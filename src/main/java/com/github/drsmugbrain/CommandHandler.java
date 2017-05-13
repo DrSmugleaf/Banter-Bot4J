@@ -16,6 +16,7 @@ import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 import sx.blah.discord.util.EmbedBuilder;
+import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RequestBuffer;
 import sx.blah.discord.util.audio.AudioPlayer;
 
@@ -142,9 +143,11 @@ public class CommandHandler {
         });
 
         commandMap.put("echo", (event, args) -> {
-            String message = String.join(" ", args);
-
-            RequestBuffer.request(() -> event.getChannel().sendMessage(message));
+            String echo = String.join(" ", args);
+            try {
+                event.getMessage().delete();
+            }catch(MissingPermissionsException e){/* Don't do anything */}
+            RequestBuffer.request(() -> event.getChannel().sendMessage(echo));
         });
 
     }
