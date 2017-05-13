@@ -9,13 +9,13 @@ import sx.blah.discord.util.RequestBuffer;
 /**
  * Created by declan on 03/04/2017.
  */
-class BotUtils {
+public class BotUtils {
 
     // Constants for use throughout the bot
-    static String BOT_PREFIX = "/";
+    public static String BOT_PREFIX = "/";
 
     // Handles the creation and getting of a IDiscordClient object for a token
-    static IDiscordClient getBuiltDiscordClient(String token){
+    public static IDiscordClient getBuiltDiscordClient(String token){
 
         // The ClientBuilder object is where you will attach your params for configuring the instance of your bot.
         // Such as withToken, setDaemon etc
@@ -27,7 +27,7 @@ class BotUtils {
     }
 
     // Helper functions to make certain aspects of the bot easier to use.
-    static void sendMessage(IChannel channel, String message){
+    public static void sendMessage(IChannel channel, String message){
 
         // This might look weird but it'll be explained in another page.
         RequestBuffer.request(() -> {
