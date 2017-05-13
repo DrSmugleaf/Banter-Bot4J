@@ -1,6 +1,8 @@
 package com.github.drsmugbrain;
 
 import com.github.drsmugbrain.lavaplayer.GuildMusicManager;
+import com.github.drsmugbrain.lavaplayer.YoutubeSearch;
+import com.google.api.services.youtube.YouTube;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -29,6 +31,8 @@ public class CommandHandler {
 
     private static final AudioPlayerManager playerManager = new DefaultAudioPlayerManager();;;
     private static final Map<Long, GuildMusicManager> musicManagers  = new HashMap<>();;
+
+    private static YouTube youtube;
 
     // Statically populate the commandMap with the intended functionality
     // Might be better practise to do this from an instantiated objects constructor
@@ -77,8 +81,13 @@ public class CommandHandler {
             // Turn the args back into a string separated by space
             String searchStr = String.join(" ", args);
 
-            loadAndPlay(event.getChannel(), searchStr);
-
+            if(searchStr.startsWith("http")) {
+                loadAndPlay(event.getChannel(), searchStr);
+            } else {
+                YoutubeSearch youtubeSearch = new YoutubeSearch();
+                String url = youtubeSearch.search(searchStr);
+                loadAndPlay(event.getChannel(), url);
+            }
 
         });
 
