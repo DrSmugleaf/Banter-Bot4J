@@ -122,6 +122,12 @@ public class CommandHandler {
 
         });
 
+        commandMap.put("echo", (event, args) -> {
+            String message = String.join(" ", args);
+
+            RequestBuffer.request(() -> event.getChannel().sendMessage(message));
+        });
+
     }
 
     private static synchronized GuildMusicManager getGuildAudioPlayer(IGuild guild) {
