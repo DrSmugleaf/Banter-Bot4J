@@ -122,6 +122,16 @@ public class CommandHandler {
 
         });
 
+        commandMap.put("roll", (event, args) -> {
+
+            Random rand = new Random();
+
+            int randomNumber = rand.nextInt(100) + 1;
+
+            event.getChannel().sendMessage(String.valueOf(randomNumber));
+
+        });
+
     }
 
     private static synchronized GuildMusicManager getGuildAudioPlayer(IGuild guild) {
