@@ -1,4 +1,4 @@
-package com.github.decyg.lavaplayer;
+package com.github.drsmugbrain.lavaplayer;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;

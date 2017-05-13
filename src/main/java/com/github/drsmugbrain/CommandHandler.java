@@ -1,6 +1,6 @@
-package com.github.decyg;
+package com.github.drsmugbrain;
 
-import com.github.decyg.lavaplayer.GuildMusicManager;
+import com.github.drsmugbrain.lavaplayer.GuildMusicManager;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;

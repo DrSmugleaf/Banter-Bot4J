@@ -1,4 +1,4 @@
-package com.github.decyg;
+package com.github.drsmugbrain;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
