@@ -2,6 +2,7 @@ package com.github.drsmugbrain;
 
 import com.github.drsmugbrain.commands.Admin;
 import com.github.drsmugbrain.commands.Basic;
+import com.github.drsmugbrain.commands.Util;
 import com.github.drsmugbrain.commands.Videos;
 import com.google.api.services.youtube.YouTube;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
@@ -81,6 +82,8 @@ public class CommandHandler {
         });
 
         commandMap.put("blacklist", Admin::blacklist);
+
+        commandMap.put("avatar", Util::avatar);
 
     }
 
