@@ -1,5 +1,6 @@
 package com.github.drsmugbrain;
 
+import com.github.drsmugbrain.models.User;
 import sx.blah.discord.api.IDiscordClient;
 
 /**
@@ -13,6 +14,8 @@ public class MainRunner {
         // Register a listener via the EventSubscriber annotation which allows for organisation and delegation of events
         cli.getDispatcher().registerListener(new CommandHandler());
         EnvVariables.getEnvVariables();
+        new Database();
+        User.createTable(Database.conn);
         // Only login after all events are registered otherwise some may be missed.
         cli.login();
 

@@ -19,6 +19,7 @@ public class Database {
     private static final String USERNAME = CREDENTIALS.get("username");
     private static final String PASSWORD = CREDENTIALS.get("password");
     private static final String DRIVER = "org.postgresql.Driver";
+    public static final Connection conn = init();
 
     private static Connection getConnection() throws SQLException {
         try {
@@ -31,7 +32,7 @@ public class Database {
         return conn;
     }
 
-    public static void main() {
+    public static Connection init() {
         Connection connection = null;
         try {
             connection = getConnection();
@@ -42,9 +43,12 @@ public class Database {
 
         if(connection != null) {
             System.out.println("Established database connection");
+            return connection;
         } else {
             System.out.println("Failed to establish database connection");
         }
+
+        return null;
     }
 
     private static Map<String, String> getCredentials(String uri) {
