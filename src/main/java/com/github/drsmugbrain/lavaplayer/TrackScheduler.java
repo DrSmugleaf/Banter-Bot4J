@@ -1,5 +1,6 @@
 package com.github.drsmugbrain.lavaplayer;
 
+import com.github.drsmugbrain.VideoManager;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -50,6 +51,7 @@ public class TrackScheduler extends AudioEventAdapter {
   public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
     // Only start the next track if the end reason is suitable for it (FINISHED or LOAD_FAILED)
     if (endReason.mayStartNext) {
+      VideoManager.votes.clear();
       nextTrack();
     }
   }
