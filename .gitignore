@@ -39,4 +39,4 @@ buildNumber.properties
 *.iml
 
 # private settings
-Settings.java
+.env

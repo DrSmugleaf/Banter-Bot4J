@@ -1,6 +1,6 @@
 package com.github.drsmugbrain.lavaplayer;
 
-import com.github.drsmugbrain.Settings;
+import com.github.drsmugbrain.EnvVariables;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -31,7 +31,7 @@ public class YoutubeSearch {
 
             YouTube.Search.List search = youtube.search().list("snippet");
 
-            String apiKey = new Settings().getGoogleKey();
+            String apiKey = EnvVariables.getEnvVariables().get("googleKey");
             search.setKey(apiKey);
             search.setQ(query);
 
