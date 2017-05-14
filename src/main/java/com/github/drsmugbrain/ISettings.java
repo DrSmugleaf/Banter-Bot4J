@@ -5,4 +5,6 @@ package com.github.drsmugbrain;
  */
 public interface ISettings {
     String getGoogleKey();
+
+    String getDatabaseUrl();
 }
