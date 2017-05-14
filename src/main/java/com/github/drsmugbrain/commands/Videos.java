@@ -2,17 +2,22 @@ package com.github.drsmugbrain.commands;
 
 import com.github.drsmugbrain.BotUtils;
 import com.github.drsmugbrain.CommandHandler;
+import com.github.drsmugbrain.VideoManager;
 import com.github.drsmugbrain.lavaplayer.GuildMusicManager;
 import com.github.drsmugbrain.lavaplayer.YoutubeSearch;
+import com.google.api.services.youtube.model.Video;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import org.apache.commons.lang3.ObjectUtils;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
+import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,15 +46,47 @@ public class Videos {
         if(searchStr.startsWith("http")) {
             loadAndPlay(event.getChannel(), searchStr);
         } else {
-            YoutubeSearch youtubeSearch = new YoutubeSearch();
-            String url = youtubeSearch.search(searchStr);
+            String url = YoutubeSearch.search(searchStr);
             loadAndPlay(event.getChannel(), url);
         }
     }
 
     public static void skip(MessageReceivedEvent event, List<String> args){
-        skipTrack(event.getChannel());
+        boolean exit = false;
+        try{
+            exit = musicManagers.get(event.getGuild().getLongID()).player.getPlayingTrack() == null;
+        }catch(NullPointerException e){
+            exit = true;
+        }
+
+        if(exit){
+            BotUtils.sendMessage(event.getChannel(), "No hay canciones en cola");
+            return;
+        }
+
+        if(!VideoManager.votes.contains(event.getAuthor())) {
+            VideoManager.votes.add(event.getAuthor());
+        }
+
+        List<IUser> connectedUsers = event.getAuthor().getVoiceStateForGuild(event.getGuild()).getChannel().getUsersHere();
+        int humanConnectedUsers = 0;
+        for(IUser user : connectedUsers){
+            if(!user.isBot()){
+                humanConnectedUsers++;
+            }
+        }
+        int votes = VideoManager.votes.size();
+        int requiredVotes = humanConnectedUsers / 2;
+
+        if(votes >= requiredVotes){
+            skipTrack(event.getChannel());
+            VideoManager.votes.clear();
+        }else{
+            BotUtils.sendMessage(event.getChannel(), "Votos: "+votes+"/"+requiredVotes);
+        }
+
     }
+
     // End commands
 
     // Util

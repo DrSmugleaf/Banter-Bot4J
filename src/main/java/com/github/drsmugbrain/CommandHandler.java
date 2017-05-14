@@ -21,7 +21,7 @@ public class CommandHandler {
     // A static map of commands mapping from command string to the functional impl
     private static Map<String, Command> commandMap = new HashMap<>();
 
-    public static final AudioPlayerManager playerManager = new DefaultAudioPlayerManager();;;
+    public static final AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
 
     private static YouTube youtube;
 
@@ -40,6 +40,8 @@ public class CommandHandler {
 
         commandMap.put("play", Videos::play);
         commandMap.put("skip", Videos::skip);
+
+//        commandMap.put("test", Videos::test);
 
         // Plays the first song found containing the first arg
         // Skips the current song
