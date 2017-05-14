@@ -20,9 +20,8 @@ public class EnvVariables {
             BufferedReader reader = new BufferedReader(new FileReader("src\\.env"));
             String line = reader.readLine();
             while(line != null){
-                System.out.println(line);
 
-                String[] tuple = line.split("=", 1);
+                String[] tuple = line.split("=", 2);
                 if(tuple.length != 2){
                     System.out.println("ERROR: Configuración en archivo .env no válida!");
                     System.exit(1);
