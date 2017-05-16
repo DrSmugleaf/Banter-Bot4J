@@ -35,8 +35,6 @@ public class EnvVariables {
             data.put(key, value);
         }
 
-        System.out.println(data);
-
         return data;
     }
 
