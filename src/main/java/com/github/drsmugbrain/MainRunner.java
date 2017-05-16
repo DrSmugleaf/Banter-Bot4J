@@ -1,5 +1,6 @@
 package com.github.drsmugbrain;
 
+import com.github.drsmugbrain.models.Guild;
 import com.github.drsmugbrain.models.User;
 import sx.blah.discord.api.IDiscordClient;
 
@@ -16,6 +17,7 @@ public class MainRunner {
         EnvVariables.readFile();
         new Database();
         User.createTable(Database.conn);
+        Guild.createTable(Database.conn);
         // Only login after all events are registered otherwise some may be missed.
         cli.login();
 
