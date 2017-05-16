@@ -14,8 +14,12 @@ public class EnvVariables {
 
     public static Map<String, String> readFile() {
         Map<String, String> data = new ArrayMap<>();
-
         Properties properties = new Properties();
+
+        Map<String, String> env = System.getenv();
+        for(String envName : env.keySet()) {
+            data.put(envName, env.get(envName));
+        }
 
         try(InputStream input = new FileInputStream(".env")) {
             properties.load(input);
@@ -30,6 +34,8 @@ public class EnvVariables {
             String value = properties.getProperty(key).trim();
             data.put(key, value);
         }
+
+        System.out.println(data);
 
         return data;
     }
