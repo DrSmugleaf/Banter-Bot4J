@@ -1,9 +1,6 @@
 package com.github.drsmugbrain;
 
-import com.github.drsmugbrain.commands.Admin;
-import com.github.drsmugbrain.commands.Basic;
-import com.github.drsmugbrain.commands.Util;
-import com.github.drsmugbrain.commands.Videos;
+import com.github.drsmugbrain.commands.*;
 import com.google.api.services.youtube.YouTube;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -42,6 +39,13 @@ public class CommandHandler {
 
         commandMap.put("play", Videos::play);
         commandMap.put("skip", Videos::skip);
+
+        // Dungeons of discord
+        commandMap.put("dungeon-start", DungeonCommands::start);
+        commandMap.put("dungeon-up", DungeonCommands::up);
+        commandMap.put("dungeon-down", DungeonCommands::down);
+        commandMap.put("dungeon-left", DungeonCommands::left);
+        commandMap.put("dungeon-right", DungeonCommands::right);
 
 //        commandMap.put("test", Videos::test);
 
