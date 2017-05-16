@@ -38,5 +38,5 @@ buildNumber.properties
 .idea/
 *.iml
 
-# private settings
+# Environment variables
 .env

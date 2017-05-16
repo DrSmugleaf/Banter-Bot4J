@@ -31,7 +31,7 @@ public class YoutubeSearch {
 
             YouTube.Search.List search = youtube.search().list("snippet");
 
-            String apiKey = EnvVariables.getEnvVariables().get("GOOGLE_KEY");
+            String apiKey = EnvVariables.readFile().get("GOOGLE_KEY");
             search.setKey(apiKey);
             search.setQ(query);
 

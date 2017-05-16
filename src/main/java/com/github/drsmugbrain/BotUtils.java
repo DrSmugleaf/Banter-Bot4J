@@ -12,7 +12,7 @@ import sx.blah.discord.util.RequestBuffer;
 public class BotUtils {
 
     // Constants for use throughout the bot
-    public static String BOT_PREFIX = EnvVariables.getEnvVariables().get("BOT_PREFIX");
+    public static String BOT_PREFIX = EnvVariables.readFile().get("BOT_PREFIX");
 
     // Handles the creation and getting of a IDiscordClient object for a token
     public static IDiscordClient getBuiltDiscordClient(String token){

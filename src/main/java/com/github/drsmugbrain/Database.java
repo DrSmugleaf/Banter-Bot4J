@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  */
 public class Database {
 
-    private static final String URI = EnvVariables.getEnvVariables().get("DATABASE_URI");
+    private static final String URI = EnvVariables.readFile().get("DATABASE_URI");
     private static final Map<String, String> CREDENTIALS = getCredentials(URI);
     private static final String URL = CREDENTIALS.get("url");
     private static final String USERNAME = CREDENTIALS.get("username");
