@@ -10,9 +10,9 @@ import java.sql.SQLException;
 public class Guild {
 
     private static Connection connection;
-    private int id;
+    private long id;
 
-    public Guild(int id) {
+    public Guild(long id) {
         this.id = id;
     }
 
@@ -34,8 +34,8 @@ public class Guild {
     public void save() {
         PreparedStatement statement;
         try {
-            statement = connection.prepareStatement("INSERT INTO guilds (id) VALUES (?)");
-            statement.setInt(1, this.id);
+            statement = connection.prepareStatement("INSERT INTO guilds (id) VALUES (?) ON CONFLICT DO NOTHING");
+            statement.setLong(1, this.id);
             statement.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Error saving guild with id " + this.id);

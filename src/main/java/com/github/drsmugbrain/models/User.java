@@ -10,9 +10,9 @@ import java.sql.SQLException;
 public class User {
 
     private static Connection connection;
-    private int id;
+    private long id;
 
-    public User(int id) {
+    public User(long id) {
         this.id = id;
     }
 
@@ -34,8 +34,8 @@ public class User {
     public void save() {
         PreparedStatement statement;
         try {
-            statement = connection.prepareStatement("INSERT INTO users (id) VALUES (?)");
-            statement.setInt(1, this.id);
+            statement = connection.prepareStatement("INSERT INTO users (id) VALUES (?) ON CONFLICT DO NOTHING");
+            statement.setLong(1, this.id);
             statement.executeUpdate();
         } catch(SQLException e) {
             System.err.println("Error saving user with id " + this.id);
