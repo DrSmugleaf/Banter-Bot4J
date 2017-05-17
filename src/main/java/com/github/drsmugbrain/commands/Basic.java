@@ -14,6 +14,14 @@ import java.util.Random;
  */
 public class Basic {
 
+    private static final String MAGIC_8_BALL_RESPONSES[] = {
+            "It is certain", "It is decidedly so", "Without a doubt", "Yes definitely", "You may rely on it",
+            "As I see it, yes", "Most likely", "Outlook good", "Yes", "Signs point to yes",
+            "Reply hazy try again", "Ask again later", "Better not tell you now", "Cannot predict now",
+            "Concentrate and ask again", "Don't count on it", "My reply is no", "My sources say no",
+            "Outlook not so good", "Very doubtful"
+    };
+
     public static void echo(MessageReceivedEvent event, List<String> args){
         String echo = String.join(" ", args);
         try {
@@ -41,6 +49,11 @@ public class Basic {
         AudioPlayer audioP = AudioPlayer.getAudioPlayerForGuild(event.getGuild());
         audioP.clear();
         botVoiceChannel.leave();
+    }
+
+    public static void magic8ball(MessageReceivedEvent event, List<String> args) {
+        int randomID = new Random().nextInt(Basic.MAGIC_8_BALL_RESPONSES.length);
+        RequestBuffer.request(() -> event.getChannel().sendMessage(Basic.MAGIC_8_BALL_RESPONSES[randomID]));
     }
 
 }

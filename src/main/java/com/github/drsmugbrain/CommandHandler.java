@@ -40,6 +40,7 @@ public class CommandHandler {
         commandMap.put("leave", Basic::leave);
         commandMap.put("roll", Basic::roll);
         commandMap.put("echo", Basic::echo);
+        commandMap.put("8", Basic::magic8ball);
 
         commandMap.put("play", Videos::play);
         commandMap.put("skip", Videos::skip);
