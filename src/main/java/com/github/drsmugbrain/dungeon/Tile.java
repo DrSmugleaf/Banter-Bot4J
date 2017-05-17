@@ -4,7 +4,8 @@ package com.github.drsmugbrain.dungeon;
  * Created by Brian on 16/05/2017.
  */
 public class Tile {
-    private static final String ALLOWED_CHARS = "-# @";
+    private static final String ALLOWED_CHARS = "-# X";
+    private static final String ALLOWED_MOVES = " ";
 
     private char type;
 
@@ -16,13 +17,20 @@ public class Tile {
         return ALLOWED_CHARS.indexOf(type) != -1;
     }
 
-    @Override
-    public String toString(){
-        return String.valueOf(this.type);
-    }
-
     public static Tile[] stringToTileRow(String input){
         return Tile.charRowToTileRow(input.toCharArray());
+    }
+
+    public boolean is_spawn(){
+        return this.type == 'X';
+    }
+
+    public boolean canMoveTo(){
+        return ALLOWED_MOVES.indexOf(this.type) != -1;
+    }
+
+    public void setEmpty(){
+        this.type = ' ';
     }
 
     public static Tile[] charRowToTileRow(char[] charRow){
@@ -34,5 +42,10 @@ public class Tile {
         }
 
         return result;
+    }
+
+    @Override
+    public String toString(){
+        return String.valueOf(this.type);
     }
 }

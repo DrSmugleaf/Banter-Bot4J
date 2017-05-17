@@ -1,5 +1,6 @@
 package com.github.drsmugbrain;
 
+import com.github.drsmugbrain.dungeon.DungeonEvents;
 import com.github.drsmugbrain.models.Blacklist;
 import com.github.drsmugbrain.models.Guild;
 import com.github.drsmugbrain.models.User;
@@ -15,6 +16,7 @@ public class MainRunner {
 
         // Register a listener via the EventSubscriber annotation which allows for organisation and delegation of events
         cli.getDispatcher().registerListener(new CommandHandler());
+        cli.getDispatcher().registerListener(new DungeonEvents());
         EnvVariables.readFile();
         new Database();
         User.createTable(Database.conn);

@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class FileParser {
 
-    protected static Tile[][] fileToArray(String filePath) throws IOException {
+    static Tile[][] fileToArray(String filePath) throws IOException {
         int rows = 0;
         int columns = 0;
         Tile[][] result;

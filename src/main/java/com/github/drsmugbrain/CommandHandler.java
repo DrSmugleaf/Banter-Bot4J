@@ -42,10 +42,6 @@ public class CommandHandler {
 
         // Dungeons of discord
         commandMap.put("dungeon-start", DungeonCommands::start);
-        commandMap.put("dungeon-up", DungeonCommands::up);
-        commandMap.put("dungeon-down", DungeonCommands::down);
-        commandMap.put("dungeon-left", DungeonCommands::left);
-        commandMap.put("dungeon-right", DungeonCommands::right);
 
 //        commandMap.put("test", Videos::test);
 

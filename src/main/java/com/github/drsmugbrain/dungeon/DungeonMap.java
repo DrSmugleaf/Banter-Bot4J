@@ -1,49 +1,41 @@
 package com.github.drsmugbrain.dungeon;
 
-import com.github.drsmugbrain.BotUtils;
-
 import java.io.*;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.InputMismatchException;
 
 /**
  * Created by Brian on 16/05/2017.
  */
 public class DungeonMap {
     private Tile[][] tiles;
-    private static final int LINES = 8;
-    private static final int COLUMNS = 8;
+    public int spawn_x;
+    public int spawn_y;
 
-
-    public DungeonMap(int width, int height){
-        this.tiles = new Tile[width][height];
-    }
-
-
-
-    public DungeonMap() throws IOException{
+    public DungeonMap() throws IOException, InputMismatchException{
         this.tiles = FileParser.fileToArray("src\\main\\java\\com\\github\\drsmugbrain\\dungeon\\example.map");
-
-
-
-//        BufferedReader br = new BufferedReader(new FileReader("src\\main\\java\\com\\github\\drsmugbrain\\dungeon\\example.map"));
-//        List<Tile[]> lines = new ArrayList<>();
-//        String sLine;
-//
-//        while ((sLine = br.readLine()) != null) {
-//            // añadimos un array de objetos Tile a la lista
-//            lines.add(Tile.stringToTileRow(sLine.replaceAll("\n", "")));
-//        }
-//
-//        this.tiles = new Tile[lines.size()][lines.get(0).length];
-//
-//        int counter = 0;
-//        for (Tile[] line : lines ){
-//            this.tiles[counter] = line;
-//        }
+        int row = 0;
+        boolean spawn_found = false;
+        while (row < this.tiles.length) {
+            int column = 0;
+            while (column < this.tiles[row].length){
+                if(this.tiles[row][column].is_spawn()){
+                    if(spawn_found){
+                        // mal rollo
+                        this.tiles[row][column].setEmpty();
+                        continue;
+                    }
+                    spawn_found = true;
+                    this.spawn_x = column;
+                    this.spawn_y = row;
+                    this.tiles[row][column].setEmpty();
+                }
+                column++;
+            }
+            row ++;
+        }
+        if(!spawn_found){
+            throw new InputMismatchException("Map has no spawn");
+        }
     }
 
     public Tile getTile(int x, int y){
@@ -65,5 +57,4 @@ public class DungeonMap {
 
         return outputBuilder.toString();
     }
-
 }
