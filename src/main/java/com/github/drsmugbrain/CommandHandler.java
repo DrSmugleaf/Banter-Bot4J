@@ -4,6 +4,7 @@ import com.github.drsmugbrain.commands.Admin;
 import com.github.drsmugbrain.commands.Basic;
 import com.github.drsmugbrain.commands.Util;
 import com.github.drsmugbrain.commands.Videos;
+import com.github.drsmugbrain.models.Member;
 import com.google.api.services.youtube.YouTube;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -107,6 +108,12 @@ public class CommandHandler {
         // Check if the first arg (the command) starts with the prefix defined in the utils class
         if(!argArray[0].startsWith(BotUtils.BOT_PREFIX))
             return;
+
+        // Filter out blacklisted users
+        Long userID = event.getAuthor().getLongID();
+        Long guildID = event.getGuild().getLongID();
+        Member member = Member.get(userID, guildID);
+        if(member != null && member.isBlacklisted) return;
 
         // Extract the "command" part of the first arg out by just ditching the first character
         String commandStr = argArray[0].substring(BotUtils.BOT_PREFIX.length());
