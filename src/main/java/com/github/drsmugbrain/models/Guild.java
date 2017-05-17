@@ -1,5 +1,8 @@
 package com.github.drsmugbrain.models;
 
+import sx.blah.discord.api.events.EventSubscriber;
+import sx.blah.discord.handle.impl.events.ReadyEvent;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -41,6 +44,15 @@ public class Guild {
             System.err.println("Error saving guild with id " + this.id);
             e.printStackTrace();
         }
+    }
+
+    @EventSubscriber
+    public static void handle(ReadyEvent event) {
+        event.getClient().getGuilds().forEach(guild -> {
+            Long guildID = guild.getLongID();
+            Guild guildModel = new Guild(guildID);
+            guildModel.save();
+        });
     }
 
 }

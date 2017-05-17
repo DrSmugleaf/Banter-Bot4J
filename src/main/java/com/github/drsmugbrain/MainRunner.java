@@ -15,6 +15,7 @@ public class MainRunner {
 
         // Register a listener via the EventSubscriber annotation which allows for organisation and delegation of events
         cli.getDispatcher().registerListener(new CommandHandler());
+        cli.getDispatcher().registerListeners(Guild.class, User.class);
         EnvVariables.readFile();
         new Database();
         User.createTable(Database.conn);

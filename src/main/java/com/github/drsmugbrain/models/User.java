@@ -1,5 +1,8 @@
 package com.github.drsmugbrain.models;
 
+import sx.blah.discord.api.events.EventSubscriber;
+import sx.blah.discord.handle.impl.events.ReadyEvent;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -41,6 +44,15 @@ public class User {
             System.err.println("Error saving user with id " + this.id);
             e.printStackTrace();
         }
+    }
+
+    @EventSubscriber
+    public static void handle(ReadyEvent event) {
+        event.getClient().getUsers().forEach(user -> {
+            Long userID = user.getLongID();
+            User userModel = new User(userID);
+            userModel.save();
+        });
     }
 
 }
