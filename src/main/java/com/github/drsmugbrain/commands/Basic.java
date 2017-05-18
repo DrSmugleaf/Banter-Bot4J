@@ -1,11 +1,13 @@
 package com.github.drsmugbrain.commands;
 
+import com.github.drsmugbrain.BotUtils;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RequestBuffer;
 import sx.blah.discord.util.audio.AudioPlayer;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -54,6 +56,23 @@ public class Basic {
     public static void magic8ball(MessageReceivedEvent event, List<String> args) {
         int randomID = new Random().nextInt(Basic.MAGIC_8_BALL_RESPONSES.length);
         RequestBuffer.request(() -> event.getChannel().sendMessage(Basic.MAGIC_8_BALL_RESPONSES[randomID]));
+    }
+
+    public static void playing(MessageReceivedEvent event, List<String> args) {
+        if(!Arrays.stream(BotUtils.OWNERS).anyMatch(id -> id == event.getAuthor().getLongID())) {
+            RequestBuffer.request(() -> event.getChannel().sendMessage("You don't have permission to change the bot's playing status"));
+            return;
+        }
+
+        if(args.isEmpty()) {
+            event.getClient().changePlayingText(null);
+            RequestBuffer.request(() -> event.getChannel().sendMessage("Reset the bot's playing status"));
+            return;
+        }
+
+        String game = String.join(" ", args);
+        event.getClient().changePlayingText(game);
+        RequestBuffer.request(() -> event.getChannel().sendMessage("Changed the bot's playing status to " + game));
     }
 
 }
