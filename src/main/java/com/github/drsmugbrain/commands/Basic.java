@@ -56,21 +56,4 @@ public class Basic {
         Bot.sendMessage(event.getChannel(), Basic.MAGIC_8_BALL_RESPONSES[randomID]);
     }
 
-    public static void playing(MessageReceivedEvent event, List<String> args) {
-        if(!Bot.isOwner(event.getAuthor().getLongID())) {
-            Bot.sendMessage(event.getChannel(), "You don't have permission to change the bot's playing status");
-            return;
-        }
-
-        if(args.isEmpty()) {
-            event.getClient().changePlayingText(null);
-            Bot.sendMessage(event.getChannel(), "Reset the bot's playing status");
-            return;
-        }
-
-        String game = String.join(" ", args);
-        event.getClient().changePlayingText(game);
-        Bot.sendMessage(event.getChannel(), "Changed the bot's playing status to " + game);
-    }
-
 }

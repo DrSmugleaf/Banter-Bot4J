@@ -1,9 +1,6 @@
 package com.github.drsmugbrain;
 
-import com.github.drsmugbrain.commands.Admin;
-import com.github.drsmugbrain.commands.Basic;
-import com.github.drsmugbrain.commands.Util;
-import com.github.drsmugbrain.commands.Videos;
+import com.github.drsmugbrain.commands.*;
 import com.github.drsmugbrain.models.Member;
 import com.github.drsmugbrain.util.Bot;
 import com.google.api.services.youtube.YouTube;
@@ -40,7 +37,6 @@ public class CommandHandler {
         commandMap.put("roll", Basic::roll);
         commandMap.put("echo", Basic::echo);
         commandMap.put("8", Basic::magic8ball);
-        commandMap.put("playing", Basic::playing);
 
         // Plays the first song found containing the first arg
         commandMap.put("play", Videos::play);
@@ -83,8 +79,9 @@ public class CommandHandler {
 
         commandMap.put("blacklist", Admin::blacklist);
 
-        commandMap.put("avatar", Util::avatar);
-        commandMap.put("name", Util::name);
+        commandMap.put("avatar", Owner::avatar);
+        commandMap.put("name", Owner::name);
+        commandMap.put("playing", Owner::playing);
     }
 
     @EventSubscriber

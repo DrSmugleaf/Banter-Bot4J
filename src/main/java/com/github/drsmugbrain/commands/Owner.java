@@ -14,11 +14,16 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by DrSmugleaf on 14/05/2017.
+ * Created by DrSmugleaf on 20/05/2017.
  */
-public class Util {
+public class Owner {
 
     public static void avatar(MessageReceivedEvent event, List<String> args) {
+        if(!Bot.isOwner(event.getAuthor().getLongID())) {
+            Bot.sendMessage(event.getChannel(), "You don't have permission to change the bot's image");
+            return;
+        }
+
         try {
             URL url = new URL(args.get(0));
             URLConnection connection = url.openConnection();
@@ -45,7 +50,30 @@ public class Util {
     }
 
     public static void name(MessageReceivedEvent event, List<String> args) {
+        if(!Bot.isOwner(event.getAuthor().getLongID())) {
+            Bot.sendMessage(event.getChannel(), "You don't have permission to change the bot's name");
+            return;
+        }
+
+        String name = String.join(" ", args);
         event.getClient().changeUsername(String.join(" ", args));
+        Bot.sendMessage(event.getChannel(), "Changed the bot's name to " + name);
     }
 
+    public static void playing(MessageReceivedEvent event, List<String> args) {
+        if(!Bot.isOwner(event.getAuthor().getLongID())) {
+            Bot.sendMessage(event.getChannel(), "You don't have permission to change the bot's playing status");
+            return;
+        }
+
+        if(args.isEmpty()) {
+            event.getClient().changePlayingText(null);
+            Bot.sendMessage(event.getChannel(), "Reset the bot's playing status");
+            return;
+        }
+
+        String game = String.join(" ", args);
+        event.getClient().changePlayingText(game);
+        Bot.sendMessage(event.getChannel(), "Changed the bot's playing status to " + game);
+    }
 }
