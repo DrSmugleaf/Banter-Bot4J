@@ -37,6 +37,7 @@ public class CommandHandler {
         commandMap.put("roll", Basic::roll);
         commandMap.put("echo", Basic::echo);
         commandMap.put("8", Basic::magic8ball);
+        commandMap.put("whois", Basic::whois);
 
         // Plays the first song found containing the first arg
         commandMap.put("play", Videos::play);

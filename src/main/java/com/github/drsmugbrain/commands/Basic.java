@@ -1,9 +1,14 @@
 package com.github.drsmugbrain.commands;
 
 import com.github.drsmugbrain.util.Bot;
+import org.apache.commons.lang3.StringUtils;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IRole;
+import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.IVoiceChannel;
+import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.MissingPermissionsException;
+import sx.blah.discord.util.RequestBuffer;
 import sx.blah.discord.util.audio.AudioPlayer;
 
 import java.util.List;
@@ -54,6 +59,40 @@ public class Basic {
     public static void magic8ball(MessageReceivedEvent event, List<String> args) {
         int randomID = new Random().nextInt(Basic.MAGIC_8_BALL_RESPONSES.length);
         Bot.sendMessage(event.getChannel(), Basic.MAGIC_8_BALL_RESPONSES[randomID]);
+    }
+
+    public static void whois(MessageReceivedEvent event, List<String> args) {
+        IUser author = event.getAuthor();
+
+        event.getMessage().getMentions().forEach((mention) -> {
+            EmbedBuilder builder = new EmbedBuilder();
+            String mentionNickname = mention.getNicknameForGuild(event.getGuild());
+            List<IRole> mentionRoles = mention.getRolesForGuild(event.getGuild());
+
+            builder.withAuthorName(String.format("%s#%s (ID: %d)", mention.getName(), mention.getDiscriminator(), mention.getLongID()));
+            builder.withAuthorIcon(mention.getAvatarURL());
+
+            builder.appendField(
+                    "Member Details",
+                    "" + (mentionNickname != null ? "Nickname: " + mentionNickname : "No nickname") + "\n" +
+                    "Roles: " + StringUtils.join(mentionRoles, ", ") + "\n" +
+                    "Joined at: " + mention.getCreationDate(),
+                    false
+            );
+
+            builder.appendField(
+                    "User Details",
+                    "" + (mention.isBot() ? "Is a bot account\n" : "") +
+                    "Status: " + mention.getPresence().getStatus().toString() + "\n" +
+                    "Game: " + (mention.getPresence().getPlayingText().orElse("None")),
+                    false
+            );
+
+            builder.withFooterIcon(author.getAvatarURL());
+            builder.withFooterText("Requested by " + author.getDisplayName(event.getGuild()));
+
+            RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
+        });
     }
 
 }
