@@ -27,6 +27,10 @@ public class Tile {
         return this.type == 'X';
     }
 
+    public boolean is_empty(){
+        return this.type == ' ';
+    }
+
     public boolean canMoveTo(){
         return ALLOWED_MOVES.indexOf(this.type) != -1;
     }
@@ -44,7 +48,6 @@ public class Tile {
         for (int i = 0; i<charRow.length; i++){
             Tile tile = new Tile(charRow[i]);
             result[i] = tile;
-            System.out.println(tile.toString());
         }
 
         return result;

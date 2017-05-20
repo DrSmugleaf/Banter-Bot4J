@@ -10,4 +10,9 @@ public interface Character extends IEntity {
     public boolean moveDown(DungeonMap map);
     public boolean moveLeft(DungeonMap map);
     public boolean moveRight(DungeonMap map);
+
+    @Override
+    default boolean isSolid() {
+        return true;
+    }
 }

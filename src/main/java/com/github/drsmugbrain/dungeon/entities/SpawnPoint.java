@@ -34,4 +34,9 @@ public class SpawnPoint implements IEntity {
         return this.pos_y;
     }
 
+    @Override
+    public boolean isSolid() {
+        return false;
+    }
+
 }

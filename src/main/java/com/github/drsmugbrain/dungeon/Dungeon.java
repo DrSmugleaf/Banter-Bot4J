@@ -32,6 +32,8 @@ public class Dungeon {
             this.map.addEntity(player);
             this.playerHash.put(user.getLongID(), player);
         }
+
+        this.map.createRandomTreasure();
     }
 
 
@@ -56,16 +58,16 @@ public class Dungeon {
         }
         switch(sReaction){
             case "⬅":
-                player.moveLeft(this.map);
+                player.actLeft(this.map);
                 break;
             case "➡":
-                player.moveRight(this.map);
+                player.actRight(this.map);
                 break;
             case "⬆":
-                player.moveUp(this.map);
+                player.actUp(this.map);
                 break;
             case "⬇":
-                player.moveDown(this.map);
+                player.actDown(this.map);
                 break;
         }
         RequestBuffer.request(() -> message.edit(this.getFinishedMap()));

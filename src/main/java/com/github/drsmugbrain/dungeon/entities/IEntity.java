@@ -13,4 +13,5 @@ public interface IEntity {
 
     int getX();
     int getY();
+    boolean isSolid();
 }

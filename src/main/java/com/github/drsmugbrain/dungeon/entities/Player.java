@@ -2,6 +2,8 @@ package com.github.drsmugbrain.dungeon.entities;
 
 import com.github.drsmugbrain.dungeon.DungeonMap;
 
+import java.util.List;
+
 /**
  * Created by Brian on 16/05/2017.
  */
@@ -12,20 +14,67 @@ public class Player implements Character {
 
     private int gold;
 
+
     public Player(int x, int y){
         this.pos_x = x;
         this.pos_y = y;
         this.gold = 0;
     }
 
-    @Override
-    public boolean moveRight(DungeonMap map){
-        if(map.getTile(this.pos_x+1, this.pos_y).canMoveTo()){
-            this.pos_x += 1;
-            return true;
-        }
-        return false;
+
+    public void addGold(int gold){
+        this.gold += gold;
+        System.out.println("You have " + this.gold + " gold");
     }
+
+
+    public void actLeft(DungeonMap map){
+        if(this.moveLeft(map)){
+            return;
+        }
+        List<IEntity> entities = map.getEntitiesFromCoords(this.pos_x-1, this.pos_y);
+        if(entities.size() > 0){
+            System.out.println("hay entidades");
+            entities.forEach(entity -> entity.receiveInteraction(this));
+        }
+    }
+
+
+    public void actRight(DungeonMap map){
+        if(this.moveRight(map)){
+            return;
+        }
+        List<IEntity> entities = map.getEntitiesFromCoords(this.pos_x+1, this.pos_y);
+        if(entities.size() > 0){
+            System.out.println("hay entidades");
+            entities.forEach(entity -> entity.receiveInteraction(this));
+        }
+    }
+
+
+    public void actUp(DungeonMap map){
+        if(this.moveUp(map)){
+            return;
+        }
+        List<IEntity> entities = map.getEntitiesFromCoords(this.pos_x, this.pos_y-1);
+        if(entities.size() > 0){
+            System.out.println("hay entidades");
+            entities.forEach(entity -> entity.receiveInteraction(this));
+        }
+    }
+
+
+    public void actDown(DungeonMap map){
+        if(this.moveDown(map)){
+            return;
+        }
+        List<IEntity> entities = map.getEntitiesFromCoords(this.pos_x, this.pos_y+1);
+        if(entities.size() > 0){
+            System.out.println("hay entidades");
+            entities.forEach(entity -> entity.receiveInteraction(this));
+        }
+    }
+
 
     @Override
     public String getCharacter() {
@@ -42,29 +91,46 @@ public class Player implements Character {
         return this.pos_y;
     }
 
+
+    @Override
     public boolean moveLeft(DungeonMap map){
-        if(map.getTile(this.pos_x-1, this.pos_y).canMoveTo()){
+        if(map.canMoveTo(this.pos_x-1, this.pos_y)){
             this.pos_x -= 1;
             return true;
         }
         return false;
     }
 
+
+    @Override
+    public boolean moveRight(DungeonMap map){
+        if(map.canMoveTo(this.pos_x+1, this.pos_y)){
+            this.pos_x += 1;
+            return true;
+        }
+        return false;
+    }
+
+
+    @Override
     public boolean moveUp(DungeonMap map){
-        if(map.getTile(this.pos_x, this.pos_y-1).canMoveTo()){
+        if(map.canMoveTo(this.pos_x, this.pos_y-1)){
             this.pos_y -= 1;
             return true;
         }
         return false;
     }
 
+
+    @Override
     public boolean moveDown(DungeonMap map){
-        if(map.getTile(this.pos_x, this.pos_y+1).canMoveTo()){
+        if(map.canMoveTo(this.pos_x, this.pos_y+1)){
             this.pos_y += 1;
             return true;
         }
         return false;
     }
+
 
     @Override
     public void interactWith(IEntity other) {}
