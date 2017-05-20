@@ -1,7 +1,6 @@
 package com.github.drsmugbrain.dungeon;
 
-import com.github.drsmugbrain.BotUtils;
-import sx.blah.discord.handle.obj.IChannel;
+import com.github.drsmugbrain.dungeon.entities.Player;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IReaction;
 import sx.blah.discord.handle.obj.IUser;
@@ -11,7 +10,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by Brian on 16/05/2017.

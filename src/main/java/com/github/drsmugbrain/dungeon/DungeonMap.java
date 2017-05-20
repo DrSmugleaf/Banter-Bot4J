@@ -1,5 +1,7 @@
 package com.github.drsmugbrain.dungeon;
 
+import com.github.drsmugbrain.dungeon.entities.Player;
+
 import java.io.*;
 import java.util.Collection;
 import java.util.InputMismatchException;
@@ -82,18 +84,6 @@ public class DungeonMap {
             outputBuilder.append("\n");
         }
 
-        /*for(Tile[] row : this.tiles){
-            for(Tile tile : row){
-                boolean isPlayer = false;
-                for(Player player : players){
-                    if(player.pos_y == row && player.pos_x == tile){
-                        isPlayer = true;
-                    }
-                }
-                outputBuilder.append(tile.toString());
-            }
-            outputBuilder.append("\n");
-        }*/
         outputBuilder.append("```");
 
         return outputBuilder.toString();
