@@ -1,8 +1,8 @@
 package com.github.drsmugbrain.commands;
 
+import com.github.drsmugbrain.util.Bot;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.Image;
-import sx.blah.discord.util.RequestBuffer;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -39,8 +39,8 @@ public class Util {
 
             event.getClient().changeAvatar(Image.forUrl(suffix, args.get(0)));
         } catch(IOException e) {
-            RequestBuffer.request(() -> event.getChannel().sendMessage("Invalid image URL"));
-            e.printStackTrace();
+            Bot.LOGGER.error("Malformed URL or error opening connection", e);
+            Bot.sendMessage(event.getChannel(), "Invalid image URL");
         }
 
     }

@@ -1,11 +1,11 @@
 package com.github.drsmugbrain.commands;
 
 import com.github.drsmugbrain.models.Member;
+import com.github.drsmugbrain.util.Bot;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
-import sx.blah.discord.util.RequestBuffer;
 
 import java.util.Comparator;
 import java.util.EnumSet;
@@ -33,17 +33,17 @@ public class Admin {
                 String nickname = mention.getDisplayName(event.getGuild());
 
                 if(member == null) {
-                    RequestBuffer.request(() -> event.getChannel().sendMessage("User " + nickname + " doesn't exist"));
+                    Bot.sendMessage(event.getChannel(), "User " + nickname + " doesn't exist");
                     return;
                 }
 
                 if(author.getLongID() == mention.getLongID()) {
-                    RequestBuffer.request(() -> event.getChannel().sendMessage("You can't blacklist yourself!"));
+                    Bot.sendMessage(event.getChannel(), "You can't blacklist yourself!");
                     return;
                 }
 
                 if(mention.getLongID() == event.getGuild().getOwner().getLongID()) {
-                    RequestBuffer.request(() -> event.getChannel().sendMessage("You can't blacklist the server owner!"));
+                    Bot.sendMessage(event.getChannel(), "You can't blacklist the server owner!");
                     return;
                 }
 
@@ -52,14 +52,14 @@ public class Admin {
                 IRole highestMentionRole = mentionRoles.get(mentionRoles.size() - 1);
 
                 if(highestAuthorRole.getPosition() < highestMentionRole.getPosition()) {
-                    RequestBuffer.request(() -> event.getChannel().sendMessage("You can't blacklist " + nickname + ".\n" +
-                            "Your highest role has a lower position in the role manager than their highest role."));
+                    Bot.sendMessage(event.getChannel(), "You can't blacklist " + nickname + ".\n" +
+                            "Your highest role has a lower position in the role manager than their highest role.");
                     return;
                 }
 
-                event.getChannel().sendMessage((member.isBlacklisted ? "Whitelisted user " : "Blacklisted user ") + nickname);
                 member.isBlacklisted = !member.isBlacklisted;
                 member.save();
+                Bot.sendMessage(event.getChannel(), (member.isBlacklisted ? "Whitelisted user " : "Blacklisted user ") + nickname);
             });
         }
     }

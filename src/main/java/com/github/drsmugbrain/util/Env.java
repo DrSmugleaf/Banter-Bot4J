@@ -25,7 +25,7 @@ public class Env {
             properties.load(input);
             input.close();
         } catch(IOException e) {
-            e.printStackTrace();
+            Bot.LOGGER.error("Error reading .env file", e);
         }
 
         Enumeration<?> enumeration = properties.propertyNames();
