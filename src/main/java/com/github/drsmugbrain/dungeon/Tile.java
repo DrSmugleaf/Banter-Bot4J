@@ -1,5 +1,7 @@
 package com.github.drsmugbrain.dungeon;
 
+import java.util.Map;
+
 /**
  * Created by Brian on 16/05/2017.
  */
@@ -31,6 +33,10 @@ public class Tile {
 
     public void setEmpty(){
         this.type = ' ';
+    }
+
+    public void setPlayer(){
+        this.type = '@';
     }
 
     public static Tile[] charRowToTileRow(char[] charRow){

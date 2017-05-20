@@ -22,10 +22,9 @@ public class Dungeon {
     private DungeonMap map;
     private Map<Long, Player> playerHash;  // <user LongID, Player instance>
 
-    public String uuid;
+
 
     public Dungeon(IUser[] users) throws IOException, InputMismatchException{
-        this.uuid = UUID.randomUUID().toString();
         this.map = new DungeonMap();
         this.playerHash = new HashMap<>();
 
@@ -34,62 +33,41 @@ public class Dungeon {
         }
     }
 
+
     public String getFinishedMap(){
         // hacer cosas como pintar jugadores y NPCs
-        return this.map.toString();
+        return this.map.toString(this.playerHash.values());
     }
+
 
     private void parseInput(IReaction reaction, IUser user){
         IMessage message = reaction.getMessage();
-        IChannel channel = message.getChannel();
-        String reactions = "⬅ ⬆ ⬇ ➡";
         String sReaction = reaction.toString();
         Player player = this.playerHash.get(user.getLongID());
 
-        if(player == null){
-//            channel.sendMessage("You're not a player, stop trying to play >:(");
+        // We remove the reaction (only if the author is not the bot itself), so it can be used again.
+        if(user.isBot()){
             return;
         }
-        if(!reactions.contains(sReaction)){
-            channel.sendMessage("This is not a valid reaction");
-            return;
-        }
-
-
         RequestBuffer.request(() -> reaction.getMessage().removeReaction(user, reaction));
-        String msg = null;
+
         switch(sReaction){
             case "⬅":
-                msg = user.mention() + " moved to the left";
+                player.moveLeft(this.map);
+                break;
             case "➡":
-                msg = user.mention() + " moved to the right";
+                player.moveRight(this.map);
                 break;
             case "⬆":
-                msg = user.mention() + " moved up";
+                player.moveUp(this.map);
                 break;
             case "⬇":
-                msg = user.mention() + " moved down";
+                player.moveDown(this.map);
                 break;
         }
-        if(msg != null){
-            String final_msg = msg;
-            RequestBuffer.request(() -> reaction.getMessage().getChannel().sendMessage(final_msg));
-        }
-
+        message.edit(this.getFinishedMap());
     }
 
-    public void up(IUser user){
-        this.getPlayerFromUser(user).moveUp(this.map);
-    }
-    public void down(IUser user){
-        this.getPlayerFromUser(user).moveDown(this.map);
-    }
-    public void left(IUser user){
-        this.getPlayerFromUser(user).moveLeft(this.map);
-    }
-    public void right(IUser user){
-        this.getPlayerFromUser(user).moveRight(this.map);
-    }
 
     private Player getPlayerFromUser(IUser user){
         return this.playerHash.get(user.getLongID());
@@ -103,8 +81,14 @@ public class Dungeon {
         }
     }
 
+
     private static Dungeon getDungeonFromMessage(IMessage msg){
         return dungeonHash.get(msg.getLongID());
     }
 
+
+    private static boolean inputIsValid(String sReaction){
+        String reactions = "⬅ ⬆ ⬇ ➡";
+        return reactions.contains(sReaction);
+    }
 }

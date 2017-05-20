@@ -4,8 +4,8 @@ package com.github.drsmugbrain.dungeon;
  * Created by Brian on 16/05/2017.
  */
 public class Player {
-    private int pos_x;
-    private int pos_y;
+    public int pos_x;
+    public int pos_y;
 
     Player(int x, int y){
         this.pos_x = x;
@@ -42,6 +42,10 @@ public class Player {
             return true;
         }
         return false;
+    }
+
+    public String toString(){
+        return "@";
     }
 
 }
