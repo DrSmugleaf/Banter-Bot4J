@@ -1,6 +1,7 @@
 package com.github.drsmugbrain.dungeon;
 
 import com.github.drsmugbrain.dungeon.entities.Player;
+import com.github.drsmugbrain.dungeon.entities.SpawnPoint;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IReaction;
 import sx.blah.discord.handle.obj.IUser;
@@ -21,20 +22,22 @@ public class Dungeon {
     private Map<Long, Player> playerHash;  // <user LongID, Player instance>
 
 
-
     public Dungeon(IUser[] users) throws IOException, InputMismatchException{
         this.map = new DungeonMap();
         this.playerHash = new HashMap<>();
 
         for(IUser user : users){
-            this.playerHash.put(user.getLongID(), new Player(this.map.spawn_x, this.map.spawn_y));
+            SpawnPoint spawn = this.map.getRandomSpawnPoint();
+            Player player = new Player(spawn.pos_x, spawn.pos_y);
+            this.map.addEntity(player);
+            this.playerHash.put(user.getLongID(), player);
         }
     }
 
 
     public String getFinishedMap(){
         // hacer cosas como pintar jugadores y NPCs
-        return this.map.toString(this.playerHash.values());
+        return this.map.toString();
     }
 
 
@@ -48,7 +51,9 @@ public class Dungeon {
             return;
         }
         RequestBuffer.request(() -> reaction.getMessage().removeReaction(user, reaction));
-
+        if(!inputIsValid(sReaction) || player == null){
+            return;
+        }
         switch(sReaction){
             case "⬅":
                 player.moveLeft(this.map);
@@ -63,7 +68,7 @@ public class Dungeon {
                 player.moveDown(this.map);
                 break;
         }
-        message.edit(this.getFinishedMap());
+        RequestBuffer.request(() -> message.edit(this.getFinishedMap()));
     }
 
 

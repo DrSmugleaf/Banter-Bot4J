@@ -1,89 +1,86 @@
 package com.github.drsmugbrain.dungeon;
 
-import com.github.drsmugbrain.dungeon.entities.Player;
+import com.github.drsmugbrain.dungeon.entities.IEntity;
+import com.github.drsmugbrain.dungeon.entities.SpawnPoint;
+import com.github.drsmugbrain.dungeon.helpers.Location;
 
-import java.io.*;
-import java.util.Collection;
-import java.util.InputMismatchException;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Created by Brian on 16/05/2017.
  */
 public class DungeonMap {
     private Tile[][] tiles;
-    public int spawn_x;
-    public int spawn_y;
+    private Map<Long, List<IEntity>> entities;
+    private List<SpawnPoint> spawnPoints;
 
 
     public DungeonMap() throws IOException, InputMismatchException{
         this.tiles = FileParser.fileToArray("src\\main\\java\\com\\github\\drsmugbrain\\dungeon\\example.map");
+        this.entities = new HashMap<>();
+        this.spawnPoints = new ArrayList<>();
+
         int row = 0;
         boolean spawn_found = false;
+
         while (row < this.tiles.length) {
             int column = 0;
             while (column < this.tiles[row].length){
                 if(this.tiles[row][column].is_spawn()){
-                    if(spawn_found){
-                        // mal rollo
-                        this.tiles[row][column].setEmpty();
-                        continue;
-                    }
                     spawn_found = true;
-                    this.spawn_x = column;
-                    this.spawn_y = row;
+                    this.spawnPoints.add(new SpawnPoint(column, row));
                     this.tiles[row][column].setEmpty();
                 }
                 column++;
             }
             row ++;
         }
+
         if(!spawn_found){
             throw new InputMismatchException("Map has no spawn");
         }
     }
 
 
-    public DungeonMap(DungeonMap instance){
-        this.tiles = instance.tiles;
-        this.spawn_x = instance.spawn_x;
-        this.spawn_y = instance.spawn_y;
+    public void addEntity(IEntity entity){
+        long location = entity.getLocation();
+        if(this.entities.get(entity.getLocation()) != null){
+            this.entities.get(location).add(entity);
+        }else{
+            List<IEntity> list = new ArrayList<>();
+            list.add(entity);
+            this.entities.put(location, list);
+        }
     }
 
+    public SpawnPoint getRandomSpawnPoint(){
+        int rnd = new Random().nextInt(this.spawnPoints.size());
+        System.out.println(rnd);
+        return this.spawnPoints.get(rnd);
+    }
 
     public Tile getTile(int x, int y){
         return this.tiles[y][x];
     }
 
 
-    public void positionPlayers(Map<Long, Player> playerHash){
-        for(Player player : playerHash.values()){
-            this.tiles[player.pos_y][player.pos_x].setPlayer();
-        }
-    }
-
-    public String toString(Collection<Player> players){
+    public String toString(){
         StringBuilder outputBuilder = new StringBuilder();
+        // Start code block
         outputBuilder.append("```\n");
 
         for(int row = 0; row < this.tiles.length; row++){
             for(int column = 0; column < this.tiles[row].length; column++){
-                Player playerToPrint = null;
-                // We iterate over the players to check if any of them is standing on the current coords
-                for(Player player : players){
-                    if(player.pos_y == row && player.pos_x == column){
-                        playerToPrint = player;
-                        break;
-                    }
-                }
-                // if any player is at current coord, we ignore the tile and print the player
-                String output = playerToPrint == null ? this.tiles[row][column].toString() : playerToPrint.toString();
-                outputBuilder.append(output);
 
+                List<IEntity> entities = this.entities.get(Location.buildKey(column, row));
+
+                String output = entities == null ? this.tiles[row][column].toString() : entities.get(0).getCharacter();
+                outputBuilder.append(output);
             }
             outputBuilder.append("\n");
         }
-
+        // End code block
         outputBuilder.append("```");
 
         return outputBuilder.toString();

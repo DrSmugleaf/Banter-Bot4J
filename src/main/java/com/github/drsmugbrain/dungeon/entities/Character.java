@@ -1,6 +1,7 @@
 package com.github.drsmugbrain.dungeon.entities;
 
 import com.github.drsmugbrain.dungeon.DungeonMap;
+import com.github.drsmugbrain.dungeon.helpers.Location;
 
 /**
  * Created by Brian on 20/05/2017.
