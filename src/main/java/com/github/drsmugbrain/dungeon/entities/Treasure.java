@@ -34,7 +34,13 @@ public class Treasure implements IEntity {
     }
 
     @Override
-    public long getLocation() {
-        return 0;
+    public int getX() {
+        return this.pos_x;
     }
+
+    @Override
+    public int getY() {
+        return this.pos_Y;
+    }
+
 }

@@ -1,6 +1,5 @@
 package com.github.drsmugbrain.dungeon.entities;
 
-import com.github.drsmugbrain.dungeon.helpers.Location;
 
 /**
  * Created by Brian on 20/05/2017.
@@ -26,7 +25,13 @@ public class SpawnPoint implements IEntity {
     }
 
     @Override
-    public long getLocation() {
-        return Location.buildKey(this.pos_x, this.pos_y);
+    public int getX() {
+        return this.pos_x;
     }
+
+    @Override
+    public int getY() {
+        return this.pos_y;
+    }
+
 }

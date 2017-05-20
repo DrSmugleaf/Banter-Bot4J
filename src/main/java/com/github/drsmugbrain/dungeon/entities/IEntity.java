@@ -10,5 +10,7 @@ public interface IEntity {
     void receiveInteraction(IEntity other);
 
     String getCharacter();
-    long getLocation();
+
+    int getX();
+    int getY();
 }

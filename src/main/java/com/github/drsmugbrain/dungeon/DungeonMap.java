@@ -2,23 +2,26 @@ package com.github.drsmugbrain.dungeon;
 
 import com.github.drsmugbrain.dungeon.entities.IEntity;
 import com.github.drsmugbrain.dungeon.entities.SpawnPoint;
-import com.github.drsmugbrain.dungeon.helpers.Location;
+import org.apache.commons.lang3.math.IEEE754rUtils;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by Brian on 16/05/2017.
  */
 public class DungeonMap {
     private Tile[][] tiles;
-    private Map<Long, List<IEntity>> entities;
+    private List<IEntity> entities;
     private List<SpawnPoint> spawnPoints;
 
 
     public DungeonMap() throws IOException, InputMismatchException{
         this.tiles = FileParser.fileToArray("src\\main\\java\\com\\github\\drsmugbrain\\dungeon\\example.map");
-        this.entities = new HashMap<>();
+        this.entities = new ArrayList<>();
         this.spawnPoints = new ArrayList<>();
 
         int row = 0;
@@ -44,13 +47,8 @@ public class DungeonMap {
 
 
     public void addEntity(IEntity entity){
-        long location = entity.getLocation();
-        if(this.entities.get(entity.getLocation()) != null){
-            this.entities.get(location).add(entity);
-        }else{
-            List<IEntity> list = new ArrayList<>();
-            list.add(entity);
-            this.entities.put(location, list);
+        if(!this.entities.contains(entity)){
+            this.entities.add(entity);
         }
     }
 
@@ -73,9 +71,11 @@ public class DungeonMap {
         for(int row = 0; row < this.tiles.length; row++){
             for(int column = 0; column < this.tiles[row].length; column++){
 
-                List<IEntity> entities = this.entities.get(Location.buildKey(column, row));
+                int x = column;
+                int y = row;
+                List<IEntity> entities = this.entities.stream().filter(e -> e.getX() == x && e.getY() == y).collect(Collectors.toList());
 
-                String output = entities == null ? this.tiles[row][column].toString() : entities.get(0).getCharacter();
+                String output = entities.size() > 0 ? entities.get(0).getCharacter() : this.tiles[row][column].toString();
                 outputBuilder.append(output);
             }
             outputBuilder.append("\n");
