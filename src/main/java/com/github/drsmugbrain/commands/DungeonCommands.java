@@ -2,16 +2,12 @@ package com.github.drsmugbrain.commands;
 
 import com.github.drsmugbrain.BotUtils;
 import com.github.drsmugbrain.dungeon.Dungeon;
-import com.github.drsmugbrain.dungeon.DungeonMap;
-import com.vdurmont.emoji.Emoji;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.util.RateLimitException;
 import sx.blah.discord.util.RequestBuffer;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 
@@ -27,12 +23,7 @@ public class DungeonCommands {
             if(!users.contains(event.getAuthor())){
                 users.add(event.getAuthor());
             }
-
             game = new Dungeon(new IUser[]{event.getMessage().getAuthor()});
-            Dungeon.dungeonHash.put(event.getMessage(), game);
-            Dungeon.dungeonHash.forEach((iMessage, dungeon) -> {
-                System.out.println(dungeon);
-            });
         } catch (IOException e){
             e.printStackTrace();
             BotUtils.sendMessage(event.getChannel(), "arregla la ruta al mapa porfa plis");
@@ -43,6 +34,7 @@ public class DungeonCommands {
             return;
         }
         IMessage message = event.getChannel().sendMessage(game.getFinishedMap());
+        Dungeon.dungeonHash.put(message.getLongID(), game);
 
         RequestBuffer.request(() -> message.addReaction(":arrow_left:")).get();
         RequestBuffer.request(() -> message.addReaction(":arrow_up:")).get();

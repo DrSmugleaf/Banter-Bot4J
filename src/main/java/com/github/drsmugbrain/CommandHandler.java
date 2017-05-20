@@ -41,7 +41,7 @@ public class CommandHandler {
         commandMap.put("skip", Videos::skip);
 
         // Dungeons of discord
-        commandMap.put("dungeon-start", DungeonCommands::start);
+        commandMap.put("dungeon", DungeonCommands::start);
 
 //        commandMap.put("test", Videos::test);
 
