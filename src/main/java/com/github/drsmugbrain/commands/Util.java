@@ -42,7 +42,10 @@ public class Util {
             Bot.LOGGER.error("Malformed URL or error opening connection", e);
             Bot.sendMessage(event.getChannel(), "Invalid image URL");
         }
+    }
 
+    public static void name(MessageReceivedEvent event, List<String> args) {
+        event.getClient().changeUsername(String.join(" ", args));
     }
 
 }

@@ -84,6 +84,7 @@ public class CommandHandler {
         commandMap.put("blacklist", Admin::blacklist);
 
         commandMap.put("avatar", Util::avatar);
+        commandMap.put("name", Util::name);
     }
 
     @EventSubscriber
