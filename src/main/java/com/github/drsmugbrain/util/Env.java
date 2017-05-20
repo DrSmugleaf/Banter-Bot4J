@@ -1,4 +1,4 @@
-package com.github.drsmugbrain;
+package com.github.drsmugbrain.util;
 
 import com.google.api.client.util.ArrayMap;
 
@@ -10,7 +10,7 @@ import java.util.Properties;
 /**
  * Created by Brian on 14/05/2017.
  */
-public class EnvVariables {
+public class Env {
 
     public static Map<String, String> readFile() {
         Map<String, String> data = new ArrayMap<>();

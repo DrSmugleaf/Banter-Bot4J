@@ -1,5 +1,6 @@
 package com.github.drsmugbrain.models;
 
+import com.github.drsmugbrain.util.Bot;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 
@@ -28,9 +29,23 @@ public class User {
             statement.executeUpdate();
             User.connection = connection;
         } catch(SQLException e) {
-            System.err.println("Unable to create table users");
-            e.printStackTrace();
+            Bot.LOGGER.error("Unable to create users database table", e);
             System.exit(1);
+        }
+    }
+
+    public void createIfNotExists() {
+        PreparedStatement statement;
+        try {
+            statement = connection.prepareStatement(
+                    "INSERT INTO users (id) " +
+                    "VALUES(?) " +
+                    "ON CONFLICT DO NOTHING"
+            );
+            statement.setLong(1, this.id);
+            statement.executeUpdate();
+        } catch(SQLException e) {
+            Bot.LOGGER.error("Error creating user with id " + this.id, e);
         }
     }
 
@@ -41,8 +56,7 @@ public class User {
             statement.setLong(1, this.id);
             statement.executeUpdate();
         } catch(SQLException e) {
-            System.err.println("Error saving user with id " + this.id);
-            e.printStackTrace();
+            Bot.LOGGER.error("Error saving user with id" + this.id, e);
         }
     }
 
@@ -51,7 +65,7 @@ public class User {
         event.getClient().getUsers().forEach(user -> {
             Long userID = user.getLongID();
             User userModel = new User(userID);
-            userModel.save();
+            userModel.createIfNotExists();
         });
     }
 

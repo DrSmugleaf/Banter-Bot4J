@@ -5,6 +5,7 @@ import com.github.drsmugbrain.commands.Basic;
 import com.github.drsmugbrain.commands.Util;
 import com.github.drsmugbrain.commands.Videos;
 import com.github.drsmugbrain.models.Member;
+import com.github.drsmugbrain.util.Bot;
 import com.google.api.services.youtube.YouTube;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -31,11 +32,9 @@ public class CommandHandler {
     // Statically populate the commandMap with the intended functionality
     // Might be better practise to do this from an instantiated objects constructor
     static {
-
         AudioSourceManagers.registerRemoteSources(playerManager);
         AudioSourceManagers.registerLocalSource(playerManager);
 
-        // If the IUser that called this is in a voice channel, join them
         commandMap.put("join", Basic::join);
         commandMap.put("leave", Basic::leave);
         commandMap.put("roll", Basic::roll);
@@ -43,13 +42,11 @@ public class CommandHandler {
         commandMap.put("8", Basic::magic8ball);
         commandMap.put("playing", Basic::playing);
 
-        commandMap.put("play", Videos::play);
-        commandMap.put("skip", Videos::skip);
-
-//        commandMap.put("test", Videos::test);
-
         // Plays the first song found containing the first arg
+        commandMap.put("play", Videos::play);
+
         // Skips the current song
+        commandMap.put("skip", Videos::skip);
 
         commandMap.put("exampleembed", (event, args) -> {
 
@@ -87,14 +84,10 @@ public class CommandHandler {
         commandMap.put("blacklist", Admin::blacklist);
 
         commandMap.put("avatar", Util::avatar);
-
     }
 
-
-
     @EventSubscriber
-    public void onMessageReceived(MessageReceivedEvent event) {
-
+    public void handle(MessageReceivedEvent event) {
         // Note for error handling, you'll probably want to log failed commands with a logger or sout
         // In most cases it's not advised to annoy the user with a reply incase they didn't intend to trigger a
         // command anyway, such as a user typing ?notacommand, the bot should not say "notacommand" doesn't exist in
@@ -108,7 +101,7 @@ public class CommandHandler {
             return;
 
         // Check if the first arg (the command) starts with the prefix defined in the utils class
-        if(!argArray[0].startsWith(BotUtils.BOT_PREFIX))
+        if(!argArray[0].startsWith(Bot.BOT_PREFIX))
             return;
 
         // Filter out blacklisted users
@@ -118,17 +111,15 @@ public class CommandHandler {
         if(member != null && member.isBlacklisted) return;
 
         // Extract the "command" part of the first arg out by just ditching the first character
-        String commandStr = argArray[0].substring(BotUtils.BOT_PREFIX.length());
+        String commandStr = argArray[0].substring(Bot.BOT_PREFIX.length());
 
         // Load the rest of the args in the array into a List for safer access
         List<String> argsList = new ArrayList<>(Arrays.asList(argArray));
         argsList.remove(0); // Remove the command
 
         // Instead of delegating the work to a switch, automatically do it via calling the mapping if it exists
-
         if(commandMap.containsKey(commandStr))
             commandMap.get(commandStr).runCommand(event, argsList);
-
     }
 
 }

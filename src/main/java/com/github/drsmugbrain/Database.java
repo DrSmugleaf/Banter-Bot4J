@@ -1,5 +1,9 @@
 package com.github.drsmugbrain;
 
+import com.github.drsmugbrain.util.Bot;
+import com.github.drsmugbrain.util.Env;
+import org.jetbrains.annotations.Nullable;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -13,7 +17,7 @@ import java.util.regex.Pattern;
  */
 public class Database {
 
-    private static final String URI = EnvVariables.readFile().get("DATABASE_URI");
+    private static final String URI = Env.readFile().get("DATABASE_URI");
     private static final Map<String, String> CREDENTIALS = getCredentials(URI);
     private static final String URL = CREDENTIALS.get("url");
     private static final String USERNAME = CREDENTIALS.get("username");
@@ -24,28 +28,27 @@ public class Database {
     private static Connection getConnection() throws SQLException {
         try {
             Class.forName(DRIVER);
-        } catch(ClassNotFoundException ex) {
-            System.out.println("Missing PostgreSQL JDBC Driver");
+        } catch(ClassNotFoundException e) {
+            Bot.LOGGER.error("Missing PostgreSQL JDBC Driver", e);
             System.exit(1);
         }
-        Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-        return conn;
+        return DriverManager.getConnection(URL, USERNAME, PASSWORD);
     }
 
+    @Nullable
     public static Connection init() {
         Connection connection = null;
         try {
             connection = getConnection();
         } catch(SQLException e) {
-            System.out.println("Database connection failed");
-            e.printStackTrace();
+            Bot.LOGGER.error("Database connection failed", e);
         }
 
         if(connection != null) {
-            System.out.println("Established database connection");
+            Bot.LOGGER.info("Established database connection");
             return connection;
         } else {
-            System.out.println("Failed to establish database connection");
+            Bot.LOGGER.error("Failed to establish database connection");
         }
 
         return null;
