@@ -27,6 +27,9 @@ public class Basic {
             "Outlook not so good", "Very doubtful"
     };
 
+    private static final String INFO = "GitHub link: https://github.com/cajon-de-brian/BlueBot/\n" +
+            "Made in Java using Discord4J";
+
     public static void echo(MessageReceivedEvent event, List<String> args){
         String echo = String.join(" ", args);
         try {
@@ -93,6 +96,10 @@ public class Basic {
 
             RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
         });
+    }
+
+    public static void info(MessageReceivedEvent event, List<String> args) {
+        Bot.sendMessage(event.getChannel(), Basic.INFO);
     }
 
 }
