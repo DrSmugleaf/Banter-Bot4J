@@ -35,8 +35,7 @@ public class Bot {
     public static void sendMessage(IChannel channel, String message){
         RequestBuffer.request(() -> {
             try {
-                throw new DiscordException("test");
-//                channel.sendMessage(message);
+                channel.sendMessage(message);
             } catch (DiscordException e) {
                 Bot.LOGGER.error("Message could not be sent", e);
             }
