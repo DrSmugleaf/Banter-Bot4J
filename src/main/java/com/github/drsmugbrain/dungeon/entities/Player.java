@@ -33,10 +33,7 @@ public class Player implements Character {
             return;
         }
         List<IEntity> entities = map.getEntitiesFromCoords(this.pos_x-1, this.pos_y);
-        if(entities.size() > 0){
-            System.out.println("hay entidades");
-            entities.forEach(entity -> entity.receiveInteraction(this));
-        }
+        this.interactWith(entities);
     }
 
 
@@ -45,10 +42,7 @@ public class Player implements Character {
             return;
         }
         List<IEntity> entities = map.getEntitiesFromCoords(this.pos_x+1, this.pos_y);
-        if(entities.size() > 0){
-            System.out.println("hay entidades");
-            entities.forEach(entity -> entity.receiveInteraction(this));
-        }
+        this.interactWith(entities);
     }
 
 
@@ -57,10 +51,7 @@ public class Player implements Character {
             return;
         }
         List<IEntity> entities = map.getEntitiesFromCoords(this.pos_x, this.pos_y-1);
-        if(entities.size() > 0){
-            System.out.println("hay entidades");
-            entities.forEach(entity -> entity.receiveInteraction(this));
-        }
+        this.interactWith(entities);
     }
 
 
@@ -69,10 +60,7 @@ public class Player implements Character {
             return;
         }
         List<IEntity> entities = map.getEntitiesFromCoords(this.pos_x, this.pos_y+1);
-        if(entities.size() > 0){
-            System.out.println("hay entidades");
-            entities.forEach(entity -> entity.receiveInteraction(this));
-        }
+        this.interactWith(entities);
     }
 
 
@@ -133,7 +121,11 @@ public class Player implements Character {
 
 
     @Override
-    public void interactWith(IEntity other) {}
+    public void interactWith(List<IEntity> others) {
+        if(others.size() > 0){
+            others.forEach(entity -> entity.receiveInteraction(this));
+        }
+    }
 
     @Override
     public void receiveInteraction(IEntity other) {}

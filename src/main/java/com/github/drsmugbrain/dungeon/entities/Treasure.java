@@ -2,6 +2,7 @@ package com.github.drsmugbrain.dungeon.entities;
 
 import com.github.drsmugbrain.dungeon.DungeonMap;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -25,7 +26,7 @@ public class Treasure implements IEntity {
     }
 
     @Override
-    public void interactWith(IEntity other) {}
+    public void interactWith(List<IEntity> others) {}
 
     @Override
     public void receiveInteraction(IEntity other) {

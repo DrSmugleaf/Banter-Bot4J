@@ -1,6 +1,8 @@
 package com.github.drsmugbrain.dungeon.entities;
 
 
+import java.util.List;
+
 /**
  * Created by Brian on 20/05/2017.
  */
@@ -14,7 +16,7 @@ public class SpawnPoint implements IEntity {
     }
 
     @Override
-    public void interactWith(IEntity other) {}
+    public void interactWith(List<IEntity> other) {}
 
     @Override
     public void receiveInteraction(IEntity other) {}
