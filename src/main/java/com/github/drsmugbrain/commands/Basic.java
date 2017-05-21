@@ -30,6 +30,7 @@ public class Basic {
     private static final String INFO = "GitHub link: https://github.com/cajon-de-brian/BlueBot/\n" +
             "Made in Java using Discord4J";
 
+    @Command
     public static void echo(MessageReceivedEvent event, List<String> args){
         String echo = String.join(" ", args);
         try {
@@ -38,11 +39,13 @@ public class Basic {
         Bot.sendMessage(event.getChannel(), echo);
     }
 
+    @Command
     public static void roll(MessageReceivedEvent event, List<String> args){
         int randomNumber = new Random().nextInt(100) + 1;
         Bot.sendMessage(event.getChannel(), String.valueOf(randomNumber));
     }
 
+    @Command
     public static void join(MessageReceivedEvent event, List<String> args){
         IVoiceChannel userVoiceChannel = event.getAuthor().getVoiceStateForGuild(event.getGuild()).getChannel();
         if(userVoiceChannel == null)
@@ -50,6 +53,7 @@ public class Basic {
         userVoiceChannel.join();
     }
 
+    @Command
     public static void leave(MessageReceivedEvent event, List<String> args){
         IVoiceChannel botVoiceChannel = event.getClient().getOurUser().getVoiceStateForGuild(event.getGuild()).getChannel();
         if(botVoiceChannel == null)
@@ -59,11 +63,13 @@ public class Basic {
         botVoiceChannel.leave();
     }
 
+    @Command
     public static void magic8ball(MessageReceivedEvent event, List<String> args) {
         int randomID = new Random().nextInt(Basic.MAGIC_8_BALL_RESPONSES.length);
         Bot.sendMessage(event.getChannel(), Basic.MAGIC_8_BALL_RESPONSES[randomID]);
     }
 
+    @Command
     public static void whois(MessageReceivedEvent event, List<String> args) {
         IUser author = event.getAuthor();
 
@@ -98,6 +104,7 @@ public class Basic {
         });
     }
 
+    @Command
     public static void info(MessageReceivedEvent event, List<String> args) {
         Bot.sendMessage(event.getChannel(), Basic.INFO);
     }

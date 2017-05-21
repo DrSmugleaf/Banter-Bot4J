@@ -16,6 +16,7 @@ import java.util.List;
  */
 public class Admin {
 
+    @Command
     public static void blacklist(MessageReceivedEvent event, List<String> args) {
         IUser author = event.getAuthor();
         EnumSet<Permissions> permissions = author.getPermissionsForGuild(event.getGuild());

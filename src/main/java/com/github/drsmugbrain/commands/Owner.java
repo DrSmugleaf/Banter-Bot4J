@@ -18,6 +18,7 @@ import java.util.List;
  */
 public class Owner {
 
+    @Command
     public static void avatar(MessageReceivedEvent event, List<String> args) {
         if(!Bot.isOwner(event.getAuthor().getLongID())) {
             Bot.sendMessage(event.getChannel(), "You don't have permission to change the bot's image");
@@ -49,6 +50,7 @@ public class Owner {
         }
     }
 
+    @Command
     public static void name(MessageReceivedEvent event, List<String> args) {
         if(!Bot.isOwner(event.getAuthor().getLongID())) {
             Bot.sendMessage(event.getChannel(), "You don't have permission to change the bot's name");
@@ -60,6 +62,7 @@ public class Owner {
         Bot.sendMessage(event.getChannel(), "Changed the bot's name to " + name);
     }
 
+    @Command
     public static void playing(MessageReceivedEvent event, List<String> args) {
         if(!Bot.isOwner(event.getAuthor().getLongID())) {
             Bot.sendMessage(event.getChannel(), "You don't have permission to change the bot's playing status");

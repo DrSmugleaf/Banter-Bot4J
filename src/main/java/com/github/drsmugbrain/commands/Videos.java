@@ -27,6 +27,7 @@ public class Videos {
     private static final Map<Long, GuildMusicManager> musicManagers  = new HashMap<>();
 
     // Commands:
+    @Command
     public static void play(MessageReceivedEvent event, List<String> args){
         IVoiceChannel botVoiceChannel = event.getClient().getOurUser().getVoiceStateForGuild(event.getGuild()).getChannel();
 
@@ -48,6 +49,7 @@ public class Videos {
         }
     }
 
+    @Command
     public static void skip(MessageReceivedEvent event, List<String> args){
         boolean exit = false;
         try{

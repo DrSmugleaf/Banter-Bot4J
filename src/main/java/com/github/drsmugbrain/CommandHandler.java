@@ -1,7 +1,7 @@
 package com.github.drsmugbrain;
 
-import com.github.drsmugbrain.commands.*;
 import com.github.drsmugbrain.models.Member;
+import com.github.drsmugbrain.util.Annotations;
 import com.github.drsmugbrain.util.Bot;
 import com.google.api.services.youtube.YouTube;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
@@ -12,6 +12,8 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 
 /**
@@ -32,19 +34,19 @@ public class CommandHandler {
         AudioSourceManagers.registerRemoteSources(playerManager);
         AudioSourceManagers.registerLocalSource(playerManager);
 
-        commandMap.put("join", Basic::join);
-        commandMap.put("leave", Basic::leave);
-        commandMap.put("roll", Basic::roll);
-        commandMap.put("echo", Basic::echo);
-        commandMap.put("8", Basic::magic8ball);
-        commandMap.put("whois", Basic::whois);
-        commandMap.put("info", Basic::info);
-
-        // Plays the first song found containing the first arg
-        commandMap.put("play", Videos::play);
-
-        // Skips the current song
-        commandMap.put("skip", Videos::skip);
+        List<Method> commands = Annotations.findMethodsWithAnnotations(com.github.drsmugbrain.commands.Command.class);
+        if(commands != null) {
+            commands.forEach((method -> {
+                Command command = (event, args) -> {
+                    try {
+                        method.invoke(method.getClass(), event, args);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        Bot.LOGGER.error("Error running command", e);
+                    }
+                };
+                commandMap.put(method.getName(), command);
+            }));
+        }
 
         commandMap.put("exampleembed", (event, args) -> {
 
@@ -78,12 +80,6 @@ public class CommandHandler {
             RequestBuffer.request(() -> event.getChannel().sendMessage(builder.build()));
 
         });
-
-        commandMap.put("blacklist", Admin::blacklist);
-
-        commandMap.put("avatar", Owner::avatar);
-        commandMap.put("name", Owner::name);
-        commandMap.put("playing", Owner::playing);
     }
 
     @EventSubscriber
