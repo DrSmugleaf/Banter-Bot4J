@@ -1,9 +1,8 @@
 package com.github.drsmugbrain.lavaplayer;
 
-import com.github.drsmugbrain.EnvVariables;
+import com.github.drsmugbrain.util.Bot;
+import com.github.drsmugbrain.util.Env;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
@@ -19,19 +18,17 @@ public class YoutubeSearch {
 
     private static final long NUMBER_OF_VIDEOS_RETURNED = 1;
 
-    private static YouTube youtube;
-
     public static String search(String query) {
         try {
-            youtube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
-                @Override
-                public void initialize(HttpRequest httpRequest) throws IOException {
-                }
-            }).setApplicationName("youtube-cmdline-search").build();
+            YouTube youtube = new YouTube.Builder(
+                    new NetHttpTransport(),
+                    new JacksonFactory(),
+                    httpRequest -> {}
+            ).setApplicationName("youtube-cmdline-search").build();
 
             YouTube.Search.List search = youtube.search().list("snippet");
 
-            String apiKey = EnvVariables.readFile().get("GOOGLE_KEY");
+            String apiKey = Env.readFile().get("GOOGLE_KEY");
             search.setKey(apiKey);
             search.setQ(query);
 
@@ -42,16 +39,14 @@ public class YoutubeSearch {
             SearchListResponse searchResponse = search.execute();
             List<SearchResult> searchResultList = searchResponse.getItems();
             if(searchResultList != null) {
-                String url = "https://www.youtube.com/watch?v=" + searchResultList.get(0).getId().getVideoId();
-                return url;
-//                prettyPrint(searchResultList.iterator(), query);
+                return "https://www.youtube.com/watch?v=" + searchResultList.get(0).getId().getVideoId();
             }
         } catch (GoogleJsonResponseException e) {
-            System.err.println("There was a service error: " + e.getDetails().getCode() + " : " + e.getDetails().getMessage());
+            Bot.LOGGER.error("Service error", e);
         } catch (IOException e) {
-            System.err.println("There was an IO error: " + e.getCause() + " : " + e.getMessage());
+            Bot.LOGGER.error("IO Error", e);
         } catch (Throwable t) {
-            t.printStackTrace();
+            Bot.LOGGER.error("Generic error", t);
         }
 
         return null;

@@ -1,23 +1,20 @@
 package com.github.drsmugbrain.commands;
 
-import com.github.drsmugbrain.BotUtils;
+import com.github.drsmugbrain.util.Bot;
 import com.github.drsmugbrain.CommandHandler;
 import com.github.drsmugbrain.VideoManager;
 import com.github.drsmugbrain.lavaplayer.GuildMusicManager;
 import com.github.drsmugbrain.lavaplayer.YoutubeSearch;
-import com.google.api.services.youtube.model.Video;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import org.apache.commons.lang3.ObjectUtils;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +57,7 @@ public class Videos {
         }
 
         if(exit){
-            BotUtils.sendMessage(event.getChannel(), "No hay canciones en cola");
+            Bot.sendMessage(event.getChannel(), "No hay canciones en cola");
             return;
         }
 
@@ -82,7 +79,7 @@ public class Videos {
             skipTrack(event.getChannel());
             VideoManager.votes.clear();
         }else{
-            BotUtils.sendMessage(event.getChannel(), "Votos: "+votes+"/"+requiredVotes);
+            Bot.sendMessage(event.getChannel(), "Votos: "+votes+"/"+requiredVotes);
         }
 
     }
@@ -110,7 +107,7 @@ public class Videos {
         CommandHandler.playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-                BotUtils.sendMessage(channel, "Adding to queue " + track.getInfo().title);
+                Bot.sendMessage(channel, "Adding to queue " + track.getInfo().title);
 
                 play(musicManager, track);
             }
@@ -123,19 +120,19 @@ public class Videos {
                     firstTrack = playlist.getTracks().get(0);
                 }
 
-                BotUtils.sendMessage(channel, "Adding to queue " + firstTrack.getInfo().title + " (first track of playlist " + playlist.getName() + ")");
+                Bot.sendMessage(channel, "Adding to queue " + firstTrack.getInfo().title + " (first track of playlist " + playlist.getName() + ")");
 
                 play(musicManager, firstTrack);
             }
 
             @Override
             public void noMatches() {
-                BotUtils.sendMessage(channel, "Nothing found by " + trackUrl);
+                Bot.sendMessage(channel, "Nothing found by " + trackUrl);
             }
 
             @Override
             public void loadFailed(FriendlyException exception) {
-                BotUtils.sendMessage(channel, "Could not play: " + exception.getMessage());
+                Bot.sendMessage(channel, "Could not play: " + exception.getMessage());
             }
         });
     }
@@ -149,7 +146,7 @@ public class Videos {
         GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
         musicManager.scheduler.nextTrack();
 
-        BotUtils.sendMessage(channel, "Skipped to next track.");
+        Bot.sendMessage(channel, "Skipped to next track.");
     }
 
 }
