@@ -40,7 +40,9 @@ public class CommandHandler {
                 Command command = (event, args) -> {
                     try {
                         method.invoke(method.getClass(), event, args);
-                    } catch (IllegalAccessException | InvocationTargetException e) {
+                    } catch (InvocationTargetException e) {
+                        Bot.LOGGER.error("Error running command", e.getCause());
+                    } catch (IllegalAccessException e) {
                         Bot.LOGGER.error("Error running command", e);
                     }
                 };
