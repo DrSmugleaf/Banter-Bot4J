@@ -3,16 +3,17 @@ package com.github.drsmugbrain.commands;
 import com.github.drsmugbrain.util.Bot;
 import org.apache.commons.lang3.StringUtils;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IRole;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.handle.obj.IVoiceChannel;
+import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RequestBuffer;
+import sx.blah.discord.util.RoleBuilder;
 import sx.blah.discord.util.audio.AudioPlayer;
 
+import java.awt.Color;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * Created by Brian on 13/05/2017.
@@ -107,6 +108,89 @@ public class Basic {
     @Command
     public static void info(MessageReceivedEvent event, List<String> args) {
         Bot.sendMessage(event.getChannel(), Basic.INFO);
+    }
+
+    @Command
+    public static void color(MessageReceivedEvent event, List<String> args) {
+        String requestedColor = 0 < args.size() ? args.get(0) : null;
+        IUser author = event.getAuthor();
+        IChannel channel = event.getChannel();
+        IGuild guild = event.getGuild();
+        List<IRole> authorColoredRoles = author.getRolesForGuild(guild);
+        authorColoredRoles.removeIf(role -> role.getColor().equals(Color.black));
+        IRole highestAuthorColoredRole = Bot.getHighestRole(authorColoredRoles);
+        List<IUser> usersWithColoredRole = guild.getUsersByRole(highestAuthorColoredRole);
+        IRole highestSelfRole = Bot.getHighestRole(event.getClient().getOurUser(), guild);
+
+        if(requestedColor == null) {
+            if(highestAuthorColoredRole == null) {
+                Bot.sendMessage(channel, "I can't remove your name color because you don't have one.");
+                return;
+            }
+
+            if(!highestAuthorColoredRole.getName().startsWith("color-")) {
+                Bot.sendMessage(channel, "Your name color was assigned by someone else.");
+                return;
+            }
+
+            author.removeRole(highestAuthorColoredRole);
+            usersWithColoredRole.remove(author);
+            if(usersWithColoredRole.isEmpty()) {
+                highestAuthorColoredRole.delete();
+            }
+            Bot.sendMessage(channel, "Removed your name color.");
+        } else {
+            if(highestAuthorColoredRole != null && highestSelfRole != null && highestAuthorColoredRole.getPosition() > highestSelfRole.getPosition()) {
+                Bot.sendMessage(channel, "I can't change your name color.\n" +
+                        "My highest role has a lower position in the role manager than your highest role.");
+                return;
+            }
+
+            Color color;
+            try {
+                color = Color.decode(requestedColor);
+            } catch (NumberFormatException nfe) {
+                Bot.LOGGER.error("Error decoding color " + requestedColor, nfe);
+                try {
+                    color = (Color) Color.class.getField(requestedColor.trim().toUpperCase().replace(" ", "_")).get(null);
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                    Bot.LOGGER.error("Error getting color field " + requestedColor, e);
+                    Bot.sendMessage(channel, "Invalid color. Make sure it is a hexadecimal string (#0000FF) or a simple color like red.");
+                    return;
+                }
+            }
+
+            if(highestAuthorColoredRole != null && highestAuthorColoredRole.getColor().equals(color)) {
+                Bot.sendMessage(channel, "You already have that name color.");
+                return;
+            }
+
+            String hexCode = String.format("#%06x", color.getRGB() & 0x00FFFFFF);
+            List<IRole> guildRoles = guild.getRoles().stream()
+                    .filter(role -> role.getName().startsWith("color-" + hexCode))
+                    .collect(Collectors.toList());
+
+            if(guildRoles.isEmpty()) {
+                IRole newColorRole = new RoleBuilder(guild)
+                        .withName("color-" + hexCode)
+                        .withColor(color)
+                        .build();
+
+                author.addRole(newColorRole);
+            } else {
+                author.addRole(guildRoles.get(0));
+            }
+
+            if(highestAuthorColoredRole != null) {
+                author.removeRole(highestAuthorColoredRole);
+                usersWithColoredRole.remove(author);
+                if(usersWithColoredRole.isEmpty()) {
+                    highestAuthorColoredRole.delete();
+                }
+            }
+
+            Bot.sendMessage(channel, "Added name color " + hexCode);
+        }
     }
 
 }

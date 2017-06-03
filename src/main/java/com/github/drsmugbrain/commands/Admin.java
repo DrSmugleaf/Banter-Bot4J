@@ -7,7 +7,6 @@ import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
 
-import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -25,9 +24,7 @@ public class Admin {
             Long guildID = event.getGuild().getLongID();
             List<IUser> mentions = event.getMessage().getMentions();
 
-            List<IRole> authorRoles = author.getRolesForGuild(event.getGuild());
-            authorRoles.sort(Comparator.comparingInt(IRole::getPosition));
-            IRole highestAuthorRole = authorRoles.get(authorRoles.size() - 1);
+            IRole highestAuthorRole = Bot.getHighestRole(event.getAuthor(), event.getGuild());
 
             mentions.forEach(mention -> {
                 Member member = Member.get(mention.getLongID(), guildID);
@@ -48,11 +45,9 @@ public class Admin {
                     return;
                 }
 
-                List<IRole> mentionRoles = mention.getRolesForGuild(event.getGuild());
-                mentionRoles.sort(Comparator.comparingInt(IRole::getPosition));
-                IRole highestMentionRole = mentionRoles.get(mentionRoles.size() - 1);
+                IRole highestMentionRole = Bot.getHighestRole(mention, event.getGuild());
 
-                if(highestAuthorRole.getPosition() < highestMentionRole.getPosition()) {
+                if(highestAuthorRole != null && highestMentionRole != null && highestAuthorRole.getPosition() < highestMentionRole.getPosition()) {
                     Bot.sendMessage(event.getChannel(), "You can't blacklist " + nickname + ".\n" +
                             "Your highest role has a lower position in the role manager than their highest role.");
                     return;
