@@ -117,16 +117,19 @@ public enum Type {
         this.NAME = name;
     }
 
+    @Nonnull
     private Type setWeakTo(@Nonnull Type... weakTo) {
         this.WEAK_TO.addAll(Arrays.asList(weakTo));
         return this;
     }
 
+    @Nonnull
     private Type setResistantTo(@Nonnull Type... resistantTo) {
         this.RESISTANT_TO.addAll(Arrays.asList(resistantTo));
         return this;
     }
 
+    @Nonnull
     private Type setImmuneTo(@Nonnull Type... immuneTo) {
         this.IMMUNE_TO.addAll(Arrays.asList(immuneTo));
         return this;
