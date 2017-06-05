@@ -31,81 +31,81 @@ public enum Type {
 
     static {
         NORMAL
-                .setWeakTo(Type.FIGHTING)
-                .setImmuneTo(Type.GHOST);
+                .setWeakTo(FIGHTING)
+                .setImmuneTo(GHOST);
 
         FIRE
-                .setWeakTo(Type.WATER, Type.GROUND, Type.ROCK)
-                .setImmuneTo(Type.FIRE, Type.GRASS, Type.ICE, Type.BUG, Type.STEEL, Type.FAIRY);
+                .setWeakTo(WATER, GROUND, ROCK)
+                .setImmuneTo(FIRE, GRASS, ICE, BUG, STEEL, FAIRY);
 
         WATER
-                .setWeakTo(Type.ELECTRIC, Type.GRASS)
-                .setResistantTo(Type.FIRE, Type.WATER, Type.ICE, Type.STEEL);
+                .setWeakTo(ELECTRIC, GRASS)
+                .setResistantTo(FIRE, WATER, ICE, STEEL);
 
         ELECTRIC
-                .setWeakTo(Type.GROUND)
-                .setResistantTo(Type.ELECTRIC, Type.FLYING, Type.STEEL);
+                .setWeakTo(GROUND)
+                .setResistantTo(ELECTRIC, FLYING, STEEL);
 
         GRASS
-                .setWeakTo(Type.FIRE, Type.ICE, Type.POISON, Type.FLYING, Type.BUG)
-                .setResistantTo(Type.WATER, Type.ELECTRIC, Type.GRASS, Type.GROUND);
+                .setWeakTo(FIRE, ICE, POISON, FLYING, BUG)
+                .setResistantTo(WATER, ELECTRIC, GRASS, GROUND);
 
         ICE
-                .setWeakTo(Type.FIRE, Type.FIGHTING, Type.ROCK, Type.STEEL)
-                .setResistantTo(Type.ICE);
+                .setWeakTo(FIRE, FIGHTING, ROCK, STEEL)
+                .setResistantTo(ICE);
 
         FIGHTING
-                .setWeakTo(Type.FLYING, Type.PSYCHIC, Type.FAIRY)
-                .setResistantTo(Type.BUG, Type.ROCK, Type.DARK);
+                .setWeakTo(FLYING, PSYCHIC, FAIRY)
+                .setResistantTo(BUG, ROCK, DARK);
 
         POISON
-                .setWeakTo(Type.GROUND, Type.PSYCHIC)
-                .setResistantTo(Type.GRASS, Type.FIGHTING, Type.PSYCHIC, Type.BUG, Type.FAIRY);
+                .setWeakTo(GROUND, PSYCHIC)
+                .setResistantTo(GRASS, FIGHTING, PSYCHIC, BUG, FAIRY);
 
         GROUND
-                .setWeakTo(Type.WATER, Type.GRASS, Type.ICE)
-                .setResistantTo(Type.POISON, Type.ROCK)
-                .setImmuneTo(Type.ELECTRIC);
+                .setWeakTo(WATER, GRASS, ICE)
+                .setResistantTo(POISON, ROCK)
+                .setImmuneTo(ELECTRIC);
 
         FLYING
-                .setWeakTo(Type.ELECTRIC, Type.ICE, Type.ROCK)
-                .setResistantTo(Type.GRASS, Type.FIGHTING, Type.BUG)
-                .setImmuneTo(Type.GROUND);
+                .setWeakTo(ELECTRIC, ICE, ROCK)
+                .setResistantTo(GRASS, FIGHTING, BUG)
+                .setImmuneTo(GROUND);
 
         PSYCHIC
-                .setWeakTo(Type.BUG, Type.GHOST, Type.DARK)
-                .setResistantTo(Type.FIGHTING, Type.PSYCHIC);
+                .setWeakTo(BUG, GHOST, DARK)
+                .setResistantTo(FIGHTING, PSYCHIC);
 
         BUG
-                .setWeakTo(Type.FIRE, Type.FLYING, Type.ROCK)
+                .setWeakTo(FIRE, FLYING, ROCK)
                 .setResistantTo();
 
         ROCK
-                .setWeakTo(Type.WATER, Type.GRASS, Type.FIGHTING, Type.GROUND)
-                .setResistantTo(Type.NORMAL, Type.FIRE, Type.POISON, Type.FLYING);
+                .setWeakTo(WATER, GRASS, FIGHTING, GROUND)
+                .setResistantTo(NORMAL, FIRE, POISON, FLYING);
 
         GHOST
-                .setWeakTo(Type.GHOST, Type.DARK)
-                .setResistantTo(Type.POISON, Type.BUG)
-                .setImmuneTo(Type.NORMAL, Type.FIGHTING);
+                .setWeakTo(GHOST, DARK)
+                .setResistantTo(POISON, BUG)
+                .setImmuneTo(NORMAL, FIGHTING);
 
         DRAGON
-                .setWeakTo(Type.ICE, Type.DRAGON, Type.FAIRY)
-                .setResistantTo(Type.FIRE, Type.WATER, Type.ELECTRIC, Type.GRASS);
+                .setWeakTo(ICE, DRAGON, FAIRY)
+                .setResistantTo(FIRE, WATER, ELECTRIC, GRASS);
 
         DARK
-                .setWeakTo(Type.FIGHTING, Type.BUG, Type.FAIRY)
-                .setResistantTo(Type.GHOST, Type.DARK)
-                .setImmuneTo(Type.PSYCHIC);
+                .setWeakTo(FIGHTING, BUG, FAIRY)
+                .setResistantTo(GHOST, DARK)
+                .setImmuneTo(PSYCHIC);
 
         STEEL
-                .setWeakTo(Type.FIRE, Type.FIGHTING, Type.GROUND)
-                .setResistantTo(Type.NORMAL, Type.GRASS, Type.ICE, Type.FLYING, Type.PSYCHIC, Type.BUG, Type.ROCK, Type.DRAGON, Type.STEEL, Type.FAIRY);
+                .setWeakTo(FIRE, FIGHTING, GROUND)
+                .setResistantTo(NORMAL, GRASS, ICE, FLYING, PSYCHIC, BUG, ROCK, DRAGON, STEEL, FAIRY);
 
         FAIRY
-                .setWeakTo(Type.POISON, Type.STEEL)
-                .setResistantTo(Type.FIGHTING, Type.BUG, Type.STEEL)
-                .setImmuneTo(Type.DRAGON);
+                .setWeakTo(POISON, STEEL)
+                .setResistantTo(FIGHTING, BUG, STEEL)
+                .setImmuneTo(DRAGON);
     }
 
     private String NAME;
