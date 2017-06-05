@@ -81,7 +81,7 @@ public enum Type {
                 .setResistantTo(GRASS, FIGHTING, GROUND);
 
         ROCK
-                .setWeakTo(WATER, GRASS, FIGHTING, GROUND)
+                .setWeakTo(WATER, GRASS, FIGHTING, GROUND, STEEL)
                 .setResistantTo(NORMAL, FIRE, POISON, FLYING);
 
         GHOST
