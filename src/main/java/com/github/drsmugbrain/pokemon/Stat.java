@@ -5,26 +5,26 @@ import javax.annotation.Nonnull;
 /**
  * Created by DrSmugleaf on 04/06/2017.
  */
-public class Stat {
+public enum Stat {
 
-    private String name;
+    HP("Health"),
+    ATTACK("Attack"),
+    DEFENSE("Defense"),
+    SPEED("Speed"),
+    SPECIAL_ATTACK("Special Attack"),
+    SPECIAL_DEFENSE("Special Defense"),
+    ACCURACY("Accuracy"),
+    EVASION("Evasion");
 
-    public static final Stat HP = new Stat("Health");
-    public static final Stat ATTACK = new Stat("Attack");
-    public static final Stat DEFENSE = new Stat("Defense");
-    public static final Stat SPEED = new Stat("Speed");
-    public static final Stat SPECIAL_ATTACK = new Stat("Special Attack");
-    public static final Stat SPECIAL_DEFENSE = new Stat("Special Defense");
-    public static final Stat ACCURACY = new Stat("Accuracy");
-    public static final Stat EVASION = new Stat("Evasion");
+    private final String NAME;
 
-    private Stat(@Nonnull String name) {
-        this.name = name;
+    Stat(@Nonnull String name) {
+        this.NAME = name;
     }
 
     @Nonnull
     public String getName() {
-        return this.name;
+        return this.NAME;
     }
 
 }
