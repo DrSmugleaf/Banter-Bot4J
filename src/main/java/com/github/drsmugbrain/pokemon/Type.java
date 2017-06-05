@@ -60,7 +60,7 @@ public enum Type {
 
         POISON
                 .setWeakTo(GROUND, PSYCHIC)
-                .setResistantTo(GRASS, FIGHTING, PSYCHIC, BUG, FAIRY);
+                .setResistantTo(GRASS, FIGHTING, POISON, BUG, FAIRY);
 
         GROUND
                 .setWeakTo(WATER, GRASS, ICE)
