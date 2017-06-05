@@ -100,7 +100,8 @@ public enum Type {
 
         STEEL
                 .setWeakTo(FIRE, FIGHTING, GROUND)
-                .setResistantTo(NORMAL, GRASS, ICE, FLYING, PSYCHIC, BUG, ROCK, DRAGON, STEEL, FAIRY);
+                .setResistantTo(NORMAL, GRASS, ICE, FLYING, PSYCHIC, BUG, ROCK, DRAGON, STEEL, FAIRY)
+                .setImmuneTo(POISON);
 
         FAIRY
                 .setWeakTo(POISON, STEEL)
