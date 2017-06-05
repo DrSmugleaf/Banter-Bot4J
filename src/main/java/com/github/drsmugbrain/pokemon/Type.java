@@ -36,7 +36,7 @@ public enum Type {
 
         FIRE
                 .setWeakTo(WATER, GROUND, ROCK)
-                .setImmuneTo(FIRE, GRASS, ICE, BUG, STEEL, FAIRY);
+                .setResistantTo(FIRE, GRASS, ICE, BUG, STEEL, FAIRY);
 
         WATER
                 .setWeakTo(ELECTRIC, GRASS)
@@ -78,7 +78,7 @@ public enum Type {
 
         BUG
                 .setWeakTo(FIRE, FLYING, ROCK)
-                .setResistantTo();
+                .setResistantTo(GRASS, FIGHTING, GROUND);
 
         ROCK
                 .setWeakTo(WATER, GRASS, FIGHTING, GROUND)
