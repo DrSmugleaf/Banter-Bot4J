@@ -1,9 +1,10 @@
 package com.github.drsmugbrain.pokemon;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.json.JSONArray;
+
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 05/06/2017.
@@ -114,7 +115,12 @@ public enum Type {
     private List<Type> RESISTANT_TO = new ArrayList<>();
     private List<Type> IMMUNE_TO = new ArrayList<>();
 
+    private static class Holder {
+        static Map<String, Type> MAP = new HashMap<>();
+    }
+
     Type(@Nonnull String name) {
+        Holder.MAP.put(this.name(), this);
         this.NAME = name;
     }
 
@@ -142,7 +148,7 @@ public enum Type {
     }
 
     @Nonnull
-    public static Double getDamageMultiplier(List<Type> pokemonTypes, Type attackType) {
+    public static Double getDamageMultiplier(@Nonnull List<Type> pokemonTypes, @Nonnull Type attackType) {
         Double multiplier = 1.0;
 
         for (Type pokemonType : pokemonTypes) {
@@ -153,7 +159,7 @@ public enum Type {
     }
 
     @Nonnull
-    public static Double getDamageMultiplier(Type pokemonType, Type attackType) {
+    public static Double getDamageMultiplier(@Nonnull Type pokemonType, @Nonnull Type attackType) {
         if (pokemonType.getImmunities().contains(attackType)) {
             return 0.0;
         }
@@ -182,6 +188,34 @@ public enum Type {
     @Nonnull
     public List<Type> getImmunities() {
         return this.IMMUNE_TO;
+    }
+
+    @Nonnull
+    public static Type[] getType(@Nonnull String type) {
+        if (Holder.MAP.containsKey(type.toUpperCase())) {
+            return new Type[]{Holder.MAP.get(type.toUpperCase())};
+        }
+
+        throw new NullPointerException("Type " + type + " doesn't exist");
+    }
+
+    @Nonnull
+    public static Type[] getTypes(@Nonnull String firstType, @Nonnull String secondType) {
+        Type[] type1 = Type.getType(firstType);
+        Type[] type2 = Type.getType(secondType);
+
+        return ArrayUtils.addAll(type1, type2);
+    }
+
+    @Nonnull
+    public static Type[] getTypes(@Nonnull JSONArray jsonArray) {
+        if (jsonArray.length() == 2) {
+            return Type.getTypes(jsonArray.getString(0), jsonArray.getString(1));
+        } else if (jsonArray.length() == 1) {
+            return Type.getType(jsonArray.getString(0));
+        } else {
+            throw new IllegalArgumentException("Pokemon types must range from 1 to 2");
+        }
     }
 
 }
