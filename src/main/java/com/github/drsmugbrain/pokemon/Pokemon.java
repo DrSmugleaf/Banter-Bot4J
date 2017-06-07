@@ -1,6 +1,5 @@
 package com.github.drsmugbrain.pokemon;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import javax.annotation.Nonnull;
@@ -35,7 +34,7 @@ public class Pokemon implements Comparable<Pokemon> {
     }
 
     @Override
-    public int compareTo(@NotNull Pokemon pokemon) {
+    public int compareTo(@Nonnull Pokemon pokemon) {
         return this.NAME.compareTo(pokemon.NAME);
     }
 
