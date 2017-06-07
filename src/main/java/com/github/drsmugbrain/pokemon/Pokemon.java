@@ -1,8 +1,11 @@
 package com.github.drsmugbrain.pokemon;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -18,47 +21,17 @@ public class Pokemon implements Comparable<Pokemon> {
 
     private final Type[] TYPES;
 
-    private final int BASE_HP;
-    private final int BASE_ATTACK;
-    private final int BASE_DEFENSE;
-    private final int BASE_SPEED;
-    private final int BASE_SPECIAL_ATTACK;
-    private final int BASE_SPECIAL_DEFENSE;
-    private final int BASE_ACCURACY;
-    private final int BASE_EVASION;
+    private final Map<Stat, Integer> BASE_STATS;
+    private final Map<Stat, Integer> STATS;
 
-    private int hp;
-    private int attack;
-    private int defense;
-    private int speed;
-    private int specialAttack;
-    private int specialDefense;
-    private int accuracy;
-    private int evasion;
-
-    public Pokemon(@Nonnull String name, Type[] types, int hp, int attack, int defense, int speed, int specialAttack, int specialDefense, int accuracy, int evasion) {
+    public Pokemon(@Nonnull String name, @Nonnull Type[] types, @Nonnull Map<Stat, Integer> stats) {
         this.NAME = name;
         this.NICKNAME = name;
 
         this.TYPES = types;
 
-        this.BASE_HP = hp;
-        this.BASE_ATTACK = attack;
-        this.BASE_DEFENSE = defense;
-        this.BASE_SPEED = speed;
-        this.BASE_SPECIAL_ATTACK = specialAttack;
-        this.BASE_SPECIAL_DEFENSE = specialDefense;
-        this.BASE_ACCURACY = accuracy;
-        this.BASE_EVASION = evasion;
-
-        this.hp = hp;
-        this.attack = attack;
-        this.defense = defense;
-        this.speed = speed;
-        this.specialAttack = specialAttack;
-        this.specialDefense = specialDefense;
-        this.accuracy = accuracy;
-        this.evasion = evasion;
+        this.BASE_STATS = stats;
+        this.STATS = stats;
     }
 
     @Override
@@ -66,8 +39,8 @@ public class Pokemon implements Comparable<Pokemon> {
         return this.NAME.compareTo(pokemon.NAME);
     }
 
-    static void createBasePokemon(@Nonnull String name, @Nonnull Type[] types, int hp, int attack, int defense, int speed, int specialAttack, int specialDefense, int accuracy, int evasion) {
-        Pokemon.BASE_POKEMON.add(new Pokemon(name, types, hp, attack, defense, speed, specialAttack, specialDefense, accuracy, evasion));
+    static void createBasePokemon(@Nonnull String name, @Nonnull Type[] types, @Nonnull Map<Stat, Integer> stats) {
+        Pokemon.BASE_POKEMON.add(new Pokemon(name, types, stats));
     }
 
     @Nonnull
@@ -75,6 +48,23 @@ public class Pokemon implements Comparable<Pokemon> {
         return Pokemon.BASE_POKEMON;
     }
 
+    @Nonnull
+    public static Map<Stat, Integer> parseStats(@Nonnull JSONObject stats) {
+        Map<Stat, Integer> statsMap = new HashMap<>();
+
+        statsMap.put(Stat.HP, stats.getInt("hp"));
+        statsMap.put(Stat.ATTACK, stats.getInt("atk"));
+        statsMap.put(Stat.DEFENSE, stats.getInt("def"));
+        statsMap.put(Stat.SPEED, stats.getInt("spe"));
+        statsMap.put(Stat.SPECIAL_ATTACK, stats.getInt("spa"));
+        statsMap.put(Stat.SPECIAL_DEFENSE, stats.getInt("spd"));
+        statsMap.put(Stat.ACCURACY, 0);
+        statsMap.put(Stat.EVASION, 0);
+
+        return statsMap;
+    }
+
+    @Nonnull
     public Type[] getTypes() {
         return this.TYPES;
     }
