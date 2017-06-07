@@ -50,4 +50,26 @@ public class Move implements Comparable<Move> {
         return this.NAME;
     }
 
+    @Nonnull
+    public Type getType() {
+        return this.TYPE;
+    }
+
+    @Nonnull
+    public Category getCategory() {
+        return this.CATEGORY;
+    }
+
+    public int getPower() {
+        return this.POWER;
+    }
+
+    public int getAccuracy() {
+        return this.ACCURACY;
+    }
+
+    public int getPP() {
+        return this.PP;
+    }
+
 }
