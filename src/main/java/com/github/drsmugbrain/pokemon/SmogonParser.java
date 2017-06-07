@@ -55,4 +55,13 @@ public class SmogonParser {
         }
     }
 
+    private static void printAbilitiesAsEnums(JSONArray abilities) {
+        for (int i = 0; i < abilities.length(); i++) {
+            String name = abilities.getJSONObject(i).getString("name");
+
+            System.out.print(name.replace(" ", "_").replace("-", "_").toUpperCase());
+            System.out.println("(\"" + name + "\"),");
+        }
+    }
+
 }
