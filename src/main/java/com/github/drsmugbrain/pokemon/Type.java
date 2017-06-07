@@ -120,19 +120,7 @@ public enum Type {
         this.NAME = name;
     }
 
-    @Nonnull
-    public static Double getDamageMultiplier(@Nonnull List<Type> pokemonTypes, @Nonnull Type attackType) {
-        Double multiplier = 1.0;
-
-        for (Type pokemonType : pokemonTypes) {
-            multiplier *= Type.getDamageMultiplier(pokemonType, attackType);
-        }
-
-        return multiplier;
-    }
-
-    @Nonnull
-    public static Double getDamageMultiplier(@Nonnull Type pokemonType, @Nonnull Type attackType) {
+    public static double getDamageMultiplier(@Nonnull Type pokemonType, @Nonnull Type attackType) {
         if (pokemonType.getImmunities().contains(attackType)) {
             return 0.0;
         }
@@ -146,6 +134,20 @@ public enum Type {
         }
 
         return 1.0;
+    }
+
+    public static double getDamageMultiplier(@Nonnull List<Type> pokemonTypes, @Nonnull Type attackType) {
+        Double multiplier = 1.0;
+
+        for (Type pokemonType : pokemonTypes) {
+            multiplier *= Type.getDamageMultiplier(pokemonType, attackType);
+        }
+
+        return multiplier;
+    }
+
+    public static double getDamageMultiplier(@Nonnull Type[] pokemonTypes, @Nonnull Type attackType) {
+        return Type.getDamageMultiplier(Arrays.asList(pokemonTypes), attackType);
     }
 
     @Nonnull
