@@ -191,18 +191,29 @@ public enum Type {
     }
 
     @Nonnull
-    public static Type[] getType(@Nonnull String type) {
-        if (Holder.MAP.containsKey(type.toUpperCase())) {
-            return new Type[]{Holder.MAP.get(type.toUpperCase())};
+    public static Type getType(@Nonnull String type) {
+        type = type.toUpperCase();
+        if (!Holder.MAP.containsKey(type)) {
+            throw new NullPointerException("Type " + type + " doesn't exist");
         }
 
-        throw new NullPointerException("Type " + type + " doesn't exist");
+        return Holder.MAP.get(type);
+    }
+
+    @Nonnull
+    public static Type[] getTypes(@Nonnull String type) {
+        type = type.toUpperCase();
+        if (!Holder.MAP.containsKey(type)) {
+            throw new NullPointerException("Type " + type + " doesn't exist");
+        }
+
+        return new Type[]{Holder.MAP.get(type)};
     }
 
     @Nonnull
     public static Type[] getTypes(@Nonnull String firstType, @Nonnull String secondType) {
-        Type[] type1 = Type.getType(firstType);
-        Type[] type2 = Type.getType(secondType);
+        Type[] type1 = Type.getTypes(firstType);
+        Type[] type2 = Type.getTypes(secondType);
 
         return ArrayUtils.addAll(type1, type2);
     }
@@ -212,7 +223,7 @@ public enum Type {
         if (jsonArray.length() == 2) {
             return Type.getTypes(jsonArray.getString(0), jsonArray.getString(1));
         } else if (jsonArray.length() == 1) {
-            return Type.getType(jsonArray.getString(0));
+            return Type.getTypes(jsonArray.getString(0));
         } else {
             throw new IllegalArgumentException("Pokemon types must range from 1 to 2");
         }
