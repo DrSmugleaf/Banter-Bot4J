@@ -14,10 +14,20 @@ public class SmogonParser {
 
     public static void parse() throws IOException {
         Document doc = Jsoup.connect("http://www.smogon.com/dex/sm/pokemon/").get();
-        JSONObject obj = new JSONObject(doc.getElementsByTag("script").first().dataNodes().get(0).getWholeData().replace("dexSettings = ", ""));
-        JSONArray pokemon = obj.getJSONArray("injectRpcs").getJSONArray(1).getJSONObject(1).getJSONArray("pokemon");
+        String docString = doc
+                .getElementsByTag("script")
+                .first()
+                .dataNodes()
+                .get(0)
+                .getWholeData()
+                .replace("dexSettings = ", "");
+        JSONObject obj = new JSONObject(docString).getJSONArray("injectRpcs").getJSONArray(1).getJSONObject(1);
 
+        JSONArray pokemon = obj.getJSONArray("pokemon");
         SmogonParser.parsePokemon(pokemon);
+
+        JSONArray moves = obj.getJSONArray("moves");
+        SmogonParser.parseMoves(moves);
     }
 
     private static void parsePokemon(JSONArray pokemonJSONArray) {
@@ -28,6 +38,20 @@ public class SmogonParser {
             Type[] types = Type.getTypes(stats.getJSONArray("types"));
 
             Pokemon.createBasePokemon(name, types, Pokemon.parseStats(stats));
+        }
+    }
+
+    private static void parseMoves(JSONArray movesJSONArray) {
+        for (int i = 0; i < movesJSONArray.length(); i++) {
+            JSONObject move = movesJSONArray.getJSONObject(i);
+            String name = move.getString("name");
+            Type type = Type.getType(move.getString("type"));
+            Category category = Category.getCategory(move.getString("category"));
+            int power = move.getInt("power");
+            int accuracy = move.getInt("accuracy");
+            int pp = move.getInt("pp");
+
+            new Move(name, type, category, power, accuracy, pp).createBaseMove();
         }
     }
 
