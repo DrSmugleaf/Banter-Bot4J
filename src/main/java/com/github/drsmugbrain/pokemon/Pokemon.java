@@ -33,10 +33,6 @@ public class Pokemon implements Comparable<Pokemon> {
         this.STATS = stats;
     }
 
-    static void createBasePokemon(@Nonnull String name, @Nonnull Type[] types, @Nonnull Map<Stat, Integer> stats) {
-        Pokemon.BASE_POKEMON.add(new Pokemon(name, types, stats));
-    }
-
     @Nonnull
     public static Set<Pokemon> getBasePokemon() {
         return Pokemon.BASE_POKEMON;
@@ -56,6 +52,10 @@ public class Pokemon implements Comparable<Pokemon> {
         statsMap.put(Stat.EVASION, 0);
 
         return statsMap;
+    }
+
+    void createBasePokemon() {
+        Pokemon.BASE_POKEMON.add(this);
     }
 
     @Override
