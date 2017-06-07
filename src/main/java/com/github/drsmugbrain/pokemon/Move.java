@@ -31,6 +31,11 @@ public class Move implements Comparable<Move> {
         this.PP = pp;
     }
 
+    @Nonnull
+    public static Set<Move> getBaseMoves() {
+        return Move.BASE_MOVES;
+    }
+
     @Override
     public int compareTo(@Nonnull Move move) {
         return this.NAME.compareTo(move.NAME);
@@ -38,11 +43,6 @@ public class Move implements Comparable<Move> {
 
     void createBaseMove() {
         Move.BASE_MOVES.add(this);
-    }
-
-    @Nonnull
-    public static Set<Move> getBaseMoves() {
-        return Move.BASE_MOVES;
     }
 
     @Nonnull

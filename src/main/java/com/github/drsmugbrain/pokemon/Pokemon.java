@@ -33,11 +33,6 @@ public class Pokemon implements Comparable<Pokemon> {
         this.STATS = stats;
     }
 
-    @Override
-    public int compareTo(@Nonnull Pokemon pokemon) {
-        return this.NAME.compareTo(pokemon.NAME);
-    }
-
     static void createBasePokemon(@Nonnull String name, @Nonnull Type[] types, @Nonnull Map<Stat, Integer> stats) {
         Pokemon.BASE_POKEMON.add(new Pokemon(name, types, stats));
     }
@@ -61,6 +56,11 @@ public class Pokemon implements Comparable<Pokemon> {
         statsMap.put(Stat.EVASION, 0);
 
         return statsMap;
+    }
+
+    @Override
+    public int compareTo(@Nonnull Pokemon pokemon) {
+        return this.NAME.compareTo(pokemon.NAME);
     }
 
     @Nonnull

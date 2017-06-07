@@ -18,10 +18,6 @@ public enum Category {
     private final String NAME;
     private final Stat STAT;
 
-    private static class Holder {
-        static Map<String, Category> MAP = new HashMap<>();
-    }
-
     Category(@Nonnull String name, @Nullable Stat stat) {
         Holder.MAP.put(this.name(), this);
         this.NAME = name;
@@ -47,6 +43,10 @@ public enum Category {
     @Nullable
     public Stat getStat() {
         return this.STAT;
+    }
+
+    private static class Holder {
+        static Map<String, Category> MAP = new HashMap<>();
     }
 
 }

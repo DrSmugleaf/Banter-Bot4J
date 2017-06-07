@@ -115,36 +115,9 @@ public enum Type {
     private List<Type> RESISTANT_TO = new ArrayList<>();
     private List<Type> IMMUNE_TO = new ArrayList<>();
 
-    private static class Holder {
-        static Map<String, Type> MAP = new HashMap<>();
-    }
-
     Type(@Nonnull String name) {
         Holder.MAP.put(this.name(), this);
         this.NAME = name;
-    }
-
-    @Nonnull
-    private Type setWeakTo(@Nonnull Type... weakTo) {
-        this.WEAK_TO.addAll(Arrays.asList(weakTo));
-        return this;
-    }
-
-    @Nonnull
-    private Type setResistantTo(@Nonnull Type... resistantTo) {
-        this.RESISTANT_TO.addAll(Arrays.asList(resistantTo));
-        return this;
-    }
-
-    @Nonnull
-    private Type setImmuneTo(@Nonnull Type... immuneTo) {
-        this.IMMUNE_TO.addAll(Arrays.asList(immuneTo));
-        return this;
-    }
-
-    @Nonnull
-    public String getName() {
-        return this.NAME;
     }
 
     @Nonnull
@@ -173,21 +146,6 @@ public enum Type {
         }
 
         return 1.0;
-    }
-
-    @Nonnull
-    public List<Type> getWeaknesses() {
-        return this.WEAK_TO;
-    }
-
-    @Nonnull
-    public List<Type> getResistances() {
-        return this.RESISTANT_TO;
-    }
-
-    @Nonnull
-    public List<Type> getImmunities() {
-        return this.IMMUNE_TO;
     }
 
     @Nonnull
@@ -227,6 +185,48 @@ public enum Type {
         } else {
             throw new IllegalArgumentException("Pokemon types must range from 1 to 2");
         }
+    }
+
+    @Nonnull
+    private Type setWeakTo(@Nonnull Type... weakTo) {
+        this.WEAK_TO.addAll(Arrays.asList(weakTo));
+        return this;
+    }
+
+    @Nonnull
+    private Type setResistantTo(@Nonnull Type... resistantTo) {
+        this.RESISTANT_TO.addAll(Arrays.asList(resistantTo));
+        return this;
+    }
+
+    @Nonnull
+    private Type setImmuneTo(@Nonnull Type... immuneTo) {
+        this.IMMUNE_TO.addAll(Arrays.asList(immuneTo));
+        return this;
+    }
+
+    @Nonnull
+    public String getName() {
+        return this.NAME;
+    }
+
+    @Nonnull
+    public List<Type> getWeaknesses() {
+        return this.WEAK_TO;
+    }
+
+    @Nonnull
+    public List<Type> getResistances() {
+        return this.RESISTANT_TO;
+    }
+
+    @Nonnull
+    public List<Type> getImmunities() {
+        return this.IMMUNE_TO;
+    }
+
+    private static class Holder {
+        static Map<String, Type> MAP = new HashMap<>();
     }
 
 }
