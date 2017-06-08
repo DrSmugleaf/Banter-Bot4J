@@ -1,7 +1,6 @@
 package com.github.drsmugbrain.pokemon;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
