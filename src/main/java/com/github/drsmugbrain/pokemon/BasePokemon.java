@@ -39,7 +39,7 @@ public class BasePokemon implements Comparable<BasePokemon> {
     }
 
     @Nonnull
-    public static Map<Stat, Integer> parseStats(@Nonnull JSONObject stats) {
+    public static Map<Stat, Integer> parseBaseStats(@Nonnull JSONObject stats) {
         Map<Stat, Integer> statsMap = new HashMap<>();
 
         statsMap.put(Stat.HP, stats.getInt("hp"));
@@ -78,36 +78,8 @@ public class BasePokemon implements Comparable<BasePokemon> {
         return this.BASE_STATS;
     }
 
-    public int getBaseHP() {
-        return this.BASE_STATS.get(Stat.HP);
-    }
-
-    public int getBaseAttack() {
-        return this.BASE_STATS.get(Stat.ATTACK);
-    }
-
-    public int getBaseDefense() {
-        return this.BASE_STATS.get(Stat.DEFENSE);
-    }
-
-    public int getBaseSpeed() {
-        return this.BASE_STATS.get(Stat.SPEED);
-    }
-
-    public int getBaseSpecialAttack() {
-        return this.BASE_STATS.get(Stat.SPECIAL_ATTACK);
-    }
-
-    public int getBaseSpecialDefense() {
-        return this.BASE_STATS.get(Stat.SPECIAL_DEFENSE);
-    }
-
-    public int getBaseAccuracy() {
-        return this.BASE_STATS.get(Stat.ACCURACY);
-    }
-
-    public int getBaseEvasion() {
-        return this.BASE_STATS.get(Stat.EVASION);
+    public int getBaseStat(@Nonnull Stat stat) {
+        return this.BASE_STATS.get(stat);
     }
 
 }
