@@ -37,7 +37,7 @@ public class SmogonParser {
             String name = pokemon.getString("name");
             Type[] types = Type.getTypes(stats.getJSONArray("types"));
 
-            new Pokemon(name, types, Pokemon.parseStats(stats)).createBasePokemon();
+            new BasePokemon(name, types, BasePokemon.parseStats(stats)).createBasePokemon();
         }
     }
 
