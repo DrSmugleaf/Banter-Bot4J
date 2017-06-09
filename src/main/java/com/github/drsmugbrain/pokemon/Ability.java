@@ -259,7 +259,7 @@ public enum Ability {
                 .replace(" ", "_")
                 .replace("-", "_")
                 .replace("'", "")
-                .toUpperCase().toUpperCase();
+                .toUpperCase();
 
         if(!Holder.MAP.containsKey(ability)) {
             throw new NullPointerException("Ability " + ability + " doesn't exist");
