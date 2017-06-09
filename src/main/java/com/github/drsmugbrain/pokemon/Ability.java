@@ -249,18 +249,12 @@ public enum Ability {
     private String NAME;
 
     Ability(@Nonnull String name) {
-        Holder.MAP.put(this.name(), this);
+        Holder.MAP.put(name, this);
         this.NAME = name;
     }
 
     @Nonnull
     public static Ability getAbility(@Nonnull String ability) {
-        ability = ability
-                .replace(" ", "_")
-                .replace("-", "_")
-                .replace("'", "")
-                .toUpperCase();
-
         if(!Holder.MAP.containsKey(ability)) {
             throw new NullPointerException("Ability " + ability + " doesn't exist");
         }

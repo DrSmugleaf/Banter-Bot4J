@@ -316,7 +316,7 @@ public enum Item {
     private String NAME;
 
     Item(@Nonnull String name) {
-        Holder.MAP.put(this.name(), this);
+        Holder.MAP.put(name, this);
         this.NAME = name;
     }
 

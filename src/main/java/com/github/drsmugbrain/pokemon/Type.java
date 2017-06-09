@@ -115,7 +115,7 @@ public enum Type {
     private List<Type> IMMUNE_TO = new ArrayList<>();
 
     Type(@Nonnull String name) {
-        Holder.MAP.put(this.name(), this);
+        Holder.MAP.put(name, this);
         this.NAME = name;
     }
 
@@ -151,8 +151,6 @@ public enum Type {
 
     @Nonnull
     public static Type getType(@Nonnull String type) {
-        type = type.toUpperCase();
-
         if (!Holder.MAP.containsKey(type)) {
             throw new NullPointerException("Type " + type + " doesn't exist");
         }
@@ -162,8 +160,6 @@ public enum Type {
 
     @Nonnull
     public static Type[] getTypes(@Nonnull String type) {
-        type = type.toUpperCase();
-
         if (!Holder.MAP.containsKey(type)) {
             throw new NullPointerException("Type " + type + " doesn't exist");
         }
