@@ -39,35 +39,35 @@ public class Pokemon extends BasePokemon {
     }
 
     public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Ability ability, int level) {
-        super(basePokemon);
+        this(basePokemon, Nature.SERIOUS, ability, level, Pokemon.getDefaultIndividualValues(), Pokemon.getDefaultEffortValues());
+    }
 
-        this.NICKNAME = basePokemon.getName();
-
-        this.ABILITY = ability;
-
-        this.NATURE = Nature.SERIOUS;
-
-        this.LEVEL = level;
-
-        this.TYPES = basePokemon.getTypes();
-
+    @Nonnull
+    private static Map<Stat, Integer> getDefaultIndividualValues() {
         Map<Stat, Integer> individualValues = new HashMap<>();
+
         individualValues.put(Stat.HP, 31);
         individualValues.put(Stat.ATTACK, 31);
         individualValues.put(Stat.DEFENSE, 31);
         individualValues.put(Stat.SPEED, 31);
         individualValues.put(Stat.SPECIAL_ATTACK, 31);
         individualValues.put(Stat.SPECIAL_DEFENSE, 31);
-        this.INDIVIDUAL_VALUES = individualValues;
 
+        return individualValues;
+    }
+
+    @Nonnull
+    private static Map<Stat, Integer> getDefaultEffortValues() {
         Map<Stat, Integer> effortValues = new HashMap<>();
+
         effortValues.put(Stat.HP, 0);
         effortValues.put(Stat.ATTACK, 0);
         effortValues.put(Stat.DEFENSE, 0);
         effortValues.put(Stat.SPEED, 0);
         effortValues.put(Stat.SPECIAL_ATTACK, 0);
         effortValues.put(Stat.SPECIAL_DEFENSE, 0);
-        this.EFFORT_VALUES = effortValues;
+
+        return effortValues;
     }
 
     @Nonnull
