@@ -59,7 +59,26 @@ public class SmogonParser {
         for (int i = 0; i < abilities.length(); i++) {
             String name = abilities.getJSONObject(i).getString("name");
 
-            System.out.print(name.replace(" ", "_").replace("-", "_").toUpperCase());
+            System.out.print(name
+                    .replace(" ", "_")
+                    .replace("-", "_")
+                    .replace("'", "")
+                    .toUpperCase()
+            );
+            System.out.println("(\"" + name + "\"),");
+        }
+    }
+
+    private static void printItemsAsEnums(JSONArray items) {
+        for (int i = 0; i < items.length(); i++) {
+            String name = items.getJSONObject(i).getString("name");
+
+            System.out.print(name
+                    .replace(" ", "_")
+                    .replace("-", "_")
+                    .replace("'", "")
+                    .toUpperCase()
+            );
             System.out.println("(\"" + name + "\"),");
         }
     }
