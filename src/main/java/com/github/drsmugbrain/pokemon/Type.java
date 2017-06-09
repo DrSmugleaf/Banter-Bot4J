@@ -1,6 +1,5 @@
 package com.github.drsmugbrain.pokemon;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.json.JSONArray;
 
 import javax.annotation.Nonnull;
@@ -164,6 +163,7 @@ public enum Type {
     @Nonnull
     public static Type[] getTypes(@Nonnull String type) {
         type = type.toUpperCase();
+
         if (!Holder.MAP.containsKey(type)) {
             throw new NullPointerException("Type " + type + " doesn't exist");
         }
@@ -173,10 +173,10 @@ public enum Type {
 
     @Nonnull
     public static Type[] getTypes(@Nonnull String firstType, @Nonnull String secondType) {
-        Type[] type1 = Type.getTypes(firstType);
-        Type[] type2 = Type.getTypes(secondType);
-
-        return ArrayUtils.addAll(type1, type2);
+        Type type1 = Type.getType(firstType);
+        Type type2 = Type.getType(secondType);
+        
+        return new Type[]{type1, type2};
     }
 
     @Nonnull
