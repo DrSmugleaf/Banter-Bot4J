@@ -17,20 +17,21 @@ public class BasePokemon implements Comparable<BasePokemon> {
 
     private final String NAME;
 
+    private final Ability[] BASE_ABILITIES;
+
     private final Type[] TYPES;
 
     private final Map<Stat, Integer> BASE_STATS;
 
-    protected BasePokemon(@Nonnull String name, @Nonnull Type[] types, @Nonnull Map<Stat, Integer> stats) {
+    protected BasePokemon(@Nonnull String name, @Nonnull Ability[] abilities, @Nonnull Type[] types, @Nonnull Map<Stat, Integer> stats) {
         this.NAME = name;
+        this.BASE_ABILITIES = abilities;
         this.TYPES = types;
         this.BASE_STATS = stats;
     }
 
     protected BasePokemon(@Nonnull BasePokemon basePokemon) {
-        this.NAME = basePokemon.getName();
-        this.TYPES = basePokemon.getTypes();
-        this.BASE_STATS = basePokemon.getBaseStats();
+        this(basePokemon.getName(), basePokemon.getBaseAbilities(), basePokemon.getTypes(), basePokemon.getBaseStats());
     }
 
     @Nonnull
@@ -62,6 +63,11 @@ public class BasePokemon implements Comparable<BasePokemon> {
     @Nonnull
     public String getName() {
         return this.NAME;
+    }
+
+    @Nonnull
+    public Ability[] getBaseAbilities() {
+        return this.BASE_ABILITIES;
     }
 
     @Nonnull

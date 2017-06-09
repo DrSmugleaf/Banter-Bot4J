@@ -1,7 +1,11 @@
 package com.github.drsmugbrain.pokemon;
 
+import org.json.JSONArray;
+
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -249,6 +253,34 @@ public enum Ability {
         this.NAME = name;
     }
 
+    @Nonnull
+    public static Ability getAbility(@Nonnull String ability) {
+        ability = ability
+                .replace(" ", "_")
+                .replace("-", "_")
+                .replace("'", "")
+                .toUpperCase().toUpperCase();
+
+        if(!Holder.MAP.containsKey(ability)) {
+            throw new NullPointerException("Ability " + ability + " doesn't exist");
+        }
+
+        return Holder.MAP.get(ability);
+    }
+
+    @Nonnull
+    public static Ability[] getAbilities(@Nonnull JSONArray abilities) {
+        List<Ability> abilityList = new ArrayList<>();
+
+        for (int i = 0; i < abilities.length(); i++) {
+            Ability ability = Ability.getAbility(abilities.getString(i));
+            abilityList.add(ability);
+        }
+
+        return abilityList.toArray(new Ability[0]);
+    }
+
+    @Nonnull
     public String getName() {
         return this.NAME;
     }
