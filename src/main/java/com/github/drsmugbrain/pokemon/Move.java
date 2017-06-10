@@ -86,12 +86,12 @@ public class Move implements Comparable<Move> {
         this.damageMultiplier = multiplier;
     }
 
-    protected void incrementDamageMultiplier(double multiplier) {
-        this.damageMultiplier += multiplier;
+    protected void incrementDamageMultiplier(double amount) {
+        this.damageMultiplier += amount;
     }
 
-    protected void decreaseDamageMultiplier(double multiplier) {
-        this.damageMultiplier -= multiplier;
+    protected void decreaseDamageMultiplier(double amount) {
+        this.damageMultiplier -= amount;
     }
 
     public boolean isHiddenPower() {

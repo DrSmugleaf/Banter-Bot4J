@@ -26,6 +26,8 @@ public class Pokemon extends BasePokemon {
 
     private double stabMultiplier = 1.5;
 
+    private double damageMultiplier = 1;
+
     public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Nature nature, @Nonnull Ability ability, @Nonnull Set moves, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues) {
         super(basePokemon);
 
@@ -146,6 +148,22 @@ public class Pokemon extends BasePokemon {
 
     protected void changeMoves(Set<Move> moves) {
         this.MOVES = moves;
+    }
+
+    protected void changeDamageMultiplier(double multiplier) {
+        this.damageMultiplier = multiplier;
+    }
+
+    protected void incrementDamageMultiplier(double amount) {
+        this.damageMultiplier += amount;
+    }
+
+    protected void decreaseDamageMultiplier(double amount) {
+        this.damageMultiplier -= amount;
+    }
+
+    protected void resetDamageMultiplier() {
+        this.damageMultiplier = 1;
     }
 
 }
