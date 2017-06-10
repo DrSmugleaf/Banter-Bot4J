@@ -23,12 +23,15 @@ public class Pokemon extends BasePokemon {
 
     private final Map<Stat, Integer> INDIVIDUAL_VALUES;
     private final Map<Stat, Integer> EFFORT_VALUES;
+    private final Map<Stat, Stage> STAT_STAGES;
 
     private double stabMultiplier = 1.5;
 
     private double damageMultiplier = 1;
 
-    public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Nature nature, @Nonnull Ability ability, @Nonnull Set moves, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues) {
+    private boolean canSwitch = true;
+
+    public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Nature nature, @Nonnull Ability ability, @Nonnull Set moves, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues, Map<Stat, Stage> stat_stages) {
         super(basePokemon);
 
         this.NICKNAME = basePokemon.getName();
@@ -45,10 +48,11 @@ public class Pokemon extends BasePokemon {
 
         this.INDIVIDUAL_VALUES = individualValues;
         this.EFFORT_VALUES = effortValues;
+        this.STAT_STAGES = stat_stages;
     }
 
     public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Ability ability, @Nonnull Set<Move> moves, int level) {
-        this(basePokemon, Nature.SERIOUS, ability, moves, level, Pokemon.getDefaultIndividualValues(), Pokemon.getDefaultEffortValues());
+        this(basePokemon, Nature.SERIOUS, ability, moves, level, Pokemon.getDefaultIndividualValues(), Pokemon.getDefaultEffortValues(), Pokemon.getDefaultStatStages());
     }
 
     @Nonnull
@@ -77,6 +81,22 @@ public class Pokemon extends BasePokemon {
         effortValues.put(Stat.SPECIAL_DEFENSE, 0);
 
         return effortValues;
+    }
+
+    @Nonnull
+    private static Map<Stat, Stage> getDefaultStatStages() {
+        Map<Stat, Stage> statStages = new HashMap<>();
+
+        statStages.put(Stat.HP, Stage.ZERO);
+        statStages.put(Stat.ATTACK, Stage.ZERO);
+        statStages.put(Stat.DEFENSE, Stage.ZERO);
+        statStages.put(Stat.SPEED, Stage.ZERO);
+        statStages.put(Stat.SPECIAL_ATTACK, Stage.ZERO);
+        statStages.put(Stat.SPECIAL_DEFENSE, Stage.ZERO);
+        statStages.put(Stat.ACCURACY, Stage.ZERO);
+        statStages.put(Stat.EVASION, Stage.ZERO);
+
+        return statStages;
     }
 
     @Nonnull
@@ -121,7 +141,7 @@ public class Pokemon extends BasePokemon {
     }
 
     public int getStat(@Nonnull Stat stat) {
-        return stat.calculate(this.getBaseStat(stat), this.getIndividualValue(stat), this.getEffortValue(stat), this.getLevel(), this.getNature().isPositiveNature(stat));
+        return stat.calculate(this.getBaseStat(stat), this.getIndividualValue(stat), this.getEffortValue(stat), this.getLevel(), this.getNature().isPositiveNature(stat), this.getStatStageMultiplier(stat));
     }
 
     @Nonnull
@@ -142,8 +162,24 @@ public class Pokemon extends BasePokemon {
         return this.EFFORT_VALUES.get(stat);
     }
 
+    public Stage getStatStage(@Nonnull Stat stat) {
+        return this.STAT_STAGES.get(stat);
+    }
+
+    public double getStatStageMultiplier(@Nonnull Stat stat) {
+        return this.STAT_STAGES.get(stat).getStatMultiplier(stat);
+    }
+
+    public void setStatStage(@Nonnull Stat stat, @Nonnull Stage stage) {
+        this.STAT_STAGES.put(stat, stage);
+    }
+
     protected void changeStabMultiplier(double multiplier) {
         this.stabMultiplier = multiplier;
+    }
+
+    protected void resetStabMultiplier() {
+        this.stabMultiplier = 1.5;
     }
 
     protected void changeMoves(Set<Move> moves) {
@@ -164,6 +200,10 @@ public class Pokemon extends BasePokemon {
 
     protected void resetDamageMultiplier() {
         this.damageMultiplier = 1;
+    }
+
+    protected void setCanSwitch(boolean bool) {
+        this.canSwitch = bool;
     }
 
 }
