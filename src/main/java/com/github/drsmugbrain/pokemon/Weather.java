@@ -10,7 +10,7 @@ public enum Weather {
     SUNSHINE("Sunshine"),
     HARSH_SUNSHINE("Harsh Sunshine"),
     RAIN("Rain"),
-    HEAVY_RAIN("Heavy_Rain"),
+    HEAVY_RAIN("Heavy Rain"),
     HAIL("Hail"),
     SANDSTORM("Sandstorm"),
     STRONG_WINDS("Strong Winds"),
