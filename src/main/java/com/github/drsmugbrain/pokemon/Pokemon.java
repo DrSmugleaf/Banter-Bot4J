@@ -3,6 +3,7 @@ package com.github.drsmugbrain.pokemon;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by DrSmugleaf on 04/06/2017.
@@ -14,6 +15,8 @@ public class Pokemon extends BasePokemon {
 
     private final Nature NATURE;
 
+    private Set<Move> MOVES;
+
     private final int LEVEL;
 
     private final Type[] TYPES;
@@ -21,7 +24,9 @@ public class Pokemon extends BasePokemon {
     private final Map<Stat, Integer> INDIVIDUAL_VALUES;
     private final Map<Stat, Integer> EFFORT_VALUES;
 
-    public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Nature nature, @Nonnull Ability ability, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues) {
+    private double stabMultiplier = 1.5;
+
+    public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Nature nature, @Nonnull Ability ability, @Nonnull Set moves, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues) {
         super(basePokemon);
 
         this.NICKNAME = basePokemon.getName();
@@ -29,6 +34,8 @@ public class Pokemon extends BasePokemon {
         this.ABILITY = ability;
 
         this.NATURE = nature;
+
+        this.MOVES = moves;
 
         this.LEVEL = level;
 
@@ -38,8 +45,8 @@ public class Pokemon extends BasePokemon {
         this.EFFORT_VALUES = effortValues;
     }
 
-    public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Ability ability, int level) {
-        this(basePokemon, Nature.SERIOUS, ability, level, Pokemon.getDefaultIndividualValues(), Pokemon.getDefaultEffortValues());
+    public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Ability ability, @Nonnull Set<Move> moves, int level) {
+        this(basePokemon, Nature.SERIOUS, ability, moves, level, Pokemon.getDefaultIndividualValues(), Pokemon.getDefaultEffortValues());
     }
 
     @Nonnull
@@ -86,6 +93,11 @@ public class Pokemon extends BasePokemon {
     }
 
     @Nonnull
+    public Set<Move> getMoves() {
+        return this.MOVES;
+    }
+
+    @Nonnull
     public Type[] getTypes() {
         return this.TYPES;
     }
@@ -126,6 +138,14 @@ public class Pokemon extends BasePokemon {
 
     public int getEffortValue(@Nonnull Stat stat) {
         return this.EFFORT_VALUES.get(stat);
+    }
+
+    protected void changeStabMultiplier(double multiplier) {
+        this.stabMultiplier = multiplier;
+    }
+
+    protected void changeMoves(Set<Move> moves) {
+        this.MOVES = moves;
     }
 
 }
