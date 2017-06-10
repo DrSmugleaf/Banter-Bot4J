@@ -13,14 +13,16 @@ public class Move implements Comparable<Move> {
 
     private final String NAME;
 
-    private final Type TYPE;
+    private Type TYPE;
 
     private final Category CATEGORY;
     private final int POWER;
     private final int ACCURACY;
     private final int PP;
+    private double damageMultiplier = 1.0;
+    private final boolean IS_HIDDEN_POWER;
 
-    public Move(@Nonnull String name, @Nonnull Type type, @Nonnull Category category, int power, int accuracy, int pp) {
+    protected Move(@Nonnull String name, @Nonnull Type type, @Nonnull Category category, int power, int accuracy, int pp) {
         this.NAME = name;
 
         this.TYPE = type;
@@ -29,6 +31,7 @@ public class Move implements Comparable<Move> {
         this.POWER = power;
         this.ACCURACY = accuracy;
         this.PP = pp;
+        this.IS_HIDDEN_POWER = name.startsWith("Hidden Power ");
     }
 
     @Nonnull
@@ -55,6 +58,10 @@ public class Move implements Comparable<Move> {
         return this.TYPE;
     }
 
+    public void setType(Type type) {
+        this.TYPE = type;
+    }
+
     @Nonnull
     public Category getCategory() {
         return this.CATEGORY;
@@ -70,6 +77,26 @@ public class Move implements Comparable<Move> {
 
     public int getPP() {
         return this.PP;
+    }
+
+    public double getDamageMultiplier() {
+        return this.damageMultiplier;
+    }
+
+    protected void setDamageMultiplier(double multiplier) {
+        this.damageMultiplier = multiplier;
+    }
+
+    protected void incrementDamageMultiplier(double multiplier) {
+        this.damageMultiplier += multiplier;
+    }
+
+    protected void decreaseDamageMultiplier(double multiplier ){
+        this.damageMultiplier -= multiplier;
+    }
+
+    public boolean isHiddenPower() {
+        return this.IS_HIDDEN_POWER;
     }
 
 }
