@@ -2,6 +2,7 @@ package com.github.drsmugbrain.pokemon;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
+import java.util.Random;
 import java.util.TreeMap;
 
 /**
@@ -99,6 +100,16 @@ public class Move implements Comparable<Move> {
 
     public int getPriority() {
         return Priority.getPriority(this);
+    }
+
+    public static Pokemon getFirstPokemon(Pokemon pokemon1, Move move1, Pokemon pokemon2, Move move2) {
+        if (move1.getPriority() > move2.getPriority()) return pokemon1;
+        if (move2.getPriority() > move1.getPriority()) return pokemon2;
+        if (pokemon1.getStat(Stat.SPEED) > pokemon2.getStat(Stat.SPEED)) return pokemon1;
+        if (pokemon2.getStat(Stat.SPEED) > pokemon1.getStat(Stat.SPEED)) return pokemon2;
+
+        Pokemon[] pokemons = new Pokemon[]{pokemon1, pokemon2};
+        return pokemons[new Random().nextInt(pokemons.length)];
     }
 
 }
