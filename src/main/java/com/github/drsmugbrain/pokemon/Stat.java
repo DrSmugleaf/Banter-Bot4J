@@ -9,7 +9,7 @@ public enum Stat {
 
     HP("Health") {
         @Override
-        public int calculate(int baseStat, int iv, int ev, int level, Boolean hasPositiveNature) {
+        public int calculate(int baseStat, int iv, int ev, int level, Boolean hasPositiveNature, double stageMultiplier) {
             return ((iv + 2 * baseStat + (ev / 4)) * level / 100) + 10 + level;
         }
     },
@@ -20,13 +20,13 @@ public enum Stat {
     SPECIAL_DEFENSE("Special Defense"),
     ACCURACY("Accuracy") {
         @Override
-        public int calculate(int baseStat, int iv, int ev, int level, Boolean hasPositiveNature) {
+        public int calculate(int baseStat, int iv, int ev, int level, Boolean hasPositiveNature, double stageMultiplier) {
             return baseStat;
         }
     },
     EVASION("Evasion") {
         @Override
-        public int calculate(int baseStat, int iv, int ev, int level, Boolean hasPositiveNature) {
+        public int calculate(int baseStat, int iv, int ev, int level, Boolean hasPositiveNature, double stageMultiplier) {
             return baseStat;
         }
     };
@@ -42,13 +42,13 @@ public enum Stat {
         return this.NAME;
     }
 
-    public int calculate(int baseStat, int iv, int ev, int level, Boolean hasPositiveNature) {
+    public int calculate(int baseStat, int iv, int ev, int level, Boolean hasPositiveNature, double stageMultiplier) {
         double natureMultiplier = hasPositiveNature == Boolean.TRUE ? 1.1 : hasPositiveNature == Boolean.FALSE ? 0.9 : 1.0;
-        return (int) ((((iv + 2 * baseStat + (ev / 4)) * level / 100) + 5) * natureMultiplier);
+        return (int) ((((iv + 2 * baseStat + (ev / 4)) * level / 100) + 5) * natureMultiplier * stageMultiplier);
     }
 
     public int calculate(int baseStat, int iv, int ev, int level) {
-        return this.calculate(baseStat, iv, ev, level, null);
+        return this.calculate(baseStat, iv, ev, level, null, 1);
     }
 
 }
