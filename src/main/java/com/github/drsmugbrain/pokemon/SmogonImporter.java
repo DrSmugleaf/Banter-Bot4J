@@ -8,7 +8,7 @@ import java.util.Set;
  */
 public class SmogonImporter {
 
-    public static void parsePokemon(String export) {
+    public static Pokemon parsePokemon(String export) {
         export = export.trim();
         String[] exportArray = export.split("\n");
 
@@ -37,7 +37,7 @@ public class SmogonImporter {
             moves.add(new Move(Move.getBaseMove(move)));
         }
 
-        Pokemon pokemon = new Pokemon(basePokemon, ability, moves, 100);
+        return new Pokemon(basePokemon, ability, moves, 100);
     }
 
 }
