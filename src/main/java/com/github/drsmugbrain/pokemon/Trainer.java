@@ -13,7 +13,7 @@ public class Trainer {
     private final String NAME;
     private final List<Pokemon> POKEMONS = new ArrayList<>();
 
-    public Trainer(@Nonnull String name, @Nonnull Pokemon[] pokemons) {
+    public Trainer(@Nonnull String name, @Nonnull Pokemon... pokemons) {
         this.NAME = name;
         this.POKEMONS.addAll(Arrays.asList(pokemons));
     }
