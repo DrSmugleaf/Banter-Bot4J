@@ -57,7 +57,7 @@ public class SmogonParser {
             int accuracy = move.getInt("accuracy");
             int pp = move.getInt("pp");
 
-            new Move(name, type, category, power, accuracy, pp).createBaseMove();
+            new BaseMove(name, type, category, power, accuracy, pp).createBaseMove();
         }
     }
 

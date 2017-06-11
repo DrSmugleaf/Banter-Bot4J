@@ -80,7 +80,7 @@ public enum Priority {
         return Holder.MAP.get(move).PRIORITY;
     }
 
-    public static int getPriority(@Nonnull Move move) {
+    public static int getPriority(@Nonnull BaseMove move) {
         return Priority.getPriority(move.getName());
     }
 

@@ -3,17 +3,14 @@ package com.github.drsmugbrain.pokemon;
 import org.json.JSONObject;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 08/06/2017.
  */
 public class BasePokemon implements Comparable<BasePokemon> {
 
-    private static final Set<BasePokemon> BASE_POKEMON = new TreeSet<>();
+    private static final Map<String, BasePokemon> BASE_POKEMON = new TreeMap<>();
 
     private final String NAME;
 
@@ -35,8 +32,8 @@ public class BasePokemon implements Comparable<BasePokemon> {
     }
 
     @Nonnull
-    public static Set<BasePokemon> getBasePokemon() {
-        return BasePokemon.BASE_POKEMON;
+    public static BasePokemon getBasePokemon(String name) {
+        return BasePokemon.BASE_POKEMON.get(name);
     }
 
     @Nonnull
@@ -76,7 +73,7 @@ public class BasePokemon implements Comparable<BasePokemon> {
     }
 
     protected void createBasePokemon() {
-        BasePokemon.BASE_POKEMON.add(this);
+        BasePokemon.BASE_POKEMON.put(this.NAME, this);
     }
 
     @Nonnull

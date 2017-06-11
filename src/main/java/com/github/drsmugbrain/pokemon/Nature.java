@@ -2,6 +2,8 @@ package com.github.drsmugbrain.pokemon;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by DrSmugleaf on 04/06/2017.
@@ -40,10 +42,20 @@ public enum Nature {
     private final Stat DECREASED_STAT;
 
     Nature(@Nonnull Integer id, @Nonnull String name, @Nullable Stat increasedStat, @Nullable Stat decreasedStat) {
+        Holder.MAP.put(name, this);
         this.ID = id;
         this.NAME = name;
         this.INCREASED_STAT = increasedStat;
         this.DECREASED_STAT = decreasedStat;
+    }
+
+    @Nonnull
+    public static Nature getNature(@Nonnull String name) {
+        if (!Holder.MAP.containsKey(name)) {
+            throw new NullPointerException("Nature " + " doesn't exist");
+        }
+
+        return Holder.MAP.get(name);
     }
 
     @Nonnull
@@ -67,7 +79,7 @@ public enum Nature {
     }
 
     @Nullable
-    public Boolean isPositiveNature(Stat stat) {
+    public Boolean isPositiveNature(@Nonnull Stat stat) {
         if (this.getIncreasedStat() != null && this.getIncreasedStat().equals(stat)) {
             return true;
         } else if (this.getDecreasedStat() != null && this.getDecreasedStat().equals(stat)) {
@@ -75,6 +87,10 @@ public enum Nature {
         } else {
             return null;
         }
+    }
+
+    private static class Holder {
+        static Map<String, Nature> MAP = new HashMap<>();
     }
 
 }

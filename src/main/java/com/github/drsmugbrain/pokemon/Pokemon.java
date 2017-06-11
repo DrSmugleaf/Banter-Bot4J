@@ -1,6 +1,7 @@
 package com.github.drsmugbrain.pokemon;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -12,26 +13,21 @@ public class Pokemon extends BasePokemon {
     private final String NICKNAME;
 
     private final Ability ABILITY;
-
     private final Nature NATURE;
-
-    private Set<Move> MOVES;
-
     private final int LEVEL;
-
     private final Type[] TYPES;
-
     private final Map<Stat, Integer> INDIVIDUAL_VALUES;
     private final Map<Stat, Integer> EFFORT_VALUES;
     private final Map<Stat, Stage> STAT_STAGES;
-
+    private Item item;
+    private Set<Move> MOVES;
     private double stabMultiplier = 1.5;
 
     private double damageMultiplier = 1;
 
     private boolean canSwitch = true;
 
-    public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Nature nature, @Nonnull Ability ability, @Nonnull Set moves, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues, Map<Stat, Stage> stat_stages) {
+    public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Nature nature, @Nonnull Ability ability, @Nonnull Set<Move> moves, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues, Map<Stat, Stage> stat_stages) {
         super(basePokemon);
 
         this.NICKNAME = basePokemon.getName();
@@ -99,6 +95,35 @@ public class Pokemon extends BasePokemon {
         return statStages;
     }
 
+    @Override
+    public String toString() {
+        String string = "";
+
+        String name = super.getName();
+        String item = this.getItem().getName();
+        String ability = this.getAbility().getName();
+
+        string = string.concat(String.format("%s @ %s" +
+                "\nAbility: %s" +
+                "\nEVs: %d HP / %d Atk / %d Def / %d SpA / %d SpD / %d Spe" +
+                "\n%s Nature",
+                name, item, ability,
+                this.getEffortValue(Stat.HP),
+                this.getEffortValue(Stat.ATTACK),
+                this.getEffortValue(Stat.DEFENSE),
+                this.getEffortValue(Stat.SPECIAL_ATTACK),
+                this.getEffortValue(Stat.SPECIAL_DEFENSE),
+                this.getEffortValue(Stat.SPEED),
+                this.getNature().getName()
+        ));
+
+        for (Move move : this.MOVES) {
+            string = string.concat(String.format("\n- %s", move.getName()));
+        }
+
+        return string;
+    }
+
     @Nonnull
     public String getNickname() {
         return this.NICKNAME;
@@ -107,6 +132,15 @@ public class Pokemon extends BasePokemon {
     @Nonnull
     public Ability getAbility() {
         return this.ABILITY;
+    }
+
+    @Nonnull
+    public Item getItem() {
+        return this.item;
+    }
+
+    public void setItem(@Nullable Item item) {
+        this.item = item;
     }
 
     @Nonnull
