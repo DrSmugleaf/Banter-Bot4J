@@ -9,6 +9,8 @@ import java.util.TreeMap;
  */
 public class BaseMove {
 
+    protected static final BaseMove SWITCH = null;
+
     private static final Map<String, BaseMove> BASE_MOVES = new TreeMap<>();
 
     private final String NAME;
