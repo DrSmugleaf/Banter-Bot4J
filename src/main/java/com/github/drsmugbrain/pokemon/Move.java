@@ -1,7 +1,7 @@
 package com.github.drsmugbrain.pokemon;
 
 import javax.annotation.Nonnull;
-import java.util.Random;
+import javax.annotation.Nullable;
 
 /**
  * Created by DrSmugleaf on 04/06/2017.
@@ -67,14 +67,10 @@ public class Move extends BaseMove {
         this.damageMultiplier -= amount;
     }
 
-    public static Pokemon getFirstPokemon(Pokemon pokemon1, Move move1, Pokemon pokemon2, Move move2) {
-        if (move1.getPriority() > move2.getPriority()) return pokemon1;
-        if (move2.getPriority() > move1.getPriority()) return pokemon2;
-        if (pokemon1.getStat(Stat.SPEED) > pokemon2.getStat(Stat.SPEED)) return pokemon1;
-        if (pokemon2.getStat(Stat.SPEED) > pokemon1.getStat(Stat.SPEED)) return pokemon2;
-
-        Pokemon[] pokemons = new Pokemon[]{pokemon1, pokemon2};
-        return pokemons[new Random().nextInt(pokemons.length)];
+    protected void use(@Nonnull Pokemon attacker, @Nullable Pokemon defender) {
+        if (defender != null && this.getPower() > 0) {
+            defender.damage(this.getDamage(attacker, defender));
+        }
     }
 
 }

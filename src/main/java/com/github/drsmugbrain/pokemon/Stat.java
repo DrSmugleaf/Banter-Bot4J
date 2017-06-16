@@ -9,7 +9,12 @@ public enum Stat {
 
     HP("Health") {
         @Override
-        public int calculate(int baseStat, int iv, int ev, int level, Boolean hasPositiveNature, double stageMultiplier) {
+        public int calculate(Pokemon pokemon, Stat stat) {
+            int iv = pokemon.getIndividualValue(Stat.HP);
+            int baseStat = pokemon.getBaseStat(Stat.HP);
+            int ev = pokemon.getEffortValue(Stat.HP);
+            int level = pokemon.getLevel();
+
             return ((iv + 2 * baseStat + (ev / 4)) * level / 100) + 10 + level;
         }
     },
@@ -20,14 +25,14 @@ public enum Stat {
     SPECIAL_DEFENSE("Special Defense"),
     ACCURACY("Accuracy") {
         @Override
-        public int calculate(int baseStat, int iv, int ev, int level, Boolean hasPositiveNature, double stageMultiplier) {
-            return baseStat;
+        public int calculate(Pokemon pokemon, Stat stat) {
+            return pokemon.getBaseStat(Stat.ACCURACY);
         }
     },
     EVASION("Evasion") {
         @Override
-        public int calculate(int baseStat, int iv, int ev, int level, Boolean hasPositiveNature, double stageMultiplier) {
-            return baseStat;
+        public int calculate(Pokemon pokemon, Stat stat) {
+            return pokemon.getBaseStat(Stat.EVASION);
         }
     };
 
@@ -42,13 +47,14 @@ public enum Stat {
         return this.NAME;
     }
 
-    public int calculate(int baseStat, int iv, int ev, int level, Boolean hasPositiveNature, double stageMultiplier) {
-        double natureMultiplier = hasPositiveNature == Boolean.TRUE ? 1.1 : hasPositiveNature == Boolean.FALSE ? 0.9 : 1.0;
+    public int calculate(Pokemon pokemon, Stat stat) {
+        int iv = pokemon.getIndividualValue(stat);
+        int baseStat = pokemon.getBaseStat(stat);
+        int ev = pokemon.getEffortValue(stat);
+        int level = pokemon.getLevel();
+        double natureMultiplier = pokemon.getNature().getNatureMultiplier(stat);
+        double stageMultiplier = pokemon.getStatStageMultiplier(stat);
         return (int) ((((iv + 2 * baseStat + (ev / 4)) * level / 100) + 5) * natureMultiplier * stageMultiplier);
-    }
-
-    public int calculate(int baseStat, int iv, int ev, int level) {
-        return this.calculate(baseStat, iv, ev, level, null, 1);
     }
 
 }

@@ -78,14 +78,13 @@ public enum Nature {
         return this.DECREASED_STAT;
     }
 
-    @Nullable
-    public Boolean isPositiveNature(@Nonnull Stat stat) {
+    public double getNatureMultiplier(@Nonnull Stat stat) {
         if (this.getIncreasedStat() != null && this.getIncreasedStat().equals(stat)) {
-            return true;
+            return 1.1;
         } else if (this.getDecreasedStat() != null && this.getDecreasedStat().equals(stat)) {
-            return false;
+            return 0.9;
         } else {
-            return null;
+            return 1.0;
         }
     }
 

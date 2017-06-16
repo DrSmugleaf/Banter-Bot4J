@@ -11,7 +11,6 @@ import java.util.Set;
  */
 public class Pokemon extends BasePokemon {
     private final String NICKNAME;
-
     private final Ability ABILITY;
     private final Nature NATURE;
     private final int LEVEL;
@@ -19,13 +18,14 @@ public class Pokemon extends BasePokemon {
     private final Map<Stat, Integer> INDIVIDUAL_VALUES;
     private final Map<Stat, Integer> EFFORT_VALUES;
     private final Map<Stat, Stage> STAT_STAGES;
+    private final Map<Stat, Integer> CURRENT_STATS;
     private Item item;
     private Set<Move> MOVES;
     private double stabMultiplier = 1.5;
-
     private double damageMultiplier = 1;
-
     private boolean canSwitch = true;
+    private Move action = null;
+    private Pokemon target = null;
 
     public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Nature nature, @Nonnull Ability ability, @Nonnull Set<Move> moves, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues, Map<Stat, Stage> stat_stages) {
         super(basePokemon);
@@ -45,6 +45,7 @@ public class Pokemon extends BasePokemon {
         this.INDIVIDUAL_VALUES = individualValues;
         this.EFFORT_VALUES = effortValues;
         this.STAT_STAGES = stat_stages;
+        this.CURRENT_STATS = this.getStats();
     }
 
     public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Ability ability, @Nonnull Set<Move> moves, int level) {
@@ -139,7 +140,7 @@ public class Pokemon extends BasePokemon {
         return this.item;
     }
 
-    public void setItem(@Nullable Item item) {
+    protected void setItem(@Nullable Item item) {
         this.item = item;
     }
 
@@ -174,8 +175,24 @@ public class Pokemon extends BasePokemon {
         return stats;
     }
 
+    @Nonnull
+    public Map<Stat, Integer> getCurrentStats() {
+        Map<Stat, Integer> stats = new HashMap<>();
+
+        for (int i = 0; i < Stat.values().length; i++) {
+            Stat stat = Stat.values()[i];
+            stats.put(stat, this.getCurrentStat(stat));
+        }
+
+        return stats;
+    }
+
     public int getStat(@Nonnull Stat stat) {
-        return stat.calculate(this.getBaseStat(stat), this.getIndividualValue(stat), this.getEffortValue(stat), this.getLevel(), this.getNature().isPositiveNature(stat), this.getStatStageMultiplier(stat));
+        return stat.calculate(this, stat);
+    }
+
+    public int getCurrentStat(@Nonnull Stat stat) {
+        return this.CURRENT_STATS.get(stat);
     }
 
     @Nonnull
@@ -204,8 +221,12 @@ public class Pokemon extends BasePokemon {
         return this.STAT_STAGES.get(stat).getStatMultiplier(stat);
     }
 
-    public void setStatStage(@Nonnull Stat stat, @Nonnull Stage stage) {
+    protected void setStatStage(@Nonnull Stat stat, @Nonnull Stage stage) {
         this.STAT_STAGES.put(stat, stage);
+    }
+
+    protected double getStabMultiplier() {
+        return this.stabMultiplier;
     }
 
     protected void changeStabMultiplier(double multiplier) {
@@ -238,6 +259,37 @@ public class Pokemon extends BasePokemon {
 
     protected void setCanSwitch(boolean bool) {
         this.canSwitch = bool;
+    }
+
+    public Move getAction() {
+        return this.action;
+    }
+
+    protected Pokemon getTarget() {
+        return this.target;
+    }
+
+    protected void setAction(@Nonnull Move action, @Nullable Pokemon target) {
+        this.action = action;
+        this.target = target;
+    }
+
+    protected void resetAction() {
+        this.action = null;
+        this.target = null;
+    }
+
+    protected void executeTurn() {
+        this.action.use(this, this.target);
+    }
+
+    protected void damage(int amount) {
+        int currentHP = this.getCurrentStat(Stat.HP);
+        this.CURRENT_STATS.put(Stat.HP, currentHP - amount);
+    }
+
+    protected void heal(int amount) {
+        this.damage(-amount);
     }
 
 }

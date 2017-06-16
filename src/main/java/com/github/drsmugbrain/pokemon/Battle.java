@@ -1,27 +1,73 @@
 package com.github.drsmugbrain.pokemon;
 
 import javax.annotation.Nonnull;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 07/06/2017.
  */
 public class Battle {
 
-    private final Trainer TRAINERS[];
-    private Set<Pokemon> turnOrder = new LinkedHashSet<>();
+    private final Map<Long, Trainer> TRAINERS = new LinkedHashMap<>();
 
-    public Battle(@Nonnull Trainer... trainers) {
-        this.TRAINERS = trainers;
+    public Battle(@Nonnull Long id1, @Nonnull Trainer trainer1, @Nonnull Long id2, @Nonnull Trainer trainer2) {
+        TRAINERS.put(id1, trainer1);
+        TRAINERS.put(id2, trainer2);
     }
 
-    public Pokemon getFirstPokemon() {
-        return turnOrder.iterator().next();
+    public void executeTurn() {
+        List<Pokemon> pokemons = new ArrayList<>();
+        for (Trainer trainer : this.TRAINERS.values()) {
+            pokemons.addAll(Arrays.asList(trainer.getActivePokemons()));
+        }
+
+        pokemons.sort((pokemon1, pokemon2) -> {
+            Move action1 = pokemon1.getAction();
+            Move action2 = pokemon2.getAction();
+
+            if (Objects.equals(action1.getName(), "Pursuit") && action2 == BaseMove.SWITCH) {
+                return 1;
+            }
+            if (Objects.equals(action2.getName(), "Pursuit") && action1 == BaseMove.SWITCH) {
+                return -1;
+            }
+
+            if (action1 == BaseMove.SWITCH) {
+                return 1;
+            }
+            if (action2 == BaseMove.SWITCH) {
+                return -1;
+            }
+
+            if (action1.getPriority() > action2.getPriority()) {
+                return 1;
+            }
+            if (action2.getPriority() < action1.getPriority()) {
+                return -1;
+            }
+
+            if (pokemon1.getCurrentStat(Stat.SPEED) > pokemon2.getCurrentStat(Stat.SPEED)) {
+                return 1;
+            }
+            if (pokemon2.getCurrentStat(Stat.SPEED) < pokemon1.getCurrentStat(Stat.SPEED)) {
+                return -1;
+            }
+
+            if (Math.random() < 0.5) {
+                return 1;
+            } else {
+                return -1;
+            }
+        });
+
+        for (Pokemon pokemon : pokemons) {
+            System.out.println(pokemon.getAction());
+            pokemon.executeTurn();
+        }
     }
 
-    public Pokemon getLastPokemon() {
-        return (Pokemon) turnOrder.toArray()[turnOrder.size() - 1];
+    public Map<Long, Trainer> getTrainers() {
+        return this.TRAINERS;
     }
 
 }
