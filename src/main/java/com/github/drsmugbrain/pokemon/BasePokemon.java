@@ -32,7 +32,7 @@ public class BasePokemon implements Comparable<BasePokemon> {
     }
 
     @Nonnull
-    public static BasePokemon getBasePokemon(String name) {
+    public static BasePokemon getBasePokemon(@Nonnull String name) {
         return BasePokemon.BASE_POKEMON.get(name);
     }
 
