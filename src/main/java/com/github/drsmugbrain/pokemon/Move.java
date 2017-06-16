@@ -31,6 +31,26 @@ public class Move extends BaseMove {
         return this.pp;
     }
 
+    protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender) {
+        int attackStat;
+        int defenseStat;
+        if (this.getCategory() == Category.PHYSICAL) {
+            attackStat = attacker.getStat(Stat.ATTACK);
+            defenseStat = defender.getStat(Stat.DEFENSE);
+        } else if (this.getCategory() == Category.SPECIAL) {
+            attackStat = attacker.getStat(Stat.SPECIAL_ATTACK);
+            defenseStat = defender.getStat(Stat.SPECIAL_DEFENSE);
+        } else {
+            return 0;
+        }
+        int level = attacker.getLevel();
+        int attackPower = this.getPower();
+        double stabMultiplier = attacker.getStabMultiplier();
+        double effectiveness = Type.getDamageMultiplier(defender.getTypes(), this.getType());
+        int randomNumber = (int) (Math.random() * 100 + 85);
+        return (int) (((((2 * level / 5 + 2) * attackStat * attackPower / defenseStat) / 50) + 2) * stabMultiplier * effectiveness * randomNumber / 100);
+    }
+
     public double getDamageMultiplier() {
         return this.damageMultiplier;
     }
