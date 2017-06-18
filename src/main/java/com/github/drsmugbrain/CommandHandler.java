@@ -9,6 +9,7 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
@@ -120,4 +121,11 @@ public class CommandHandler {
             commandMap.get(commandStr).runCommand(event, argsList);
     }
 
+    @EventSubscriber
+    public void handleReaction(ReactionAddEvent event){
+        if(event.getAuthor().isBot()){
+            return;
+        }
+        
+    }
 }
