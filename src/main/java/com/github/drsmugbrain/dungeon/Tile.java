@@ -39,10 +39,6 @@ public class Tile {
         this.type = ' ';
     }
 
-    public void setPlayer(){
-        this.type = '@';
-    }
-
     public static Tile[] charRowToTileRow(char[] charRow){
         Tile[] result = new Tile[charRow.length];
         for (int i = 0; i<charRow.length; i++){

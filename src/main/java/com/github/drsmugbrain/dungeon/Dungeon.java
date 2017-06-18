@@ -10,6 +10,7 @@ import sx.blah.discord.util.RequestBuffer;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,7 +23,7 @@ public class Dungeon {
     private Map<Long, Player> playerHash;  // <user LongID, Player instance>
 
 
-    public Dungeon(IUser[] users) throws IOException, InputMismatchException{
+    public Dungeon(List<IUser> users) throws IOException, InputMismatchException{
         this.map = new DungeonMap();
         this.playerHash = new HashMap<>();
 

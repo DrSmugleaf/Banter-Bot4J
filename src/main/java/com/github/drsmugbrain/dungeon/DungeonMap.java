@@ -21,7 +21,7 @@ public class DungeonMap {
 
 
     public DungeonMap() throws IOException, InputMismatchException{
-        this.tiles = FileParser.fileToArray("src\\main\\java\\com\\github\\drsmugbrain\\dungeon\\example.map");
+        this.tiles = FileParser.fileToArray("src\\main\\java\\com\\github\\drsmugbrain\\dungeon\\example2.map");
         this.entities = new ArrayList<>();
         this.spawnPoints = new ArrayList<>();
 

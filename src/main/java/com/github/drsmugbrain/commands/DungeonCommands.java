@@ -1,7 +1,7 @@
 package com.github.drsmugbrain.commands;
 
-import com.github.drsmugbrain.BotUtils;
 import com.github.drsmugbrain.dungeon.Dungeon;
+import com.github.drsmugbrain.util.Bot;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
@@ -23,14 +23,14 @@ public class DungeonCommands {
             if(!users.contains(event.getAuthor())){
                 users.add(event.getAuthor());
             }
-            game = new Dungeon(new IUser[]{event.getMessage().getAuthor()});
+            game = new Dungeon(users);
         } catch (IOException e){
             e.printStackTrace();
-            BotUtils.sendMessage(event.getChannel(), "arregla la ruta al mapa porfa plis");
+            Bot.sendMessage(event.getChannel(), "arregla la ruta al mapa porfa plis");
             return;
         } catch (InputMismatchException e){
             e.printStackTrace();
-            BotUtils.sendMessage(event.getChannel(), "El mapa no tiene spawn");
+            Bot.sendMessage(event.getChannel(), "El mapa no tiene spawn");
             return;
         }
         IMessage message = event.getChannel().sendMessage(game.getFinishedMap());

@@ -32,7 +32,6 @@ public class Treasure implements IEntity {
     public void receiveInteraction(IEntity other) {
         System.out.println("interaction received");
         if(other instanceof Player){
-            System.out.println("Algo raro pasa");
             Player player = (Player) other;
             player.addGold(this.gold);
             this.map.removeEntity(this);
