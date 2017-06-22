@@ -1341,7 +1341,7 @@ public enum Movess {
             return false;
         }
 
-        return this.Z_MOVE_ITEM == pokemon.getItem() && !Collections.disjoint(this.Z_MOVE_REQUIRED_MOVE, pokemon.getMoves());
+        return this.Z_MOVE_ITEM == pokemon.getItem() && !Collections.disjoint(this.Z_MOVE_MOVES_THAT_TURN_INTO_THIS, pokemon.getMoves());
     }
 
     protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer) {
