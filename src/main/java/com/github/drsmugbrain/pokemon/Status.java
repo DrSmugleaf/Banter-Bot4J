@@ -11,10 +11,8 @@ public enum Status {
     FREEZE("Freeze"),
     PARALYSIS("Paralysis"),
     POISON("Poison"),
-    SLEEP("Sleep"),
-    ATTRACT("Attract"),
-    CONFUSION("Confusion"),
-    CURSE("Curse");
+    BADLY_POISONED("Badly poisoned"),
+    SLEEP("Sleep");
 
     private String NAME;
 

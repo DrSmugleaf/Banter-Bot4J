@@ -28,10 +28,19 @@ public enum Stage {
     private final double EVASION_MULTIPLIER;
 
     Stage(int stage, double mainStatMultiplier, double accuracyMultiplier, double evasionMultiplier) {
+        Holder.MAP.put(stage, this);
         this.STAGE = stage;
         this.MAIN_STAT_MULTIPLIER = mainStatMultiplier;
         this.ACCURACY_MULTIPLIER = accuracyMultiplier;
         this.EVASION_MULTIPLIER = evasionMultiplier;
+    }
+
+    public static Stage getStage(int stage) {
+        if (!Holder.MAP.containsKey(stage)) {
+            throw new NullPointerException("Stage " + stage + " doesn't exist");
+        }
+
+        return Holder.MAP.get(stage);
     }
 
     public int getStage() {
@@ -61,14 +70,6 @@ public enum Stage {
 
     public double getEvasionMultiplier() {
         return this.EVASION_MULTIPLIER;
-    }
-
-    public static Stage getStage(int stage) {
-        if (!Holder.MAP.containsKey(stage)) {
-            throw new NullPointerException("Stage " + stage + " doesn't exist");
-        }
-
-        return Holder.MAP.get(stage);
     }
 
     private static class Holder {

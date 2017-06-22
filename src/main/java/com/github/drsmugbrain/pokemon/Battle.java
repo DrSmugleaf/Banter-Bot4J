@@ -9,6 +9,7 @@ import java.util.*;
 public class Battle {
 
     private final Map<Long, Trainer> TRAINERS = new LinkedHashMap<>();
+    protected final List<Pokemon> TURN_ORDER = new ArrayList<>();
 
     public Battle(@Nonnull Long id1, @Nonnull Trainer trainer1, @Nonnull Long id2, @Nonnull Trainer trainer2) {
         TRAINERS.put(id1, trainer1);
@@ -16,12 +17,11 @@ public class Battle {
     }
 
     public void executeTurn() {
-        List<Pokemon> pokemons = new ArrayList<>();
         for (Trainer trainer : this.TRAINERS.values()) {
-            pokemons.addAll(Arrays.asList(trainer.getActivePokemons()));
+            this.TURN_ORDER.addAll(Arrays.asList(trainer.getActivePokemons()));
         }
 
-        pokemons.sort((pokemon1, pokemon2) -> {
+        this.TURN_ORDER.sort((pokemon1, pokemon2) -> {
             Move action1 = pokemon1.getAction();
             Move action2 = pokemon2.getAction();
 
@@ -60,8 +60,7 @@ public class Battle {
             }
         });
 
-        for (Pokemon pokemon : pokemons) {
-            System.out.println(pokemon.getAction());
+        for (Pokemon pokemon : this.TURN_ORDER) {
             pokemon.executeTurn();
         }
     }

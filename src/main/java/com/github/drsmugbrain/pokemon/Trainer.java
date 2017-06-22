@@ -1,6 +1,9 @@
 package com.github.drsmugbrain.pokemon;
 
+import com.google.common.collect.Lists;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -63,6 +66,19 @@ public class Trainer {
 
     public void sendOut(Pokemon pokemon) {
         this.ACTIVE_POKEMONS.add(pokemon);
+    }
+
+    @Nullable
+    public Pokemon getOppositePokemon(Pokemon pokemon) {
+        int index = this.ACTIVE_POKEMONS.indexOf(pokemon);
+        if (this.ACTIVE_POKEMONS.size() >= 3) {
+            return Lists.reverse(this.ACTIVE_POKEMONS).get(index);
+        }
+        return null;
+    }
+
+    public void swapActivePokemon(Pokemon pokemon1, Pokemon pokemon2) {
+        Collections.swap(this.ACTIVE_POKEMONS, this.ACTIVE_POKEMONS.indexOf(pokemon1), this.ACTIVE_POKEMONS.indexOf(pokemon2));
     }
 
 }

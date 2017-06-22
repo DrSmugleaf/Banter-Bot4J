@@ -2,9 +2,7 @@ package com.github.drsmugbrain.pokemon;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 04/06/2017.
@@ -26,6 +24,9 @@ public class Pokemon extends BasePokemon {
     private boolean canSwitch = true;
     private Move action = null;
     private Pokemon target = null;
+    private Status status = null;
+    private final List<VolatileStatus> VOLATILE_STATUSES = new ArrayList<>();
+    private CriticalHitStage criticalHitStage = CriticalHitStage.ZERO;
 
     public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Nature nature, @Nonnull Ability ability, @Nonnull Set<Move> moves, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues, Map<Stat, Stage> stat_stages) {
         super(basePokemon);
@@ -101,7 +102,7 @@ public class Pokemon extends BasePokemon {
         String string = "";
 
         String name = super.getName();
-        String item = this.getItem().getName();
+        String item = this.getItem() != null ? this.getItem().getName() : null;
         String ability = this.getAbility().getName();
 
         string = string.concat(String.format("%s @ %s" +
@@ -135,13 +136,21 @@ public class Pokemon extends BasePokemon {
         return this.ABILITY;
     }
 
-    @Nonnull
+    @Nullable
     public Item getItem() {
         return this.item;
     }
 
-    protected void setItem(@Nullable Item item) {
+    public boolean hasItem(Item item) {
+        return this.item.equals(item);
+    }
+
+    protected void setItem(@Nonnull Item item) {
         this.item = item;
+    }
+
+    protected void removeItem() {
+        this.item = null;
     }
 
     @Nonnull
@@ -153,6 +162,14 @@ public class Pokemon extends BasePokemon {
     public Set<Move> getMoves() {
         return this.MOVES;
     }
+
+    protected void changeMoves(Set<Move> moves) {
+        this.MOVES = moves;
+    }
+
+//    protected boolean hasMove(Movess... move) {
+//        return Collections.disjoint(this.MOVES, Arrays.asList(move));
+//    }
 
     @Nonnull
     public Type[] getTypes() {
@@ -225,6 +242,15 @@ public class Pokemon extends BasePokemon {
         this.STAT_STAGES.put(stat, stage);
     }
 
+    protected void raiseStatStage(@Nonnull Stat stat, int amount) {
+        this.STAT_STAGES.put(stat, Stage.getStage(this.STAT_STAGES.get(stat).getStage() + amount));
+    }
+
+    protected void lowerStatStage(@Nonnull Stat stat, int amount) {
+        this.raiseStatStage(stat, -amount);
+    }
+
+
     protected double getStabMultiplier() {
         return this.stabMultiplier;
     }
@@ -235,10 +261,6 @@ public class Pokemon extends BasePokemon {
 
     protected void resetStabMultiplier() {
         this.stabMultiplier = 1.5;
-    }
-
-    protected void changeMoves(Set<Move> moves) {
-        this.MOVES = moves;
     }
 
     protected void changeDamageMultiplier(double multiplier) {
@@ -290,6 +312,64 @@ public class Pokemon extends BasePokemon {
 
     protected void heal(int amount) {
         this.damage(-amount);
+    }
+
+    protected void setStatus(Status status) {
+        this.status = status;
+    }
+
+    @Nullable
+    protected Status getStatus() {
+        return this.status;
+    }
+
+    protected void resetStatus() {
+        this.status = null;
+    }
+
+    protected void addVolatileStatus(VolatileStatus status) {
+        this.VOLATILE_STATUSES.add(status);
+    }
+
+    @Nonnull
+    protected List<VolatileStatus> getVolatileStatuses(VolatileStatus status) {
+        return this.VOLATILE_STATUSES;
+    }
+
+    protected boolean hasVolatileStatus(VolatileStatus status) {
+        return this.VOLATILE_STATUSES.contains(status);
+    }
+
+    protected void removeVolatileStatus(VolatileStatus status) {
+        this.VOLATILE_STATUSES.remove(status);
+    }
+
+    protected void resetLoweredStats() {
+        for (Stat stat : this.STAT_STAGES.keySet()) {
+            if (this.STAT_STAGES.get(stat).getStage() < Stage.ZERO.getStage()) {
+                this.STAT_STAGES.put(stat, Stage.ZERO);
+            }
+        }
+    }
+
+    protected CriticalHitStage getCriticalHitStage() {
+        return this.criticalHitStage;
+    }
+
+    protected void raiseCriticalHitStage(int amount) {
+        this.criticalHitStage = CriticalHitStage.getStage(this.criticalHitStage.getStage() + amount);
+    }
+
+    protected void lowerCriticalHitStage(int amount) {
+        this.raiseCriticalHitStage(-amount);
+    }
+
+    protected void setCriticalHitStage(CriticalHitStage stage) {
+        this.criticalHitStage = stage;
+    }
+
+    protected void resetCriticalHitStage() {
+        this.criticalHitStage = CriticalHitStage.ZERO;
     }
 
 }

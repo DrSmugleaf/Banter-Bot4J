@@ -316,8 +316,17 @@ public enum Item {
     private String NAME;
 
     Item(@Nonnull String name) {
-        Holder.MAP.put(name, this);
+        Holder.MAP.put(name.toLowerCase(), this);
         this.NAME = name;
+    }
+
+    public static Item getItem(@Nonnull String item) {
+        item = item.toLowerCase();
+        if (!Holder.MAP.containsKey(item)) {
+            throw new NullPointerException("Item " + item + " doesn't exist");
+        }
+
+        return Holder.MAP.get(item);
     }
 
     public String getName() {

@@ -19,14 +19,15 @@ public enum Category {
     private final Stat STAT;
 
     Category(@Nonnull String name, @Nullable Stat stat) {
-        Holder.MAP.put(name, this);
+        Holder.MAP.put(name.toLowerCase(), this);
         this.NAME = name;
         this.STAT = stat;
     }
 
     @Nonnull
     public static Category getCategory(@Nonnull String category) {
-        if (Objects.equals(category, "Non-Damaging")) return Holder.MAP.get("Other");
+        category = category.toLowerCase();
+        if (Objects.equals(category, "non-damaging")) return Holder.MAP.get("other");
         if (!Holder.MAP.containsKey(category)) {
             throw new NullPointerException("Category " + category + " doesn't exist");
         }

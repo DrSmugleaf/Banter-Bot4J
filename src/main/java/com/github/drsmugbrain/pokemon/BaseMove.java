@@ -11,7 +11,7 @@ public class BaseMove {
 
     protected static final BaseMove SWITCH = null;
 
-    private static final Map<String, BaseMove> BASE_MOVES = new TreeMap<>();
+    public static final Map<String, BaseMove> BASE_MOVES = new TreeMap<>();
 
     private final String NAME;
     private final Type TYPE;
