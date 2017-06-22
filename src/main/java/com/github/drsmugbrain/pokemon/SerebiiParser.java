@@ -14,6 +14,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -56,6 +57,7 @@ public class SerebiiParser {
                         .setIsZMove(Boolean.parseBoolean(nextLine[15]))
                         .setZMoveRequiredPokemon(nextLine[16].isEmpty() ? null : nextLine[16].split(","))
                         .setZMoveRequiredMove(nextLine[17].isEmpty() ? null : Movess.getMove(nextLine[17]))
+                        .setZMoveMovesThatTurnIntoThis(nextLine[18].isEmpty() ? null : Arrays.copyOf(nextLine[18].split(","), nextLine[18].split(",").length, Movess[].class))
                         .setBaseCriticalHitRate(nextLine[19].isEmpty() ? null : CriticalHitStage.getStageByPercentage(Double.parseDouble(nextLine[19])))
                         .setPriority(Integer.parseInt(nextLine[20]))
                         .setTarget(nextLine[21].isEmpty() ? null : Target.getTarget(nextLine[21]))

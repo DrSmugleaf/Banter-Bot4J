@@ -790,8 +790,6 @@ public enum Movess {
     ZING_ZAP("Zing Zap");
 
     private final String NAME;
-    private final List<String> Z_MOVE_REQUIRED_POKEMON = new ArrayList<>();
-    private final List<Movess> Z_MOVE_REQUIRED_MOVES = new ArrayList<>();
     private final List<Status> STATUS_EFFECTS = new ArrayList<>();
     private final Map<VolatileStatus, Integer> VOLATILE_STATUS_EFFECTS_CHANCE = new HashMap<>();
     private final Map<Stat, Integer> RAISES_OWN_STATS = new HashMap<>();
@@ -807,6 +805,9 @@ public enum Movess {
     private int PP;
     private int ACCURACY;
     private boolean IS_Z_MOVE = false;
+    private final List<String> Z_MOVE_REQUIRED_POKEMON = new ArrayList<>();
+    private Movess Z_MOVE_REQUIRED_MOVE = null;
+    private final List<Movess> Z_MOVE_MOVES_THAT_TURN_INTO_THIS = new ArrayList<>();
     private boolean IS_SELF_Z_MOVE = false;
     private Item Z_MOVE_ITEM;
     private String BATTLE_EFFECT;
@@ -893,7 +894,14 @@ public enum Movess {
     }
 
     protected Movess setZMoveRequiredMove(@Nullable Movess move) {
-        this.Z_MOVE_REQUIRED_MOVES.add(move);
+        this.Z_MOVE_REQUIRED_MOVE = move;
+        return this;
+    }
+
+    protected Movess setZMoveMovesThatTurnIntoThis(@Nullable Movess... moves) {
+        if (moves != null) {
+            this.Z_MOVE_MOVES_THAT_TURN_INTO_THIS.addAll(Arrays.asList(moves));
+        }
         return this;
     }
 
@@ -1084,8 +1092,23 @@ public enum Movess {
         return this;
     }
 
+    @Nonnull
     public String getName() {
         return this.NAME;
+    }
+
+    @Nonnull
+    public Type getType() {
+        return this.TYPE;
+    }
+
+    @Nonnull
+    public Category getCategory() {
+        return this.CATEGORY;
+    }
+
+    public int getPP() {
+        return this.PP;
     }
 
     public int getBasePower() {
@@ -1139,8 +1162,130 @@ public enum Movess {
         throw new IllegalZMoveException(originalMove + " can't become Z-Move " + this.NAME);
     }
 
-    public Category getCategory() {
-        return this.CATEGORY;
+    public int getAccuracy() {
+        return this.ACCURACY;
+    }
+
+    @Nonnull
+    public String getBattleEffect() {
+        return this.BATTLE_EFFECT;
+    }
+
+    @Nullable
+    public String inDepthEffect() {
+        return this.IN_DEPTH_EFFECT;
+    }
+
+    @Nonnull
+    public String getSecondaryEffect() {
+        return this.SECONDARY_EFFECT;
+    }
+
+    @Nullable
+    public Integer getEffectRate() {
+        return this.EFFECT_RATE;
+    }
+
+    public boolean isSelfZMove() {
+        return this.IS_SELF_Z_MOVE;
+    }
+
+    @Nullable
+    public Movess getCorrespondingZMove() {
+        return this.CORRESPONDING_Z_MOVE;
+    }
+
+    @Nullable
+    public Item getZMoveItem() {
+        return this.Z_MOVE_ITEM;
+    }
+
+    @Nullable
+    public String getDetailedEffect() {
+        return this.DETAILED_EFFECT;
+    }
+
+    @Nullable
+    public Integer getZMovePower() {
+        return this.Z_MOVE_POWER;
+    }
+
+    public boolean isZMove() {
+        return this.IS_Z_MOVE;
+    }
+
+    @Nullable
+    public String[] getZMoveRequiredPokemon() {
+        return this.Z_MOVE_REQUIRED_POKEMON.toArray(new String[]{});
+    }
+
+    @Nullable
+    public Movess getZMoveRequiredMoves() {
+        return this.Z_MOVE_REQUIRED_MOVE;
+    }
+
+    @Nullable
+    public Movess[] getZMoveMovesThatTurnIntoThis() {
+        return this.Z_MOVE_MOVES_THAT_TURN_INTO_THIS.toArray(new Movess[]{});
+    }
+
+    @Nullable
+    public CriticalHitStage getCriticalHitStage() {
+        return this.BASE_CRITICAL_HIT_RATE;
+    }
+
+    public int getPriority() {
+        return this.PRIORITY;
+    }
+
+    @Nonnull
+    public Target getTarget() {
+        return this.TARGET;
+    }
+
+    @Nonnull
+    public Hit getPokemonHit() {
+        return this.POKEMON_HIT;
+    }
+
+    public boolean physicalContact() {
+        return this.PHYSICAL_CONTACT;
+    }
+
+    public boolean soundType() {
+        return this.SOUND_TYPE;
+    }
+
+    public boolean punchMove() {
+        return this.PUNCH_MOVE;
+    }
+
+    public boolean snatchable() {
+        return this.SNATCHABLE;
+    }
+
+    public boolean zMove() {
+        return this.Z_MOVE;
+    }
+
+    public boolean defrostsWhenUsed() {
+        return this.DEFROSTS_WHEN_USED;
+    }
+
+    public boolean hitsOppositeSideInTriples() {
+        return this.HITS_OPPOSITE_SIDE_IN_TRIPLES;
+    }
+
+    public boolean reflected() {
+        return this.REFLECTED;
+    }
+
+    public boolean blocked() {
+        return this.BLOCKED;
+    }
+
+    public boolean copyable() {
+        return this.COPYABLE;
     }
 
     protected Movess setCategory(@Nonnull Category category) {
@@ -1196,7 +1341,7 @@ public enum Movess {
             return false;
         }
 
-        return this.Z_MOVE_ITEM == pokemon.getItem() && !Collections.disjoint(this.Z_MOVE_REQUIRED_MOVES, pokemon.getMoves());
+        return this.Z_MOVE_ITEM == pokemon.getItem() && !Collections.disjoint(this.Z_MOVE_REQUIRED_MOVE, pokemon.getMoves());
     }
 
     protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer) {
