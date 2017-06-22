@@ -845,6 +845,9 @@ public enum BaseMove {
 
     public static BaseMove getMove(@Nonnull String move) {
         move = move.toLowerCase();
+        if (move.startsWith("hidden power")) {
+            return Holder.MAP.get("hidden power");
+        }
         if (!Holder.MAP.containsKey(move)) {
             throw new NullPointerException("Move " + move + " doesn't exist");
         }

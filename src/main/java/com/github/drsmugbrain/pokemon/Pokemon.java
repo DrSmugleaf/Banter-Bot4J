@@ -9,15 +9,15 @@ import java.util.*;
  */
 public class Pokemon extends BasePokemon {
     private final String NICKNAME;
+    private Item item;
     private final Ability ABILITY;
     private final Nature NATURE;
     private final int LEVEL;
     private final Type[] TYPES;
-    private final Map<Stat, Integer> INDIVIDUAL_VALUES;
-    private final Map<Stat, Integer> EFFORT_VALUES;
-    private final Map<Stat, Stage> STAT_STAGES;
+    private final Map<Stat, Integer> INDIVIDUAL_VALUES = getDefaultIndividualValues();
+    private final Map<Stat, Integer> EFFORT_VALUES = getDefaultEffortValues();
+    private final Map<Stat, Stage> STAT_STAGES = getDefaultStatStages();
     private final Map<Stat, Integer> CURRENT_STATS;
-    private Item item;
     private List<Move> MOVES;
     private double stabMultiplier = 1.5;
     private double damageMultiplier = 1;
@@ -29,13 +29,12 @@ public class Pokemon extends BasePokemon {
     private final List<VolatileStatus> VOLATILE_STATUSES = new ArrayList<>();
     private CriticalHitStage criticalHitStage = CriticalHitStage.ZERO;
 
-    public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Nature nature, @Nonnull Ability ability, @Nonnull List<Move> moves, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues, Map<Stat, Stage> stat_stages) {
+    public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Item item, @Nonnull Nature nature, @Nonnull Ability ability, @Nonnull List<Move> moves, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues) {
         super(basePokemon);
 
         this.NICKNAME = basePokemon.getName();
-
+        this.item = item;
         this.ABILITY = ability;
-
         this.NATURE = nature;
 
         this.MOVES = moves;
@@ -47,14 +46,9 @@ public class Pokemon extends BasePokemon {
 
         this.TYPES = basePokemon.getTypes();
 
-        this.INDIVIDUAL_VALUES = individualValues;
-        this.EFFORT_VALUES = effortValues;
-        this.STAT_STAGES = stat_stages;
+        this.INDIVIDUAL_VALUES.putAll(individualValues);
+        this.EFFORT_VALUES.putAll(effortValues);
         this.CURRENT_STATS = this.getStats();
-    }
-
-    public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Ability ability, @Nonnull List<Move> moves, int level) {
-        this(basePokemon, Nature.SERIOUS, ability, moves, level, Pokemon.getDefaultIndividualValues(), Pokemon.getDefaultEffortValues(), Pokemon.getDefaultStatStages());
     }
 
     @Nonnull

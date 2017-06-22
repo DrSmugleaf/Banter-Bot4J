@@ -161,6 +161,7 @@ public enum Type {
 
     @Nonnull
     public static Type[] getTypes(@Nonnull String type) {
+        type = type.toLowerCase();
         if (!Holder.MAP.containsKey(type)) {
             throw new NullPointerException("Type " + type + " doesn't exist");
         }
