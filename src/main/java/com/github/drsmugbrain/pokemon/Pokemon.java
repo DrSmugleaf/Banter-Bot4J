@@ -18,9 +18,10 @@ public class Pokemon extends BasePokemon {
     private final Map<Stat, Stage> STAT_STAGES;
     private final Map<Stat, Integer> CURRENT_STATS;
     private Item item;
-    private Set<Move> MOVES;
+    private List<Move> MOVES;
     private double stabMultiplier = 1.5;
     private double damageMultiplier = 1;
+    private final Map<Move, Double> MOVE_DAMAGE_MULTIPLIER = new HashMap<Move, Double>();
     private boolean canSwitch = true;
     private Move action = null;
     private Pokemon target = null;
@@ -28,7 +29,7 @@ public class Pokemon extends BasePokemon {
     private final List<VolatileStatus> VOLATILE_STATUSES = new ArrayList<>();
     private CriticalHitStage criticalHitStage = CriticalHitStage.ZERO;
 
-    public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Nature nature, @Nonnull Ability ability, @Nonnull Set<Move> moves, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues, Map<Stat, Stage> stat_stages) {
+    public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Nature nature, @Nonnull Ability ability, @Nonnull List<Move> moves, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues, Map<Stat, Stage> stat_stages) {
         super(basePokemon);
 
         this.NICKNAME = basePokemon.getName();
@@ -38,6 +39,9 @@ public class Pokemon extends BasePokemon {
         this.NATURE = nature;
 
         this.MOVES = moves;
+        for (Move move : moves) {
+            this.MOVE_DAMAGE_MULTIPLIER.put(move, 1.0);
+        }
 
         this.LEVEL = level;
 
@@ -49,7 +53,7 @@ public class Pokemon extends BasePokemon {
         this.CURRENT_STATS = this.getStats();
     }
 
-    public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Ability ability, @Nonnull Set<Move> moves, int level) {
+    public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Ability ability, @Nonnull List<Move> moves, int level) {
         this(basePokemon, Nature.SERIOUS, ability, moves, level, Pokemon.getDefaultIndividualValues(), Pokemon.getDefaultEffortValues(), Pokemon.getDefaultStatStages());
     }
 
@@ -120,7 +124,7 @@ public class Pokemon extends BasePokemon {
         ));
 
         for (Move move : this.MOVES) {
-            string = string.concat(String.format("\n- %s", move.getName()));
+            string = string.concat(String.format("\n- %s", move.getBaseMove().getName()));
         }
 
         return string;
@@ -159,17 +163,17 @@ public class Pokemon extends BasePokemon {
     }
 
     @Nonnull
-    public Set<Move> getMoves() {
+    public List<Move> getMoves() {
         return this.MOVES;
     }
 
-    protected void changeMoves(Set<Move> moves) {
+    protected void changeMoves(List<Move> moves) {
         this.MOVES = moves;
     }
 
-//    protected boolean hasMove(Movess... move) {
-//        return Collections.disjoint(this.MOVES, Arrays.asList(move));
-//    }
+    protected boolean hasMove(Move... move) {
+        return Collections.disjoint(this.MOVES, Arrays.asList(move));
+    }
 
     @Nonnull
     public Type[] getTypes() {
@@ -263,6 +267,10 @@ public class Pokemon extends BasePokemon {
         this.stabMultiplier = 1.5;
     }
 
+    protected double getDamageMultiplier() {
+        return this.damageMultiplier;
+    }
+
     protected void changeDamageMultiplier(double multiplier) {
         this.damageMultiplier = multiplier;
     }
@@ -277,6 +285,26 @@ public class Pokemon extends BasePokemon {
 
     protected void resetDamageMultiplier() {
         this.damageMultiplier = 1;
+    }
+
+    protected double getMoveDamageMultiplier(Move move) {
+        return this.MOVE_DAMAGE_MULTIPLIER.get(move);
+    }
+
+    protected void changeMoveDamageMultiplier(Move move, double multiplier) {
+        this.MOVE_DAMAGE_MULTIPLIER.put(move, multiplier);
+    }
+
+    protected void incrementMoveDamageMultiplier(Move move, double multiplier) {
+        this.changeMoveDamageMultiplier(move, this.getMoveDamageMultiplier(move) + multiplier);
+    }
+
+    protected void decreaseMoveDamageMultiplier(Move move, double multiplier) {
+        this.incrementMoveDamageMultiplier(move, -multiplier);
+    }
+
+    protected void resetMoveDamageMultiplier(Move move) {
+        this.MOVE_DAMAGE_MULTIPLIER.put(move, 1.0);
     }
 
     protected void setCanSwitch(boolean bool) {
@@ -302,7 +330,7 @@ public class Pokemon extends BasePokemon {
     }
 
     protected void executeTurn() {
-        this.action.use(this, this.target);
+        this.action.getBaseMove().use(this, this.target);
     }
 
     protected void damage(int amount) {

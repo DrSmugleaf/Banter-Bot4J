@@ -1,7 +1,7 @@
 package com.github.drsmugbrain.pokemon;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by DrSmugleaf on 10/06/2017.
@@ -32,9 +32,9 @@ public class SmogonImporter {
         BasePokemon basePokemon = BasePokemon.getBasePokemon(nameString);
         Nature nature = Nature.getNature(natureString);
         Ability ability = Ability.getAbility(abilityString);
-        Set<Move> moves = new LinkedHashSet<>();
+        List<Move> moves = new ArrayList<>();
         for (String move : movesString) {
-            moves.add(new Move(Move.getBaseMove(move)));
+            moves.add(new Move(BaseMove.getMove(move)));
         }
 
         return new Pokemon(basePokemon, ability, moves, 100);

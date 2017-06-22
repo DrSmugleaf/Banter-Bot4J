@@ -25,17 +25,17 @@ public class Battle {
             Move action1 = pokemon1.getAction();
             Move action2 = pokemon2.getAction();
 
-            if (Objects.equals(action1.getName(), "Pursuit") && action2 == BaseMove.SWITCH) {
+            if (Objects.equals(action1.getBaseMove().getName(), "Pursuit") && action2.getBaseMove() == BaseMove.SWITCH) {
                 return 1;
             }
-            if (Objects.equals(action2.getName(), "Pursuit") && action1 == BaseMove.SWITCH) {
+            if (Objects.equals(action2.getBaseMove().getName(), "Pursuit") && action1.getBaseMove() == BaseMove.SWITCH) {
                 return -1;
             }
 
-            if (action1 == BaseMove.SWITCH) {
+            if (action1.getBaseMove() == BaseMove.SWITCH) {
                 return 1;
             }
-            if (action2 == BaseMove.SWITCH) {
+            if (action2.getBaseMove() == BaseMove.SWITCH) {
                 return -1;
             }
 

@@ -44,7 +44,7 @@ public enum CriticalHitStage {
         return null;
     }
 
-//    public static CriticalHitStage getStage(Pokemon pokemon, Movess move) {
+//    public static CriticalHitStage getStage(Pokemon pokemon, BaseMove move) {
 //        return CriticalHitStage.getStage(move.getBaseCriticalHitRate().getStage() + pokemon.getCriticalHitStage().getStage());
 //    }
 

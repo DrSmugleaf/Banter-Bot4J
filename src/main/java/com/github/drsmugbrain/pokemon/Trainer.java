@@ -51,7 +51,7 @@ public class Trainer {
         return this.ACTIONS;
     }
 
-    public void removeAction(Pokemon pokemon, Move move) {
+    public void removeAction(Pokemon pokemon, BaseMove move) {
         this.ACTIONS.remove(pokemon, move);
     }
 

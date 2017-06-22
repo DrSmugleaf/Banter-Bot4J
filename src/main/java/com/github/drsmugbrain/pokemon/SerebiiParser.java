@@ -14,7 +14,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -38,7 +37,7 @@ public class SerebiiParser {
         try {
             reader.readNext();
             while ((nextLine = reader.readNext()) != null) {
-                Movess move = Movess.getMove(nextLine[0]);
+                BaseMove move = BaseMove.getMove(nextLine[0]);
                 move
                         .setType(Type.getType(nextLine[1]))
                         .setCategory(Category.getCategory(nextLine[2]))
@@ -50,14 +49,14 @@ public class SerebiiParser {
                         .setSecondaryEffect(nextLine[8])
                         .setEffectRate(nextLine[9].isEmpty() ? null : Integer.valueOf(nextLine[9]))
                         .setIsSelfZMove(Boolean.parseBoolean(nextLine[10]))
-                        .setCorrespondingZMove(nextLine[11].isEmpty() ? null : Movess.getMove(nextLine[11]))
+                        .setCorrespondingZMove(nextLine[11].isEmpty() ? null : BaseMove.getMove(nextLine[11]))
                         .setZMoveItem(nextLine[12].isEmpty() ? null : Item.getItem(nextLine[12]))
                         .setDetailedEffect(nextLine[13].isEmpty() ? null : nextLine[13])
                         .setZMovePower(nextLine[14].isEmpty() ? null : Integer.valueOf(nextLine[14]))
                         .setIsZMove(Boolean.parseBoolean(nextLine[15]))
                         .setZMoveRequiredPokemon(nextLine[16].isEmpty() ? null : nextLine[16].split(","))
-                        .setZMoveRequiredMove(nextLine[17].isEmpty() ? null : Movess.getMove(nextLine[17]))
-                        .setZMoveMovesThatTurnIntoThis(nextLine[18].isEmpty() ? null : Arrays.copyOf(nextLine[18].split(","), nextLine[18].split(",").length, Movess[].class))
+                        .setZMoveRequiredMove(nextLine[17].isEmpty() ? null : BaseMove.getMove(nextLine[17]))
+                        .setZMoveMovesThatTurnIntoThis(nextLine[18].isEmpty() ? null : nextLine[18].split(","))
                         .setBaseCriticalHitRate(nextLine[19].isEmpty() ? null : CriticalHitStage.getStageByPercentage(Double.parseDouble(nextLine[19])))
                         .setPriority(Integer.parseInt(nextLine[20]))
                         .setTarget(nextLine[21].isEmpty() ? null : Target.getTarget(nextLine[21]))
@@ -181,7 +180,7 @@ public class SerebiiParser {
             Integer zMovePower = null;
             Item zMoveItem = null;
             List<String> zMoveRequiredPokemon = new ArrayList<>();
-            List<Movess> zMoveRequiredMove = new ArrayList<>();
+            List<BaseMove> zMoveRequiredMove = new ArrayList<>();
             Boolean defrostsWhenUsed = null;
             Boolean hitsOppositeSideInTriples = null;
             Boolean reflected = null;
@@ -228,17 +227,17 @@ public class SerebiiParser {
                                     case "10,000,000 Volt Thunderbolt":
                                         zMoveItem = Item.PIKASHUNIUM_Z;
                                         zMoveRequiredPokemon.add("Pikachu");
-                                        zMoveRequiredMove.add(Movess.THUNDERBOLT);
+                                        zMoveRequiredMove.add(BaseMove.THUNDERBOLT);
                                         break;
                                     case "Catastropika":
                                         zMoveItem = Item.PIKANIUM_Z;
                                         zMoveRequiredPokemon.add("Pikachu");
-                                        zMoveRequiredMove.add(Movess.VOLT_TACKLE);
+                                        zMoveRequiredMove.add(BaseMove.VOLT_TACKLE);
                                         break;
                                     case "Extreme Evoboost":
                                         zMoveItem = Item.EEVIUM_Z;
                                         zMoveRequiredPokemon.add("Eevee");
-                                        zMoveRequiredMove.add(Movess.LAST_RESORT);
+                                        zMoveRequiredMove.add(BaseMove.LAST_RESORT);
                                         break;
                                     case "Guardian of Alola":
                                         zMoveItem = Item.TAPUNIUM_Z;
@@ -246,37 +245,37 @@ public class SerebiiParser {
                                         zMoveRequiredPokemon.add("Tapu Fini");
                                         zMoveRequiredPokemon.add("Tapu Koko");
                                         zMoveRequiredPokemon.add("Tapu Lele");
-                                        zMoveRequiredMove.add(Movess.NATURES_MADNESS);
+                                        zMoveRequiredMove.add(BaseMove.NATURES_MADNESS);
                                         break;
                                     case "Malicious Moonsault":
                                         zMoveItem = Item.INCINIUM_Z;
                                         zMoveRequiredPokemon.add("Incineroar");
-                                        zMoveRequiredMove.add(Movess.DARKEST_LARIAT);
+                                        zMoveRequiredMove.add(BaseMove.DARKEST_LARIAT);
                                         break;
                                     case "Oceanic Operetta":
                                         zMoveItem = Item.PRIMARIUM_Z;
                                         zMoveRequiredPokemon.add("Primarina");
-                                        zMoveRequiredMove.add(Movess.SPARKLING_ARIA);
+                                        zMoveRequiredMove.add(BaseMove.SPARKLING_ARIA);
                                         break;
                                     case "Pulverizing Pancake":
                                         zMoveItem = Item.SNORLIUM_Z;
                                         zMoveRequiredPokemon.add("Snorlax");
-                                        zMoveRequiredMove.add(Movess.GIGA_IMPACT);
+                                        zMoveRequiredMove.add(BaseMove.GIGA_IMPACT);
                                         break;
                                     case "Sinister Arrow Raid":
                                         zMoveItem = Item.DECIDIUM_Z;
                                         zMoveRequiredPokemon.add("Decidueye");
-                                        zMoveRequiredMove.add(Movess.SPIRIT_SHACKLE);
+                                        zMoveRequiredMove.add(BaseMove.SPIRIT_SHACKLE);
                                         break;
                                     case "Soul-Stealing 7-Star Strike":
                                         zMoveItem = Item.MARSHADIUM_Z;
                                         zMoveRequiredPokemon.add("Marshadow");
-                                        zMoveRequiredMove.add(Movess.SPECTRAL_THIEF);
+                                        zMoveRequiredMove.add(BaseMove.SPECTRAL_THIEF);
                                         break;
                                     case "Stoked Sparksurfer":
                                         zMoveItem = Item.ALORAICHIUM_Z;
                                         zMoveRequiredPokemon.add("Raichu-Alola");
-                                        zMoveRequiredMove.add(Movess.THUNDERBOLT);
+                                        zMoveRequiredMove.add(BaseMove.THUNDERBOLT);
                                         break;
                                 }
                                 break;
@@ -546,7 +545,7 @@ public class SerebiiParser {
                     zMovePower != null ? String.valueOf(zMovePower) : "", // Z-Move Power
                     !isSelfZMove && correspondingZMove == null ? "true" : "false", // Is Z-Move?
                     zMoveRequiredPokemon.isEmpty() ? "" : zMoveRequiredPokemon.stream().collect(Collectors.joining(",")), // Z-Move Required Pokemon
-                    zMoveRequiredMove.isEmpty() ? "" : zMoveRequiredMove.stream().map(Movess::getName).collect(Collectors.joining(",")), // Z-Move Required Moves
+                    zMoveRequiredMove.isEmpty() ? "" : zMoveRequiredMove.stream().map(BaseMove::getName).collect(Collectors.joining(",")), // Z-Move Required Moves
                     movesThatTurnIntoThis.isEmpty() ? "" : movesThatTurnIntoThis.stream().collect(Collectors.joining(",")), // Moves that turn into this
                     baseCriticalHitRate != null ? String.valueOf(baseCriticalHitRate) : "", // Base Critical Hit Rate
                     String.valueOf(priority), // Priority

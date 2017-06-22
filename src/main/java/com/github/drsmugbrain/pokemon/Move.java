@@ -1,54 +1,74 @@
 package com.github.drsmugbrain.pokemon;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
- * Created by DrSmugleaf on 04/06/2017.
+ * Created by DrSmugleaf on 22/06/2017.
  */
-public class Move extends BaseMove {
+public class Move {
 
+    private final BaseMove BASE_MOVE;
     private Type type;
-    private int pp;
+    private Category category;
+    private Integer pp;
+    private Integer power;
+    private Integer priority;
     private double damageMultiplier = 1.0;
 
-    protected Move(@Nonnull BaseMove baseMove) {
-        super(baseMove);
+    Move(BaseMove baseMove) {
+        this.BASE_MOVE = baseMove;
         this.type = baseMove.getType();
+        this.category = baseMove.getCategory();
         this.pp = baseMove.getPP();
+        this.power = baseMove.getBasePower();
+        this.priority = baseMove.getPriority();
     }
+
+    public BaseMove getBaseMove() {
+        return this.BASE_MOVE;
+    }
+
 
     @Nonnull
     public Type getType() {
         return this.type;
     }
 
-    public void setType(@Nonnull Type type) {
+    protected void setType(Type type) {
         this.type = type;
+    }
+
+    @Nonnull
+    public Category getCategory() {
+        return this.category;
+    }
+
+    protected void setCategory(Category category) {
+        this.category = category;
     }
 
     public int getPP() {
         return this.pp;
     }
 
-    protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender) {
-        int attackStat;
-        int defenseStat;
-        if (this.getCategory() == Category.PHYSICAL) {
-            attackStat = attacker.getStat(Stat.ATTACK);
-            defenseStat = defender.getStat(Stat.DEFENSE);
-        } else if (this.getCategory() == Category.SPECIAL) {
-            attackStat = attacker.getStat(Stat.SPECIAL_ATTACK);
-            defenseStat = defender.getStat(Stat.SPECIAL_DEFENSE);
-        } else {
-            return 0;
-        }
-        int level = attacker.getLevel();
-        int attackPower = this.getPower();
-        double stabMultiplier = attacker.getStabMultiplier();
-        double effectiveness = Type.getDamageMultiplier(defender.getTypes(), this.getType());
-        int randomNumber = (int) (Math.random() * 100 + 85);
-        return (int) (((((2 * level / 5 + 2) * attackStat * attackPower / defenseStat) / 50) + 2) * stabMultiplier * effectiveness * randomNumber / 100);
+    protected void setPP(int pp) {
+        this.pp = pp;
+    }
+
+    public int getPower() {
+        return this.power;
+    }
+
+    protected void setPower(int power) {
+        this.power = power;
+    }
+
+    public int getPriority() {
+        return this.priority;
+    }
+
+    protected void setPriority(int priority) {
+        this.priority = priority;
     }
 
     public double getDamageMultiplier() {
@@ -59,18 +79,16 @@ public class Move extends BaseMove {
         this.damageMultiplier = multiplier;
     }
 
-    protected void incrementDamageMultiplier(double amount) {
-        this.damageMultiplier += amount;
+    protected void incrementDamageMultiplier(double multiplier) {
+        this.setDamageMultiplier(this.getDamageMultiplier() + multiplier);
     }
 
-    protected void decreaseDamageMultiplier(double amount) {
-        this.damageMultiplier -= amount;
+    protected void decreaseDamageMultiplier(double multiplier) {
+        this.incrementDamageMultiplier(-multiplier);
     }
 
-    protected void use(@Nonnull Pokemon attacker, @Nullable Pokemon defender) {
-        if (defender != null && this.getPower() > 0) {
-            defender.damage(this.getDamage(attacker, defender));
-        }
+    protected void resetDamageMultiplier() {
+        this.damageMultiplier = 1.0;
     }
 
 }
