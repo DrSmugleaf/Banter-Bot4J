@@ -192,7 +192,7 @@ public class Pokemon extends BasePokemon {
 
     @Nonnull
     public Map<Stat, Integer> getStats() {
-        Map<Stat, Integer> stats = new HashMap<>();
+        Map<Stat, Integer> stats = new LinkedHashMap<>();
 
         for (int i = 0; i < Stat.values().length; i++) {
             Stat stat = Stat.values()[i];

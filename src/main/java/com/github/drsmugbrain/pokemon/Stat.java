@@ -20,9 +20,9 @@ public enum Stat {
     },
     ATTACK("Attack", "Atk"),
     DEFENSE("Defense", "Def"),
-    SPEED("Speed", "Spe"),
     SPECIAL_ATTACK("Special Attack", "SpA"),
     SPECIAL_DEFENSE("Special Defense", "SpD"),
+    SPEED("Speed", "Spe"),
     ACCURACY("Accuracy", "Acc") {
         @Override
         public int calculate(Pokemon pokemon, Stat stat) {

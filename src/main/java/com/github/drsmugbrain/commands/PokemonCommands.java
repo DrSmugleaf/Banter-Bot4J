@@ -61,8 +61,10 @@ public class PokemonCommands {
     private static EmbedObject assemblePrivateBattleEmbed(Battle battle, IUser user) {
         EmbedBuilder builder = new EmbedBuilder();
 
-        Map<IUser, Trainer> trainers = battle.getTrainers().entrySet().stream().collect(Collectors.toMap(key -> Bot.client.fetchUser(key.getKey()), Map.Entry::getValue));
-        List<String> users = trainers.keySet().stream().map(IUser::getName).collect(Collectors.toList());
+        Map<IUser, Trainer> trainers = battle.getTrainers().entrySet().stream()
+                .collect(Collectors.toMap(key -> Bot.client.fetchUser(key.getKey()), Map.Entry::getValue));
+        List<String> users = trainers.keySet().stream().map(IUser::getName)
+                .collect(Collectors.toList());
         Trainer trainer = trainers.get(user);
 
         builder.withAuthorName(String.join(" vs ", users));
@@ -79,7 +81,6 @@ public class PokemonCommands {
                 int currentHP = pokemon.getCurrentStat(Stat.HP);
                 int maxHP = pokemon.getStat(Stat.HP);
                 double percentageHP = Math.round((100.0 * currentHP / maxHP) * 10) / 10.0;
-                System.out.println(percentageHP);
                 builder.appendField(
                         pokemon.getName() + " (" + String.join(" ", pokemon.getTypesString()) + ")",
                         "HP: " + percentageHP + "% (" + currentHP + "/" + maxHP + ")\n" +
