@@ -3,6 +3,7 @@ package com.github.drsmugbrain.pokemon;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by DrSmugleaf on 04/06/2017.
@@ -21,7 +22,7 @@ public class Pokemon extends BasePokemon {
     private List<Move> MOVES;
     private double stabMultiplier = 1.5;
     private double damageMultiplier = 1;
-    private final Map<Move, Double> MOVE_DAMAGE_MULTIPLIER = new HashMap<Move, Double>();
+    private final Map<Move, Double> MOVE_DAMAGE_MULTIPLIER = new HashMap<>();
     private boolean canSwitch = true;
     private Move action = null;
     private Pokemon target = null;
@@ -174,6 +175,17 @@ public class Pokemon extends BasePokemon {
         return this.TYPES;
     }
 
+    @Nonnull
+    public String[] getTypesString() {
+        List<String> types = new ArrayList<>();
+
+        for (Type type : this.TYPES) {
+            types.add(type.getName());
+        }
+
+        return types.toArray(new String[]{});
+    }
+
     public int getLevel() {
         return this.LEVEL;
     }
@@ -188,6 +200,19 @@ public class Pokemon extends BasePokemon {
         }
 
         return stats;
+    }
+
+    public String getStatsStringWithoutHP() {
+        Map<Stat, Integer> stats = this.getStats();
+        stats.remove(Stat.HP);
+        stats.remove(Stat.ACCURACY);
+        stats.remove(Stat.EVASION);
+
+        return stats
+                .entrySet()
+                .stream()
+                .map((entry) -> entry.getValue() + " " + entry.getKey().getAbbreviation())
+                .collect(Collectors.joining(" / "));
     }
 
     @Nonnull

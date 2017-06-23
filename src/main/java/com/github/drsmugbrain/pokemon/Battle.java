@@ -18,7 +18,7 @@ public class Battle {
 
     public void executeTurn() {
         for (Trainer trainer : this.TRAINERS.values()) {
-            this.TURN_ORDER.addAll(Arrays.asList(trainer.getActivePokemons()));
+            this.TURN_ORDER.addAll(trainer.getActivePokemons());
         }
 
         this.TURN_ORDER.sort((pokemon1, pokemon2) -> {
@@ -67,6 +67,10 @@ public class Battle {
 
     public Map<Long, Trainer> getTrainers() {
         return this.TRAINERS;
+    }
+
+    public Trainer getTrainer(Long id) {
+        return this.TRAINERS.get(id);
     }
 
 }

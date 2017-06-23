@@ -11,19 +11,20 @@ import java.util.*;
  */
 public class Trainer {
 
-    private final String NAME;
+    private final Long ID;
     private final List<Pokemon> POKEMONS = new ArrayList<>();
     private final List<Pokemon> ACTIVE_POKEMONS = new ArrayList<>();
     private final Map<Pokemon, Move> ACTIONS = new LinkedHashMap<>();
+    private Pokemon pokemonInFocus = null;
 
-    public Trainer(@Nonnull String name, @Nonnull Pokemon... pokemons) {
-        this.NAME = name;
+    public Trainer(@Nonnull Long name, @Nonnull Pokemon... pokemons) {
+        this.ID = name;
         this.POKEMONS.addAll(Arrays.asList(pokemons));
     }
 
     @Nonnull
-    public String getName() {
-        return this.NAME;
+    public Long getID() {
+        return this.ID;
     }
 
     @Nonnull
@@ -32,8 +33,8 @@ public class Trainer {
     }
 
     @Nonnull
-    public Pokemon[] getActivePokemons() {
-        return this.ACTIVE_POKEMONS.toArray(new Pokemon[0]);
+    public List<Pokemon> getActivePokemons() {
+        return this.ACTIVE_POKEMONS;
     }
 
     public void addAction(Pokemon pokemon, Move move, Pokemon target) {
@@ -79,6 +80,23 @@ public class Trainer {
 
     public void swapActivePokemon(Pokemon pokemon1, Pokemon pokemon2) {
         Collections.swap(this.ACTIVE_POKEMONS, this.ACTIVE_POKEMONS.indexOf(pokemon1), this.ACTIVE_POKEMONS.indexOf(pokemon2));
+    }
+
+    public boolean hasActivePokemon(Pokemon pokemon) {
+        return this.ACTIVE_POKEMONS.contains(pokemon);
+    }
+
+    @Nullable
+    public Pokemon getPokemonInFocus() {
+        return this.pokemonInFocus;
+    }
+
+    public void setPokemonInFocus(@Nonnull Pokemon pokemon) {
+        this.pokemonInFocus = pokemon;
+    }
+
+    public void resetPokemonInFocus() {
+        this.pokemonInFocus = null;
     }
 
 }

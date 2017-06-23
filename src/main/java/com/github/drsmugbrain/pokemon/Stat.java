@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
  */
 public enum Stat {
 
-    HP("Health") {
+    HP("Health", "HP") {
         @Override
         public int calculate(Pokemon pokemon, Stat stat) {
             int iv = pokemon.getIndividualValue(Stat.HP);
@@ -18,18 +18,18 @@ public enum Stat {
             return ((iv + 2 * baseStat + (ev / 4)) * level / 100) + 10 + level;
         }
     },
-    ATTACK("Attack"),
-    DEFENSE("Defense"),
-    SPEED("Speed"),
-    SPECIAL_ATTACK("Special Attack"),
-    SPECIAL_DEFENSE("Special Defense"),
-    ACCURACY("Accuracy") {
+    ATTACK("Attack", "Atk"),
+    DEFENSE("Defense", "Def"),
+    SPEED("Speed", "Spe"),
+    SPECIAL_ATTACK("Special Attack", "SpA"),
+    SPECIAL_DEFENSE("Special Defense", "SpD"),
+    ACCURACY("Accuracy", "Acc") {
         @Override
         public int calculate(Pokemon pokemon, Stat stat) {
             return pokemon.getBaseStat(Stat.ACCURACY);
         }
     },
-    EVASION("Evasion") {
+    EVASION("Evasion", "Eva") {
         @Override
         public int calculate(Pokemon pokemon, Stat stat) {
             return pokemon.getBaseStat(Stat.EVASION);
@@ -37,14 +37,21 @@ public enum Stat {
     };
 
     private final String NAME;
+    private final String ABBREVIATION;
 
-    Stat(@Nonnull String name) {
+    Stat(@Nonnull String name, @Nonnull String abbreviation) {
         this.NAME = name;
+        this.ABBREVIATION = abbreviation;
     }
 
     @Nonnull
     public String getName() {
         return this.NAME;
+    }
+
+    @Nonnull
+    public String getAbbreviation() {
+        return this.ABBREVIATION;
     }
 
     public int calculate(Pokemon pokemon, Stat stat) {

@@ -106,7 +106,7 @@ public class SmogonImporter {
         return new Pokemon(basePokemon, item, nature, ability, moves, 100, individualValues, effortValues);
     }
 
-    public static Pokemon[] parsePokemons(String export) throws DiscordException {
+    public static List<Pokemon> parsePokemons(String export) throws DiscordException {
         String[] exportArray = export.split("\n\n");
         List<Pokemon> pokemons = new ArrayList<>();
 
@@ -114,7 +114,7 @@ public class SmogonImporter {
             pokemons.add(SmogonImporter.parsePokemon(s));
         }
 
-        return pokemons.toArray(new Pokemon[]{});
+        return pokemons;
     }
 
 }
