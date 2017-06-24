@@ -31,12 +31,19 @@ public class SmogonImporter {
         }
 
         String nameString;
+        Gender gender = null;
         String itemString = null;
         if (exportArray[0].contains("@")) {
             nameString = exportArray[0].split("@")[0].trim();
             itemString = exportArray[0].split("@")[1].trim();
         } else {
             nameString = exportArray[0].trim();
+        }
+        if (nameString.contains("(M)") || nameString.contains("(F)")) {
+            nameString = nameString.replaceAll("\\(M\\)|\\(F\\)", "");
+            Matcher matcher = Pattern.compile("(\\(\\w\\))").matcher(nameString);
+            matcher.find();
+            gender = Gender.getGender(matcher.group());
         }
 
         String abilityString = null;
@@ -103,7 +110,7 @@ public class SmogonImporter {
             }
         }
 
-        return new Pokemon(basePokemon, item, nature, ability, moves, 100, individualValues, effortValues);
+        return new Pokemon(basePokemon, item, nature, ability, gender, 100, individualValues, effortValues, moves);
     }
 
     public static List<Pokemon> parsePokemons(String export) throws DiscordException {

@@ -30,14 +30,20 @@ public class Pokemon extends BasePokemon {
     private Status status = null;
     private CriticalHitStage criticalHitStage = CriticalHitStage.ZERO;
     private boolean damagedThisTurn = false;
+    private final Gender GENDER;
 
-    public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Item item, @Nonnull Nature nature, @Nonnull Ability ability, @Nonnull List<Move> moves, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues) {
+    public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Item item, @Nonnull Nature nature, @Nonnull Ability ability, @Nullable Gender gender, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues, @Nonnull List<Move> moves) {
         super(basePokemon);
 
         this.NICKNAME = basePokemon.getName();
         this.item = item;
         this.ABILITY = ability;
         this.NATURE = nature;
+        if (gender == null) {
+            this.GENDER = Gender.getRandomGender();
+        } else {
+            this.GENDER = gender;
+        }
 
         this.MOVES = moves;
         for (Move move : moves) {
@@ -464,6 +470,11 @@ public class Pokemon extends BasePokemon {
 
     protected boolean isDamagedThisTurn() {
         return this.damagedThisTurn;
+    }
+
+    @Nonnull
+    protected Gender getGender() {
+        return this.GENDER;
     }
 
 }
