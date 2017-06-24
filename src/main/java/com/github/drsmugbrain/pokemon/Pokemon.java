@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
  */
 public class Pokemon extends BasePokemon {
     private final String NICKNAME;
-    private Item item;
     private final Ability ABILITY;
     private final Nature NATURE;
     private final int LEVEL;
@@ -19,15 +18,16 @@ public class Pokemon extends BasePokemon {
     private final Map<Stat, Integer> EFFORT_VALUES = getDefaultEffortValues();
     private final Map<Stat, Stage> STAT_STAGES = getDefaultStatStages();
     private final Map<Stat, Integer> CURRENT_STATS;
+    private final Map<Move, Double> MOVE_DAMAGE_MULTIPLIER = new HashMap<>();
+    private final List<VolatileStatus> VOLATILE_STATUSES = new ArrayList<>();
+    private Item item;
     private List<Move> MOVES;
     private double stabMultiplier = 1.5;
     private double damageMultiplier = 1;
-    private final Map<Move, Double> MOVE_DAMAGE_MULTIPLIER = new HashMap<>();
     private boolean canSwitch = true;
     private Move action = null;
     private Pokemon target = null;
     private Status status = null;
-    private final List<VolatileStatus> VOLATILE_STATUSES = new ArrayList<>();
     private CriticalHitStage criticalHitStage = CriticalHitStage.ZERO;
 
     public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Item item, @Nonnull Nature nature, @Nonnull Ability ability, @Nonnull List<Move> moves, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues) {
@@ -140,12 +140,12 @@ public class Pokemon extends BasePokemon {
         return this.item;
     }
 
-    public boolean hasItem(Item item) {
-        return this.item.equals(item);
-    }
-
     protected void setItem(@Nonnull Item item) {
         this.item = item;
+    }
+
+    public boolean hasItem(Item item) {
+        return this.item.equals(item);
     }
 
     protected void removeItem() {
@@ -162,12 +162,35 @@ public class Pokemon extends BasePokemon {
         return this.MOVES;
     }
 
+    @Nonnull
+    public Move getMove(String moveName) {
+        moveName = moveName.toLowerCase();
+        for (Move move : this.MOVES) {
+            if (Objects.equals(move.getBaseMove().getName().toLowerCase(), moveName)) {
+                return move;
+            }
+        }
+
+        throw new NullPointerException("Move " + moveName + " doesn't exist");
+    }
+
     protected void changeMoves(List<Move> moves) {
         this.MOVES = moves;
     }
 
-    protected boolean hasMove(Move... move) {
+    public boolean hasMove(Move... move) {
         return Collections.disjoint(this.MOVES, Arrays.asList(move));
+    }
+
+    public boolean hasMove(String moveName) {
+        moveName = moveName.toLowerCase();
+        for (Move move : this.MOVES) {
+            if (Objects.equals(move.getBaseMove().getName().toLowerCase(), moveName)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Nonnull
@@ -349,7 +372,7 @@ public class Pokemon extends BasePokemon {
     }
 
     protected void executeTurn() {
-        this.action.getBaseMove().use(this, this.target);
+        this.action.use(this, this.target);
     }
 
     protected void damage(int amount) {
@@ -361,13 +384,13 @@ public class Pokemon extends BasePokemon {
         this.damage(-amount);
     }
 
-    protected void setStatus(Status status) {
-        this.status = status;
-    }
-
     @Nullable
     protected Status getStatus() {
         return this.status;
+    }
+
+    protected void setStatus(Status status) {
+        this.status = status;
     }
 
     protected void resetStatus() {
@@ -403,16 +426,16 @@ public class Pokemon extends BasePokemon {
         return this.criticalHitStage;
     }
 
+    protected void setCriticalHitStage(CriticalHitStage stage) {
+        this.criticalHitStage = stage;
+    }
+
     protected void raiseCriticalHitStage(int amount) {
         this.criticalHitStage = CriticalHitStage.getStage(this.criticalHitStage.getStage() + amount);
     }
 
     protected void lowerCriticalHitStage(int amount) {
         this.raiseCriticalHitStage(-amount);
-    }
-
-    protected void setCriticalHitStage(CriticalHitStage stage) {
-        this.criticalHitStage = stage;
     }
 
     protected void resetCriticalHitStage() {

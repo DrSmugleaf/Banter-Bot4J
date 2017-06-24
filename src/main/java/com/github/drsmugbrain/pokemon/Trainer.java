@@ -16,6 +16,7 @@ public class Trainer {
     private final List<Pokemon> ACTIVE_POKEMONS = new ArrayList<>();
     private final Map<Pokemon, Move> ACTIONS = new LinkedHashMap<>();
     private Pokemon pokemonInFocus = null;
+    private Move chosenMove = null;
 
     public Trainer(@Nonnull Long name, @Nonnull Pokemon... pokemons) {
         this.ID = name;
@@ -25,6 +26,11 @@ public class Trainer {
     @Nonnull
     public Long getID() {
         return this.ID;
+    }
+
+    @Nonnull
+    public Pokemon getPokemon(int id) {
+        return this.POKEMONS.get(id);
     }
 
     @Nonnull
@@ -42,9 +48,17 @@ public class Trainer {
         this.ACTIONS.put(pokemon, move);
     }
 
+    public void addAction(Pokemon pokemon, String move, Pokemon target) {
+        this.addAction(pokemon, pokemon.getMove(move), target);
+    }
+
     @Nonnull
     public Move getAction(Pokemon pokemon) {
         return this.ACTIONS.get(pokemon);
+    }
+
+    public boolean hasAction(Pokemon pokemon) {
+        return this.ACTIONS.containsKey(pokemon);
     }
 
     @Nonnull
@@ -97,6 +111,19 @@ public class Trainer {
 
     public void resetPokemonInFocus() {
         this.pokemonInFocus = null;
+    }
+
+    @Nullable
+    public Move getChosenMove() {
+        return this.chosenMove;
+    }
+
+    public void setChosenMove(Move move) {
+        this.chosenMove = move;
+    }
+
+    public void resetChosenMove() {
+        this.chosenMove = null;
     }
 
 }

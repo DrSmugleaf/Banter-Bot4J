@@ -19,6 +19,8 @@ public class Battle {
     public void executeTurn() {
         for (Trainer trainer : this.TRAINERS.values()) {
             this.TURN_ORDER.addAll(trainer.getActivePokemons());
+            trainer.resetChosenMove();
+            trainer.resetActions();
         }
 
         this.TURN_ORDER.sort((pokemon1, pokemon2) -> {
@@ -71,6 +73,26 @@ public class Battle {
 
     public Trainer getTrainer(Long id) {
         return this.TRAINERS.get(id);
+    }
+
+    public boolean ready() {
+        for (Trainer trainer : this.TRAINERS.values()) {
+            if (trainer.getActivePokemons().isEmpty()) return false;
+        }
+
+        return true;
+    }
+
+    public boolean executeTurnReady() {
+        for (Trainer trainer : this.TRAINERS.values()) {
+            for (Pokemon pokemon : trainer.getActivePokemons()) {
+                if (!trainer.hasAction(pokemon)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
 }

@@ -28,7 +28,6 @@ public class Move {
         return this.BASE_MOVE;
     }
 
-
     @Nonnull
     public Type getType() {
         return this.type;
@@ -89,6 +88,11 @@ public class Move {
 
     protected void resetDamageMultiplier() {
         this.damageMultiplier = 1.0;
+    }
+
+    protected void use(@Nonnull Pokemon user, Pokemon target) {
+        this.pp--;
+        this.getBaseMove().use(user, target);
     }
 
 }
