@@ -92,7 +92,7 @@ public class Trainer {
         return null;
     }
 
-    public void swapActivePokemon(Pokemon pokemon1, Pokemon pokemon2) {
+    public void swapActivePokemonPlaces(Pokemon pokemon1, Pokemon pokemon2) {
         Collections.swap(this.ACTIVE_POKEMONS, this.ACTIVE_POKEMONS.indexOf(pokemon1), this.ACTIVE_POKEMONS.indexOf(pokemon2));
     }
 

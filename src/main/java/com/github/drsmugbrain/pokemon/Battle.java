@@ -64,6 +64,7 @@ public class Battle {
 
         for (Pokemon pokemon : this.TURN_ORDER) {
             pokemon.executeTurn();
+            pokemon.finishTurn();
         }
     }
 

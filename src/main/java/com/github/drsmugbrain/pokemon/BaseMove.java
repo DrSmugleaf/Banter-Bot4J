@@ -10,12 +10,7 @@ import java.util.*;
 public enum BaseMove {
 
     SWITCH("Switch"),
-    _10000000_VOLT_THUNDERBOLT("10,000,000 Volt Thunderbolt") {
-        @Override
-        protected void useAsZMove(@Nonnull Pokemon user, @Nonnull Pokemon target, Battle battle, Trainer trainer) {
-            super.use(user, target);
-        }
-    },
+    _10000000_VOLT_THUNDERBOLT("10,000,000 Volt Thunderbolt"),
     ABSORB("Absorb") {
         @Override
         protected void use(@Nonnull Pokemon user, @Nonnull Pokemon target) {
@@ -37,12 +32,12 @@ public enum BaseMove {
         @Override
         public void useAsZMove(@Nonnull Pokemon user, @Nullable Pokemon target, Battle battle, Trainer trainer) {
             user.resetLoweredStats();
-            this.use(user, null);
+            super.useAsZMove(user, target, battle, trainer);
         }
     },
     ACID_DOWNPOUR("Acid Downpour"),
     ACID_SPRAY("Acid Spray"),
-    ACROBATICS("Acrobatics") {
+    ACROBATICS("Acrobatics") { // Flying Gem is consumed before the power calculation is made
         @Override
         public int getPower(Pokemon attacker) {
             if (attacker.getItem() == null) {
@@ -80,7 +75,7 @@ public enum BaseMove {
         @Override
         public void useAsZMove(@Nonnull Pokemon user, @Nullable Pokemon target, @Nullable Battle battle, Trainer trainer) {
             user.resetLoweredStats();
-            this.use(user, null);
+            super.useAsZMove(user, target, battle, trainer);
         }
     },
     AIR_CUTTER("Air Cutter"),
@@ -89,33 +84,219 @@ public enum BaseMove {
     ALLY_SWITCH("Ally Switch") {
         @Override
         protected void use(@Nonnull Pokemon user, @Nonnull Pokemon target, @Nonnull Battle battle, @Nonnull Trainer trainer) {
-            trainer.swapActivePokemon(user, target);
+            trainer.swapActivePokemonPlaces(user, target);
             super.use(user, target, battle, trainer);
         }
 
         @Override
         protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, Trainer trainer) {
             user.raiseStatStage(Stat.SPEED, 2);
-            this.use(user, target, battle, trainer);
+            super.useAsZMove(user, target, battle, trainer);
         }
     },
     AMNESIA("Amnesia") {
         @Override
         public void useAsZMove(@Nonnull Pokemon user, @Nullable Pokemon target, @Nullable Battle battle, Trainer trainer) {
             user.resetLoweredStats();
-            this.use(user, null);
+            super.useAsZMove(user, target, battle, trainer);
         }
     },
     ANCHOR_SHOT("Anchor Shot"),
     ANCIENT_POWER("Ancient Power"),
     AQUA_JET("Aqua Jet"),
-    AQUA_RING("Aqua Ring"),
+    AQUA_RING("Aqua Ring") {
+        @Override
+        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer) {
+            user.raiseStatStage(Stat.DEFENSE, 1);
+            super.useAsZMove(user, target, battle, trainer);
+        }
+    },
     AQUA_TAIL("Aqua Tail"),
-    ARM_THRUST("Arm Thrust"),
-    AROMATHERAPY("Aromatherapy"),
-    AROMATIC_MIST("Aromatic Mist"),
-    ASSIST("Assist"),
-    ASSURANCE("Assurance"),
+    ARM_THRUST("Arm Thrust") {
+        @Override
+        protected void use(@Nonnull Pokemon user, @Nonnull Pokemon target) {
+            super.use(user, target);
+
+            if (Math.random() < 0.375) {
+                super.use(user, target);
+            }
+            if (Math.random() < 0.375) {
+                super.use(user, target);
+            }
+            if (Math.random() < 0.125) {
+                super.use(user, target);
+            }
+            if (Math.random() < 0.125) {
+                super.use(user, target);
+            }
+        }
+    },
+    AROMATHERAPY("Aromatherapy") {
+        @Override
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
+            for (Pokemon pokemon : trainer.getPokemons()) {
+                pokemon.resetStatus();
+            }
+        }
+
+        @Override
+        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer) {
+            user.heal(100);
+            super.useAsZMove(user, target, battle, trainer);
+        }
+    },
+    AROMATIC_MIST("Aromatic Mist") {
+        @Override
+        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer) {
+            user.raiseStatStage(Stat.SPECIAL_DEFENSE, 2);
+            super.useAsZMove(user, target, battle, trainer);
+        }
+    },
+    ASSIST("Assist") {
+        @Override
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
+            List<Move> teamMoves = new ArrayList<>();
+            for (Pokemon pokemon : trainer.getPokemons()) {
+                teamMoves.addAll(pokemon.getMoves());
+            }
+            teamMoves.removeIf((move) -> {
+                BaseMove baseMove = move.getBaseMove();
+                switch (baseMove) {
+                    case ASSIST:
+                    case BELCH:
+                    case BOUNCE:
+                    case CHATTER:
+                    case CIRCLE_THROW:
+                    case COPYCAT:
+                    case COUNTER:
+                    case COVET:
+                    case DESTINY_BOND:
+                    case DETECT:
+                    case DIG:
+                    case DIVE:
+                    case DRAGON_TAIL:
+                    case ENDURE:
+                    case FEINT:
+                    case FLY:
+                    case FOCUS_PUNCH:
+                    case FOLLOW_ME:
+                    case HELPING_HAND:
+                    case KINGS_SHIELD:
+                    case MAT_BLOCK:
+                    case ME_FIRST:
+                    case METRONOME:
+                    case MIMIC:
+                    case MIRROR_COAT:
+                    case MIRROR_MOVE:
+                    case NATURE_POWER:
+                    case PHANTOM_FORCE:
+                    case PROTECT:
+                    case ROAR:
+                    case SHADOW_FORCE:
+                    case SKETCH:
+                    case SKY_DROP:
+                    case SLEEP_TALK:
+                    case SNATCH:
+                    case SPIKY_SHIELD:
+                    case STRUGGLE:
+                    case SWITCHEROO:
+                    case THIEF:
+                    case TRANSFORM:
+                    case TRICK:
+                    case WHIRLWIND:
+                        return true;
+                    default:
+                        return false;
+                }
+            });
+
+            if (teamMoves.isEmpty()) {
+                this.fail();
+                return;
+            }
+
+            Move randomMove = teamMoves.get(new Random().nextInt(teamMoves.size()));
+            randomMove.getBaseMove().use(user, target, battle, trainer);
+        }
+
+        @Override
+        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer) {
+            user.removeItem();
+
+            List<Move> teamMoves = new ArrayList<>();
+            for (Pokemon pokemon : trainer.getPokemons()) {
+                teamMoves.addAll(pokemon.getMoves());
+            }
+            teamMoves.removeIf((move) -> {
+                BaseMove baseMove = move.getBaseMove();
+                switch (baseMove) {
+                    case ASSIST:
+                    case BELCH:
+                    case BOUNCE:
+                    case CHATTER:
+                    case CIRCLE_THROW:
+                    case COPYCAT:
+                    case COUNTER:
+                    case COVET:
+                    case DESTINY_BOND:
+                    case DETECT:
+                    case DIG:
+                    case DIVE:
+                    case DRAGON_TAIL:
+                    case ENDURE:
+                    case FEINT:
+                    case FLY:
+                    case FOCUS_PUNCH:
+                    case FOLLOW_ME:
+                    case HELPING_HAND:
+                    case KINGS_SHIELD:
+                    case MAT_BLOCK:
+                    case ME_FIRST:
+                    case METRONOME:
+                    case MIMIC:
+                    case MIRROR_COAT:
+                    case MIRROR_MOVE:
+                    case NATURE_POWER:
+                    case PHANTOM_FORCE:
+                    case PROTECT:
+                    case ROAR:
+                    case SHADOW_FORCE:
+                    case SKETCH:
+                    case SKY_DROP:
+                    case SLEEP_TALK:
+                    case SNATCH:
+                    case SPIKY_SHIELD:
+                    case STRUGGLE:
+                    case SWITCHEROO:
+                    case THIEF:
+                    case TRANSFORM:
+                    case TRICK:
+                    case WHIRLWIND:
+                        return true;
+                    default:
+                        return false;
+                }
+            });
+
+            if (teamMoves.isEmpty()) {
+                this.fail();
+                return;
+            }
+
+            Move randomMove = teamMoves.get(new Random().nextInt(teamMoves.size()));
+            randomMove.getBaseMove().useAsZMove(user, target, battle, trainer);
+        }
+    },
+    ASSURANCE("Assurance") {
+        @Override
+        public int getPower(Pokemon attacker) {
+            if (attacker.isDamagedThisTurn()) {
+                return super.getPower(attacker) * 2;
+            }
+
+            return super.getPower(attacker);
+        }
+    },
     ASTONISH("Astonish"),
     ATTACK_ORDER("Attack Order"),
     ATTRACT("Attract"),
@@ -1379,6 +1560,8 @@ public enum BaseMove {
         }
         this.use(user, target, battle, trainer);
     }
+
+    protected void fail() {}
 
     private static class Holder {
         static Map<String, BaseMove> MAP = new HashMap<>();

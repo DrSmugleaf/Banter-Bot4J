@@ -168,7 +168,6 @@ public class PokemonCommands {
         List<String> users = userTrainerMap.keySet().stream().map(IUser::getName)
                 .collect(Collectors.toList());
 
-        builder.withAuthorName(String.join(" vs ", users));
         builder.withTitle("Who do you want to target?");
 
         List<Trainer> trainerList = new ArrayList<>(userTrainerMap.values());

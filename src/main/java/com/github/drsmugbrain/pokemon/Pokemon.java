@@ -29,6 +29,7 @@ public class Pokemon extends BasePokemon {
     private Pokemon target = null;
     private Status status = null;
     private CriticalHitStage criticalHitStage = CriticalHitStage.ZERO;
+    private boolean damagedThisTurn = false;
 
     public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Item item, @Nonnull Nature nature, @Nonnull Ability ability, @Nonnull List<Move> moves, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues) {
         super(basePokemon);
@@ -375,13 +376,32 @@ public class Pokemon extends BasePokemon {
         this.action.use(this, this.target);
     }
 
+    protected void finishTurn() {
+        this.damagedThisTurn = false;
+    }
+
     protected void damage(int amount) {
         int currentHP = this.getCurrentStat(Stat.HP);
         this.CURRENT_STATS.put(Stat.HP, currentHP - amount);
+        this.damagedThisTurn = true;
     }
 
     protected void heal(int amount) {
-        this.damage(-amount);
+        int currentHP = this.getCurrentStat(Stat.HP);
+        int maxHP = this.getStat(Stat.HP);
+
+        if (currentHP + amount > maxHP) {
+            this.CURRENT_STATS.put(Stat.HP, maxHP);
+            return;
+        }
+
+        this.CURRENT_STATS.put(Stat.HP, currentHP + amount);
+    }
+
+    protected void heal(double percentage) {
+        int maxHP = this.getStat(Stat.HP);
+        int healedHP = (int) (maxHP * (percentage / 100.0f));
+        this.heal(healedHP);
     }
 
     @Nullable
@@ -440,6 +460,10 @@ public class Pokemon extends BasePokemon {
 
     protected void resetCriticalHitStage() {
         this.criticalHitStage = CriticalHitStage.ZERO;
+    }
+
+    protected boolean isDamagedThisTurn() {
+        return this.damagedThisTurn;
     }
 
 }
