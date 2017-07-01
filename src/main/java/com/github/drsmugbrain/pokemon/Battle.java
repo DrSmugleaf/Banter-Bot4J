@@ -8,12 +8,20 @@ import java.util.*;
  */
 public class Battle {
 
-    private final Map<Long, Trainer> TRAINERS = new LinkedHashMap<>();
     protected final List<Pokemon> TURN_ORDER = new ArrayList<>();
+    private final Generation GENERATION;
+    private final Map<Long, Trainer> TRAINERS = new LinkedHashMap<>();
+    private Weather weather;
 
-    public Battle(@Nonnull Long id1, @Nonnull Trainer trainer1, @Nonnull Long id2, @Nonnull Trainer trainer2) {
+    public Battle(Generation generation, @Nonnull Trainer trainer1, @Nonnull Long id2, @Nonnull Trainer trainer2, @Nonnull Long id1) {
+        this.GENERATION = generation;
         TRAINERS.put(id1, trainer1);
         TRAINERS.put(id2, trainer2);
+    }
+
+    @Nonnull
+    public Generation getGeneration() {
+        return this.GENERATION;
     }
 
     public void executeTurn() {
@@ -94,6 +102,14 @@ public class Battle {
         }
 
         return true;
+    }
+
+    protected Weather getWeather() {
+        return this.weather;
+    }
+
+    protected void setWeather(Weather weather) {
+        this.weather = weather;
     }
 
 }

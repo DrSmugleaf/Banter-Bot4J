@@ -126,4 +126,24 @@ public class Trainer {
         this.chosenMove = null;
     }
 
+    public List<Pokemon> getAlivePokemons() {
+        List<Pokemon> alivePokemons = new ArrayList<>();
+
+        for (Pokemon pokemon : this.POKEMONS) {
+            if (pokemon.getStat(Stat.HP) > 0) {
+                alivePokemons.add(pokemon);
+            }
+        }
+
+        return alivePokemons;
+    }
+
+    public List<Pokemon> getAliveUnactivePokemons() {
+        List<Pokemon> aliveUnactivePokemons = this.getAlivePokemons();
+
+        aliveUnactivePokemons.removeIf(this.ACTIVE_POKEMONS::contains);
+
+        return aliveUnactivePokemons;
+    }
+
 }

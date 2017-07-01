@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
  * Created by DrSmugleaf on 04/06/2017.
  */
 public class Pokemon extends BasePokemon {
+
     private final String NICKNAME;
     private final Ability ABILITY;
     private final Nature NATURE;
@@ -20,17 +21,24 @@ public class Pokemon extends BasePokemon {
     private final Map<Stat, Integer> CURRENT_STATS;
     private final Map<Move, Double> MOVE_DAMAGE_MULTIPLIER = new HashMap<>();
     private final List<VolatileStatus> VOLATILE_STATUSES = new ArrayList<>();
+    private final List<Pokemon> damagedThisTurnBy = new ArrayList<>();
+    private final Gender GENDER;
+    private final Map<Stat, Map<String, Double>> STAT_MODIFIERS = new LinkedHashMap<>();
     private Item item;
     private List<Move> MOVES;
     private double stabMultiplier = 1.5;
     private double damageMultiplier = 1;
+    private boolean canAttackThisTurn = true;
     private boolean canSwitch = true;
     private Move action = null;
     private Pokemon target = null;
     private Status status = null;
     private CriticalHitStage criticalHitStage = CriticalHitStage.ZERO;
     private boolean damagedThisTurn = false;
-    private final Gender GENDER;
+    private int weight;
+    private boolean berryUsed = false;
+    private int bideDamageTaken = 0;
+    private Pokemon bideTarget = null;
 
     public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Item item, @Nonnull Nature nature, @Nonnull Ability ability, @Nullable Gender gender, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues, @Nonnull List<Move> moves) {
         super(basePokemon);
@@ -44,6 +52,7 @@ public class Pokemon extends BasePokemon {
         } else {
             this.GENDER = gender;
         }
+//        this.weight = basePokemon.weight;
 
         this.MOVES = moves;
         for (Move move : moves) {
@@ -149,6 +158,10 @@ public class Pokemon extends BasePokemon {
 
     protected void setItem(@Nonnull Item item) {
         this.item = item;
+    }
+
+    public boolean hasItem() {
+        return this.item != null;
     }
 
     public boolean hasItem(Item item) {
@@ -283,6 +296,10 @@ public class Pokemon extends BasePokemon {
         return this.EFFORT_VALUES.get(stat);
     }
 
+    public Map<Stat, Stage> getStatStages() {
+        return this.STAT_STAGES;
+    }
+
     public Stage getStatStage(@Nonnull Stat stat) {
         return this.STAT_STAGES.get(stat);
     }
@@ -295,6 +312,10 @@ public class Pokemon extends BasePokemon {
         this.STAT_STAGES.put(stat, stage);
     }
 
+    protected void setStatStage(Map<Stat, Stage> stages) {
+        this.STAT_STAGES.putAll(stages);
+    }
+
     protected void raiseStatStage(@Nonnull Stat stat, int amount) {
         this.STAT_STAGES.put(stat, Stage.getStage(this.STAT_STAGES.get(stat).getStage() + amount));
     }
@@ -303,6 +324,9 @@ public class Pokemon extends BasePokemon {
         this.raiseStatStage(stat, -amount);
     }
 
+    protected void resetStatStages() {
+        this.STAT_STAGES.putAll(Pokemon.getDefaultStatStages());
+    }
 
     protected double getStabMultiplier() {
         return this.stabMultiplier;
@@ -384,12 +408,20 @@ public class Pokemon extends BasePokemon {
 
     protected void finishTurn() {
         this.damagedThisTurn = false;
+        this.damagedThisTurnBy.clear();
+        this.canAttackThisTurn = true;
     }
 
     protected void damage(int amount) {
         int currentHP = this.getCurrentStat(Stat.HP);
         this.CURRENT_STATS.put(Stat.HP, currentHP - amount);
         this.damagedThisTurn = true;
+    }
+
+    protected void damage(double percentage) {
+        int maxHP = this.getStat(Stat.HP);
+        int damage = (int) (maxHP * (percentage / 100.0f));
+        this.damage(damage);
     }
 
     protected void heal(int amount) {
@@ -427,8 +459,12 @@ public class Pokemon extends BasePokemon {
         this.VOLATILE_STATUSES.add(status);
     }
 
+    protected void addVolatileStatus(Collection<VolatileStatus> status) {
+        this.VOLATILE_STATUSES.addAll(status);
+    }
+
     @Nonnull
-    protected List<VolatileStatus> getVolatileStatuses(VolatileStatus status) {
+    protected List<VolatileStatus> getVolatileStatuses() {
         return this.VOLATILE_STATUSES;
     }
 
@@ -472,9 +508,113 @@ public class Pokemon extends BasePokemon {
         return this.damagedThisTurn;
     }
 
+    protected boolean isDamagedThisTurnBy(Pokemon pokemon) {
+        return this.damagedThisTurnBy.contains(pokemon);
+    }
+
     @Nonnull
-    protected Gender getGender() {
+    public Gender getGender() {
         return this.GENDER;
+    }
+
+    public int getWeight() {
+        return this.weight;
+    }
+
+    protected void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    protected void setWeight(double weight) {
+        this.weight = (int) (this.weight * (weight / 100.0f));
+    }
+
+    protected void resetWeight() {
+        this.weight = this.getBaseWeight();
+    }
+
+    protected boolean isBerryUsed() {
+        return this.berryUsed;
+    }
+
+    protected void setBerryUsed(boolean bool) {
+        this.berryUsed = bool;
+    }
+
+    protected void resetBerryUsed() {
+        this.berryUsed = false;
+    }
+
+    protected int getBideDamageTaken() {
+        return this.bideDamageTaken;
+    }
+
+    protected void setBideDamageTaken(int amount) {
+        this.bideDamageTaken = amount;
+    }
+
+    protected void addBideDamageTaken(int amount) {
+        this.bideDamageTaken += amount;
+    }
+
+    protected void resetBideDamageTaken() {
+        this.bideDamageTaken = 0;
+    }
+
+    protected Pokemon getBideTarget() {
+        return this.bideTarget;
+    }
+
+    protected void setBideTarget(Pokemon pokemon) {
+        this.bideTarget = pokemon;
+    }
+
+    protected Map<Stat, Map<String, Double>> getStatModifiers() {
+        return this.STAT_MODIFIERS;
+    }
+
+    protected Collection<Double> getStatModifiers(Stat stat) {
+        return this.STAT_MODIFIERS.get(stat).values();
+    }
+
+    protected double getStatModifier(Stat stat) {
+        double total = 0;
+
+        for (Map<String, Double> modifierMap : this.STAT_MODIFIERS.values()) {
+            total += modifierMap.values().stream().mapToDouble(Double::doubleValue).sum();
+        }
+
+        return total;
+    }
+
+    protected void addStatModifier(Stat stat, String identifier, double modifier) {
+        this.STAT_MODIFIERS.get(stat).put(identifier, modifier);
+    }
+
+    protected void removeStatModifier(Stat stat, String identifier) {
+        this.STAT_MODIFIERS.remove(stat, identifier);
+    }
+
+    protected void removeStatModifier(String... identifiers) {
+        for (String id : identifiers) {
+            for (Map<String, Double> modifierMap : this.STAT_MODIFIERS.values()) {
+                if (modifierMap.containsKey(id)) {
+                    modifierMap.remove(id);
+                }
+            }
+        }
+    }
+
+    protected boolean getCanAttackThisTurn() {
+        return this.canAttackThisTurn;
+    }
+
+    protected void setCanAttackThisTurn(boolean bool) {
+        this.canAttackThisTurn = bool;
+    }
+
+    protected void resetCanAttackThisTurn() {
+        this.canAttackThisTurn = true;
     }
 
 }

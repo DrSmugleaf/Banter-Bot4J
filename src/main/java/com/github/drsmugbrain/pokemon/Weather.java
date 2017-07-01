@@ -8,7 +8,29 @@ import javax.annotation.Nonnull;
 public enum Weather {
 
     SUNSHINE("Sunshine"),
-    HARSH_SUNSHINE("Harsh Sunshine"),
+    HARSH_SUNSHINE("Harsh Sunshine") {
+        @Override
+        protected boolean tryApplyStatusEffect(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Status status) {
+            switch (battle.getGeneration()) {
+                case I:
+                    break;
+                case II:
+                case III:
+                case IV:
+                case V:
+                case VI:
+                case VII:
+                    if (status == Status.FREEZE) {
+                        return false;
+                    }
+                    break;
+                default:
+                    throw new InvalidGenerationException(battle.getGeneration());
+            }
+
+            return super.tryApplyStatusEffect(user, target, battle, trainer, move, status);
+        }
+    },
     RAIN("Rain"),
     HEAVY_RAIN("Heavy Rain"),
     HAIL("Hail"),
@@ -21,6 +43,10 @@ public enum Weather {
 
     Weather(@Nonnull String name) {
         this.NAME = name;
+    }
+
+    protected boolean tryApplyStatusEffect(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Status status) {
+        return true;
     }
 
 }

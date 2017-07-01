@@ -38,7 +38,7 @@ public class PokemonCommands {
 
         IUser author2 = PokemonCommands.awaitingTrainer.entrySet().iterator().next().getKey();
         Trainer trainer2 = PokemonCommands.awaitingTrainer.entrySet().iterator().next().getValue();
-        Battle battle = new Battle(author1.getLongID(), trainer1, author2.getLongID(), trainer2);
+        Battle battle = new Battle(Generation.VII, trainer1, author2.getLongID(), trainer2, author1.getLongID());
 
         PokemonCommands.BATTLES.put(author1, battle);
         PokemonCommands.BATTLES.put(author2, battle);
