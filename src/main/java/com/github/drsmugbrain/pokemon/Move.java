@@ -54,6 +54,14 @@ public class Move {
         this.pp = pp;
     }
 
+    protected void increasePP(int amount) {
+        this.setPP(this.getPP() + amount);
+    }
+
+    protected void decreasePP(int amount) {
+        this.increasePP(-amount);
+    }
+
     public int getPower() {
         return this.power;
     }
@@ -90,9 +98,38 @@ public class Move {
         this.damageMultiplier = 1.0;
     }
 
-    protected void use(@Nonnull Pokemon user, Pokemon target) {
+    protected void use(@Nonnull Pokemon user, @Nonnull Pokemon target) {
+
+    }
+
+    protected void use(@Nonnull Pokemon user, @Nonnull Pokemon target, @Nonnull Battle battle, @Nonnull Trainer trainer) {
         this.pp--;
-        this.getBaseMove().use(user, target);
+        this.getBaseMove().use(user, target, battle, trainer, this);
+    }
+
+    protected void fail(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
+        this.getBaseMove().fail(user, target, battle, trainer, this);
+    }
+
+    protected void tryUse(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
+        if (this.getBaseMove().getAccuracy() == 0) {
+            this.use(user, target, battle, trainer);
+            return;
+        }
+
+        if (battle.getGeneration() == Generation.I) {
+            if (Math.random() < 0.004) {
+                this.fail(user, target, battle, trainer);
+            }
+            return;
+        }
+
+        double probability = this.getBaseMove().getAccuracy() * (user.getAccuracy() / target.getEvasion());
+        if (probability > 1 || probability > Math.random()) {
+            this.use(user, target, battle, trainer);
+        } else {
+            this.fail(user, target, battle, trainer);
+        }
     }
 
 }

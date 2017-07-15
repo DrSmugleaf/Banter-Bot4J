@@ -13,9 +13,9 @@ public enum BaseMove {
     _10000000_VOLT_THUNDERBOLT("10,000,000 Volt Thunderbolt"),
     ABSORB("Absorb") {
         @Override
-        protected void use(@Nonnull Pokemon user, @Nonnull Pokemon target) {
-            super.use(user, target);
-            user.heal(this.getDamage(user, target) / 2);
+        protected void use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            super.use(user, target, battle, trainer, move);
+            user.heal(this.getDamage(user, target, move) / 2);
         }
     },
     ACCELEROCK("Accelerock"),
@@ -30,9 +30,9 @@ public enum BaseMove {
     },
     ACID_ARMOR("Acid Armor") {
         @Override
-        public void useAsZMove(@Nonnull Pokemon user, @Nullable Pokemon target, Battle battle, Trainer trainer) {
+        public void useAsZMove(@Nonnull Pokemon user, @Nullable Pokemon target, Battle battle, Trainer trainer, Move move) {
             user.resetLoweredStats();
-            super.useAsZMove(user, target, battle, trainer);
+            super.useAsZMove(user, target, battle, trainer, move);
         }
     },
     ACID_DOWNPOUR("Acid Downpour"),
@@ -49,16 +49,16 @@ public enum BaseMove {
     },
     ACUPRESSURE("Acupressure") {
         @Override
-        protected void useAsZMove(@Nonnull Pokemon user, @Nullable Pokemon target, Battle battle, Trainer trainer) {
+        protected void useAsZMove(@Nonnull Pokemon user, @Nullable Pokemon target, Battle battle, Trainer trainer, Move move) {
             user.raiseCriticalHitStage(1);
-            super.useAsZMove(user, target, battle, trainer);
+            super.useAsZMove(user, target, battle, trainer, move);
         }
     },
     AERIAL_ACE("Aerial Ace"), // Always hit except semi invulnerable targets
     AEROBLAST("Aeroblast"),
     AFTER_YOU("After You") {
         @Override
-        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             if (battle.TURN_ORDER.contains(target) && battle.TURN_ORDER.indexOf(target) > battle.TURN_ORDER.indexOf(user)) {
                 battle.TURN_ORDER.add(battle.TURN_ORDER.indexOf(user) + 1, battle.TURN_ORDER.remove(battle.TURN_ORDER.indexOf(target)));
             }
@@ -66,16 +66,16 @@ public enum BaseMove {
         }
 
         @Override
-        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
+        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
             user.raiseStatStage(Stat.SPEED, 1);
-            super.useAsZMove(user, target, battle, trainer);
+            super.useAsZMove(user, target, battle, trainer, move);
         }
     },
     AGILITY("Agility") {
         @Override
-        public void useAsZMove(@Nonnull Pokemon user, @Nullable Pokemon target, @Nullable Battle battle, Trainer trainer) {
+        public void useAsZMove(@Nonnull Pokemon user, @Nullable Pokemon target, @Nullable Battle battle, Trainer trainer, Move move) {
             user.resetLoweredStats();
-            super.useAsZMove(user, target, battle, trainer);
+            super.useAsZMove(user, target, battle, trainer, move);
         }
     },
     AIR_CUTTER("Air Cutter"),
@@ -83,22 +83,22 @@ public enum BaseMove {
     ALL_OUT_PUMMELING("All-Out Pummeling"),
     ALLY_SWITCH("Ally Switch") {
         @Override
-        protected void use(@Nonnull Pokemon user, @Nonnull Pokemon target, @Nonnull Battle battle, @Nonnull Trainer trainer) {
+        protected void use(@Nonnull Pokemon user, @Nonnull Pokemon target, @Nonnull Battle battle, @Nonnull Trainer trainer, Move move) {
             trainer.swapActivePokemonPlaces(user, target);
-            super.use(user, target, battle, trainer);
+            super.use(user, target, battle, trainer, move);
         }
 
         @Override
-        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, Trainer trainer) {
+        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, Trainer trainer, Move move) {
             user.raiseStatStage(Stat.SPEED, 2);
-            super.useAsZMove(user, target, battle, trainer);
+            super.useAsZMove(user, target, battle, trainer, move);
         }
     },
     AMNESIA("Amnesia") {
         @Override
-        public void useAsZMove(@Nonnull Pokemon user, @Nullable Pokemon target, @Nullable Battle battle, Trainer trainer) {
+        public void useAsZMove(@Nonnull Pokemon user, @Nullable Pokemon target, @Nullable Battle battle, Trainer trainer, Move move) {
             user.resetLoweredStats();
-            super.useAsZMove(user, target, battle, trainer);
+            super.useAsZMove(user, target, battle, trainer, move);
         }
     },
     ANCHOR_SHOT("Anchor Shot"),
@@ -106,9 +106,9 @@ public enum BaseMove {
     AQUA_JET("Aqua Jet"),
     AQUA_RING("Aqua Ring") {
         @Override
-        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer) {
+        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer, Move move) {
             user.raiseStatStage(Stat.DEFENSE, 1);
-            super.useAsZMove(user, target, battle, trainer);
+            super.useAsZMove(user, target, battle, trainer, move);
         }
     },
     AQUA_TAIL("Aqua Tail"),
@@ -133,34 +133,34 @@ public enum BaseMove {
     },
     AROMATHERAPY("Aromatherapy") {
         @Override
-        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             for (Pokemon pokemon : trainer.getPokemons()) {
                 pokemon.resetStatus();
             }
         }
 
         @Override
-        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer) {
+        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer, Move move) {
             user.heal(100);
-            super.useAsZMove(user, target, battle, trainer);
+            super.useAsZMove(user, target, battle, trainer, move);
         }
     },
     AROMATIC_MIST("Aromatic Mist") {
         @Override
-        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer) {
+        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer, Move move) {
             user.raiseStatStage(Stat.SPECIAL_DEFENSE, 2);
-            super.useAsZMove(user, target, battle, trainer);
+            super.useAsZMove(user, target, battle, trainer, move);
         }
     },
     ASSIST("Assist") {
         @Override
-        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             List<Move> teamMoves = new ArrayList<>();
             for (Pokemon pokemon : trainer.getPokemons()) {
                 teamMoves.addAll(pokemon.getMoves());
             }
-            teamMoves.removeIf((move) -> {
-                BaseMove baseMove = move.getBaseMove();
+            teamMoves.removeIf((teamMove) -> {
+                BaseMove baseMove = teamMove.getBaseMove();
                 switch (baseMove) {
                     case ASSIST:
                     case BELCH:
@@ -211,24 +211,24 @@ public enum BaseMove {
             });
 
             if (teamMoves.isEmpty()) {
-                this.fail(user, target, battle, trainer);
+                this.fail(user, target, battle, trainer, move);
                 return;
             }
 
             Move randomMove = teamMoves.get(new Random().nextInt(teamMoves.size()));
-            randomMove.getBaseMove().use(user, target, battle, trainer);
+            randomMove.getBaseMove().use(user, target, battle, trainer, move);
         }
 
         @Override
-        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer) {
+        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer, Move move) {
             user.removeItem();
 
             List<Move> teamMoves = new ArrayList<>();
             for (Pokemon pokemon : trainer.getPokemons()) {
                 teamMoves.addAll(pokemon.getMoves());
             }
-            teamMoves.removeIf((move) -> {
-                BaseMove baseMove = move.getBaseMove();
+            teamMoves.removeIf((teamMove) -> {
+                BaseMove baseMove = teamMove.getBaseMove();
                 switch (baseMove) {
                     case ASSIST:
                     case BELCH:
@@ -279,12 +279,12 @@ public enum BaseMove {
             });
 
             if (teamMoves.isEmpty()) {
-                this.fail(user, target, battle, trainer);
+                this.fail(user, target, battle, trainer, move);
                 return;
             }
 
             Move randomMove = teamMoves.get(new Random().nextInt(teamMoves.size()));
-            randomMove.getBaseMove().useAsZMove(user, target, battle, trainer);
+            randomMove.getBaseMove().useAsZMove(user, target, battle, trainer, move);
         }
     },
     ASSURANCE("Assurance") {
@@ -301,49 +301,49 @@ public enum BaseMove {
     ATTACK_ORDER("Attack Order"),
     ATTRACT("Attract") {
         @Override
-        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             if (Gender.isOppositeGender(user, target)) {
-                target.addVolatileStatus(VolatileStatus.INFATUATION);
+                BaseVolatileStatus.INFATUATION.apply(user, target, battle, trainer, this);
             } else {
-                this.fail(user, target, battle, trainer);
+                this.fail(user, target, battle, trainer, move);
             }
         }
 
         @Override
-        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer) {
+        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer, Move move) {
             user.resetLoweredStats();
-            super.useAsZMove(user, target, battle, trainer);
+            super.useAsZMove(user, target, battle, trainer, move);
         }
     },
     AURA_SPHERE("Aura Sphere"),
     AURORA_BEAM("Aurora Beam"),
     AURORA_VEIL("Aurora Veil") {
         @Override
-        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             if (battle.getWeather() != Weather.HAIL) {
-                this.fail(user, target, battle, trainer);
+                this.fail(user, target, battle, trainer, move);
                 return;
             }
 
-            VolatileStatus.AURORA_VEIL.apply(user, target, battle, trainer, this);
+            BaseVolatileStatus.AURORA_VEIL.apply(user, target, battle, trainer, this);
         }
 
         @Override
-        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer) {
+        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer, Move move) {
             user.raiseStatStage(Stat.SPEED, 1);
-            super.useAsZMove(user, target, battle, trainer);
+            super.useAsZMove(user, target, battle, trainer, move);
         }
     },
     AUTOTOMIZE("Autotomize") {
         @Override
-        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             user.setWeight(50);
         }
 
         @Override
-        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer) {
+        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer, Move move) {
             user.resetLoweredStats();
-            super.useAsZMove(user, target, battle, trainer);
+            super.useAsZMove(user, target, battle, trainer, move);
         }
     },
     AVALANCHE("Avalanche") { // If the target had already damaged the user in the same turn, Avalanche's power is doubled to 120.
@@ -379,23 +379,21 @@ public enum BaseMove {
     },
     BARRIER("Barrier") {
         @Override
-        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer) {
+        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer, Move move) {
             user.resetLoweredStats();
-            super.useAsZMove(user, target, battle, trainer);
+            super.useAsZMove(user, target, battle, trainer, move);
         }
     },
     BATON_PASS("Baton Pass") {
         @Override
-        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             if (trainer.getAliveUnactivePokemons().isEmpty()) {
-                this.fail(user, target, battle, trainer);
+                this.fail(user, target, battle, trainer, move);
                 return;
             }
 
-            List<VolatileStatus> volatileStatuses = user.getVolatileStatuses();
-            if (volatileStatuses.contains(VolatileStatus.INFATUATION)) {
-                volatileStatuses.remove(VolatileStatus.INFATUATION);
-            }
+            Collection<VolatileStatus> volatileStatuses = user.getVolatileStatuses();
+            volatileStatuses.removeIf(status -> status.getBaseVolatileStatus() == BaseVolatileStatus.INFATUATION);
 
             target.addVolatileStatus(volatileStatuses);
             target.setStatStage(user.getStatStages());
@@ -403,26 +401,26 @@ public enum BaseMove {
         }
 
         @Override
-        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer) {
+        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer, Move move) {
             user.resetLoweredStats();
-            super.useAsZMove(user, target, battle, trainer);
+            super.useAsZMove(user, target, battle, trainer, move);
         }
     },
     BEAK_BLAST("Beak Blast") {
         @Override
         protected void onTurnStart(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
-            VolatileStatus.BEAK_BLAST.apply(user, target, battle, trainer, this);
+            BaseVolatileStatus.BEAK_BLAST.apply(user, target, battle, trainer, this);
         }
 
         @Override
-        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
-            VolatileStatus.BEAK_BLAST.remove(user, target, battle, trainer, this);
-            super.use(user, target, battle, trainer);
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
+            BaseVolatileStatus.BEAK_BLAST.remove(user, target, battle, trainer, this);
+            super.use(user, target, battle, trainer, move);
         }
     },
     BEAT_UP("Beat Up") {
         @Override
-        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             List<Pokemon> validPokemons = trainer.getAlivePokemons();
             validPokemons.removeIf(pokemon -> pokemon.getStatus() != null);
 
@@ -454,38 +452,49 @@ public enum BaseMove {
     },
     BELLY_DRUM("Belly Drum") {
         @Override
-        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             user.damage(50.0);
-            super.use(user, target, battle, trainer);
+            super.use(user, target, battle, trainer, move);
         }
 
         @Override
-        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer) {
+        protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer, Move move) {
             user.heal(100.0);
-            super.useAsZMove(user, target, battle, trainer);
+            super.useAsZMove(user, target, battle, trainer, move);
         }
     },
     BESTOW("Bestow") {
         @Override
-        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             if (target.hasItem() || user.getItem() == null) {
-                this.fail(user, target, battle, trainer);
+                this.fail(user, target, battle, trainer, move);
                 return;
             }
 
             target.setItem(user.getItem());
             user.removeItem();
-            super.use(user, target, battle, trainer);
+            super.use(user, target, battle, trainer, move);
         }
     },
     BIDE("Bide") {
         @Override
-        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
-            user.addVolatileStatus(VolatileStatus.BIDE);
-            super.use(user, target, battle, trainer);
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
+            BaseVolatileStatus.BIDE.apply(user, target, battle, trainer, this);
+            super.use(user, target, battle, trainer, move);
         }
     },
-    BIND("Bind"),
+    BIND("Bind") {
+        @Override
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
+            target.setCanAttackThisTurn(false);
+            if (!user.hasVolatileStatus(BaseVolatileStatus.BIND)) {
+                BaseVolatileStatus.BIND.apply(user, target, battle, trainer, this);
+            } else if (user.getLastTarget() == target) {
+                move.increasePP(1);
+            }
+            super.use(user, user, battle, trainer, move);
+        }
+    },
     BITE("Bite"),
     BLACK_HOLE_ECLIPSE("Black Hole Eclipse"),
     BLAST_BURN("Blast Burn"),
@@ -516,7 +525,7 @@ public enum BaseMove {
     BULLET_SEED("Bullet Seed"),
     BURN_UP("Burn Up") {
         @Override
-        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             switch (battle.getGeneration()) {
                 case I:
                     break;
@@ -532,7 +541,7 @@ public enum BaseMove {
                     break;
             }
 
-            super.use(user, target, battle, trainer);
+            super.use(user, target, battle, trainer, move);
         }
     },
     CALM_MIND("Calm Mind"),
@@ -662,7 +671,7 @@ public enum BaseMove {
     FLAME_CHARGE("Flame Charge"),
     FLAME_WHEEL("Flame Wheel") {
         @Override
-        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             switch (battle.getGeneration()) {
                 case I:
                     break;
@@ -678,13 +687,13 @@ public enum BaseMove {
                     break;
             }
 
-            super.use(user, target, battle, trainer);
+            super.use(user, target, battle, trainer, move);
         }
     },
     FLAMETHROWER("Flamethrower"),
     FLARE_BLITZ("Flare Blitz") {
         @Override
-        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             switch (battle.getGeneration()) {
                 case I:
                     break;
@@ -700,7 +709,7 @@ public enum BaseMove {
                     break;
             }
 
-            super.use(user, target, battle, trainer);
+            super.use(user, target, battle, trainer, move);
         }
     },
     FLASH("Flash"),
@@ -731,7 +740,7 @@ public enum BaseMove {
     FUSION_BOLT("Fusion Bolt"),
     FUSION_FLARE("Fusion Flare") {
         @Override
-        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             switch (battle.getGeneration()) {
                 case I:
                     break;
@@ -747,7 +756,7 @@ public enum BaseMove {
                     break;
             }
 
-            super.use(user, target, battle, trainer);
+            super.use(user, target, battle, trainer, move);
         }
     },
     FUTURE_SIGHT("Future Sight"),
@@ -782,7 +791,7 @@ public enum BaseMove {
     HARDEN("Harden"),
     HAZE("Haze") {
         @Override
-        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             switch (battle.getGeneration()) {
                 case I:
                     for (Trainer battleTrainer : battle.getTrainers().values()) {
@@ -790,9 +799,7 @@ public enum BaseMove {
                             pokemon.resetStatStages();
                             pokemon.removeStatModifier("burn", "paralysis");
 //                            pokemon.removeVolatileStatus(); // TODO: Removes effects of focus energy, dire hit, mist, guard spec, x accuracy, leech sed, disable, reflect, light screen
-                            if (pokemon.getVolatileStatuses().contains(VolatileStatus.CONFUSION)) {
-                                pokemon.removeVolatileStatus(VolatileStatus.CONFUSION);
-                            }
+                            pokemon.getVolatileStatuses().removeIf(status -> status.getBaseVolatileStatus() == BaseVolatileStatus.CONFUSION);
                             if (pokemon.getStatus() == Status.BADLY_POISONED) {
                                 pokemon.setStatus(Status.POISON);
                             }
@@ -810,8 +817,8 @@ public enum BaseMove {
                 case VII:
                     for (Trainer battleTrainer : battle.getTrainers().values()) {
                         for (Pokemon pokemon : battleTrainer.getActivePokemons()) {
-                            if (battle.getGeneration() == Generation.III && pokemon.getVolatileStatuses().contains(VolatileStatus.PROTECTION)) {
-                                this.fail(user, target, battle, trainer);
+                            if (battle.getGeneration() == Generation.III && pokemon.hasVolatileStatus(BaseVolatileStatus.PROTECTION)) {
+                                this.fail(user, target, battle, trainer, move);
                             }
                             pokemon.resetStatStages();
                         }
@@ -820,7 +827,7 @@ public enum BaseMove {
                 default:
                     throw new InvalidGenerationException(battle.getGeneration());
             }
-            super.use(user, target, battle, trainer);
+            super.use(user, target, battle, trainer, move);
         }
     },
     HEAD_CHARGE("Head Charge"),
@@ -1065,7 +1072,7 @@ public enum BaseMove {
     ROUND("Round"),
     SACRED_FIRE("Sacred Fire") {
         @Override
-        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             switch (battle.getGeneration()) {
                 case I:
                     break;
@@ -1081,7 +1088,7 @@ public enum BaseMove {
                     break;
             }
 
-            super.use(user, target, battle, trainer);
+            super.use(user, target, battle, trainer, move);
         }
     },
     SACRED_SWORD("Sacred Sword"),
@@ -1092,7 +1099,7 @@ public enum BaseMove {
     SAVAGE_SPIN_OUT("Savage Spin-Out"),
     SCALD("Scald") {
         @Override
-        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             switch (battle.getGeneration()) {
                 case I:
                     break;
@@ -1108,7 +1115,7 @@ public enum BaseMove {
                     break;
             }
 
-            super.use(user, target, battle, trainer);
+            super.use(user, target, battle, trainer, move);
         }
     },
     SCARY_FACE("Scary Face"),
@@ -1186,7 +1193,7 @@ public enum BaseMove {
     STEALTH_ROCK("Stealth Rock"),
     STEAM_ERUPTION("Steam Eruption") {
         @Override
-        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             switch (battle.getGeneration()) {
                 case I:
                     break;
@@ -1202,7 +1209,7 @@ public enum BaseMove {
                     break;
             }
 
-            super.use(user, target, battle, trainer);
+            super.use(user, target, battle, trainer, move);
         }
     },
     STEAMROLLER("Steamroller"),
@@ -1274,14 +1281,14 @@ public enum BaseMove {
     TRANSFORM("Transform"),
     TRI_ATTACK("Tri Attack") {
         @Override
-        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
+        protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             if (battle.getGeneration() == Generation.II) {
                 if (target.getStatus() == Status.FREEZE && Math.random() < 0.3) {
                     Status.FREEZE.remove(user, target, battle, trainer, this);
                 }
             }
-            super.use(user, target, battle, trainer);
-            super.use(user, target, battle, trainer);
+            super.use(user, target, battle, trainer, move);
+            super.use(user, target, battle, trainer, move);
         }
     },
     TRICK("Trick"),
@@ -1335,7 +1342,7 @@ public enum BaseMove {
 
     private final String NAME;
     private final List<Status> STATUS_EFFECTS = new ArrayList<>();
-    private final Map<VolatileStatus, Integer> VOLATILE_STATUS_EFFECTS_CHANCE = new HashMap<>();
+    private final Map<BaseVolatileStatus, Integer> VOLATILE_STATUS_EFFECTS_CHANCE = new HashMap<>();
     private final Map<Stat, Integer> RAISES_OWN_STATS = new HashMap<>();
     private final Map<Stat, Integer> LOWERS_OWN_STATS = new HashMap<>();
     private final Map<Stat, Integer> RAISES_ENEMY_STATS = new HashMap<>();
@@ -1505,12 +1512,12 @@ public enum BaseMove {
         return this;
     }
 
-    protected BaseMove setVolatileStatusEffect(int chance, @Nonnull VolatileStatus status) {
+    protected BaseMove setVolatileStatusEffect(int chance, @Nonnull BaseVolatileStatus status) {
         this.VOLATILE_STATUS_EFFECTS_CHANCE.put(status, chance);
         return this;
     }
 
-    protected BaseMove setVolatileStatusEffect(@Nonnull VolatileStatus status) {
+    protected BaseMove setVolatileStatusEffect(@Nonnull BaseVolatileStatus status) {
         this.VOLATILE_STATUS_EFFECTS_CHANCE.put(status, this.EFFECT_RATE);
         return this;
     }
@@ -1876,9 +1883,19 @@ public enum BaseMove {
         return this;
     }
 
-    protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender) {
+    protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, Move move) {
+        if (this.CATEGORY == Category.OTHER) {
+            return 0;
+        }
+
         int attackStat;
         int defenseStat;
+        int level = attacker.getLevel();
+        int attackPower = this.POWER;
+        double stabMultiplier = attacker.getStabMultiplier(move);
+        double effectiveness = Type.getDamageMultiplier(defender.getTypes(), this.TYPE);
+        int randomNumber = (int) (Math.random() * 100 + 85);
+
         if (this.CATEGORY == Category.PHYSICAL) {
             attackStat = attacker.getStat(Stat.ATTACK);
             defenseStat = defender.getStat(Stat.DEFENSE);
@@ -1886,31 +1903,20 @@ public enum BaseMove {
             attackStat = attacker.getStat(Stat.SPECIAL_ATTACK);
             defenseStat = defender.getStat(Stat.SPECIAL_DEFENSE);
         } else {
-            return 0;
+            throw new InvalidCategoryException(this.CATEGORY);
         }
-        int level = attacker.getLevel();
-        int attackPower = this.POWER;
-        double stabMultiplier = 1.0;
-        if (Arrays.asList(attacker.getTypes()).contains(this.TYPE)) {
-            stabMultiplier = attacker.getStabMultiplier();
-        }
-        double effectiveness = Type.getDamageMultiplier(defender.getTypes(), this.TYPE);
-        int randomNumber = (int) (Math.random() * 100 + 85);
+
         return (int) (((((2 * level / 5 + 2) * attackStat * attackPower / defenseStat) / 50) + 2) * stabMultiplier * effectiveness * randomNumber / 100);
+        return (int) (((((2 * level / 5) + 2) * attackPower * attackStat / defenseStat) / 50) + 2) *
+                ;
     }
 
     protected boolean canUseMove(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
         return true;
     }
 
-    protected void use(@Nonnull Pokemon user, Pokemon target) {
-        if(target != null && this.POWER > 0) {
-            target.damage(this.getDamage(user, target));
-        }
-    }
-
-    protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer) {
-        this.use(user, target);
+    protected void use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+        if ()
     }
 
     public boolean canUseZMove(@Nonnull Pokemon pokemon) {
@@ -1921,24 +1927,18 @@ public enum BaseMove {
         return this.Z_MOVE_ITEM == pokemon.getItem() && !Collections.disjoint(this.Z_MOVE_MOVES_THAT_TURN_INTO_THIS, pokemon.getMoves());
     }
 
-    protected void useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, @Nullable Trainer trainer) {
+    protected void useAsZMove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
         user.removeItem();
-        if (battle == null) {
-            this.use(user, target);
-            return;
-        }
-        this.use(user, target, battle, trainer);
+        this.use(user, target, battle, trainer, move);
     }
 
-    protected void fail(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {}
+    protected void fail(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {}
 
     protected void onTurnStart(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {}
 
     protected void onItemUsed(Item item, Pokemon user, Battle battle, Trainer trainer) {}
 
     protected void onReceiveAttack(Pokemon user, Pokemon target, Battle battle, Trainer trainer, BaseMove move) {}
-
-
 
     private static class Holder {
         static Map<String, BaseMove> MAP = new HashMap<>();

@@ -20,12 +20,13 @@ public class Pokemon extends BasePokemon {
     private final Map<Stat, Stage> STAT_STAGES = getDefaultStatStages();
     private final Map<Stat, Integer> CURRENT_STATS;
     private final Map<Move, Double> MOVE_DAMAGE_MULTIPLIER = new HashMap<>();
-    private final List<VolatileStatus> VOLATILE_STATUSES = new ArrayList<>();
+    private final Map<BaseVolatileStatus, VolatileStatus> VOLATILE_STATUSES = new LinkedHashMap<>();
     private final List<Pokemon> damagedThisTurnBy = new ArrayList<>();
     private final Gender GENDER;
     private final Map<Stat, Map<String, Double>> STAT_MODIFIERS = new LinkedHashMap<>();
     private Item item;
     private List<Move> MOVES;
+    private List<Move> VALID_MOVES;
     private double stabMultiplier = 1.5;
     private double damageMultiplier = 1;
     private boolean canAttackThisTurn = true;
@@ -39,6 +40,7 @@ public class Pokemon extends BasePokemon {
     private boolean berryUsed = false;
     private int bideDamageTaken = 0;
     private Pokemon bideTarget = null;
+    private Pokemon lastTarget = null;
 
     public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Item item, @Nonnull Nature nature, @Nonnull Ability ability, @Nullable Gender gender, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues, @Nonnull List<Move> moves) {
         super(basePokemon);
@@ -183,6 +185,17 @@ public class Pokemon extends BasePokemon {
     }
 
     @Nonnull
+    public Move getMove(BaseMove baseMove) {
+        for (Move move : this.MOVES) {
+            if (move.getBaseMove() == baseMove) {
+                return move;
+            }
+        }
+
+        throw new NullPointerException("Pokemon doesn't have move " + baseMove.getName());
+    }
+
+    @Nonnull
     public Move getMove(String moveName) {
         moveName = moveName.toLowerCase();
         for (Move move : this.MOVES) {
@@ -191,7 +204,7 @@ public class Pokemon extends BasePokemon {
             }
         }
 
-        throw new NullPointerException("Move " + moveName + " doesn't exist");
+        throw new NullPointerException("Pokemon doesn't have move " + moveName);
     }
 
     protected void changeMoves(List<Move> moves) {
@@ -211,6 +224,23 @@ public class Pokemon extends BasePokemon {
         }
 
         return false;
+    }
+
+    @Nonnull
+    public List<Move> getValidMoves() {
+        return this.VALID_MOVES;
+    }
+
+    public void setValidMoves(BaseMove... baseMoves) {
+        this.VALID_MOVES.clear();
+        for (BaseMove baseMove : baseMoves) {
+            this.VALID_MOVES.add(this.getMove(baseMove));
+        }
+    }
+
+    public void setValidMoves(Move... move) {
+        this.VALID_MOVES.clear();
+        Collections.addAll(this.VALID_MOVES, move);
     }
 
     @Nonnull
@@ -328,8 +358,12 @@ public class Pokemon extends BasePokemon {
         this.STAT_STAGES.putAll(Pokemon.getDefaultStatStages());
     }
 
-    protected double getStabMultiplier() {
-        return this.stabMultiplier;
+    protected double getStabMultiplier(Move move) {
+        if (Arrays.asList(this.TYPES).contains(move.getType())) {
+            return this.stabMultiplier;
+        } else {
+            return 1.0;
+        }
     }
 
     protected void changeStabMultiplier(double multiplier) {
@@ -395,6 +429,7 @@ public class Pokemon extends BasePokemon {
     protected void setAction(@Nonnull Move action, @Nullable Pokemon target) {
         this.action = action;
         this.target = target;
+        this.lastTarget = target;
     }
 
     protected void resetAction() {
@@ -402,14 +437,15 @@ public class Pokemon extends BasePokemon {
         this.target = null;
     }
 
-    protected void executeTurn() {
-        this.action.use(this, this.target);
+    protected void executeTurn(Battle battle) {
+        this.action.use(this, this.target, battle, battle.getTrainer(this));
     }
 
     protected void finishTurn() {
         this.damagedThisTurn = false;
         this.damagedThisTurnBy.clear();
         this.canAttackThisTurn = true;
+        this.VALID_MOVES = this.MOVES;
     }
 
     protected void damage(int amount) {
@@ -422,6 +458,10 @@ public class Pokemon extends BasePokemon {
         int maxHP = this.getStat(Stat.HP);
         int damage = (int) (maxHP * (percentage / 100.0f));
         this.damage(damage);
+    }
+
+    protected void damage(Move move, Pokemon attacker) {
+        this.damage(move.getBaseMove().getDamage(attacker, this, move));
     }
 
     protected void heal(int amount) {
@@ -455,24 +495,32 @@ public class Pokemon extends BasePokemon {
         this.status = null;
     }
 
+    protected void addVolatileStatus(BaseVolatileStatus status, Pokemon pokemon, int duration) {}
+
     protected void addVolatileStatus(VolatileStatus status) {
-        this.VOLATILE_STATUSES.add(status);
+        this.VOLATILE_STATUSES.put(status.getBaseVolatileStatus(), status);
     }
 
-    protected void addVolatileStatus(Collection<VolatileStatus> status) {
-        this.VOLATILE_STATUSES.addAll(status);
+    protected void addVolatileStatus(Collection<VolatileStatus> statuses) {
+        for (VolatileStatus volatileStatus : statuses) {
+            this.addVolatileStatus(volatileStatus);
+        }
     }
 
     @Nonnull
-    protected List<VolatileStatus> getVolatileStatuses() {
-        return this.VOLATILE_STATUSES;
+    protected Collection<VolatileStatus> getVolatileStatuses() {
+        return this.VOLATILE_STATUSES.values();
     }
 
-    protected boolean hasVolatileStatus(VolatileStatus status) {
-        return this.VOLATILE_STATUSES.contains(status);
+    protected VolatileStatus getVolatileStatus(BaseVolatileStatus status) {
+        return this.VOLATILE_STATUSES.get(status);
     }
 
-    protected void removeVolatileStatus(VolatileStatus status) {
+    protected boolean hasVolatileStatus(BaseVolatileStatus status) {
+        return this.VOLATILE_STATUSES.containsKey(status);
+    }
+
+    protected void removeVolatileStatus(BaseVolatileStatus status) {
         this.VOLATILE_STATUSES.remove(status);
     }
 
@@ -615,6 +663,23 @@ public class Pokemon extends BasePokemon {
 
     protected void resetCanAttackThisTurn() {
         this.canAttackThisTurn = true;
+    }
+
+    @Nullable
+    protected Pokemon getLastTarget() {
+        return this.lastTarget;
+    }
+
+    protected void setLastTarget(Pokemon target) {
+        this.lastTarget = target;
+    }
+
+    protected double getAccuracy() {
+        return this.STAT_STAGES.get(Stat.ACCURACY).getAccuracyMultiplier();
+    }
+
+    protected double getEvasion() {
+        return this.STAT_STAGES.get(Stat.EVASION).getEvasionMultiplier();
     }
 
 }

@@ -73,7 +73,7 @@ public class PokemonCommands {
             trainer.sendOut(chosenPokemon);
             trainer.setPokemonInFocus(chosenPokemon);
 
-            if (battle.ready()) {
+            if (battle.isReady()) {
                 for (Long trainerID : battle.getTrainers().keySet()) {
                     IUser trainerUser = Bot.client.fetchUser(trainerID);
                     trainerUser.getOrCreatePMChannel().sendMessage(PokemonCommands.chooseMoveEmbed(battle, trainerUser));

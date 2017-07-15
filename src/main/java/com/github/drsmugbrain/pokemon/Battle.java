@@ -71,7 +71,7 @@ public class Battle {
         });
 
         for (Pokemon pokemon : this.TURN_ORDER) {
-            pokemon.executeTurn();
+            pokemon.executeTurn(this);
             pokemon.finishTurn();
         }
     }
@@ -84,7 +84,18 @@ public class Battle {
         return this.TRAINERS.get(id);
     }
 
-    public boolean ready() {
+    @Nonnull
+    protected Trainer getTrainer(Pokemon pokemon) {
+        for (Trainer trainer : this.getTrainers().values()) {
+            if (trainer.hasPokemon(pokemon)) {
+                return trainer;
+            }
+        }
+
+        throw new IllegalArgumentException("Pokemon " + pokemon.getName() + " isn't owned by any trainer in this battle");
+    }
+
+    public boolean isReady() {
         for (Trainer trainer : this.TRAINERS.values()) {
             if (trainer.getActivePokemons().isEmpty()) return false;
         }
@@ -110,6 +121,18 @@ public class Battle {
 
     protected void setWeather(Weather weather) {
         this.weather = weather;
+    }
+
+    @Nonnull
+    public List<Pokemon> getEnemies(Trainer trainer, Pokemon pokemon) {
+        List<Pokemon> enemyActivePokemons = new ArrayList<>();
+
+        for (Trainer trainer1 : this.TRAINERS.values()) {
+            if (trainer1 == trainer) continue;
+            enemyActivePokemons.addAll(trainer1.getActivePokemons());
+        }
+
+        return enemyActivePokemons;
     }
 
 }

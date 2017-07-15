@@ -96,8 +96,16 @@ public class Trainer {
         Collections.swap(this.ACTIVE_POKEMONS, this.ACTIVE_POKEMONS.indexOf(pokemon1), this.ACTIVE_POKEMONS.indexOf(pokemon2));
     }
 
+    public boolean hasPokemon(Pokemon pokemon) {
+        return this.POKEMONS.contains(pokemon) || this.ACTIVE_POKEMONS.contains(pokemon);
+    }
+
     public boolean hasActivePokemon(Pokemon pokemon) {
         return this.ACTIVE_POKEMONS.contains(pokemon);
+    }
+
+    public boolean hasInactivePokemon(Pokemon pokemon) {
+        return this.POKEMONS.contains(pokemon);
     }
 
     @Nullable
