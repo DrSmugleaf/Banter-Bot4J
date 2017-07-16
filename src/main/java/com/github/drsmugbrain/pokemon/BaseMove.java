@@ -21,8 +21,8 @@ public enum BaseMove {
     ACCELEROCK("Accelerock"),
     ACID("Acid") {
         @Override
-        protected void use(@Nonnull Pokemon user, @Nonnull Pokemon target) {
-            super.use(user, target);
+        protected void use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            super.use(user, target, battle, trainer, move);
             if (Math.random() < this.EFFECT_RATE) {
                 target.lowerStatStage(Stat.SPECIAL_DEFENSE, 1);
             }
@@ -62,7 +62,7 @@ public enum BaseMove {
             if (battle.TURN_ORDER.contains(target) && battle.TURN_ORDER.indexOf(target) > battle.TURN_ORDER.indexOf(user)) {
                 battle.TURN_ORDER.add(battle.TURN_ORDER.indexOf(user) + 1, battle.TURN_ORDER.remove(battle.TURN_ORDER.indexOf(target)));
             }
-            super.use(user, target);
+            super.use(user, target, battle, trainer, move);
         }
 
         @Override
@@ -114,20 +114,20 @@ public enum BaseMove {
     AQUA_TAIL("Aqua Tail"),
     ARM_THRUST("Arm Thrust") {
         @Override
-        protected void use(@Nonnull Pokemon user, @Nonnull Pokemon target) {
-            super.use(user, target);
+        protected void use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            super.use(user, target, battle, trainer, move);
 
             if (Math.random() < 0.375) {
-                super.use(user, target);
+                super.use(user, target, battle, trainer, move);
             }
             if (Math.random() < 0.375) {
-                super.use(user, target);
+                super.use(user, target, battle, trainer, move);
             }
             if (Math.random() < 0.125) {
-                super.use(user, target);
+                super.use(user, target, battle, trainer, move);
             }
             if (Math.random() < 0.125) {
-                super.use(user, target);
+                super.use(user, target, battle, trainer, move);
             }
         }
     },
@@ -360,20 +360,20 @@ public enum BaseMove {
     BANEFUL_BUNKER("Baneful Bunker"),
     BARRAGE("Barrage") {
         @Override
-        protected void use(@Nonnull Pokemon user, @Nonnull Pokemon target) {
-            super.use(user, target);
+        protected void use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            super.use(user, target, battle, trainer, move);
 
             if (Math.random() < 0.375) {
-                super.use(user, target);
+                super.use(user, target, battle, trainer, move);
             }
             if (Math.random() < 0.375) {
-                super.use(user, target);
+                super.use(user, target, battle, trainer, move);
             }
             if (Math.random() < 0.125) {
-                super.use(user, target);
+                super.use(user, target, battle, trainer, move);
             }
             if (Math.random() < 0.125) {
-                super.use(user, target);
+                super.use(user, target, battle, trainer, move);
             }
         }
     },
@@ -427,7 +427,7 @@ public enum BaseMove {
             for (Pokemon pokemon : validPokemons) {
                 double stabMultiplier = 1.0;
                 if (Arrays.asList(pokemon.getTypes()).contains(this.getType())) {
-                    stabMultiplier = pokemon.getStabMultiplier();
+                    stabMultiplier = pokemon.getStabMultiplier(move);
                 }
                 target.damage((int) (((pokemon.getStat(Stat.ATTACK) / 10) + 5) * stabMultiplier));
             }
@@ -1907,8 +1907,6 @@ public enum BaseMove {
         }
 
         return (int) (((((2 * level / 5 + 2) * attackStat * attackPower / defenseStat) / 50) + 2) * stabMultiplier * effectiveness * randomNumber / 100);
-        return (int) (((((2 * level / 5) + 2) * attackPower * attackStat / defenseStat) / 50) + 2) *
-                ;
     }
 
     protected boolean canUseMove(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
@@ -1916,7 +1914,7 @@ public enum BaseMove {
     }
 
     protected void use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-        if ()
+        target.damage(move, user);
     }
 
     public boolean canUseZMove(@Nonnull Pokemon pokemon) {
