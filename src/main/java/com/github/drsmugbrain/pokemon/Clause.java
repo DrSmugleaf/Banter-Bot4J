@@ -271,7 +271,8 @@ public enum Clause {
             return true;
         }
     },
-    TIME_LIMIT("Time Limit", "Battles will have a 10-minute player time limit, 45-second move time limit, and a 90-second team preview.");
+    TIME_LIMIT("Time Limit", "Battles will have a 10-minute player time limit, 45-second move time limit, and a 90-second team preview."),
+    SKETCH_CLAUSE("Sketch Clause", "You can't sketch two of the same moves in a team with non-native users.");
 
     private final String NAME;
     private final String DESCRIPTION;
