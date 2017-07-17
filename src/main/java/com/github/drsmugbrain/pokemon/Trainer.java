@@ -28,6 +28,23 @@ public class Trainer {
         return this.ID;
     }
 
+    protected void addPokemon(Pokemon pokemon) {
+        this.POKEMONS.add(pokemon);
+    }
+
+    protected void removePokemon(Pokemon pokemon) {
+        this.POKEMONS.remove(pokemon);
+        this.ACTIVE_POKEMONS.remove(pokemon);
+    }
+
+    protected void replacePokemon(Pokemon oldPokemon, Pokemon newPokemon) {
+        if (this.ACTIVE_POKEMONS.contains(oldPokemon)) {
+            this.ACTIVE_POKEMONS.add(newPokemon);
+        }
+        this.removePokemon(oldPokemon);
+        this.addPokemon(newPokemon);
+    }
+
     @Nonnull
     public Pokemon getPokemon(int id) {
         return this.POKEMONS.get(id);

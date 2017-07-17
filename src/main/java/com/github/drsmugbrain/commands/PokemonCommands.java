@@ -81,7 +81,7 @@ public class PokemonCommands {
             }
         } else {
             if (trainer.getChosenMove() == null) {
-                if (!trainer.getPokemonInFocus().hasMove(message)) {
+                if (!trainer.getPokemonInFocus().hasOneMove(message)) {
                     Bot.sendMessage(event.getChannel(), "Invalid move name.");
                     return;
                 }

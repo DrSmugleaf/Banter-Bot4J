@@ -13,7 +13,7 @@ public class Pokemon extends BasePokemon {
     private final String NICKNAME;
     private final Ability ABILITY;
     private final Nature NATURE;
-    private final int LEVEL;
+    private int LEVEL;
     private final Type[] TYPES;
     private final Map<Stat, Integer> INDIVIDUAL_VALUES = getDefaultIndividualValues();
     private final Map<Stat, Integer> EFFORT_VALUES = getDefaultEffortValues();
@@ -211,11 +211,22 @@ public class Pokemon extends BasePokemon {
         this.MOVES = moves;
     }
 
-    public boolean hasMove(Move... move) {
+    public boolean hasOneMove(Move... move) {
         return Collections.disjoint(this.MOVES, Arrays.asList(move));
     }
 
-    public boolean hasMove(String moveName) {
+    public boolean hasOneMove(BaseMove... baseMoves) {
+        List<BaseMove> baseMoveList = Arrays.asList(baseMoves);
+        for (Move move : this.MOVES) {
+            if (baseMoveList.contains(move.getBaseMove())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean hasOneMove(String moveName) {
         moveName = moveName.toLowerCase();
         for (Move move : this.MOVES) {
             if (Objects.equals(move.getBaseMove().getName().toLowerCase(), moveName)) {
@@ -224,6 +235,10 @@ public class Pokemon extends BasePokemon {
         }
 
         return false;
+    }
+
+    public boolean hasAllMoves(BaseMove... baseMoves) {
+        return this.MOVES.containsAll(Arrays.asList(baseMoves));
     }
 
     @Nonnull
@@ -261,6 +276,10 @@ public class Pokemon extends BasePokemon {
 
     public int getLevel() {
         return this.LEVEL;
+    }
+
+    protected void setLevel(int level) {
+        this.LEVEL = level;
     }
 
     @Nonnull
