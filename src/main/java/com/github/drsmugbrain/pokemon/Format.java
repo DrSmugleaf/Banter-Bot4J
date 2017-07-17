@@ -205,6 +205,10 @@ public enum Format {
     }
 
     public boolean isValid(Battle battle) {
+        if (!TIER.isValid(battle)) {
+            return false;
+        }
+
         for (Clause clause : this.CLAUSES) {
             if (!clause.isValid(battle)) {
                 return false;
