@@ -60,14 +60,20 @@ public enum Format {
 
     private final String NAME;
     private final String ABBREVIATION;
+    private final Clause[] CLAUSES;
 
-    Format(@Nonnull String name, @Nullable String abbreviation) {
+    Format(@Nonnull String name, @Nullable String abbreviation, @Nonnull Clause... clauses) {
         this.NAME = name;
         this.ABBREVIATION = abbreviation;
+        this.CLAUSES = clauses;
+    }
+
+    Format(@Nonnull String name, @Nullable String abbreviation) {
+        this(name, abbreviation, new Clause[]{});
     }
 
     Format(@Nonnull String name) {
-        this(name, null);
+        this(name, null, new Clause[]{});
     }
 
     @Nonnull
@@ -80,7 +86,16 @@ public enum Format {
         return this.ABBREVIATION;
     }
 
-    protected boolean isValid(Battle battle) {
+    @Nonnull
+    public Clause[] getClauses() {
+        return this.CLAUSES;
+    }
+
+    public boolean isValid(Battle battle) {
+        for (Clause clause : this.CLAUSES) {
+            if (!clause.isValid(battle)) return false;
+        }
+
         return true;
     }
 
