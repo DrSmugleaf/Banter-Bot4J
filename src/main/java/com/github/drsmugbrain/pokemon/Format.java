@@ -52,7 +52,6 @@ public enum Format {
     UNDERUSED("UnderUsed", "UU", Clause.SPECIES_CLAUSE, Clause.SLEEP_CLAUSE, Clause.EVASION_CLAUSE, Clause.OHKO_CLAUSE, Clause.MOODY_CLAUSE, Clause.ENDLESS_BATTLE_CLAUSE, Clause.SWAGGER_CLAUSE),
     VGC11("VGC11"),
     VGC12("VGC12"),
-    VGC13("VGC13"),
     VGC14("VGC14"),
     VGC15("VGC15"),
     VGC16("VGC16"),
