@@ -97,7 +97,9 @@ public enum Format {
 
     public boolean isValid(Battle battle) {
         for (Clause clause : this.CLAUSES) {
-            if (!clause.isValid(battle)) return false;
+            if (!clause.isValid(battle)) {
+                return false;
+            }
         }
 
         return true;
