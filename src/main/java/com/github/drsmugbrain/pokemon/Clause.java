@@ -1,9 +1,7 @@
 package com.github.drsmugbrain.pokemon;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 16/07/2017.
@@ -182,7 +180,98 @@ public enum Clause {
             return true;
         }
     },
-    SLEEP_CLAUSE("Sleep Clause", "If a player has already put a Pokemon on his/her opponent's side to sleep and it is still sleeping, another one can't be put to sleep.");
+    SLEEP_CLAUSE("Sleep Clause", "If a player has already put a Pokemon on his/her opponent's side to sleep and it is still sleeping, another one can't be put to sleep."),
+    LEVEL_5_CLAUSE("Level 5 Clause", "All Pokémon must be level 5.") {
+        @Override
+        public boolean isValid(Battle battle) {
+            for (Trainer trainer : battle.getTrainers().values()) {
+                for (Pokemon pokemon : trainer.getPokemons()) {
+                    if (pokemon.getLevel() != 5) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+    },
+    MEGA_STONE_AND_ORB_CLAUSE("Mega Stone / Orb Clause", "A limit of two of each Mega Stone and Orb may be used.") {
+        @Override
+        public boolean isValid(Battle battle) {
+            for (Trainer trainer : battle.getTrainers().values()) {
+                Map<Item, Integer> itemCount = new HashMap<>();
+
+                for (Pokemon pokemon : trainer.getPokemons()) {
+                    Item item = pokemon.getItem();
+
+                    if (itemCount.containsKey(item)) {
+                        if (itemCount.get(item) == 2) {
+                            return false;
+                        }
+
+                        itemCount.put(item, itemCount.get(item) + 1);
+                    } else {
+                        itemCount.put(item, 1);
+                    }
+                }
+            }
+
+            return true;
+        }
+    },
+    BATON_PASS_CLAUSE("Baton Pass Clause", "Only one Pokémon per team may know the move Baton Pass.") {
+        @Override
+        public boolean isValid(Battle battle) {
+            for (Trainer trainer : battle.getTrainers().values()) {
+                boolean onePokemonHasBatonPass = false;
+
+                for (Pokemon pokemon : trainer.getPokemons()) {
+                    if (pokemon.hasOneMove(BaseMove.BATON_PASS)) {
+                        if (onePokemonHasBatonPass) {
+                            return false;
+                        }
+
+                        onePokemonHasBatonPass = true;
+                    }
+                }
+            }
+
+            return true;
+        }
+    },
+    SAME_TYPE_CLAUSE("Same Type Clause", "All Pokémon in a team must share a type.") {
+        @Override
+        public boolean isValid(Battle battle) {
+            for (Trainer trainer : battle.getTrainers().values()) {
+                List<Type> types = Arrays.asList(trainer.getPokemon(0).getTypes());
+
+                for (Pokemon pokemon : trainer.getPokemons()) {
+                    if (Collections.disjoint(types, Arrays.asList(pokemon.getTypes()))) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+    },
+    LEVEL_LIMIT("Level Limit", "Pokémon above and below Level 50 are permitted, but will be auto-leveled to Level 50 during battle.") {
+        @Override
+        public boolean isValid(Battle battle) {
+            for (Trainer trainer : battle.getTrainers().values()) {
+                for (Pokemon pokemon : trainer.getPokemons()) {
+                    if (pokemon.getLevel() != 50) {
+                        trainer.removePokemon(pokemon);
+                        pokemon.setLevel(50);
+                        trainer.addPokemon(pokemon);
+                    }
+                }
+            }
+
+            return true;
+        }
+    },
+    TIME_LIMIT("Time Limit", "Battles will have a 10-minute player time limit, 45-second move time limit, and a 90-second team preview.");
 
     private final String NAME;
     private final String DESCRIPTION;
