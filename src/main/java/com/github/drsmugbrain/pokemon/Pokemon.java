@@ -1,5 +1,10 @@
 package com.github.drsmugbrain.pokemon;
 
+import com.github.drsmugbrain.pokemon.events.EventDispatcher;
+import com.github.drsmugbrain.pokemon.events.PokemonDamagedEvent;
+import com.github.drsmugbrain.pokemon.events.PokemonDeathEvent;
+import com.github.drsmugbrain.pokemon.events.PokemonHealedEvent;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
@@ -41,6 +46,8 @@ public class Pokemon extends BasePokemon {
     private int bideDamageTaken = 0;
     private Pokemon bideTarget = null;
     private Pokemon lastTarget = null;
+    private Battle battle = null;
+    private Trainer trainer = null;
 
     public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Item item, @Nonnull Nature nature, @Nonnull Ability ability, @Nullable Gender gender, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues, @Nonnull List<Move> moves) {
         super(basePokemon);
@@ -57,6 +64,7 @@ public class Pokemon extends BasePokemon {
 //        this.weight = basePokemon.weight;
 
         this.MOVES = moves;
+        this.VALID_MOVES = moves;
         for (Move move : moves) {
             this.MOVE_DAMAGE_MULTIPLIER.put(move, 1.0);
         }
@@ -116,6 +124,10 @@ public class Pokemon extends BasePokemon {
 
     @Override
     public String toString() {
+        return this.getName();
+    }
+
+    public String export() {
         String string = "";
 
         String name = super.getName();
@@ -457,20 +469,42 @@ public class Pokemon extends BasePokemon {
     }
 
     protected void executeTurn(Battle battle) {
-        this.action.use(this, this.target, battle, battle.getTrainer(this));
+        if (this.getCurrentStat(Stat.HP) <= 0) {
+            return;
+        }
+        this.action.tryUse(this, this.target, battle, battle.getTrainer(this));
     }
 
     protected void finishTurn() {
+        this.action = null;
+        this.target = null;
         this.damagedThisTurn = false;
         this.damagedThisTurnBy.clear();
         this.canAttackThisTurn = true;
         this.VALID_MOVES = this.MOVES;
     }
 
+    protected void kill() {
+        this.getTrainer().removeActivePokemon(this);
+        PokemonDeathEvent event = new PokemonDeathEvent(this);
+        EventDispatcher.dispatch(event);
+    }
+
     protected void damage(int amount) {
         int currentHP = this.getCurrentStat(Stat.HP);
+        if (this.getCurrentStat(Stat.HP) - amount < 0) {
+            amount += this.getCurrentStat(Stat.HP) - amount;
+        }
+
         this.CURRENT_STATS.put(Stat.HP, currentHP - amount);
         this.damagedThisTurn = true;
+
+        PokemonDamagedEvent event = new PokemonDamagedEvent(this, amount);
+        EventDispatcher.dispatch(event);
+
+        if (this.CURRENT_STATS.get(Stat.HP) <= 0) {
+            this.kill();
+        }
     }
 
     protected void damage(double percentage) {
@@ -480,7 +514,8 @@ public class Pokemon extends BasePokemon {
     }
 
     protected void damage(Move move, Pokemon attacker) {
-        this.damage(move.getBaseMove().getDamage(attacker, this, move));
+        int amount = move.getBaseMove().getDamage(attacker, this, move);
+        this.damage(amount);
     }
 
     protected void heal(int amount) {
@@ -493,6 +528,8 @@ public class Pokemon extends BasePokemon {
         }
 
         this.CURRENT_STATS.put(Stat.HP, currentHP + amount);
+        PokemonHealedEvent event = new PokemonHealedEvent(this, amount);
+        EventDispatcher.dispatch(event);
     }
 
     protected void heal(double percentage) {
@@ -699,6 +736,24 @@ public class Pokemon extends BasePokemon {
 
     protected double getEvasion() {
         return this.STAT_STAGES.get(Stat.EVASION).getEvasionMultiplier();
+    }
+
+    @Nullable
+    public Battle getBattle() {
+        return this.battle;
+    }
+
+    protected void setBattle(Battle battle) {
+        this.battle = battle;
+    }
+
+    @Nullable
+    public Trainer getTrainer() {
+        return this.trainer;
+    }
+
+    protected void setTrainer(Trainer trainer) {
+        this.trainer = trainer;
     }
 
 }

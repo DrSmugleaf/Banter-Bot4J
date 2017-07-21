@@ -1,8 +1,11 @@
 package com.github.drsmugbrain.pokemon;
 
+import com.github.drsmugbrain.pokemon.events.PokemonMoveMissEvent;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by DrSmugleaf on 17/06/2017.
@@ -387,7 +390,7 @@ public enum BaseMove {
     BATON_PASS("Baton Pass") {
         @Override
         protected void use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
-            if (trainer.getAliveUnactivePokemons().isEmpty()) {
+            if (trainer.getAliveInactivePokemons().isEmpty()) {
                 this.fail(user, target, battle, trainer, move);
                 return;
             }
@@ -1810,7 +1813,7 @@ public enum BaseMove {
     public BaseMove[] getZMoveMovesThatTurnIntoThis() {
         return this.Z_MOVE_MOVES_THAT_TURN_INTO_THIS.toArray(new BaseMove[]{});
     }
-
+    
     @Nullable
     public CriticalHitStage getCriticalHitStage() {
         return this.BASE_CRITICAL_HIT_RATE;
@@ -1894,7 +1897,7 @@ public enum BaseMove {
         int attackPower = this.POWER;
         double stabMultiplier = attacker.getStabMultiplier(move);
         double effectiveness = Type.getDamageMultiplier(defender.getTypes(), this.TYPE);
-        int randomNumber = (int) (Math.random() * 100 + 85);
+        double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
 
         if (this.CATEGORY == Category.PHYSICAL) {
             attackStat = attacker.getStat(Stat.ATTACK);
@@ -1906,7 +1909,7 @@ public enum BaseMove {
             throw new InvalidCategoryException(this.CATEGORY);
         }
 
-        return (int) (((((2 * level / 5 + 2) * attackStat * attackPower / defenseStat) / 50) + 2) * stabMultiplier * effectiveness * randomNumber / 100);
+        return (int) (((((2 * level / 5 + 2) * attackStat * attackPower / defenseStat) / 50) + 2) * stabMultiplier * effectiveness * randomNumber);
     }
 
     protected boolean canUseMove(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
@@ -1930,7 +1933,9 @@ public enum BaseMove {
         this.use(user, target, battle, trainer, move);
     }
 
-    protected void fail(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {}
+    protected void fail(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+        PokemonMoveMissEvent event = new PokemonMoveMissEvent(user, move, target);
+    }
 
     protected void onTurnStart(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {}
 

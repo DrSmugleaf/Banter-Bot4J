@@ -40,6 +40,10 @@ public class BasePokemon implements Comparable<BasePokemon> {
 
     @Nonnull
     public static BasePokemon getBasePokemon(@Nonnull String name) {
+        if (!BasePokemon.BASE_POKEMON.containsKey(name)) {
+            throw new NullPointerException("Pokemon " + name + " doesn't exist");
+        }
+
         return BasePokemon.BASE_POKEMON.get(name);
     }
 

@@ -1,5 +1,6 @@
 package com.github.drsmugbrain.pokemon;
 
+import com.github.drsmugbrain.pokemon.events.*;
 import com.google.common.collect.Lists;
 
 import javax.annotation.Nonnull;
@@ -17,9 +18,15 @@ public class Trainer {
     private final Map<Pokemon, Move> ACTIONS = new LinkedHashMap<>();
     private Pokemon pokemonInFocus = null;
     private Move chosenMove = null;
+    private Battle battle = null;
+    private boolean ready = false;
+    private TrainerStatus status = TrainerStatus.NONE;
 
-    public Trainer(@Nonnull Long name, @Nonnull Pokemon... pokemons) {
-        this.ID = name;
+    public Trainer(@Nonnull Long id, @Nonnull Pokemon... pokemons) {
+        this.ID = id;
+        for (Pokemon pokemon : pokemons) {
+            pokemon.setTrainer(this);
+        }
         this.POKEMONS.addAll(Arrays.asList(pokemons));
     }
 
@@ -34,6 +41,10 @@ public class Trainer {
 
     protected void removePokemon(Pokemon pokemon) {
         this.POKEMONS.remove(pokemon);
+        this.ACTIVE_POKEMONS.remove(pokemon);
+    }
+
+    protected void removeActivePokemon(Pokemon pokemon) {
         this.ACTIVE_POKEMONS.remove(pokemon);
     }
 
@@ -63,6 +74,9 @@ public class Trainer {
     public void addAction(Pokemon pokemon, Move move, Pokemon target) {
         pokemon.setAction(move, target);
         this.ACTIONS.put(pokemon, move);
+        this.setStatus(TrainerStatus.WAITING);
+        TrainerChooseTargetEvent event = new TrainerChooseTargetEvent(pokemon, move, target);
+        EventDispatcher.dispatch(event);
     }
 
     public void addAction(Pokemon pokemon, String move, Pokemon target) {
@@ -92,12 +106,19 @@ public class Trainer {
     }
 
     public void switchPokemon(Pokemon newPokemon, Pokemon oldPokemon) {
-        this.ACTIVE_POKEMONS.remove(oldPokemon);
-        this.ACTIVE_POKEMONS.add(newPokemon);
+        this.sendBack(oldPokemon);
+        this.sendOut(newPokemon);
     }
 
-    public void sendOut(Pokemon pokemon) {
+    private void sendBack(Pokemon pokemon) {
+        this.ACTIVE_POKEMONS.remove(pokemon);
+        TrainerSendBackPokemonEvent event = new TrainerSendBackPokemonEvent(pokemon);
+        EventDispatcher.dispatch(event);
+    }
+
+    protected void sendOut(Pokemon pokemon) {
         this.ACTIVE_POKEMONS.add(pokemon);
+        this.setStatus(TrainerStatus.WAITING);
     }
 
     @Nullable
@@ -145,6 +166,9 @@ public class Trainer {
 
     public void setChosenMove(Move move) {
         this.chosenMove = move;
+        this.setStatus(TrainerStatus.CHOOSING_TARGET);
+        TrainerChooseMoveEvent event = new TrainerChooseMoveEvent(this.pokemonInFocus, move);
+        EventDispatcher.dispatch(event);
     }
 
     public void resetChosenMove() {
@@ -163,12 +187,46 @@ public class Trainer {
         return alivePokemons;
     }
 
-    public List<Pokemon> getAliveUnactivePokemons() {
-        List<Pokemon> aliveUnactivePokemons = this.getAlivePokemons();
+    public List<Pokemon> getAliveInactivePokemons() {
+        List<Pokemon> aliveInactivePokemons = this.getAlivePokemons();
 
-        aliveUnactivePokemons.removeIf(this.ACTIVE_POKEMONS::contains);
+        aliveInactivePokemons.removeIf(this.ACTIVE_POKEMONS::contains);
 
-        return aliveUnactivePokemons;
+        return aliveInactivePokemons;
+    }
+
+    public Battle getBattle() {
+        return this.battle;
+    }
+
+    protected void setBattle(Battle battle) {
+        this.battle = battle;
+    }
+
+    public boolean isReady() {
+        return this.ready;
+    }
+
+    protected void setReady(boolean bool) {
+        this.ready = bool;
+    }
+
+    public TrainerStatus getStatus() {
+        return this.status;
+    }
+
+    protected void setStatus(TrainerStatus status) {
+        this.status = status;
+    }
+
+    protected void finishTurn() {
+        if (this.ACTIVE_POKEMONS.size() < 1) {
+            this.setStatus(TrainerStatus.CHOOSING_POKEMON);
+            TrainerChoosingPokemonEvent event = new TrainerChoosingPokemonEvent(this);
+            EventDispatcher.dispatch(event);
+        } else {
+            this.setStatus(TrainerStatus.CHOOSING_MOVE);
+        }
     }
 
 }

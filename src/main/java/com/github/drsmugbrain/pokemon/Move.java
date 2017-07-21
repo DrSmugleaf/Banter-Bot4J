@@ -1,5 +1,8 @@
 package com.github.drsmugbrain.pokemon;
 
+import com.github.drsmugbrain.pokemon.events.EventDispatcher;
+import com.github.drsmugbrain.pokemon.events.PokemonMoveEvent;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -103,6 +106,8 @@ public class Move {
     }
 
     protected void use(@Nonnull Pokemon user, @Nonnull Pokemon target, @Nonnull Battle battle, @Nonnull Trainer trainer) {
+        PokemonMoveEvent event = new PokemonMoveEvent(user, this);
+        EventDispatcher.dispatch(event);
         this.pp--;
         this.getBaseMove().use(user, target, battle, trainer, this);
     }
