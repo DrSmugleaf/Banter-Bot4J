@@ -36,6 +36,11 @@ public class SmogonImporter {
         if (exportArray[0].contains("@")) {
             nameString = exportArray[0].split("@")[0].trim();
             itemString = exportArray[0].split("@")[1].trim();
+
+            Matcher matcher = Pattern.compile(".*\\((.*)\\)").matcher(nameString);
+            if (matcher.find()) {
+                nameString = matcher.group(1);
+            }
         } else {
             nameString = exportArray[0].trim();
         }
