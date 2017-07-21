@@ -103,10 +103,12 @@ public class CommandHandler {
             return;
 
         // Filter out blacklisted users
-        Long userID = event.getAuthor().getLongID();
-        Long guildID = event.getGuild().getLongID();
-        Member member = Member.get(userID, guildID);
-        if(member != null && member.isBlacklisted) return;
+        if(event.getGuild() != null) {
+            Long userID = event.getAuthor().getLongID();
+            Long guildID = event.getGuild().getLongID();
+            Member member = Member.get(userID, guildID);
+            if(member != null && member.isBlacklisted) return;
+        }
 
         // Extract the "command" part of the first arg out by just ditching the first character
         String commandStr = argArray[0].substring(Bot.BOT_PREFIX.length());
