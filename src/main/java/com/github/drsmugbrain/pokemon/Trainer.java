@@ -191,6 +191,7 @@ public class Trainer {
         List<Pokemon> aliveInactivePokemons = this.getAlivePokemons();
 
         aliveInactivePokemons.removeIf(this.ACTIVE_POKEMONS::contains);
+        aliveInactivePokemons.removeIf(pokemon -> pokemon.getCurrentStat(Stat.HP) <= 0);
 
         return aliveInactivePokemons;
     }
