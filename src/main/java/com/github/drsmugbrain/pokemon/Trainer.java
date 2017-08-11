@@ -21,8 +21,10 @@ public class Trainer {
     private Battle battle = null;
     private boolean ready = false;
     private TrainerStatus status = TrainerStatus.NONE;
+    private String NAME;
 
-    public Trainer(@Nonnull Long id, @Nonnull Pokemon... pokemons) {
+    public Trainer(String name, @Nonnull Long id, @Nonnull Pokemon... pokemons) {
+        this.NAME = name;
         this.ID = id;
         for (Pokemon pokemon : pokemons) {
             pokemon.setTrainer(this);
@@ -228,6 +230,14 @@ public class Trainer {
         } else {
             this.setStatus(TrainerStatus.CHOOSING_MOVE);
         }
+    }
+
+    public String getName() {
+        return this.NAME;
+    }
+
+    public void setName(String name) {
+        this.NAME = name;
     }
 
 }

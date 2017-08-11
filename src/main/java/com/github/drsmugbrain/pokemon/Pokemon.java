@@ -1,9 +1,6 @@
 package com.github.drsmugbrain.pokemon;
 
-import com.github.drsmugbrain.pokemon.events.EventDispatcher;
-import com.github.drsmugbrain.pokemon.events.PokemonDamagedEvent;
-import com.github.drsmugbrain.pokemon.events.PokemonDeathEvent;
-import com.github.drsmugbrain.pokemon.events.PokemonHealedEvent;
+import com.github.drsmugbrain.pokemon.events.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -528,6 +525,7 @@ public class Pokemon extends BasePokemon {
         }
 
         this.CURRENT_STATS.put(Stat.HP, currentHP + amount);
+
         PokemonHealedEvent event = new PokemonHealedEvent(this, amount);
         EventDispatcher.dispatch(event);
     }
@@ -544,6 +542,10 @@ public class Pokemon extends BasePokemon {
     }
 
     protected void setStatus(Status status) {
+        String message = Messages.STATUS.getMessage(this, null, null, status, null, null);
+        BattleMessageEvent event = new BattleMessageEvent(this.battle, message);
+        EventDispatcher.dispatch(event);
+
         this.status = status;
     }
 

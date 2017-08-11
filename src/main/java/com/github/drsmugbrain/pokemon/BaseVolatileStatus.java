@@ -194,7 +194,17 @@ public enum BaseVolatileStatus {
             target.setCanAttackThisTurn(false);
             super.afterEnemySwitch(user, target, battle, trainer);
         }
-    };
+    },
+
+    STOCKPILE_1("Stockpile 1"),
+    STOCKPILE_2("Stockpile 2"),
+    STOCKPILE_3("Stockpile 3"),
+    PERISH_0("Perish 0"),
+    PERISH_1("Perish 1"),
+    PERISH_2("Perish 2"),
+    PERISH_3("Perish 3"),
+
+    UPROAR("Uproar");
 
     private final String NAME;
     private final Integer DURATION;
