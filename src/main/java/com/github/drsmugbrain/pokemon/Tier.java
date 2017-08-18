@@ -2,26 +2,25 @@ package com.github.drsmugbrain.pokemon;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 17/07/2017.
  */
 public enum Tier {
 
-    UBERS("Ubers"),
+    UBER("Uber", "Uber"),
     OVERUSED("OverUsed", "OU"),
+    BORDERLINE("Borderline", "BL"),
     UNDERUSED("UnderUsed", "UU"),
     RARELYUSED("RarelyUsed", "RU"),
     NEVERUSED("NeverUsed", "NU"),
     PARTIALLYUSED("PartiallyUsed", "PU"),
     LITTLE_CUP("Little Cup", "LC"),
-    DOUBLES("Doubles");
+    DOUBLES("Doubles", "Doubles");
 
     static {
-        UBERS
+        UBER
                 .setClauses(
                         Clause.ENDLESS_BATTLE_CLAUSE,
                         Clause.MOODY_CLAUSE,
@@ -42,7 +41,7 @@ public enum Tier {
                         Clause.SLEEP_CLAUSE,
                         Clause.SPECIES_CLAUSE
                 )
-                .setBannedTiers(Tier.UBERS)
+                .setBannedTiers(Tier.UBER)
                 .setBannedPokemons(
                         "Aegislash",
                         "Arceus",
@@ -91,7 +90,7 @@ public enum Tier {
                         Clause.SPECIES_CLAUSE
                 )
                 .setBannedTiers(
-                        Tier.UBERS,
+                        Tier.UBER,
                         Tier.OVERUSED
                 )
                 .setBannedPokemons(
@@ -135,7 +134,7 @@ public enum Tier {
                         Clause.SPECIES_CLAUSE
                 )
                 .setBannedTiers(
-                        Tier.UBERS,
+                        Tier.UBER,
                         Tier.OVERUSED,
                         Tier.UNDERUSED
                 )
@@ -168,7 +167,7 @@ public enum Tier {
                         Clause.SPECIES_CLAUSE
                 )
                 .setBannedTiers(
-                        Tier.UBERS,
+                        Tier.UBER,
                         Tier.OVERUSED,
                         Tier.UNDERUSED,
                         Tier.RARELYUSED
@@ -194,7 +193,7 @@ public enum Tier {
                         Clause.SPECIES_CLAUSE
                 )
                 .setBannedTiers(
-                        Tier.UBERS,
+                        Tier.UBER,
                         Tier.OVERUSED,
                         Tier.UNDERUSED,
                         Tier.RARELYUSED
@@ -288,22 +287,28 @@ public enum Tier {
     private final List<Item> BANNED_ITEMS = new ArrayList<>();
     private final List<Ability> BANNED_ABILITIES = new ArrayList<>();
 
-    Tier(@Nonnull String name, @Nullable String abbreviation, @Nonnull Clause... clauses) {
+    Tier(@Nonnull String name, @Nonnull String abbreviation, @Nonnull Clause... clauses) {
+        Holder.MAP.put(abbreviation.toLowerCase(), this);
         this.NAME = name;
         this.ABBREVIATION = abbreviation;
         Collections.addAll(this.CLAUSES, clauses);
     }
 
-    Tier(@Nonnull String name, @Nullable String abbreviation) {
+    Tier(@Nonnull String name, @Nonnull String abbreviation) {
         this(name, abbreviation, new Clause[]{});
-    }
-
-    Tier(@Nonnull String name, @Nonnull Clause... clauses) {
-        this(name, null, clauses);
     }
 
     Tier(@Nonnull String name) {
         this(name, null, new Clause[]{});
+    }
+
+    public static Tier getTier(@Nonnull String abbreviation) {
+        abbreviation = abbreviation.toLowerCase();
+        if (!Holder.MAP.containsKey(abbreviation)) {
+            throw new NullPointerException("Tier " + abbreviation + " doesn't exist");
+        }
+
+        return Holder.MAP.get(abbreviation);
     }
 
     @Nonnull
@@ -414,6 +419,10 @@ public enum Tier {
     private Tier setBannedAbilities(Ability... abilities) {
         this.BANNED_ABILITIES.clear();
         return this.addBannedAbilities(abilities);
+    }
+
+    private static class Holder {
+        static Map<String, Tier> MAP = new HashMap<>();
     }
 
 }

@@ -2,9 +2,7 @@ package com.github.drsmugbrain.pokemon;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 15/07/2017.
@@ -118,7 +116,7 @@ public enum Format {
                 );
 
         MIX_AND_MEGA
-                .setTier(Tier.UBERS)
+                .setTier(Tier.UBER)
                 .setClauses(Clause.MEGA_STONE_AND_ORB_CLAUSE);
 
         MONOTYPE
@@ -157,7 +155,7 @@ public enum Format {
                 .setClauses(Clause.SKETCH_CLAUSE);
 
         UBER
-                .setTier(Tier.UBERS);
+                .setTier(Tier.UBER);
 
         UNDERUSED
                 .setTier(Tier.UNDERUSED)
@@ -186,12 +184,22 @@ public enum Format {
     private Tier TIER;
 
     Format(@Nonnull String name, @Nullable String abbreviation) {
+        Holder.MAP.put(name.toLowerCase(), this);
         this.NAME = name;
         this.ABBREVIATION = abbreviation;
     }
 
     Format(@Nonnull String name) {
         this(name, null);
+    }
+
+    public static Format getFormat(@Nonnull String name) {
+        name = name.toLowerCase();
+        if (!Holder.MAP.containsKey(name)) {
+            throw new NullPointerException("Format " + name + " doesn't exist");
+        }
+
+        return Holder.MAP.get(name);
     }
 
     @Nonnull
@@ -241,6 +249,10 @@ public enum Format {
     public Format setTier(Tier tier) {
         this.TIER = tier;
         return this;
+    }
+
+    public static class Holder {
+        static Map<String, Format> MAP = new HashMap<>();
     }
 
 }
