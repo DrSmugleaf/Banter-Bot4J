@@ -8,13 +8,13 @@ import java.util.*;
  */
 public enum Generation {
 
-    I("Generation I"),
-    II("Generation II"),
-    III("Generation III"),
-    IV("Generation IV"),
-    V("Generation V"),
-    VI("Generation VI"),
-    VII("Generation VII");
+    I("Generation I", "RB"),
+    II("Generation II", "GS"),
+    III("Generation III", "RS"),
+    IV("Generation IV", "DP"),
+    V("Generation V", "BW"),
+    VI("Generation VI", "XY"),
+    VII("Generation VII", "SM");
 
     static {
         I
@@ -79,21 +79,24 @@ public enum Generation {
     }
 
     private final String NAME;
+    private final String SHORTHAND;
     private final List<Game> CORE_GAMES = new ArrayList<>();
     private int NEW_POKEMON;
     private int TOTAL_POKEMON;
 
-    Generation(@Nonnull String name) {
+    Generation(@Nonnull String name, String shorthand) {
+        Holder.MAP.put(shorthand.toLowerCase(), this);
         this.NAME = name;
+        this.SHORTHAND = shorthand;
     }
 
-    public static Generation getGeneration(@Nonnull String generation) {
-        generation = generation.toLowerCase();
-        if (!Holder.MAP.containsKey(generation)) {
-            throw new NullPointerException("Generation " + generation + " doesn't exist");
+    public static Generation getGeneration(@Nonnull String shorthand) {
+        shorthand = shorthand.toLowerCase();
+        if (!Holder.MAP.containsKey(shorthand)) {
+            throw new NullPointerException("Generation " + shorthand + " doesn't exist");
         }
 
-        return Holder.MAP.get(generation);
+        return Holder.MAP.get(shorthand);
     }
 
     public String getName() {
