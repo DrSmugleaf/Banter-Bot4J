@@ -429,7 +429,7 @@ public enum BaseMove {
 
             for (Pokemon pokemon : validPokemons) {
                 double stabMultiplier = 1.0;
-                if (Arrays.asList(pokemon.getTypes()).contains(this.getType())) {
+                if (pokemon.getTypes().contains(this.getType())) {
                     stabMultiplier = pokemon.getStabMultiplier(move);
                 }
                 target.damage((int) (((pokemon.getStat(Stat.ATTACK) / 10) + 5) * stabMultiplier));

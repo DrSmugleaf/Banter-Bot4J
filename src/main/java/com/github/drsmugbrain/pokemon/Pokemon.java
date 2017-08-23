@@ -10,13 +10,14 @@ import java.util.stream.Collectors;
 /**
  * Created by DrSmugleaf on 04/06/2017.
  */
-public class Pokemon extends BasePokemon {
+public class Pokemon {
 
+    private final Pokemons BASE_POKEMON;
     private final String NICKNAME;
     private final Ability ABILITY;
     private final Nature NATURE;
     private int LEVEL;
-    private final Type[] TYPES;
+    private final List<Type> TYPES;
     private final Map<Stat, Integer> INDIVIDUAL_VALUES = getDefaultIndividualValues();
     private final Map<Stat, Integer> EFFORT_VALUES = getDefaultEffortValues();
     private final Map<Stat, Stage> STAT_STAGES = getDefaultStatStages();
@@ -38,7 +39,7 @@ public class Pokemon extends BasePokemon {
     private Status status = null;
     private CriticalHitStage criticalHitStage = CriticalHitStage.ZERO;
     private boolean damagedThisTurn = false;
-    private int weight;
+    private double weight;
     private boolean berryUsed = false;
     private int bideDamageTaken = 0;
     private Pokemon bideTarget = null;
@@ -46,9 +47,8 @@ public class Pokemon extends BasePokemon {
     private Battle battle = null;
     private Trainer trainer = null;
 
-    public Pokemon(@Nonnull BasePokemon basePokemon, @Nonnull Item item, @Nonnull Nature nature, @Nonnull Ability ability, @Nullable Gender gender, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues, @Nonnull List<Move> moves) {
-        super(basePokemon);
-
+    public Pokemon(@Nonnull Pokemons basePokemon, @Nonnull Item item, @Nonnull Nature nature, @Nonnull Ability ability, @Nullable Gender gender, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues, @Nonnull List<Move> moves) {
+        this.BASE_POKEMON = basePokemon;
         this.NICKNAME = basePokemon.getName();
         this.item = item;
         this.ABILITY = ability;
@@ -58,7 +58,6 @@ public class Pokemon extends BasePokemon {
         } else {
             this.GENDER = gender;
         }
-//        this.weight = basePokemon.weight;
 
         this.MOVES = moves;
         this.VALID_MOVES = moves;
@@ -127,7 +126,7 @@ public class Pokemon extends BasePokemon {
     public String export() {
         String string = "";
 
-        String name = super.getName();
+        String name = this.getName();
         String item = this.getItem() != null ? this.getItem().getName() : null;
         String ability = this.getAbility().getName();
 
@@ -150,6 +149,11 @@ public class Pokemon extends BasePokemon {
         }
 
         return string;
+    }
+
+    @Nonnull
+    public String getName() {
+        return this.BASE_POKEMON.getName();
     }
 
     @Nonnull
@@ -268,7 +272,7 @@ public class Pokemon extends BasePokemon {
     }
 
     @Nonnull
-    public Type[] getTypes() {
+    public List<Type> getTypes() {
         return this.TYPES;
     }
 
@@ -326,6 +330,10 @@ public class Pokemon extends BasePokemon {
         }
 
         return stats;
+    }
+
+    public int getBaseStat(@Nonnull Stat stat) {
+        return this.BASE_POKEMON.getStats().get(stat);
     }
 
     public int getStat(@Nonnull Stat stat) {
@@ -387,7 +395,7 @@ public class Pokemon extends BasePokemon {
     }
 
     protected double getStabMultiplier(Move move) {
-        if (Arrays.asList(this.TYPES).contains(move.getType())) {
+        if (this.TYPES.contains(move.getType())) {
             return this.stabMultiplier;
         } else {
             return 1.0;
@@ -623,7 +631,7 @@ public class Pokemon extends BasePokemon {
         return this.GENDER;
     }
 
-    public int getWeight() {
+    public double getWeight() {
         return this.weight;
     }
 
@@ -636,7 +644,7 @@ public class Pokemon extends BasePokemon {
     }
 
     protected void resetWeight() {
-        this.weight = this.getBaseWeight();
+        this.weight = this.BASE_POKEMON.getWeight();
     }
 
     protected boolean isBerryUsed() {

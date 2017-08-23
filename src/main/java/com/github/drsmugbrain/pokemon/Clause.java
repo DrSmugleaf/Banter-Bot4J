@@ -243,10 +243,10 @@ public enum Clause {
         @Override
         public boolean isValid(Battle battle) {
             for (Trainer trainer : battle.getTrainers().values()) {
-                List<Type> types = Arrays.asList(trainer.getPokemon(0).getTypes());
+                List<Type> types = trainer.getPokemon(0).getTypes();
 
                 for (Pokemon pokemon : trainer.getPokemons()) {
-                    if (Collections.disjoint(types, Arrays.asList(pokemon.getTypes()))) {
+                    if (Collections.disjoint(types, pokemon.getTypes())) {
                         return false;
                     }
                 }

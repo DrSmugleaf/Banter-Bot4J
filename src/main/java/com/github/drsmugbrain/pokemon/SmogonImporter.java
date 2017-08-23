@@ -87,7 +87,7 @@ public class SmogonImporter {
             throw new DiscordException(nameString + " has no moves.");
         }
 
-        BasePokemon basePokemon = BasePokemon.getBasePokemon(nameString);
+        Pokemons pokemon = Pokemons.getPokemon(nameString);
         Item item = Item.getItem(itemString);
         Ability ability = Ability.getAbility(abilityString);
         Nature nature = Nature.getNature(natureString);
@@ -115,7 +115,7 @@ public class SmogonImporter {
             }
         }
 
-        return new Pokemon(basePokemon, item, nature, ability, gender, 100, individualValues, effortValues, moves);
+        return new Pokemon(pokemon, item, nature, ability, gender, 100, individualValues, effortValues, moves);
     }
 
     public static List<Pokemon> parsePokemons(String export) throws DiscordException {

@@ -6,7 +6,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * Created by DrSmugleaf on 06/06/2017.
@@ -24,27 +23,8 @@ public class SmogonParser {
                 .replace("dexSettings = ", "");
         JSONObject obj = new JSONObject(docString).getJSONArray("injectRpcs").getJSONArray(1).getJSONObject(1);
 
-        JSONArray pokemon = obj.getJSONArray("pokemon");
-        SmogonParser.parsePokemon(pokemon);
-
         JSONArray moves = obj.getJSONArray("moves");
         SmogonParser.parseMoves(moves);
-    }
-
-    private static void parsePokemon(JSONArray pokemonJSONArray) {
-        for (int i = 0; i < pokemonJSONArray.length(); i++) {
-            JSONObject pokemon = pokemonJSONArray.getJSONObject(i);
-            JSONArray alts = pokemon.getJSONArray("alts");
-            JSONObject statsJSON = alts.getJSONObject(0);
-            JSONArray abilitiesJSON = statsJSON.getJSONArray("abilities");
-            String name = pokemon.getString("name");
-
-            Ability[] abilities = Ability.getAbilities(abilitiesJSON);
-            Type[] types = Type.getTypes(statsJSON.getJSONArray("types"));
-            Map<Stat, Integer> stats = BasePokemon.parseBaseStats(statsJSON);
-
-            new BasePokemon(name, abilities, types, stats).createBasePokemon();
-        }
     }
 
     private static void parseMoves(JSONArray movesJSONArray) {
