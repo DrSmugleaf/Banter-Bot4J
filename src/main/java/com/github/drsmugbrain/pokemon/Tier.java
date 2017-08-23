@@ -13,11 +13,15 @@ public enum Tier {
     OVERUSED("OverUsed", "OU"),
     BORDERLINE("Borderline", "BL"),
     UNDERUSED("UnderUsed", "UU"),
+    BORDERLINE_2("Borderline 2", "BL2"),
     RARELYUSED("RarelyUsed", "RU"),
+    BORDERLINE_3("Borderline 3", "BL3"),
     NEVERUSED("NeverUsed", "NU"),
+    BORDERLINE_4("Borderline 4", "BL4"),
     PARTIALLYUSED("PartiallyUsed", "PU"),
     LITTLE_CUP("Little Cup", "LC"),
-    DOUBLES("Doubles", "Doubles");
+    DOUBLES("Doubles", "Doubles"),
+    LIMBO("Limbo", "Limbo");
 
     static {
         UBER
