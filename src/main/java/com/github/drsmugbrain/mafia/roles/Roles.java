@@ -1,77 +1,82 @@
 package com.github.drsmugbrain.mafia.roles;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by DrSmugleaf on 23/08/2017.
  */
 public enum Roles {
 
-    BODYGUARD("Bodyguard", Teams.TOWN),
-    BUS_DRIVER("Bus Driver", Teams.TOWN),
-    CITIZEN("Citizen", Teams.TOWN),
-    CORONER("Coroner", Teams.TOWN),
-    CRIER("Crier", Teams.TOWN),
-    DETECTIVE("Detective", Teams.TOWN),
-    DOCTOR("Doctor", Teams.TOWN),
-    ESCORT("Escort", Teams.TOWN),
-    INVESTIGATOR("Investigator", Teams.TOWN),
-    JAILOR("Jailor", Teams.TOWN),
-    LOOKOUT("Lookout", Teams.TOWN),
-    MARSHALL("Marshall", Teams.TOWN),
-    MASON("Mason", Teams.TOWN),
-    MASON_LEADER("Mason Leader", Teams.TOWN),
-    MAYOR("Mayor", Teams.TOWN),
-    SHERIFF("Sheriff", Teams.TOWN),
-    SPY("Spy", Teams.TOWN),
+    BODYGUARD("Bodyguard", Teams.TOWN, Categories.TOWN_PROTECTIVE, Categories.TOWN_KILLING),
+    BUS_DRIVER("Bus Driver", Teams.TOWN, Categories.TOWN_PROTECTIVE, Categories.TOWN_POWER),
+    CITIZEN("Citizen", Teams.TOWN, Categories.TOWN_GOVERNMENT),
+    CORONER("Coroner", Teams.TOWN, Categories.TOWN_INVESTIGATIVE),
+    CRIER("Crier", Teams.TOWN, Categories.TOWN_GOVERNMENT),
+    DETECTIVE("Detective", Teams.TOWN, Categories.TOWN_INVESTIGATIVE),
+    DOCTOR("Doctor", Teams.TOWN, Categories.TOWN_PROTECTIVE),
+    ESCORT("Escort", Teams.TOWN, Categories.TOWN_PROTECTIVE),
+    INVESTIGATOR("Investigator", Teams.TOWN, Categories.TOWN_INVESTIGATIVE),
+    JAILOR("Jailor", Teams.TOWN, Categories.TOWN_KILLING, Categories.TOWN_POWER),
+    LOOKOUT("Lookout", Teams.TOWN, Categories.TOWN_INVESTIGATIVE),
+    MARSHALL("Marshall", Teams.TOWN, Categories.TOWN_GOVERNMENT),
+    MASON("Mason", Teams.TOWN, Categories.TOWN_GOVERNMENT),
+    MASON_LEADER("Mason Leader", Teams.TOWN, Categories.TOWN_GOVERNMENT),
+    MAYOR("Mayor", Teams.TOWN, Categories.TOWN_GOVERNMENT),
+    SHERIFF("Sheriff", Teams.TOWN, Categories.TOWN_INVESTIGATIVE),
+    SPY("Spy", Teams.TOWN, Categories.TOWN_POWER),
     STUMP("Stump", Teams.TOWN),
-    VETERAN("Veteran", Teams.TOWN),
-    VIGILANTE("Vigilante", Teams.TOWN),
+    VETERAN("Veteran", Teams.TOWN, Categories.TOWN_KILLING, Categories.TOWN_POWER),
+    VIGILANTE("Vigilante", Teams.TOWN, Categories.TOWN_KILLING),
 
-    AGENT("Agent", Teams.MAFIA),
-    BEGUILER("Beguiler", Teams.MAFIA),
-    BLACKMAILER("Blackmailer", Teams.MAFIA),
-    CONSIGLIERE("Consigliere", Teams.MAFIA),
-    CONSORT("Consort", Teams.MAFIA),
-    DISGUISER("Disguiser", Teams.MAFIA),
-    FRAMER("Framer", Teams.MAFIA),
-    GODFATHER("Godfather", Teams.MAFIA),
-    JANITOR("Janitor", Teams.MAFIA),
-    KIDNAPPER("Kidnapper", Teams.MAFIA),
-    MAFIOSO("Mafioso", Teams.MAFIA),
+    AGENT("Agent", Teams.MAFIA, Categories.MAFIA_SUPPORT),
+    BEGUILER("Beguiler", Teams.MAFIA, Categories.MAFIA_DECEPTION),
+    BLACKMAILER("Blackmailer", Teams.MAFIA, Categories.MAFIA_SUPPORT),
+    CONSIGLIERE("Consigliere", Teams.MAFIA, Categories.MAFIA_SUPPORT),
+    CONSORT("Consort", Teams.MAFIA, Categories.MAFIA_SUPPORT),
+    DISGUISER("Disguiser", Teams.MAFIA, Categories.MAFIA_DECEPTION, Categories.MAFIA_KILLING),
+    FRAMER("Framer", Teams.MAFIA, Categories.MAFIA_DECEPTION),
+    GODFATHER("Godfather", Teams.MAFIA, Categories.MAFIA_KILLING),
+    JANITOR("Janitor", Teams.MAFIA, Categories.MAFIA_DECEPTION),
+    KIDNAPPER("Kidnapper", Teams.MAFIA, Categories.MAFIA_KILLING, Categories.MAFIA_SUPPORT),
+    MAFIOSO("Mafioso", Teams.MAFIA, Categories.MAFIA_KILLING),
 
-    ADMINISTRATOR("Administrator", Teams.TRIAD),
-    DECEIVER("Deceiver", Teams.TRIAD),
-    DRAGON_HEAD("Head", Teams.TRIAD),
-    ENFORCER("Enforcer", Teams.TRIAD),
-    FORGER("Forger", Teams.TRIAD),
-    INCENSE_MASTER("Master", Teams.TRIAD),
-    INFORMANT("Informant", Teams.TRIAD),
-    INTERROGATOR("Interrogator", Teams.TRIAD),
-    LIAISON("Liaison", Teams.TRIAD),
-    SILENCER("Silencer", Teams.TRIAD),
-    VANGUARD("Vanguard", Teams.TRIAD),
+    ADMINISTRATOR("Administrator", Teams.TRIAD, Categories.TRIAD_SUPPORT),
+    DECEIVER("Deceiver", Teams.TRIAD, Categories.TRIAD_DECEPTION),
+    DRAGON_HEAD("Head", Teams.TRIAD, Categories.TRIAD_KILLING),
+    ENFORCER("Enforcer", Teams.TRIAD, Categories.TRIAD_KILLING),
+    FORGER("Forger", Teams.TRIAD, Categories.TRIAD_DECEPTION),
+    INCENSE_MASTER("Master", Teams.TRIAD, Categories.TRIAD_DECEPTION),
+    INFORMANT("Informant", Teams.TRIAD, Categories.TRIAD_DECEPTION, Categories.TRIAD_KILLING),
+    INTERROGATOR("Interrogator", Teams.TRIAD, Categories.TRIAD_KILLING, Categories.TRIAD_SUPPORT),
+    LIAISON("Liaison", Teams.TRIAD, Categories.TRIAD_SUPPORT),
+    SILENCER("Silencer", Teams.TRIAD, Categories.TRIAD_SUPPORT),
+    VANGUARD("Vanguard", Teams.TRIAD, Categories.TRIAD_SUPPORT),
 
-    AMNESIAC("Amnesiac", Teams.NEUTRAL),
-    ARSONIST("Arsonist", Teams.NEUTRAL),
-    AUDITOR("Auditor", Teams.NEUTRAL),
-    CULTIST("Cultist", Teams.NEUTRAL),
-    EXECUTIONER("Executioner", Teams.NEUTRAL),
-    JESTER("Jester", Teams.NEUTRAL),
+    AMNESIAC("Amnesiac", Teams.NEUTRAL, Categories.NEUTRAL_BENIGN),
+    ARSONIST("Arsonist", Teams.NEUTRAL, Categories.NEUTRAL_EVIL, Categories.NEUTRAL_KILLING),
+    AUDITOR("Auditor", Teams.NEUTRAL, Categories.NEUTRAL_EVIL),
+    CULTIST("Cultist", Teams.NEUTRAL, Categories.NEUTRAL_EVIL),
+    EXECUTIONER("Executioner", Teams.NEUTRAL, Categories.NEUTRAL_BENIGN),
+    JESTER("Jester", Teams.NEUTRAL, Categories.NEUTRAL_BENIGN),
     JUDGE("Judge", Teams.NEUTRAL),
-    MASS_MURDERER("Murderer", Teams.NEUTRAL),
-    SCUMBAG("Scumbag", Teams.NEUTRAL),
-    SERIAL_KILLER("Killer", Teams.NEUTRAL),
-    SURVIVOR("Survivor", Teams.NEUTRAL),
-    WITCH("Witch", Teams.NEUTRAL),
-    WITCH_DOCTOR("Witch Doctor", Teams.NEUTRAL);
+    MASS_MURDERER("Murderer", Teams.NEUTRAL, Categories.NEUTRAL_EVIL, Categories.NEUTRAL_KILLING),
+    SCUMBAG("Scumbag", Teams.NEUTRAL, Categories.NEUTRAL_EVIL),
+    SERIAL_KILLER("Killer", Teams.NEUTRAL, Categories.NEUTRAL_EVIL, Categories.NEUTRAL_KILLING),
+    SURVIVOR("Survivor", Teams.NEUTRAL, Categories.NEUTRAL_BENIGN),
+    WITCH("Witch", Teams.NEUTRAL, Categories.NEUTRAL_EVIL),
+    WITCH_DOCTOR("Witch Doctor", Teams.NEUTRAL, Categories.NEUTRAL_EVIL);
 
     private final String NAME;
     private final Teams TEAM;
+    private final List<Categories> CATEGORY = new ArrayList<>();
 
-    Roles(@Nonnull String name, @Nonnull Teams team) {
+    Roles(@Nonnull String name, @Nonnull Teams team, @Nonnull Categories... categories) {
         this.NAME = name;
         this.TEAM = team;
+        Collections.addAll(this.CATEGORY, categories);
     }
 
     public String getName() {
@@ -80,6 +85,10 @@ public enum Roles {
 
     public Teams getTeam() {
         return this.TEAM;
+    }
+
+    public List<Categories> getCategories() {
+        return this.CATEGORY;
     }
 
 }
