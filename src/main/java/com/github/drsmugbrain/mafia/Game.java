@@ -8,11 +8,17 @@ import java.util.Map;
  */
 public class Game {
 
+    private final Setup SETUP;
     private final Map<Integer, Player> PLAYERS;
     private Cycles CYCLE = Cycles.DAY;
 
-    Game(@Nonnull Map<Integer, Player> players) {
+    Game(@Nonnull Setup setup, @Nonnull Map<Integer, Player> players) {
+        this.SETUP = setup;
         this.PLAYERS = players;
+    }
+
+    public Setup getSetup() {
+        return this.SETUP;
     }
 
     public Map<Integer, Player> getPlayers() {
