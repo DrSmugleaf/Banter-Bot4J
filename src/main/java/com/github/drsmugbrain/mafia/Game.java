@@ -1,7 +1,5 @@
 package com.github.drsmugbrain.mafia;
 
-import com.github.drsmugbrain.mafia.roles.Role;
-
 import javax.annotation.Nonnull;
 import java.util.Map;
 
@@ -10,14 +8,14 @@ import java.util.Map;
  */
 public class Game {
 
-    private final Map<Integer, Role> PLAYERS;
+    private final Map<Integer, Player> PLAYERS;
     private Cycles CYCLE = Cycles.DAY;
 
-    Game(@Nonnull Map<Integer, Role> players) {
+    Game(@Nonnull Map<Integer, Player> players) {
         this.PLAYERS = players;
     }
 
-    public Map<Integer, Role> getPlayers() {
+    public Map<Integer, Player> getPlayers() {
         return this.PLAYERS;
     }
 
