@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
  */
 public enum Teams {
 
+    NONE("None"),
     TOWN("Town"),
     MAFIA("Mafia"),
     TRIAD("Triad"),
