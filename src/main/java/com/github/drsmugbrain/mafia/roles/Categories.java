@@ -9,23 +9,29 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public enum Categories {
 
+    ANY_RANDOM("Any Random", Teams.NONE),
+
     TOWN_INVESTIGATIVE("Town Investigative", Teams.TOWN),
     TOWN_PROTECTIVE("Town Protective", Teams.TOWN),
     TOWN_GOVERNMENT("Town Government", Teams.TOWN),
     TOWN_KILLING("Town Killing", Teams.TOWN),
     TOWN_POWER("Town Power", Teams.TOWN),
+    TOWN_RANDOM("Town Random", Teams.TOWN),
 
     MAFIA_DECEPTION("Mafia Deception", Teams.MAFIA),
     MAFIA_KILLING("Mafia Killing", Teams.MAFIA),
     MAFIA_SUPPORT("Mafia Support", Teams.MAFIA),
+    MAFIA_RANDOM("Mafia Random", Teams.MAFIA),
 
     TRIAD_DECEPTION("Triad Deception", Teams.TRIAD),
     TRIAD_KILLING("Triad Killing", Teams.TRIAD),
     TRIAD_SUPPORT("Triad Support", Teams.TRIAD),
+    TRIAD_RANDOM("Triad Random", Teams.TRIAD),
 
     NEUTRAL_BENIGN("Neutral Benign", Teams.NEUTRAL),
     NEUTRAL_EVIL("Neutral Evil", Teams.NEUTRAL),
-    NEUTRAL_KILLING("Neutral Killing", Teams.NEUTRAL);
+    NEUTRAL_KILLING("Neutral Killing", Teams.NEUTRAL),
+    NEUTRAL_RANDOM("Neutral Random", Teams.NEUTRAL);
 
     static {
         TOWN_INVESTIGATIVE.setRoles(
@@ -136,6 +142,13 @@ public enum Categories {
                 Roles.MASS_MURDERER,
                 Roles.SERIAL_KILLER
         );
+
+
+        ANY_RANDOM.setRoles(Roles.values());
+        TOWN_RANDOM.setRoles(TOWN_INVESTIGATIVE, TOWN_PROTECTIVE, TOWN_GOVERNMENT, TOWN_KILLING, TOWN_POWER);
+        MAFIA_RANDOM.setRoles(MAFIA_DECEPTION, MAFIA_KILLING, MAFIA_SUPPORT);
+        TRIAD_RANDOM.setRoles(TRIAD_DECEPTION, TRIAD_KILLING, TRIAD_SUPPORT);
+        NEUTRAL_RANDOM.setRoles(NEUTRAL_BENIGN, NEUTRAL_EVIL, NEUTRAL_KILLING);
     }
 
     private final String NAME;
@@ -164,9 +177,35 @@ public enum Categories {
         return this.ROLES;
     }
 
-    private Categories setRoles(Roles... roles) {
-        Collections.addAll(this.ROLES, roles);
+    private Categories addRoles(Roles... roles) {
+        for (Roles role : roles) {
+            if (this.ROLES.contains(role)) {
+                continue;
+            }
+            this.ROLES.add(role);
+        }
         return this;
+    }
+
+    private Categories setRoles(Roles... roles) {
+        this.ROLES.clear();
+        return this.addRoles(roles);
+    }
+
+    private Categories setRoles(List<Roles>... roles) {
+        List<Roles> list = new ArrayList<>();
+        for (List<Roles> roleList : roles) {
+            list.addAll(roleList);
+        }
+        return this.setRoles(list.toArray(new Roles[list.size()]));
+    }
+
+    private Categories setRoles(Categories... categories) {
+        List<Roles> list = new ArrayList<>();
+        for (Categories category : categories) {
+            list.addAll(category.getRoles());
+        }
+        return this.setRoles(list.toArray(new Roles[list.size()]));
     }
 
     public Roles random() {
