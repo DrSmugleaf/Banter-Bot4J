@@ -2,6 +2,7 @@ package com.github.drsmugbrain.mafia;
 
 import com.github.drsmugbrain.mafia.roles.Categories;
 import com.github.drsmugbrain.mafia.roles.Roles;
+import com.github.drsmugbrain.mafia.settings.Settings;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -13,16 +14,22 @@ import java.util.List;
 public class Setup {
 
     private final List<Roles> ROLES;
+    private final Settings SETTINGS;
 
-    Setup(@Nonnull List<Roles> roles, List<Categories> categories) {
+    Setup(@Nonnull List<Roles> roles, @Nonnull List<Categories> categories, @Nonnull Settings settings) {
         this.ROLES = roles;
         for (Categories category : categories) {
             this.ROLES.add(category.random());
         }
+        this.SETTINGS = settings;
     }
 
     public List<Roles> getRoles() {
         return this.ROLES;
+    }
+
+    public Settings getSettings() {
+        return this.SETTINGS;
     }
 
     public static Setup random() {
@@ -45,7 +52,7 @@ public class Setup {
         categories.add(Categories.NEUTRAL_EVIL);
         categories.add(Categories.NEUTRAL_KILLING);
 
-        return new Setup(roles, categories);
+        return new Setup(roles, categories, Settings.getDefault());
     }
 
     public static Setup importSetup(String string) throws ParseException {
@@ -66,7 +73,7 @@ public class Setup {
             }
         }
 
-        return new Setup(roles, categories);
+        return new Setup(roles, categories, Settings.getDefault());
     }
 
 }
