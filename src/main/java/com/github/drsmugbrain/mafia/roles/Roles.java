@@ -1,9 +1,7 @@
 package com.github.drsmugbrain.mafia.roles;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 23/08/2017.
@@ -74,9 +72,14 @@ public enum Roles {
     private final List<Categories> CATEGORY = new ArrayList<>();
 
     Roles(@Nonnull String name, @Nonnull Teams team, @Nonnull Categories... categories) {
+        Holder.MAP.put(name.toLowerCase(), this);
         this.NAME = name;
         this.TEAM = team;
         Collections.addAll(this.CATEGORY, categories);
+    }
+
+    public static Roles getRole(@Nonnull String name) {
+        return Holder.MAP.get(name.toLowerCase());
     }
 
     public String getName() {
@@ -89,6 +92,10 @@ public enum Roles {
 
     public List<Categories> getCategories() {
         return this.CATEGORY;
+    }
+
+    private static class Holder {
+        static Map<String, Roles> MAP = new HashMap<>();
     }
 
 }
