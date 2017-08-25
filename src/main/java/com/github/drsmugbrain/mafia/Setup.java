@@ -25,6 +25,29 @@ public class Setup {
         return this.ROLES;
     }
 
+    public static Setup random() {
+        List<Roles> roles = new ArrayList<>();
+        List<Categories> categories = new ArrayList<>();
+
+        categories.add(Categories.TOWN_INVESTIGATIVE);
+        categories.add(Categories.TOWN_INVESTIGATIVE);
+        categories.add(Categories.TOWN_PROTECTIVE);
+        categories.add(Categories.TOWN_PROTECTIVE);
+        categories.add(Categories.TOWN_GOVERNMENT);
+        categories.add(Categories.TOWN_KILLING);
+        categories.add(Categories.TOWN_KILLING);
+        categories.add(Categories.TOWN_POWER);
+        categories.add(Categories.TOWN_POWER);
+        roles.add(Roles.GODFATHER);
+        categories.add(Categories.MAFIA_DECEPTION);
+        categories.add(Categories.MAFIA_SUPPORT);
+        categories.add(Categories.NEUTRAL_BENIGN);
+        categories.add(Categories.NEUTRAL_EVIL);
+        categories.add(Categories.NEUTRAL_KILLING);
+
+        return new Setup(roles, categories);
+    }
+
     public static Setup importSetup(String string) throws ParseException {
         String[] stringArray = string.split("\r?\n");
         List<Roles> roles = new ArrayList<>();
