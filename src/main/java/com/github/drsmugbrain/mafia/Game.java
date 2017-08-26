@@ -48,8 +48,4 @@ public class Game {
         return this.CYCLE;
     }
 
-    protected void setCycle(@Nonnull Cycle cycle) {
-        this.CYCLE = cycle;
-    }
-
 }
