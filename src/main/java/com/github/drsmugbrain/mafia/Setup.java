@@ -16,7 +16,7 @@ public class Setup {
     private final List<Roles> ROLES;
     private final Settings SETTINGS;
 
-    Setup(@Nonnull List<Roles> roles, @Nonnull List<Categories> categories, @Nonnull Settings settings) {
+    public Setup(@Nonnull List<Roles> roles, @Nonnull List<Categories> categories, @Nonnull Settings settings) {
         this.ROLES = roles;
         for (Categories category : categories) {
             this.ROLES.add(category.random());

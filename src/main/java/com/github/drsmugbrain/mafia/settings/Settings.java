@@ -19,7 +19,7 @@ public class Settings {
     private boolean CHOOSE_NAMES;
     private double TRIAL_LENGTH;
 
-    Settings() {}
+    public Settings() {}
 
     public static Settings getDefault() {
         Settings settings = new Settings();

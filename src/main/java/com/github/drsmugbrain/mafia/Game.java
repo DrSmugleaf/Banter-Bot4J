@@ -1,7 +1,13 @@
 package com.github.drsmugbrain.mafia;
 
+import com.github.drsmugbrain.mafia.roles.Role;
+import com.github.drsmugbrain.mafia.roles.Roles;
+
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by DrSmugleaf on 23/08/2017.
@@ -10,9 +16,9 @@ public class Game {
 
     private final Setup SETUP;
     private final Map<Integer, Player> PLAYERS;
-    private Cycles CYCLE = Cycles.DAY;
+    private Cycle CYCLE = new Cycle(Cycles.DAY);
 
-    Game(@Nonnull Setup setup, @Nonnull Map<Integer, Player> players) {
+    public Game(@Nonnull Setup setup, @Nonnull Map<Integer, Player> players) {
         this.SETUP = setup;
         this.PLAYERS = players;
     }
@@ -25,11 +31,24 @@ public class Game {
         return this.PLAYERS;
     }
 
-    public Cycles getCycle() {
+    public void start() {
+        List<Player> playersWithoutRoles = new ArrayList<>(this.PLAYERS.values());
+
+        for (Roles role : this.SETUP.getRoles()) {
+            int randomIndex = ThreadLocalRandom.current().nextInt(playersWithoutRoles.size());
+            Player randomPlayer = playersWithoutRoles.remove(randomIndex);
+
+            randomPlayer.setRole(new Role(role));
+        }
+
+
+    }
+
+    public Cycle getCycle() {
         return this.CYCLE;
     }
 
-    protected void setCycle(@Nonnull Cycles cycle) {
+    protected void setCycle(@Nonnull Cycle cycle) {
         this.CYCLE = cycle;
     }
 

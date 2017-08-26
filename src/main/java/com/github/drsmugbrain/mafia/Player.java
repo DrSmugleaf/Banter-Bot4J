@@ -1,6 +1,6 @@
 package com.github.drsmugbrain.mafia;
 
-import com.github.drsmugbrain.mafia.roles.Roles;
+import com.github.drsmugbrain.mafia.roles.Role;
 
 import javax.annotation.Nonnull;
 
@@ -11,9 +11,9 @@ public class Player {
 
     private final Integer ID;
     private final String NAME;
-    private Roles ROLE;
+    private Role ROLE;
 
-    Player(@Nonnull Integer id, @Nonnull String name, @Nonnull Roles role) {
+    public Player(@Nonnull Integer id, @Nonnull String name, @Nonnull Role role) {
         this.ID = id;
         this.NAME = name;
         this.ROLE = role;
@@ -27,8 +27,12 @@ public class Player {
         return this.NAME;
     }
 
-    public Roles getRole() {
+    public Role getRole() {
         return this.ROLE;
+    }
+
+    protected void setRole(Role role) {
+        this.ROLE = role;
     }
 
 }

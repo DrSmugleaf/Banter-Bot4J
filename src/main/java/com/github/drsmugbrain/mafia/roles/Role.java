@@ -9,7 +9,7 @@ public class Role {
 
     private final Roles BASE_ROLE;
 
-    Role(@Nonnull Roles role) {
+    public Role(@Nonnull Roles role) {
         this.BASE_ROLE = role;
     }
 
