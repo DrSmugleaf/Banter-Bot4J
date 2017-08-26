@@ -16,8 +16,10 @@ public class Cycle implements Runnable {
     private Phase PHASE;
     private int day;
     private int timeLeft;
+    private final Game GAME;
 
-    public Cycle(@Nonnull Phase phase) {
+    public Cycle(@Nonnull Game game, @Nonnull Phase phase) {
+        this.GAME = game;
         this.PHASE = phase;
     }
 
@@ -41,6 +43,10 @@ public class Cycle implements Runnable {
         return this.timeLeft;
     }
 
+    public Game getGame() {
+        return this.GAME;
+    }
+
     protected void resume() {
         this.CURRENT_TIMER = this.TIMER.scheduleAtFixedRate(this, 0, 1, TimeUnit.SECONDS);
     }
@@ -54,5 +60,9 @@ public class Cycle implements Runnable {
     @Override
     public void run() {
         this.timeLeft--;
+        if (this.timeLeft <= 0) {
+            this.CURRENT_TIMER.cancel(true);
+        }
     }
+
 }
