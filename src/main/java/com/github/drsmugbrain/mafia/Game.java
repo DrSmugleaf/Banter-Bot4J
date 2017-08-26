@@ -16,7 +16,7 @@ public class Game {
 
     private final Setup SETUP;
     private final Map<Integer, Player> PLAYERS;
-    private Cycle CYCLE = new Cycle(Cycles.DAY);
+    private Cycle CYCLE = new Cycle(Phase.DAY);
 
     public Game(@Nonnull Setup setup, @Nonnull Map<Integer, Player> players) {
         this.SETUP = setup;

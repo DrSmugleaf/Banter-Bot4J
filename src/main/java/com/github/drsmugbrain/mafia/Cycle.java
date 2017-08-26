@@ -13,19 +13,19 @@ public class Cycle implements Runnable {
 
     private final ScheduledExecutorService TIMER = Executors.newScheduledThreadPool(1);
     private Future<?> CURRENT_TIMER = null;
-    private Cycles CYCLE;
+    private Phase CYCLE;
     private int day;
     private int timeLeft;
 
-    public Cycle(@Nonnull Cycles cycle) {
-        this.CYCLE = cycle;
+    public Cycle(@Nonnull Phase phase) {
+        this.CYCLE = phase;
     }
 
-    public Cycles getCycle() {
+    public Phase getCycle() {
         return this.CYCLE;
     }
 
-    protected void setCycle(Cycles cycle) {
+    protected void setCycle(Phase cycle) {
         this.CYCLE = cycle;
     }
 
