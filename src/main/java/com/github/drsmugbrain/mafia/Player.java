@@ -3,23 +3,23 @@ package com.github.drsmugbrain.mafia;
 import com.github.drsmugbrain.mafia.roles.Role;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by DrSmugleaf on 24/08/2017.
  */
 public class Player {
 
-    private final Integer ID;
+    private final Long ID;
     private final String NAME;
-    private Role ROLE;
+    private Role ROLE = null;
 
-    public Player(@Nonnull Integer id, @Nonnull String name, @Nonnull Role role) {
+    public Player(@Nonnull Long id, @Nonnull String name) {
         this.ID = id;
         this.NAME = name;
-        this.ROLE = role;
     }
 
-    public Integer getID() {
+    public Long getID() {
         return this.ID;
     }
 
@@ -27,6 +27,7 @@ public class Player {
         return this.NAME;
     }
 
+    @Nullable
     public Role getRole() {
         return this.ROLE;
     }

@@ -1,5 +1,7 @@
 package com.github.drsmugbrain.mafia;
 
+import com.github.drsmugbrain.mafia.events.EventDispatcher;
+import com.github.drsmugbrain.mafia.events.GameStartEvent;
 import com.github.drsmugbrain.mafia.roles.Role;
 import com.github.drsmugbrain.mafia.roles.Roles;
 
@@ -15,10 +17,10 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Game {
 
     private final Setup SETUP;
-    private final Map<Integer, Player> PLAYERS;
-    private Cycle CYCLE = new Cycle(Phase.DAY);
+    private final Map<Long, Player> PLAYERS;
+    private Cycle CYCLE = new Cycle(this, Phase.DAY);
 
-    public Game(@Nonnull Setup setup, @Nonnull Map<Integer, Player> players) {
+    public Game(@Nonnull Setup setup, @Nonnull Map<Long, Player> players) {
         this.SETUP = setup;
         this.PLAYERS = players;
     }
@@ -27,7 +29,7 @@ public class Game {
         return this.SETUP;
     }
 
-    public Map<Integer, Player> getPlayers() {
+    public Map<Long, Player> getPlayers() {
         return this.PLAYERS;
     }
 
@@ -41,7 +43,9 @@ public class Game {
             randomPlayer.setRole(new Role(role));
         }
 
+        EventDispatcher.dispatch(new GameStartEvent(this));
 
+        this.CYCLE.resume();
     }
 
     public Cycle getCycle() {

@@ -13,6 +13,7 @@ public class Role {
         this.BASE_ROLE = role;
     }
 
+    @Nonnull
     public Roles getBaseRole() {
         return this.BASE_ROLE;
     }
