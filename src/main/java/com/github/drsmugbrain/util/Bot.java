@@ -22,6 +22,7 @@ import java.util.List;
 public class Bot {
 
     // Constants for use throughout the bot
+    public static IDiscordClient client = null;
     public static final String BOT_PREFIX = Env.readFile().get("BOT_PREFIX");
     public static final Long[] OWNERS = {159650451447480320L, 109067752286715904L};
     public static final Logger LOGGER = initLogger();
@@ -34,7 +35,8 @@ public class Bot {
     public static IDiscordClient buildClient(String token){
         // The ClientBuilder object is where you will attach your params for configuring the instance of your bot.
         // Such as withToken, setDaemon etc
-        return new ClientBuilder().withToken(token).withRecommendedShardCount().build();
+        Bot.client = new ClientBuilder().withToken(token).withRecommendedShardCount().build();
+        return Bot.client;
     }
 
     // Helper functions to make certain aspects of the bot easier to use.
