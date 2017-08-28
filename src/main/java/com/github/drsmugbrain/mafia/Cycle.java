@@ -1,5 +1,9 @@
 package com.github.drsmugbrain.mafia;
 
+import com.github.drsmugbrain.mafia.events.DayStartEvent;
+import com.github.drsmugbrain.mafia.events.EventDispatcher;
+import com.github.drsmugbrain.mafia.events.NightStartEvent;
+
 import javax.annotation.Nonnull;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -13,14 +17,15 @@ public class Cycle implements Runnable {
 
     private final ScheduledExecutorService TIMER = Executors.newScheduledThreadPool(1);
     private Future<?> CURRENT_TIMER = null;
-    private Phase PHASE;
-    private int day;
-    private int timeLeft;
     private final Game GAME;
+    private Phase PHASE;
+    private int day = 1;
+    private int timeLeft;
 
     public Cycle(@Nonnull Game game, @Nonnull Phase phase) {
         this.GAME = game;
         this.PHASE = phase;
+        this.timeLeft = game.getSetup().getSettings().getDayLength();
     }
 
     public Phase getPhase() {
@@ -29,6 +34,10 @@ public class Cycle implements Runnable {
 
     protected void setPhase(Phase phase) {
         this.PHASE = phase;
+    }
+
+    public Game getGame() {
+        return this.GAME;
     }
 
     public int getDay() {
@@ -41,10 +50,6 @@ public class Cycle implements Runnable {
 
     public int getTimeLeft() {
         return this.timeLeft;
-    }
-
-    public Game getGame() {
-        return this.GAME;
     }
 
     protected void resume() {
@@ -62,6 +67,22 @@ public class Cycle implements Runnable {
         this.timeLeft--;
         if (this.timeLeft <= 0) {
             this.CURRENT_TIMER.cancel(true);
+
+            switch (this.PHASE) {
+                case DAY:
+                    this.PHASE = Phase.NIGHT;
+                    this.timeLeft = this.GAME.getSetup().getSettings().getNightLength();
+                    EventDispatcher.dispatch(new NightStartEvent(this.GAME));
+                    break;
+                case NIGHT:
+                    this.PHASE = Phase.DAY;
+                    this.day++;
+                    this.timeLeft = this.GAME.getSetup().getSettings().getDayLength();
+                    EventDispatcher.dispatch(new DayStartEvent(this.GAME));
+                    break;
+            }
+
+            this.CURRENT_TIMER = this.TIMER.scheduleAtFixedRate(this, 0, 1, TimeUnit.SECONDS);
         }
     }
 
