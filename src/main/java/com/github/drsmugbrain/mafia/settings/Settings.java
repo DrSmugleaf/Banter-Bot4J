@@ -5,11 +5,12 @@ package com.github.drsmugbrain.mafia.settings;
  */
 public class Settings {
 
-    private double DAY_LENGTH;
-    private double NIGHT_LENGTH;
+    private int DAY_LENGTH;
+    private int NIGHT_LENGTH;
+    private int DISCUSSION_TIME;
+    private int TRIAL_LENGTH;
     private DayType DAY_TYPE;
     private boolean LAST_WILL_ALLOWED;
-    private double DISCUSSION_TIME;
     private GameStart GAME_START;
     private NightTimeActions NIGHT_TIME_ACTIONS;
     private boolean PM_ALLOWED;
@@ -17,7 +18,6 @@ public class Settings {
     private boolean TRIAL_PAUSES_DAY;
     private boolean TRIAL_DEFENSE;
     private boolean CHOOSE_NAMES;
-    private double TRIAL_LENGTH;
 
     public Settings() {}
 
@@ -25,38 +25,56 @@ public class Settings {
         Settings settings = new Settings();
 
         settings
-                .setDayLength(2.5)
+                .setDayLength(120)
+                .setNightLength(60)
+                .setDiscussionTime(60)
+                .setTrialLength(60)
                 .setDayType(DayType.TRIAL)
-                .setNightLength(1.0)
                 .setLastWillAllowed(true)
-                .setDiscussionTime(1.0)
                 .setGameStart(GameStart.NIGHT)
                 .setNightTimeActions(NightTimeActions.NIGHT_SEQUENCE)
                 .setPmAllowed(true)
                 .setDiscussionPhase(true)
                 .setTrialPausesDay(true)
                 .setTrialDefense(true)
-                .setChooseNames(false)
-                .setTrialLength(1.0);
+                .setChooseNames(false);
 
         return settings;
     }
 
-    public double getDayLength() {
+    public int getDayLength() {
         return DAY_LENGTH;
     }
 
-    public Settings setDayLength(double length) {
+    public Settings setDayLength(int length) {
         this.DAY_LENGTH = length;
         return this;
     }
 
-    public double getNightLength() {
+    public int getNightLength() {
         return NIGHT_LENGTH;
     }
 
-    public Settings setNightLength(double length) {
+    public Settings setNightLength(int length) {
         this.NIGHT_LENGTH = length;
+        return this;
+    }
+
+    public int getDiscussionTime() {
+        return DISCUSSION_TIME;
+    }
+
+    public Settings setDiscussionTime(int time) {
+        this.DISCUSSION_TIME = time;
+        return this;
+    }
+
+    public int getTrialLength() {
+        return TRIAL_LENGTH;
+    }
+
+    public Settings setTrialLength(int length) {
+        this.TRIAL_LENGTH = length;
         return this;
     }
 
@@ -75,15 +93,6 @@ public class Settings {
 
     public Settings setLastWillAllowed(boolean bool) {
         this.LAST_WILL_ALLOWED = bool;
-        return this;
-    }
-
-    public double getDiscussionTime() {
-        return DISCUSSION_TIME;
-    }
-
-    public Settings setDiscussionTime(double time) {
-        this.DISCUSSION_TIME = time;
         return this;
     }
 
@@ -150,12 +159,4 @@ public class Settings {
         return this;
     }
 
-    public double getTrialLength() {
-        return TRIAL_LENGTH;
-    }
-
-    public Settings setTrialLength(double length) {
-        this.TRIAL_LENGTH = length;
-        return this;
-    }
 }
