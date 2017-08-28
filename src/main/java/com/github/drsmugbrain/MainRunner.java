@@ -1,5 +1,6 @@
 package com.github.drsmugbrain;
 
+import com.github.drsmugbrain.commands.Mafia;
 import com.github.drsmugbrain.models.Guild;
 import com.github.drsmugbrain.models.Member;
 import com.github.drsmugbrain.models.User;
@@ -17,7 +18,7 @@ public class MainRunner {
 
         // Register a listener via the EventSubscriber annotation which allows for organisation and delegation of events
         cli.getDispatcher().registerListener(new CommandHandler());
-        cli.getDispatcher().registerListeners(Guild.class, User.class);
+        cli.getDispatcher().registerListeners(Guild.class, User.class, Mafia.class);
         Env.readFile();
         new Database();
 
