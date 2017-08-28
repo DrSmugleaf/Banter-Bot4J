@@ -13,6 +13,7 @@ public class Player {
     private final Long ID;
     private final String NAME;
     private Role ROLE = null;
+    private boolean bot = false;
 
     public Player(@Nonnull Long id, @Nonnull String name) {
         this.ID = id;
@@ -36,4 +37,11 @@ public class Player {
         this.ROLE = role;
     }
 
+    public boolean isBot() {
+        return this.bot;
+    }
+
+    public void setBot(boolean bool) {
+        this.bot = bool;
+    }
 }
