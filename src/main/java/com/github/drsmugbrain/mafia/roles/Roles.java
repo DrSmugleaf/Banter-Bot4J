@@ -67,9 +67,16 @@ public enum Roles {
     WITCH("Witch", Teams.NEUTRAL, Categories.NEUTRAL_EVIL),
     WITCH_DOCTOR("Witch Doctor", Teams.NEUTRAL, Categories.NEUTRAL_EVIL);
 
+    static {
+        for (Roles roles : Roles.values()) {
+            roles.setAbility(Abilities.getAbility(roles.getName()));
+        }
+    }
+
     private final String NAME;
     private final Teams TEAM;
     private final List<Categories> CATEGORY = new ArrayList<>();
+    private Abilities ABILITY;
 
     Roles(@Nonnull String name, @Nonnull Teams team, @Nonnull Categories... categories) {
         Holder.MAP.put(name.toLowerCase(), this);
@@ -82,16 +89,28 @@ public enum Roles {
         return Holder.MAP.get(name.toLowerCase());
     }
 
+    @Nonnull
     public String getName() {
         return this.NAME;
     }
 
+    @Nonnull
     public Teams getTeam() {
         return this.TEAM;
     }
 
+    @Nonnull
     public List<Categories> getCategories() {
         return this.CATEGORY;
+    }
+
+    @Nonnull
+    public Abilities getAbility() {
+        return this.ABILITY;
+    }
+
+    private void setAbility(@Nonnull Abilities ability) {
+        this.ABILITY = ability;
     }
 
     private static class Holder {
