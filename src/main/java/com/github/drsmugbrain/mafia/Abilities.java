@@ -1,5 +1,8 @@
 package com.github.drsmugbrain.mafia;
 
+import com.github.drsmugbrain.mafia.chat.Channel;
+import com.github.drsmugbrain.mafia.chat.Chatter;
+import com.github.drsmugbrain.mafia.chat.Type;
 import com.github.drsmugbrain.mafia.events.EventDispatcher;
 import com.github.drsmugbrain.mafia.events.StatusEvent;
 import com.github.drsmugbrain.mafia.roles.RoleStatuses;
@@ -40,7 +43,20 @@ public enum Abilities {
     },
     CRIER("Crier") {
         @Override
-        protected void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
+        protected void onPhaseChange(@Nonnull Game game, @Nonnull Phase phase, @Nonnull Player target1, Player target2, @Nonnull Player player) {
+            Channel channel = game.getChat().getChannel(Type.TOWN);
+
+            switch (phase) {
+                case DAY:
+                    game.getChat().removeChatter(channel, player.getID());
+                    break;
+                case NIGHT:
+                    Chatter chatter = new Chatter(player);
+                    chatter.setAnonymous(true);
+                    game.getChat().addChatter(channel, chatter);
+                    break;
+            }
+        }
     },
     DETECTIVE("Detective") {
         @Override
@@ -265,7 +281,9 @@ public enum Abilities {
         return new ArrayList<>(this.PHASES);
     }
 
-    protected abstract void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2);
+    protected void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {};
+
+    protected void onPhaseChange(@Nonnull Game game, @Nonnull Phase phase, @Nonnull Player target1, Player target2, @Nonnull Player player) {}
 
     @Nonnull
     public static Abilities getAbility(@Nonnull String name) {
