@@ -17,7 +17,7 @@ public class Chatter {
     private String name;
     private boolean anonymous = false;
 
-    protected Chatter(@Nonnull Player player) {
+    public Chatter(@Nonnull Player player) {
         this.PLAYER = player;
         this.name = player.getName();
     }
@@ -56,7 +56,7 @@ public class Chatter {
     }
 
     @Nonnull
-    protected void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -64,7 +64,7 @@ public class Chatter {
         return this.anonymous;
     }
 
-    protected void setAnonymous(boolean anonymous) {
+    public void setAnonymous(boolean anonymous) {
         this.anonymous = anonymous;
     }
 

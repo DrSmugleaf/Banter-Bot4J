@@ -14,19 +14,24 @@ import java.util.*;
 public class Channel {
 
     private final Map<Long, Chatter> CHATTERS = new HashMap<>();
+    private final Type TYPE;
 
-    protected Channel(@Nonnull Chatter... chatters) {
+    protected Channel(@Nonnull Type type, @Nonnull Chatter... chatters) {
         for (Chatter chatter : chatters) {
             this.CHATTERS.put(chatter.getID(), chatter);
         }
+        this.TYPE = type;
     }
 
-    protected Channel(@Nonnull Collection<Chatter> chatters) {
-        this(chatters.toArray(new Chatter[chatters.size()]));
+    protected Channel(Type type, @Nonnull Collection<Chatter> chatters) {
+        this(type, chatters.toArray(new Chatter[chatters.size()]));
     }
 
     protected void addChatters(@Nonnull Chatter... chatters) {
         for (Chatter chatter : chatters) {
+            if (this.CHATTERS.containsValue(chatter)) {
+                continue;
+            }
             this.CHATTERS.put(chatter.getID(), chatter);
         }
     }
@@ -34,6 +39,18 @@ public class Channel {
     @Nonnull
     public Map<Long, Chatter> getChatters() {
         return this.CHATTERS;
+    }
+
+    protected void removeChatters(@Nonnull Long... ids) {
+        for (Long id : ids) {
+            this.CHATTERS.remove(id);
+        }
+    }
+
+    protected void removeChatters(@Nonnull Chatter... chatters) {
+        for (Chatter chatter : chatters) {
+            this.removeChatters(chatter.getID());
+        }
     }
 
     protected void setChatters(@Nonnull Chatter... chatters) {
@@ -53,6 +70,10 @@ public class Channel {
 
     protected void sendMessage(@Nonnull Game game, @Nonnull Player sender, @Nonnull String message) {
         this.sendMessage(game, this.CHATTERS.get(sender.getID()), message);
+    }
+
+    public Type getType() {
+        return this.TYPE;
     }
 
 }

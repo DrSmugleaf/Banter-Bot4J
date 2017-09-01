@@ -1,6 +1,7 @@
 package com.github.drsmugbrain.mafia;
 
 import com.github.drsmugbrain.mafia.chat.Chat;
+import com.github.drsmugbrain.mafia.chat.Type;
 import com.github.drsmugbrain.mafia.events.EventDispatcher;
 import com.github.drsmugbrain.mafia.events.GameStartEvent;
 import com.github.drsmugbrain.mafia.roles.Role;
@@ -76,7 +77,7 @@ public class Game {
         EventDispatcher.dispatch(new GameStartEvent(this));
 
         this.CYCLE.resume();
-        this.CHAT.createChannel(this.PLAYERS.values());
+        this.CHAT.createChannel(Type.TOWN, this.PLAYERS.values());
     }
 
     protected long getNextBotID() {
@@ -104,6 +105,10 @@ public class Game {
 
     public void sendMessage(long id, @Nonnull String message) {
         this.sendMessage(this.PLAYERS.get(id), message);
+    }
+
+    protected Chat getChat() {
+        return this.CHAT;
     }
 
 }
