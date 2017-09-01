@@ -13,7 +13,7 @@ public class ChatEvent extends MessageEvent {
     private final Chatter RECIPIENT;
     private final Chatter SENDER;
 
-    public ChatEvent(@Nonnull Game game, Chatter recipient, Chatter sender, String message) {
+    public ChatEvent(@Nonnull Game game, @Nonnull Chatter recipient, @Nonnull Chatter sender, @Nonnull String message) {
         super(game, recipient.getPlayer(), message);
         this.RECIPIENT = recipient;
         this.SENDER = sender;

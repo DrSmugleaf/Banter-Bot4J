@@ -12,7 +12,7 @@ public abstract class PlayerEvent extends Event {
 
     private final Player PLAYER;
 
-    public PlayerEvent(@Nonnull Game game, Player player) {
+    public PlayerEvent(@Nonnull Game game, @Nonnull Player player) {
         super(game);
         this.PLAYER = player;
     }
