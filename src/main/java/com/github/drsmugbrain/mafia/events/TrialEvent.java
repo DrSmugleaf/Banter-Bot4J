@@ -7,12 +7,12 @@ import com.github.drsmugbrain.mafia.Player;
 /**
  * Created by DrSmugleaf on 26/08/2017.
  */
-public abstract class LynchEvent extends PhaseChangeEvent {
+public abstract class TrialEvent extends PhaseChangeEvent {
 
     private final Player PLAYER;
 
-    public LynchEvent(Game game, Player player) {
-        super(game, Phase.LYNCH);
+    public TrialEvent(Game game, Player player) {
+        super(game, Phase.TRIAL);
         this.PLAYER = player;
     }
 

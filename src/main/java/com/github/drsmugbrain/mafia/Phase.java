@@ -8,8 +8,13 @@ import javax.annotation.Nonnull;
 public enum Phase {
 
     DAY("Day"),
+    TRIAL("Trial"),
+    VOTE("Vote"),
+    VOTE_RECOUNT("Vote Recount"),
+    LAST_WORDS("Last Words"),
+    EXECUTION("Execution"),
     NIGHT("Night"),
-    LYNCH("Lynch");
+    COURT("Court");
 
     private final String NAME;
 

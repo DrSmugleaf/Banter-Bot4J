@@ -1,5 +1,7 @@
 package com.github.drsmugbrain.mafia.roles;
 
+import com.github.drsmugbrain.mafia.Ability;
+
 import javax.annotation.Nonnull;
 
 /**

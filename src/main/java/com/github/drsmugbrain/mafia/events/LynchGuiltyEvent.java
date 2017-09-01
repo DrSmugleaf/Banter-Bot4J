@@ -6,7 +6,7 @@ import com.github.drsmugbrain.mafia.Player;
 /**
  * Created by DrSmugleaf on 26/08/2017.
  */
-public class LynchGuiltyEvent extends LynchEvent {
+public class LynchGuiltyEvent extends TrialEvent {
 
     public LynchGuiltyEvent(Game game, Player player) {
         super(game, player);

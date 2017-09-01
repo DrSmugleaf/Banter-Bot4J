@@ -93,4 +93,6 @@ public class Game {
         }
     }
 
+    protected void switchPlayers(Player player1, Player player2) {}
+
 }

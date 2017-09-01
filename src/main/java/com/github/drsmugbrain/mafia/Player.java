@@ -1,9 +1,13 @@
 package com.github.drsmugbrain.mafia;
 
 import com.github.drsmugbrain.mafia.roles.Role;
+import com.github.drsmugbrain.mafia.roles.RoleStatuses;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by DrSmugleaf on 24/08/2017.
@@ -14,6 +18,10 @@ public class Player {
     private final String NAME;
     private Role ROLE = null;
     private boolean bot = false;
+    private final List<RoleStatuses> STATUSES = new ArrayList<>();
+    private Player target = null;
+    private PlayerStates state = null;
+    private boolean anonymous = false;
 
     public Player(@Nonnull Long id, @Nonnull String name) {
         this.ID = id;
@@ -33,7 +41,7 @@ public class Player {
         return this.ROLE;
     }
 
-    protected void setRole(Role role) {
+    protected void setRole(@Nonnull Role role) {
         this.ROLE = role;
     }
 
@@ -44,4 +52,53 @@ public class Player {
     public void setBot(boolean bool) {
         this.bot = bool;
     }
+
+    public List<RoleStatuses> getStatuses() {
+        return new ArrayList<>(this.STATUSES);
+    }
+
+    protected void addStatuses(@Nonnull RoleStatuses... statuses) {
+        Collections.addAll(this.STATUSES, statuses);
+    }
+
+    protected void resetStatuses() {
+        this.STATUSES.clear();
+    }
+
+    public Player getTarget() {
+        return this.target;
+    }
+
+    protected void setTarget(@Nonnull Player target) {
+        this.target = target;
+    }
+
+    protected void resetTarget() {
+        this.target = null;
+    }
+
+    public PlayerStates getState() {
+        return this.state;
+    }
+
+    protected void setState(@Nonnull PlayerStates state) {
+        this.state = state;
+    }
+
+    protected void resetState() {
+        this.state = null;
+    }
+
+    public boolean isAnonymous() {
+        return this.anonymous;
+    }
+
+    protected void setAnonymous(boolean bool) {
+        this.anonymous = bool;
+    }
+
+    protected void resetAnonymous() {
+        this.anonymous = false;
+    }
+
 }

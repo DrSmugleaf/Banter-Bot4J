@@ -1,4 +1,4 @@
-package com.github.drsmugbrain.mafia.roles;
+package com.github.drsmugbrain.mafia;
 
 import javax.annotation.Nonnull;
 
@@ -10,7 +10,7 @@ public class Ability {
     private final Abilities ABILITY;
     private int usesLeft;
 
-    Ability(@Nonnull Abilities ability) {
+    public Ability(@Nonnull Abilities ability) {
         this.ABILITY = ability;
     }
 
