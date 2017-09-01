@@ -28,14 +28,16 @@ public class Cycle implements Runnable {
         this.timeLeft = game.getSetup().getSettings().getDayLength();
     }
 
+    @Nonnull
     public Phase getPhase() {
         return this.PHASE;
     }
 
-    protected void setPhase(Phase phase) {
+    protected void setPhase(@Nonnull Phase phase) {
         this.PHASE = phase;
     }
 
+    @Nonnull
     public Game getGame() {
         return this.GAME;
     }

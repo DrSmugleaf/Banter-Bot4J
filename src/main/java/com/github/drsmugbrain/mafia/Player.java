@@ -27,10 +27,12 @@ public class Player {
         this.NAME = name;
     }
 
+    @Nonnull
     public Long getID() {
         return this.ID;
     }
 
+    @Nonnull
     public String getName() {
         return this.NAME;
     }
@@ -52,6 +54,7 @@ public class Player {
         this.bot = bool;
     }
 
+    @Nonnull
     public List<RoleStatuses> getStatuses() {
         return new ArrayList<>(this.STATUSES);
     }
@@ -64,6 +67,7 @@ public class Player {
         this.STATUSES.clear();
     }
 
+    @Nonnull
     public Player getTarget() {
         return this.target;
     }
@@ -76,6 +80,7 @@ public class Player {
         this.target = null;
     }
 
+    @Nonnull
     public PlayerStates getState() {
         return this.state;
     }

@@ -15,6 +15,7 @@ public abstract class Event {
         this.GAME = game;
     }
 
+    @Nonnull
     public Game getGame() {
         return this.GAME;
     }

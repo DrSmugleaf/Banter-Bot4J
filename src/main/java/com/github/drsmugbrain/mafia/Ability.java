@@ -14,6 +14,7 @@ public class Ability {
         this.ABILITY = ability;
     }
 
+    @Nonnull
     protected Abilities getBaseAbility() {
         return this.ABILITY;
     }

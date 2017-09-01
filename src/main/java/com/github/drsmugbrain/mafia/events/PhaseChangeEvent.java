@@ -17,6 +17,7 @@ public abstract class PhaseChangeEvent extends Event {
         this.PHASE = phase;
     }
 
+    @Nonnull
     public Phase getPhase() {
         return this.PHASE;
     }

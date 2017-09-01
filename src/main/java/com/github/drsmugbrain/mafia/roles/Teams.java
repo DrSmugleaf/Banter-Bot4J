@@ -19,6 +19,7 @@ public enum Teams {
         this.NAME = name;
     }
 
+    @Nonnull
     public String getName() {
         return this.NAME;
     }

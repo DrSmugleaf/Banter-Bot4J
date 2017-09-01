@@ -24,14 +24,17 @@ public class Setup {
         this.SETTINGS = settings;
     }
 
+    @Nonnull
     public List<Roles> getRoles() {
         return this.ROLES;
     }
 
+    @Nonnull
     public Settings getSettings() {
         return this.SETTINGS;
     }
 
+    @Nonnull
     public static Setup random() {
         List<Roles> roles = new ArrayList<>();
         List<Categories> categories = new ArrayList<>();
@@ -55,6 +58,7 @@ public class Setup {
         return new Setup(roles, categories, Settings.getDefault());
     }
 
+    @Nonnull
     public static Setup importSetup(String string) throws ParseException {
         String[] stringArray = string.split("\r?\n");
         List<Roles> roles = new ArrayList<>();

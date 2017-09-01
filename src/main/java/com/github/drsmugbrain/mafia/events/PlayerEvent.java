@@ -17,6 +17,7 @@ public abstract class PlayerEvent extends Event {
         this.PLAYER = player;
     }
 
+    @Nonnull
     public Player getPlayer() {
         return this.PLAYER;
     }

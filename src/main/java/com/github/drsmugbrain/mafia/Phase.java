@@ -22,6 +22,7 @@ public enum Phase {
         this.NAME = name;
     }
 
+    @Nonnull
     public String getName() {
         return this.NAME;
     }

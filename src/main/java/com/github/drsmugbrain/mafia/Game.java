@@ -96,13 +96,13 @@ public class Game {
         }
     }
 
-    protected void switchPlayers(Player player1, Player player2) {}
+    protected void switchPlayers(@Nonnull Player player1, @Nonnull Player player2) {}
 
-    private void sendMessage(Player player, String message) {
+    private void sendMessage(@Nonnull Player player, @Nonnull String message) {
         this.CHAT.sendMessage(this, player, message);
     }
 
-    public void sendMessage(long id, String message) {
+    public void sendMessage(long id, @Nonnull String message) {
         this.sendMessage(this.PLAYERS.get(id), message);
     }
 

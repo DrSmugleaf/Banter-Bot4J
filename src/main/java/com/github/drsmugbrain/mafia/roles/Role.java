@@ -22,6 +22,7 @@ public class Role {
         return this.BASE_ROLE;
     }
 
+    @Nonnull
     public Ability getAbility() {
         return this.ABILITY;
     }

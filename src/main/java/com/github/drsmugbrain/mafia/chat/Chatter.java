@@ -22,7 +22,8 @@ public class Chatter {
         this.name = player.getName();
     }
 
-    protected static List<Chatter> toChatters(Collection<Player> players) {
+    @Nonnull
+    protected static List<Chatter> toChatters(@Nonnull Collection<Player> players) {
         List<Chatter> chatters = new ArrayList<>();
 
         for (Player player : players) {
@@ -36,7 +37,7 @@ public class Chatter {
     }
 
     @Nonnull
-    protected static List<Chatter> toChatters(Player... players) {
+    protected static List<Chatter> toChatters(@Nonnull Player... players) {
         return Chatter.toChatters(Arrays.asList(players));
     }
 
@@ -54,6 +55,7 @@ public class Chatter {
         return this.name;
     }
 
+    @Nonnull
     protected void setName(String name) {
         this.name = name;
     }

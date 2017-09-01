@@ -1,5 +1,7 @@
 package com.github.drsmugbrain.mafia.settings;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by DrSmugleaf on 25/08/2017.
  */
@@ -21,6 +23,7 @@ public class Settings {
 
     public Settings() {}
 
+    @Nonnull
     public static Settings getDefault() {
         Settings settings = new Settings();
 
@@ -46,6 +49,7 @@ public class Settings {
         return DAY_LENGTH;
     }
 
+    @Nonnull
     public Settings setDayLength(int length) {
         this.DAY_LENGTH = length;
         return this;
@@ -55,6 +59,7 @@ public class Settings {
         return NIGHT_LENGTH;
     }
 
+    @Nonnull
     public Settings setNightLength(int length) {
         this.NIGHT_LENGTH = length;
         return this;
@@ -64,6 +69,7 @@ public class Settings {
         return DISCUSSION_TIME;
     }
 
+    @Nonnull
     public Settings setDiscussionTime(int time) {
         this.DISCUSSION_TIME = time;
         return this;
@@ -73,16 +79,19 @@ public class Settings {
         return TRIAL_LENGTH;
     }
 
+    @Nonnull
     public Settings setTrialLength(int length) {
         this.TRIAL_LENGTH = length;
         return this;
     }
 
+    @Nonnull
     public DayType getDayType() {
         return DAY_TYPE;
     }
 
-    public Settings setDayType(DayType type) {
+    @Nonnull
+    public Settings setDayType(@Nonnull DayType type) {
         this.DAY_TYPE = type;
         return this;
     }
@@ -91,25 +100,30 @@ public class Settings {
         return LAST_WILL_ALLOWED;
     }
 
+    @Nonnull
     public Settings setLastWillAllowed(boolean bool) {
         this.LAST_WILL_ALLOWED = bool;
         return this;
     }
 
+    @Nonnull
     public GameStart getGameStart() {
         return GAME_START;
     }
 
-    public Settings setGameStart(GameStart startAt) {
+    @Nonnull
+    public Settings setGameStart(@Nonnull GameStart startAt) {
         this.GAME_START = startAt;
         return this;
     }
 
+    @Nonnull
     public NightTimeActions getNightTimeActions() {
         return NIGHT_TIME_ACTIONS;
     }
 
-    public Settings setNightTimeActions(NightTimeActions actions) {
+    @Nonnull
+    public Settings setNightTimeActions(@Nonnull NightTimeActions actions) {
         this.NIGHT_TIME_ACTIONS = actions;
         return this;
     }
@@ -118,6 +132,7 @@ public class Settings {
         return PM_ALLOWED;
     }
 
+    @Nonnull
     public Settings setPmAllowed(boolean bool) {
         this.PM_ALLOWED = bool;
         return this;
@@ -127,6 +142,7 @@ public class Settings {
         return DISCUSSION_PHASE;
     }
 
+    @Nonnull
     public Settings setDiscussionPhase(boolean bool) {
         this.DISCUSSION_PHASE = bool;
         return this;
@@ -136,6 +152,7 @@ public class Settings {
         return TRIAL_PAUSES_DAY;
     }
 
+    @Nonnull
     public Settings setTrialPausesDay(boolean bool) {
         this.TRIAL_PAUSES_DAY = bool;
         return this;
@@ -145,6 +162,7 @@ public class Settings {
         return TRIAL_DEFENSE;
     }
 
+    @Nonnull
     public Settings setTrialDefense(boolean bool) {
         this.TRIAL_DEFENSE = bool;
         return this;
@@ -154,6 +172,7 @@ public class Settings {
         return CHOOSE_NAMES;
     }
 
+    @Nonnull
     public Settings setChooseNames(boolean bool) {
         this.CHOOSE_NAMES = bool;
         return this;

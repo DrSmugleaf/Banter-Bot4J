@@ -249,22 +249,25 @@ public enum Abilities {
     private final String NAME;
     private final List<Phase> PHASES = new ArrayList<>();
 
-    Abilities(@Nonnull String name, Phase... phase) {
+    Abilities(@Nonnull String name, @Nonnull Phase... phase) {
         Holder.MAP.put(name.toLowerCase(), this);
         this.NAME = name;
         Collections.addAll(this.PHASES, phase);
     }
 
+    @Nonnull
     public String getName() {
         return this.NAME;
     }
 
+    @Nonnull
     public List<Phase> getPhases() {
         return new ArrayList<>(this.PHASES);
     }
 
     protected abstract void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2);
 
+    @Nonnull
     public static Abilities getAbility(@Nonnull String name) {
         return Holder.MAP.get(name.toLowerCase());
     }

@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 public enum Messages {
 
     CORONER("Coroner") {
+        @Nonnull
         @Override
         public String getMessage(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, @Nonnull Player target2) {
             return String.format("%s's role was %s", target1.getName(), target1.getRole());
@@ -20,6 +21,7 @@ public enum Messages {
         this.NAME = name;
     }
 
+    @Nonnull
     public String getName() {
         return this.NAME;
     }

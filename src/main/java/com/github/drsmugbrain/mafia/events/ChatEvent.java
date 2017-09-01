@@ -19,14 +19,17 @@ public class ChatEvent extends MessageEvent {
         this.SENDER = sender;
     }
 
+    @Nonnull
     public Chatter getRecipient() {
         return this.RECIPIENT;
     }
 
+    @Nonnull
     public Chatter getSender() {
         return this.SENDER;
     }
 
+    @Nonnull
     public String getFormattedMessage() {
         return this.getSender().getName() + ": " + this.getMessage();
     }

@@ -11,6 +11,7 @@ import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IPrivateChannel;
 import sx.blah.discord.handle.obj.IUser;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,10 +28,10 @@ public class Mafia {
     }
 
     @Command
-    public static void mafia(MessageReceivedEvent event, List<String> args) {}
+    public static void mafia(@Nonnull MessageReceivedEvent event, @Nonnull List<String> args) {}
 
     @Command
-    public static void mafiadev(MessageReceivedEvent event, List<String> args) {
+    public static void mafiadev(@Nonnull MessageReceivedEvent event, @Nonnull List<String> args) {
         Long authorID = event.getAuthor().getLongID();
         String authorName = event.getAuthor().getName();
 
@@ -44,10 +45,9 @@ public class Mafia {
     }
 
     @EventSubscriber
-    public static void handle(MessageReceivedEvent event) {
-        IUser author = event.getAuthor();
+    public static void handle(@Nonnull MessageReceivedEvent event) {
         long authorID = event.getAuthor().getLongID();
-        if (!Mafia.GAMES.containsKey(author.getLongID())) {
+        if (!Mafia.GAMES.containsKey(authorID)) {
             return;
         }
         if (!event.getChannel().isPrivate()) {
@@ -58,42 +58,33 @@ public class Mafia {
     }
 
     @MafiaEventHandler(event = ChatEvent.class)
-    public static void handle(ChatEvent event) {
-        IChannel channel = Bot.client.fetchUser(event.getRecipient().getID()).getOrCreatePMChannel();
+    public static void handle(@Nonnull ChatEvent event) {
+        IChannel channel = Bot.fetchUser(event.getRecipient().getID()).getOrCreatePMChannel();
         Bot.sendMessage(channel, event.getFormattedMessage());
     }
 
     @MafiaEventHandler(event = GameStartEvent.class)
-    public static void handle(GameStartEvent event) {
-        for (Player player : event.getGame().getPlayers().values()) {
-            if (player.isBot()) {
-                continue;
-            }
-            IUser user = Bot.client.fetchUser(player.getID());
+    public static void handle(@Nonnull GameStartEvent event) {
+        for (Player player : event.getGame().getHumanPlayers().values()) {
+            IUser user = Bot.fetchUser(player.getID());
             IPrivateChannel channel = user.getOrCreatePMChannel();
             channel.sendMessage("Your role is " + player.getRole().getBaseRole().getName());
         }
     }
 
     @MafiaEventHandler(event = DayStartEvent.class)
-    public static void handle(DayStartEvent event) {
-        for (Player player : event.getGame().getPlayers().values()) {
-            if (player.isBot()) {
-                continue;
-            }
-            IUser user = Bot.client.fetchUser(player.getID());
+    public static void handle(@Nonnull DayStartEvent event) {
+        for (Player player : event.getGame().getHumanPlayers().values()) {
+            IUser user = Bot.fetchUser(player.getID());
             IPrivateChannel channel = user.getOrCreatePMChannel();
             channel.sendMessage("Day: " + event.getGame().getCycle().getDay());
         }
     }
 
     @MafiaEventHandler(event = NightStartEvent.class)
-    public static void handle(NightStartEvent event) {
-        for (Player player : event.getGame().getPlayers().values()) {
-            if (player.isBot()) {
-                continue;
-            }
-            IUser user = Bot.client.fetchUser(player.getID());
+    public static void handle(@Nonnull NightStartEvent event) {
+        for (Player player : event.getGame().getHumanPlayers().values()) {
+            IUser user = Bot.fetchUser(player.getID());
             IPrivateChannel channel = user.getOrCreatePMChannel();
             channel.sendMessage("Night: " + event.getGame().getCycle().getDay());
         }

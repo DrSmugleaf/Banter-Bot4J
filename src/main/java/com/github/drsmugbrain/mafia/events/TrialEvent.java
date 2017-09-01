@@ -18,6 +18,7 @@ public abstract class TrialEvent extends PhaseChangeEvent {
         this.PLAYER = player;
     }
 
+    @Nonnull
     public Player getPlayer() {
         return this.PLAYER;
     }

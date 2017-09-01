@@ -17,6 +17,7 @@ public abstract class MessageEvent extends PlayerEvent {
         this.MESSAGE = message;
     }
 
+    @Nonnull
     public String getMessage() {
         return this.MESSAGE;
     }

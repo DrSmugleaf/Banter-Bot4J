@@ -161,23 +161,28 @@ public enum Categories {
         this.TEAM = team;
     }
 
+    @Nonnull
     public static Categories getCategory(@Nonnull String name) {
         return Holder.MAP.get(name.toLowerCase());
     }
 
+    @Nonnull
     public String getName() {
         return this.NAME;
     }
 
+    @Nonnull
     public Teams getTeam() {
         return this.TEAM;
     }
 
+    @Nonnull
     public List<Roles> getRoles() {
         return this.ROLES;
     }
 
-    private Categories addRoles(Roles... roles) {
+    @Nonnull
+    private Categories addRoles(@Nonnull Roles... roles) {
         for (Roles role : roles) {
             if (this.ROLES.contains(role)) {
                 continue;
@@ -187,12 +192,14 @@ public enum Categories {
         return this;
     }
 
-    private Categories setRoles(Roles... roles) {
+    @Nonnull
+    private Categories setRoles(@Nonnull Roles... roles) {
         this.ROLES.clear();
         return this.addRoles(roles);
     }
 
-    private Categories setRoles(List<Roles>... roles) {
+    @Nonnull
+    private Categories setRoles(@Nonnull List<Roles>... roles) {
         List<Roles> list = new ArrayList<>();
         for (List<Roles> roleList : roles) {
             list.addAll(roleList);
@@ -200,7 +207,8 @@ public enum Categories {
         return this.setRoles(list.toArray(new Roles[list.size()]));
     }
 
-    private Categories setRoles(Categories... categories) {
+    @Nonnull
+    private Categories setRoles(@Nonnull Categories... categories) {
         List<Roles> list = new ArrayList<>();
         for (Categories category : categories) {
             list.addAll(category.getRoles());
@@ -208,6 +216,7 @@ public enum Categories {
         return this.setRoles(list.toArray(new Roles[list.size()]));
     }
 
+    @Nonnull
     public Roles random() {
         int randomIndex = ThreadLocalRandom.current().nextInt(this.ROLES.size());
         return this.ROLES.get(randomIndex);
