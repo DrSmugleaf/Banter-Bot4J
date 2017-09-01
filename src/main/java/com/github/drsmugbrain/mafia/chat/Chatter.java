@@ -15,10 +15,11 @@ public class Chatter {
 
     private final Player PLAYER;
     private String name;
-    private boolean anonymous;
+    private boolean anonymous = false;
 
     protected Chatter(@Nonnull Player player) {
         this.PLAYER = player;
+        this.name = player.getName();
     }
 
     protected static List<Chatter> toChatters(Collection<Player> players) {
@@ -50,7 +51,7 @@ public class Chatter {
 
     @Nonnull
     public String getName() {
-        return name;
+        return this.name;
     }
 
     protected void setName(String name) {
@@ -58,7 +59,7 @@ public class Chatter {
     }
 
     public boolean isAnonymous() {
-        return anonymous;
+        return this.anonymous;
     }
 
     protected void setAnonymous(boolean anonymous) {
