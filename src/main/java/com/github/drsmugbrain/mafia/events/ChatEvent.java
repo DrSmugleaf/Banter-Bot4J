@@ -1,6 +1,6 @@
 package com.github.drsmugbrain.mafia.events;
 
-import com.github.drsmugbrain.mafia.Chatter;
+import com.github.drsmugbrain.mafia.chat.Chatter;
 import com.github.drsmugbrain.mafia.Game;
 
 import javax.annotation.Nonnull;

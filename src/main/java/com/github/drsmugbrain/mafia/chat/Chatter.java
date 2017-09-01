@@ -1,6 +1,12 @@
-package com.github.drsmugbrain.mafia;
+package com.github.drsmugbrain.mafia.chat;
+
+import com.github.drsmugbrain.mafia.Player;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by DrSmugleaf on 01/09/2017.
@@ -15,6 +21,25 @@ public class Chatter {
         this.PLAYER = player;
     }
 
+    protected static List<Chatter> toChatters(Collection<Player> players) {
+        List<Chatter> chatters = new ArrayList<>();
+
+        for (Player player : players) {
+            if (player.isBot()) {
+                continue;
+            }
+            chatters.add(new Chatter(player));
+        }
+
+        return chatters;
+    }
+
+    @Nonnull
+    protected static List<Chatter> toChatters(Player... players) {
+        return Chatter.toChatters(Arrays.asList(players));
+    }
+
+    @Nonnull
     public Player getPlayer() {
         return this.PLAYER;
     }
@@ -23,6 +48,7 @@ public class Chatter {
         return this.PLAYER.getID();
     }
 
+    @Nonnull
     public String getName() {
         return name;
     }

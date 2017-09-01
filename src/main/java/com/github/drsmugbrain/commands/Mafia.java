@@ -46,6 +46,7 @@ public class Mafia {
     @EventSubscriber
     public static void handle(MessageReceivedEvent event) {
         IUser author = event.getAuthor();
+        long authorID = event.getAuthor().getLongID();
         if (!Mafia.GAMES.containsKey(author.getLongID())) {
             return;
         }
@@ -53,12 +54,13 @@ public class Mafia {
             return;
         }
 
-        Map<Long, Player> players = Mafia.GAMES.get(author.getLongID()).getHumanPlayers();
-        players.remove(author.getLongID());
-        players.forEach((id, player) -> {
-            IChannel channel = Bot.client.fetchUser(id).getOrCreatePMChannel();
-            Bot.sendMessage(channel, player.getName() + ": " + event.getMessage().getContent());
-        });
+        Mafia.GAMES.get(authorID).sendMessage(authorID, event.getMessage().getContent());
+    }
+
+    @MafiaEventHandler(event = ChatEvent.class)
+    public static void handle(ChatEvent event) {
+        IChannel channel = Bot.client.fetchUser(event.getRecipient().getID()).getOrCreatePMChannel();
+        Bot.sendMessage(channel, event.getMessage());
     }
 
     @MafiaEventHandler(event = GameStartEvent.class)

@@ -1,5 +1,6 @@
 package com.github.drsmugbrain.mafia;
 
+import com.github.drsmugbrain.mafia.chat.Chat;
 import com.github.drsmugbrain.mafia.events.EventDispatcher;
 import com.github.drsmugbrain.mafia.events.GameStartEvent;
 import com.github.drsmugbrain.mafia.roles.Role;
@@ -19,6 +20,7 @@ public class Game {
     private final List<Player> PLAYERS_DISPLAY = new ArrayList<>();
     private final Cycle CYCLE;
     private boolean started = false;
+    private final Chat CHAT = new Chat();
 
     public Game(@Nonnull Setup setup, @Nonnull Map<Long, Player> players) {
         this.SETUP = setup;
@@ -74,6 +76,7 @@ public class Game {
         EventDispatcher.dispatch(new GameStartEvent(this));
 
         this.CYCLE.resume();
+        this.CHAT.createChannel(this.PLAYERS.values());
     }
 
     protected long getNextBotID() {
@@ -94,5 +97,13 @@ public class Game {
     }
 
     protected void switchPlayers(Player player1, Player player2) {}
+
+    private void sendMessage(Player player, String message) {
+        this.CHAT.sendMessage(this, player, message);
+    }
+
+    public void sendMessage(long id, String message) {
+        this.sendMessage(this.PLAYERS.get(id), message);
+    }
 
 }
