@@ -68,11 +68,15 @@ public enum Abilities {
     },
     DOCTOR("Doctor") {
         @Override
-        protected void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
+        protected void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {
+            target1.addStatuses(RoleStatuses.HEALED);
+        }
     },
     ESCORT("Escort") {
         @Override
-        protected void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
+        protected void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {
+            target1.addStatuses(RoleStatuses.ROLEBLOCKED);
+        }
     },
     INVESTIGATOR("Investigator") {
         @Override

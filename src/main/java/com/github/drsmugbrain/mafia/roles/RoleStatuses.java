@@ -8,7 +8,9 @@ import javax.annotation.Nonnull;
 public enum RoleStatuses {
 
     BODYGUARDED("Bodyguarded"),
-    BULLETPROOF_VEST("Bulletproof Vest");
+    BULLETPROOF_VEST("Bulletproof Vest"),
+    HEALED("Healed"),
+    ROLEBLOCKED("Roleblocked");
 
     private final String NAME;
 
