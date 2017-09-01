@@ -111,4 +111,17 @@ public class Game {
         return this.CHAT;
     }
 
+    @Nonnull
+    protected List<Player> getTargetedBy(Player player) {
+        List<Player> targetedBy = new ArrayList<>();
+
+        for (Player player1 : this.PLAYERS.values()) {
+            if (player1.getTarget() == player) {
+                targetedBy.add(player1);
+            }
+        }
+
+        return targetedBy;
+    }
+
 }

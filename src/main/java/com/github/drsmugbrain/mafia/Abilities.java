@@ -60,7 +60,11 @@ public enum Abilities {
     },
     DETECTIVE("Detective") {
         @Override
-        protected void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
+        protected void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {
+            String message = Messages.DETECTIVE.getMessage(game, player, target1, target2);
+            StatusEvent event = new StatusEvent(game, player, message);
+            EventDispatcher.dispatch(event);
+        }
     },
     DOCTOR("Doctor") {
         @Override

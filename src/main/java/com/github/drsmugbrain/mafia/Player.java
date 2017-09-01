@@ -67,7 +67,7 @@ public class Player {
         this.STATUSES.clear();
     }
 
-    @Nonnull
+    @Nullable
     public Player getTarget() {
         return this.target;
     }

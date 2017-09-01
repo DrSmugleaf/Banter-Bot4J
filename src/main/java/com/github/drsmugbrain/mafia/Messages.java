@@ -13,6 +13,17 @@ public enum Messages {
         public String getMessage(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, @Nonnull Player target2) {
             return String.format("%s's role was %s", target1.getName(), target1.getRole());
         }
+    },
+    DETECTIVE("Detective") {
+        @Nonnull
+        @Override
+        public String getMessage(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, @Nonnull Player target2) {
+            if (target1.getTarget() == null) {
+                return String.format("%s didn't visit anyone today", target1.getName());
+            }
+
+            return String.format("%s visited %s today", target1.getName(), target1.getTarget().getName());
+        }
     };
 
     private final String NAME;
