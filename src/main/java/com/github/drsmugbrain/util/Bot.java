@@ -46,6 +46,7 @@ public class Bot {
                 channel.sendMessage(message);
             } catch (DiscordException e) {
                 Bot.LOGGER.error("Message could not be sent", e);
+                throw e;
             }
         });
     }
@@ -58,6 +59,7 @@ public class Bot {
                 user[0] = Bot.client.fetchUser(id);
             } catch (DiscordException e) {
                 Bot.LOGGER.error("User couldn't be fetched", e);
+                throw e;
             }
         }).get();
 
