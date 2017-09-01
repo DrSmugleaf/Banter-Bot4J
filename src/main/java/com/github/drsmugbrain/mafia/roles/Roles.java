@@ -45,10 +45,10 @@ public enum Roles {
 
     ADMINISTRATOR("Administrator", Teams.TRIAD, Categories.TRIAD_SUPPORT),
     DECEIVER("Deceiver", Teams.TRIAD, Categories.TRIAD_DECEPTION),
-    DRAGON_HEAD("Head", Teams.TRIAD, Categories.TRIAD_KILLING),
+    DRAGON_HEAD("Dragon Head", Teams.TRIAD, Categories.TRIAD_KILLING),
     ENFORCER("Enforcer", Teams.TRIAD, Categories.TRIAD_KILLING),
     FORGER("Forger", Teams.TRIAD, Categories.TRIAD_DECEPTION),
-    INCENSE_MASTER("Master", Teams.TRIAD, Categories.TRIAD_DECEPTION),
+    INCENSE_MASTER("Incense Master", Teams.TRIAD, Categories.TRIAD_DECEPTION),
     INFORMANT("Informant", Teams.TRIAD, Categories.TRIAD_DECEPTION, Categories.TRIAD_KILLING),
     INTERROGATOR("Interrogator", Teams.TRIAD, Categories.TRIAD_KILLING, Categories.TRIAD_SUPPORT),
     LIAISON("Liaison", Teams.TRIAD, Categories.TRIAD_SUPPORT),
@@ -62,16 +62,16 @@ public enum Roles {
     EXECUTIONER("Executioner", Teams.NEUTRAL, Categories.NEUTRAL_BENIGN),
     JESTER("Jester", Teams.NEUTRAL, Categories.NEUTRAL_BENIGN),
     JUDGE("Judge", Teams.NEUTRAL),
-    MASS_MURDERER("Murderer", Teams.NEUTRAL, Categories.NEUTRAL_EVIL, Categories.NEUTRAL_KILLING),
+    MASS_MURDERER("Mass Murderer", Teams.NEUTRAL, Categories.NEUTRAL_EVIL, Categories.NEUTRAL_KILLING),
     SCUMBAG("Scumbag", Teams.NEUTRAL, Categories.NEUTRAL_EVIL),
-    SERIAL_KILLER("Killer", Teams.NEUTRAL, Categories.NEUTRAL_EVIL, Categories.NEUTRAL_KILLING),
+    SERIAL_KILLER("Serial Killer", Teams.NEUTRAL, Categories.NEUTRAL_EVIL, Categories.NEUTRAL_KILLING),
     SURVIVOR("Survivor", Teams.NEUTRAL, Categories.NEUTRAL_BENIGN),
     WITCH("Witch", Teams.NEUTRAL, Categories.NEUTRAL_EVIL),
     WITCH_DOCTOR("Witch Doctor", Teams.NEUTRAL, Categories.NEUTRAL_EVIL);
 
     static {
-        for (Roles roles : Roles.values()) {
-            roles.setAbility(Abilities.getAbility(roles.getName()));
+        for (Roles role : Roles.values()) {
+            role.setAbility(Abilities.getAbility(role.getName()));
         }
     }
 
