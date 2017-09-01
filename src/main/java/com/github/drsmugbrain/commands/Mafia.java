@@ -60,7 +60,7 @@ public class Mafia {
     @MafiaEventHandler(event = ChatEvent.class)
     public static void handle(ChatEvent event) {
         IChannel channel = Bot.client.fetchUser(event.getRecipient().getID()).getOrCreatePMChannel();
-        Bot.sendMessage(channel, event.getMessage());
+        Bot.sendMessage(channel, event.getFormattedMessage());
     }
 
     @MafiaEventHandler(event = GameStartEvent.class)

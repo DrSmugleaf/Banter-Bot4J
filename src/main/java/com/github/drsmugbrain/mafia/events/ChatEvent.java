@@ -27,4 +27,8 @@ public class ChatEvent extends MessageEvent {
         return this.SENDER;
     }
 
+    public String getFormattedMessage() {
+        return this.getSender().getName() + ": " + this.getMessage();
+    }
+
 }
