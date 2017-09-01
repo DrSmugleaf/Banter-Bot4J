@@ -1,7 +1,7 @@
 package com.github.drsmugbrain.mafia.events;
 
+import com.github.drsmugbrain.mafia.Chatter;
 import com.github.drsmugbrain.mafia.Game;
-import com.github.drsmugbrain.mafia.Player;
 
 import javax.annotation.Nonnull;
 
@@ -10,8 +10,21 @@ import javax.annotation.Nonnull;
  */
 public class ChatEvent extends MessageEvent {
 
-    public ChatEvent(@Nonnull Game game, Player player, String message) {
-        super(game, player, message);
+    private final Chatter RECIPIENT;
+    private final Chatter SENDER;
+
+    public ChatEvent(@Nonnull Game game, Chatter recipient, Chatter sender, String message) {
+        super(game, recipient.getPlayer(), message);
+        this.RECIPIENT = recipient;
+        this.SENDER = sender;
+    }
+
+    public Chatter getRecipient() {
+        return this.RECIPIENT;
+    }
+
+    public Chatter getSender() {
+        return this.SENDER;
     }
 
 }

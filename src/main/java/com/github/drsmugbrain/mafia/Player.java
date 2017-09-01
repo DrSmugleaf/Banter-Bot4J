@@ -21,7 +21,6 @@ public class Player {
     private final List<RoleStatuses> STATUSES = new ArrayList<>();
     private Player target = null;
     private PlayerStates state = null;
-    private boolean anonymous = false;
 
     public Player(@Nonnull Long id, @Nonnull String name) {
         this.ID = id;
@@ -87,18 +86,6 @@ public class Player {
 
     protected void resetState() {
         this.state = null;
-    }
-
-    public boolean isAnonymous() {
-        return this.anonymous;
-    }
-
-    protected void setAnonymous(boolean bool) {
-        this.anonymous = bool;
-    }
-
-    protected void resetAnonymous() {
-        this.anonymous = false;
     }
 
 }
