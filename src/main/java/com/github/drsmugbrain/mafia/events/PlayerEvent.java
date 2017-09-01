@@ -3,26 +3,22 @@ package com.github.drsmugbrain.mafia.events;
 import com.github.drsmugbrain.mafia.Game;
 import com.github.drsmugbrain.mafia.Player;
 
+import javax.annotation.Nonnull;
+
 /**
- * Created by DrSmugleaf on 31/08/2017.
+ * Created by DrSmugleaf on 01/09/2017.
  */
-public class PrivatePlayerEvent extends Event {
+public abstract class PlayerEvent extends Event {
 
     private final Player PLAYER;
-    private final String MESSAGE;
 
-    public PrivatePlayerEvent(Game game, Player player, String message) {
+    public PlayerEvent(@Nonnull Game game, Player player) {
         super(game);
         this.PLAYER = player;
-        this.MESSAGE = message;
     }
 
     public Player getPlayer() {
         return this.PLAYER;
-    }
-
-    public String getMessage() {
-        return this.MESSAGE;
     }
 
 }

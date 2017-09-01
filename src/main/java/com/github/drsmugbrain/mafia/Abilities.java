@@ -1,7 +1,7 @@
 package com.github.drsmugbrain.mafia;
 
 import com.github.drsmugbrain.mafia.events.EventDispatcher;
-import com.github.drsmugbrain.mafia.events.PrivatePlayerEvent;
+import com.github.drsmugbrain.mafia.events.StatusEvent;
 import com.github.drsmugbrain.mafia.roles.RoleStatuses;
 
 import javax.annotation.Nonnull;
@@ -34,7 +34,7 @@ public enum Abilities {
         @Override
         protected void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {
             String message = Messages.CORONER.getMessage(game, player, target1, target2);
-            PrivatePlayerEvent event = new PrivatePlayerEvent(game, player, message);
+            StatusEvent event = new StatusEvent(game, player, message);
             EventDispatcher.dispatch(event);
         }
     },
