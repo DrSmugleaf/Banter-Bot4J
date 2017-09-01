@@ -59,7 +59,7 @@ public class Bot {
             } catch (DiscordException e) {
                 Bot.LOGGER.error("User couldn't be fetched", e);
             }
-        });
+        }).get();
 
         return user[0];
     }
