@@ -43,12 +43,20 @@ public enum Crime {
                 Roles.BEGUILER,
                 Roles.SERIAL_KILLER,
                 Roles.ARSONIST,
-                Roles.MASS_MURDERER
+                Roles.MASS_MURDERER,
+                Roles.ADMINISTRATOR,
+                Roles.DECEIVER,
+                Roles.DRAGON_HEAD,
+                Roles.ENFORCER,
+                Roles.FORGER,
+                Roles.INCENSE_MASTER,
+                Roles.VANGUARD
         );
 
         Crime.KIDNAPPING.setRoles(
                 Roles.JAILOR,
-                Roles.KIDNAPPER
+                Roles.KIDNAPPER,
+                Roles.INTERROGATOR
         );
 
         Crime.NO_CRIME.setRoles(
@@ -63,7 +71,8 @@ public enum Crime {
                 Roles.JESTER,
                 Roles.WITCH,
                 Roles.AMNESIAC,
-                Roles.EXECUTIONER
+                Roles.EXECUTIONER,
+                Roles.SILENCER
         );
 
         Crime.CORRUPTION.setRoles(
@@ -74,14 +83,16 @@ public enum Crime {
         );
 
         Crime.IDENTITY_THEFT.setRoles(
-                Roles.DISGUISER
+                Roles.DISGUISER,
+                Roles.INFORMANT
         );
 
         Crime.SOLICITING.setRoles(
                 Roles.ESCORT,
                 Roles.MASON_LEADER,
                 Roles.CONSORT,
-                Roles.CULTIST
+                Roles.CULTIST,
+                Roles.LIAISON
         );
 
         Crime.MURDER.setRoles(
@@ -98,14 +109,20 @@ public enum Crime {
                 Roles.BEGUILER,
                 Roles.SERIAL_KILLER,
                 Roles.ARSONIST,
-                Roles.MASS_MURDERER
+                Roles.MASS_MURDERER,
+                Roles.DECEIVER,
+                Roles.DRAGON_HEAD,
+                Roles.ENFORCER,
+                Roles.INFORMANT,
+                Roles.INTERROGATOR
         );
 
         Crime.DISTURBING_THE_PEACE.setRoles(
                 Roles.CRIER,
                 Roles.JUDGE,
                 Roles.ESCORT,
-                Roles.CONSORT
+                Roles.CONSORT,
+                Roles.LIAISON
         );
 
         Crime.CONSPIRACY.setRoles(
@@ -118,7 +135,8 @@ public enum Crime {
                 Roles.VETERAN,
                 Roles.JANITOR,
                 Roles.ARSONIST,
-                Roles.MASS_MURDERER
+                Roles.MASS_MURDERER,
+                Roles.INCENSE_MASTER
         );
 
         Crime.ARSON.setRoles(
