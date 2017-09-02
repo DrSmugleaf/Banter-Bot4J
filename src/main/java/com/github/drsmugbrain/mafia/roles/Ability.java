@@ -1,4 +1,8 @@
-package com.github.drsmugbrain.mafia;
+package com.github.drsmugbrain.mafia.roles;
+
+import com.github.drsmugbrain.mafia.Abilities;
+import com.github.drsmugbrain.mafia.Game;
+import com.github.drsmugbrain.mafia.Player;
 
 import javax.annotation.Nonnull;
 
@@ -25,6 +29,10 @@ public class Ability {
 
     protected void setUsesLeft(int amount) {
         this.usesLeft = amount;
+    }
+
+    public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {
+        this.getBaseAbility().use(game, player, target1, target2);
     }
 
 }
