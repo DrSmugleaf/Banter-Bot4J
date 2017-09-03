@@ -1,6 +1,7 @@
 package com.github.drsmugbrain.mafia.roles;
 
 import com.github.drsmugbrain.mafia.Abilities;
+import com.github.drsmugbrain.mafia.Phase;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -71,14 +72,14 @@ public enum Roles {
 
     static {
         for (Roles role : Roles.values()) {
-            role.setAbility(Abilities.getAbility(role.getName()));
+            role.addAbility(Abilities.getAbility(role));
         }
     }
 
     private final String NAME;
     private final Teams TEAM;
     private final List<Categories> CATEGORY = new ArrayList<>();
-    private Abilities ABILITY;
+    private final Map<Phase, Abilities> ABILITIES = new HashMap<>();
 
     Roles(@Nonnull String name, @Nonnull Teams team, @Nonnull Categories... categories) {
         Holder.MAP.put(name.toLowerCase(), this);
@@ -107,12 +108,12 @@ public enum Roles {
     }
 
     @Nonnull
-    public Abilities getAbility() {
-        return this.ABILITY;
+    public Map<Phase, Abilities> getAbilities() {
+        return this.ABILITIES;
     }
 
-    private void setAbility(@Nonnull Abilities ability) {
-        this.ABILITY = ability;
+    private void addAbility(@Nonnull Abilities ability) {
+        this.ABILITIES.put(ability.getPhase(), ability);
     }
 
     private static class Holder {

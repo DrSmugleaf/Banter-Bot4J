@@ -67,6 +67,7 @@ public class Cycle implements Runnable {
     @Override
     public void run() {
         this.timeLeft--;
+
         if (this.timeLeft <= 0) {
             this.CURRENT_TIMER.cancel(true);
 

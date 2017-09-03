@@ -124,4 +124,8 @@ public class Game {
         return targetedBy;
     }
 
+    public void useAbility(Player player, Player target1, Player target2) {
+        player.getRole().useAbility(this, this.getCycle().getPhase(), player, target1, target2);
+    }
+
 }

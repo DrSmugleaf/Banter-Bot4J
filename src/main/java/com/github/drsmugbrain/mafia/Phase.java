@@ -14,7 +14,8 @@ public enum Phase {
     LAST_WORDS("Last Words"),
     EXECUTION("Execution"),
     NIGHT("Night"),
-    COURT("Court");
+    COURT("Court"),
+    NONE("None");
 
     private final String NAME;
 

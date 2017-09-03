@@ -1,11 +1,14 @@
 package com.github.drsmugbrain.mafia.roles;
 
 import com.github.drsmugbrain.mafia.Game;
+import com.github.drsmugbrain.mafia.Phase;
 import com.github.drsmugbrain.mafia.Player;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by DrSmugleaf on 23/08/2017.
@@ -13,12 +16,15 @@ import java.util.List;
 public class Role {
 
     private final Roles BASE_ROLE;
-    private final Ability ABILITY;
+    private final Map<Phase, Ability> ABILITIES = new HashMap<>();
     private final List<Crime> CRIMES = new ArrayList<>();
 
     public Role(@Nonnull Roles role) {
         this.BASE_ROLE = role;
-        this.ABILITY = new Ability(role.getAbility());
+
+        role.getAbilities().forEach((phase, ability) -> {
+            this.ABILITIES.put(phase, new Ability(ability));
+        });
     }
 
     @Nonnull
@@ -27,12 +33,12 @@ public class Role {
     }
 
     @Nonnull
-    public Ability getAbility() {
-        return this.ABILITY;
+    public Map<Phase, Ability> getAbilities() {
+        return this.ABILITIES;
     }
 
-    protected void useAbility(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {
-        this.getAbility().use(game, player, target1, target2);
+    public void useAbility(@Nonnull Game game, @Nonnull Phase phase, @Nonnull Player target1, Player target2, @Nonnull Player player) {
+        this.getAbilities().get(phase).use(game, player, target1, target2);
         this.setCrimes();
     }
 

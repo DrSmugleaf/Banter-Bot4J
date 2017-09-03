@@ -6,6 +6,8 @@ import com.github.drsmugbrain.mafia.chat.Type;
 import com.github.drsmugbrain.mafia.events.EventDispatcher;
 import com.github.drsmugbrain.mafia.events.StatusEvent;
 import com.github.drsmugbrain.mafia.roles.RoleStatuses;
+import com.github.drsmugbrain.mafia.roles.Roles;
+import com.github.drsmugbrain.mafia.roles.Types;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -15,25 +17,25 @@ import java.util.*;
  */
 public enum Abilities {
 
-    BODYGUARD("Bodyguard", Phase.NIGHT) {
+    BODYGUARD(Roles.BODYGUARD, Types.MISCELLANEOUS, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {
-            target1.addStatuses(RoleStatuses.BODYGUARDED);
+            player.setTarget(target1);
         }
     },
-    BUS_DRIVER("Bus Driver", Phase.NIGHT) {
+    BUS_DRIVER(Roles.BUS_DRIVER, Types.TARGET_SWITCH, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {
             game.switchPlayers(target1, target2);
         }
     },
-    CITIZEN("Citizen", Phase.NIGHT) {
+    CITIZEN(Roles.CITIZEN, Types.MISCELLANEOUS, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {
             player.addStatuses(RoleStatuses.BULLETPROOF_VEST);
         }
     },
-    CORONER("Coroner") {
+    CORONER(Roles.CORONER, Types.INVESTIGATION, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {
             String message = Messages.CORONER.getMessage(game, player, target1, target2);
@@ -41,7 +43,7 @@ public enum Abilities {
             EventDispatcher.dispatch(event);
         }
     },
-    CRIER("Crier") {
+    CRIER(Roles.CRIER, Types.CHAT, Phase.NIGHT) {
         @Override
         protected void onPhaseChange(@Nonnull Game game, @Nonnull Phase phase, @Nonnull Player target1, Player target2, @Nonnull Player player) {
             Channel channel = game.getChat().getChannel(Type.TOWN);
@@ -58,7 +60,7 @@ public enum Abilities {
             }
         }
     },
-    DETECTIVE("Detective") {
+    DETECTIVE(Roles.DETECTIVE, Types.INVESTIGATION, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {
             String message = Messages.DETECTIVE.getMessage(game, player, target1, target2);
@@ -66,19 +68,19 @@ public enum Abilities {
             EventDispatcher.dispatch(event);
         }
     },
-    DOCTOR("Doctor") {
+    DOCTOR(Roles.DOCTOR, Types.MISCELLANEOUS, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {
             target1.addStatuses(RoleStatuses.HEALED);
         }
     },
-    ESCORT("Escort") {
+    ESCORT(Roles.ESCORT, Types.ROLE_BLOCK, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {
             target1.addStatuses(RoleStatuses.ROLEBLOCKED);
         }
     },
-    INVESTIGATOR("Investigator") {
+    INVESTIGATOR(Roles.INVESTIGATOR, Types.INVESTIGATION, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {
             String message = Messages.INVESTIGATOR.getMessage(game, player, target1, target2);
@@ -86,224 +88,231 @@ public enum Abilities {
             EventDispatcher.dispatch(event);
         }
     },
-    JAILOR("Jailor") {
+    JAILOR(Roles.JAILOR, Types.DETAIN, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    LOOKOUT("Lookout") {
+    LOOKOUT(Roles.LOOKOUT, Types.INVESTIGATION, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    MARSHALL("Marshall") {
+    MARSHALL(Roles.MARSHALL, Types.MISCELLANEOUS, Phase.DAY) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    MASON("Mason") {
+    MASON(Roles.MASON, Types.CHAT, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    MASON_LEADER("Mason Leader") {
+    MASON_LEADER(Roles.MASON_LEADER, Types.MASON, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    MAYOR("Mayor") {
+    MAYOR(Roles.MAYOR, Types.MISCELLANEOUS, Phase.DAY) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    SHERIFF("Sheriff") {
+    SHERIFF(Roles.SHERIFF, Types.INVESTIGATION, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    SPY("Spy") {
+    SPY(Roles.SPY, Types.CHAT, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    STUMP("Stump") {
+    STUMP(Roles.STUMP, Types.NONE, Phase.NONE) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    VETERAN("Veteran") {
+    VETERAN(Roles.VETERAN, Types.BULLETPROOF_VEST, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    VIGILANTE("Vigilante") {
-        @Override
-        public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
-    },
-
-    AGENT("Agent") {
-        @Override
-        public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
-    },
-    BEGUILER("Beguiler") {
-        @Override
-        public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
-    },
-    BLACKMAILER("Blackmailer") {
-        @Override
-        public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
-    },
-    CONSIGLIERE("Consigliere") {
-        @Override
-        public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
-    },
-    CONSORT("Consort") {
-        @Override
-        public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
-    },
-    DISGUISER("Disguiser") {
-        @Override
-        public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
-    },
-    FRAMER("Framer") {
-        @Override
-        public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
-    },
-    GODFATHER("Godfather") {
-        @Override
-        public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
-    },
-    JANITOR("Janitor") {
-        @Override
-        public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
-    },
-    KIDNAPPER("Kidnapper") {
-        @Override
-        public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
-    },
-    MAFIOSO("Mafioso") {
+    VIGILANTE(Roles.VIGILANTE, Types.KILL, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
 
-    ADMINISTRATOR("Administrator") {
+    AGENT(Roles.AGENT, Types.INVESTIGATION, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    DECEIVER("Deceiver") {
+    BEGUILER(Roles.BEGUILER, Types.TARGET_SWITCH, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    DRAGON_HEAD("Dragon Head") {
+    BLACKMAILER(Roles.BLACKMAILER, Types.MISCELLANEOUS, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    ENFORCER("Enforcer") {
+    CONSIGLIERE(Roles.CONSIGLIERE, Types.INVESTIGATION, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    FORGER("Forger") {
+    CONSORT(Roles.CONSORT, Types.ROLE_BLOCK, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    INCENSE_MASTER("Incense Master") {
+    DISGUISER(Roles.DISGUISER, Types.DISGUISE, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    INFORMANT("Informant") {
+    FRAMER(Roles.FRAMER, Types.MISCELLANEOUS, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    INTERROGATOR("Interrogator") {
+    GODFATHER(Roles.GODFATHER, Types.KILL, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    LIAISON("Liaison") {
+    JANITOR(Roles.JANITOR, Types.JANITOR, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    SILENCER("Silencer") {
+    KIDNAPPER(Roles.KIDNAPPER, Types.DETAIN, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    VANGUARD("Vanguard") {
+    MAFIOSO(Roles.MAFIOSO, Types.KILL, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
 
-    AMNESIAC("Amnesiac") {
+    ADMINISTRATOR(Roles.ADMINISTRATOR, Types.INVESTIGATION, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    ARSONIST("Arsonist") {
+    DECEIVER(Roles.DECEIVER, Types.TARGET_SWITCH, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    AUDITOR("Auditor") {
+    DRAGON_HEAD(Roles.DRAGON_HEAD, Types.KILL, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    CULTIST("Cultist") {
+    ENFORCER(Roles.ENFORCER, Types.KILL, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    EXECUTIONER("Executioner") {
+    FORGER(Roles.FORGER, Types.MISCELLANEOUS, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    JESTER("Jester") {
+    INCENSE_MASTER(Roles.INCENSE_MASTER, Types.JANITOR, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    JUDGE("Judge") {
+    INFORMANT(Roles.INFORMANT, Types.DISGUISE, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    MASS_MURDERER("Mass Murderer") {
+    INTERROGATOR(Roles.INTERROGATOR, Types.DETAIN, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    SCUMBAG("Scumbag") {
+    LIAISON(Roles.LIAISON, Types.ROLE_BLOCK, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    SERIAL_KILLER("Serial Killer") {
+    SILENCER(Roles.SILENCER, Types.MISCELLANEOUS, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    SURVIVOR("Survivor") {
+    VANGUARD(Roles.VANGUARD, Types.INVESTIGATION, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    WITCH("Witch") {
+
+    AMNESIAC(Roles.AMNESIAC, Types.MISCELLANEOUS, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     },
-    WITCH_DOCTOR("Witch Doctor") {
+    ARSONIST(Roles.ARSONIST, Types.ARSON, Phase.NIGHT) {
+        @Override
+        public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
+    },
+    AUDITOR(Roles.AUDITOR, Types.MISCELLANEOUS, Phase.NIGHT) {
+        @Override
+        public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
+    },
+    CULTIST(Roles.CULTIST, Types.CULT, Phase.NIGHT) {
+        @Override
+        public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
+    },
+    EXECUTIONER(Roles.EXECUTIONER, Types.NONE, Phase.NONE) {
+        @Override
+        public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
+    },
+    JESTER(Roles.JESTER, Types.MISCELLANEOUS, Phase.NIGHT) {
+        @Override
+        public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
+    },
+    JUDGE(Roles.JUDGE, Types.MISCELLANEOUS, Phase.DAY) {
+        @Override
+        public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
+    },
+    MASS_MURDERER(Roles.MASS_MURDERER, Types.KILL, Phase.NIGHT) {
+        @Override
+        public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
+    },
+    SCUMBAG(Roles.SCUMBAG, Types.NONE, Phase.NONE) {
+        @Override
+        public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
+    },
+    SERIAL_KILLER(Roles.SERIAL_KILLER, Types.KILL, Phase.NIGHT) {
+        @Override
+        public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
+    },
+    SURVIVOR(Roles.SURVIVOR, Types.BULLETPROOF_VEST, Phase.NIGHT) {
+        @Override
+        public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
+    },
+    WITCH(Roles.WITCH, Types.TARGET_SWITCH, Phase.NIGHT) {
+        @Override
+        public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
+    },
+    WITCH_DOCTOR(Roles.WITCH_DOCTOR, Types.MISCELLANEOUS, Phase.NIGHT) {
         @Override
         public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
     };
 
-    private final String NAME;
-    private final List<Phase> PHASES = new ArrayList<>();
+    private final Roles ROLE;
+    private final Types TYPE;
+    private final Phase PHASE;
 
-    Abilities(@Nonnull String name, @Nonnull Phase... phase) {
-        Holder.MAP.put(name.toLowerCase(), this);
-        this.NAME = name;
-        Collections.addAll(this.PHASES, phase);
+    Abilities(@Nonnull Roles role, @Nonnull Types type, @Nonnull Phase phase) {
+        Holder.MAP.put(role, this);
+        this.ROLE = role;
+        this.TYPE = type;
+        this.PHASE = phase;
     }
 
     @Nonnull
-    public String getName() {
-        return this.NAME;
+    public Roles getRole() {
+        return this.ROLE;
     }
 
     @Nonnull
-    public List<Phase> getPhases() {
-        return new ArrayList<>(this.PHASES);
+    public Types getType() {
+        return this.TYPE;
     }
 
-    public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {};
+    @Nonnull
+    public Phase getPhase() {
+        return this.PHASE;
+    }
+
+    public void use(@Nonnull Game game, @Nonnull Player player, @Nonnull Player target1, Player target2) {}
 
     protected void onPhaseChange(@Nonnull Game game, @Nonnull Phase phase, @Nonnull Player target1, Player target2, @Nonnull Player player) {}
 
     @Nonnull
-    public static Abilities getAbility(@Nonnull String name) {
-        return Holder.MAP.get(name.toLowerCase());
+    public static Abilities getAbility(@Nonnull Roles role) {
+        return Holder.MAP.get(role);
     }
 
     private static class Holder {
-        static Map<String, Abilities> MAP = new HashMap<>();
+        static Map<Roles, Abilities> MAP = new HashMap<>();
     }
 
 }
