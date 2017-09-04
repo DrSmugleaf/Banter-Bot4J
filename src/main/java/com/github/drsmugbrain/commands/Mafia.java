@@ -77,7 +77,7 @@ public class Mafia {
         for (Player player : event.getGame().getHumanPlayers().values()) {
             IUser user = Bot.fetchUser(player.getID());
             IPrivateChannel channel = user.getOrCreatePMChannel();
-            channel.sendMessage("Day: " + event.getGame().getCycle().getDay());
+            channel.sendMessage("Day: " + event.getGame().getDay());
         }
     }
 
@@ -86,7 +86,7 @@ public class Mafia {
         for (Player player : event.getGame().getHumanPlayers().values()) {
             IUser user = Bot.fetchUser(player.getID());
             IPrivateChannel channel = user.getOrCreatePMChannel();
-            channel.sendMessage("Night: " + event.getGame().getCycle().getDay());
+            channel.sendMessage("Night: " + event.getGame().getDay());
         }
     }
 

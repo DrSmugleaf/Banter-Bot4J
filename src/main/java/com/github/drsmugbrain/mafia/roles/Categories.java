@@ -199,15 +199,6 @@ public enum Categories {
     }
 
     @Nonnull
-    private Categories setRoles(@Nonnull List<Roles>... roles) {
-        List<Roles> list = new ArrayList<>();
-        for (List<Roles> roleList : roles) {
-            list.addAll(roleList);
-        }
-        return this.setRoles(list.toArray(new Roles[list.size()]));
-    }
-
-    @Nonnull
     private Categories setRoles(@Nonnull Categories... categories) {
         List<Roles> list = new ArrayList<>();
         for (Categories category : categories) {

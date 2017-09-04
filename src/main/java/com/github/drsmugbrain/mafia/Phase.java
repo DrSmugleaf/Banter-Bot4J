@@ -13,8 +13,8 @@ public enum Phase {
     VOTE_RECOUNT("Vote Recount"),
     LAST_WORDS("Last Words"),
     EXECUTION("Execution"),
-    NIGHT("Night"),
     COURT("Court"),
+    NIGHT("Night"),
     NONE("None");
 
     private final String NAME;

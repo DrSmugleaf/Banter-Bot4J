@@ -2,8 +2,7 @@ package com.github.drsmugbrain.mafia;
 
 import com.github.drsmugbrain.mafia.chat.Chat;
 import com.github.drsmugbrain.mafia.chat.Type;
-import com.github.drsmugbrain.mafia.events.EventDispatcher;
-import com.github.drsmugbrain.mafia.events.GameStartEvent;
+import com.github.drsmugbrain.mafia.events.*;
 import com.github.drsmugbrain.mafia.roles.Role;
 import com.github.drsmugbrain.mafia.roles.Roles;
 
@@ -14,19 +13,47 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Created by DrSmugleaf on 23/08/2017.
  */
-public class Game {
+public class Game extends Cycle {
 
     private final Setup SETUP;
     private final Map<Long, Player> PLAYERS = new HashMap<>();
     private final List<Player> PLAYERS_DISPLAY = new ArrayList<>();
-    private final Cycle CYCLE;
-    private boolean started = false;
     private final Chat CHAT = new Chat();
+    private boolean started = false;
 
     public Game(@Nonnull Setup setup, @Nonnull Map<Long, Player> players) {
+        super(setup, Phase.DAY);
         this.SETUP = setup;
         this.PLAYERS.putAll(players);
-        this.CYCLE = new Cycle(this, Phase.DAY);
+    }
+
+    @Override
+    protected void changePhase(Phase phase) {
+        this.setPhase(phase);
+
+        PhaseChangeEvent event;
+        switch (phase) {
+            case DAY:
+                event = new DayStartEvent(this);
+                EventDispatcher.dispatch(event);
+                break;
+            case TRIAL:
+                break;
+            case VOTE:
+                break;
+            case VOTE_RECOUNT:
+                break;
+            case LAST_WORDS:
+                break;
+            case EXECUTION:
+                break;
+            case COURT:
+                break;
+            case NIGHT:
+                event = new NightStartEvent(this);
+                EventDispatcher.dispatch(event);
+                break;
+        }
     }
 
     @Nonnull
@@ -51,9 +78,8 @@ public class Game {
         return new ArrayList<>(this.PLAYERS_DISPLAY);
     }
 
-    @Nonnull
-    public Cycle getCycle() {
-        return this.CYCLE;
+    protected Chat getChat() {
+        return this.CHAT;
     }
 
     public void start() {
@@ -76,7 +102,7 @@ public class Game {
 
         EventDispatcher.dispatch(new GameStartEvent(this));
 
-        this.CYCLE.resume();
+        this.resume();
         this.CHAT.createChannel(Type.TOWN, this.PLAYERS.values());
     }
 
@@ -107,10 +133,6 @@ public class Game {
         this.sendMessage(this.PLAYERS.get(id), message);
     }
 
-    protected Chat getChat() {
-        return this.CHAT;
-    }
-
     @Nonnull
     protected List<Player> getTargetedBy(Player player) {
         List<Player> targetedBy = new ArrayList<>();
@@ -125,7 +147,7 @@ public class Game {
     }
 
     public void useAbility(Player player, Player target1, Player target2) {
-        player.getRole().useAbility(this, this.getCycle().getPhase(), player, target1, target2);
+        player.getRole().useAbility(this, this.getPhase(), player, target1, target2);
     }
 
 }
