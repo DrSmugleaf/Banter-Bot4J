@@ -142,4 +142,72 @@ public class Youtube {
         }
     }
 
+    @Command
+    public static void pause(MessageReceivedEvent event, List<String> args) {
+        IGuild guild = event.getGuild();
+        IChannel channel = event.getChannel();
+        IUser author = event.getAuthor();
+        IUser bot = event.getClient().getOurUser();
+        GuildMusicManager musicManager = Youtube.getGuildMusicManager(guild);
+
+        if (!musicManager.getScheduler().isPlaying()) {
+            Bot.sendMessage(channel, "There isn't a song currently playing.");
+            return;
+        }
+
+        IChannel userVoiceChannel = event.getAuthor().getVoiceStateForGuild(guild).getChannel();
+        if (userVoiceChannel == null) {
+            Bot.sendMessage(channel, "You aren't in a voice channel.");
+            return;
+        }
+
+        IChannel botVoiceChannel = bot.getVoiceStateForGuild(guild).getChannel();
+        if (userVoiceChannel != botVoiceChannel) {
+            Bot.sendMessage(channel, "You aren't in the same voice channel as me.");
+            return;
+        }
+
+        if (musicManager.getScheduler().isPaused()) {
+            Bot.sendMessage(channel, "The current song is already paused. Use " + Bot.BOT_PREFIX + "resume to resume it.");
+            return;
+        }
+
+        musicManager.getScheduler().pause();
+        Bot.sendMessage(channel, "Paused the current song.");
+    }
+
+    @Command
+    public static void resume(MessageReceivedEvent event, List<String> args) {
+        IGuild guild = event.getGuild();
+        IChannel channel = event.getChannel();
+        IUser author = event.getAuthor();
+        IUser bot = event.getClient().getOurUser();
+        GuildMusicManager musicManager = Youtube.getGuildMusicManager(guild);
+
+        if (!musicManager.getScheduler().isPlaying()) {
+            Bot.sendMessage(channel, "There isn't a song currently playing.");
+            return;
+        }
+
+        IChannel userVoiceChannel = event.getAuthor().getVoiceStateForGuild(guild).getChannel();
+        if (userVoiceChannel == null) {
+            Bot.sendMessage(channel, "You aren't in a voice channel.");
+            return;
+        }
+
+        IChannel botVoiceChannel = bot.getVoiceStateForGuild(guild).getChannel();
+        if (userVoiceChannel != botVoiceChannel) {
+            Bot.sendMessage(channel, "You aren't in the same voice channel as me.");
+            return;
+        }
+
+        if (!musicManager.getScheduler().isPaused()) {
+            Bot.sendMessage(channel, "There isn't a song currently paused.");
+            return;
+        }
+
+        musicManager.getScheduler().resume();
+        Bot.sendMessage(channel, "Resumed the current song.");
+    }
+
 }

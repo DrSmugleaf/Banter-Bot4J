@@ -60,6 +60,10 @@ public class TrackScheduler extends AudioEventAdapter {
         return this.QUEUE.size() > 1;
     }
 
+    public boolean isPaused() {
+        return this.PLAYER.isPaused();
+    }
+
     public void queue(AudioTrack track) {
         boolean isPlaying = this.PLAYER.startTrack(track, true);
         if (!isPlaying) {
@@ -69,6 +73,14 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public void skip() {
         this.PLAYER.startTrack(this.QUEUE.poll(), false);
+    }
+
+    public void pause() {
+        this.PLAYER.setPaused(true);
+    }
+
+    public void resume() {
+        this.PLAYER.setPaused(false);
     }
 
 }
