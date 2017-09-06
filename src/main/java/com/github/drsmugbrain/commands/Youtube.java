@@ -2,18 +2,18 @@ package com.github.drsmugbrain.commands;
 
 import com.github.drsmugbrain.util.Bot;
 import com.github.drsmugbrain.youtube.API;
+import com.github.drsmugbrain.youtube.AudioResultHandler;
 import com.github.drsmugbrain.youtube.GuildMusicManager;
 import com.github.drsmugbrain.youtube.SearchErrorException;
 import com.google.api.services.youtube.model.SearchResult;
-import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
-import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.*;
+import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.IGuild;
+import sx.blah.discord.handle.obj.IUser;
+import sx.blah.discord.handle.obj.IVoiceChannel;
 import sx.blah.discord.util.MissingPermissionsException;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class Youtube {
         AudioSourceManagers.registerRemoteSources(Youtube.PLAYER_MANAGER);
     }
 
-    private static synchronized GuildMusicManager getGuildMusicManager(IGuild guild) {
+    public static synchronized GuildMusicManager getGuildMusicManager(IGuild guild) {
         GuildMusicManager musicManager = Youtube.MUSIC_MANAGERS.computeIfAbsent(
                 guild, k -> new GuildMusicManager(Youtube.PLAYER_MANAGER)
         );
@@ -83,56 +83,7 @@ public class Youtube {
         }
 
         String videoID = search.getId().getVideoId();
-        Youtube.PLAYER_MANAGER.loadItem(videoID, new AudioLoadResultHandler() {
-            GuildMusicManager musicManager = Youtube.getGuildMusicManager(guild);
-
-            @Override
-            public void trackLoaded(AudioTrack track) {
-                boolean isPlaying = musicManager.getScheduler().isPlaying();
-
-                musicManager.getScheduler().queue(track);
-
-                String response;
-                String trackTitle = track.getInfo().title;
-                if (isPlaying) {
-                    response = String.format("Added `%s` to the queue.", trackTitle);
-                    Bot.sendMessage(channel, response);
-                } else {
-                    response = String.format("Now playing: `%s`.", trackTitle);
-                    Bot.sendMessage(channel, response);
-                }
-            }
-
-            @Override
-            public void playlistLoaded(AudioPlaylist playlist) {
-                List<AudioTrack> tracks = playlist.getTracks();
-                boolean isPlaying = musicManager.getScheduler().isPlaying();
-
-                for (AudioTrack track : tracks) {
-                    musicManager.getScheduler().queue(track);
-                }
-
-                String response = String.format("Added %d songs to the queue.", tracks.size());
-                Bot.sendMessage(channel, response);
-
-                if (!isPlaying) {
-                    response = String.format("Now playing: `%s`.", tracks.get(0).getInfo().title);
-                    Bot.sendMessage(channel, response);
-                }
-            }
-
-            @Override
-            public void noMatches() {
-                String response = String.format("No results found for %s.", searchString);
-                Bot.sendMessage(channel, response);
-            }
-
-            @Override
-            public void loadFailed(FriendlyException exception) {
-                String response = String.format("Error playing song: %s", exception.getMessage());
-                Bot.sendMessage(channel, response);
-            }
-        });
+        Youtube.PLAYER_MANAGER.loadItem(videoID, new AudioResultHandler(guild, channel, searchString));
     }
 
     @Command
