@@ -9,6 +9,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -19,18 +20,20 @@ public class AudioResultHandler implements AudioLoadResultHandler {
     private final GuildMusicManager MUSIC_MANAGER;
     private final IChannel CHANNEL;
     private final String SEARCH_STRING;
+    private final long SUBMITTER_ID;
 
-    public AudioResultHandler(IGuild guild, IChannel channel, String searchString) {
+    public AudioResultHandler(@Nonnull IGuild guild, @Nonnull IChannel channel, @Nonnull String searchString, long submitterID) {
         this.MUSIC_MANAGER = Youtube.getGuildMusicManager(guild);
         this.CHANNEL = channel;
         this.SEARCH_STRING = searchString;
+        this.SUBMITTER_ID = submitterID;
     }
 
     @Override
     public void trackLoaded(AudioTrack track) {
         boolean isPlaying = this.MUSIC_MANAGER.getScheduler().isPlaying();
 
-        this.MUSIC_MANAGER.getScheduler().queue(track);
+        this.MUSIC_MANAGER.getScheduler().queue(track, this.SUBMITTER_ID);
 
         String response;
         String trackTitle = track.getInfo().title;
@@ -49,7 +52,7 @@ public class AudioResultHandler implements AudioLoadResultHandler {
         boolean isPlaying = this.MUSIC_MANAGER.getScheduler().isPlaying();
 
         for (AudioTrack track : tracks) {
-            this.MUSIC_MANAGER.getScheduler().queue(track);
+            this.MUSIC_MANAGER.getScheduler().queue(track, this.SUBMITTER_ID);
         }
 
         String response = String.format("Added %d songs to the queue.", tracks.size());

@@ -1,10 +1,7 @@
 package com.github.drsmugbrain.commands;
 
 import com.github.drsmugbrain.util.Bot;
-import com.github.drsmugbrain.youtube.API;
-import com.github.drsmugbrain.youtube.AudioResultHandler;
-import com.github.drsmugbrain.youtube.GuildMusicManager;
-import com.github.drsmugbrain.youtube.SearchErrorException;
+import com.github.drsmugbrain.youtube.*;
 import com.google.api.services.youtube.model.SearchResult;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -83,7 +80,7 @@ public class Youtube {
         }
 
         String videoID = search.getId().getVideoId();
-        Youtube.PLAYER_MANAGER.loadItem(videoID, new AudioResultHandler(guild, channel, searchString));
+        Youtube.PLAYER_MANAGER.loadItem(videoID, new AudioResultHandler(guild, channel, searchString, author.getLongID()));
     }
 
     @Command
