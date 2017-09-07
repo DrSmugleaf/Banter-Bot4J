@@ -73,7 +73,7 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public boolean hasNextSong() {
-        return this.QUEUE.size() >= 1;
+        return this.QUEUE.size() > 0;
     }
 
     public boolean isPlaying() {
