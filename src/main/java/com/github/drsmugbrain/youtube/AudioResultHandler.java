@@ -54,12 +54,10 @@ public class AudioResultHandler implements AudioLoadResultHandler {
 
         for (AudioTrack track : tracks) {
             Song song = new Song(track, this.CHANNEL, this.SUBMITTER);
-            this.MUSIC_MANAGER.getScheduler().queue(song);
             songs.add(song);
         }
 
-        Event event = new PlaylistQueueEvent(this, songs);
-        EventDispatcher.dispatch(event);
+        this.MUSIC_MANAGER.getScheduler().queue(songs);
     }
 
     @Override

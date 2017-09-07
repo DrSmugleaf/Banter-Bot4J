@@ -51,6 +51,18 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     @Nonnull
+    public List<Song> cloneSongs() {
+        List<Song> songs = new ArrayList<>();
+
+        Song currentSong = this.currentSong;
+        songs.add(new Song(currentSong.getTrack().makeClone(), currentSong.getChannel(), currentSong.getSubmitter()));
+
+        songs.addAll(this.QUEUE);
+
+        return songs;
+    }
+
+    @Nonnull
     public List<Song> getQueue() {
         return new ArrayList<>(this.QUEUE);
     }
@@ -81,6 +93,20 @@ public class TrackScheduler extends AudioEventAdapter {
             this.currentSong = song;
             this.PLAYER.playTrack(song.getTrack());
         }
+    }
+
+    public void queue(@Nonnull List<Song> songs) {
+        for (Song song : songs) {
+            this.QUEUE.offer(song);
+        }
+
+        if (!this.isPlaying()) {
+            this.currentSong = this.QUEUE.poll();
+            this.PLAYER.playTrack(this.currentSong.getTrack());
+        }
+
+        Event event = new PlaylistQueueEvent(songs);
+        EventDispatcher.dispatch(event);
     }
 
     public void skip() {

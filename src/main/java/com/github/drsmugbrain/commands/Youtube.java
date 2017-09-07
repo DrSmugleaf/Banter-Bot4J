@@ -264,10 +264,7 @@ public class Youtube {
         TrackScheduler scheduler = Youtube.getGuildMusicManager(guild).getScheduler();
 
         Pair<IGuild, IUser> pair = new Pair<>(guild, author);
-        List<Song> songs = new ArrayList<>();
-        songs.add(scheduler.getCurrentSong());
-        songs.addAll(scheduler.getQueue());
-        Youtube.UNDO_STOP_CACHE.put(pair, songs);
+        Youtube.UNDO_STOP_CACHE.put(pair, scheduler.cloneSongs());
 
         scheduler.stop();
         Bot.sendMessage(
@@ -296,12 +293,11 @@ public class Youtube {
         }
 
         Youtube.UNDO_STOP_CACHE.invalidate(pair);
+
         TrackScheduler scheduler = Youtube.getGuildMusicManager(guild).getScheduler();
-        songs.addAll(scheduler.getQueue());
+        songs.addAll(scheduler.cloneSongs());
         scheduler.stop();
-        for (Song song : songs) {
-            scheduler.queue(song);
-        }
+        scheduler.queue(songs);
         Bot.sendMessage(channel, "Restored all stopped songs.");
     }
 
@@ -334,8 +330,9 @@ public class Youtube {
 
     @SongEventHandler(event = PlaylistQueueEvent.class)
     public static void handle(@Nonnull PlaylistQueueEvent event) {
+        IChannel channel = event.getSongs().get(0).getChannel();
         String response = String.format("Added %d songs to the queue.", event.getSongs().size());
-        Bot.sendMessage(event.getHandler().getChannel(), response);
+        Bot.sendMessage(channel, response);
     }
 
 }
