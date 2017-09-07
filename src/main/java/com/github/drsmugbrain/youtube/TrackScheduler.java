@@ -17,8 +17,13 @@ import java.util.Queue;
  */
 public class TrackScheduler extends AudioEventAdapter {
 
+    @Nonnull
     private final AudioPlayer PLAYER;
+
+    @Nonnull
     private final Queue<Song> QUEUE = new LinkedList<>();
+
+    @Nullable
     private Song currentSong = null;
 
     public TrackScheduler(@Nonnull AudioPlayer player) {
@@ -37,8 +42,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
         if (endReason.mayStartNext) {
             if (this.hasNextSong()) {
-                this.currentSong = this.QUEUE.poll();
-                this.PLAYER.playTrack(this.currentSong.getTrack());
+                this.play(this.QUEUE.poll(), false);
             }
         }
 
@@ -55,7 +59,9 @@ public class TrackScheduler extends AudioEventAdapter {
         List<Song> songs = new ArrayList<>();
 
         Song currentSong = this.currentSong;
-        songs.add(new Song(currentSong.getTrack().makeClone(), currentSong.getChannel(), currentSong.getSubmitter()));
+        if (currentSong != null) {
+            songs.add(new Song(currentSong.getTrack().makeClone(), currentSong.getChannel(), currentSong.getSubmitter()));
+        }
 
         songs.addAll(this.QUEUE);
 
@@ -84,25 +90,29 @@ public class TrackScheduler extends AudioEventAdapter {
         return this.PLAYER.isPaused();
     }
 
+    private boolean play(@Nonnull Song song, boolean noInterrupt) {
+        if (!this.isPlaying() || !noInterrupt) {
+            this.currentSong = song;
+        }
+        return this.PLAYER.startTrack(song.getTrack(), noInterrupt);
+    }
+
     public void queue(@Nonnull Song song) {
-        if (this.isPlaying()) {
+        if (!this.play(song, true)) {
             Event event = new SongQueueEvent(song);
             EventDispatcher.dispatch(event);
             this.QUEUE.offer(song);
-        } else {
-            this.currentSong = song;
-            this.PLAYER.playTrack(song.getTrack());
         }
     }
 
     public void queue(@Nonnull List<Song> songs) {
-        for (Song song : songs) {
-            this.QUEUE.offer(song);
+        Song firstSong = songs.remove(0);
+        if (!this.play(firstSong, true)) {
+            this.QUEUE.offer(firstSong);
         }
 
-        if (!this.isPlaying()) {
-            this.currentSong = this.QUEUE.poll();
-            this.PLAYER.playTrack(this.currentSong.getTrack());
+        for (Song song : songs) {
+            this.QUEUE.offer(song);
         }
 
         Event event = new PlaylistQueueEvent(songs);
