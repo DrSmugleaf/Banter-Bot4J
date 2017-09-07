@@ -24,10 +24,17 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     @Override
+    public void onTrackStart(AudioPlayer player, AudioTrack track) {
+        Event event = new SongStartEvent(this.PLAYER, this.currentSong);
+        EventDispatcher.dispatch(event);
+    }
+
+    @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         if (endReason.mayStartNext) {
             if (this.hasNextSong()) {
-                this.PLAYER.playTrack(this.QUEUE.poll().getTrack());
+                this.currentSong = this.QUEUE.poll();
+                this.PLAYER.playTrack(this.currentSong.getTrack());
             }
         }
     }
@@ -49,11 +56,12 @@ public class TrackScheduler extends AudioEventAdapter {
         return this.PLAYER.isPaused();
     }
 
-    public void queue(@Nonnull AudioTrack track, long submitterID) {
+    public void queue(@Nonnull Song song) {
         if (this.isPlaying()) {
-            this.QUEUE.offer(new Song(track, submitterID));
+            this.QUEUE.offer(song);
         } else {
-            this.PLAYER.playTrack(track);
+            this.currentSong = song;
+            this.PLAYER.playTrack(song.getTrack());
         }
     }
 

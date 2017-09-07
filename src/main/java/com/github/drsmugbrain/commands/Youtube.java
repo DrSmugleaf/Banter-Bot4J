@@ -13,6 +13,7 @@ import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 import sx.blah.discord.util.MissingPermissionsException;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,7 @@ public class Youtube {
 
     static {
         AudioSourceManagers.registerRemoteSources(Youtube.PLAYER_MANAGER);
+        EventDispatcher.registerListener(new Youtube());
     }
 
     public static synchronized GuildMusicManager getGuildMusicManager(IGuild guild) {
@@ -80,7 +82,7 @@ public class Youtube {
         }
 
         String videoID = search.getId().getVideoId();
-        Youtube.PLAYER_MANAGER.loadItem(videoID, new AudioResultHandler(guild, channel, searchString, author.getLongID()));
+        Youtube.PLAYER_MANAGER.loadItem(videoID, new AudioResultHandler(channel, author, searchString));
     }
 
     @Command
@@ -205,6 +207,47 @@ public class Youtube {
 
         musicManager.getScheduler().resume();
         Bot.sendMessage(channel, "Resumed the current song.");
+    }
+
+    @Command
+    public static void stop(MessageReceivedEvent event, List<String> args) {
+        IGuild guild = event.getGuild();
+        IChannel channel = event.getChannel();
+        IUser author = event.getAuthor();
+        IUser bot = event.getClient().getOurUser();
+        TrackScheduler scheduler = Youtube.getGuildMusicManager(guild).getScheduler();
+        Song currentSong = scheduler.getCurrentSong();
+
+        if (currentSong == null) {
+            Bot.sendMessage(channel, "There isn't a song currently playing.");
+            return;
+        }
+
+        if (scheduler.getCurrentSong().getSubmitter() != author) {
+            Bot.sendMessage(channel, "You don't have permission to stop the song that's currently playing.");
+            return;
+        }
+
+        IChannel userVoiceChannel = event.getAuthor().getVoiceStateForGuild(guild).getChannel();
+        if (userVoiceChannel == null) {
+            Bot.sendMessage(channel, "You aren't in a voice channel.");
+            return;
+        }
+
+        IChannel botVoiceChannel = bot.getVoiceStateForGuild(guild).getChannel();
+        if (userVoiceChannel != botVoiceChannel) {
+            Bot.sendMessage(channel, "You aren't in the same voice channel as me.");
+            return;
+        }
+
+        scheduler.skip();
+        Bot.sendMessage(channel, "Stopped the current song.");
+    }
+
+    @SongEventHandler(event = SongStartEvent.class)
+    public static void handle(@Nonnull SongStartEvent event) {
+        String response = String.format("Now playing `%s`.", event.getSong().getTrack().getInfo().title);
+        Bot.sendMessage(event.getSong().getChannel(), response);
     }
 
 }

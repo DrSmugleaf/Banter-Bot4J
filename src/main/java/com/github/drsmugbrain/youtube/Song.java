@@ -1,6 +1,9 @@
 package com.github.drsmugbrain.youtube;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.IGuild;
+import sx.blah.discord.handle.obj.IUser;
 
 import javax.annotation.Nonnull;
 
@@ -10,19 +13,29 @@ import javax.annotation.Nonnull;
 public class Song {
 
     private final AudioTrack TRACK;
-    private final long SUBMITTER_ID;
+    private final IChannel CHANNEL;
+    private final IUser SUBMITTER;
 
-    protected Song(@Nonnull AudioTrack track, long submitterID) {
+    protected Song(@Nonnull AudioTrack track, @Nonnull IChannel channel, @Nonnull IUser submitter) {
         this.TRACK = track;
-        this.SUBMITTER_ID = submitterID;
+        this.CHANNEL = channel;
+        this.SUBMITTER = submitter;
     }
 
-    protected AudioTrack getTrack() {
+    public AudioTrack getTrack() {
         return this.TRACK;
     }
 
-    public long getSubmitterID() {
-        return this.SUBMITTER_ID;
+    public IGuild getGuild() {
+        return this.CHANNEL.getGuild();
+    }
+
+    public IChannel getChannel() {
+        return this.CHANNEL;
+    }
+
+    public IUser getSubmitter() {
+        return this.SUBMITTER;
     }
 
 }
