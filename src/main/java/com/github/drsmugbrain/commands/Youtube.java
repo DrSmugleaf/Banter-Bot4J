@@ -7,10 +7,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.handle.obj.IVoiceChannel;
+import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.MissingPermissionsException;
 
 import javax.annotation.Nonnull;
@@ -47,10 +44,9 @@ public class Youtube {
     public static void play(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
-        IUser author = event.getAuthor();
-        IUser bot = event.getClient().getOurUser();
+
         if (guild == null) {
-            Bot.sendMessage(channel, "The play command must be used in a server channel.");
+            Bot.sendMessage(channel, "This command must be used in a server channel.");
             return;
         }
 
@@ -58,12 +54,15 @@ public class Youtube {
             event.getMessage().delete();
         } catch (MissingPermissionsException ignored) {}
 
+        IUser author = event.getAuthor();
         IVoiceChannel userVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
-        IVoiceChannel botVoiceChannel = bot.getVoiceStateForGuild(guild).getChannel();
         if (userVoiceChannel == null) {
             Bot.sendMessage(channel, "You must be in a voice channel to use this command.");
             return;
         }
+
+        IUser bot = event.getClient().getOurUser();
+        IVoiceChannel botVoiceChannel = bot.getVoiceStateForGuild(guild).getChannel();
         if (botVoiceChannel != userVoiceChannel) {
             userVoiceChannel.join();
         }
@@ -89,21 +88,26 @@ public class Youtube {
     public static void skip(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
-        IUser author = event.getAuthor();
-        IUser bot = event.getClient().getOurUser();
-        GuildMusicManager musicManager = Youtube.getGuildMusicManager(guild);
 
+        if (guild == null) {
+            Bot.sendMessage(channel, "This command must be used in a server channel.");
+            return;
+        }
+
+        GuildMusicManager musicManager = Youtube.getGuildMusicManager(guild);
         if (!musicManager.getScheduler().isPlaying()) {
             Bot.sendMessage(channel, "There isn't a song currently playing.");
             return;
         }
 
-        IChannel userVoiceChannel = event.getAuthor().getVoiceStateForGuild(guild).getChannel();
+        IUser author = event.getAuthor();
+        IChannel userVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
         if (userVoiceChannel == null) {
             Bot.sendMessage(channel, "You aren't in a voice channel.");
             return;
         }
 
+        IUser bot = event.getClient().getOurUser();
         IChannel botVoiceChannel = bot.getVoiceStateForGuild(guild).getChannel();
         if (userVoiceChannel != botVoiceChannel) {
             Bot.sendMessage(channel, "You aren't in the same voice channel as me.");
@@ -133,7 +137,6 @@ public class Youtube {
         if (votes >= requiredVotes) {
             Youtube.SKIP_VOTES.clear();
             musicManager.getScheduler().skip();
-
             Bot.sendMessage(channel, "Skipped the current song.");
         } else {
             String response = String.format("Votes: %d/%d", votes, requiredVotes);
@@ -145,21 +148,31 @@ public class Youtube {
     public static void pause(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
-        IUser author = event.getAuthor();
-        IUser bot = event.getClient().getOurUser();
-        GuildMusicManager musicManager = Youtube.getGuildMusicManager(guild);
 
+        if (guild == null) {
+            Bot.sendMessage(channel, "This command must be used in a server channel.");
+            return;
+        }
+
+        IUser author = event.getAuthor();
+        if (!author.getPermissionsForGuild(guild).contains(Permissions.VOICE_MUTE_MEMBERS)) {
+            Bot.sendMessage(channel, "You don't have permission pause the song that's currently playing.");
+            return;
+        }
+
+        GuildMusicManager musicManager = Youtube.getGuildMusicManager(guild);
         if (!musicManager.getScheduler().isPlaying()) {
             Bot.sendMessage(channel, "There isn't a song currently playing.");
             return;
         }
 
-        IChannel userVoiceChannel = event.getAuthor().getVoiceStateForGuild(guild).getChannel();
+        IChannel userVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
         if (userVoiceChannel == null) {
             Bot.sendMessage(channel, "You aren't in a voice channel.");
             return;
         }
 
+        IUser bot = event.getClient().getOurUser();
         IChannel botVoiceChannel = bot.getVoiceStateForGuild(guild).getChannel();
         if (userVoiceChannel != botVoiceChannel) {
             Bot.sendMessage(channel, "You aren't in the same voice channel as me.");
@@ -179,21 +192,31 @@ public class Youtube {
     public static void resume(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
-        IUser author = event.getAuthor();
-        IUser bot = event.getClient().getOurUser();
-        GuildMusicManager musicManager = Youtube.getGuildMusicManager(guild);
 
+        if (guild == null) {
+            Bot.sendMessage(channel, "This command must be used in a server channel.");
+            return;
+        }
+
+        IUser author = event.getAuthor();
+        if (!author.getPermissionsForGuild(guild).contains(Permissions.VOICE_MUTE_MEMBERS)) {
+            Bot.sendMessage(channel, "You don't have permission pause the song that's currently playing.");
+            return;
+        }
+
+        GuildMusicManager musicManager = Youtube.getGuildMusicManager(guild);
         if (!musicManager.getScheduler().isPlaying()) {
             Bot.sendMessage(channel, "There isn't a song currently playing.");
             return;
         }
 
-        IChannel userVoiceChannel = event.getAuthor().getVoiceStateForGuild(guild).getChannel();
+        IChannel userVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
         if (userVoiceChannel == null) {
             Bot.sendMessage(channel, "You aren't in a voice channel.");
             return;
         }
 
+        IUser bot = event.getClient().getOurUser();
         IChannel botVoiceChannel = bot.getVoiceStateForGuild(guild).getChannel();
         if (userVoiceChannel != botVoiceChannel) {
             Bot.sendMessage(channel, "You aren't in the same voice channel as me.");
@@ -213,27 +236,32 @@ public class Youtube {
     public static void stop(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
-        IUser author = event.getAuthor();
-        IUser bot = event.getClient().getOurUser();
+
+        if (guild == null) {
+            Bot.sendMessage(channel, "This command must be used in a server channel.");
+            return;
+        }
+
         TrackScheduler scheduler = Youtube.getGuildMusicManager(guild).getScheduler();
         Song currentSong = scheduler.getCurrentSong();
-
         if (currentSong == null) {
             Bot.sendMessage(channel, "There isn't a song currently playing.");
             return;
         }
 
+        IUser author = event.getAuthor();
         if (scheduler.getCurrentSong().getSubmitter() != author) {
             Bot.sendMessage(channel, "You don't have permission to stop the song that's currently playing.");
             return;
         }
 
-        IChannel userVoiceChannel = event.getAuthor().getVoiceStateForGuild(guild).getChannel();
+        IChannel userVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
         if (userVoiceChannel == null) {
             Bot.sendMessage(channel, "You aren't in a voice channel.");
             return;
         }
 
+        IUser bot = event.getClient().getOurUser();
         IChannel botVoiceChannel = bot.getVoiceStateForGuild(guild).getChannel();
         if (userVoiceChannel != botVoiceChannel) {
             Bot.sendMessage(channel, "You aren't in the same voice channel as me.");
