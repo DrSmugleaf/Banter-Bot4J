@@ -3,6 +3,8 @@ package com.github.drsmugbrain.commands;
 import com.github.drsmugbrain.util.Bot;
 import com.github.drsmugbrain.youtube.*;
 import com.google.api.services.youtube.model.SearchResult;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by DrSmugleaf on 04/09/2017.
@@ -24,6 +27,9 @@ public class Youtube {
     private static final AudioPlayerManager PLAYER_MANAGER = new DefaultAudioPlayerManager();
     private static final Map<IGuild, GuildMusicManager> MUSIC_MANAGERS = new HashMap<>();
     private static final Map<IGuild, List<IUser>> SKIP_VOTES = new HashMap<>();
+    private static final Cache<IUser, List<Song>> UNDO_STOP_CACHE = CacheBuilder.newBuilder()
+            .expireAfterWrite(1, TimeUnit.MINUTES)
+            .build();
 
     static {
         AudioSourceManagers.registerRemoteSources(Youtube.PLAYER_MANAGER);
@@ -248,9 +254,45 @@ public class Youtube {
             return;
         }
 
+        GuildMusicManager musicManager = Youtube.getGuildMusicManager(guild);
+        if (musicManager.getScheduler().getCurrentSong() == null) {
+            Bot.sendMessage(channel, "There aren't any songs currently playing or in the queue.");
+            return;
+        }
+
         TrackScheduler scheduler = Youtube.getGuildMusicManager(guild).getScheduler();
+        Youtube.UNDO_STOP_CACHE.put(author, scheduler.getQueue());
         scheduler.stop();
-        Bot.sendMessage(channel, "Stopped and removed all songs from the queue.");
+        Bot.sendMessage(
+                channel,
+                "Stopped and removed all songs from the queue.\n" +
+                "You have one minute to restore them back to the queue using " + Bot.BOT_PREFIX + "undostop."
+        );
+    }
+
+    @Command
+    public static void undostop(MessageReceivedEvent event, List<String> args) {
+        IGuild guild = event.getGuild();
+        IChannel channel = event.getChannel();
+
+        if (guild == null) {
+            Bot.sendMessage(channel, "This command must be used in a server channel.");
+            return;
+        }
+
+        IUser author = event.getAuthor();
+        List<Song> songs = Youtube.UNDO_STOP_CACHE.getIfPresent(author);
+        if (songs == null) {
+            Bot.sendMessage(channel, "You haven't stopped any songs in the last minute.");
+            return;
+        }
+
+        Youtube.UNDO_STOP_CACHE.invalidate(author);
+        TrackScheduler scheduler = Youtube.getGuildMusicManager(guild).getScheduler();
+        for (Song song : songs) {
+            scheduler.queue(song);
+        }
+        Bot.sendMessage(channel, "Restored all stopped songs.");
     }
 
     @SongEventHandler(event = SongStartEvent.class)

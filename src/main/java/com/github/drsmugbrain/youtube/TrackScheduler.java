@@ -7,7 +7,9 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 /**
@@ -46,6 +48,11 @@ public class TrackScheduler extends AudioEventAdapter {
                 this.QUEUE.clear();
                 break;
         }
+    }
+
+    @Nonnull
+    public List<Song> getQueue() {
+        return new ArrayList<>(this.QUEUE);
     }
 
     @Nullable
