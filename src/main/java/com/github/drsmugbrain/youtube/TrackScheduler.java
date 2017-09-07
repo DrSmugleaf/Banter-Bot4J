@@ -25,7 +25,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
-        Event event = new SongStartEvent(this.PLAYER, this.currentSong);
+        Event event = new SongStartEvent(this.currentSong);
         EventDispatcher.dispatch(event);
     }
 
@@ -58,7 +58,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public void queue(@Nonnull Song song) {
         if (this.isPlaying()) {
-            Event event = new SongQueueEvent(this.PLAYER, song);
+            Event event = new SongQueueEvent(song);
             EventDispatcher.dispatch(event);
             this.QUEUE.offer(song);
         } else {

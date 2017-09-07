@@ -246,14 +246,29 @@ public class Youtube {
 
     @SongEventHandler(event = SongStartEvent.class)
     public static void handle(@Nonnull SongStartEvent event) {
-        String response = String.format("Now playing `%s`.", event.getSong().getTrack().getInfo().title);
-        Bot.sendMessage(event.getSong().getChannel(), response);
+        Song song = event.getSong();
+        String response = String.format("Now playing `%s`.", song.getTrack().getInfo().title);
+        Bot.sendMessage(song.getChannel(), response);
     }
 
     @SongEventHandler(event = SongQueueEvent.class)
     public static void handle(@Nonnull SongQueueEvent event) {
-        String response = String.format("Added `%s` to the queue.", event.getSong().getTrack().getInfo().title);
-        Bot.sendMessage(event.getSong().getChannel(), response);
+        Song song = event.getSong();
+        String response = String.format("Added `%s` to the queue.", song.getTrack().getInfo().title);
+        Bot.sendMessage(song.getChannel(), response);
+    }
+
+    @SongEventHandler(event = NoMatchesEvent.class)
+    public static void handle(@Nonnull NoMatchesEvent event) {
+        AudioResultHandler handler = event.getHandler();
+        String response = String.format("No results found for %s.", handler.getSearchString());
+        Bot.sendMessage(handler.getChannel(), response);
+    }
+
+    @SongEventHandler(event = LoadFailedEvent.class)
+    public static void handle(@Nonnull LoadFailedEvent event) {
+        String response = String.format("Error playing song: %s", event.getException().getMessage());
+        Bot.sendMessage(event.getHandler().getChannel(), response);
     }
 
 }

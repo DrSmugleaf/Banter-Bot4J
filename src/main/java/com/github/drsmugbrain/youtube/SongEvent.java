@@ -1,7 +1,5 @@
 package com.github.drsmugbrain.youtube;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
-
 import javax.annotation.Nonnull;
 
 /**
@@ -11,8 +9,8 @@ public abstract class SongEvent extends Event {
 
     private final Song SONG;
 
-    protected SongEvent(@Nonnull AudioPlayer player, @Nonnull Song song) {
-        super(player);
+    protected SongEvent(@Nonnull Song song) {
+        super();
         this.SONG = song;
     }
 

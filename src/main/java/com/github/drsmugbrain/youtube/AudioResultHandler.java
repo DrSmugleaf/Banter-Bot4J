@@ -29,6 +29,18 @@ public class AudioResultHandler implements AudioLoadResultHandler {
         this.SEARCH_STRING = searchString;
     }
 
+    public IChannel getChannel() {
+        return this.CHANNEL;
+    }
+
+    public IUser getSubmitter() {
+        return this.SUBMITTER;
+    }
+
+    public String getSearchString() {
+        return this.SEARCH_STRING;
+    }
+
     @Override
     public void trackLoaded(AudioTrack track) {
         Song song = new Song(track, this.CHANNEL, this.SUBMITTER);
@@ -50,14 +62,14 @@ public class AudioResultHandler implements AudioLoadResultHandler {
 
     @Override
     public void noMatches() {
-        String response = String.format("No results found for %s.", this.SEARCH_STRING);
-        Bot.sendMessage(this.CHANNEL, response);
+        Event event = new NoMatchesEvent(this);
+        EventDispatcher.dispatch(event);
     }
 
     @Override
     public void loadFailed(FriendlyException exception) {
-        String response = String.format("Error playing song: %s", exception.getMessage());
-        Bot.sendMessage(this.CHANNEL, response);
+        Event event = new LoadFailedEvent(this, exception);
+        EventDispatcher.dispatch(event);
     }
 
 }
