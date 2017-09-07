@@ -242,34 +242,15 @@ public class Youtube {
             return;
         }
 
-        TrackScheduler scheduler = Youtube.getGuildMusicManager(guild).getScheduler();
-        Song currentSong = scheduler.getCurrentSong();
-        if (currentSong == null) {
-            Bot.sendMessage(channel, "There isn't a song currently playing.");
-            return;
-        }
-
         IUser author = event.getAuthor();
-        if (scheduler.getCurrentSong().getSubmitter() != author) {
-            Bot.sendMessage(channel, "You don't have permission to stop the song that's currently playing.");
+        if (!author.getPermissionsForGuild(guild).contains(Permissions.VOICE_MUTE_MEMBERS)) {
+            Bot.sendMessage(channel, "You don't have permission to stop all songs currently queued.");
             return;
         }
 
-        IChannel userVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
-        if (userVoiceChannel == null) {
-            Bot.sendMessage(channel, "You aren't in a voice channel.");
-            return;
-        }
-
-        IUser bot = event.getClient().getOurUser();
-        IChannel botVoiceChannel = bot.getVoiceStateForGuild(guild).getChannel();
-        if (userVoiceChannel != botVoiceChannel) {
-            Bot.sendMessage(channel, "You aren't in the same voice channel as me.");
-            return;
-        }
-
-        scheduler.skip();
-        Bot.sendMessage(channel, "Stopped the current song.");
+        TrackScheduler scheduler = Youtube.getGuildMusicManager(guild).getScheduler();
+        scheduler.stop();
+        Bot.sendMessage(channel, "Stopped and removed all songs from the queue.");
     }
 
     @SongEventHandler(event = SongStartEvent.class)

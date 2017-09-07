@@ -39,6 +39,13 @@ public class TrackScheduler extends AudioEventAdapter {
                 this.PLAYER.playTrack(this.currentSong.getTrack());
             }
         }
+
+        switch (endReason) {
+            case STOPPED:
+            case CLEANUP:
+                this.QUEUE.clear();
+                break;
+        }
     }
 
     @Nullable
@@ -82,6 +89,10 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public void resume() {
         this.PLAYER.setPaused(false);
+    }
+
+    public void stop() {
+        this.PLAYER.stopTrack();
     }
 
 }
