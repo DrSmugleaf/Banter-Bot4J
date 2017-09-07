@@ -58,7 +58,10 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public void skip() {
-        this.PLAYER.startTrack(this.QUEUE.poll().getTrack(), false);
+        this.PLAYER.startTrack(null, false);
+        if (this.hasNextSong()) {
+            this.PLAYER.startTrack(this.QUEUE.poll().getTrack(), false);
+        }
     }
 
     public void pause() {
