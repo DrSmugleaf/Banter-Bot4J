@@ -2,11 +2,11 @@ package com.github.drsmugbrain.youtube;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
-import javax.annotation.Nullable;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -24,7 +24,13 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     @Override
-    public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {}
+    public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
+        if (endReason.mayStartNext) {
+            if (this.hasNextSong()) {
+                this.PLAYER.playTrack(this.QUEUE.poll().getTrack());
+            }
+        }
+    }
 
     @Nullable
     public Song getCurrentSong() {
@@ -32,7 +38,7 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public boolean hasNextSong() {
-        return this.QUEUE.size() > 1;
+        return this.QUEUE.size() >= 1;
     }
 
     public boolean isPlaying() {
