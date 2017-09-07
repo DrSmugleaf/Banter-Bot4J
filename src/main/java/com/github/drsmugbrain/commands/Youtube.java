@@ -297,6 +297,8 @@ public class Youtube {
 
         Youtube.UNDO_STOP_CACHE.invalidate(pair);
         TrackScheduler scheduler = Youtube.getGuildMusicManager(guild).getScheduler();
+        songs.addAll(scheduler.getQueue());
+        scheduler.stop();
         for (Song song : songs) {
             scheduler.queue(song);
         }
