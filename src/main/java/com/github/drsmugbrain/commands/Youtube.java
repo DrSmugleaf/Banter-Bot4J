@@ -250,4 +250,10 @@ public class Youtube {
         Bot.sendMessage(event.getSong().getChannel(), response);
     }
 
+    @SongEventHandler(event = SongQueueEvent.class)
+    public static void handle(@Nonnull SongQueueEvent event) {
+        String response = String.format("Added `%s` to the queue.", event.getSong().getTrack().getInfo().title);
+        Bot.sendMessage(event.getSong().getChannel(), response);
+    }
+
 }

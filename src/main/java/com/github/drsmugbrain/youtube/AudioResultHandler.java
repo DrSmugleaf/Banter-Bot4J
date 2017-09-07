@@ -31,17 +31,8 @@ public class AudioResultHandler implements AudioLoadResultHandler {
 
     @Override
     public void trackLoaded(AudioTrack track) {
-        boolean isPlaying = this.MUSIC_MANAGER.getScheduler().isPlaying();
-
         Song song = new Song(track, this.CHANNEL, this.SUBMITTER);
         this.MUSIC_MANAGER.getScheduler().queue(song);
-
-        String response;
-        String trackTitle = track.getInfo().title;
-        if (isPlaying) {
-            response = String.format("Added `%s` to the queue.", trackTitle);
-            Bot.sendMessage(this.CHANNEL, response);
-        }
     }
 
     @Override

@@ -58,6 +58,8 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public void queue(@Nonnull Song song) {
         if (this.isPlaying()) {
+            Event event = new SongQueueEvent(this.PLAYER, song);
+            EventDispatcher.dispatch(event);
             this.QUEUE.offer(song);
         } else {
             this.currentSong = song;
