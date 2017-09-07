@@ -95,7 +95,7 @@ public class Youtube {
         }
 
         GuildMusicManager musicManager = Youtube.getGuildMusicManager(guild);
-        if (!musicManager.getScheduler().isPlaying()) {
+        if (musicManager.getScheduler().getCurrentSong() == null) {
             Bot.sendMessage(channel, "There isn't a song currently playing.");
             return;
         }
@@ -134,7 +134,7 @@ public class Youtube {
         int votes = Youtube.SKIP_VOTES.get(guild).size();
         int requiredVotes = humanUsers / 2;
 
-        if (votes >= requiredVotes) {
+        if (votes >= requiredVotes || author == musicManager.getScheduler().getCurrentSong().getSubmitter()) {
             Youtube.SKIP_VOTES.clear();
             musicManager.getScheduler().skip();
             Bot.sendMessage(channel, "Skipped the current song.");
