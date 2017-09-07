@@ -8,9 +8,11 @@ import com.google.common.cache.CacheBuilder;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import javafx.util.Pair;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.*;
+import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.MissingPermissionsException;
 
 import javax.annotation.Nonnull;
@@ -299,6 +301,55 @@ public class Youtube {
         scheduler.stop();
         scheduler.queue(songs);
         Bot.sendMessage(channel, "Restored all stopped songs.");
+    }
+
+    @Command
+    public static void queue(MessageReceivedEvent event, List<String> args) {
+        IGuild guild = event.getGuild();
+        IChannel channel = event.getChannel();
+        IUser author = event.getAuthor();
+
+        if (guild == null) {
+            Bot.sendMessage(channel, "This command must be used in a server channel.");
+            return;
+        }
+
+        TrackScheduler scheduler = Youtube.getGuildMusicManager(guild).getScheduler();
+        Song currentSong = scheduler.getCurrentSong();
+        if (currentSong == null) {
+            Bot.sendMessage(channel, "There are no songs currently playing or in the queue.");
+            return;
+        }
+
+        AudioTrack track = currentSong.getTrack();
+        TimeUnit msUnit = TimeUnit.MILLISECONDS;
+        long trackDuration = track.getDuration();
+        String duration = String.format(
+                "%02d:%02d:%02d",
+                msUnit.toHours(trackDuration) % 24,
+                msUnit.toMinutes(trackDuration) % 60,
+                msUnit.toSeconds(trackDuration) % 60
+        );
+
+        long trackTimeLeft = trackDuration - track.getPosition();
+        String timeLeft = String.format(
+                "%02d:%02d:%02d",
+                msUnit.toHours(trackTimeLeft) % 24,
+                msUnit.toMinutes(trackTimeLeft) % 60,
+                msUnit.toSeconds(trackTimeLeft) % 60
+        );
+
+        List<Song> queue = scheduler.getQueue();
+        EmbedBuilder builder = new EmbedBuilder();
+        builder.withAuthorName(author.getDisplayName(guild))
+                .withAuthorIcon(author.getAvatarURL())
+                .withTitle("Currently playing: " + track.getInfo().title)
+                .appendDescription("Song Duration: " + duration)
+                .appendDescription("\n")
+                .appendDescription("Time remaining: " + timeLeft)
+                .appendField("Songs in queue", String.valueOf(queue.size()), false);
+
+        Bot.sendMessage(channel, builder.build());
     }
 
     @SongEventHandler(event = SongStartEvent.class)

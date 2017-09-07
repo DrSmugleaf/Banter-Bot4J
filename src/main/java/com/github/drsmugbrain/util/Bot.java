@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
+import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IRole;
@@ -46,6 +47,17 @@ public class Bot {
                 channel.sendMessage(message);
             } catch (DiscordException e) {
                 Bot.LOGGER.error("Message could not be sent", e);
+                throw e;
+            }
+        });
+    }
+
+    public static void sendMessage(IChannel channel, EmbedObject embed) {
+        RequestBuffer.request(() -> {
+            try {
+                channel.sendMessage(embed);
+            } catch (DiscordException e) {
+                Bot.LOGGER.error("Embed could not be sent", e);
                 throw e;
             }
         });
