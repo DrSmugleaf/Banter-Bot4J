@@ -8,6 +8,7 @@ import com.google.common.cache.CacheBuilder;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import javafx.util.Pair;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.MissingPermissionsException;
@@ -27,7 +28,7 @@ public class Youtube {
     private static final AudioPlayerManager PLAYER_MANAGER = new DefaultAudioPlayerManager();
     private static final Map<IGuild, GuildMusicManager> MUSIC_MANAGERS = new HashMap<>();
     private static final Map<IGuild, List<IUser>> SKIP_VOTES = new HashMap<>();
-    private static final Cache<IUser, List<Song>> UNDO_STOP_CACHE = CacheBuilder.newBuilder()
+    private static final Cache<Pair<IGuild, IUser>, List<Song>> UNDO_STOP_CACHE = CacheBuilder.newBuilder()
             .expireAfterWrite(1, TimeUnit.MINUTES)
             .build();
 
@@ -261,7 +262,8 @@ public class Youtube {
         }
 
         TrackScheduler scheduler = Youtube.getGuildMusicManager(guild).getScheduler();
-        Youtube.UNDO_STOP_CACHE.put(author, scheduler.getQueue());
+        Pair<IGuild, IUser> pair = new Pair<>(guild, author);
+        Youtube.UNDO_STOP_CACHE.put(pair, scheduler.getQueue());
         scheduler.stop();
         Bot.sendMessage(
                 channel,
@@ -281,13 +283,14 @@ public class Youtube {
         }
 
         IUser author = event.getAuthor();
-        List<Song> songs = Youtube.UNDO_STOP_CACHE.getIfPresent(author);
+        Pair<IGuild, IUser> pair = new Pair<>(guild, author);
+        List<Song> songs = Youtube.UNDO_STOP_CACHE.getIfPresent(pair);
         if (songs == null) {
             Bot.sendMessage(channel, "You haven't stopped any songs in the last minute.");
             return;
         }
 
-        Youtube.UNDO_STOP_CACHE.invalidate(author);
+        Youtube.UNDO_STOP_CACHE.invalidate(pair);
         TrackScheduler scheduler = Youtube.getGuildMusicManager(guild).getScheduler();
         for (Song song : songs) {
             scheduler.queue(song);
