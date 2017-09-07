@@ -262,8 +262,13 @@ public class Youtube {
         }
 
         TrackScheduler scheduler = Youtube.getGuildMusicManager(guild).getScheduler();
+
         Pair<IGuild, IUser> pair = new Pair<>(guild, author);
-        Youtube.UNDO_STOP_CACHE.put(pair, scheduler.getQueue());
+        List<Song> songs = new ArrayList<>();
+        songs.add(scheduler.getCurrentSong());
+        songs.addAll(scheduler.getQueue());
+        Youtube.UNDO_STOP_CACHE.put(pair, songs);
+
         scheduler.stop();
         Bot.sendMessage(
                 channel,
