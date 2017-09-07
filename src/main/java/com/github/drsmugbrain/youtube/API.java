@@ -48,7 +48,7 @@ public class API {
         }
 
         List<SearchResult> searchItems = searchResponse.getItems();
-        if (searchItems == null) {
+        if (searchItems.size() == 0) {
             Bot.LOGGER.warn("No search results found for youtube video: " + query);
             return null;
         }

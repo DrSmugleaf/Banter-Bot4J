@@ -47,7 +47,6 @@ public class AudioResultHandler implements AudioLoadResultHandler {
     @Override
     public void playlistLoaded(AudioPlaylist playlist) {
         List<AudioTrack> tracks = playlist.getTracks();
-        boolean isPlaying = this.MUSIC_MANAGER.getScheduler().isPlaying();
 
         for (AudioTrack track : tracks) {
             Song song = new Song(track, this.CHANNEL, this.SUBMITTER);
