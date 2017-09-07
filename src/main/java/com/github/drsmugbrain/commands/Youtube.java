@@ -135,7 +135,7 @@ public class Youtube {
         int requiredVotes = humanUsers / 2;
 
         if (votes >= requiredVotes || author == musicManager.getScheduler().getCurrentSong().getSubmitter()) {
-            Youtube.SKIP_VOTES.clear();
+            Youtube.SKIP_VOTES.get(guild).clear();
             musicManager.getScheduler().skip();
             Bot.sendMessage(channel, "Skipped the current song.");
         } else {
