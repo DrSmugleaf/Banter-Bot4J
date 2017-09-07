@@ -31,6 +31,8 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
+        this.currentSong = null;
+
         if (endReason.mayStartNext) {
             if (this.hasNextSong()) {
                 this.currentSong = this.QUEUE.poll();
