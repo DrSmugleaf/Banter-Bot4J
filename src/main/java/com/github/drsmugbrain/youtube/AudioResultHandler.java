@@ -1,7 +1,6 @@
 package com.github.drsmugbrain.youtube;
 
 import com.github.drsmugbrain.commands.Youtube;
-import com.github.drsmugbrain.util.Bot;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
@@ -10,6 +9,7 @@ import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IUser;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,14 +50,16 @@ public class AudioResultHandler implements AudioLoadResultHandler {
     @Override
     public void playlistLoaded(AudioPlaylist playlist) {
         List<AudioTrack> tracks = playlist.getTracks();
+        List<Song> songs = new ArrayList<>();
 
         for (AudioTrack track : tracks) {
             Song song = new Song(track, this.CHANNEL, this.SUBMITTER);
             this.MUSIC_MANAGER.getScheduler().queue(song);
+            songs.add(song);
         }
 
-        String response = String.format("Added %d songs to the queue.", tracks.size());
-        Bot.sendMessage(this.CHANNEL, response);
+        Event event = new PlaylistQueueEvent(this, songs);
+        EventDispatcher.dispatch(event);
     }
 
     @Override
