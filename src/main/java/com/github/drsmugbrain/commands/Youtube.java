@@ -324,7 +324,7 @@ public class Youtube {
         AudioTrack track = currentSong.getTrack();
         TimeUnit msUnit = TimeUnit.MILLISECONDS;
         long trackDuration = track.getDuration();
-        String duration = String.format(
+        String trackDurationString = String.format(
                 "%02d:%02d:%02d",
                 msUnit.toHours(trackDuration) % 24,
                 msUnit.toMinutes(trackDuration) % 60,
@@ -332,22 +332,45 @@ public class Youtube {
         );
 
         long trackTimeLeft = trackDuration - track.getPosition();
-        String timeLeft = String.format(
+        String trackTimeLeftString = String.format(
                 "%02d:%02d:%02d",
                 msUnit.toHours(trackTimeLeft) % 24,
                 msUnit.toMinutes(trackTimeLeft) % 60,
                 msUnit.toSeconds(trackTimeLeft) % 60
         );
 
+        String songStatus = "Playing";
+        if (scheduler.isPaused()) {
+            songStatus = "Paused";
+        }
+
         List<Song> queue = scheduler.getQueue();
         EmbedBuilder builder = new EmbedBuilder();
         builder.withAuthorName(author.getDisplayName(guild))
                 .withAuthorIcon(author.getAvatarURL())
                 .withTitle("Currently playing: " + track.getInfo().title)
-                .appendDescription("Song Duration: " + duration)
                 .appendDescription("\n")
-                .appendDescription("Time remaining: " + timeLeft)
+                .appendDescription("Song status: " + songStatus)
+                .appendDescription("\n")
+                .appendDescription("Song duration: " + trackDurationString)
+                .appendDescription("\n")
+                .appendDescription("Time remaining: " + trackTimeLeftString)
                 .appendField("Songs in queue", String.valueOf(queue.size()), false);
+
+        if (scheduler.hasNextSong()) {
+            long queueDuration = 0;
+            for (Song song : queue) {
+                queueDuration += song.getTrack().getDuration();
+            }
+            String queueDurationString = String.format(
+                    "%02d:%02d:%02d",
+                    msUnit.toHours(queueDuration) % 24,
+                    msUnit.toMinutes(queueDuration) % 60,
+                    msUnit.toSeconds(queueDuration) % 60
+            );
+
+            builder.appendField("Queue duration", queueDurationString, false);
+        }
 
         Bot.sendMessage(channel, builder.build());
     }
