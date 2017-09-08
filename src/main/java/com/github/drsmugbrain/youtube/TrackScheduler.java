@@ -106,6 +106,11 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public void queue(@Nonnull List<Song> songs) {
+        if (songs.size() == 1) {
+            this.queue(songs.get(0));
+            return;
+        }
+
         Song firstSong = songs.remove(0);
         if (!this.play(firstSong, true)) {
             this.QUEUE.offer(firstSong);
