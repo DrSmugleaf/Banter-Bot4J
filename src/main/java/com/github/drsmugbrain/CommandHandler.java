@@ -46,7 +46,13 @@ public class CommandHandler {
                         Bot.LOGGER.error("Error running command", e);
                     }
                 };
-                commandMap.put(method.getName(), command);
+
+                String commandName = method.getAnnotation(com.github.drsmugbrain.commands.Command.class).name();
+                if (!commandName.isEmpty()) {
+                    commandMap.put(commandName, command);
+                } else {
+                    commandMap.put(method.getName(), command);
+                }
             }));
         }
 
