@@ -47,6 +47,7 @@ public class Bot {
                 channel.sendMessage(message);
             } catch (DiscordException e) {
                 Bot.LOGGER.error("Message could not be sent", e);
+                throw e;
             }
         });
     }
@@ -59,6 +60,21 @@ public class Bot {
                 Bot.LOGGER.error("Message could not be sent", e);
             }
         });
+    }
+
+    public static IUser fetchUser(long id) {
+        final IUser[] user = new IUser[1];
+
+        RequestBuffer.request(() -> {
+            try {
+                user[0] = Bot.client.fetchUser(id);
+            } catch (DiscordException e) {
+                Bot.LOGGER.error("User couldn't be fetched", e);
+                throw e;
+            }
+        }).get();
+
+        return user[0];
     }
 
     public static boolean isOwner(Long userID) {

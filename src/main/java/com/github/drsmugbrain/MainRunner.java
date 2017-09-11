@@ -27,7 +27,7 @@ public class MainRunner {
 
         // Register a listener via the EventSubscriber annotation which allows for organisation and delegation of events
         cli.getDispatcher().registerListener(new CommandHandler());
-        cli.getDispatcher().registerListeners(Guild.class, User.class, PokemonCommands.class);
+        cli.getDispatcher().registerListeners(Guild.class, User.class, Member.class, PokemonCommands.class);
         Env.readFile();
         new Database();
 
