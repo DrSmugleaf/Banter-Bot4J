@@ -204,7 +204,21 @@ public enum BaseVolatileStatus {
     PERISH_2("Perish 2"),
     PERISH_3("Perish 3"),
 
-    UPROAR("Uproar");
+    UPROAR("Uproar"),
+
+    BOUNCE("Bounce", 1) {
+        @Override
+        protected void onTrainerTurnStart(Pokemon pokemon, Trainer trainer, Battle battle) {
+            pokemon.setValidMoves(BaseMove.BOUNCE);
+            super.onTrainerTurnStart(pokemon, trainer, battle);
+        }
+
+        @Override
+        protected void remove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, BaseMove move) {
+
+            super.remove(user, target, battle, trainer, move);
+        }
+    };
 
     private final String NAME;
     private final Integer DURATION;

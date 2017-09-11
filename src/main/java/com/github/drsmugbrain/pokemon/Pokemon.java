@@ -518,9 +518,10 @@ public class Pokemon {
         this.damage(damage);
     }
 
-    protected void damage(Move move, Pokemon attacker) {
+    protected int damage(Move move, Pokemon attacker) {
         int amount = move.getBaseMove().getDamage(attacker, this, move);
         this.damage(amount);
+        return amount;
     }
 
     protected void heal(int amount) {
@@ -560,8 +561,6 @@ public class Pokemon {
     protected void resetStatus() {
         this.status = null;
     }
-
-    protected void addVolatileStatus(BaseVolatileStatus status, Pokemon pokemon, int duration) {}
 
     protected void addVolatileStatus(VolatileStatus status) {
         this.VOLATILE_STATUSES.put(status.getBaseVolatileStatus(), status);
