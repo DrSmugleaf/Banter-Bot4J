@@ -101,10 +101,6 @@ public class Move {
         this.damageMultiplier = 1.0;
     }
 
-    protected void use(@Nonnull Pokemon user, @Nonnull Pokemon target) {
-
-    }
-
     protected void use(@Nonnull Pokemon user, @Nonnull Pokemon target, @Nonnull Battle battle, @Nonnull Trainer trainer) {
         PokemonMoveEvent event = new PokemonMoveEvent(user, this);
         EventDispatcher.dispatch(event);

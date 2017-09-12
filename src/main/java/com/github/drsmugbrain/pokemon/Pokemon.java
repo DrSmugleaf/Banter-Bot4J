@@ -585,8 +585,10 @@ public class Pokemon {
         return this.VOLATILE_STATUSES.containsKey(status);
     }
 
-    protected void removeVolatileStatus(BaseVolatileStatus status) {
-        this.VOLATILE_STATUSES.remove(status);
+    protected void removeVolatileStatus(BaseVolatileStatus... statuses) {
+        for (BaseVolatileStatus status : statuses) {
+            this.VOLATILE_STATUSES.remove(status);
+        }
     }
 
     protected void resetLoweredStats() {
@@ -763,6 +765,16 @@ public class Pokemon {
 
     protected void setTrainer(Trainer trainer) {
         this.trainer = trainer;
+    }
+
+    protected boolean isImmune(@Nonnull Move move) {
+        for (Type type : this.TYPES) {
+            if (type.getImmunities().contains(move.getType())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

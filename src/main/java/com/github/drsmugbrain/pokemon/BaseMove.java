@@ -564,7 +564,40 @@ public enum BaseMove {
         }
     },
     BREAKNECK_BLITZ("Breakneck Blitz"),
-    BRICK_BREAK("Brick Break"),
+    BRICK_BREAK("Brick Break") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            switch (battle.getGeneration()) {
+                case I:
+                case II:
+                    throw new InvalidGenerationException(battle.getGeneration());
+                case III:
+                    if (target.getTrainer() == user.getTrainer()) {
+                        break;
+                    }
+                case IV:
+                    for (Pokemon pokemon : target.getTrainer().getActivePokemons()) {
+                        pokemon.removeVolatileStatus(BaseVolatileStatus.LIGHT_SCREEN, BaseVolatileStatus.REFLECT);
+                    }
+                    break;
+                case V:
+                case VI:
+                case VII:
+                    if (target.isImmune(move)) {
+                        break;
+                    }
+
+                    for (Pokemon pokemon : target.getTrainer().getActivePokemons()) {
+                        pokemon.removeVolatileStatus(BaseVolatileStatus.LIGHT_SCREEN, BaseVolatileStatus.REFLECT, BaseVolatileStatus.AURORA_VEIL);
+                    }
+                    break;
+                default:
+                    throw new InvalidGenerationException(battle.getGeneration());
+            }
+
+            return super.use(user, target, battle, trainer, move);
+        }
+    },
     BRINE("Brine"),
     BRUTAL_SWING("Brutal Swing"),
     BUBBLE("Bubble"),

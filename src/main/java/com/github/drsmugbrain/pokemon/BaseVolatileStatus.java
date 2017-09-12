@@ -218,7 +218,10 @@ public enum BaseVolatileStatus {
 
             super.remove(user, target, battle, trainer, move);
         }
-    };
+    },
+
+    LIGHT_SCREEN("Light Screen"),
+    REFLECT("Reflect");
 
     private final String NAME;
     private final Integer DURATION;
