@@ -333,6 +333,8 @@ public enum Item {
         return this.NAME;
     }
 
+    protected void use(@Nonnull Pokemon user, @Nonnull Battle battle) {}
+
     private static class Holder {
         static Map<String, Item> MAP = new HashMap<>();
     }

@@ -510,7 +510,13 @@ public enum BaseMove {
     BLAST_BURN("Blast Burn"),
     BLAZE_KICK("Blaze Kick"),
     BLIZZARD("Blizzard"),
-    BLOCK("Block"),
+    BLOCK("Block") {
+        @Override
+        protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            user.raiseStatStage(Stat.DEFENSE, 1);
+            return super.useAsZMove(user, target, battle, trainer, move);
+        }
+    },
     BLOOM_DOOM("Bloom Doom"),
     BLUE_FLARE("Blue Flare"),
     BODY_SLAM("Body Slam"),
@@ -598,16 +604,52 @@ public enum BaseMove {
             return super.use(user, target, battle, trainer, move);
         }
     },
-    BRINE("Brine"),
+    BRINE("Brine") {
+        @Override
+        public int getPower(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
+            int defenderCurrentHP = target.getCurrentStat(Stat.HP);
+            int defenderMaxHP = target.getStat(Stat.HP);
+            if (defenderCurrentHP <= defenderMaxHP / 2) {
+                return this.POWER * 2;
+            } else {
+                return this.POWER;
+            }
+        }
+    },
     BRUTAL_SWING("Brutal Swing"),
     BUBBLE("Bubble"),
     BUBBLE_BEAM("Bubble Beam"),
-    BUG_BITE("Bug Bite"),
+    BUG_BITE("Bug Bite") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            Item berry = target.getItem();
+            target.removeItem();
+            berry.use(user, battle);
+            return super.use(user, target, battle, trainer, move);
+        }
+    },
     BUG_BUZZ("Bug Buzz"),
     BULK_UP("Bulk Up"),
     BULLDOZE("Bulldoze"),
     BULLET_PUNCH("Bullet Punch"),
-    BULLET_SEED("Bullet Seed"),
+    BULLET_SEED("Bullet Seed") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            Integer repeats;
+            double chance = Math.random();
+            if (chance < 0.375) {
+                repeats = 1;
+            } else if (chance < 0.75) {
+                repeats = 2;
+            } else if (chance < 0.875) {
+                repeats = 3;
+            } else {
+                repeats = 4;
+            }
+
+            return super.use(user, target, battle, trainer, move, repeats);
+        }
+    },
     BURN_UP("Burn Up") {
         @Override
         protected int use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
@@ -626,11 +668,36 @@ public enum BaseMove {
                     break;
             }
 
+            List<Type> types = user.getTypes();
+            if (types.contains(Type.FIRE)) {
+                types.remove(Type.FIRE);
+                if (types.size() == 0) {
+                    types.add(Type.TYPELESS);
+                }
+
+                user.setTypes(types);
+            }
+
             return super.use(user, target, battle, trainer, move);
+        }
+
+        @Override
+        protected boolean hits(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            if (!user.isType(Type.FIRE)) {
+                return false;
+            }
+
+            return super.hits(user, target, battle, trainer, move);
         }
     },
     CALM_MIND("Calm Mind"),
-    CAMOUFLAGE("Camouflage"),
+    CAMOUFLAGE("Camouflage") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            user.setTypes(Type.NORMAL);
+            return super.use(user, target, battle, trainer, move);
+        }
+    },
     CAPTIVATE("Captivate"),
     CATASTROPIKA("Catastropika"),
     CELEBRATE("Celebrate"),
@@ -2009,6 +2076,25 @@ public enum BaseMove {
             damage += this.use(user, target, battle, trainer, move);
         }
         return damage;
+    }
+
+    protected boolean hits(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+        if (this.getAccuracy() == 0) {
+            return true;
+        }
+
+        if (battle.getGeneration() == Generation.I) {
+            if (Math.random() < 0.004) {
+                return false;
+            }
+        }
+
+        double probability = this.getAccuracy() * (user.getAccuracy() / target.getEvasion());
+        if (probability > 1 || probability < Math.random()) {
+            return true;
+        }
+
+        return false;
     }
 
     public boolean canUseZMove(@Nonnull Pokemon pokemon) {

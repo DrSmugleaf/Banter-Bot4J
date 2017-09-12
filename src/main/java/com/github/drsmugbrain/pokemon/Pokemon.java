@@ -276,6 +276,26 @@ public class Pokemon {
         return this.TYPES;
     }
 
+    protected boolean isType(Type... types) {
+        for (Type type : types) {
+            if (!this.TYPES.contains(type)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    protected void setTypes(List<Type> types) {
+        this.TYPES.clear();
+        this.TYPES.addAll(types);
+    }
+
+    protected void setTypes(Type... types) {
+        this.TYPES.clear();
+        Collections.addAll(this.TYPES, types);
+    }
+
     @Nonnull
     public String[] getTypesString() {
         List<String> types = new ArrayList<>();

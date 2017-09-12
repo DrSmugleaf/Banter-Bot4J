@@ -10,6 +10,7 @@ import java.util.*;
  */
 public enum Type {
 
+    TYPELESS("Typeless"),
     NORMAL("Normal"),
     FIRE("Fire"),
     WATER("Water"),

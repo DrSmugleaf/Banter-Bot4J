@@ -113,20 +113,7 @@ public class Move {
     }
 
     protected void tryUse(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
-        if (this.getBaseMove().getAccuracy() == 0) {
-            this.use(user, target, battle, trainer);
-            return;
-        }
-
-        if (battle.getGeneration() == Generation.I) {
-            if (Math.random() < 0.004) {
-                this.fail(user, target, battle, trainer);
-            }
-            return;
-        }
-
-        double probability = this.getBaseMove().getAccuracy() * (user.getAccuracy() / target.getEvasion());
-        if (probability > 1 || probability > Math.random()) {
+        if (this.getBaseMove().hits(user, target, battle, trainer, this)) {
             this.use(user, target, battle, trainer);
         } else {
             this.fail(user, target, battle, trainer);
