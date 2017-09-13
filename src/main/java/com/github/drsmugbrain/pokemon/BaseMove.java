@@ -496,13 +496,83 @@ public enum BaseMove {
     BIND("Bind") {
         @Override
         protected int use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
-            target.setCanAttackThisTurn(false);
+            switch (battle.getGeneration()) {
+                case I:
+                    target.setCanAttackThisTurn(false);
+                    break;
+                case II:
+                case III:
+                case IV:
+                case V:
+                case VI:
+                case VII:
+                    target.setCanSwitch(false);
+                    break;
+                default:
+                    throw new InvalidGenerationException(battle.getGeneration());
+            }
+
             if (!user.hasVolatileStatus(BaseVolatileStatus.BIND)) {
                 BaseVolatileStatus.BIND.apply(user, target, battle, trainer, move);
             } else if (user.getLastTarget() == target) {
                 move.increasePP(1);
             }
+
             return super.use(user, user, battle, trainer, move);
+        }
+
+        @Override
+        protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, Move move) {
+            switch (attacker.getBattle().getGeneration()) {
+                case I:
+                    if (defender.isImmune(move)) {
+                        return 0;
+                    }
+
+                    return super.getDamage(attacker, defender, move);
+                case II:
+                case III:
+                case IV:
+                case V:
+                    return defender.getStat(Stat.HP) / 16;
+                case VI:
+                case VII:
+                    return defender.getStat(Stat.HP) / 8;
+                default:
+                    throw new InvalidGenerationException(attacker.getBattle().getGeneration());
+            }
+        }
+
+        @Override
+        protected boolean hits(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            switch (battle.getGeneration()) {
+                case I:
+                    if (this.getAccuracy() == 0) {
+                        return true;
+                    }
+
+                    if (battle.getGeneration() == Generation.I) {
+                        if (Math.random() < 0.004) {
+                            return false;
+                        }
+                    }
+
+                    double probability = this.getAccuracy() * (user.getAccuracy() / target.getEvasion());
+                    if (probability > 1 || probability < Math.random()) {
+                        return true;
+                    }
+
+                    return false;
+                case II:
+                case III:
+                case IV:
+                case V:
+                case VI:
+                case VII:
+                    return super.hits(user, target, battle, trainer, move);
+                default:
+                    throw new InvalidGenerationException(battle.getGeneration());
+            }
         }
     },
     BITE("Bite"),
@@ -824,7 +894,88 @@ public enum BaseMove {
             return damage;
         }
     },
-    CLAMP("Clamp"),
+    CLAMP("Clamp") {
+        @Override
+        protected int use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
+            switch (battle.getGeneration()) {
+                case I:
+                    target.setCanAttackThisTurn(false);
+                    break;
+                case II:
+                case III:
+                case IV:
+                case V:
+                case VI:
+                case VII:
+                    target.setCanSwitch(false);
+                    break;
+                default:
+                    throw new InvalidGenerationException(battle.getGeneration());
+            }
+
+            if (!user.hasVolatileStatus(BaseVolatileStatus.CLAMP)) {
+                BaseVolatileStatus.CLAMP.apply(user, target, battle, trainer, move);
+            } else if (user.getLastTarget() == target) {
+                move.increasePP(1);
+            }
+
+            return super.use(user, user, battle, trainer, move);
+        }
+
+        @Override
+        protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, Move move) {
+            switch (attacker.getBattle().getGeneration()) {
+                case I:
+                    if (defender.isImmune(move)) {
+                        return 0;
+                    }
+
+                    return super.getDamage(attacker, defender, move);
+                case II:
+                case III:
+                case IV:
+                case V:
+                    return defender.getStat(Stat.HP) / 16;
+                case VI:
+                case VII:
+                    return defender.getStat(Stat.HP) / 8;
+                default:
+                    throw new InvalidGenerationException(attacker.getBattle().getGeneration());
+            }
+        }
+
+        @Override
+        protected boolean hits(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            switch (battle.getGeneration()) {
+                case I:
+                    if (this.getAccuracy() == 0) {
+                        return true;
+                    }
+
+                    if (battle.getGeneration() == Generation.I) {
+                        if (Math.random() < 0.004) {
+                            return false;
+                        }
+                    }
+
+                    double probability = this.getAccuracy() * (user.getAccuracy() / target.getEvasion());
+                    if (probability > 1 || probability < Math.random()) {
+                        return true;
+                    }
+
+                    return false;
+                case II:
+                case III:
+                case IV:
+                case V:
+                case VI:
+                case VII:
+                    return super.hits(user, target, battle, trainer, move);
+                default:
+                    throw new InvalidGenerationException(battle.getGeneration());
+            }
+        }
+    },
     CLANGING_SCALES("Clanging Scales"),
     CLEAR_SMOG("Clear Smog"),
     CLOSE_COMBAT("Close Combat"),
@@ -2198,6 +2349,10 @@ public enum BaseMove {
     protected boolean hits(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
         if (this.getAccuracy() == 0) {
             return true;
+        }
+
+        if (target.isImmune(move)) {
+            return false;
         }
 
         if (battle.getGeneration() == Generation.I) {

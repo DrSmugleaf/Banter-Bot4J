@@ -158,21 +158,39 @@ public enum BaseVolatileStatus {
         @Override
         protected void apply(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
             double random = Math.random();
-            if (random < 0.375) {
-                this.apply(user, user, battle, trainer, move, 2);
-            } else if (random < 0.75) {
-                this.apply(user, user, battle, trainer, move, 3);
-            } else if (random < 0.875) {
-                this.apply(user, user, battle, trainer, move, 4);
-            } else if (random < 1) {
-                this.apply(user, user, battle, trainer, move, 5);
-            }
-        }
+            Integer duration;
 
-        @Override
-        protected void onDealAttack(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, int damage) {
-            target.setCanAttackThisTurn(false);
-            super.onDealAttack(user, target, battle, trainer, move, damage);
+            switch (battle.getGeneration()) {
+                case I:
+                case II:
+                case III:
+                case IV:
+                    if (random < 0.375) {
+                        duration = 2;
+                    } else if (random < 0.75) {
+                        duration = 3;
+                    } else if (random < 0.875) {
+                        duration = 4;
+                    } else {
+                        duration = 5;
+                    }
+
+                    break;
+                case V:
+                case VI:
+                case VII:
+                    if (random < 0.5) {
+                        duration = 4;
+                    } else {
+                        duration = 5;
+                    }
+
+                    break;
+                default:
+                    throw new InvalidGenerationException(battle.getGeneration());
+            }
+
+            this.apply(user, user, battle, trainer, move, duration);
         }
 
         @Override
@@ -182,8 +200,29 @@ public enum BaseVolatileStatus {
         }
 
         @Override
+        protected void onTurnStart(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            switch (battle.getGeneration()) {
+                case I:
+                    target.setCanAttackThisTurn(false);
+                    break;
+                case II:
+                case III:
+                case IV:
+                case V:
+                case VI:
+                case VII:
+                    target.setCanSwitch(false);
+                    break;
+                default:
+                    throw new InvalidGenerationException(battle.getGeneration());
+            }
+
+            super.onTurnStart(user, target, battle, trainer, move);
+        }
+
+        @Override
         protected void onOwnSwitch(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
-            if (user.getLastTarget() != null) {
+            if (battle.getGeneration() == Generation.I && user.getLastTarget() != null) {
                 user.getLastTarget().setCanAttackThisTurn(false);
             }
             super.onOwnSwitch(user, target, battle, trainer);
@@ -191,7 +230,9 @@ public enum BaseVolatileStatus {
 
         @Override
         protected void afterEnemySwitch(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
-            target.setCanAttackThisTurn(false);
+            if (battle.getGeneration() == Generation.I) {
+                target.setCanAttackThisTurn(false);
+            }
             super.afterEnemySwitch(user, target, battle, trainer);
         }
     },
@@ -261,6 +302,88 @@ public enum BaseVolatileStatus {
                 default:
                     throw new InvalidGenerationException(battle.getGeneration());
             }
+        }
+    },
+    CLAMP("Clamp") {
+        @Override
+        protected void apply(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            double random = Math.random();
+            Integer duration;
+
+            switch (battle.getGeneration()) {
+                case I:
+                case II:
+                case III:
+                case IV:
+                    if (random < 0.375) {
+                        duration = 2;
+                    } else if (random < 0.75) {
+                        duration = 3;
+                    } else if (random < 0.875) {
+                        duration = 4;
+                    } else {
+                        duration = 5;
+                    }
+
+                    break;
+                case V:
+                case VI:
+                case VII:
+                    if (random < 0.5) {
+                        duration = 4;
+                    } else {
+                        duration = 5;
+                    }
+
+                    break;
+                default:
+                    throw new InvalidGenerationException(battle.getGeneration());
+            }
+
+            this.apply(user, user, battle, trainer, move, duration);
+        }
+
+        @Override
+        protected void onTrainerTurnStart(Pokemon pokemon, Trainer trainer, Battle battle) {
+            pokemon.setValidMoves(BaseMove.CLAMP);
+            super.onTrainerTurnStart(pokemon, trainer, battle);
+        }
+
+        @Override
+        protected void onTurnStart(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            switch (battle.getGeneration()) {
+                case I:
+                    target.setCanAttackThisTurn(false);
+                    break;
+                case II:
+                case III:
+                case IV:
+                case V:
+                case VI:
+                case VII:
+                    target.setCanSwitch(false);
+                    break;
+                default:
+                    throw new InvalidGenerationException(battle.getGeneration());
+            }
+
+            super.onTurnStart(user, target, battle, trainer, move);
+        }
+
+        @Override
+        protected void onOwnSwitch(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
+            if (battle.getGeneration() == Generation.I && user.getLastTarget() != null) {
+                user.getLastTarget().setCanAttackThisTurn(false);
+            }
+            super.onOwnSwitch(user, target, battle, trainer);
+        }
+
+        @Override
+        protected void afterEnemySwitch(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
+            if (battle.getGeneration() == Generation.I) {
+                target.setCanAttackThisTurn(false);
+            }
+            super.afterEnemySwitch(user, target, battle, trainer);
         }
     };
 
