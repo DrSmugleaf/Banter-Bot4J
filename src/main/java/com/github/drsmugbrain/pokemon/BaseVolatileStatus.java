@@ -46,7 +46,7 @@ public enum BaseVolatileStatus {
 
     AURORA_VEIL("Aurora Veil", 5) {
         @Override
-        protected void apply(Pokemon user, Pokemon target, Battle battle, Trainer trainer, BaseMove move) {
+        protected void apply(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
             if (battle.getWeather() != Weather.HAIL) {
                 this.fail();
                 return;
@@ -156,7 +156,7 @@ public enum BaseVolatileStatus {
     },
     BIND("Bind") {
         @Override
-        protected void apply(Pokemon user, Pokemon target, Battle battle, Trainer trainer, BaseMove move) {
+        protected void apply(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
             double random = Math.random();
             if (random < 0.375) {
                 this.apply(user, user, battle, trainer, move, 2);
@@ -214,14 +214,55 @@ public enum BaseVolatileStatus {
         }
 
         @Override
-        protected void remove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, BaseMove move) {
+        protected void remove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
 
             super.remove(user, target, battle, trainer, move);
         }
     },
 
     LIGHT_SCREEN("Light Screen"),
-    REFLECT("Reflect");
+    REFLECT("Reflect"),
+    CHARGE("Charge", 2) {
+        @Override
+        protected double modifyDamage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            switch (battle.getGeneration()) {
+                case I:
+                case II:
+                case III:
+                    if (move.getType() == Type.ELECTRIC) {
+                        return 2.0;
+                    }
+                    return 1.0;
+                case IV:
+                case V:
+                case VI:
+                case VII:
+                    return 1.0;
+                default:
+                    throw new InvalidGenerationException(battle.getGeneration());
+            }
+        }
+
+        @Override
+        protected double modifyPower(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            switch (battle.getGeneration()) {
+                case I:
+                case II:
+                case III:
+                    return 1.0;
+                case IV:
+                case V:
+                case VI:
+                case VII:
+                    if (move.getType() == Type.ELECTRIC) {
+                        return 2.0;
+                    }
+                    return 1.0;
+                default:
+                    throw new InvalidGenerationException(battle.getGeneration());
+            }
+        }
+    };
 
     private final String NAME;
     private final Integer DURATION;
@@ -245,21 +286,25 @@ public enum BaseVolatileStatus {
         return this.DURATION;
     }
 
-    protected void apply(Pokemon user, Pokemon target, Battle battle, Trainer trainer, BaseMove move, int duration) {
+    protected void apply(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, int duration) {
         target.addVolatileStatus(new VolatileStatus(this, user, duration));
     }
 
-    protected void apply(Pokemon user, Pokemon target, Battle battle, Trainer trainer, BaseMove move) {
+    protected void apply(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
         this.apply(user, target, battle, trainer, move, this.DURATION);
     }
 
-    protected void remove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, BaseMove move) {
+    protected void remove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
         target.removeVolatileStatus(this);
     }
 
     protected void fail() {}
 
     protected double modifyDamage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+        return 1.0;
+    }
+
+    protected double modifyPower(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
         return 1.0;
     }
 

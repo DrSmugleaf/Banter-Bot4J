@@ -307,7 +307,7 @@ public enum BaseMove {
         @Override
         protected int use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             if (Gender.isOppositeGender(user, target)) {
-                BaseVolatileStatus.INFATUATION.apply(user, target, battle, trainer, this);
+                BaseVolatileStatus.INFATUATION.apply(user, target, battle, trainer, move);
                 return super.use(user, target, battle, trainer, move);
             } else {
                 return this.fail(user, target, battle, trainer, move);
@@ -329,7 +329,7 @@ public enum BaseMove {
                 return this.fail(user, target, battle, trainer, move);
             }
 
-            BaseVolatileStatus.AURORA_VEIL.apply(user, target, battle, trainer, this);
+            BaseVolatileStatus.AURORA_VEIL.apply(user, target, battle, trainer, move);
             return super.use(user, target, battle, trainer, move);
         }
 
@@ -414,12 +414,12 @@ public enum BaseMove {
     BEAK_BLAST("Beak Blast") {
         @Override
         protected void onTurnStart(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
-            BaseVolatileStatus.BEAK_BLAST.apply(user, target, battle, trainer, this);
+            BaseVolatileStatus.BEAK_BLAST.apply(user, target, battle, trainer, null);
         }
 
         @Override
         protected int use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
-            BaseVolatileStatus.BEAK_BLAST.remove(user, target, battle, trainer, this);
+            BaseVolatileStatus.BEAK_BLAST.remove(user, target, battle, trainer, move);
             return super.use(user, target, battle, trainer, move);
         }
     },
@@ -489,7 +489,7 @@ public enum BaseMove {
     BIDE("Bide") {
         @Override
         protected int use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
-            BaseVolatileStatus.BIDE.apply(user, target, battle, trainer, this);
+            BaseVolatileStatus.BIDE.apply(user, target, battle, trainer, move);
             return super.use(user, target, battle, trainer, move);
         }
     },
@@ -498,7 +498,7 @@ public enum BaseMove {
         protected int use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             target.setCanAttackThisTurn(false);
             if (!user.hasVolatileStatus(BaseVolatileStatus.BIND)) {
-                BaseVolatileStatus.BIND.apply(user, target, battle, trainer, this);
+                BaseVolatileStatus.BIND.apply(user, target, battle, trainer, move);
             } else if (user.getLastTarget() == target) {
                 move.increasePP(1);
             }
@@ -698,10 +698,64 @@ public enum BaseMove {
             return super.use(user, target, battle, trainer, move);
         }
     },
-    CAPTIVATE("Captivate"),
+    CAPTIVATE("Captivate") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            if (!Gender.isInfatuatable(user, target)) {
+                return super.fail(user, target, battle, trainer, move);
+            }
+
+            return super.use(user, target, battle, trainer, move);
+        }
+
+        @Override
+        protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            user.raiseStatStage(Stat.SPECIAL_DEFENSE, 2);
+            return super.useAsZMove(user, target, battle, trainer, move);
+        }
+    },
     CATASTROPIKA("Catastropika"),
-    CELEBRATE("Celebrate"),
-    CHARGE("Charge"),
+    CELEBRATE("Celebrate") {
+        @Override
+        protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            user.raiseStatStage(Stat.ATTACK, 1);
+            user.raiseStatStage(Stat.DEFENSE, 1);
+            user.raiseStatStage(Stat.SPECIAL_ATTACK, 1);
+            user.raiseStatStage(Stat.SPECIAL_DEFENSE, 1);
+            user.raiseStatStage(Stat.SPEED, 1);
+
+            return super.useAsZMove(user, target, battle, trainer, move);
+        }
+    },
+    CHARGE("Charge") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            BaseVolatileStatus.CHARGE.apply(user, target, battle, trainer, move);
+
+            switch (battle.getGeneration()) {
+                case I:
+                case II:
+                case III:
+                    break;
+                case IV:
+                case V:
+                case VI:
+                case VII:
+                    user.raiseStatStage(Stat.SPECIAL_DEFENSE, 1);
+                    break;
+                default:
+                    throw new InvalidGenerationException(battle.getGeneration());
+            }
+
+            return super.use(user, target, battle, trainer, move);
+        }
+
+        @Override
+        protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            user.raiseStatStage(Stat.SPECIAL_DEFENSE, 1);
+            return super.useAsZMove(user, target, battle, trainer, move);
+        }
+    },
     CHARGE_BEAM("Charge Beam"),
     CHARM("Charm"),
     CHATTER("Chatter"),
