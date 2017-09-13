@@ -759,8 +759,71 @@ public enum BaseMove {
     CHARGE_BEAM("Charge Beam"),
     CHARM("Charm"),
     CHATTER("Chatter"),
-    CHIP_AWAY("Chip Away"),
-    CIRCLE_THROW("Circle Throw"),
+    CHIP_AWAY("Chip Away") {
+        @Override
+        protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, Move move) {
+            if (this.CATEGORY == Category.OTHER) {
+                return 0;
+            }
+
+            int attackStat;
+            int defenseStat;
+            int level = attacker.getLevel();
+            int attackPower = this.POWER;
+            double stabMultiplier = attacker.getStabMultiplier(move);
+            double effectiveness = Type.getDamageMultiplier(defender.getTypes(), this.TYPE);
+            double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
+
+            if (this.CATEGORY == Category.PHYSICAL) {
+                attackStat = attacker.getStat(Stat.ATTACK);
+                defenseStat = defender.getStatWithoutStages(Stat.DEFENSE);
+            } else if (this.CATEGORY == Category.SPECIAL) {
+                attackStat = attacker.getStat(Stat.SPECIAL_ATTACK);
+                defenseStat = defender.getStatWithoutStages(Stat.SPECIAL_DEFENSE);
+            } else {
+                throw new InvalidCategoryException(this.CATEGORY);
+            }
+
+            return (int) (((((2 * level / 5 + 2) * attackStat * attackPower / defenseStat) / 50) + 2) * stabMultiplier * effectiveness * randomNumber);
+        }
+
+        @Override
+        protected boolean hits(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            if (this.getAccuracy() == 0) {
+                return true;
+            }
+
+            if (battle.getGeneration() == Generation.I) {
+                if (Math.random() < 0.004) {
+                    return false;
+                }
+            }
+
+            double probability = this.getAccuracy() * user.getAccuracy();
+            if (probability > 1 || probability < Math.random()) {
+                return true;
+            }
+
+            return false;
+        }
+    },
+    CIRCLE_THROW("Circle Throw") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            int damage = super.use(user, target, battle, trainer, move);
+
+            if (user.isFainted()) {
+                return damage;
+            }
+
+            Pokemon nextpokemon = trainer.getNextAliveUnactivePokemon();
+            if (nextpokemon != null) {
+                trainer.switchPokemon(nextpokemon, target);
+            }
+
+            return damage;
+        }
+    },
     CLAMP("Clamp"),
     CLANGING_SCALES("Clanging Scales"),
     CLEAR_SMOG("Clear Smog"),

@@ -64,4 +64,13 @@ public enum Stat {
         return (int) ((((iv + 2 * baseStat + (ev / 4)) * level / 100) + 5) * natureMultiplier * stageMultiplier);
     }
 
+    public int calculateWithoutStages(Pokemon pokemon, Stat stat) {
+        int iv = pokemon.getIndividualValue(stat);
+        int baseStat = pokemon.getBaseStat(stat);
+        int ev = pokemon.getEffortValue(stat);
+        int level = pokemon.getLevel();
+        double natureMultiplier = pokemon.getNature().getNatureMultiplier(stat);
+        return (int) ((((iv + 2 * baseStat + (ev / 4)) * level / 100) + 5) * natureMultiplier);
+    }
+
 }

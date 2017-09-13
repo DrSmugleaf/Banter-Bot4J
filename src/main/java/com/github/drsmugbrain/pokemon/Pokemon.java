@@ -46,6 +46,7 @@ public class Pokemon {
     private Pokemon lastTarget = null;
     private Battle battle = null;
     private Trainer trainer = null;
+    private boolean fainted = false;
 
     public Pokemon(@Nonnull Pokemons basePokemon, @Nonnull Item item, @Nonnull Nature nature, @Nonnull Ability ability, @Nullable Gender gender, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues, @Nonnull List<Move> moves) {
         this.BASE_POKEMON = basePokemon;
@@ -360,6 +361,10 @@ public class Pokemon {
         return stat.calculate(this, stat);
     }
 
+    public int getStatWithoutStages(@Nonnull Stat stat) {
+        return stat.calculateWithoutStages(this, stat);
+    }
+
     public int getCurrentStat(@Nonnull Stat stat) {
         return this.CURRENT_STATS.get(stat);
     }
@@ -509,7 +514,12 @@ public class Pokemon {
         this.VALID_MOVES = this.MOVES;
     }
 
+    public boolean isFainted() {
+        return this.fainted;
+    }
+
     protected void kill() {
+        this.fainted = true;
         this.getTrainer().removeActivePokemon(this);
         PokemonDeathEvent event = new PokemonDeathEvent(this);
         EventDispatcher.dispatch(event);

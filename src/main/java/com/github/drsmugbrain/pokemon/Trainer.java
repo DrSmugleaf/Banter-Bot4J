@@ -68,9 +68,36 @@ public class Trainer {
         return this.POKEMONS.toArray(new Pokemon[0]);
     }
 
+    @Nullable
+    public Pokemon getNextAliveUnactivePokemon() {
+        List<Pokemon> alivePokemons = this.getAliveInactivePokemons();
+        return alivePokemons.get(0);
+    }
+
     @Nonnull
     public List<Pokemon> getActivePokemons() {
         return this.ACTIVE_POKEMONS;
+    }
+
+    public List<Pokemon> getAlivePokemons() {
+        List<Pokemon> alivePokemons = new ArrayList<>();
+
+        for (Pokemon pokemon : this.POKEMONS) {
+            if (pokemon.getStat(Stat.HP) > 0) {
+                alivePokemons.add(pokemon);
+            }
+        }
+
+        return alivePokemons;
+    }
+
+    public List<Pokemon> getAliveInactivePokemons() {
+        List<Pokemon> aliveInactivePokemons = this.getAlivePokemons();
+
+        aliveInactivePokemons.removeIf(this.ACTIVE_POKEMONS::contains);
+        aliveInactivePokemons.removeIf(pokemon -> pokemon.getCurrentStat(Stat.HP) <= 0);
+
+        return aliveInactivePokemons;
     }
 
     public void addAction(Pokemon pokemon, Move move, Pokemon target) {
@@ -175,27 +202,6 @@ public class Trainer {
 
     public void resetChosenMove() {
         this.chosenMove = null;
-    }
-
-    public List<Pokemon> getAlivePokemons() {
-        List<Pokemon> alivePokemons = new ArrayList<>();
-
-        for (Pokemon pokemon : this.POKEMONS) {
-            if (pokemon.getStat(Stat.HP) > 0) {
-                alivePokemons.add(pokemon);
-            }
-        }
-
-        return alivePokemons;
-    }
-
-    public List<Pokemon> getAliveInactivePokemons() {
-        List<Pokemon> aliveInactivePokemons = this.getAlivePokemons();
-
-        aliveInactivePokemons.removeIf(this.ACTIVE_POKEMONS::contains);
-        aliveInactivePokemons.removeIf(pokemon -> pokemon.getCurrentStat(Stat.HP) <= 0);
-
-        return aliveInactivePokemons;
     }
 
     public Battle getBattle() {
