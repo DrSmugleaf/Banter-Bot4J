@@ -980,7 +980,7 @@ public enum BaseMove {
     CLEAR_SMOG("Clear Smog") {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-            target.resetLoweredStats();
+            target.resetStatStages();
             return super.use(user, target, battle, trainer, move);
         }
     },
