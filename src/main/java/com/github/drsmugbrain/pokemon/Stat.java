@@ -5,36 +5,40 @@ import javax.annotation.Nonnull;
 /**
  * Created by DrSmugleaf on 04/06/2017.
  */
-public enum Stat {
+public enum Stat implements IStat {
 
     HP("Health", "HP") {
         @Override
-        public int calculate(Pokemon pokemon, Stat stat) {
-            int iv = pokemon.getIndividualValue(Stat.HP);
-            int baseStat = pokemon.getBaseStat(Stat.HP);
-            int ev = pokemon.getEffortValue(Stat.HP);
+        public int calculate(Pokemon pokemon, Stat stat, Generation generation, Double stageMultiplier) {
+            int baseStat = pokemon.getBaseStat(stat);
+            int iv = pokemon.getIndividualValue(stat);
+            int ev = pokemon.getEffortValue(stat);
             int level = pokemon.getLevel();
+            switch (generation) {
+                case I:
+                case II:
+                    return (int) ((((((baseStat + iv) * 2) + (Math.sqrt(ev) / 4)) * level) / 100) + level + 10);
+                case III:
+                case IV:
+                case V:
+                case VI:
+                case VII:
+                    return ((((((2 * baseStat) + iv + (ev / 4))) * level) / 100) + level + 10);
+                default:
+                    throw new InvalidGenerationException(generation);
+            }
+        }
 
-            return ((iv + 2 * baseStat + (ev / 4)) * level / 100) + 10 + level;
+        @Override
+        public int calculateWithoutStages(Pokemon pokemon, Stat stat, Generation generation) {
+            return this.calculate(pokemon, stat, generation, 1.0);
         }
     },
     ATTACK("Attack", "Atk"),
     DEFENSE("Defense", "Def"),
     SPECIAL_ATTACK("Special Attack", "SpA"),
     SPECIAL_DEFENSE("Special Defense", "SpD"),
-    SPEED("Speed", "Spe"),
-    ACCURACY("Accuracy", "Acc") {
-        @Override
-        public int calculate(Pokemon pokemon, Stat stat) {
-            return pokemon.getBaseStat(Stat.ACCURACY);
-        }
-    },
-    EVASION("Evasion", "Eva") {
-        @Override
-        public int calculate(Pokemon pokemon, Stat stat) {
-            return pokemon.getBaseStat(Stat.EVASION);
-        }
-    };
+    SPEED("Speed", "Spe");
 
     private final String NAME;
     private final String ABBREVIATION;
@@ -54,23 +58,30 @@ public enum Stat {
         return this.ABBREVIATION;
     }
 
-    public int calculate(Pokemon pokemon, Stat stat) {
-        int iv = pokemon.getIndividualValue(stat);
+    public int calculate(Pokemon pokemon, Stat stat, Generation generation, Double stageMultiplier) {
         int baseStat = pokemon.getBaseStat(stat);
+        int iv = pokemon.getIndividualValue(stat);
         int ev = pokemon.getEffortValue(stat);
         int level = pokemon.getLevel();
-        double natureMultiplier = pokemon.getNature().getNatureMultiplier(stat);
-        double stageMultiplier = pokemon.getStatStageMultiplier(stat);
-        return (int) ((((iv + 2 * baseStat + (ev / 4)) * level / 100) + 5) * natureMultiplier * stageMultiplier);
+
+        switch (generation) {
+            case I:
+            case II:
+                return (int) ((int) (((((baseStat + iv) * 2 + (Math.sqrt(ev) / 4)) * level) / 100) + 5) * stageMultiplier);
+            case III:
+            case IV:
+            case V:
+            case VI:
+            case VII:
+                double natureMultiplier = pokemon.getNature().getNatureMultiplier(stat);
+                return (int) ((int) (((int) ((((2.0 * baseStat + iv + (ev / 4.0)) * level) / 100.0) + 5.0)) * natureMultiplier) * stageMultiplier);
+            default:
+                throw new InvalidGenerationException(generation);
+        }
     }
 
-    public int calculateWithoutStages(Pokemon pokemon, Stat stat) {
-        int iv = pokemon.getIndividualValue(stat);
-        int baseStat = pokemon.getBaseStat(stat);
-        int ev = pokemon.getEffortValue(stat);
-        int level = pokemon.getLevel();
-        double natureMultiplier = pokemon.getNature().getNatureMultiplier(stat);
-        return (int) ((((iv + 2 * baseStat + (ev / 4)) * level / 100) + 5) * natureMultiplier);
+    public int calculateWithoutStages(Pokemon pokemon, Stat stat, Generation generation) {
+        return this.calculate(pokemon, stat, generation, 1.0);
     }
 
 }

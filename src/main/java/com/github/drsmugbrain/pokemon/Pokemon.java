@@ -20,9 +20,8 @@ public class Pokemon {
     private final List<Type> TYPES;
     private final Map<Stat, Integer> INDIVIDUAL_VALUES = getDefaultIndividualValues();
     private final Map<Stat, Integer> EFFORT_VALUES = getDefaultEffortValues();
-    private final Map<Stat, Stage> STAT_STAGES = getDefaultStatStages();
-    private final Map<Stat, Integer> CURRENT_STATS;
-    private final Map<Move, Double> MOVE_DAMAGE_MULTIPLIER = new HashMap<>();
+    private final Map<IStat, Stage> STAT_STAGES = getDefaultStatStages();
+    private int currentHP;
     private final Map<BaseVolatileStatus, VolatileStatus> VOLATILE_STATUSES = new LinkedHashMap<>();
     private final List<Pokemon> damagedThisTurnBy = new ArrayList<>();
     private final Gender GENDER;
@@ -62,9 +61,6 @@ public class Pokemon {
 
         this.MOVES = moves;
         this.VALID_MOVES = moves;
-        for (Move move : moves) {
-            this.MOVE_DAMAGE_MULTIPLIER.put(move, 1.0);
-        }
 
         this.LEVEL = level;
 
@@ -72,7 +68,7 @@ public class Pokemon {
 
         this.INDIVIDUAL_VALUES.putAll(individualValues);
         this.EFFORT_VALUES.putAll(effortValues);
-        this.CURRENT_STATS = this.getStats();
+        this.currentHP = this.getStat(Stat.HP);
     }
 
     @Nonnull
@@ -104,8 +100,8 @@ public class Pokemon {
     }
 
     @Nonnull
-    private static Map<Stat, Stage> getDefaultStatStages() {
-        Map<Stat, Stage> statStages = new HashMap<>();
+    private static Map<IStat, Stage> getDefaultStatStages() {
+        Map<IStat, Stage> statStages = new HashMap<>();
 
         statStages.put(Stat.HP, Stage.ZERO);
         statStages.put(Stat.ATTACK, Stage.ZERO);
@@ -113,8 +109,8 @@ public class Pokemon {
         statStages.put(Stat.SPEED, Stage.ZERO);
         statStages.put(Stat.SPECIAL_ATTACK, Stage.ZERO);
         statStages.put(Stat.SPECIAL_DEFENSE, Stage.ZERO);
-        statStages.put(Stat.ACCURACY, Stage.ZERO);
-        statStages.put(Stat.EVASION, Stage.ZERO);
+        statStages.put(BattleStat.ACCURACY, Stage.ZERO);
+        statStages.put(BattleStat.EVASION, Stage.ZERO);
 
         return statStages;
     }
@@ -331,8 +327,6 @@ public class Pokemon {
     public String getStatsStringWithoutHP() {
         Map<Stat, Integer> stats = this.getStats();
         stats.remove(Stat.HP);
-        stats.remove(Stat.ACCURACY);
-        stats.remove(Stat.EVASION);
 
         return stats
                 .entrySet()
@@ -358,15 +352,19 @@ public class Pokemon {
     }
 
     public int getStat(@Nonnull Stat stat) {
-        return stat.calculate(this, stat);
+        return stat.calculate(this, stat, this.getBattle().getGeneration(), this.getStatStageMultiplier(stat));
     }
 
     public int getStatWithoutStages(@Nonnull Stat stat) {
-        return stat.calculateWithoutStages(this, stat);
+        return stat.calculateWithoutStages(this, stat, this.getBattle().getGeneration());
     }
 
     public int getCurrentStat(@Nonnull Stat stat) {
-        return this.CURRENT_STATS.get(stat);
+        if (stat == Stat.HP) {
+            return this.currentHP;
+        }
+
+        return this.getStat(stat);
     }
 
     @Nonnull
@@ -387,31 +385,31 @@ public class Pokemon {
         return this.EFFORT_VALUES.get(stat);
     }
 
-    public Map<Stat, Stage> getStatStages() {
+    public Map<IStat, Stage> getStatStages() {
         return this.STAT_STAGES;
     }
 
-    public Stage getStatStage(@Nonnull Stat stat) {
+    public Stage getStatStage(@Nonnull IStat stat) {
         return this.STAT_STAGES.get(stat);
     }
 
-    public double getStatStageMultiplier(@Nonnull Stat stat) {
+    public double getStatStageMultiplier(@Nonnull IStat stat) {
         return this.STAT_STAGES.get(stat).getStatMultiplier(stat);
     }
 
-    protected void setStatStage(@Nonnull Stat stat, @Nonnull Stage stage) {
+    protected void setStatStage(@Nonnull IStat stat, @Nonnull Stage stage) {
         this.STAT_STAGES.put(stat, stage);
     }
 
-    protected void setStatStage(Map<Stat, Stage> stages) {
+    protected void setStatStage(Map<IStat, Stage> stages) {
         this.STAT_STAGES.putAll(stages);
     }
 
-    protected void raiseStatStage(@Nonnull Stat stat, int amount) {
+    protected void raiseStatStage(@Nonnull IStat stat, int amount) {
         this.STAT_STAGES.put(stat, Stage.getStage(this.STAT_STAGES.get(stat).getStage() + amount));
     }
 
-    protected void lowerStatStage(@Nonnull Stat stat, int amount) {
+    protected void lowerStatStage(@Nonnull IStat stat, int amount) {
         this.raiseStatStage(stat, -amount);
     }
 
@@ -453,26 +451,6 @@ public class Pokemon {
 
     protected void resetDamageMultiplier() {
         this.damageMultiplier = 1;
-    }
-
-    protected double getMoveDamageMultiplier(Move move) {
-        return this.MOVE_DAMAGE_MULTIPLIER.get(move);
-    }
-
-    protected void changeMoveDamageMultiplier(Move move, double multiplier) {
-        this.MOVE_DAMAGE_MULTIPLIER.put(move, multiplier);
-    }
-
-    protected void incrementMoveDamageMultiplier(Move move, double multiplier) {
-        this.changeMoveDamageMultiplier(move, this.getMoveDamageMultiplier(move) + multiplier);
-    }
-
-    protected void decreaseMoveDamageMultiplier(Move move, double multiplier) {
-        this.incrementMoveDamageMultiplier(move, -multiplier);
-    }
-
-    protected void resetMoveDamageMultiplier(Move move) {
-        this.MOVE_DAMAGE_MULTIPLIER.put(move, 1.0);
     }
 
     protected void setCanSwitch(boolean bool) {
@@ -531,13 +509,13 @@ public class Pokemon {
             amount += this.getCurrentStat(Stat.HP) - amount;
         }
 
-        this.CURRENT_STATS.put(Stat.HP, currentHP - amount);
+        this.currentHP -= amount;
         this.damagedThisTurn = true;
 
         PokemonDamagedEvent event = new PokemonDamagedEvent(this, amount);
         EventDispatcher.dispatch(event);
 
-        if (this.CURRENT_STATS.get(Stat.HP) <= 0) {
+        if (this.currentHP <= 0) {
             this.kill();
         }
     }
@@ -559,11 +537,11 @@ public class Pokemon {
         int maxHP = this.getStat(Stat.HP);
 
         if (currentHP + amount > maxHP) {
-            this.CURRENT_STATS.put(Stat.HP, maxHP);
+            this.currentHP = maxHP;
             return;
         }
 
-        this.CURRENT_STATS.put(Stat.HP, currentHP + amount);
+        this.currentHP += amount;
 
         PokemonHealedEvent event = new PokemonHealedEvent(this, amount);
         EventDispatcher.dispatch(event);
@@ -622,7 +600,7 @@ public class Pokemon {
     }
 
     protected void resetLoweredStats() {
-        for (Stat stat : this.STAT_STAGES.keySet()) {
+        for (IStat stat : this.STAT_STAGES.keySet()) {
             if (this.STAT_STAGES.get(stat).getStage() < Stage.ZERO.getStage()) {
                 this.STAT_STAGES.put(stat, Stage.ZERO);
             }
@@ -772,11 +750,11 @@ public class Pokemon {
     }
 
     protected double getAccuracy() {
-        return this.STAT_STAGES.get(Stat.ACCURACY).getAccuracyMultiplier();
+        return this.STAT_STAGES.get(BattleStat.ACCURACY).getAccuracyMultiplier();
     }
 
     protected double getEvasion() {
-        return this.STAT_STAGES.get(Stat.EVASION).getEvasionMultiplier();
+        return this.STAT_STAGES.get(BattleStat.EVASION).getEvasionMultiplier();
     }
 
     @Nullable

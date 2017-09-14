@@ -47,17 +47,18 @@ public enum Stage {
         return this.STAGE;
     }
 
-    public double getStatMultiplier(Stat stat) {
-        switch (stat) {
-            case HP:case ATTACK:case DEFENSE:case SPEED:case SPECIAL_ATTACK:case SPECIAL_DEFENSE:
-                return this.MAIN_STAT_MULTIPLIER;
-            case ACCURACY:
+    public double getStatMultiplier(IStat stat) {
+        if (stat instanceof Stat) {
+            return this.MAIN_STAT_MULTIPLIER;
+        } else if (stat instanceof BattleStat) {
+            if (stat == BattleStat.ACCURACY) {
                 return this.ACCURACY_MULTIPLIER;
-            case EVASION:
+            } else if (stat == BattleStat.EVASION) {
                 return this.EVASION_MULTIPLIER;
-            default:
-                return 1.0;
+            }
         }
+
+        throw new IllegalArgumentException("Invalid stat: " + stat);
     }
 
     public double getMainStatMultiplier() {
