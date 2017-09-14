@@ -367,7 +367,7 @@ public enum BaseMove {
     BARRAGE("Barrage") {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-            Integer repeats = 0;
+            Integer repeats;
             double chance = Math.random();
             if (chance < 0.375) {
                 repeats = 1;
