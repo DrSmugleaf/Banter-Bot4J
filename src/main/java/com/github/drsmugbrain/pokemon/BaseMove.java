@@ -832,7 +832,7 @@ public enum BaseMove {
     CHIP_AWAY("Chip Away") {
         @Override
         protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, Move move) {
-            if (this.CATEGORY == Category.OTHER) {
+            if (this.getCategory() == Category.OTHER) {
                 return 0;
             }
 
@@ -841,17 +841,17 @@ public enum BaseMove {
             int level = attacker.getLevel();
             int attackPower = this.POWER;
             double stabMultiplier = attacker.getStabMultiplier(move);
-            double effectiveness = Type.getDamageMultiplier(defender.getTypes(), this.TYPE);
+            double effectiveness = Type.getDamageMultiplier(defender.getTypes(), this.getType());
             double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
 
-            if (this.CATEGORY == Category.PHYSICAL) {
+            if (this.getCategory() == Category.PHYSICAL) {
                 attackStat = attacker.getStat(Stat.ATTACK);
                 defenseStat = defender.getStatWithoutStages(Stat.DEFENSE);
-            } else if (this.CATEGORY == Category.SPECIAL) {
+            } else if (this.getCategory() == Category.SPECIAL) {
                 attackStat = attacker.getStat(Stat.SPECIAL_ATTACK);
                 defenseStat = defender.getStatWithoutStages(Stat.SPECIAL_DEFENSE);
             } else {
-                throw new InvalidCategoryException(this.CATEGORY);
+                throw new InvalidCategoryException(this.getCategory());
             }
 
             return (int) (((((2 * level / 5 + 2) * attackStat * attackPower / defenseStat) / 50) + 2) * stabMultiplier * effectiveness * randomNumber);
