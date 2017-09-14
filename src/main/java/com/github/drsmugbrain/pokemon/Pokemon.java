@@ -504,8 +504,7 @@ public class Pokemon {
     }
 
     protected void damage(int amount) {
-        int currentHP = this.getCurrentStat(Stat.HP);
-        if (this.getCurrentStat(Stat.HP) - amount < 0) {
+        if (this.currentHP - amount < 0) {
             amount += this.getCurrentStat(Stat.HP) - amount;
         }
 
