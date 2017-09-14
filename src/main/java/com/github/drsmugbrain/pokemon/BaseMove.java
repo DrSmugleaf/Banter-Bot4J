@@ -985,8 +985,90 @@ public enum BaseMove {
         }
     },
     CLOSE_COMBAT("Close Combat"),
-    COIL("Coil"),
-    COMET_PUNCH("Comet Punch"),
+    COIL("Coil") {
+        @Override
+        protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            user.resetLoweredStats();
+            return super.useAsZMove(user, target, battle, trainer, move);
+        }
+    },
+    COMET_PUNCH("Comet Punch") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            Integer repeats;
+            double chance = Math.random();
+
+            switch (battle.getGeneration()) {
+                case I:
+                case II:
+                case III:
+                case IV:
+                    if (chance < 0.375) {
+                        repeats = 1;
+                    } else if (chance < 0.75) {
+                        repeats = 2;
+                    } else if (chance < 0.875) {
+                        repeats = 3;
+                    } else {
+                        repeats = 4;
+                    }
+                    break;
+                case V:
+                case VI:
+                case VII:
+                    if (chance < 0.33) {
+                        repeats = 1;
+                    } else if (chance < 0.66) {
+                        repeats = 2;
+                    } else if (chance < 0.833) {
+                        repeats = 3;
+                    } else {
+                        repeats = 4;
+                    }
+                    break;
+                default:
+                    throw new InvalidGenerationException(battle.getGeneration());
+            }
+
+            return super.use(user, target, battle, trainer, move, repeats);
+        }
+
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, @Nonnull Integer repeats) {
+            switch (battle.getGeneration()) {
+                case I:
+                case II:
+                    if (!target.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+                        return super.use(user, target, battle, trainer, move, repeats);
+                    }
+
+                    Integer firstHitDamage = null;
+                    int damage = 0;
+                    for (int i = 0; i < repeats; i++) {
+                        damage += this.use(user, target, battle, trainer, move);
+                        if (firstHitDamage == null) {
+                            firstHitDamage = damage;
+                        } else {
+                            this.use(target, firstHitDamage);
+                        }
+
+                        if (!target.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+                            break;
+                        }
+                    }
+
+                    return damage;
+                case III:
+                case IV:
+                case V:
+                case VI:
+                case VII:
+                    return super.use(user, target, battle, trainer, move, repeats);
+                default:
+                    throw new InvalidGenerationException(battle.getGeneration());
+            }
+        }
+    },
     CONFIDE("Confide"),
     CONFUSE_RAY("Confuse Ray"),
     CONFUSION("Confusion"),
@@ -2349,6 +2431,11 @@ public enum BaseMove {
         for (int i = 0; i < repeats; i++) {
             damage += this.use(user, target, battle, trainer, move);
         }
+        return damage;
+    }
+
+    protected int use(Pokemon target, int damage) {
+        target.damage(damage);
         return damage;
     }
 
