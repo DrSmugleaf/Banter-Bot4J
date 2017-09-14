@@ -2353,12 +2353,12 @@ public enum BaseMove {
     }
 
     protected boolean hits(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-        if (this.getAccuracy() == 0) {
-            return true;
-        }
-
         if (target.isImmune(move)) {
             return false;
+        }
+
+        if (this.getAccuracy() == 0) {
+            return true;
         }
 
         if (battle.getGeneration() == Generation.I) {
