@@ -977,7 +977,13 @@ public enum BaseMove {
         }
     },
     CLANGING_SCALES("Clanging Scales"),
-    CLEAR_SMOG("Clear Smog"),
+    CLEAR_SMOG("Clear Smog") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            target.resetLoweredStats();
+            return super.use(user, target, battle, trainer, move);
+        }
+    },
     CLOSE_COMBAT("Close Combat"),
     COIL("Coil"),
     COMET_PUNCH("Comet Punch"),
