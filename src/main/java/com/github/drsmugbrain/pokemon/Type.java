@@ -115,7 +115,9 @@ public enum Type {
     private List<Type> WEAK_TO = new ArrayList<>();
     private List<Type> RESISTANT_TO = new ArrayList<>();
     private List<Type> IMMUNE_TO = new ArrayList<>();
-
+    private List<Type> WEAK_BY = new ArrayList<>();
+    private List<Type> RESISTED_BY = new ArrayList<>();
+    private List<Type> IGNORED_BY = new ArrayList<>();
     Type(@Nonnull String name) {
         Holder.MAP.put(name.toLowerCase(), this);
         this.NAME = name;
@@ -193,18 +195,27 @@ public enum Type {
     @Nonnull
     private Type setWeakTo(@Nonnull Type... weakTo) {
         this.WEAK_TO.addAll(Arrays.asList(weakTo));
+        for (Type type : weakTo) {
+            type.WEAK_BY.add(this);
+        }
         return this;
     }
 
     @Nonnull
     private Type setResistantTo(@Nonnull Type... resistantTo) {
         this.RESISTANT_TO.addAll(Arrays.asList(resistantTo));
+        for (Type type : resistantTo) {
+            type.RESISTED_BY.add(this);
+        }
         return this;
     }
 
     @Nonnull
     private Type setImmuneTo(@Nonnull Type... immuneTo) {
         this.IMMUNE_TO.addAll(Arrays.asList(immuneTo));
+        for (Type type : immuneTo) {
+            type.IGNORED_BY.add(this);
+        }
         return this;
     }
 
