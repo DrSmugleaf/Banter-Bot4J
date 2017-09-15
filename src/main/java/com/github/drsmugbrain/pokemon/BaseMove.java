@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 /**
  * Created by DrSmugleaf on 17/06/2017.
@@ -514,7 +515,7 @@ public enum BaseMove {
 
             if (!user.hasVolatileStatus(BaseVolatileStatus.BIND)) {
                 BaseVolatileStatus.BIND.apply(user, target, battle, trainer, move);
-            } else if (user.getLastTarget() == target) {
+            } else if (user.getLastTarget().getKey() == target) {
                 move.increasePP(1);
             }
 
@@ -915,7 +916,7 @@ public enum BaseMove {
 
             if (!user.hasVolatileStatus(BaseVolatileStatus.CLAMP)) {
                 BaseVolatileStatus.CLAMP.apply(user, target, battle, trainer, move);
-            } else if (user.getLastTarget() == target) {
+            } else if (user.getLastTarget().getKey() == target) {
                 move.increasePP(1);
             }
 
@@ -1069,13 +1070,140 @@ public enum BaseMove {
             }
         }
     },
-    CONFIDE("Confide"),
-    CONFUSE_RAY("Confuse Ray"),
+    CONFIDE("Confide") {
+        @Override
+        protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            user.raiseStatStage(Stat.SPECIAL_DEFENSE, 1);
+            return super.useAsZMove(user, target, battle, trainer, move);
+        }
+    },
+    CONFUSE_RAY("Confuse Ray") {
+        @Override
+        protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            user.raiseStatStage(Stat.SPECIAL_ATTACK, 1);
+            return super.useAsZMove(user, target, battle, trainer, move);
+        }
+    },
     CONFUSION("Confusion"),
     CONSTRICT("Constrict"),
     CONTINENTAL_CRUSH("Continental Crush"),
-    CONVERSION("Conversion"),
-    CONVERSION_2("Conversion 2"),
+    CONVERSION("Conversion") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            switch (battle.getGeneration()) {
+                case I:
+                    user.setTypes(target.getTypes());
+                    break;
+                case II:
+                case III:
+                case IV: {
+                    List<Type> moveTypes = user.getMoves().stream().map(Move::getType).collect(Collectors.toList());
+                    moveTypes.remove(Type.CURSE);
+
+                    int randomIndex = ThreadLocalRandom.current().nextInt(moveTypes.size());
+                    Type randomType = moveTypes.get(randomIndex);
+
+                    user.setTypes(randomType);
+                    break;
+                }
+                case V: {
+                    List<Type> moveTypes = user.getMoves().stream().map(Move::getType).collect(Collectors.toList());
+
+                    int randomIndex = ThreadLocalRandom.current().nextInt(moveTypes.size());
+                    Type randomType = moveTypes.get(randomIndex);
+
+                    user.setTypes(randomType);
+                    break;
+                }
+                case VI:
+                case VII:
+                    Type firstMoveType = user.getMoves().get(0).getType();
+                    user.setTypes(firstMoveType);
+                    break;
+            }
+
+            return super.use(user, target, battle, trainer, move);
+        }
+
+        @Override
+        protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            user.raiseStatStage(Stat.ATTACK, 1);
+            user.raiseStatStage(Stat.DEFENSE, 1);
+            user.raiseStatStage(Stat.SPECIAL_ATTACK, 1);
+            user.raiseStatStage(Stat.SPECIAL_DEFENSE, 1);
+            user.raiseStatStage(Stat.SPEED, 1);
+
+            return super.useAsZMove(user, target, battle, trainer, move);
+        }
+    },
+    CONVERSION_2("Conversion 2") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            Move lastMove = null;
+            List<Type> typesResisted = new ArrayList<>();
+            Type moveType;
+
+            switch (battle.getGeneration()) {
+                case I:
+                case II:
+                case III:
+                case IV:
+                    TreeMap<Pokemon, Move> movesHitBy = user.getHitBy();
+
+                    for (Map.Entry<Pokemon, Move> pokemonMoveEntry : movesHitBy.descendingMap().entrySet()) {
+                        Move currentMove = pokemonMoveEntry.getValue();
+
+                        if (currentMove.getCategory() != Category.OTHER) {
+                            lastMove = currentMove;
+                            break;
+                        }
+                    }
+
+                    if (lastMove == null) {
+                        return this.fail(user, target, battle, trainer, move);
+                    }
+
+                    moveType = lastMove.getType();
+                    typesResisted.addAll(moveType.getResistances());
+                    typesResisted.addAll(moveType.getImmunities());
+                    break;
+                case V:
+                case VI:
+                case VII:
+                    lastMove = target.getLastTarget().getValue();
+
+                    if (lastMove == null) {
+                        return this.fail(user, target, battle, trainer, move);
+                    }
+
+                    moveType = lastMove.getType();
+                    typesResisted.addAll(moveType.getResistances());
+                    typesResisted.addAll(moveType.getImmunities());
+
+                    typesResisted.removeAll(user.getTypes());
+
+                    if (typesResisted.isEmpty()) {
+                        return this.fail(user, target, battle, trainer, move);
+                    }
+                    break;
+                default:
+                    throw new InvalidGenerationException(battle.getGeneration());
+            }
+
+            int randomIndex = ThreadLocalRandom.current().nextInt(typesResisted.size());
+            Type randomType = typesResisted.get(randomIndex);
+
+            user.setTypes(randomType);
+
+            return super.use(user, target, battle, trainer, move);
+        }
+
+        @Override
+        protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            user.heal(100.0);
+            return super.useAsZMove(user, target, battle, trainer, move);
+        }
+    },
     COPYCAT("Copycat"),
     CORE_ENFORCER("Core Enforcer"),
     CORKSCREW_CRASH("Corkscrew Crash"),

@@ -1,6 +1,7 @@
 package com.github.drsmugbrain.pokemon;
 
 import com.github.drsmugbrain.pokemon.events.*;
+import javafx.util.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,10 +43,11 @@ public class Pokemon {
     private boolean berryUsed = false;
     private int bideDamageTaken = 0;
     private Pokemon bideTarget = null;
-    private Pokemon lastTarget = null;
+    private Pair<Pokemon, Move> lastTarget = new Pair<>(null, null);
     private Battle battle = null;
     private Trainer trainer = null;
     private boolean fainted = false;
+    private TreeMap<Pokemon, Move> hitBy = new TreeMap<>();
 
     public Pokemon(@Nonnull Pokemons basePokemon, @Nonnull Item item, @Nonnull Nature nature, @Nonnull Ability ability, @Nullable Gender gender, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues, @Nonnull List<Move> moves) {
         this.BASE_POKEMON = basePokemon;
@@ -468,7 +470,7 @@ public class Pokemon {
     protected void setAction(@Nonnull Move action, @Nullable Pokemon target) {
         this.action = action;
         this.target = target;
-        this.lastTarget = target;
+        this.lastTarget = new Pair<>(target, action);
     }
 
     protected void resetAction() {
@@ -526,21 +528,21 @@ public class Pokemon {
     }
 
     protected int damage(Move move, Pokemon attacker) {
+        this.hitBy.put(attacker, move);
         int amount = move.getBaseMove().getDamage(attacker, this, move);
         this.damage(amount);
         return amount;
     }
 
     protected void heal(int amount) {
-        int currentHP = this.getCurrentStat(Stat.HP);
         int maxHP = this.getStat(Stat.HP);
 
         if (currentHP + amount > maxHP) {
-            this.currentHP = maxHP;
+            currentHP = maxHP;
             return;
         }
 
-        this.currentHP += amount;
+        currentHP += amount;
 
         PokemonHealedEvent event = new PokemonHealedEvent(this, amount);
         EventDispatcher.dispatch(event);
@@ -739,13 +741,9 @@ public class Pokemon {
         this.canAttackThisTurn = true;
     }
 
-    @Nullable
-    protected Pokemon getLastTarget() {
+    @Nonnull
+    protected Pair<Pokemon, Move> getLastTarget() {
         return this.lastTarget;
-    }
-
-    protected void setLastTarget(Pokemon target) {
-        this.lastTarget = target;
     }
 
     protected double getAccuracy() {
@@ -783,5 +781,9 @@ public class Pokemon {
 
         return false;
     }
+
+    protected TreeMap<Pokemon, Move> getHitBy() {
+        return this.hitBy;
+    }<
 
 }

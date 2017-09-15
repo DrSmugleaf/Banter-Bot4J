@@ -222,8 +222,8 @@ public enum BaseVolatileStatus {
 
         @Override
         protected void onOwnSwitch(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
-            if (battle.getGeneration() == Generation.I && user.getLastTarget() != null) {
-                user.getLastTarget().setCanAttackThisTurn(false);
+            if (battle.getGeneration() == Generation.I && user.getLastTarget().getKey() != null) {
+                user.getLastTarget().getKey().setCanAttackThisTurn(false);
             }
             super.onOwnSwitch(user, target, battle, trainer);
         }
@@ -372,8 +372,8 @@ public enum BaseVolatileStatus {
 
         @Override
         protected void onOwnSwitch(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
-            if (battle.getGeneration() == Generation.I && user.getLastTarget() != null) {
-                user.getLastTarget().setCanAttackThisTurn(false);
+            if (battle.getGeneration() == Generation.I && user.getLastTarget().getKey() != null) {
+                user.getLastTarget().getKey().setCanAttackThisTurn(false);
             }
             super.onOwnSwitch(user, target, battle, trainer);
         }
