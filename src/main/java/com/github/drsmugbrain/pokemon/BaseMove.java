@@ -1204,7 +1204,105 @@ public enum BaseMove {
             return super.useAsZMove(user, target, battle, trainer, move);
         }
     },
-    COPYCAT("Copycat"),
+    COPYCAT("Copycat") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            Move copiedMove = null;
+
+            Map.Entry<Pokemon, Move> lastEntry = battle.getActions().lastEntry();
+            if (lastEntry != null) {
+                Move lastMove = lastEntry.getValue();
+
+                switch (lastMove.getBaseMove()) {
+                    case ASSIST:
+                    case CHATTER:
+                    case COPYCAT:
+                    case COUNTER:
+                    case COVET:
+                    case DESTINY_BOND:
+                    case DETECT:
+                    case ENDURE:
+                    case FEINT:
+                    case FOCUS_PUNCH:
+                    case FOLLOW_ME:
+                    case HELPING_HAND:
+                    case ME_FIRST:
+                    case METRONOME:
+                    case MIMIC:
+                    case MIRROR_COAT:
+                    case MIRROR_MOVE:
+                    case PROTECT:
+                    case SKETCH:
+                    case SLEEP_TALK:
+                    case SNATCH:
+                    case STRUGGLE:
+                    case SWITCHEROO:
+                    case THIEF:
+                    case TRICK:
+                        copiedMove = lastMove;
+                        break;
+                    default:
+                        copiedMove = null;
+                }
+            }
+
+            if (copiedMove == null) {
+                return super.fail(user, target, battle, trainer, move);
+            }
+
+            return copiedMove.tryUse(user, target, battle, trainer);
+        }
+
+        @Override
+        protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            user.raiseStatStage(BattleStat.ACCURACY, 1);
+
+            Move copiedMove = null;
+
+            Map.Entry<Pokemon, Move> lastEntry = battle.getActions().lastEntry();
+            if (lastEntry != null) {
+                Move lastMove = lastEntry.getValue();
+
+                switch (lastMove.getBaseMove()) {
+                    case ASSIST:
+                    case CHATTER:
+                    case COPYCAT:
+                    case COUNTER:
+                    case COVET:
+                    case DESTINY_BOND:
+                    case DETECT:
+                    case ENDURE:
+                    case FEINT:
+                    case FOCUS_PUNCH:
+                    case FOLLOW_ME:
+                    case HELPING_HAND:
+                    case ME_FIRST:
+                    case METRONOME:
+                    case MIMIC:
+                    case MIRROR_COAT:
+                    case MIRROR_MOVE:
+                    case PROTECT:
+                    case SKETCH:
+                    case SLEEP_TALK:
+                    case SNATCH:
+                    case STRUGGLE:
+                    case SWITCHEROO:
+                    case THIEF:
+                    case TRICK:
+                        copiedMove = lastMove;
+                        break;
+                    default:
+                        copiedMove = null;
+                }
+            }
+
+            if (copiedMove == null) {
+                return super.fail(user, target, battle, trainer, move);
+            }
+
+            return copiedMove.useAsZMove(user, target, battle, trainer);
+        }
+    },
     CORE_ENFORCER("Core Enforcer"),
     CORKSCREW_CRASH("Corkscrew Crash"),
     COSMIC_POWER("Cosmic Power"),
@@ -2565,6 +2663,11 @@ public enum BaseMove {
     protected int use(Pokemon target, int damage) {
         target.damage(damage);
         return damage;
+    }
+
+    protected int use(Pokemon user, Battle battle, Trainer trainer, Move move) {
+        // TODO: Random target choice
+        return 0;
     }
 
     protected boolean hits(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {

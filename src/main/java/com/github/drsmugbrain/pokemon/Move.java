@@ -101,22 +101,29 @@ public class Move {
         this.damageMultiplier = 1.0;
     }
 
-    protected void use(@Nonnull Pokemon user, @Nonnull Pokemon target, @Nonnull Battle battle, @Nonnull Trainer trainer) {
+    protected int use(@Nonnull Pokemon user, @Nonnull Pokemon target, @Nonnull Battle battle, @Nonnull Trainer trainer) {
         PokemonMoveEvent event = new PokemonMoveEvent(user, this);
         EventDispatcher.dispatch(event);
         this.pp--;
-        this.getBaseMove().use(user, target, battle, trainer, this);
+        return this.getBaseMove().use(user, target, battle, trainer, this);
     }
 
-    protected void fail(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
-        this.getBaseMove().fail(user, target, battle, trainer, this);
+    protected int useAsZMove(@Nonnull Pokemon user, @Nonnull Pokemon target, @Nonnull Battle battle, @Nonnull Trainer trainer) {
+        PokemonMoveEvent event = new PokemonMoveEvent(user, this);
+        EventDispatcher.dispatch(event);
+        this.pp--;
+        return this.getBaseMove().useAsZMove(user, target, battle, trainer, this);
     }
 
-    protected void tryUse(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
+    protected int fail(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
+        return this.getBaseMove().fail(user, target, battle, trainer, this);
+    }
+
+    protected int tryUse(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
         if (this.getBaseMove().hits(user, target, battle, trainer, this)) {
-            this.use(user, target, battle, trainer);
+            return this.use(user, target, battle, trainer);
         } else {
-            this.fail(user, target, battle, trainer);
+            return this.fail(user, target, battle, trainer);
         }
     }
 

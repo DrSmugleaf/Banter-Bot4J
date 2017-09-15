@@ -17,6 +17,7 @@ public class Battle {
     private boolean ready = false;
     private int TURN_NUMBER = 1;
     private final Map<Trainer, List<Pokemon>> POKEMONS_SENT_OUT_THIS_TURN = new HashMap<>();
+    private final TreeMap<Pokemon, Move> ACTIONS = new TreeMap<>();
 
     public Battle(Generation generation, @Nonnull Long id1, @Nonnull Trainer trainer1, @Nonnull Long id2, @Nonnull Trainer trainer2) {
         this.GENERATION = generation;
@@ -184,6 +185,9 @@ public class Battle {
     }
 
     public void addAction(Trainer trainer, Pokemon pokemon, Move move, Pokemon target) {
+        if (move.getBaseMove() != BaseMove.SWITCH) {
+            this.ACTIONS.put(pokemon, move);
+        }
         trainer.addAction(pokemon, move, target);
         for (Trainer trainer1 : this.TRAINERS.values()) {
             if (trainer1.getStatus() != TrainerStatus.WAITING) {
@@ -221,6 +225,10 @@ public class Battle {
 
     public int getTurnNumber() {
         return this.TURN_NUMBER;
+    }
+
+    protected TreeMap<Pokemon, Move> getActions() {
+        return this.ACTIONS;
     }
 
 }
