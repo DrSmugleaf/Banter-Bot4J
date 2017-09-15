@@ -48,6 +48,7 @@ public class Pokemon {
     private Trainer trainer = null;
     private boolean fainted = false;
     private TreeMap<Pokemon, Move> hitBy = new TreeMap<>();
+    private boolean movedThisTurn = false;
 
     public Pokemon(@Nonnull Pokemons basePokemon, @Nonnull Item item, @Nonnull Nature nature, @Nonnull Ability ability, @Nullable Gender gender, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues, @Nonnull List<Move> moves) {
         this.BASE_POKEMON = basePokemon;
@@ -483,11 +484,13 @@ public class Pokemon {
             return;
         }
         this.action.tryUse(this, this.target, battle, battle.getTrainer(this));
+        this.movedThisTurn = true;
     }
 
     protected void finishTurn() {
         this.action = null;
         this.target = null;
+        this.movedThisTurn = false;
         this.damagedThisTurn = false;
         this.damagedThisTurnBy.clear();
         this.canAttackThisTurn = true;
@@ -783,6 +786,10 @@ public class Pokemon {
 
     protected TreeMap<Pokemon, Move> getHitBy() {
         return this.hitBy;
+    }
+
+    protected boolean movedThisTurn() {
+        return this.movedThisTurn;
     }
 
 }

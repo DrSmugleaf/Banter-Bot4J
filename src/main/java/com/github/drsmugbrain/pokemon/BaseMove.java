@@ -1300,10 +1300,36 @@ public enum BaseMove {
                 return super.fail(user, target, battle, trainer, move);
             }
 
-            return copiedMove.useAsZMove(user, target, battle, trainer);
+            if (copiedMove.getCategory() != Category.OTHER) {
+                return copiedMove.useAsZMove(user, target, battle, trainer);
+            } else {
+                return copiedMove.tryUse(user, target, battle, trainer);
+            }
         }
     },
-    CORE_ENFORCER("Core Enforcer"),
+    CORE_ENFORCER("Core Enforcer") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            if (target.movedThisTurn()) {
+                switch (target.getAbility()) {
+                    case MULTITYPE:
+                    case STANCE_CHANGE:
+                    case SCHOOLING:
+                    case COMATOSE:
+                    case SHIELDS_DOWN:
+                    case DISGUISE:
+                    case RKS_SYSTEM:
+                    case BATTLE_BOND:
+                    case POWER_CONSTRUCT:
+                        break;
+                    default:
+                        target.getAbility().setSuppressed(true);
+                }
+            }
+
+            return super.use(user, target, battle, trainer, move);
+        }
+    },
     CORKSCREW_CRASH("Corkscrew Crash"),
     COSMIC_POWER("Cosmic Power"),
     COTTON_GUARD("Cotton Guard"),

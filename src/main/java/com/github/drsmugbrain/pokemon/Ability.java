@@ -10,65 +10,15 @@ import java.util.*;
  */
 public enum Ability {
 
-    ADAPTABILITY("Adaptability") {
-        public void add(Pokemon pokemon) {
-            pokemon.changeStabMultiplier(2.0);
-        }
-
-        public void remove(Pokemon pokemon) {
-            pokemon.resetStabMultiplier();
-        }
-    },
-    AERILATE("Aerilate") {
-        private Set<Move> CHANGED_MOVES;
-
-        public void add(Pokemon pokemon) {
-            for (Move move : pokemon.getMoves()) {
-                if (move.getType().equals(Type.NORMAL) && move.getBaseMove() != BaseMove.HIDDEN_POWER) {
-                    move.setType(Type.FLYING);
-                    move.incrementDamageMultiplier(0.2);
-                    CHANGED_MOVES.add(move);
-                }
-            }
-        }
-
-        public void remove(Pokemon pokemon) {
-            for (Move changedMove : CHANGED_MOVES) {
-                changedMove.setType(Type.NORMAL);
-                changedMove.decreaseDamageMultiplier(0.2);
-                pokemon.getMoves().remove(changedMove);
-                pokemon.getMoves().add(changedMove);
-            }
-        }
-    },
+    ADAPTABILITY("Adaptability"),
+    AERILATE("Aerilate"),
     AFTERMATH("Aftermath"),
     AIR_LOCK("Air Lock"),
-    ANALYTIC("Analytic") {
-//        public void beforeAttack(Battle battle, Pokemon pokemon) {
-//            if (battle.getLastPokemon().equals(pokemon)) {
-//                pokemon.incrementDamageMultiplier(0.3);
-//            }
-//        }
-    },
-    ANGER_POINT("Anger Point") {
-        public void onHit(Pokemon attacker, Pokemon defender, BaseMove attack, boolean wasCriticalHit) {
-            if (!wasCriticalHit) return;
-            defender.setStatStage(Stat.ATTACK, Stage.POSITIVE_SIX);
-        }
-    },
+    ANALYTIC("Analytic"),
+    ANGER_POINT("Anger Point"),
     ANTICIPATION("Anticipation"),
-    ARENA_TRAP("Arena Trap") {
-        public void onSendOut(Pokemon self, Pokemon enemy) {
-            enemy.setCanSwitch(false);
-        }
-
-        public void onSendBack(Pokemon self, Pokemon enemy) {
-            enemy.setCanSwitch(true);
-        }
-    },
-    AROMA_VEIL("Aroma Veil") {
-
-    },
+    ARENA_TRAP("Arena Trap"),
+    AROMA_VEIL("Aroma Veil"),
     AURA_BREAK("Aura Break"),
     BAD_DREAMS("Bad Dreams"),
     BATTLE_ARMOR("Battle Armor"),
@@ -294,6 +244,7 @@ public enum Ability {
     POWER_CONSTRUCT("Power Construct");
 
     private String NAME;
+    private boolean suppressed = false;
 
     Ability(@Nonnull String name) {
         Holder.MAP.put(name, this);
@@ -321,19 +272,21 @@ public enum Ability {
         return abilityList.toArray(new Ability[0]);
     }
 
-    public void onAdd(Pokemon pokemon) {}
-
-    public void onRemove(Pokemon pokemon) {}
-
-    public void onDeath(Pokemon pokemon, Battle battle) {}
-
-    public void onSendOut(Pokemon pokemon) {}
-
-    public void onAttack(Battle battle, Pokemon pokemon) {}
-
     @Nonnull
     public String getName() {
         return this.NAME;
+    }
+
+    public boolean getSupressed() {
+        return this.suppressed;
+    }
+
+    protected void setSuppressed(boolean bool) {
+        this.suppressed = bool;
+    }
+
+    protected void onOwnSendOut(Pokemon pokemon) {
+        this.setSuppressed(false);
     }
 
     private static class Holder {
