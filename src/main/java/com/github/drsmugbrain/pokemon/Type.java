@@ -11,6 +11,7 @@ import java.util.*;
 public enum Type {
 
     TYPELESS("Typeless"),
+    CURSE("???"),
     NORMAL("Normal"),
     FIRE("Fire"),
     WATER("Water"),
