@@ -784,6 +784,6 @@ public class Pokemon {
 
     protected TreeMap<Pokemon, Move> getHitBy() {
         return this.hitBy;
-    }<
+    }
 
 }
