@@ -506,17 +506,17 @@ public class Pokemon {
     }
 
     protected void damage(int amount) {
-        if (this.currentHP - amount < 0) {
-            amount += this.getCurrentStat(Stat.HP) - amount;
+        if (currentHP - amount < 0) {
+            amount = currentHP;
         }
 
-        this.currentHP -= amount;
-        this.damagedThisTurn = true;
+        currentHP -= amount;
+        damagedThisTurn = true;
 
         PokemonDamagedEvent event = new PokemonDamagedEvent(this, amount);
         EventDispatcher.dispatch(event);
 
-        if (this.currentHP <= 0) {
+        if (currentHP <= 0) {
             this.kill();
         }
     }
@@ -538,8 +538,7 @@ public class Pokemon {
         int maxHP = this.getStat(Stat.HP);
 
         if (currentHP + amount > maxHP) {
-            currentHP = maxHP;
-            return;
+            amount = maxHP - currentHP;
         }
 
         currentHP += amount;
