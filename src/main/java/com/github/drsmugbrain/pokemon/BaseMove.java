@@ -1332,7 +1332,13 @@ public enum BaseMove {
         }
     },
     CORKSCREW_CRASH("Corkscrew Crash"),
-    COSMIC_POWER("Cosmic Power"),
+    COSMIC_POWER("Cosmic Power") {
+        @Override
+        protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            user.raiseStatStage(Stat.SPECIAL_DEFENSE, 1);
+            return super.useAsZMove(user, target, battle, trainer, move);
+        }
+    },
     COTTON_GUARD("Cotton Guard"),
     COTTON_SPORE("Cotton Spore"),
     COUNTER("Counter"),
