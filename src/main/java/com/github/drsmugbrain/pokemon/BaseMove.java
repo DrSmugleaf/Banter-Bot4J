@@ -1148,10 +1148,10 @@ public enum BaseMove {
                 case II:
                 case III:
                 case IV:
-                    TreeMap<Pokemon, Move> movesHitBy = user.getHitBy();
+                    List<Action> movesHitBy = user.getHitBy();
 
-                    for (Map.Entry<Pokemon, Move> pokemonMoveEntry : movesHitBy.descendingMap().entrySet()) {
-                        Move currentMove = pokemonMoveEntry.getValue();
+                    for (int i = movesHitBy.size() - 1; i >= 0; i--) {
+                        Move currentMove = movesHitBy.get(i);
 
                         if (currentMove.getCategory() != Category.OTHER) {
                             lastMove = currentMove;
@@ -1209,9 +1209,9 @@ public enum BaseMove {
         protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
             Move copiedMove = null;
 
-            Map.Entry<Pokemon, Move> lastEntry = battle.getActions().lastEntry();
-            if (lastEntry != null) {
-                Move lastMove = lastEntry.getValue();
+            Action lastAction = battle.getLastAction();
+            if (lastAction != null) {
+                Move lastMove = lastAction.getMove();
 
                 switch (lastMove.getBaseMove()) {
                     case ASSIST:
@@ -1259,9 +1259,9 @@ public enum BaseMove {
 
             Move copiedMove = null;
 
-            Map.Entry<Pokemon, Move> lastEntry = battle.getActions().lastEntry();
-            if (lastEntry != null) {
-                Move lastMove = lastEntry.getValue();
+            Action lastAction = battle.getLastAction();
+            if (lastAction != null) {
+                Move lastMove = lastAction.getMove();
 
                 switch (lastMove.getBaseMove()) {
                     case ASSIST:
@@ -1356,19 +1356,22 @@ public enum BaseMove {
     COUNTER("Counter") {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-            Map.Entry<Pokemon, Move> lastDamage = user.getLastDamagingHitBy();
-            if (lastDamage == null) {
+            Action lastAction = user.getLastHitBy();
+            if (lastAction == null) {
                 return this.fail(user, target, battle, trainer, move);
             }
 
-            Move lastMove = lastDamage.getValue();
-
             switch (battle.getGeneration()) {
                 case I:
-                    if (lastMove.getCategory() != Category.OTHER
-                        && (lastMove.getType() == Type.NORMAL || lastMove.getType() == Type.FIGHTING)
-                        && lastMove.getBaseMove() != COUNTER) {
-                        int damage = lastMove.getBaseMove().getDamage(target, user, lastMove);
+                    if (lastAction.getDamage() > 0
+                        && (lastAction.getType() == Type.NORMAL || lastAction.getType() == Type.FIGHTING)
+                        && lastAction.getBaseMove() != COUNTER) {
+                        int damage;
+                        if (lastAction.getDefenderVolatileStatuses().contains(BaseVolatileStatus.SUBSTITUTE)) {
+                            damage = lastAction.getBaseMove().getDamage(lastAction.getAttacker(), lastAction.getDefender(), lastAction.getMove());
+                        } else {
+                            damage = lastAction.getDamage() * 2;
+                        }
                         target.damage(damage);
                         return damage;
                     }
@@ -1378,9 +1381,26 @@ public enum BaseMove {
                 case IV:
                 case V:
                 case VI:
+                    if (lastAction.getDefenderVolatileStatuses().contains(BaseVolatileStatus.SUBSTITUTE)) {
+                        return this.fail(user, target, battle, trainer, move);
+                    }
+
+                    if (lastAction.getCategory() == Category.PHYSICAL) {
+                        int damage = lastAction.getDamage() * 2;
+                        target.damage(damage);
+                        return damage;
+                    }
+                    break;
                 case VII:
-                    if (lastMove.getCategory() == Category.PHYSICAL) {
-                        int damage = lastMove.getBaseMove().getDamage(target, user, lastMove);
+                    if (lastAction.getDefenderVolatileStatuses().contains(BaseVolatileStatus.SUBSTITUTE)) {
+                        return this.fail(user, target, battle, trainer, move);
+                    }
+
+                    if (lastAction.getCategory() == Category.PHYSICAL) {
+                        int damage = lastAction.getDamage() * 2;
+                        if (damage == 0) {
+                            damage = 1;
+                        }
                         target.damage(damage);
                         return damage;
                     }

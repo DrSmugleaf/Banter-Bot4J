@@ -3,6 +3,7 @@ package com.github.drsmugbrain.pokemon;
 import com.github.drsmugbrain.pokemon.events.*;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -17,7 +18,7 @@ public class Battle {
     private boolean ready = false;
     private int TURN_NUMBER = 1;
     private final Map<Trainer, List<Pokemon>> POKEMONS_SENT_OUT_THIS_TURN = new HashMap<>();
-    private final TreeMap<Pokemon, Move> ACTIONS = new TreeMap<>();
+    private final List<Action> ACTIONS = new ArrayList<>();
 
     public Battle(Generation generation, @Nonnull Long id1, @Nonnull Trainer trainer1, @Nonnull Long id2, @Nonnull Trainer trainer2) {
         this.GENERATION = generation;
@@ -185,9 +186,6 @@ public class Battle {
     }
 
     public void addAction(Trainer trainer, Pokemon pokemon, Move move, Pokemon target) {
-        if (move.getBaseMove() != BaseMove.SWITCH) {
-            this.ACTIONS.put(pokemon, move);
-        }
         trainer.addAction(pokemon, move, target);
         for (Trainer trainer1 : this.TRAINERS.values()) {
             if (trainer1.getStatus() != TrainerStatus.WAITING) {
@@ -227,8 +225,18 @@ public class Battle {
         return this.TURN_NUMBER;
     }
 
-    protected TreeMap<Pokemon, Move> getActions() {
+    @Nonnull
+    protected List<Action> getActions() {
         return this.ACTIONS;
+    }
+
+    @Nullable
+    protected Action getLastAction() {
+        if (ACTIONS.size() == 0) {
+            return null;
+        }
+
+        return ACTIONS.get(ACTIONS.size() - 1);
     }
 
 }

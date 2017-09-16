@@ -47,7 +47,7 @@ public class Pokemon {
     private Battle battle = null;
     private Trainer trainer = null;
     private boolean fainted = false;
-    private TreeMap<Pokemon, Move> hitBy = new TreeMap<>();
+    private List<Action> hitBy = new ArrayList<>();
     private boolean movedThisTurn = false;
 
     public Pokemon(@Nonnull Pokemons basePokemon, @Nonnull Item item, @Nonnull Nature nature, @Nonnull Ability ability, @Nullable Gender gender, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues, @Nonnull List<Move> moves) {
@@ -531,8 +531,8 @@ public class Pokemon {
     }
 
     protected int damage(Move move, Pokemon attacker) {
-        this.hitBy.put(attacker, move);
         int amount = move.getBaseMove().getDamage(attacker, this, move);
+        hitBy.add(new Action(move, attacker, this, amount, false));
         this.damage(amount);
         return amount;
     }
@@ -785,19 +785,17 @@ public class Pokemon {
     }
 
     @Nonnull
-    protected TreeMap<Pokemon, Move> getHitBy() {
+    protected List<Action> getHitBy() {
         return this.hitBy;
     }
 
     @Nullable
-    protected Map.Entry<Pokemon, Move> getLastDamagingHitBy() {
-        for (Map.Entry<Pokemon, Move> pokemonMoveEntry : hitBy.descendingMap().entrySet()) {
-            if (pokemonMoveEntry.getValue().getCategory() != Category.OTHER) {
-                return pokemonMoveEntry;
-            }
+    protected Action getLastHitBy() {
+        if (hitBy.size() == 0) {
+            return null;
         }
 
-        return null;
+        return hitBy.get(hitBy.size() - 1);
     }
 
     protected boolean movedThisTurn() {
