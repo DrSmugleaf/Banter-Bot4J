@@ -1300,6 +1300,7 @@ public enum BaseMove {
                 return super.fail(user, target, battle, trainer, move);
             }
 
+            user.removeItem();
             if (copiedMove.getCategory() != Category.OTHER) {
                 return copiedMove.useAsZMove(user, target, battle, trainer);
             } else {
