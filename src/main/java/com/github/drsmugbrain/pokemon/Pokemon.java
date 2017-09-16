@@ -784,8 +784,20 @@ public class Pokemon {
         return false;
     }
 
+    @Nonnull
     protected TreeMap<Pokemon, Move> getHitBy() {
         return this.hitBy;
+    }
+
+    @Nullable
+    protected Map.Entry<Pokemon, Move> getLastDamagingHitBy() {
+        for (Map.Entry<Pokemon, Move> pokemonMoveEntry : hitBy.descendingMap().entrySet()) {
+            if (pokemonMoveEntry.getValue().getCategory() != Category.OTHER) {
+                return pokemonMoveEntry;
+            }
+        }
+
+        return null;
     }
 
     protected boolean movedThisTurn() {

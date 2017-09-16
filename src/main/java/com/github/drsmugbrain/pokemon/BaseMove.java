@@ -1353,7 +1353,69 @@ public enum BaseMove {
             return super.useAsZMove(user, target, battle, trainer, move);
         }
     },
-    COUNTER("Counter"),
+    COUNTER("Counter") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            Map.Entry<Pokemon, Move> lastDamage = user.getLastDamagingHitBy();
+            if (lastDamage == null) {
+                return this.fail(user, target, battle, trainer, move);
+            }
+
+            Move lastMove = lastDamage.getValue();
+
+            switch (battle.getGeneration()) {
+                case I:
+                    if (lastMove.getCategory() != Category.OTHER
+                        && (lastMove.getType() == Type.NORMAL || lastMove.getType() == Type.FIGHTING)
+                        && lastMove.getBaseMove() != COUNTER) {
+                        int damage = lastMove.getBaseMove().getDamage(target, user, lastMove);
+                        target.damage(damage);
+                        return damage;
+                    }
+                    break;
+                case II:
+                case III:
+                case IV:
+                case V:
+                case VI:
+                case VII:
+                    if (lastMove.getCategory() == Category.PHYSICAL) {
+                        int damage = lastMove.getBaseMove().getDamage(target, user, lastMove);
+                        target.damage(damage);
+                        return damage;
+                    }
+                    break;
+                default:
+                    throw new InvalidGenerationException(battle.getGeneration());
+            }
+
+            return this.fail(user, target, battle, trainer, move);
+        }
+
+        @Override
+        protected boolean hits(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            if (battle.getGeneration() != Generation.I) {
+                return super.hits(user, target, battle, trainer, move);
+            }
+
+            if (this.getAccuracy() == 0) {
+                return true;
+            }
+
+            if (battle.getGeneration() == Generation.I) {
+                if (Math.random() < 0.004) {
+                    return false;
+                }
+            }
+
+            double probability = this.getAccuracy() * (user.getAccuracy() / target.getEvasion());
+            if (probability > 1 || probability < Math.random()) {
+                return true;
+            }
+
+            return false;
+        }
+    },
     COVET("Covet"),
     CRABHAMMER("Crabhammer"),
     CRAFTY_SHIELD("Crafty Shield"),
