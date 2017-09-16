@@ -1339,7 +1339,13 @@ public enum BaseMove {
             return super.useAsZMove(user, target, battle, trainer, move);
         }
     },
-    COTTON_GUARD("Cotton Guard"),
+    COTTON_GUARD("Cotton Guard") {
+        @Override
+        protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            user.resetLoweredStats();
+            return super.useAsZMove(user, target, battle, trainer, move);
+        }
+    },
     COTTON_SPORE("Cotton Spore"),
     COUNTER("Counter"),
     COVET("Covet"),
