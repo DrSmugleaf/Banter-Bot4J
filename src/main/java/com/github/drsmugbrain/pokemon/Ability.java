@@ -3,12 +3,13 @@ package com.github.drsmugbrain.pokemon;
 import org.json.JSONArray;
 
 import javax.annotation.Nonnull;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.util.*;
 
 /**
  * Created by DrSmugleaf on 07/06/2017.
  */
-public enum Ability {
+public enum Ability implements IBattle {
 
     ADAPTABILITY("Adaptability"),
     AERILATE("Aerilate"),
@@ -277,7 +278,7 @@ public enum Ability {
         return this.NAME;
     }
 
-    public boolean getSupressed() {
+    public boolean isSuppressed() {
         return this.suppressed;
     }
 
@@ -285,7 +286,9 @@ public enum Ability {
         this.suppressed = bool;
     }
 
-    protected void onOwnSendOut(Pokemon pokemon) {
+    @Override
+    @OverridingMethodsMustInvokeSuper
+    public void onOwnSendOut(@Nonnull Pokemon pokemon) {
         this.setSuppressed(false);
     }
 

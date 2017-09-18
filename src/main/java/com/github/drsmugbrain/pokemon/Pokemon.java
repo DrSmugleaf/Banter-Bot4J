@@ -187,6 +187,7 @@ public class Pokemon {
         return this.item.equals(item);
     }
 
+    @Nullable
     protected Item removeItem() {
         Item item = this.item;
         this.item = null;

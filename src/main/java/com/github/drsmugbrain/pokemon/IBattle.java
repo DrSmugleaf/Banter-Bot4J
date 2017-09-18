@@ -7,44 +7,62 @@ import javax.annotation.Nonnull;
  */
 interface IBattle {
 
-    default void onTrainerTurnStart(@Nonnull Trainer trainer) {}
+    default void onTrainerTurnStart(@Nonnull Trainer trainer, @Nonnull Pokemon pokemon) {}
 
-    default void onTurnStart(@Nonnull Battle battle) {}
+    default void onTurnStart(@Nonnull Battle battle, @Nonnull Pokemon pokemon) {}
 
-    default void onOwnSwitch(@Nonnull Pokemon user, @Nonnull Pokemon target) {}
+    default void onOwnSendBack(@Nonnull Pokemon pokemon) {}
 
-    default void afterOwnSwitch(@Nonnull Pokemon user, @Nonnull Pokemon target) {}
+    default void onEnemySendBack(@Nonnull Pokemon pokemon) {}
 
-    default void onEnemySwitch(@Nonnull Pokemon user, @Nonnull Pokemon target) {}
+    default void onOwnSendOut(@Nonnull Pokemon pokemon) {}
 
-    default void afterEnemySwitch(@Nonnull Pokemon user, @Nonnull Pokemon target) {}
+    default void onEnemySendOut(@Nonnull Pokemon pokemon) {}
 
-    default void onPokemonTurnStart(@Nonnull Pokemon pokemon) {}
+    default void onOwnTurnStart(@Nonnull Pokemon pokemon) {}
 
-    default void onPokemonAttemptAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Move move) {}
+    default void onEnemyTurnStart(@Nonnull Pokemon pokemon) {}
 
-    default void onPokemonDealAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Move move) {}
+    default boolean onOwnAttemptAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+        return true;
+    }
 
-    default void onPokemonReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Move move) {}
+    default boolean onEnemyAttemptAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+        return true;
+    }
 
-    default void onPokemonFailAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Move move) {}
+    default void onOwnDealAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {}
 
-    default void onPokemonTurnEnd(@Nonnull Pokemon pokemon) {}
+    default void onEnemyDealAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {}
 
-    default void onTurnEnd(@Nonnull Battle battle) {}
+    default void onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {}
+
+    default void onEnemyReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {}
+
+    default void onPokemonFailAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {}
+
+    default void onEnemyFailAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {}
+
+    default void onOwnTurnEnd(@Nonnull Pokemon pokemon) {}
+
+    default void onEnemyTurnEnd(@Nonnull Pokemon pokemon) {}
+
+    default void onTurnEnd(@Nonnull Battle battle, @Nonnull Pokemon pokemon) {}
+
+    default void onOwnItemUsed(@Nonnull Pokemon user, @Nonnull Item item) {}
+
+    default void onEnemyItemUsed(@Nonnull Pokemon user, @Nonnull Item item) {}
 
     default boolean hits(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Move move) {
         return true;
     }
 
-    default double damageMultiplier(@Nonnull Pokemon attacker, @Nonnull Move move) {
+    default double damageMultiplier(@Nonnull Pokemon attacker, @Nonnull Action action) {
         return 1.0;
     }
 
-    default double powerMultiplier(@Nonnull Pokemon attacker, @Nonnull Move move) {
+    default double powerMultiplier(@Nonnull Pokemon attacker, @Nonnull Action action) {
         return 1.0;
     }
-
-    default void onItemUsed(@Nonnull Pokemon pokemon, @Nonnull Item item) {}
 
 }

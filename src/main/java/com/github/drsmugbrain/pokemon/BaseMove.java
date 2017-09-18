@@ -1,5 +1,6 @@
 package com.github.drsmugbrain.pokemon;
 
+import com.github.drsmugbrain.pokemon.events.EventDispatcher;
 import com.github.drsmugbrain.pokemon.events.PokemonMoveMissEvent;
 
 import javax.annotation.Nonnull;
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
 /**
  * Created by DrSmugleaf on 17/06/2017.
  */
-public enum BaseMove {
+public enum BaseMove implements IBattle {
 
     SWITCH("Switch"),
     _10000000_VOLT_THUNDERBOLT("10,000,000 Volt Thunderbolt"),
@@ -308,7 +309,7 @@ public enum BaseMove {
         @Override
         protected int use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             if (Gender.isOppositeGender(user, target)) {
-                BaseVolatileStatus.INFATUATION.apply(user, target, battle, trainer, move);
+                BaseVolatileStatus.INFATUATION.apply(user, target, move);
                 return super.use(user, target, battle, trainer, move);
             } else {
                 return this.fail(user, target, battle, trainer, move);
@@ -330,7 +331,7 @@ public enum BaseMove {
                 return this.fail(user, target, battle, trainer, move);
             }
 
-            BaseVolatileStatus.AURORA_VEIL.apply(user, target, battle, trainer, move);
+            BaseVolatileStatus.AURORA_VEIL.apply(user, target, move);
             return super.use(user, target, battle, trainer, move);
         }
 
@@ -414,13 +415,13 @@ public enum BaseMove {
     },
     BEAK_BLAST("Beak Blast") {
         @Override
-        protected void onTurnStart(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
-            BaseVolatileStatus.BEAK_BLAST.apply(user, target, battle, trainer, null);
+        public void onTurnStart(@Nonnull Battle battle, @Nonnull Pokemon user) {
+            BaseVolatileStatus.BEAK_BLAST.apply(user, user, null);
         }
 
         @Override
         protected int use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
-            BaseVolatileStatus.BEAK_BLAST.remove(user, target, battle, trainer, move);
+            BaseVolatileStatus.BEAK_BLAST.remove(user, target, move);
             return super.use(user, target, battle, trainer, move);
         }
     },
@@ -447,14 +448,14 @@ public enum BaseMove {
     },
     BELCH("Belch") {
         @Override
-        protected void onItemUsed(Item item, Pokemon user, Battle battle, Trainer trainer) {
+        public void onOwnItemUsed(@Nonnull Pokemon user, @Nonnull Item item) {
             if (item.getCategory() == ItemCategory.BERRY) {
                 user.setBerryUsed(true);
             }
         }
 
         @Override
-        protected boolean canUseMove(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
+        public boolean canUseMove(@Nonnull Pokemon user) {
             return user.isBerryUsed();
         }
     },
@@ -486,7 +487,7 @@ public enum BaseMove {
     BIDE("Bide") {
         @Override
         protected int use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
-            BaseVolatileStatus.BIDE.apply(user, target, battle, trainer, move);
+            BaseVolatileStatus.BIDE.apply(user, target, move);
             return super.use(user, target, battle, trainer, move);
         }
     },
@@ -510,7 +511,7 @@ public enum BaseMove {
             }
 
             if (!user.hasVolatileStatus(BaseVolatileStatus.BIND)) {
-                BaseVolatileStatus.BIND.apply(user, target, battle, trainer, move);
+                BaseVolatileStatus.BIND.apply(user, target, move);
             } else if (user.getLastTarget().getKey() == target) {
                 move.increasePP(1);
             }
@@ -541,7 +542,9 @@ public enum BaseMove {
         }
 
         @Override
-        protected boolean hits(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+        public boolean hits(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Move move) {
+            Battle battle = attacker.getBattle();
+
             switch (battle.getGeneration()) {
                 case I:
                     if (this.getAccuracy() == 0) {
@@ -554,7 +557,7 @@ public enum BaseMove {
                         }
                     }
 
-                    double probability = this.getAccuracy() * (user.getAccuracy() / target.getEvasion());
+                    double probability = this.getAccuracy() * (attacker.getAccuracy() / defender.getEvasion());
                     if (probability > 1 || probability < Math.random()) {
                         return true;
                     }
@@ -566,7 +569,7 @@ public enum BaseMove {
                 case V:
                 case VI:
                 case VII:
-                    return super.hits(user, target, battle, trainer, move);
+                    return super.hits(attacker, defender, move);
                 default:
                     throw new InvalidGenerationException(battle.getGeneration());
             }
@@ -749,12 +752,12 @@ public enum BaseMove {
         }
 
         @Override
-        protected boolean hits(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-            if (!user.isType(Type.FIRE)) {
+        public boolean hits(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Move move) {
+            if (!attacker.isType(Type.FIRE)) {
                 return false;
             }
 
-            return super.hits(user, target, battle, trainer, move);
+            return super.hits(attacker, defender, move);
         }
     },
     CALM_MIND("Calm Mind"),
@@ -797,7 +800,7 @@ public enum BaseMove {
     CHARGE("Charge") {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-            BaseVolatileStatus.CHARGE.apply(user, target, battle, trainer, move);
+            BaseVolatileStatus.CHARGE.apply(user, target, move);
 
             switch (battle.getGeneration()) {
                 case I:
@@ -855,18 +858,19 @@ public enum BaseMove {
         }
 
         @Override
-        protected boolean hits(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+        public boolean hits(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Move move) {
             if (this.getAccuracy() == 0) {
                 return true;
             }
 
-            if (battle.getGeneration() == Generation.I) {
+            Generation generation = attacker.getBattle().getGeneration();
+            if (generation == Generation.I) {
                 if (Math.random() < 0.004) {
                     return false;
                 }
             }
 
-            double probability = this.getAccuracy() * user.getAccuracy();
+            double probability = this.getAccuracy() * attacker.getAccuracy();
             if (probability > 1 || probability < Math.random()) {
                 return true;
             }
@@ -911,7 +915,7 @@ public enum BaseMove {
             }
 
             if (!user.hasVolatileStatus(BaseVolatileStatus.CLAMP)) {
-                BaseVolatileStatus.CLAMP.apply(user, target, battle, trainer, move);
+                BaseVolatileStatus.CLAMP.apply(user, target, move);
             } else if (user.getLastTarget().getKey() == target) {
                 move.increasePP(1);
             }
@@ -942,20 +946,22 @@ public enum BaseMove {
         }
 
         @Override
-        protected boolean hits(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-            switch (battle.getGeneration()) {
+        public boolean hits(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Move move) {
+            Generation generation = attacker.getBattle().getGeneration();
+
+            switch (generation) {
                 case I:
                     if (this.getAccuracy() == 0) {
                         return true;
                     }
 
-                    if (battle.getGeneration() == Generation.I) {
+                    if (generation == Generation.I) {
                         if (Math.random() < 0.004) {
                             return false;
                         }
                     }
 
-                    double probability = this.getAccuracy() * (user.getAccuracy() / target.getEvasion());
+                    double probability = this.getAccuracy() * (attacker.getAccuracy() / defender.getEvasion());
                     if (probability > 1 || probability < Math.random()) {
                         return true;
                     }
@@ -967,9 +973,9 @@ public enum BaseMove {
                 case V:
                 case VI:
                 case VII:
-                    return super.hits(user, target, battle, trainer, move);
+                    return super.hits(attacker, defender, move);
                 default:
-                    throw new InvalidGenerationException(battle.getGeneration());
+                    throw new InvalidGenerationException(generation);
             }
         }
     },
@@ -1409,22 +1415,22 @@ public enum BaseMove {
         }
 
         @Override
-        protected boolean hits(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-            if (battle.getGeneration() != Generation.I) {
-                return super.hits(user, target, battle, trainer, move);
+        public boolean hits(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Move move) {
+            Generation generation = attacker.getBattle().getGeneration();
+
+            if (generation != Generation.I) {
+                return super.hits(attacker, defender, move);
             }
 
             if (this.getAccuracy() == 0) {
                 return true;
             }
 
-            if (battle.getGeneration() == Generation.I) {
-                if (Math.random() < 0.004) {
-                    return false;
-                }
+            if (Math.random() < 0.004) {
+                return false;
             }
 
-            double probability = this.getAccuracy() * (user.getAccuracy() / target.getEvasion());
+            double probability = this.getAccuracy() * (attacker.getAccuracy() / defender.getEvasion());
             if (probability > 1 || probability < Math.random()) {
                 return true;
             }
@@ -2866,8 +2872,16 @@ public enum BaseMove {
         return (int) (((((2 * level / 5 + 2) * attackStat * attackPower / defenseStat) / 50) + 2) * stabMultiplier * effectiveness * randomNumber);
     }
 
-    protected boolean canUseMove(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
+    public boolean canUseMove(@Nonnull Pokemon user) {
         return true;
+    }
+
+    public boolean canUseZMove(@Nonnull Pokemon user) {
+        if (!this.Z_MOVE_REQUIRED_POKEMON.isEmpty() && !this.Z_MOVE_REQUIRED_POKEMON.contains(user.getName())) {
+            return false;
+        }
+
+        return this.Z_MOVE_ITEM == user.getItem() && !Collections.disjoint(this.Z_MOVE_MOVES_THAT_TURN_INTO_THIS, user.getMoves());
     }
 
     protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
@@ -2892,8 +2906,9 @@ public enum BaseMove {
         return 0;
     }
 
-    protected boolean hits(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-        if (target.isImmune(move)) {
+    @Override
+    public boolean hits(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Move move) {
+        if (defender.isImmune(move)) {
             return false;
         }
 
@@ -2901,13 +2916,13 @@ public enum BaseMove {
             return true;
         }
 
-        if (battle.getGeneration() == Generation.I) {
+        if (attacker.getBattle().getGeneration() == Generation.I) {
             if (Math.random() < 0.004) {
                 return false;
             }
         }
 
-        double probability = this.getAccuracy() * (user.getAccuracy() / target.getEvasion());
+        double probability = this.getAccuracy() * (attacker.getAccuracy() / defender.getEvasion());
         if (probability > 1 || probability < Math.random()) {
             return true;
         }
@@ -2915,29 +2930,15 @@ public enum BaseMove {
         return false;
     }
 
-    public boolean canUseZMove(@Nonnull Pokemon pokemon) {
-        if (!this.Z_MOVE_REQUIRED_POKEMON.isEmpty() && !this.Z_MOVE_REQUIRED_POKEMON.contains(pokemon.getName())) {
-            return false;
-        }
-
-        return this.Z_MOVE_ITEM == pokemon.getItem() && !Collections.disjoint(this.Z_MOVE_MOVES_THAT_TURN_INTO_THIS, pokemon.getMoves());
-    }
-
     protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-        user.removeItem();
         return this.use(user, target, battle, trainer, move);
     }
 
     protected int fail(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
         PokemonMoveMissEvent event = new PokemonMoveMissEvent(user, move, target);
+        EventDispatcher.dispatch(event);
         return 0;
     }
-
-    protected void onTurnStart(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {}
-
-    protected void onItemUsed(Item item, Pokemon user, Battle battle, Trainer trainer) {}
-
-    protected void onReceiveAttack(Pokemon user, Pokemon target, Battle battle, Trainer trainer, BaseMove move) {}
 
     private static class Holder {
         static Map<String, BaseMove> MAP = new HashMap<>();

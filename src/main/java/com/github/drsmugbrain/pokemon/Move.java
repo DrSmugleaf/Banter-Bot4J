@@ -112,6 +112,7 @@ public class Move {
         PokemonMoveEvent event = new PokemonMoveEvent(user, this);
         EventDispatcher.dispatch(event);
         this.pp--;
+        user.removeItem();
         return this.getBaseMove().useAsZMove(user, target, battle, trainer, this);
     }
 
@@ -120,7 +121,7 @@ public class Move {
     }
 
     protected int tryUse(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
-        if (this.getBaseMove().hits(user, target, battle, trainer, this)) {
+        if (this.getBaseMove().hits(user, target, this)) {
             return this.use(user, target, battle, trainer);
         } else {
             return this.fail(user, target, battle, trainer);
