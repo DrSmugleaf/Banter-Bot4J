@@ -733,7 +733,7 @@ public enum BaseMove implements IBattle {
                 case VI:
                 case VII:
                     if (user.getStatus() == Status.FREEZE) {
-                        Status.FREEZE.remove(user, target, battle, trainer, this);
+                        Status.FREEZE.remove(user);
                     }
                     break;
             }
@@ -1644,7 +1644,7 @@ public enum BaseMove implements IBattle {
                 case VI:
                 case VII:
                     if (user.getStatus() == Status.FREEZE) {
-                        Status.FREEZE.remove(user, target, battle, trainer, this);
+                        Status.FREEZE.remove(user);
                     }
                     break;
             }
@@ -1666,7 +1666,7 @@ public enum BaseMove implements IBattle {
                 case VI:
                 case VII:
                     if (user.getStatus() == Status.FREEZE) {
-                        Status.FREEZE.remove(user, target, battle, trainer, this);
+                        Status.FREEZE.remove(user);
                     }
                     break;
             }
@@ -1713,7 +1713,7 @@ public enum BaseMove implements IBattle {
                 case VI:
                 case VII:
                     if (user.getStatus() == Status.FREEZE) {
-                        Status.FREEZE.remove(user, target, battle, trainer, this);
+                        Status.FREEZE.remove(user);
                     }
                     break;
             }
@@ -2046,7 +2046,7 @@ public enum BaseMove implements IBattle {
                 case VI:
                 case VII:
                     if (user.getStatus() == Status.FREEZE) {
-                        Status.FREEZE.remove(user, target, battle, trainer, this);
+                        Status.FREEZE.remove(user);
                     }
                     break;
             }
@@ -2073,7 +2073,7 @@ public enum BaseMove implements IBattle {
                 case VI:
                 case VII:
                     if (user.getStatus() == Status.FREEZE) {
-                        Status.FREEZE.remove(user, target, battle, trainer, this);
+                        Status.FREEZE.remove(user);
                     }
                     break;
             }
@@ -2167,7 +2167,7 @@ public enum BaseMove implements IBattle {
                 case VI:
                 case VII:
                     if (user.getStatus() == Status.FREEZE) {
-                        Status.FREEZE.remove(user, target, battle, trainer, this);
+                        Status.FREEZE.remove(user);
                     }
                     break;
             }
@@ -2247,7 +2247,7 @@ public enum BaseMove implements IBattle {
         protected int use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
             if (battle.getGeneration() == Generation.II) {
                 if (target.getStatus() == Status.FREEZE && Math.random() < 0.3) {
-                    Status.FREEZE.remove(user, target, battle, trainer, this);
+                    Status.FREEZE.remove(user);
                 }
             }
 

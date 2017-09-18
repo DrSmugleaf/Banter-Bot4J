@@ -32,11 +32,13 @@ public enum Status implements IBattle {
         }
 
         @Override
-        protected void remove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-            switch (battle.getGeneration()) {
+        protected void remove(Pokemon pokemon) {
+            Generation generation = pokemon.getBattle().getGeneration();
+
+            switch (generation) {
                 case I:
                 case II:
-                    user.removeStatModifier(Stat.ATTACK, "burn");
+                    pokemon.removeStatModifier(Stat.ATTACK, "burn");
                     break;
                 case III:
                 case IV:
@@ -45,10 +47,10 @@ public enum Status implements IBattle {
                 case VII:
                     break;
                 default:
-                    throw new InvalidGenerationException(battle.getGeneration());
+                    throw new InvalidGenerationException(generation);
             }
 
-            super.remove(user, target, battle, trainer, move);
+            super.remove(pokemon);
         }
 
         @Override
