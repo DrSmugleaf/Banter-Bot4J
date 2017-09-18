@@ -993,6 +993,14 @@ public enum Pokemons {
         return Holder.MAP.get(pokemon);
     }
 
+    public static boolean isArceus(@Nonnull Pokemon pokemon) {
+        return pokemon.getName().contains("Arceus");
+    }
+
+    public static boolean isSilvally(@Nonnull Pokemon pokemon) {
+        return pokemon.getName().contains("Silvally");
+    }
+
     public String getName() {
         return this.NAME;
     }

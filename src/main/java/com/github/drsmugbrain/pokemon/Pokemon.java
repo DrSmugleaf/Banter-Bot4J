@@ -151,6 +151,10 @@ public class Pokemon {
         return string;
     }
 
+    public Pokemons getBasePokemon() {
+        return this.BASE_POKEMON;
+    }
+
     @Nonnull
     public String getName() {
         return this.BASE_POKEMON.getName();
@@ -183,8 +187,15 @@ public class Pokemon {
         return this.item.equals(item);
     }
 
-    protected void removeItem() {
+    protected Item removeItem() {
+        Item item = this.item;
         this.item = null;
+        return item;
+    }
+
+    protected void stealItem(Pokemon thief) {
+        Item item = this.removeItem();
+        thief.setItem(item);
     }
 
     @Nonnull

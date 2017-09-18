@@ -1436,7 +1436,104 @@ public enum BaseMove {
             return false;
         }
     },
-    COVET("Covet"),
+    COVET("Covet") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            int damage = super.use(user, target, battle, trainer, move);
+
+            if (!user.hasItem() && target.hasItem() && !target.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+                switch (battle.getGeneration()) {
+                    case I:
+                    case II:
+                    case III:
+                        target.stealItem(user);
+                        break;
+                    case IV:
+                        if (target.getAbility() == Ability.MULTITYPE || target.getItem() == Item.GRISEOUS_ORB) {
+                            break;
+                        }
+
+                        target.stealItem(user);
+                        break;
+                    case V: {
+                        if (user.isFainted()) {
+                            break;
+                        }
+
+                        Pokemons userPokemon = user.getBasePokemon();
+                        Pokemons targetPokemon = target.getBasePokemon();
+                        if (target.getItem() == Item.GRISEOUS_ORB) {
+                            if (userPokemon == Pokemons.GIRATINA || targetPokemon == Pokemons.GIRATINA) {
+                                break;
+                            }
+                        }
+
+                        if (Item.isArceusPlate(target.getItem())) {
+                            if (Pokemons.isArceus(user) || Pokemons.isArceus(target)) {
+                                break;
+                            }
+                        }
+
+                        if (Item.isGenesectDrive(target.getItem())) {
+                            if (user.getBasePokemon() == Pokemons.GENESECT || target.getBasePokemon() == Pokemons.GENESECT) {
+                                break;
+                            }
+                        }
+
+                        target.stealItem(user);
+                        break;
+                    }
+                    case VI:
+                    case VII: {
+                        if (user.isFainted()) {
+                            break;
+                        }
+
+                        Pokemons userPokemon = user.getBasePokemon();
+                        Pokemons targetPokemon = target.getBasePokemon();
+                        if (target.getItem() == Item.GRISEOUS_ORB) {
+                            if (userPokemon == Pokemons.GIRATINA || targetPokemon == Pokemons.GIRATINA) {
+                                break;
+                            }
+                        }
+
+                        if (Item.isArceusPlate(target.getItem())) {
+                            if (Pokemons.isArceus(user) || Pokemons.isArceus(target)) {
+                                break;
+                            }
+                        }
+
+                        if (Item.isGenesectDrive(target.getItem())) {
+                            if (user.getBasePokemon() == Pokemons.GENESECT || target.getBasePokemon() == Pokemons.GENESECT) {
+                                break;
+                            }
+                        }
+
+                        if (Item.isMegaStone(target.getItem()) || Item.isOrb(target.getItem())) {
+                            break;
+                        }
+
+                        if (Item.isZCrystal(target.getItem())) {
+                            break;
+                        }
+
+                        if (Item.isSilvallyMemory(target.getItem())) {
+                            if (Pokemons.isSilvally(user) || Pokemons.isSilvally(target)) {
+                                break;
+                            }
+                        }
+
+                        target.stealItem(user);
+                        break;
+                    }
+                    default:
+                        throw new InvalidGenerationException(battle.getGeneration());
+                }
+            }
+
+            return damage;
+        }
+    },
     CRABHAMMER("Crabhammer"),
     CRAFTY_SHIELD("Crafty Shield"),
     CROSS_CHOP("Cross Chop"),
