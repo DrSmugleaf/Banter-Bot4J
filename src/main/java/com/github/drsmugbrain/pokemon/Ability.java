@@ -281,7 +281,7 @@ public enum Ability implements IBattle {
     @Override
     @OverridingMethodsMustInvokeSuper
     public void onOwnSendOut(@Nonnull Pokemon pokemon) {
-        pokemon.setAbilitySupressed(false);
+        pokemon.setAbilitySuppressed(false);
     }
 
     private static class Holder {
