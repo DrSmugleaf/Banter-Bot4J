@@ -2,12 +2,13 @@ package com.github.drsmugbrain.pokemon;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by DrSmugleaf on 08/06/2017.
  */
-public enum Status {
+public enum Status implements IBattle {
 
     BURN("Burn") {
         @Override
@@ -46,41 +47,44 @@ public enum Status {
                 default:
                     throw new InvalidGenerationException(battle.getGeneration());
             }
+
             super.remove(user, target, battle, trainer, move);
         }
 
         @Override
-        protected void onTurnEnd(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+        public void onTurnEnd(@Nonnull Battle battle, @Nonnull Pokemon pokemon) {
             switch (battle.getGeneration()) {
                 case I:
-                    user.damage(6.25);
+                    pokemon.damage(6.25);
                     break;
                 case II:
                 case III:
                 case IV:
                 case V:
                 case VI:
-                    user.damage(12.5);
+                    pokemon.damage(12.5);
                     break;
                 case VII:
-                    user.damage(6.25);
+                    pokemon.damage(6.25);
                     break;
                 default:
                     throw new InvalidGenerationException(battle.getGeneration());
             }
-            user.damage(6.25);
+            pokemon.damage(6.25);
         }
 
         @Override
-        protected double getDamageDone(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-            switch (battle.getGeneration()) {
+        public double damageMultiplier(@Nonnull Pokemon attacker, @Nonnull Action action) {
+            Generation generation = attacker.getBattle().getGeneration();
+
+            switch (generation) {
                 case I:
                 case II:
                     return 1.0;
                 case III:
                 case IV:
                 case V:
-                    switch (move.getBaseMove()) {
+                    switch (action.getBaseMove()) {
                         case BIDE:
                         case COUNTER:
                         case ENDEAVOR:
@@ -96,67 +100,69 @@ public enum Status {
                             return 1.0;
                     }
 
-                    if (move.getCategory() == Category.PHYSICAL) {
+                    if (action.getCategory() == Category.PHYSICAL) {
                         return 0.5;
                     }
 
                     return 1.0;
                 default:
-                    throw new InvalidGenerationException(battle.getGeneration());
+                    throw new InvalidGenerationException(generation);
             }
         }
     },
     FREEZE("Freeze") {
         @Override
-        protected void onReceiveAttack(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-            switch (battle.getGeneration()) {
+        public void onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+            Generation generation = attacker.getBattle().getGeneration();
+
+            switch (generation) {
                 case I:
-                    if (move.getType() == Type.FIRE && move.getBaseMove() != BaseMove.FIRE_SPIN) {
-                        this.remove(user, target, battle, trainer, move);
+                    if (action.getType() == Type.FIRE && action.getBaseMove() != BaseMove.FIRE_SPIN) {
+                        this.remove(defender);
                     }
                     break;
                 case II:
-                    if (move.getType() == Type.FIRE && move.getBaseMove() != BaseMove.FIRE_SPIN) {
-                        this.remove(user, target, battle, trainer, move);
+                    if (action.getType() == Type.FIRE && action.getBaseMove() != BaseMove.FIRE_SPIN) {
+                        this.remove(defender);
                         break;
                     }
-                    if (move.getBaseMove() == BaseMove.TRI_ATTACK && Math.random() < 0.3333333333) {
-                        this.remove(user, target, battle, trainer, move);
+                    if (action.getBaseMove() == BaseMove.TRI_ATTACK && Math.random() < 0.3333333333) {
+                        this.remove(defender);
                     }
                     break;
                 case III:
-                    if (move.getType() == Type.FIRE && move.getBaseMove() != BaseMove.HIDDEN_POWER) {
-                        this.remove(user, target, battle, trainer, move);
+                    if (action.getType() == Type.FIRE && action.getBaseMove() != BaseMove.HIDDEN_POWER) {
+                        this.remove(defender);
                     }
                     break;
                 case IV:
-                    if (move.getType() == Type.FIRE) {
-                        this.remove(user, target, battle, trainer, move);
+                    if (action.getType() == Type.FIRE) {
+                        this.remove(defender);
                     }
                 case V:
                 case VI:
                 case VII:
                     break;
                 default:
-                    throw new InvalidGenerationException(battle.getGeneration());
+                    throw new InvalidGenerationException(generation);
             }
-
-            super.onReceiveAttack(user, target, battle, trainer, move);
         }
 
         @Override
-        protected void onOwnTurnStart(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-            switch (battle.getGeneration()) {
+        public void onOwnTurnStart(@Nonnull Pokemon pokemon) {
+            Generation generation = pokemon.getBattle().getGeneration();
+
+            switch (generation) {
                 case I:
                     break;
                 case II:
                     if (Math.random() < 0.1) {
-                        user.setCanAttackThisTurn(false);
-                        this.remove(user, target, battle, trainer, move);
+                        pokemon.setCanAttackThisTurn(false);
+                        this.remove(pokemon);
                     }
                 case III:
                     if (Math.random() < 0.2) {
-                        this.remove(user, target, battle, trainer, move);
+                        this.remove(pokemon);
                     }
                     break;
                 case IV:
@@ -168,10 +174,8 @@ public enum Status {
                 case VII:
                     break;
                 default:
-                    throw new InvalidGenerationException(battle.getGeneration());
+                    throw new InvalidGenerationException(generation);
             }
-
-            super.onOwnTurnStart(user, target, battle, trainer, move);
         }
     },
     PARALYSIS("Paralysis"),
@@ -224,33 +228,15 @@ public enum Status {
         return true;
     }
 
+    @OverridingMethodsMustInvokeSuper
     protected boolean apply(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
         target.setStatus(this);
         return true;
     }
 
-    protected void remove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-        this.remove(user, target, battle, trainer, move.getBaseMove());
+    @OverridingMethodsMustInvokeSuper
+    protected void remove(Pokemon user) {
+        user.resetStatus();
     }
-
-    protected void remove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, BaseMove move) {
-        target.resetStatus();
-    }
-
-    protected void onTurnStart(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {}
-
-    protected void onTurnEnd(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {}
-
-    protected double getDamageDone(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-        return 1.0;
-    }
-
-    protected double getDamageReceived(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-        return 1.0;
-    }
-
-    protected void onReceiveAttack(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {}
-
-    protected void onOwnTurnStart(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {}
 
 }
