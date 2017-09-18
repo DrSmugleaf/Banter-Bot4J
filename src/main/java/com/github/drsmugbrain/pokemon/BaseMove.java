@@ -1326,7 +1326,7 @@ public enum BaseMove implements IBattle {
                     case POWER_CONSTRUCT:
                         break;
                     default:
-                        target.getAbility().setSuppressed(true);
+                        target.setAbilitySuppressed(true);
                 }
             }
 

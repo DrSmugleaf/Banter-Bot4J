@@ -49,6 +49,7 @@ public class Pokemon {
     private boolean fainted = false;
     private List<Action> hitBy = new ArrayList<>();
     private boolean movedThisTurn = false;
+    private boolean abilitySuppressed = false;
 
     public Pokemon(@Nonnull Pokemons basePokemon, @Nonnull Item item, @Nonnull Nature nature, @Nonnull Ability ability, @Nullable Gender gender, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues, @Nonnull List<Move> moves) {
         this.BASE_POKEMON = basePokemon;
@@ -812,6 +813,14 @@ public class Pokemon {
 
     protected boolean movedThisTurn() {
         return this.movedThisTurn;
+    }
+
+    public boolean isAbilitySuppressed() {
+        return this.abilitySuppressed;
+    }
+
+    protected void setAbilitySuppressed(boolean bool) {
+        this.abilitySuppressed = bool;
     }
 
 }

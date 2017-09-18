@@ -278,18 +278,10 @@ public enum Ability implements IBattle {
         return this.NAME;
     }
 
-    public boolean isSuppressed() {
-        return this.suppressed;
-    }
-
-    protected void setSuppressed(boolean bool) {
-        this.suppressed = bool;
-    }
-
     @Override
     @OverridingMethodsMustInvokeSuper
     public void onOwnSendOut(@Nonnull Pokemon pokemon) {
-        this.setSuppressed(false);
+        pokemon.setAbilitySupressed(false);
     }
 
     private static class Holder {
