@@ -448,11 +448,7 @@ public enum BaseMove {
     BELCH("Belch") {
         @Override
         protected void onItemUsed(Item item, Pokemon user, Battle battle, Trainer trainer) {
-            if (item == Item.BERRY_JUICE) {
-                return;
-            }
-
-            if (item.getName().contains("Berry")) {
+            if (item.getCategory() == ItemCategory.BERRY) {
                 user.setBerryUsed(true);
             }
         }
