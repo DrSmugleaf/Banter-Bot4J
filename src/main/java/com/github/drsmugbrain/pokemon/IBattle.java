@@ -19,7 +19,7 @@ interface IBattle {
 
     default void afterEnemySwitch(@Nonnull Pokemon user, @Nonnull Pokemon target) {}
 
-    default void onPokemonTurnStart(@Nonnull Pokemon pokemon) {};
+    default void onPokemonTurnStart(@Nonnull Pokemon pokemon) {}
 
     default void onPokemonAttemptAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Move move) {}
 
