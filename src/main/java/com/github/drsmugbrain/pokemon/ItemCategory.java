@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 public enum ItemCategory {
 
     DEFAULT("Default"),
+    BERRY("Berry"),
     MEGA_STONE("Mega Stone"),
     PRIMAL_ORB("Primal Orb"),
     Z_CRYSTAL("Z-Crystal"),
