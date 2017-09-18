@@ -1441,6 +1441,8 @@ public enum BaseMove {
         protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
             int damage = super.use(user, target, battle, trainer, move);
 
+            Item targetItem = target.getItem();
+            ItemCategory targetItemCategory = targetItem.getCategory();
             if (!user.hasItem() && target.hasItem() && !target.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
                 switch (battle.getGeneration()) {
                     case I:
@@ -1449,7 +1451,7 @@ public enum BaseMove {
                         target.stealItem(user);
                         break;
                     case IV:
-                        if (target.getAbility() == Ability.MULTITYPE || target.getItem() == Item.GRISEOUS_ORB) {
+                        if (target.getAbility() == Ability.MULTITYPE || targetItem == Item.GRISEOUS_ORB) {
                             break;
                         }
 
@@ -1462,19 +1464,19 @@ public enum BaseMove {
 
                         Pokemons userPokemon = user.getBasePokemon();
                         Pokemons targetPokemon = target.getBasePokemon();
-                        if (target.getItem() == Item.GRISEOUS_ORB) {
+                        if (targetItem == Item.GRISEOUS_ORB) {
                             if (userPokemon == Pokemons.GIRATINA || targetPokemon == Pokemons.GIRATINA) {
                                 break;
                             }
                         }
 
-                        if (Item.isArceusPlate(target.getItem())) {
+                        if (targetItemCategory == ItemCategory.ARCEUS_PLATE) {
                             if (Pokemons.isArceus(user) || Pokemons.isArceus(target)) {
                                 break;
                             }
                         }
 
-                        if (Item.isGenesectDrive(target.getItem())) {
+                        if (targetItemCategory == ItemCategory.GENESECT_DRIVE) {
                             if (user.getBasePokemon() == Pokemons.GENESECT || target.getBasePokemon() == Pokemons.GENESECT) {
                                 break;
                             }
@@ -1491,33 +1493,33 @@ public enum BaseMove {
 
                         Pokemons userPokemon = user.getBasePokemon();
                         Pokemons targetPokemon = target.getBasePokemon();
-                        if (target.getItem() == Item.GRISEOUS_ORB) {
+                        if (targetItem == Item.GRISEOUS_ORB) {
                             if (userPokemon == Pokemons.GIRATINA || targetPokemon == Pokemons.GIRATINA) {
                                 break;
                             }
                         }
 
-                        if (Item.isArceusPlate(target.getItem())) {
+                        if (targetItemCategory == ItemCategory.ARCEUS_PLATE) {
                             if (Pokemons.isArceus(user) || Pokemons.isArceus(target)) {
                                 break;
                             }
                         }
 
-                        if (Item.isGenesectDrive(target.getItem())) {
+                        if (targetItemCategory == ItemCategory.GENESECT_DRIVE) {
                             if (user.getBasePokemon() == Pokemons.GENESECT || target.getBasePokemon() == Pokemons.GENESECT) {
                                 break;
                             }
                         }
 
-                        if (Item.isMegaStone(target.getItem()) || Item.isOrb(target.getItem())) {
+                        if (targetItemCategory == ItemCategory.MEGA_STONE || targetItemCategory == ItemCategory.PRIMAL_ORB) {
                             break;
                         }
 
-                        if (Item.isZCrystal(target.getItem())) {
+                        if (targetItemCategory == ItemCategory.Z_CRYSTAL) {
                             break;
                         }
 
-                        if (Item.isSilvallyMemory(target.getItem())) {
+                        if (targetItemCategory == ItemCategory.SILVALLY_MEMORY) {
                             if (Pokemons.isSilvally(user) || Pokemons.isSilvally(target)) {
                                 break;
                             }
