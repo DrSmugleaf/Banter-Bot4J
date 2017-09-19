@@ -65,4 +65,12 @@ interface IBattle {
         return 1.0;
     }
 
+    default double statMultiplier(@Nonnull Pokemon pokemon, @Nonnull IStat stat) {
+        return 1.0;
+    }
+
+    default boolean canApplyStatus(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Status status) {
+        return true;
+    }
+
 }
