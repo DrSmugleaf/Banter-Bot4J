@@ -1754,14 +1754,16 @@ public enum BaseMove implements IBattle {
     HAZE("Haze") {
         @Override
         protected int use(@Nonnull Pokemon user, Pokemon target, @Nonnull Battle battle, Trainer trainer, Move move) {
+            int damage =  super.use(user, target, battle, trainer, move);
+
             switch (battle.getGeneration()) {
                 case I:
                     for (Trainer battleTrainer : battle.getTrainers().values()) {
                         for (Pokemon pokemon : battleTrainer.getActivePokemons()) {
                             pokemon.resetStatStages();
-                            pokemon.removeStatModifier("burn", "paralysis");
+                            pokemon.removeStatModifier(Status.BURN, Status.PARALYSIS);
 //                            pokemon.removeVolatileStatus(); // TODO: Removes effects of focus energy, dire hit, mist, guard spec, x accuracy, leech sed, disable, reflect, light screen
-                            pokemon.getVolatileStatuses().removeIf(status -> status.getBaseVolatileStatus() == BaseVolatileStatus.CONFUSION);
+                            pokemon.removeVolatileStatus(BaseVolatileStatus.CONFUSION);
                             if (pokemon.getStatus() == Status.BADLY_POISONED) {
                                 pokemon.setStatus(Status.POISON);
                             }
@@ -1790,7 +1792,13 @@ public enum BaseMove implements IBattle {
                     throw new InvalidGenerationException(battle.getGeneration());
             }
 
-            return super.use(user, target, battle, trainer, move);
+            return damage;
+        }
+
+        @Override
+        protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            user.heal(100.0);
+            return super.useAsZMove(user, target, battle, trainer, move);
         }
     },
     HEAD_CHARGE("Head Charge"),

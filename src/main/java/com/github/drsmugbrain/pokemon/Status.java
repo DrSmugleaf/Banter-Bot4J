@@ -12,50 +12,28 @@ public enum Status implements IBattle {
 
     BURN("Burn") {
         @Override
-        protected boolean apply(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-            switch (battle.getGeneration()) {
-                case I:
-                case II:
-                    user.addStatModifier(Stat.ATTACK, "burn", 0.5);
-                    break;
-                case III:
-                case IV:
-                case V:
-                case VI:
-                case VII:
-                    break;
-                default:
-                    throw new InvalidGenerationException(battle.getGeneration());
+        protected boolean apply(Pokemon pokemon) {
+            if (pokemon.getBattle().getGeneration() == Generation.I) {
+                pokemon.addStatModifier(Stat.ATTACK, BURN, 0.5);
             }
 
-            return super.apply(user, target, battle, trainer, move);
+            return super.apply(pokemon);
         }
 
         @Override
         protected void remove(Pokemon pokemon) {
-            Generation generation = pokemon.getBattle().getGeneration();
-
-            switch (generation) {
-                case I:
-                case II:
-                    pokemon.removeStatModifier(Stat.ATTACK, "burn");
-                    break;
-                case III:
-                case IV:
-                case V:
-                case VI:
-                case VII:
-                    break;
-                default:
-                    throw new InvalidGenerationException(generation);
+            if (pokemon.getBattle().getGeneration() == Generation.I) {
+                pokemon.removeStatModifier(BURN);
             }
 
             super.remove(pokemon);
         }
 
         @Override
-        public void onTurnEnd(@Nonnull Battle battle, @Nonnull Pokemon pokemon) {
-            switch (battle.getGeneration()) {
+        public void onOwnTurnEnd(@Nonnull Pokemon pokemon) {
+            Generation generation = pokemon.getBattle().getGeneration();
+
+            switch (generation) {
                 case I:
                     pokemon.damage(6.25);
                     break;
@@ -70,9 +48,8 @@ public enum Status implements IBattle {
                     pokemon.damage(6.25);
                     break;
                 default:
-                    throw new InvalidGenerationException(battle.getGeneration());
+                    throw new InvalidGenerationException(generation);
             }
-            pokemon.damage(6.25);
         }
 
         @Override
@@ -86,6 +63,8 @@ public enum Status implements IBattle {
                 case III:
                 case IV:
                 case V:
+                case VI:
+                case VII:
                     switch (action.getBaseMove()) {
                         case BIDE:
                         case COUNTER:
@@ -180,24 +159,149 @@ public enum Status implements IBattle {
             }
         }
     },
-    PARALYSIS("Paralysis"),
-    POISON("Poison"),
-    BADLY_POISONED("Badly poisoned"),
+    PARALYSIS("Paralysis") {
+        @Override
+        protected boolean apply(Pokemon pokemon) {
+            if (pokemon.getBattle().getGeneration() == Generation.I) {
+                pokemon.addStatModifier(Stat.SPEED, PARALYSIS, 0.5);
+            }
+
+            return super.apply(pokemon);
+        }
+
+        @Override
+        protected void remove(Pokemon pokemon) {
+            if (pokemon.getBattle().getGeneration() == Generation.I) {
+                pokemon.removeStatModifier(PARALYSIS);
+            }
+
+            super.remove(pokemon);
+        }
+
+        @Override
+        public boolean onOwnAttemptAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+            if (Math.random() < 0.25) {
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        public double statMultiplier(@Nonnull Pokemon pokemon, @Nonnull IStat stat) {
+            Generation generation = pokemon.getBattle().getGeneration();
+
+            if (stat == Stat.SPEED) {
+                switch (generation) {
+                    case I:
+                        break;
+                    case II:
+                    case III:
+                    case IV:
+                    case V:
+                    case VI:
+                        return 0.25;
+                    case VII:
+                        return 0.5;
+                    default:
+                        throw new InvalidGenerationException(generation);
+                }
+            }
+
+            return 1.0;
+        }
+    },
+    POISON("Poison") {
+        @Override
+        public void onOwnTurnEnd(@Nonnull Pokemon pokemon) {
+            Generation generation = pokemon.getBattle().getGeneration();
+
+            switch (generation) {
+                case I:
+                    pokemon.damage(6.25);
+                    break;
+                case II:
+                case III:
+                case IV:
+                case V:
+                case VI:
+                    pokemon.damage(12.5);
+                    break;
+                case VII:
+                    pokemon.damage(6.25);
+                    break;
+                default:
+                    throw new InvalidGenerationException(generation);
+            }
+        }
+    },
+    BADLY_POISONED("Badly poisoned") {
+        @Override
+        protected void remove(Pokemon user) {
+            user.resetToxicN();
+            super.remove(user);
+        }
+
+        @Override
+        public void onOwnTurnEnd(@Nonnull Pokemon pokemon) {
+            Generation generation = pokemon.getBattle().getGeneration();
+
+            switch (generation) {
+                case I:
+                    pokemon.damage(6.25 * pokemon.getToxicN());
+                    break;
+                case II:
+                case III:
+                case IV:
+                case V:
+                case VI:
+                    pokemon.damage(6.25 * pokemon.getToxicN());
+                    break;
+                case VII:
+                    pokemon.damage(6.25 * pokemon.getToxicN());
+                    break;
+                default:
+                    throw new InvalidGenerationException(generation);
+            }
+
+            pokemon.increaseToxicN();
+        }
+
+        @Override
+        public void onOwnSendBack(@Nonnull Pokemon pokemon) {
+            Generation generation = pokemon.getBattle().getGeneration();
+
+            switch (generation) {
+                case I:
+                    break;
+                case II:
+                    break;
+                case III:
+                case IV:
+                case V:
+                case VI:
+                case VII:
+                    pokemon.resetToxicN();
+                    break;
+                default:
+                    throw new InvalidGenerationException(generation);
+            }
+        }
+    },
     SLEEP("Sleep") {
         @Override
         public Integer getDuration(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-            if (move.getBaseMove() == BaseMove.REST) {
-                return 2;
-            }
-
             switch (battle.getGeneration()) {
                 case I:
                     return ThreadLocalRandom.current().nextInt(1, 7 + 1);
                 case II:
+                    return ThreadLocalRandom.current().nextInt(2, 7 + 1);
                 case III:
                 case IV:
-                    return ThreadLocalRandom.current().nextInt(1, 5 + 1);
+                    return ThreadLocalRandom.current().nextInt(2, 5 + 1);
                 case V:
+                case VI:
+                case VII:
                     return ThreadLocalRandom.current().nextInt(1, 3 + 1);
                 default:
                     throw new InvalidGenerationException(battle.getGeneration());
@@ -205,8 +309,8 @@ public enum Status implements IBattle {
         }
 
         @Override
-        public boolean hasInfiniteDuration() {
-            return false;
+        public void onOwnTurnStart(@Nonnull Pokemon pokemon) {
+            pokemon.setCanAttackThisTurn(false);
         }
     };
 
@@ -226,19 +330,15 @@ public enum Status implements IBattle {
         return null;
     }
 
-    public boolean hasInfiniteDuration() {
+    @OverridingMethodsMustInvokeSuper
+    protected boolean apply(Pokemon pokemon) {
+        pokemon.setStatus(this);
         return true;
     }
 
     @OverridingMethodsMustInvokeSuper
-    protected boolean apply(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-        target.setStatus(this);
-        return true;
-    }
-
-    @OverridingMethodsMustInvokeSuper
-    protected void remove(Pokemon user) {
-        user.resetStatus();
+    protected void remove(Pokemon pokemon) {
+        pokemon.resetStatus();
     }
 
 }

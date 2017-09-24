@@ -26,7 +26,6 @@ public class Pokemon {
     private final Map<BaseVolatileStatus, VolatileStatus> VOLATILE_STATUSES = new LinkedHashMap<>();
     private final List<Pokemon> damagedThisTurnBy = new ArrayList<>();
     private final Gender GENDER;
-    private final Map<Stat, Map<String, Double>> STAT_MODIFIERS = new LinkedHashMap<>();
     private Item item;
     private List<Move> MOVES;
     private List<Move> VALID_MOVES;
@@ -50,6 +49,8 @@ public class Pokemon {
     private List<Action> hitBy = new ArrayList<>();
     private boolean movedThisTurn = false;
     private boolean abilitySuppressed = false;
+    private int toxicN = 1;
+    private Map<IStat, Map<IBattle, Double>> STAT_MODIFIERS = new HashMap<>();
 
     public Pokemon(@Nonnull Pokemons basePokemon, @Nonnull Item item, @Nonnull Nature nature, @Nonnull Ability ability, @Nullable Gender gender, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues, @Nonnull List<Move> moves) {
         this.BASE_POKEMON = basePokemon;
@@ -73,6 +74,14 @@ public class Pokemon {
         this.INDIVIDUAL_VALUES.putAll(individualValues);
         this.EFFORT_VALUES.putAll(effortValues);
         this.currentHP = this.getStat(Stat.HP);
+
+        for (Stat stat : Stat.values()) {
+            this.STAT_MODIFIERS.put(stat, new HashMap<>());
+        }
+
+        for (BattleStat battleStat : BattleStat.values()) {
+            this.STAT_MODIFIERS.put(battleStat, new HashMap<>());
+        }
     }
 
     @Nonnull
@@ -708,42 +717,6 @@ public class Pokemon {
         this.bideTarget = pokemon;
     }
 
-    protected Map<Stat, Map<String, Double>> getStatModifiers() {
-        return this.STAT_MODIFIERS;
-    }
-
-    protected Collection<Double> getStatModifiers(Stat stat) {
-        return this.STAT_MODIFIERS.get(stat).values();
-    }
-
-    protected double getStatModifier(Stat stat) {
-        double total = 0;
-
-        for (Map<String, Double> modifierMap : this.STAT_MODIFIERS.values()) {
-            total += modifierMap.values().stream().mapToDouble(Double::doubleValue).sum();
-        }
-
-        return total;
-    }
-
-    protected void addStatModifier(Stat stat, String identifier, double modifier) {
-        this.STAT_MODIFIERS.get(stat).put(identifier, modifier);
-    }
-
-    protected void removeStatModifier(Stat stat, String identifier) {
-        this.STAT_MODIFIERS.remove(stat, identifier);
-    }
-
-    protected void removeStatModifier(String... identifiers) {
-        for (String id : identifiers) {
-            for (Map<String, Double> modifierMap : this.STAT_MODIFIERS.values()) {
-                if (modifierMap.containsKey(id)) {
-                    modifierMap.remove(id);
-                }
-            }
-        }
-    }
-
     protected boolean getCanAttackThisTurn() {
         return this.canAttackThisTurn;
     }
@@ -821,6 +794,38 @@ public class Pokemon {
 
     protected void setAbilitySuppressed(boolean bool) {
         this.abilitySuppressed = bool;
+    }
+
+    protected int getToxicN() {
+        return this.toxicN;
+    }
+
+    protected void increaseToxicN() {
+        this.toxicN++;
+    }
+
+    protected void resetToxicN() {
+        this.toxicN = 1;
+    }
+
+    protected void addStatModifier(@Nonnull IStat stat, @Nonnull IBattle source, double modifier) {
+        this.STAT_MODIFIERS.get(stat).put(source, modifier);
+    }
+
+    protected double getStatModifier(IStat stat) {
+        double modifier = 1.0;
+        for (Double statModifier : this.STAT_MODIFIERS.get(stat).values()) {
+            modifier *= statModifier;
+        }
+        return modifier;
+    }
+
+    protected void removeStatModifier(IBattle... sources) {
+        for (Map<IBattle, Double> iBattleDoubleMap : this.STAT_MODIFIERS.values()) {
+            for (IBattle source : sources) {
+                iBattleDoubleMap.remove(source);
+            }
+        }
     }
 
 }
