@@ -120,6 +120,7 @@ public enum Status implements IBattle {
                     if (action.getType() == Type.FIRE) {
                         this.remove(defender);
                     }
+                    break;
                 case V:
                 case VI:
                 case VII:
