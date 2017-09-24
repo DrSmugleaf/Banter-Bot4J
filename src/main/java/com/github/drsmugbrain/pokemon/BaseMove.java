@@ -1539,7 +1539,22 @@ public enum BaseMove implements IBattle {
         }
     },
     CRABHAMMER("Crabhammer"),
-    CRAFTY_SHIELD("Crafty Shield"),
+    CRAFTY_SHIELD("Crafty Shield") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            for (Pokemon pokemon : user.getTrainer().getActivePokemons()) {
+                BaseVolatileStatus.CRAFTY_SHIELD.apply(user, pokemon, move);
+            }
+
+            return super.use(user, target, battle, trainer, move);
+        }
+
+        @Override
+        protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            user.raiseStatStage(Stat.SPECIAL_DEFENSE, 1);
+            return super.useAsZMove(user, target, battle, trainer, move);
+        }
+    },
     CROSS_CHOP("Cross Chop"),
     CROSS_POISON("Cross Poison"),
     CRUNCH("Crunch"),
@@ -2324,6 +2339,7 @@ public enum BaseMove implements IBattle {
     protected Integer EFFECT_RATE = null;
     private Type TYPE;
     private Category CATEGORY;
+    private MoveEffect EFFECT;
     private int PP;
     private int ACCURACY;
     private boolean IS_Z_MOVE = false;
@@ -2383,6 +2399,11 @@ public enum BaseMove implements IBattle {
 
     protected BaseMove setCategory(@Nonnull Category category) {
         this.CATEGORY = category;
+        return this;
+    }
+
+    protected BaseMove setEffect(@Nonnull MoveEffect effect) {
+        this.EFFECT = effect;
         return this;
     }
 
@@ -2658,6 +2679,11 @@ public enum BaseMove implements IBattle {
     @Nonnull
     public Category getCategory() {
         return this.CATEGORY;
+    }
+
+    @Nonnull
+    public MoveEffect getEffect() {
+        return this.EFFECT;
     }
 
     public int getPP() {

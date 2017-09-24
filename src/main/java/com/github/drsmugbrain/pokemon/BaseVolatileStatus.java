@@ -122,17 +122,21 @@ public enum BaseVolatileStatus implements IBattle {
     },
     BEAK_BLAST("Beak Blast", 1) {
         @Override
-        public void onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+        public boolean onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
             if (action.getBaseMove().physicalContact()) {
                 attacker.setStatus(Status.BURN);
             }
+
+            return true;
         }
     },
     BIDE("Bide", 2) {
         @Override
-        public void onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+        public boolean onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
             defender.addBideDamageTaken(action.getDamage());
             defender.setBideTarget(attacker);
+
+            return true;
         }
     },
     BIND("Bind") {
@@ -359,6 +363,22 @@ public enum BaseVolatileStatus implements IBattle {
             if (pokemon.getBattle().getGeneration() == Generation.I) {
                 pokemon.setCanAttackThisTurn(false);
             }
+        }
+    },
+
+    CRAFTY_SHIELD("Crafty Shield", 0) {
+        @Override
+        public boolean onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+            if (
+                    action.getCategory() == Category.OTHER
+                    && attacker != defender
+                    && action.getBaseMove() != BaseMove.PERISH_SONG
+                    && action.getBaseMove().getEffect() != MoveEffect.ENTRY_HAZARD
+                ) {
+                return false;
+            }
+
+            return true;
         }
     };
 

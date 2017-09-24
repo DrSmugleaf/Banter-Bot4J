@@ -35,7 +35,9 @@ interface IBattle {
 
     default void onEnemyDealAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {}
 
-    default void onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {}
+    default boolean onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+        return true;
+    }
 
     default void onEnemyReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {}
 

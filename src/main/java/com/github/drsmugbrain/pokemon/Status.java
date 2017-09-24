@@ -93,7 +93,7 @@ public enum Status implements IBattle {
     },
     FREEZE("Freeze") {
         @Override
-        public void onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+        public boolean onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
             Generation generation = attacker.getBattle().getGeneration();
 
             switch (generation) {
@@ -127,6 +127,8 @@ public enum Status implements IBattle {
                 default:
                     throw new InvalidGenerationException(generation);
             }
+
+            return true;
         }
 
         @Override
