@@ -1587,7 +1587,27 @@ public enum BaseMove implements IBattle {
         }
     },
     CRUSH_CLAW("Crush Claw"),
-    CRUSH_GRIP("Crush Grip"),
+    CRUSH_GRIP("Crush Grip") {
+        @Override
+        public int getPower(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
+            int targetCurrentHP = target.getCurrentStat(Stat.HP);
+            int targetMaxHP = target.getStat(Stat.HP);
+
+            switch (user.getBattle().getGeneration()) {
+                case I:
+                case II:
+                case III:
+                case IV:
+                    return 1 + 120 * (targetCurrentHP / targetMaxHP);
+                case V:
+                case VI:
+                case VII:
+                    return 120 * (targetCurrentHP / targetMaxHP);
+                default:
+                    throw new InvalidGenerationException(battle.getGeneration());
+            }
+        }
+    },
     CURSE("Curse"),
     CUT("Cut"),
     DARK_PULSE("Dark Pulse"),
