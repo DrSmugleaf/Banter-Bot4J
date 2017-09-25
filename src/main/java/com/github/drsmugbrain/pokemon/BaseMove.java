@@ -1557,7 +1557,35 @@ public enum BaseMove implements IBattle {
     },
     CROSS_CHOP("Cross Chop"),
     CROSS_POISON("Cross Poison"),
-    CRUNCH("Crunch"),
+    CRUNCH("Crunch") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            Generation generation = user.getBattle().getGeneration();
+            double chance = Math.random();
+
+            switch (generation) {
+                case I:
+                case II:
+                case III:
+                    if (chance < 0.2) {
+                        target.lowerStatStage(Stat.SPECIAL_DEFENSE, 1);
+                    }
+                    break;
+                case IV:
+                case V:
+                case VI:
+                case VII:
+                    if (chance < 0.2) {
+                        target.lowerStatStage(Stat.DEFENSE, 1);
+                    }
+                    break;
+                default:
+                    throw new InvalidGenerationException(battle.getGeneration());
+            }
+
+            return super.use(user, target, battle, trainer, move);
+        }
+    },
     CRUSH_CLAW("Crush Claw"),
     CRUSH_GRIP("Crush Grip"),
     CURSE("Curse"),
