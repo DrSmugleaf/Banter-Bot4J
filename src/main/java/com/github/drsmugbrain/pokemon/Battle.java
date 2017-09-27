@@ -19,9 +19,11 @@ public class Battle {
     private int TURN_NUMBER = 1;
     private final Map<Trainer, List<Pokemon>> POKEMONS_SENT_OUT_THIS_TURN = new HashMap<>();
     private final List<Action> ACTIONS = new ArrayList<>();
+    private final Setup SETUP;
 
     public Battle(Generation generation, @Nonnull Long id1, @Nonnull Trainer trainer1, @Nonnull Long id2, @Nonnull Trainer trainer2) {
         this.GENERATION = generation;
+        this.SETUP = Setup.SINGLE_BATTLE;
         trainer1.setBattle(this);
         trainer2.setBattle(this);
         for (Pokemon pokemon : trainer1.getPokemons()) {
@@ -43,6 +45,11 @@ public class Battle {
     @Nonnull
     public Generation getGeneration() {
         return this.GENERATION;
+    }
+
+    @Nonnull
+    public Setup getSetup() {
+        return this.SETUP;
     }
 
     public void executeTurn() {
@@ -139,11 +146,14 @@ public class Battle {
     }
 
     @Nonnull
-    public List<Pokemon> getEnemies(Trainer trainer, Pokemon pokemon) {
+    public List<Pokemon> getEnemies(Trainer trainer) {
         List<Pokemon> enemyActivePokemons = new ArrayList<>();
 
         for (Trainer trainer1 : this.TRAINERS.values()) {
-            if (trainer1 == trainer) continue;
+            if (trainer1 == trainer) {
+                continue;
+            }
+
             enemyActivePokemons.addAll(trainer1.getActivePokemons());
         }
 
@@ -237,6 +247,13 @@ public class Battle {
         }
 
         return ACTIONS.get(ACTIONS.size() - 1);
+    }
+
+    @Nonnull
+    protected Trainer getOppositeTrainer(Trainer trainer) {
+        List<Trainer> trainers = new ArrayList<>(this.TRAINERS.values());
+        trainers.remove(trainer);
+        return trainers.get(0);
     }
 
 }

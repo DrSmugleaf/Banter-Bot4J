@@ -1608,7 +1608,126 @@ public enum BaseMove implements IBattle {
             }
         }
     },
-    CURSE("Curse"),
+    CURSE("Curse") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            int damage = super.use(user, target, battle, trainer, move);
+
+            if (user.isType(Type.GHOST)) {
+                user.damage(50.0);
+                BaseVolatileStatus.CURSE.apply(user, target, move);
+            } else {
+                user.lowerStatStage(Stat.SPEED, 1);
+                user.raiseStatStage(Stat.ATTACK, 1);
+                user.raiseStatStage(Stat.DEFENSE, 1);
+            }
+
+            return damage;
+        }
+
+        @Override
+        protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
+            if (user.isType(Type.GHOST)) {
+                user.heal(100.0);
+            } else {
+                user.raiseStatStage(Stat.ATTACK, 1);
+            }
+
+            return super.useAsZMove(user, target, battle, trainer, move);
+        }
+
+        @Override
+        public boolean hits(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Move move) {
+            if (defender.hasVolatileStatus(BaseVolatileStatus.CURSE)) {
+                return false;
+            }
+
+            if (!defender.getTrainer().hasOpponentOnField()) {
+                return false;
+            }
+
+            Generation generation = attacker.getBattle().getGeneration();
+            switch (generation) {
+                case I:
+                case II:
+                    if (defender.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+                        return false;
+                    }
+                    break;
+
+                // If the user changes type before using Curse,
+                // Curse will obey the user's type at the time of the move's execution.
+                // In a Double Battle, if the user gains the Ghost type before Curse executes,
+                // Curse will prioritize the opponent directly opposite the user as its target.
+                case III:
+                case IV:
+
+                // In a Triple Battle, if the user gains the Ghost type before Curse executes,
+                // Curse will prioritize the opponent directly opposite the user as its target.
+                case V:
+                    if (attacker.isType(Type.GHOST) && attacker == defender) {
+                        attacker.setTarget(attacker.getEnemyOppositePokemon());
+                    }
+                    break;
+                case VI:
+                case VII:
+                    if (attacker.isType(Type.GHOST) && attacker == defender) {
+
+                        Setup setup = attacker.getBattle().getSetup();
+                        switch (attacker.getBattle().getSetup()) {
+                            // In a Single Battle, if the user is not already Ghost-type and
+                            // becomes Ghost-type before executing Curse (due to Mega Evolution,
+                            // Color Change or Trick-or-Treat), Curse will execute as it does
+                            // for all Ghost types, hurting the user and inflicting the curse.
+                            case SINGLE_BATTLE:
+                                attacker.setTarget(attacker.getEnemyOppositePokemon());
+                                break;
+
+                            // In a Double Battle, if the user is not already Ghost-type and
+                            // becomes Ghost-type before executing Curse (due to Mega Evolution,
+                            // Color Change or Trick-or-Treat), Curse will now target the
+                            // user's ally (or fail if there is none) if the user is on the
+                            // right side (from its Trainer's perspective), or a random opponent
+                            // if the user is on the left side (from its Trainer's perspective).
+                            // Follow Me and Rage Powder will still redirect Curse as normal.
+                            case DOUBLE_BATTLE:
+
+                                // In a Double Battle, if the user is not already Ghost-type
+                                // and becomes Ghost-type before executing Curse (due to Mega
+                                // Evolution, Color Change or Trick-or-Treat), Curse will now
+                                // target a random opponent.
+                                if (generation == Generation.VII) {
+                                    attacker.setTarget(attacker.getRandomActiveEnemyPokemon());
+                                    break;
+                                }
+
+                                if (attacker.getTrainer().getActivePokemon(attacker) == 1) {
+                                    attacker.setTarget(attacker.getTrainer().getActivePokemon(0));
+                                } else {
+                                    attacker.setTarget(attacker.getRandomActiveEnemyPokemon());
+                                }
+                                break;
+
+                            // In a Triple Battle or Horde Encounter, if the user is not already
+                            // Ghost-type and becomes Ghost-type before executing Curse
+                            // (due to Mega Evolution, Color Change or Trick-or-Treat), Curse
+                            // will now target a random adjacent opponent.
+                            case TRIPLE_BATTLE:
+                                attacker.setTarget(attacker.getRandomAdjacentEnemyPokemon());
+                                break;
+                            default:
+                                throw new InvalidSetupException(setup);
+                        }
+
+                    }
+                    break;
+                default:
+                    throw new InvalidGenerationException(generation);
+            }
+
+            return super.hits(attacker, defender, move);
+        }
+    },
     CUT("Cut"),
     DARK_PULSE("Dark Pulse"),
     DARK_VOID("Dark Void"),

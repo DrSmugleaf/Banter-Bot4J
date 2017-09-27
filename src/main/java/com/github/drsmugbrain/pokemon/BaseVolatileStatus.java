@@ -11,7 +11,12 @@ public enum BaseVolatileStatus implements IBattle {
     BOUND("Bound"),
     CANT_ESCAPE("Can't escape"),
     CONFUSION("Confusion"),
-    CURSE("Curse"),
+    CURSE("Curse") {
+        @Override
+        public void onTurnEnd(@Nonnull Battle battle, @Nonnull Pokemon pokemon) {
+            pokemon.damage(25.0);
+        }
+    },
     EMBARGO("Embargo"),
     ENCORE("Encore"),
     FLINCH("Flinch"),

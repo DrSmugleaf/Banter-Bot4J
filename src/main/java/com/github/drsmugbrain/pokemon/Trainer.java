@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by DrSmugleaf on 07/06/2017.
@@ -13,6 +14,7 @@ import java.util.*;
 public class Trainer {
 
     private final Long ID;
+    private String NAME;
     private final List<Pokemon> POKEMONS = new ArrayList<>();
     private final List<Pokemon> ACTIVE_POKEMONS = new ArrayList<>();
     private final Map<Pokemon, Move> ACTIONS = new LinkedHashMap<>();
@@ -21,7 +23,6 @@ public class Trainer {
     private Battle battle = null;
     private boolean ready = false;
     private TrainerStatus status = TrainerStatus.NONE;
-    private String NAME;
 
     public Trainer(String name, @Nonnull Long id, @Nonnull Pokemon... pokemons) {
         this.NAME = name;
@@ -35,6 +36,14 @@ public class Trainer {
     @Nonnull
     public Long getID() {
         return this.ID;
+    }
+
+    public String getName() {
+        return this.NAME;
+    }
+
+    public void setName(String name) {
+        this.NAME = name;
     }
 
     protected void addPokemon(Pokemon pokemon) {
@@ -77,6 +86,60 @@ public class Trainer {
     @Nonnull
     public List<Pokemon> getActivePokemons() {
         return this.ACTIVE_POKEMONS;
+    }
+
+    @Nullable
+    public Pokemon getActivePokemon(int index) {
+        return this.ACTIVE_POKEMONS.get(index);
+    }
+
+    public int getActivePokemon(Pokemon pokemon) {
+        return this.ACTIVE_POKEMONS.indexOf(pokemon);
+    }
+
+    @Nullable
+    protected Pokemon getRandomActivePokemon() {
+        if (this.ACTIVE_POKEMONS.isEmpty()) {
+            return null;
+        }
+
+        int randomIndex = ThreadLocalRandom.current().nextInt(this.ACTIVE_POKEMONS.size());
+        return this.ACTIVE_POKEMONS.get(randomIndex);
+    }
+
+    @Nonnull
+    protected List<Pokemon> getAdjacentEnemyPokemons(Pokemon pokemon) {
+        Trainer opposingTrainer = this.battle.getOppositeTrainer(this);
+        List<Pokemon> opposingPokemons = opposingTrainer.getActivePokemons();
+        int index = this.ACTIVE_POKEMONS.indexOf(pokemon);
+        List<Pokemon> adjacentEnemyPokemons = new ArrayList<>();
+
+        if (this.ACTIVE_POKEMONS.isEmpty() || opposingPokemons.isEmpty()) {
+            return adjacentEnemyPokemons;
+        }
+
+        if (!this.ACTIVE_POKEMONS.contains(pokemon)) {
+            return adjacentEnemyPokemons;
+        }
+
+        for (int i = index - 1; i <= index + 1; i++) {
+            if (index >= 0 && index < opposingPokemons.size()) {
+                adjacentEnemyPokemons.add(opposingPokemons.get(i));
+            }
+        }
+
+        return adjacentEnemyPokemons;
+    }
+
+    @Nullable
+    protected Pokemon getRandomAdjacentEnemyPokemon(Pokemon pokemon) {
+        List<Pokemon> adjacentEnemyPokemons = this.getAdjacentEnemyPokemons(pokemon);
+        if (adjacentEnemyPokemons.isEmpty()) {
+            return null;
+        }
+
+        int randomIndex = ThreadLocalRandom.current().nextInt(adjacentEnemyPokemons.size());
+        return adjacentEnemyPokemons.get(randomIndex);
     }
 
     public List<Pokemon> getAlivePokemons() {
@@ -238,12 +301,18 @@ public class Trainer {
         }
     }
 
-    public String getName() {
-        return this.NAME;
-    }
+    protected boolean hasOpponentOnField() {
+        for (Trainer trainer : this.battle.getTrainers().values()) {
+            if (trainer == this) {
+                continue;
+            }
 
-    public void setName(String name) {
-        this.NAME = name;
+            if (!trainer.getActivePokemons().isEmpty()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

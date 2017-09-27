@@ -490,6 +490,10 @@ public class Pokemon {
         return this.target;
     }
 
+    protected void setTarget(Pokemon target) {
+        this.target = target;
+    }
+
     protected void setAction(@Nonnull Move action, @Nullable Pokemon target) {
         this.action = action;
         this.target = target;
@@ -826,6 +830,31 @@ public class Pokemon {
                 iBattleDoubleMap.remove(source);
             }
         }
+    }
+
+    @Nullable
+    protected Pokemon getEnemyOppositePokemon() {
+        int index = this.trainer.getActivePokemons().indexOf(this);
+        Trainer oppositeTrainer = this.battle.getOppositeTrainer(this.trainer);
+        Pokemon oppositePokemon = null;
+
+        while (oppositePokemon == null && index >= 0) {
+            oppositePokemon = oppositeTrainer.getActivePokemon(index);
+            index--;
+        }
+
+        return oppositePokemon;
+    }
+
+    @Nullable
+    protected Pokemon getRandomActiveEnemyPokemon() {
+        Trainer oppositeTrainer = this.battle.getOppositeTrainer(this.trainer);
+        return oppositeTrainer.getRandomActivePokemon();
+    }
+
+    @Nullable
+    protected Pokemon getRandomAdjacentEnemyPokemon() {
+        return this.trainer.getRandomAdjacentEnemyPokemon(this);
     }
 
 }
