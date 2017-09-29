@@ -86,12 +86,9 @@ public class Pokemon {
     private static Map<Stat, Integer> getDefaultIndividualValues() {
         Map<Stat, Integer> individualValues = new HashMap<>();
 
-        individualValues.put(Stat.HP, 31);
-        individualValues.put(Stat.ATTACK, 31);
-        individualValues.put(Stat.DEFENSE, 31);
-        individualValues.put(Stat.SPEED, 31);
-        individualValues.put(Stat.SPECIAL_ATTACK, 31);
-        individualValues.put(Stat.SPECIAL_DEFENSE, 31);
+        for (Stat stat : Stat.values()) {
+            individualValues.put(stat, 31);
+        }
 
         return individualValues;
     }
@@ -100,12 +97,9 @@ public class Pokemon {
     private static Map<Stat, Integer> getDefaultEffortValues() {
         Map<Stat, Integer> effortValues = new HashMap<>();
 
-        effortValues.put(Stat.HP, 0);
-        effortValues.put(Stat.ATTACK, 0);
-        effortValues.put(Stat.DEFENSE, 0);
-        effortValues.put(Stat.SPEED, 0);
-        effortValues.put(Stat.SPECIAL_ATTACK, 0);
-        effortValues.put(Stat.SPECIAL_DEFENSE, 0);
+        for (Stat stat : Stat.values()) {
+            effortValues.put(stat, 0);
+        }
 
         return effortValues;
     }
@@ -114,14 +108,13 @@ public class Pokemon {
     private static Map<IStat, Stage> getDefaultStatStages() {
         Map<IStat, Stage> statStages = new HashMap<>();
 
-        statStages.put(Stat.HP, Stage.ZERO);
-        statStages.put(Stat.ATTACK, Stage.ZERO);
-        statStages.put(Stat.DEFENSE, Stage.ZERO);
-        statStages.put(Stat.SPEED, Stage.ZERO);
-        statStages.put(Stat.SPECIAL_ATTACK, Stage.ZERO);
-        statStages.put(Stat.SPECIAL_DEFENSE, Stage.ZERO);
-        statStages.put(BattleStat.ACCURACY, Stage.ZERO);
-        statStages.put(BattleStat.EVASION, Stage.ZERO);
+        for (Stat stat : Stat.values()) {
+            statStages.put(stat, Stage.ZERO);
+        }
+
+        for (BattleStat battleStat : BattleStat.values()) {
+            statStages.put(battleStat, Stage.ZERO);
+        }
 
         return statStages;
     }
