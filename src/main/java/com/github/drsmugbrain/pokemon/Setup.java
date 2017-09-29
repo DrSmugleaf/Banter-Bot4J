@@ -19,10 +19,12 @@ public class Setup {
         this(setup.GENERATION, setup.VARIATION);
     }
 
+    @Nonnull
     public Generation getGeneration() {
         return GENERATION;
     }
 
+    @Nonnull
     public Variation getVariation() {
         return VARIATION;
     }

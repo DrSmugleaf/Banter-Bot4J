@@ -2,6 +2,7 @@ package com.github.drsmugbrain.pokemon.events;
 
 import com.github.drsmugbrain.util.Bot;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -17,12 +18,12 @@ public class EventDispatcher {
 
     private static final Set<Method> LISTENERS = new HashSet<>();
 
-    public static void registerListener(Object listener) {
+    public static void registerListener(@Nonnull Object listener) {
         Stream<Method> methods = Arrays.stream(listener.getClass().getMethods()).filter(method -> method.isAnnotationPresent(PokemonEventHandler.class));
         EventDispatcher.LISTENERS.addAll(methods.collect(Collectors.toSet()));
     }
 
-    public static void dispatch(Event event) {
+    public static void dispatch(@Nonnull Event event) {
         for (Method listener : EventDispatcher.LISTENERS) {
             if (listener.getAnnotation(PokemonEventHandler.class).event() == event.getClass()) {
                 try {

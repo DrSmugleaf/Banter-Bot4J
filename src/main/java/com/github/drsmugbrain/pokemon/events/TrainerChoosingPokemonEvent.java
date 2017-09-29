@@ -13,7 +13,6 @@ import java.util.List;
  */
 public class TrainerChoosingPokemonEvent extends Event {
 
-    @Nonnull
     private final List<Trainer> TRAINERS;
 
     public TrainerChoosingPokemonEvent(@Nonnull Trainer... trainers) {
