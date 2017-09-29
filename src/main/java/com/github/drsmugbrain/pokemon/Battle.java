@@ -11,7 +11,6 @@ import java.util.*;
  */
 public class Battle extends Setup {
 
-    private final Setup SETUP;
     private final Map<Long, Trainer> TRAINERS = new LinkedHashMap<>();
     private final List<Action> TURN_ORDER = new ArrayList<>();
     private Weather weather;
@@ -21,7 +20,6 @@ public class Battle extends Setup {
 
     public Battle(@Nonnull Setup setup, @Nonnull List<Trainer> trainers) {
         super(setup);
-        SETUP = setup;
         for (Trainer trainer : trainers) {
             trainer.setBattle(this);
             TRAINERS.put(trainer.getID(), trainer);
@@ -36,10 +34,6 @@ public class Battle extends Setup {
 
         Event trainersEvent = new TrainerChoosingPokemonEvent(TRAINERS.values());
         EventDispatcher.dispatch(trainersEvent);
-    }
-
-    protected Setup getSetup() {
-        return SETUP;
     }
 
     @Nullable
