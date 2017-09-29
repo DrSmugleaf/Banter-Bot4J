@@ -69,19 +69,19 @@ public class PokemonCommands {
         return builder.build();
     }
 
-    private static EmbedObject chooseTargetEmbed(Trainer trainer, Pokemon pokemon, Move move) {
+    private static EmbedObject chooseTargetEmbed(Trainer trainer, Move move) {
         EmbedBuilder builder = new EmbedBuilder();
 
         builder.withTitle("Who do you want to target?");
 
         int i = 1;
-        for (Pokemon pokemon1 : trainer.getBattle().getTargetList(pokemon)) {
-            int currentHP = pokemon1.getCurrentStat(Stat.HP);
-            int maxHP = pokemon1.getStat(Stat.HP);
+        for (Pokemon pokemon : trainer.getBattle().getTargetList(trainer.getPokemonInFocus())) {
+            int currentHP = pokemon.getCurrentStat(Stat.HP);
+            int maxHP = pokemon.getStat(Stat.HP);
             double percentageHP = Math.round((100.0 * currentHP / maxHP) * 10) / 10.0;
 
             builder.appendField(
-                    i + ": " + pokemon1.getName(),
+                    i + ": " + pokemon.getName(),
                     "HP: " + percentageHP + "%",
                     true
             );
@@ -364,7 +364,7 @@ public class PokemonCommands {
         IUser user = Bot.client.fetchUser(trainer.getID());
 
         IPrivateChannel channel = user.getOrCreatePMChannel();
-        Bot.sendMessage(channel, PokemonCommands.chooseTargetEmbed(trainer, trainer.getPokemonInFocus(), move));
+        Bot.sendMessage(channel, PokemonCommands.chooseTargetEmbed(trainer, move));
     }
 
     @PokemonEventHandler(event = PokemonDodgeEvent.class)
