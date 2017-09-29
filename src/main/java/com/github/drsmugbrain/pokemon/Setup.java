@@ -3,22 +3,28 @@ package com.github.drsmugbrain.pokemon;
 import javax.annotation.Nonnull;
 
 /**
- * Created by DrSmugleaf on 26/09/2017.
+ * Created by DrSmugleaf on 28/09/2017.
  */
-public enum Setup {
+public class Setup {
 
-    SINGLE_BATTLE("Single Battle"),
-    DOUBLE_BATTLE("Double Battle"),
-    TRIPLE_BATTLE("Triple Battle");
+    private final Generation GENERATION;
+    private final Variation VARIATION;
 
-    private final String NAME;
-
-    Setup(@Nonnull String name) {
-        this.NAME = name;
+    public Setup(@Nonnull Generation generation, @Nonnull Variation variation) {
+        GENERATION = generation;
+        VARIATION = variation;
     }
 
-    public String getName() {
-        return this.NAME;
+    public Setup(@Nonnull Setup setup) {
+        this(setup.GENERATION, setup.VARIATION);
+    }
+
+    public Generation getGeneration() {
+        return GENERATION;
+    }
+
+    public Variation getVariation() {
+        return VARIATION;
     }
 
 }

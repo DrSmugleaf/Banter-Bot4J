@@ -55,7 +55,7 @@ interface IBattle {
 
     default void onEnemyItemUsed(@Nonnull Pokemon user, @Nonnull Item item) {}
 
-    default boolean hits(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Move move) {
+    default boolean hits(Pokemon attacker, Pokemon defender, Battle battle, Move move) {
         return true;
     }
 

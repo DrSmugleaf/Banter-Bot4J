@@ -7,178 +7,91 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 /**
- * Created by DrSmugleaf on 07/06/2017.
+ * Created by DrSmugleaf on 28/09/2017.
  */
-public class Battle {
+public class Battle extends Setup {
 
-    protected final List<Pokemon> TURN_ORDER = new ArrayList<>();
-    private final Generation GENERATION;
+    private final Setup SETUP;
     private final Map<Long, Trainer> TRAINERS = new LinkedHashMap<>();
+    private final List<Action> TURN_ORDER = new ArrayList<>();
     private Weather weather;
-    private boolean ready = false;
-    private int TURN_NUMBER = 1;
+    private int turn = 1;
     private final Map<Trainer, List<Pokemon>> POKEMONS_SENT_OUT_THIS_TURN = new HashMap<>();
     private final List<Action> ACTIONS = new ArrayList<>();
-    private final Setup SETUP;
 
-    public Battle(Generation generation, @Nonnull Long id1, @Nonnull Trainer trainer1, @Nonnull Long id2, @Nonnull Trainer trainer2) {
-        this.GENERATION = generation;
-        this.SETUP = Setup.SINGLE_BATTLE;
-        trainer1.setBattle(this);
-        trainer2.setBattle(this);
-        for (Pokemon pokemon : trainer1.getPokemons()) {
-            pokemon.setBattle(this);
+    public Battle(@Nonnull Setup setup, @Nonnull List<Trainer> trainers) {
+        super(setup);
+        SETUP = setup;
+        for (Trainer trainer : trainers) {
+            trainer.setBattle(this);
+            TRAINERS.put(trainer.getID(), trainer);
+            for (Pokemon pokemon : trainer.getPokemons()) {
+                pokemon.setBattle(this);
+            }
+            trainer.setStatus(TrainerStatus.CHOOSING_POKEMON);
         }
-        for (Pokemon pokemon : trainer2.getPokemons()) {
-            pokemon.setBattle(this);
-        }
-        BattleStartedEvent event = new BattleStartedEvent(this);
-        EventDispatcher.dispatch(event);
-        trainer1.setStatus(TrainerStatus.CHOOSING_POKEMON);
-        trainer2.setStatus(TrainerStatus.CHOOSING_POKEMON);
-        TRAINERS.put(id1, trainer1);
-        TRAINERS.put(id2, trainer2);
-        TrainerChoosingPokemonEvent trainerEvent = new TrainerChoosingPokemonEvent(trainer1, trainer2);
-        EventDispatcher.dispatch(trainerEvent);
+
+        Event battleEvent = new BattleStartedEvent(this);
+        EventDispatcher.dispatch(battleEvent);
+
+        Event trainersEvent = new TrainerChoosingPokemonEvent(TRAINERS.values());
+        EventDispatcher.dispatch(trainersEvent);
     }
 
-    @Nonnull
-    public Generation getGeneration() {
-        return this.GENERATION;
+    protected Setup getSetup() {
+        return SETUP;
     }
 
-    @Nonnull
-    public Setup getSetup() {
-        return this.SETUP;
-    }
-
-    public void executeTurn() {
-        for (Trainer trainer : this.TRAINERS.values()) {
-            this.TURN_ORDER.addAll(trainer.getActivePokemons());
-            trainer.resetChosenMove();
-            trainer.resetActions();
+    @Nullable
+    protected Action getAction(Pokemon attacker) {
+        for (Action action : ACTIONS) {
+            if (action.getAttacker() == attacker) {
+                return action;
+            }
         }
 
-        this.TURN_ORDER.sort((pokemon1, pokemon2) -> {
-            Move action1 = pokemon1.getAction();
-            Move action2 = pokemon2.getAction();
-
-            if (Objects.equals(action1.getBaseMove().getName(), "Pursuit") && action2.getBaseMove() == BaseMove.SWITCH) {
-                return 1;
-            }
-            if (Objects.equals(action2.getBaseMove().getName(), "Pursuit") && action1.getBaseMove() == BaseMove.SWITCH) {
-                return -1;
-            }
-
-            if (action1.getBaseMove() == BaseMove.SWITCH) {
-                return 1;
-            }
-            if (action2.getBaseMove() == BaseMove.SWITCH) {
-                return -1;
-            }
-
-            if (action1.getPriority() > action2.getPriority()) {
-                return 1;
-            }
-            if (action2.getPriority() < action1.getPriority()) {
-                return -1;
-            }
-
-            if (pokemon1.getCurrentStat(Stat.SPEED) > pokemon2.getCurrentStat(Stat.SPEED)) {
-                return 1;
-            }
-            if (pokemon2.getCurrentStat(Stat.SPEED) < pokemon1.getCurrentStat(Stat.SPEED)) {
-                return -1;
-            }
-
-            if (Math.random() < 0.5) {
-                return 1;
-            } else {
-                return -1;
-            }
-        });
-
-        for (Pokemon pokemon : this.TURN_ORDER) {
-            pokemon.executeTurn(this);
-            pokemon.finishTurn();
-        }
-
-        this.finishTurn();
+        return null;
     }
 
     public Map<Long, Trainer> getTrainers() {
-        return this.TRAINERS;
+        return new HashMap<>(TRAINERS);
     }
 
     public Trainer getTrainer(Long id) {
-        return this.TRAINERS.get(id);
+        return TRAINERS.get(id);
     }
 
-    @Nonnull
-    protected Trainer getTrainer(Pokemon pokemon) {
-        for (Trainer trainer : this.getTrainers().values()) {
-            if (trainer.hasPokemon(pokemon)) {
-                return trainer;
-            }
-        }
-
-        throw new IllegalArgumentException("Pokemon " + pokemon.getName() + " isn't owned by any trainer in this battle");
-    }
-
-    public boolean executeTurnReady() {
-        for (Trainer trainer : this.TRAINERS.values()) {
-            for (Pokemon pokemon : trainer.getActivePokemons()) {
-                if (!trainer.hasAction(pokemon)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+    protected List<Action> getTurnOrder() {
+        return TURN_ORDER;
     }
 
     protected Weather getWeather() {
-        return this.weather;
+        return weather;
     }
 
     protected void setWeather(Weather weather) {
         this.weather = weather;
     }
 
-    @Nonnull
-    public List<Pokemon> getEnemies(Trainer trainer) {
-        List<Pokemon> enemyActivePokemons = new ArrayList<>();
-
-        for (Trainer trainer1 : this.TRAINERS.values()) {
-            if (trainer1 == trainer) {
-                continue;
-            }
-
-            enemyActivePokemons.addAll(trainer1.getActivePokemons());
-        }
-
-        return enemyActivePokemons;
-    }
-
     public void sendOut(Trainer trainer, Pokemon pokemon) {
-        this.POKEMONS_SENT_OUT_THIS_TURN.putIfAbsent(trainer, new ArrayList<>());
-        this.POKEMONS_SENT_OUT_THIS_TURN.get(trainer).add(pokemon);
+        POKEMONS_SENT_OUT_THIS_TURN.putIfAbsent(trainer, new ArrayList<>());
+        POKEMONS_SENT_OUT_THIS_TURN.get(trainer).add(pokemon);
         trainer.sendOut(pokemon);
 
-        for (Trainer trainer1 : this.getTrainers().values()) {
+        for (Trainer trainer1 : TRAINERS.values()) {
             if (trainer1.getStatus() == TrainerStatus.CHOOSING_POKEMON) {
                 return;
             }
         }
 
-        for (Map.Entry<Trainer, List<Pokemon>> trainerListEntry : this.POKEMONS_SENT_OUT_THIS_TURN.entrySet()) {
+        for (Map.Entry<Trainer, List<Pokemon>> trainerListEntry : POKEMONS_SENT_OUT_THIS_TURN.entrySet()) {
             for (Pokemon pokemon1 : trainerListEntry.getValue()) {
                 Event event = new TrainerSendOutPokemonEvent(pokemon1);
                 EventDispatcher.dispatch(event);
             }
         }
 
-        for (Trainer trainer1 : this.getTrainers().values()) {
+        for (Trainer trainer1 : TRAINERS.values()) {
             trainer1.setPokemonInFocus(trainer1.getActivePokemons().get(0));
             trainer1.setStatus(TrainerStatus.CHOOSING_MOVE);
         }
@@ -187,57 +100,62 @@ public class Battle {
         EventDispatcher.dispatch(event);
     }
 
-    public boolean isReady() {
-        return this.ready;
-    }
-
-    protected void setReady(boolean bool) {
-        this.ready = bool;
-    }
-
     public void addAction(Trainer trainer, Pokemon pokemon, Move move, Pokemon target) {
         trainer.addAction(pokemon, move, target);
-        for (Trainer trainer1 : this.TRAINERS.values()) {
+        for (Trainer trainer1 : TRAINERS.values()) {
             if (trainer1.getStatus() != TrainerStatus.WAITING) {
                 return;
             }
         }
 
-        this.executeTurn();
+        executeTurn();
+    }
+
+    public void executeTurn() {
+        for (Trainer trainer : TRAINERS.values()) {
+            TURN_ORDER.addAll(trainer.getActions());
+            trainer.resetChosenMove();
+            trainer.resetActions();
+        }
+
+        Collections.shuffle(ACTIONS);
+        ACTIONS.sort((action1, action2) -> action2.getPriority().compareTo(action1.getPriority()));
+
+        for (Action action : ACTIONS) {
+            action.getAttacker().executeTurn();
+            action.getAttacker().finishTurn();
+        }
+
+        finishTurn();
     }
 
     private void finishTurn() {
-        this.TURN_ORDER.clear();
-        this.POKEMONS_SENT_OUT_THIS_TURN.clear();
-        this.TURN_NUMBER++;
+        ACTIONS.clear();
+        POKEMONS_SENT_OUT_THIS_TURN.clear();
+        turn++;
 
-        for (Trainer trainer : this.getTrainers().values()) {
+        for (Trainer trainer : TRAINERS.values()) {
             trainer.finishTurn();
         }
 
-        if (this.getTrainers().values().stream().allMatch(trainer -> trainer.getStatus() != TrainerStatus.CHOOSING_POKEMON)) {
-            BattleTurnStartEvent event = new BattleTurnStartEvent(this);
+        if (TRAINERS.values().stream().allMatch(trainer -> trainer.getStatus() != TrainerStatus.CHOOSING_POKEMON)) {
+            Event event = new BattleTurnStartEvent(this);
             EventDispatcher.dispatch(event);
         }
     }
 
-    public List<Pokemon> getTargetList() {
+    public List<Pokemon> getTargetList(Pokemon pokemon) {
         List<Pokemon> targets = new ArrayList<>();
 
-        for (Trainer trainer : this.getTrainers().values()) {
+        for (Trainer trainer : TRAINERS.values()) {
             targets.addAll(trainer.getActivePokemons());
         }
 
         return targets;
     }
 
-    public int getTurnNumber() {
-        return this.TURN_NUMBER;
-    }
-
-    @Nonnull
-    protected List<Action> getActions() {
-        return this.ACTIONS;
+    public int getTurn() {
+        return turn;
     }
 
     @Nullable
@@ -251,7 +169,7 @@ public class Battle {
 
     @Nonnull
     protected Trainer getOppositeTrainer(Trainer trainer) {
-        List<Trainer> trainers = new ArrayList<>(this.TRAINERS.values());
+        List<Trainer> trainers = new ArrayList<>(TRAINERS.values());
         trainers.remove(trainer);
         return trainers.get(0);
     }

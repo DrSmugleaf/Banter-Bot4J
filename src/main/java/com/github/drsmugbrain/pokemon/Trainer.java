@@ -17,7 +17,7 @@ public class Trainer {
     private String NAME;
     private final List<Pokemon> POKEMONS = new ArrayList<>();
     private final List<Pokemon> ACTIVE_POKEMONS = new ArrayList<>();
-    private final Map<Pokemon, Move> ACTIONS = new LinkedHashMap<>();
+    private final List<Action> ACTIONS = new ArrayList<>();
     private Pokemon pokemonInFocus = null;
     private Move chosenMove = null;
     private Battle battle = null;
@@ -164,33 +164,31 @@ public class Trainer {
     }
 
     public void addAction(Pokemon pokemon, Move move, Pokemon target) {
-        pokemon.setAction(move, target);
-        this.ACTIONS.put(pokemon, move);
-        this.setStatus(TrainerStatus.WAITING);
+        Action action = new Action(move, pokemon, target);
+        pokemon.setAction(action);
+        this.ACTIONS.add(action);
+
+        if (this.ACTIONS.size() == this.ACTIVE_POKEMONS.size()) {
+            this.setStatus(TrainerStatus.WAITING);
+        }
+
         TrainerChooseTargetEvent event = new TrainerChooseTargetEvent(pokemon, move, target);
         EventDispatcher.dispatch(event);
     }
 
-    public void addAction(Pokemon pokemon, String move, Pokemon target) {
-        this.addAction(pokemon, pokemon.getMove(move), target);
-    }
-
-    @Nonnull
-    public Move getAction(Pokemon pokemon) {
-        return this.ACTIONS.get(pokemon);
-    }
-
     public boolean hasAction(Pokemon pokemon) {
-        return this.ACTIONS.containsKey(pokemon);
+        for (Action action : this.ACTIONS) {
+            if (action.getAttacker() == pokemon) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Nonnull
-    protected Map<Pokemon, Move> getActions() {
+    protected List<Action> getActions() {
         return this.ACTIONS;
-    }
-
-    public void removeAction(Pokemon pokemon, BaseMove move) {
-        this.ACTIONS.remove(pokemon, move);
     }
 
     public void resetActions() {

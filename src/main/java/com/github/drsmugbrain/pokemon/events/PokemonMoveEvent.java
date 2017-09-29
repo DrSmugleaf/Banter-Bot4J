@@ -14,9 +14,10 @@ public class PokemonMoveEvent extends PokemonEvent {
 
     public PokemonMoveEvent(@Nonnull Pokemon pokemon, @Nonnull Move move) {
         super(pokemon);
-        this.MOVE = move;
+        MOVE = move;
     }
 
+    @Nonnull
     public Move getMove() {
         return this.MOVE;
     }

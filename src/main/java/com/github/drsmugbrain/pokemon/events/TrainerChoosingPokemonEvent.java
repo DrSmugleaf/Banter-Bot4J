@@ -2,7 +2,10 @@ package com.github.drsmugbrain.pokemon.events;
 
 import com.github.drsmugbrain.pokemon.Trainer;
 
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -10,15 +13,22 @@ import java.util.List;
  */
 public class TrainerChoosingPokemonEvent extends Event {
 
-    private final Trainer[] TRAINERS;
+    @Nonnull
+    private final List<Trainer> TRAINERS;
 
-    public TrainerChoosingPokemonEvent(Trainer... trainers) {
+    public TrainerChoosingPokemonEvent(@Nonnull Trainer... trainers) {
         super(trainers[0].getBattle());
-        this.TRAINERS = trainers;
+        TRAINERS = new ArrayList<>(Arrays.asList(trainers));
     }
 
+    public TrainerChoosingPokemonEvent(@Nonnull Collection<Trainer> trainers) {
+        super(trainers.iterator().next().getBattle());
+        TRAINERS = new ArrayList<>(trainers);
+    }
+
+    @Nonnull
     public List<Trainer> getTrainers() {
-        return Arrays.asList(this.TRAINERS);
+        return TRAINERS;
     }
 
 }

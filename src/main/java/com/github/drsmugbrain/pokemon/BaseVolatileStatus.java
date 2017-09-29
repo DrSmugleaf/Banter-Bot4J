@@ -193,7 +193,7 @@ public enum BaseVolatileStatus implements IBattle {
         public void onTurnStart(@Nonnull Battle battle, @Nonnull Pokemon pokemon) {
             switch (battle.getGeneration()) {
                 case I:
-                    pokemon.getTarget().setCanAttackThisTurn(false);
+                    pokemon.getAction().getDefender().setCanAttackThisTurn(false);
                     break;
                 case II:
                 case III:
@@ -201,7 +201,7 @@ public enum BaseVolatileStatus implements IBattle {
                 case V:
                 case VI:
                 case VII:
-                    pokemon.getTarget().setCanSwitch(false);
+                    pokemon.getAction().getDefender().setCanSwitch(false);
                     break;
                 default:
                     throw new InvalidGenerationException(battle.getGeneration());
@@ -341,7 +341,7 @@ public enum BaseVolatileStatus implements IBattle {
         public void onTurnStart(@Nonnull Battle battle, @Nonnull Pokemon pokemon) {
             switch (battle.getGeneration()) {
                 case I:
-                    pokemon.getTarget().setCanAttackThisTurn(false);
+                    pokemon.getAction().getDefender().setCanAttackThisTurn(false);
                     break;
                 case II:
                 case III:
@@ -349,7 +349,7 @@ public enum BaseVolatileStatus implements IBattle {
                 case V:
                 case VI:
                 case VII:
-                    pokemon.getTarget().setCanSwitch(false);
+                    pokemon.getAction().getDefender().setCanSwitch(false);
                     break;
                 default:
                     throw new InvalidGenerationException(battle.getGeneration());

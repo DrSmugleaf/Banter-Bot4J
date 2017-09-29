@@ -33,8 +33,7 @@ public class Pokemon {
     private double damageMultiplier = 1;
     private boolean canAttackThisTurn = true;
     private boolean canSwitch = true;
-    private Move action = null;
-    private Pokemon target = null;
+    private Action action = null;
     private Status status = null;
     private CriticalHitStage criticalHitStage = CriticalHitStage.ZERO;
     private boolean damagedThisTurn = false;
@@ -482,40 +481,34 @@ public class Pokemon {
         this.canSwitch = bool;
     }
 
-    public Move getAction() {
+    @Nullable
+    public Action getAction() {
         return this.action;
     }
 
-    protected Pokemon getTarget() {
-        return this.target;
+    protected void setTarget(@Nonnull Pokemon target) {
+        action.setDefender(target);
     }
 
-    protected void setTarget(Pokemon target) {
-        this.target = target;
-    }
-
-    protected void setAction(@Nonnull Move action, @Nullable Pokemon target) {
+    protected void setAction(@Nonnull Action action) {
         this.action = action;
-        this.target = target;
-        this.lastTarget = new Pair<>(target, action);
+        this.lastTarget = new Pair<>(action.getDefender(), action);
     }
 
     protected void resetAction() {
         this.action = null;
-        this.target = null;
     }
 
-    protected void executeTurn(Battle battle) {
+    protected void executeTurn() {
         if (this.getCurrentStat(Stat.HP) <= 0) {
             return;
         }
-        this.action.tryUse(this, this.target, battle, battle.getTrainer(this));
+        this.action.tryUse();
         this.movedThisTurn = true;
     }
 
     protected void finishTurn() {
         this.action = null;
-        this.target = null;
         this.movedThisTurn = false;
         this.damagedThisTurn = false;
         this.damagedThisTurnBy.clear();

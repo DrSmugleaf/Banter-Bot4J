@@ -69,19 +69,19 @@ public class PokemonCommands {
         return builder.build();
     }
 
-    private static EmbedObject chooseTargetEmbed(Trainer trainer, Move move) {
+    private static EmbedObject chooseTargetEmbed(Trainer trainer, Pokemon pokemon, Move move) {
         EmbedBuilder builder = new EmbedBuilder();
 
         builder.withTitle("Who do you want to target?");
 
         int i = 1;
-        for (Pokemon pokemon : trainer.getBattle().getTargetList()) {
-            int currentHP = pokemon.getCurrentStat(Stat.HP);
-            int maxHP = pokemon.getStat(Stat.HP);
+        for (Pokemon pokemon1 : trainer.getBattle().getTargetList(pokemon)) {
+            int currentHP = pokemon1.getCurrentStat(Stat.HP);
+            int maxHP = pokemon1.getStat(Stat.HP);
             double percentageHP = Math.round((100.0 * currentHP / maxHP) * 10) / 10.0;
 
             builder.appendField(
-                    i + ": " + pokemon.getName(),
+                    i + ": " + pokemon1.getName(),
                     "HP: " + percentageHP + "%",
                     true
             );
@@ -111,7 +111,11 @@ public class PokemonCommands {
         Entry<IUser, Trainer> userTrainerEntry = PokemonCommands.awaitingTrainer.entrySet().iterator().next();
         IUser user2 = userTrainerEntry.getKey();
         Trainer trainer2 = userTrainerEntry.getValue();
-        Battle battle = new Battle(Generation.VII, user1.getLongID(), trainer1, user2.getLongID(), trainer2);
+        Setup setup = new Setup(Generation.VII, Variation.SINGLE_BATTLE);
+        List<Trainer> trainers = new ArrayList<>();
+        trainers.add(trainer1);
+        trainers.add(trainer2);
+        Battle battle = new Battle(setup, trainers);
 
         PokemonCommands.BATTLES.put(user1, battle);
         PokemonCommands.BATTLES.put(user2, battle);
@@ -168,7 +172,7 @@ public class PokemonCommands {
 
                 int pokemonID = scanner.nextInt() - 1;
 
-                battle.addAction(trainer, trainer.getPokemonInFocus(), trainer.getChosenMove(), battle.getTargetList().get(pokemonID));
+                battle.addAction(trainer, trainer.getPokemonInFocus(), trainer.getChosenMove(), battle.getTargetList(trainer.getPokemonInFocus()).get(pokemonID));
                 break;
             }
             case WAITING:
@@ -348,7 +352,7 @@ public class PokemonCommands {
             IUser user = Bot.client.fetchUser(trainer.getID());
 
             IPrivateChannel channel = user.getOrCreatePMChannel();
-            Bot.sendMessage(channel, "**TURN " + event.getBattle().getTurnNumber() + "**");
+            Bot.sendMessage(channel, "**TURN " + event.getBattle().getTurn() + "**");
             Bot.sendMessage(channel, PokemonCommands.chooseMoveEmbed(trainer));
         }
     }
@@ -360,12 +364,12 @@ public class PokemonCommands {
         IUser user = Bot.client.fetchUser(trainer.getID());
 
         IPrivateChannel channel = user.getOrCreatePMChannel();
-        Bot.sendMessage(channel, PokemonCommands.chooseTargetEmbed(trainer, move));
+        Bot.sendMessage(channel, PokemonCommands.chooseTargetEmbed(trainer, trainer.getPokemonInFocus(), move));
     }
 
-    @PokemonEventHandler(event = PokemonMoveMissEvent.class)
-    public static void handle(PokemonMoveMissEvent event) {
-        Pokemon target = event.getTarget();
+    @PokemonEventHandler(event = PokemonDodgeEvent.class)
+    public static void handle(PokemonDodgeEvent event) {
+        Pokemon target = event.getPokemon();
         Trainer trainer = event.getPokemon().getTrainer();
         StringBuilder response = new StringBuilder();
 

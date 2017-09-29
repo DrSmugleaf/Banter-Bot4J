@@ -73,7 +73,7 @@ public class Move {
         this.power = power;
     }
 
-    public int getPriority() {
+    public Integer getPriority() {
         return this.priority;
     }
 
@@ -101,30 +101,29 @@ public class Move {
         this.damageMultiplier = 1.0;
     }
 
-    protected int use(@Nonnull Pokemon user, @Nonnull Pokemon target, @Nonnull Battle battle, @Nonnull Trainer trainer) {
-        PokemonMoveEvent event = new PokemonMoveEvent(user, this);
+    protected int use(@Nonnull Pokemon attacker, @Nonnull Pokemon defender) {
+        PokemonMoveEvent event = new PokemonMoveEvent(attacker, this);
         EventDispatcher.dispatch(event);
-        this.pp--;
-        return this.getBaseMove().use(user, target, battle, trainer, this);
+        decreasePP(1);
+        return getBaseMove().use(attacker, defender, attacker.getBattle(), this);
     }
 
-    protected int useAsZMove(@Nonnull Pokemon user, @Nonnull Pokemon target, @Nonnull Battle battle, @Nonnull Trainer trainer) {
-        PokemonMoveEvent event = new PokemonMoveEvent(user, this);
-        EventDispatcher.dispatch(event);
-        this.pp--;
-        user.removeItem();
-        return this.getBaseMove().useAsZMove(user, target, battle, trainer, this);
+    protected int useAsZMove(@Nonnull Pokemon attacker, @Nonnull Pokemon defender) {
+        decreasePP(1);
+        attacker.removeItem();
+        return getBaseMove().useAsZMove(attacker, defender, attacker.getBattle(), this);
     }
 
-    protected int fail(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
-        return this.getBaseMove().fail(user, target, battle, trainer, this);
+    protected int miss(@Nonnull Pokemon defender) {
+        return getBaseMove().miss(defender);
     }
 
-    protected int tryUse(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
-        if (this.getBaseMove().hits(user, target, this)) {
-            return this.use(user, target, battle, trainer);
+
+    protected int tryUse(@Nonnull Pokemon attacker, @Nonnull Pokemon defender) {
+        if (getBaseMove().hits(attacker, defender, attacker.getBattle(), this)) {
+            return use(attacker, defender);
         } else {
-            return this.fail(user, target, battle, trainer);
+            return miss(defender);
         }
     }
 
