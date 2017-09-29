@@ -23,9 +23,6 @@ public class Battle extends Setup {
         for (Trainer trainer : trainers) {
             trainer.setBattle(this);
             TRAINERS.put(trainer.getID(), trainer);
-            for (Pokemon pokemon : trainer.getPokemons()) {
-                pokemon.setBattle(this);
-            }
             trainer.setStatus(TrainerStatus.CHOOSING_POKEMON);
         }
 

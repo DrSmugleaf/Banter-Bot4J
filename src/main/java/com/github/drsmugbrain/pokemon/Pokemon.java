@@ -42,7 +42,6 @@ public class Pokemon {
     private int bideDamageTaken = 0;
     private Pokemon bideTarget = null;
     private Pair<Pokemon, Move> lastTarget = new Pair<>(null, null);
-    private Battle battle = null;
     private Trainer trainer = null;
     private boolean fainted = false;
     private List<Action> hitBy = new ArrayList<>();
@@ -582,7 +581,7 @@ public class Pokemon {
 
     protected void setStatus(Status status) {
         String message = Messages.STATUS.getMessage(this, null, null, status, null, null);
-        BattleMessageEvent event = new BattleMessageEvent(this.battle, message);
+        BattleMessageEvent event = new BattleMessageEvent(this.trainer.getBattle(), message);
         EventDispatcher.dispatch(event);
 
         this.status = status;
@@ -740,17 +739,13 @@ public class Pokemon {
     }
 
     @Nullable
-    public Battle getBattle() {
-        return this.battle;
-    }
-
-    protected void setBattle(Battle battle) {
-        this.battle = battle;
+    public Trainer getTrainer() {
+        return this.trainer;
     }
 
     @Nullable
-    public Trainer getTrainer() {
-        return this.trainer;
+    public Battle getBattle() {
+        return this.trainer.getBattle();
     }
 
     protected void setTrainer(Trainer trainer) {
@@ -828,7 +823,7 @@ public class Pokemon {
     @Nullable
     protected Pokemon getEnemyOppositePokemon() {
         int index = this.trainer.getActivePokemons().indexOf(this);
-        Trainer oppositeTrainer = this.battle.getOppositeTrainer(this.trainer);
+        Trainer oppositeTrainer = this.trainer.getBattle().getOppositeTrainer(this.trainer);
         Pokemon oppositePokemon = null;
 
         while (oppositePokemon == null && index >= 0) {
@@ -841,7 +836,7 @@ public class Pokemon {
 
     @Nullable
     protected Pokemon getRandomActiveEnemyPokemon() {
-        Trainer oppositeTrainer = this.battle.getOppositeTrainer(this.trainer);
+        Trainer oppositeTrainer = this.trainer.getBattle().getOppositeTrainer(this.trainer);
         return oppositeTrainer.getRandomActivePokemon();
     }
 
