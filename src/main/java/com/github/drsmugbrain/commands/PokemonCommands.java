@@ -102,7 +102,7 @@ public class PokemonCommands {
         }
 
         IUser user1 = event.getAuthor();
-        Trainer trainer1 = new Trainer(event.getAuthor().getName(), event.getAuthor().getLongID(), pokemons.toArray(new Pokemon[]{}));
+        Trainer trainer1 = new Trainer(event.getAuthor().getLongID(), event.getAuthor().getName(), pokemons.toArray(new Pokemon[]{}));
         if (PokemonCommands.awaitingTrainer.isEmpty()) {
             PokemonCommands.awaitingTrainer.put(event.getAuthor(), trainer1);
             return;

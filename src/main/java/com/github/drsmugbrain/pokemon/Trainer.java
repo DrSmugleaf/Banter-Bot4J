@@ -11,10 +11,8 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Created by DrSmugleaf on 07/06/2017.
  */
-public class Trainer {
+public class Trainer extends Player {
 
-    private final Long ID;
-    private String NAME;
     private final List<Pokemon> POKEMONS = new ArrayList<>();
     private final List<Pokemon> ACTIVE_POKEMONS = new ArrayList<>();
     private final List<Action> ACTIONS = new ArrayList<>();
@@ -24,26 +22,12 @@ public class Trainer {
     private boolean ready = false;
     private TrainerStatus status = TrainerStatus.NONE;
 
-    public Trainer(String name, @Nonnull Long id, @Nonnull Pokemon... pokemons) {
-        this.NAME = name;
-        this.ID = id;
+    public Trainer(@Nonnull Long id, @Nonnull String name, @Nonnull Pokemon... pokemons) {
+        super(id, name);
         for (Pokemon pokemon : pokemons) {
             pokemon.setTrainer(this);
         }
         this.POKEMONS.addAll(Arrays.asList(pokemons));
-    }
-
-    @Nonnull
-    public Long getID() {
-        return this.ID;
-    }
-
-    public String getName() {
-        return this.NAME;
-    }
-
-    public void setName(String name) {
-        this.NAME = name;
     }
 
     protected void addPokemon(Pokemon pokemon) {
