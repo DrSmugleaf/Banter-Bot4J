@@ -13,17 +13,33 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Trainer extends Player {
 
+    @Nonnull
+    private final Battle BATTLE;
+
+    @Nonnull
     private final List<Pokemon> POKEMONS = new ArrayList<>();
+
+    @Nonnull
     private final List<Pokemon> ACTIVE_POKEMONS = new ArrayList<>();
+
+    @Nonnull
     private final List<Action> ACTIONS = new ArrayList<>();
+
+    @Nullable
     private Pokemon pokemonInFocus = null;
+
+    @Nullable
     private Move chosenMove = null;
-    private Battle battle = null;
+
     private boolean ready = false;
+
+    @Nonnull
     private TrainerStatus status = TrainerStatus.NONE;
 
-    public Trainer(@Nonnull Long id, @Nonnull String name, @Nonnull PokemonBuilder... pokemonBuilders) {
+    protected Trainer(@Nonnull Long id, @Nonnull String name, @Nonnull Battle battle, @Nonnull PokemonBuilder... pokemonBuilders) {
         super(id, name);
+
+        BATTLE = battle;
 
         List<Pokemon> pokemons = new ArrayList<>();
         for (PokemonBuilder pokemonBuilder : pokemonBuilders) {
@@ -97,7 +113,7 @@ public class Trainer extends Player {
 
     @Nonnull
     protected List<Pokemon> getAdjacentEnemyPokemons(Pokemon pokemon) {
-        Trainer opposingTrainer = this.battle.getOppositeTrainer(this);
+        Trainer opposingTrainer = this.BATTLE.getOppositeTrainer(this);
         List<Pokemon> opposingPokemons = opposingTrainer.getActivePokemons();
         int index = this.ACTIVE_POKEMONS.indexOf(pokemon);
         List<Pokemon> adjacentEnemyPokemons = new ArrayList<>();
@@ -152,7 +168,7 @@ public class Trainer extends Player {
     }
 
     public void addAction(Pokemon pokemon, Move move, Pokemon target) {
-        Action action = new Action(move, pokemon, target, battle.getTurn());
+        Action action = new Action(move, pokemon, target, BATTLE.getTurn());
         pokemon.setAction(action);
         this.ACTIONS.add(action);
 
@@ -253,12 +269,9 @@ public class Trainer extends Player {
         this.chosenMove = null;
     }
 
+    @Nonnull
     public Battle getBattle() {
-        return this.battle;
-    }
-
-    protected void setBattle(Battle battle) {
-        this.battle = battle;
+        return this.BATTLE;
     }
 
     public boolean isReady() {
@@ -288,7 +301,7 @@ public class Trainer extends Player {
     }
 
     protected boolean hasOpponentOnField() {
-        for (Trainer trainer : this.battle.getTrainers().values()) {
+        for (Trainer trainer : this.BATTLE.getTrainers().values()) {
             if (trainer == this) {
                 continue;
             }

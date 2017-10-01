@@ -22,7 +22,7 @@ import java.util.Map.Entry;
 public class PokemonCommands {
 
     private static final Map<IUser, Battle> BATTLES = new HashMap<>();
-    private static final Map<IUser, Trainer> awaitingTrainer = new LinkedHashMap<>();
+    private static final Map<IUser, TrainerBuilder> awaitingTrainer = new LinkedHashMap<>();
 
     static {
         EventDispatcher.registerListener(new PokemonCommands());
@@ -95,36 +95,34 @@ public class PokemonCommands {
         long id = user1.getLongID();
         String name = user1.getName();
 
-        Trainer trainer1 = null;
-        try {
-            TrainerBuilder trainerBuilder = new TrainerBuilder();
-            trainerBuilder
-                    .setID(id)
-                    .setName(name)
-                    .addPokemons(String.join(" ", args));
-            trainer1 = trainerBuilder.build();
-        } catch (DiscordException e) {
-            Bot.sendMessage(event.getChannel(), e.getMessage());
-        }
+        TrainerBuilder trainerBuilder1 = new TrainerBuilder();
+        trainerBuilder1
+                .setID(id)
+                .setName(name)
+                .addPokemons(String.join(" ", args));
 
         if (awaitingTrainer.isEmpty()) {
-            awaitingTrainer.put(event.getAuthor(), trainer1);
+            awaitingTrainer.put(event.getAuthor(), trainerBuilder1);
             return;
         }
 
-        Entry<IUser, Trainer> userTrainerEntry = awaitingTrainer.entrySet().iterator().next();
-
+        Entry<IUser, TrainerBuilder> userTrainerEntry = awaitingTrainer.entrySet().iterator().next();
         IUser user2 = userTrainerEntry.getKey();
-        Trainer trainer2 = userTrainerEntry.getValue();
+        TrainerBuilder trainerBuilder2 = userTrainerEntry.getValue();
 
+        BattleBuilder battleBuilder = new BattleBuilder();
         Setup setup = new Setup(Generation.VII, Variation.SINGLE_BATTLE);
 
-        List<Trainer> trainers = new ArrayList<>();
+        battleBuilder
+                .setSetup(setup)
+                .addTrainer(trainerBuilder1, trainerBuilder2);
 
-        trainers.add(trainer1);
-        trainers.add(trainer2);
-
-        Battle battle = new Battle(setup, trainers);
+        Battle battle = null;
+        try {
+            battle = battleBuilder.build();
+        } catch (DiscordException e) {
+            Bot.sendMessage(event.getChannel(), e.getMessage());
+        }
 
         PokemonCommands.BATTLES.put(user1, battle);
         PokemonCommands.BATTLES.put(user2, battle);

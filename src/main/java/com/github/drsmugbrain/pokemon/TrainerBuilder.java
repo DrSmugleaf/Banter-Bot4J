@@ -16,10 +16,11 @@ public class TrainerBuilder {
     private long id;
     private String name;
     private List<String> pokemonStrings = new ArrayList<>();
+    private Battle battle;
 
     public TrainerBuilder() {}
 
-    public Trainer build() throws DiscordException {
+    protected Trainer build() throws DiscordException {
         PokemonBuilder[] pokemons = new PokemonBuilder[pokemonStrings.size()];
 
         for (int i = 0; i < pokemonStrings.size(); i++) {
@@ -27,7 +28,7 @@ public class TrainerBuilder {
             pokemons[i] = pokemon;
         }
 
-        return new Trainer(id, name, pokemons);
+        return new Trainer(id, name, battle, pokemons);
     }
 
     public long getID() {
@@ -53,13 +54,18 @@ public class TrainerBuilder {
 
     @Nonnull
     public TrainerBuilder addPokemon(@Nonnull String exportString) {
-        this.pokemonStrings.add(exportString);
+        pokemonStrings.add(exportString);
         return this;
     }
 
     @Nonnull
     public TrainerBuilder addPokemons(@Nonnull String exportStrings) {
-        this.pokemonStrings.addAll(Arrays.asList(exportStrings.split("\n\n")));
+        pokemonStrings.addAll(Arrays.asList(exportStrings.split("\n\n")));
+        return this;
+    }
+
+    protected TrainerBuilder setBattle(@Nonnull Battle battle) {
+        this.battle = battle;
         return this;
     }
 
