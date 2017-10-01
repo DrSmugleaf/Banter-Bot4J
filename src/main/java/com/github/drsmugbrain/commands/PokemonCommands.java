@@ -56,12 +56,10 @@ public class PokemonCommands {
 
         builder.withTitle("Which move do you want to use?");
 
-        for (Move move : trainer.getPokemonInFocus().getValidMoves()) {
-            BaseMove baseMove = move.getBaseMove();
-
+        for (BaseMove baseMove : trainer.getPokemonInFocus().getValidMoves()) {
             builder.appendField(
                     baseMove.getName(),
-                    move.getType().getName() + " " + move.getPP() + "/" + baseMove.getPP(),
+                    baseMove.getType().getName() + " " + baseMove.getPP() + "/" + baseMove.getPP(),
                     true
             );
         }

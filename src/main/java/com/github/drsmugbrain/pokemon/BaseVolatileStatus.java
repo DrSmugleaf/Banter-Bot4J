@@ -8,7 +8,103 @@ import javax.annotation.Nullable;
  */
 public enum BaseVolatileStatus implements IBattle {
 
-    BOUND("Bound"),
+    BOUND("Bound") {
+        @Nullable
+        @Override
+        public Integer getDuration(Pokemon user, Pokemon target, Move move) {
+            double random = Math.random();
+            Integer duration;
+
+            Generation generation = user.getBattle().getGeneration();
+            switch (generation) {
+                case I:
+                case II:
+                case III:
+                case IV:
+                    if (random < 0.375) {
+                        duration = 2;
+                    } else if (random < 0.75) {
+                        duration = 3;
+                    } else if (random < 0.875) {
+                        duration = 4;
+                    } else {
+                        duration = 5;
+                    }
+
+                    break;
+                case V:
+                case VI:
+                case VII:
+                    if (random < 0.5) {
+                        duration = 4;
+                    } else {
+                        duration = 5;
+                    }
+
+                    break;
+                default:
+                    throw new InvalidGenerationException(generation);
+            }
+
+            return duration;
+        }
+
+        @Override
+        public void onTrainerTurnStart(@Nonnull Trainer trainer, @Nonnull Pokemon pokemon) {
+            pokemon.getVolatileStatus(this).getAction().getAttacker().setValidMoves(BaseMove.BIND);
+        }
+
+        @Override
+        public void onEnemySendBack(@Nonnull Pokemon user, @Nonnull Pokemon enemy) {
+            Generation generation = user.getBattle().getGeneration();
+
+            if (generation != Generation.I) {
+                Action action = user.getVolatileStatus(this).getAction();
+                Pokemon applier = action.getAttacker();
+                if (applier == enemy) {
+                    remove(user, enemy, action);
+                }
+            }
+        }
+
+        @Override
+        public boolean onOwnAttemptAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+            Generation generation = attacker.getBattle().getGeneration();
+
+            switch (generation) {
+                case I:
+                    return false;
+                case II:
+                case III:
+                case IV:
+                case V:
+                case VI:
+                case VII:
+                    return true;
+                default:
+                    throw new InvalidGenerationException(generation);
+            }
+        }
+
+        @Override
+        public boolean canSwitch(@Nonnull Pokemon pokemon) {
+            Generation generation = pokemon.getBattle().getGeneration();
+
+            switch (generation) {
+                case I:
+                    return true;
+                case II:
+                case III:
+                case IV:
+                case V:
+                case VI:
+                case VII:
+                    return false;
+                default:
+                    throw new InvalidGenerationException(generation);
+            }
+        }
+    },
     CANT_ESCAPE("Can't escape"),
     CONFUSION("Confusion"),
     CURSE("Curse") {
@@ -51,13 +147,13 @@ public enum BaseVolatileStatus implements IBattle {
 
     AURORA_VEIL("Aurora Veil", 5) {
         @Override
-        protected void apply(Pokemon user, Pokemon target, Move move) {
+        protected void apply(Pokemon user, Pokemon target, Action action) {
             if (user.getBattle().getWeather() != Weather.HAIL) {
                 this.fail();
                 return;
             }
 
-            super.apply(user, target, move);
+            super.apply(user, target, action);
         }
 
         @Override
@@ -138,88 +234,10 @@ public enum BaseVolatileStatus implements IBattle {
     BIDE("Bide", 2) {
         @Override
         public boolean onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
-            defender.addBideDamageTaken(action.getDamage());
-            defender.setBideTarget(attacker);
-
+//            defender.addBideDamageTaken(action.getDamage());
+//            defender.setBideTarget(attacker);
+            // TODO: Bide damage taken processing
             return true;
-        }
-    },
-    BIND("Bind") {
-        @Override
-        protected void apply(Pokemon user, Pokemon target, Move move) {
-            double random = Math.random();
-            Integer duration;
-
-            Generation generation = user.getBattle().getGeneration();
-            switch (generation) {
-                case I:
-                case II:
-                case III:
-                case IV:
-                    if (random < 0.375) {
-                        duration = 2;
-                    } else if (random < 0.75) {
-                        duration = 3;
-                    } else if (random < 0.875) {
-                        duration = 4;
-                    } else {
-                        duration = 5;
-                    }
-
-                    break;
-                case V:
-                case VI:
-                case VII:
-                    if (random < 0.5) {
-                        duration = 4;
-                    } else {
-                        duration = 5;
-                    }
-
-                    break;
-                default:
-                    throw new InvalidGenerationException(generation);
-            }
-
-            this.apply(user, user, duration);
-        }
-
-        @Override
-        public void onTrainerTurnStart(@Nonnull Trainer trainer, @Nonnull Pokemon pokemon) {
-            pokemon.setValidMoves(BaseMove.BIND);
-        }
-
-        @Override
-        public void onTurnStart(@Nonnull Battle battle, @Nonnull Pokemon pokemon) {
-            switch (battle.getGeneration()) {
-                case I:
-                    pokemon.getAction().getDefender().setCanAttackThisTurn(false);
-                    break;
-                case II:
-                case III:
-                case IV:
-                case V:
-                case VI:
-                case VII:
-                    pokemon.getAction().getDefender().setCanSwitch(false);
-                    break;
-                default:
-                    throw new InvalidGenerationException(battle.getGeneration());
-            }
-        }
-
-        @Override
-        public void onOwnSendBack(@Nonnull Pokemon pokemon) {
-            if (pokemon.getBattle().getGeneration() == Generation.I && pokemon.getLastTarget().getKey() != null) {
-                pokemon.getLastTarget().getKey().setCanAttackThisTurn(false);
-            }
-        }
-
-        @Override
-        public void onEnemySendOut(@Nonnull Pokemon pokemon) {
-            if (pokemon.getBattle().getGeneration() == Generation.I) {
-                pokemon.setCanAttackThisTurn(false);
-            }
         }
     },
 
@@ -292,84 +310,6 @@ public enum BaseVolatileStatus implements IBattle {
             }
         }
     },
-    CLAMP("Clamp") {
-        @Override
-        protected void apply(Pokemon user, Pokemon target, Move move) {
-            double random = Math.random();
-            Integer duration;
-
-            Generation generation = user.getBattle().getGeneration();
-            switch (generation) {
-                case I:
-                case II:
-                case III:
-                case IV:
-                    if (random < 0.375) {
-                        duration = 2;
-                    } else if (random < 0.75) {
-                        duration = 3;
-                    } else if (random < 0.875) {
-                        duration = 4;
-                    } else {
-                        duration = 5;
-                    }
-
-                    break;
-                case V:
-                case VI:
-                case VII:
-                    if (random < 0.5) {
-                        duration = 4;
-                    } else {
-                        duration = 5;
-                    }
-
-                    break;
-                default:
-                    throw new InvalidGenerationException(generation);
-            }
-
-            this.apply(user, user, duration);
-        }
-
-        @Override
-        public void onTrainerTurnStart(@Nonnull Trainer trainer, @Nonnull Pokemon pokemon) {
-            pokemon.setValidMoves(BaseMove.CLAMP);
-        }
-
-        @Override
-        public void onTurnStart(@Nonnull Battle battle, @Nonnull Pokemon pokemon) {
-            switch (battle.getGeneration()) {
-                case I:
-                    pokemon.getAction().getDefender().setCanAttackThisTurn(false);
-                    break;
-                case II:
-                case III:
-                case IV:
-                case V:
-                case VI:
-                case VII:
-                    pokemon.getAction().getDefender().setCanSwitch(false);
-                    break;
-                default:
-                    throw new InvalidGenerationException(battle.getGeneration());
-            }
-        }
-
-        @Override
-        public void onOwnSendBack(@Nonnull Pokemon pokemon) {
-            if (pokemon.getBattle().getGeneration() == Generation.I && pokemon.getLastTarget().getKey() != null) {
-                pokemon.getLastTarget().getKey().setCanAttackThisTurn(false);
-            }
-        }
-
-        @Override
-        public void onEnemySendOut(@Nonnull Pokemon pokemon) {
-            if (pokemon.getBattle().getGeneration() == Generation.I) {
-                pokemon.setCanAttackThisTurn(false);
-            }
-        }
-    },
 
     CRAFTY_SHIELD("Crafty Shield", 0) {
         @Override
@@ -401,20 +341,21 @@ public enum BaseVolatileStatus implements IBattle {
 
     @Nonnull
     public String getName() {
-        return this.NAME;
+        return NAME;
     }
 
     @Nullable
-    public Integer getDuration(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-        return this.DURATION;
+    public Integer getDuration(Pokemon user, Pokemon target, Move move) {
+        return DURATION;
     }
 
-    protected void apply(Pokemon user, Pokemon target, int duration) {
-        target.addVolatileStatus(new VolatileStatus(this, user, duration));
+    protected void apply(Pokemon user, Pokemon target, Action action, int duration) {
+        VolatileStatus volatileStatus = new VolatileStatus(this, action, duration);
+        target.addVolatileStatus(volatileStatus);
     }
 
-    protected void apply(Pokemon user, Pokemon target, Move move) {
-        this.apply(user, target, this.DURATION);
+    protected void apply(Pokemon user, Pokemon target, Action action) {
+        this.apply(user, target, action, getDuration(user, target, action));
     }
 
     protected void remove(Pokemon user, Pokemon target, Move move) {

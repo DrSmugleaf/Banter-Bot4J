@@ -1,7 +1,6 @@
 package com.github.drsmugbrain.pokemon;
 
 import com.github.drsmugbrain.pokemon.events.*;
-import javafx.util.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -9,82 +8,108 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Created by DrSmugleaf on 04/06/2017.
+ * Created by DrSmugleaf on 29/09/2017.
  */
 public class Pokemon {
 
+    @Nonnull
+    private final Trainer TRAINER;
+
+    @Nonnull
     private final Pokemons BASE_POKEMON;
+
+    @Nonnull
     private final String NICKNAME;
+
+    @Nonnull
+    private final List<Type> TYPES = new ArrayList<>();
+
+    @Nonnull
     private final Ability ABILITY;
+
+    @Nonnull
     private final Nature NATURE;
-    private int LEVEL;
-    private final List<Type> TYPES;
-    private final Map<Stat, Integer> INDIVIDUAL_VALUES = getDefaultIndividualValues();
-    private final Map<Stat, Integer> EFFORT_VALUES = getDefaultEffortValues();
-    private final Map<IStat, Stage> STAT_STAGES = getDefaultStatStages();
-    private int currentHP;
-    private final Map<BaseVolatileStatus, VolatileStatus> VOLATILE_STATUSES = new LinkedHashMap<>();
-    private final List<Pokemon> damagedThisTurnBy = new ArrayList<>();
-    private final Gender GENDER;
+
+    @Nullable
     private Item item;
-    private List<Move> MOVES;
-    private List<Move> VALID_MOVES;
-    private double stabMultiplier = 1.5;
-    private double damageMultiplier = 1;
-    private boolean canAttackThisTurn = true;
-    private boolean canSwitch = true;
-    private Action action = null;
-    private Status status = null;
+
+    @Nonnull
+    private final Gender GENDER;
+
+    private int LEVEL;
+
+    @Nonnull
+    private final Map<Stat, Integer> INDIVIDUAL_VALUES = getDefaultIndividualValues();
+
+    @Nonnull
+    private final Map<Stat, Integer> EFFORT_VALUES = getDefaultEffortValues();
+
+    @Nonnull
+    private final Map<IStat, Stage> STAT_STAGES = getDefaultStatStages();
+
+    @Nonnull
+    private final Map<IStat, Map<IBattle, Double>> STAT_MODIFIERS = getDefaultStatModifiers();
+
+    @Nonnull
     private CriticalHitStage criticalHitStage = CriticalHitStage.ZERO;
-    private boolean damagedThisTurn = false;
-    private double weight;
-    private boolean berryUsed = false;
-    private int bideDamageTaken = 0;
-    private Pokemon bideTarget = null;
-    private Pair<Pokemon, Move> lastTarget = new Pair<>(null, null);
-    private Trainer trainer = null;
-    private boolean fainted = false;
-    private List<Action> hitBy = new ArrayList<>();
-    private boolean movedThisTurn = false;
+
+    private int hp = this.getStat(Stat.HP);
+
+    @Nonnull
+    private final Map<BaseVolatileStatus, VolatileStatus> VOLATILE_STATUSES = new LinkedHashMap<>();
+
+    @Nonnull
+    private final List<Move> MOVES = new ArrayList<>();
+
+    @Nonnull
+    private final List<BaseMove> VALID_MOVES = new ArrayList<>();
+
+    @Nullable
+    private Action action = null;
+
+    @Nullable
+    private Status status = null;
+
     private boolean abilitySuppressed = false;
+
+    private Pokemon damagedThisTurn = null;
+
+    private double weight;
+
+    private final List<Tag> TAGS = new ArrayList<>();
+
     private int toxicN = 1;
-    private Map<IStat, Map<IBattle, Double>> STAT_MODIFIERS = new HashMap<>();
 
-    public Pokemon(@Nonnull Pokemons basePokemon, @Nonnull Item item, @Nonnull Nature nature, @Nonnull Ability ability, @Nullable Gender gender, int level, @Nonnull Map<Stat, Integer> individualValues, @Nonnull Map<Stat, Integer> effortValues, @Nonnull List<Move> moves) {
-        this.BASE_POKEMON = basePokemon;
-        this.NICKNAME = basePokemon.getName();
+    protected Pokemon(
+            @Nonnull Trainer trainer,
+            @Nonnull Pokemons basePokemon,
+            @Nonnull String nickname,
+            @Nonnull Ability ability,
+            @Nullable Item item,
+            @Nonnull Nature nature,
+            @Nonnull Gender gender,
+            @Nonnull Integer level,
+            @Nonnull Map<Stat, Integer> individualValues,
+            @Nonnull Map<Stat, Integer> effortValues,
+            @Nonnull List<Move> moves
+    ) {
+        TRAINER = trainer;
+        BASE_POKEMON = basePokemon;
+        NICKNAME = nickname;
+        ABILITY = ability;
         this.item = item;
-        this.ABILITY = ability;
-        this.NATURE = nature;
-        if (gender == null) {
-            this.GENDER = Gender.getRandomGender();
-        } else {
-            this.GENDER = gender;
-        }
-
-        this.MOVES = moves;
-        this.VALID_MOVES = moves;
-
-        this.LEVEL = level;
-
-        this.TYPES = basePokemon.getTypes();
-
-        this.INDIVIDUAL_VALUES.putAll(individualValues);
-        this.EFFORT_VALUES.putAll(effortValues);
-        this.currentHP = this.getStat(Stat.HP);
-
-        for (Stat stat : Stat.values()) {
-            this.STAT_MODIFIERS.put(stat, new HashMap<>());
-        }
-
-        for (BattleStat battleStat : BattleStat.values()) {
-            this.STAT_MODIFIERS.put(battleStat, new HashMap<>());
-        }
+        NATURE = nature;
+        GENDER = gender;
+        LEVEL = level;
+        INDIVIDUAL_VALUES.putAll(individualValues);
+        EFFORT_VALUES.putAll(effortValues);
+        MOVES.addAll(moves);
+        weight = basePokemon.getWeight();
     }
 
     @Nonnull
     private static Map<Stat, Integer> getDefaultIndividualValues() {
-        Map<Stat, Integer> individualValues = new HashMap<>();
+        Map<Stat, Integer> individualValues = new EnumMap<>(Stat.class);
 
         for (Stat stat : Stat.values()) {
             individualValues.put(stat, 31);
@@ -95,7 +120,7 @@ public class Pokemon {
 
     @Nonnull
     private static Map<Stat, Integer> getDefaultEffortValues() {
-        Map<Stat, Integer> effortValues = new HashMap<>();
+        Map<Stat, Integer> effortValues = new EnumMap<>(Stat.class);
 
         for (Stat stat : Stat.values()) {
             effortValues.put(stat, 0);
@@ -119,73 +144,124 @@ public class Pokemon {
         return statStages;
     }
 
-    @Override
-    public String toString() {
-        return this.getName();
+    @Nonnull
+    private static Map<IStat, Map<IBattle, Double>> getDefaultStatModifiers() {
+        Map<IStat, Map<IBattle, Double>> statModifiers = new HashMap<>();
+
+        for (Stat stat : Stat.values()) {
+            statModifiers.put(stat, new HashMap<>());
+        }
+
+        for (BattleStat battleStat : BattleStat.values()) {
+            statModifiers.put(battleStat, new HashMap<>());
+        }
+
+        return statModifiers;
     }
 
+    @Nonnull
     public String export() {
         String string = "";
 
-        String name = this.getName();
-        String item = this.getItem() != null ? this.getItem().getName() : null;
-        String ability = this.getAbility().getName();
+        string = string.concat(
+                String.format(
+                        "%s @ %s\n" +
+                        "Ability: %s\n" +
+                        "EVs: %d HP / %d Atk / %d Def / %d SpA / %d SpD / %d Spe\n" +
+                        "%s Nature",
+                        BASE_POKEMON.getName(), item, ABILITY.getName(),
+                        EFFORT_VALUES.get(Stat.HP),
+                        EFFORT_VALUES.get(Stat.ATTACK),
+                        EFFORT_VALUES.get(Stat.DEFENSE),
+                        EFFORT_VALUES.get(Stat.SPECIAL_ATTACK),
+                        EFFORT_VALUES.get(Stat.SPECIAL_DEFENSE),
+                        EFFORT_VALUES.get(Stat.SPEED),
+                        NATURE.getName()
+                )
+        );
 
-        string = string.concat(String.format("%s @ %s" +
-                "\nAbility: %s" +
-                "\nEVs: %d HP / %d Atk / %d Def / %d SpA / %d SpD / %d Spe" +
-                "\n%s Nature",
-                name, item, ability,
-                this.getEffortValue(Stat.HP),
-                this.getEffortValue(Stat.ATTACK),
-                this.getEffortValue(Stat.DEFENSE),
-                this.getEffortValue(Stat.SPECIAL_ATTACK),
-                this.getEffortValue(Stat.SPECIAL_DEFENSE),
-                this.getEffortValue(Stat.SPEED),
-                this.getNature().getName()
-        ));
-
-        for (Move move : this.MOVES) {
+        for (Move move : MOVES) {
             string = string.concat(String.format("\n- %s", move.getBaseMove().getName()));
         }
 
         return string;
     }
 
+    @Nonnull
+    public Trainer getTrainer() {
+        return TRAINER;
+    }
+
+    @Nonnull
+    public Battle getBattle() {
+        return TRAINER.getBattle();
+    }
+
+    @Nonnull
     public Pokemons getBasePokemon() {
-        return this.BASE_POKEMON;
+        return BASE_POKEMON;
     }
 
     @Nonnull
     public String getName() {
-        return this.BASE_POKEMON.getName();
+        return BASE_POKEMON.getName();
     }
 
     @Nonnull
     public String getNickname() {
-        return this.NICKNAME;
+        return NICKNAME;
+    }
+
+    @Nonnull
+    public List<Type> getTypes() {
+        return new ArrayList<>(TYPES);
+    }
+
+    @Nonnull
+    public boolean isType(@Nonnull Type... types) {
+        for (Type type : types) {
+            if (!TYPES.contains(type)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    protected void setTypes(@Nonnull Collection<Type> types) {
+        TYPES.clear();
+        TYPES.addAll(types);
+    }
+
+    protected void setTypes(@Nonnull Type... types) {
+        setTypes(Arrays.asList(types));
     }
 
     @Nonnull
     public Ability getAbility() {
-        return this.ABILITY;
+        return ABILITY;
+    }
+
+    @Nonnull
+    public Nature getNature() {
+        return NATURE;
     }
 
     @Nullable
     public Item getItem() {
-        return this.item;
+        return item;
     }
 
     protected void setItem(@Nonnull Item item) {
         this.item = item;
     }
 
-    public boolean hasItem() {
-        return this.item != null;
+    protected boolean hasItem() {
+        return item != null;
     }
 
-    public boolean hasItem(Item item) {
-        return this.item.equals(item);
+    protected boolean hasItem(@Nonnull Item item) {
+        return this.item == item;
     }
 
     @Nullable
@@ -195,558 +271,347 @@ public class Pokemon {
         return item;
     }
 
-    protected void stealItem(Pokemon thief) {
+    protected void stealItem(@Nonnull Pokemon thief) {
         Item item = this.removeItem();
+
+        if (item == null) {
+            return;
+        }
+
         thief.setItem(item);
     }
 
     @Nonnull
-    public Nature getNature() {
-        return this.NATURE;
+    public Gender getGender() {
+        return GENDER;
     }
 
     @Nonnull
-    public List<Move> getMoves() {
-        return this.MOVES;
+    public Integer getLevel() {
+        return LEVEL;
+    }
+
+    protected void setLevel(int level) {
+        LEVEL = level;
     }
 
     @Nonnull
-    public Move getMove(BaseMove baseMove) {
-        for (Move move : this.MOVES) {
-            if (move.getBaseMove() == baseMove) {
-                return move;
-            }
+    public Map<Stat, Integer> getStats() {
+        Map<Stat, Integer> stats = new EnumMap<>(Stat.class);
+
+        for (Stat stat : Stat.values()) {
+            stats.put(stat, getCurrentStat(stat));
         }
 
-        throw new NullPointerException("Pokemon doesn't have move " + baseMove.getName());
+        return stats;
     }
 
     @Nonnull
-    public Move getMove(String moveName) {
-        moveName = moveName.toLowerCase();
-        for (Move move : this.MOVES) {
-            if (Objects.equals(move.getBaseMove().getName().toLowerCase(), moveName)) {
-                return move;
+    public Integer getIndividualValue(@Nonnull Stat stat) {
+        return INDIVIDUAL_VALUES.get(stat);
+    }
+
+    @Nonnull
+    public Integer getEffortValue(@Nonnull Stat stat) {
+        return EFFORT_VALUES.get(stat);
+    }
+
+    @Nonnull
+    public Map<IStat, Stage> getStatStages() {
+        return new HashMap<>(STAT_STAGES);
+    }
+
+    @Nonnull
+    public Stage getStatStage(@Nonnull IStat stat) {
+        return STAT_STAGES.get(stat);
+    }
+
+
+    protected void setStatStage(@Nonnull IStat stat, int amount) {
+        Stage newStage = Stage.getStage(amount);
+        STAT_STAGES.put(stat, newStage);
+    }
+
+    protected void setStatStage(@Nonnull Map<IStat, Stage> stages) {
+        STAT_STAGES.putAll(stages);
+    }
+
+    protected void raiseStatStage(@Nonnull IStat stat, int amount) {
+        int currentStage = STAT_STAGES.get(stat).getStage();
+        Stage newStage = Stage.getStage(currentStage + amount);
+        STAT_STAGES.put(stat, newStage);
+    }
+
+    protected void lowerStatStage(@Nonnull IStat stat, int amount) {
+        raiseStatStage(stat, -amount);
+    }
+
+    protected void resetStatStages() {
+        STAT_STAGES.putAll(getDefaultStatStages());
+    }
+
+    protected void resetLoweredStatStages() {
+        for (Map.Entry<IStat, Stage> iStatStageEntry : STAT_STAGES.entrySet()) {
+            IStat stat = iStatStageEntry.getKey();
+            Stage stage = iStatStageEntry.getValue();
+
+            if (stage.getStage() < Stage.ZERO.getStage()) {
+                STAT_STAGES.put(stat, Stage.ZERO);
             }
         }
-
-        throw new NullPointerException("Pokemon doesn't have move " + moveName);
     }
 
-    protected void changeMoves(List<Move> moves) {
-        this.MOVES = moves;
+    @Nonnull
+    public Integer getBaseStat(@Nonnull Stat stat) {
+        return BASE_POKEMON.getStats().get(stat);
     }
 
-    public boolean hasOneMove(Move... move) {
-        return Collections.disjoint(this.MOVES, Arrays.asList(move));
+    public int getStat(@Nonnull Stat stat) {
+        return stat.calculate(this, stat, TRAINER.getBattle().getGeneration(), STAT_STAGES.get(stat).getStatMultiplier(stat));
     }
 
-    public boolean hasOneMove(BaseMove... baseMoves) {
-        List<BaseMove> baseMoveList = Arrays.asList(baseMoves);
-        for (Move move : this.MOVES) {
-            if (baseMoveList.contains(move.getBaseMove())) {
-                return true;
-            }
+    public int getStatWithoutStages(@Nonnull Stat stat) {
+        return stat.calculateWithoutStages(this, stat, TRAINER.getBattle().getGeneration());
+    }
+
+    public int getCurrentStat(@Nonnull Stat stat) {
+        if (stat == Stat.HP) {
+            return hp;
+        }
+
+        return getStat(stat);
+    }
+
+    protected void raiseCriticalHitStage(int amount) {
+        int currentStage = criticalHitStage.getStage();
+        CriticalHitStage newStage = CriticalHitStage.getStage(currentStage + amount);
+        criticalHitStage = newStage;
+    }
+
+    @Nullable
+    public Action getAction() {
+        return action;
+    }
+
+    protected void setAction(@Nonnull Action action) {
+        this.action = action;
+    }
+
+    public boolean getAbilitySuppressed() {
+        return abilitySuppressed;
+    }
+
+    protected void setAbilitySuppressed(boolean bool) {
+        this.abilitySuppressed = bool;
+    }
+
+    protected void kill() {
+        TRAINER.removeActivePokemon(this);
+        Event event = new PokemonDeathEvent(this);
+        EventDispatcher.dispatch(event);
+    }
+
+    protected int damage(@Nonnull Action action) {
+        damagedThisTurn = action.getAttacker();
+
+        int amount = action.getMove().getBaseMove().getDamage(action.getAttacker(), action.getDefender(), action);
+
+        action.setDamage(amount);
+        damage(amount);
+
+        return amount;
+    }
+
+    protected void damage(int amount) {
+        if (hp - amount < 0) {
+            amount = hp;
+        }
+
+        hp -= amount;
+
+        Event event = new PokemonDamagedEvent(this, amount);
+        EventDispatcher.dispatch(event);
+
+        if (hp <= 0) {
+            kill();
+        }
+    }
+
+    protected void damage(double percentage) {
+        int maxHP = getStat(Stat.HP);
+        int amount = (int) (maxHP * (percentage / 100.0d));
+        damage(amount);
+    }
+
+    protected void heal(int amount) {
+        int maxHP = getStat(Stat.HP);
+
+        if (hp + amount > maxHP) {
+            amount = maxHP - hp;
+        }
+
+        hp += amount;
+
+        Event event = new PokemonHealedEvent(this, amount);
+        EventDispatcher.dispatch(event);
+    }
+
+    protected void heal(double percentage) {
+        int maxHP = getStat(Stat.HP);
+        int healedHP = (int) (maxHP * (percentage / 100.0d));
+        this.heal(healedHP);
+    }
+
+    @Nullable
+    public Status getStatus() {
+        return status;
+    }
+
+    protected void resetStatus() {
+        status = null;
+    }
+
+    protected void setStatus(@Nonnull Status status) {
+        this.status = status;
+    }
+
+    protected boolean hasAllMoves(BaseMove... moves) {
+        return MOVES.containsAll(Arrays.asList(moves));
+    }
+
+    protected boolean hasOneMove(BaseMove... moves) {
+        List<BaseMove> baseMoveList = Arrays.asList(moves);
+
+        for (Move move : MOVES) {
+            if (baseMoveList.contains(move));
         }
 
         return false;
     }
 
     public boolean hasOneMove(String moveName) {
-        moveName = moveName.toLowerCase();
-        for (Move move : this.MOVES) {
-            if (Objects.equals(move.getBaseMove().getName().toLowerCase(), moveName)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public boolean hasAllMoves(BaseMove... baseMoves) {
-        return this.MOVES.containsAll(Arrays.asList(baseMoves));
+        BaseMove baseMove = BaseMove.getMove(moveName);
+        return hasOneMove(baseMove);
     }
 
     @Nonnull
-    public List<Move> getValidMoves() {
-        return this.VALID_MOVES;
-    }
-
-    public void setValidMoves(BaseMove... baseMoves) {
-        this.VALID_MOVES.clear();
-        for (BaseMove baseMove : baseMoves) {
-            this.VALID_MOVES.add(this.getMove(baseMove));
-        }
-    }
-
-    public void setValidMoves(Move... move) {
-        this.VALID_MOVES.clear();
-        Collections.addAll(this.VALID_MOVES, move);
-    }
-
-    @Nonnull
-    public List<Type> getTypes() {
-        return this.TYPES;
-    }
-
-    protected boolean isType(Type... types) {
-        for (Type type : types) {
-            if (!this.TYPES.contains(type)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    protected void setTypes(List<Type> types) {
-        this.TYPES.clear();
-        this.TYPES.addAll(types);
-    }
-
-    protected void setTypes(Type... types) {
-        this.TYPES.clear();
-        Collections.addAll(this.TYPES, types);
-    }
-
-    @Nonnull
-    public String[] getTypesString() {
-        List<String> types = new ArrayList<>();
-
-        for (Type type : this.TYPES) {
-            types.add(type.getName());
-        }
-
-        return types.toArray(new String[]{});
-    }
-
-    public int getLevel() {
-        return this.LEVEL;
-    }
-
-    protected void setLevel(int level) {
-        this.LEVEL = level;
-    }
-
-    @Nonnull
-    public Map<Stat, Integer> getStats() {
-        Map<Stat, Integer> stats = new LinkedHashMap<>();
-
-        for (int i = 0; i < Stat.values().length; i++) {
-            Stat stat = Stat.values()[i];
-            stats.put(stat, this.getStat(stat));
-        }
-
-        return stats;
-    }
-
-    public String getStatsStringWithoutHP() {
-        Map<Stat, Integer> stats = this.getStats();
-        stats.remove(Stat.HP);
-
-        return stats
-                .entrySet()
-                .stream()
-                .map((entry) -> entry.getValue() + " " + entry.getKey().getAbbreviation())
-                .collect(Collectors.joining(" / "));
-    }
-
-    @Nonnull
-    public Map<Stat, Integer> getCurrentStats() {
-        Map<Stat, Integer> stats = new HashMap<>();
-
-        for (int i = 0; i < Stat.values().length; i++) {
-            Stat stat = Stat.values()[i];
-            stats.put(stat, this.getCurrentStat(stat));
-        }
-
-        return stats;
-    }
-
-    public int getBaseStat(@Nonnull Stat stat) {
-        return this.BASE_POKEMON.getStats().get(stat);
-    }
-
-    public int getStat(@Nonnull Stat stat) {
-        return stat.calculate(this, stat, this.getBattle().getGeneration(), this.getStatStageMultiplier(stat));
-    }
-
-    public int getStatWithoutStages(@Nonnull Stat stat) {
-        return stat.calculateWithoutStages(this, stat, this.getBattle().getGeneration());
-    }
-
-    public int getCurrentStat(@Nonnull Stat stat) {
-        if (stat == Stat.HP) {
-            return this.currentHP;
-        }
-
-        return this.getStat(stat);
-    }
-
-    @Nonnull
-    public Map<Stat, Integer> getIndividualValues() {
-        return this.INDIVIDUAL_VALUES;
-    }
-
-    public int getIndividualValue(@Nonnull Stat stat) {
-        return this.INDIVIDUAL_VALUES.get(stat);
-    }
-
-    @Nonnull
-    public Map<Stat, Integer> getEffortValues() {
-        return this.EFFORT_VALUES;
-    }
-
-    public int getEffortValue(@Nonnull Stat stat) {
-        return this.EFFORT_VALUES.get(stat);
-    }
-
-    public Map<IStat, Stage> getStatStages() {
-        return this.STAT_STAGES;
-    }
-
-    public Stage getStatStage(@Nonnull IStat stat) {
-        return this.STAT_STAGES.get(stat);
-    }
-
-    public double getStatStageMultiplier(@Nonnull IStat stat) {
-        return this.STAT_STAGES.get(stat).getStatMultiplier(stat);
-    }
-
-    protected void setStatStage(@Nonnull IStat stat, @Nonnull Stage stage) {
-        this.STAT_STAGES.put(stat, stage);
-    }
-
-    protected void setStatStage(Map<IStat, Stage> stages) {
-        this.STAT_STAGES.putAll(stages);
-    }
-
-    protected void raiseStatStage(@Nonnull IStat stat, int amount) {
-        this.STAT_STAGES.put(stat, Stage.getStage(this.STAT_STAGES.get(stat).getStage() + amount));
-    }
-
-    protected void lowerStatStage(@Nonnull IStat stat, int amount) {
-        this.raiseStatStage(stat, -amount);
-    }
-
-    protected void resetStatStages() {
-        this.STAT_STAGES.putAll(Pokemon.getDefaultStatStages());
-    }
-
-    protected double getStabMultiplier(Move move) {
-        if (this.TYPES.contains(move.getType())) {
-            return this.stabMultiplier;
-        } else {
-            return 1.0;
-        }
-    }
-
-    protected void changeStabMultiplier(double multiplier) {
-        this.stabMultiplier = multiplier;
-    }
-
-    protected void resetStabMultiplier() {
-        this.stabMultiplier = 1.5;
-    }
-
-    protected double getDamageMultiplier() {
-        return this.damageMultiplier;
-    }
-
-    protected void changeDamageMultiplier(double multiplier) {
-        this.damageMultiplier = multiplier;
-    }
-
-    protected void incrementDamageMultiplier(double amount) {
-        this.damageMultiplier += amount;
-    }
-
-    protected void decreaseDamageMultiplier(double amount) {
-        this.damageMultiplier -= amount;
-    }
-
-    protected void resetDamageMultiplier() {
-        this.damageMultiplier = 1;
-    }
-
-    protected void setCanSwitch(boolean bool) {
-        this.canSwitch = bool;
+    public List<Move> getMoves() {
+        return new ArrayList<>(MOVES);
     }
 
     @Nullable
-    public Action getAction() {
-        return this.action;
+    public Move getMove(String moveName) {
+        moveName = moveName.toLowerCase();
+
+        for (Move move : MOVES) {
+            if (Objects.equals(move.getBaseMove().getName(), moveName)) {
+                return move;
+            }
+        }
+
+        return null;
     }
 
-    protected void setTarget(@Nonnull Pokemon target) {
-        action.setDefender(target);
+    @Nonnull
+    public List<BaseMove> getValidMoves() {
+        return new ArrayList<>(VALID_MOVES);
     }
 
-    protected void setAction(@Nonnull Action action) {
-        this.action = action;
-        this.lastTarget = new Pair<>(action.getDefender(), action);
-    }
-
-    protected void resetAction() {
-        this.action = null;
+    protected void setValidMoves(@Nonnull BaseMove... moves) {
+        VALID_MOVES.clear();
+        VALID_MOVES.addAll(Arrays.asList(moves));
     }
 
     protected void executeTurn() {
-        if (this.getCurrentStat(Stat.HP) <= 0) {
+        if (hp <= 0) {
             return;
         }
-        this.action.tryUse();
-        this.movedThisTurn = true;
+
+        if (action != null) {
+            action.tryUse();
+        }
     }
 
     protected void finishTurn() {
-        this.action = null;
-        this.movedThisTurn = false;
-        this.damagedThisTurn = false;
-        this.damagedThisTurnBy.clear();
-        this.canAttackThisTurn = true;
-        this.VALID_MOVES = this.MOVES;
-    }
-
-    public boolean isFainted() {
-        return this.fainted;
-    }
-
-    protected void kill() {
-        this.fainted = true;
-        this.getTrainer().removeActivePokemon(this);
-        PokemonDeathEvent event = new PokemonDeathEvent(this);
-        EventDispatcher.dispatch(event);
-    }
-
-    protected void damage(int amount) {
-        if (currentHP - amount < 0) {
-            amount = currentHP;
-        }
-
-        currentHP -= amount;
-        damagedThisTurn = true;
-
-        PokemonDamagedEvent event = new PokemonDamagedEvent(this, amount);
-        EventDispatcher.dispatch(event);
-
-        if (currentHP <= 0) {
-            this.kill();
+        action = null;
+        damagedThisTurn = null;
+        VALID_MOVES.clear();
+        for (Move move : MOVES) {
+            VALID_MOVES.add(move.getBaseMove());
         }
     }
 
-    protected void damage(double percentage) {
-        int maxHP = this.getStat(Stat.HP);
-        int damage = (int) (maxHP * (percentage / 100.0f));
-        this.damage(damage);
-    }
-
-    protected int damage(Move move, Pokemon attacker) {
-        int amount = move.getBaseMove().getDamage(attacker, this, move);
-        hitBy.add(new Action(move, attacker, this, amount, false));
-        this.damage(amount);
-        return amount;
-    }
-
-    protected void heal(int amount) {
-        int maxHP = this.getStat(Stat.HP);
-
-        if (currentHP + amount > maxHP) {
-            amount = maxHP - currentHP;
+    protected void addVolatileStatus(@Nonnull Collection<VolatileStatus> statuses) {
+        for (VolatileStatus volatileStatus : statuses) {
+            VOLATILE_STATUSES.put(volatileStatus.getBaseVolatileStatus(), volatileStatus);
         }
-
-        currentHP += amount;
-
-        PokemonHealedEvent event = new PokemonHealedEvent(this, amount);
-        EventDispatcher.dispatch(event);
     }
 
-    protected void heal(double percentage) {
-        int maxHP = this.getStat(Stat.HP);
-        int healedHP = (int) (maxHP * (percentage / 100.0f));
-        this.heal(healedHP);
+    protected void addVolatileStatus(@Nonnull VolatileStatus... statuses) {
+        addVolatileStatus(Arrays.asList(statuses));
     }
 
     @Nullable
-    protected Status getStatus() {
-        return this.status;
-    }
-
-    protected void setStatus(Status status) {
-        String message = Messages.STATUS.getMessage(this, null, null, status, null, null);
-        BattleMessageEvent event = new BattleMessageEvent(this.trainer.getBattle(), message);
-        EventDispatcher.dispatch(event);
-
-        this.status = status;
-    }
-
-    protected void resetStatus() {
-        this.status = null;
-    }
-
-    protected void addVolatileStatus(VolatileStatus status) {
-        this.VOLATILE_STATUSES.put(status.getBaseVolatileStatus(), status);
-    }
-
-    protected void addVolatileStatus(Collection<VolatileStatus> statuses) {
-        for (VolatileStatus volatileStatus : statuses) {
-            this.addVolatileStatus(volatileStatus);
-        }
+    protected VolatileStatus getVolatileStatus(@Nonnull BaseVolatileStatus status) {
+        return VOLATILE_STATUSES.get(status);
     }
 
     @Nonnull
-    protected Collection<VolatileStatus> getVolatileStatuses() {
-        return this.VOLATILE_STATUSES.values();
+    public Map<BaseVolatileStatus, VolatileStatus> getVolatileStatuses() {
+        return new LinkedHashMap<>(VOLATILE_STATUSES);
     }
 
-    protected VolatileStatus getVolatileStatus(BaseVolatileStatus status) {
-        return this.VOLATILE_STATUSES.get(status);
+    protected boolean hasVolatileStatus(@Nonnull BaseVolatileStatus status) {
+        return VOLATILE_STATUSES.containsKey(status);
     }
 
-    protected boolean hasVolatileStatus(BaseVolatileStatus status) {
-        return this.VOLATILE_STATUSES.containsKey(status);
-    }
-
-    protected void removeVolatileStatus(BaseVolatileStatus... statuses) {
-        for (BaseVolatileStatus status : statuses) {
-            this.VOLATILE_STATUSES.remove(status);
+    protected void removeVolatileStatus(@Nonnull BaseVolatileStatus... statuses) {
+        for (BaseVolatileStatus baseVolatileStatus : statuses) {
+            VOLATILE_STATUSES.remove(baseVolatileStatus);
         }
-    }
-
-    protected void resetLoweredStats() {
-        for (IStat stat : this.STAT_STAGES.keySet()) {
-            if (this.STAT_STAGES.get(stat).getStage() < Stage.ZERO.getStage()) {
-                this.STAT_STAGES.put(stat, Stage.ZERO);
-            }
-        }
-    }
-
-    protected CriticalHitStage getCriticalHitStage() {
-        return this.criticalHitStage;
-    }
-
-    protected void setCriticalHitStage(CriticalHitStage stage) {
-        this.criticalHitStage = stage;
-    }
-
-    protected void raiseCriticalHitStage(int amount) {
-        this.criticalHitStage = CriticalHitStage.getStage(this.criticalHitStage.getStage() + amount);
-    }
-
-    protected void lowerCriticalHitStage(int amount) {
-        this.raiseCriticalHitStage(-amount);
-    }
-
-    protected void resetCriticalHitStage() {
-        this.criticalHitStage = CriticalHitStage.ZERO;
     }
 
     protected boolean isDamagedThisTurn() {
-        return this.damagedThisTurn;
+        return damagedThisTurn != null;
     }
 
-    protected boolean isDamagedThisTurnBy(Pokemon pokemon) {
-        return this.damagedThisTurnBy.contains(pokemon);
+    protected boolean isDamagedThisTurnBy(@Nonnull Pokemon pokemon) {
+        return damagedThisTurn == pokemon;
     }
 
-    @Nonnull
-    public Gender getGender() {
-        return this.GENDER;
-    }
-
-    public double getWeight() {
-        return this.weight;
-    }
-
-    protected void setWeight(int weight) {
-        this.weight = weight;
+    protected double getWeight() {
+        return weight;
     }
 
     protected void setWeight(double weight) {
-        this.weight = (int) (this.weight * (weight / 100.0f));
+        this.weight = weight;
     }
 
-    protected void resetWeight() {
-        this.weight = this.BASE_POKEMON.getWeight();
+    protected double getStabMultiplier(@Nonnull Move move) {
+        return 1.0;
     }
 
-    protected boolean isBerryUsed() {
-        return this.berryUsed;
-    }
-
-    protected void setBerryUsed(boolean bool) {
-        this.berryUsed = bool;
-    }
-
-    protected void resetBerryUsed() {
-        this.berryUsed = false;
-    }
-
-    protected int getBideDamageTaken() {
-        return this.bideDamageTaken;
-    }
-
-    protected void setBideDamageTaken(int amount) {
-        this.bideDamageTaken = amount;
-    }
-
-    protected void addBideDamageTaken(int amount) {
-        this.bideDamageTaken += amount;
-    }
-
-    protected void resetBideDamageTaken() {
-        this.bideDamageTaken = 0;
-    }
-
-    protected Pokemon getBideTarget() {
-        return this.bideTarget;
-    }
-
-    protected void setBideTarget(Pokemon pokemon) {
-        this.bideTarget = pokemon;
-    }
-
-    protected boolean getCanAttackThisTurn() {
-        return this.canAttackThisTurn;
-    }
-
-    protected void setCanAttackThisTurn(boolean bool) {
-        this.canAttackThisTurn = bool;
-    }
-
-    protected void resetCanAttackThisTurn() {
-        this.canAttackThisTurn = true;
+    @Nullable
+    protected Action getLastAction() {
+        return TRAINER.getBattle().getLastAction(this);
     }
 
     @Nonnull
-    protected Pair<Pokemon, Move> getLastTarget() {
-        return this.lastTarget;
-    }
-
-    protected double getAccuracy() {
-        return this.STAT_STAGES.get(BattleStat.ACCURACY).getAccuracyMultiplier();
-    }
-
-    protected double getEvasion() {
-        return this.STAT_STAGES.get(BattleStat.EVASION).getEvasionMultiplier();
+    protected List<Action> getHitBy() {
+        return TRAINER.getBattle().getHitBy(this);
     }
 
     @Nullable
-    public Trainer getTrainer() {
-        return this.trainer;
+    protected Action getLastHitBy() {
+        return TRAINER.getBattle().getLastHitBy(this);
     }
 
-    @Nullable
-    public Battle getBattle() {
-        return this.trainer.getBattle();
-    }
-
-    protected void setTrainer(Trainer trainer) {
-        this.trainer = trainer;
+    protected boolean movedThisTurn() {
+        return TRAINER.getBattle().movedThisTurn(this);
     }
 
     protected boolean isImmune(@Nonnull Move move) {
-        for (Type type : this.TYPES) {
+        for (Type type : TYPES) {
             if (type.getImmunities().contains(move.getType())) {
                 return true;
             }
@@ -755,68 +620,36 @@ public class Pokemon {
         return false;
     }
 
-    @Nonnull
-    protected List<Action> getHitBy() {
-        return this.hitBy;
+    protected void addTag(@Nonnull Tag tag) {
+        TAGS.add(tag);
     }
 
-    @Nullable
-    protected Action getLastHitBy() {
-        if (hitBy.size() == 0) {
-            return null;
-        }
-
-        return hitBy.get(hitBy.size() - 1);
+    protected boolean hasTag(@Nonnull Tag tag) {
+        return TAGS.contains(tag);
     }
 
-    protected boolean movedThisTurn() {
-        return this.movedThisTurn;
+    protected double getAccuracy() {
+        return STAT_STAGES.get(BattleStat.ACCURACY).getAccuracyMultiplier();
     }
 
-    public boolean isAbilitySuppressed() {
-        return this.abilitySuppressed;
+    protected double getEvasion() {
+        return STAT_STAGES.get(BattleStat.EVASION).getEvasionMultiplier();
     }
 
-    protected void setAbilitySuppressed(boolean bool) {
-        this.abilitySuppressed = bool;
+    public boolean isFainted() {
+        return hp <= 0;
     }
 
-    protected int getToxicN() {
-        return this.toxicN;
-    }
-
-    protected void increaseToxicN() {
-        this.toxicN++;
-    }
-
-    protected void resetToxicN() {
-        this.toxicN = 1;
-    }
-
-    protected void addStatModifier(@Nonnull IStat stat, @Nonnull IBattle source, double modifier) {
-        this.STAT_MODIFIERS.get(stat).put(source, modifier);
-    }
-
-    protected double getStatModifier(IStat stat) {
-        double modifier = 1.0;
-        for (Double statModifier : this.STAT_MODIFIERS.get(stat).values()) {
-            modifier *= statModifier;
-        }
-        return modifier;
-    }
-
-    protected void removeStatModifier(IBattle... sources) {
-        for (Map<IBattle, Double> iBattleDoubleMap : this.STAT_MODIFIERS.values()) {
-            for (IBattle source : sources) {
-                iBattleDoubleMap.remove(source);
-            }
+    protected void retarget(@Nonnull Pokemon pokemon) {
+        if (action != null) {
+            action.setDefender(pokemon);
         }
     }
 
     @Nullable
     protected Pokemon getEnemyOppositePokemon() {
-        int index = this.trainer.getActivePokemons().indexOf(this);
-        Trainer oppositeTrainer = this.trainer.getBattle().getOppositeTrainer(this.trainer);
+        int index = TRAINER.getActivePokemons().indexOf(this);
+        Trainer oppositeTrainer = TRAINER.getBattle().getOppositeTrainer(TRAINER);
         Pokemon oppositePokemon = null;
 
         while (oppositePokemon == null && index >= 0) {
@@ -829,13 +662,60 @@ public class Pokemon {
 
     @Nullable
     protected Pokemon getRandomActiveEnemyPokemon() {
-        Trainer oppositeTrainer = this.trainer.getBattle().getOppositeTrainer(this.trainer);
+        Trainer oppositeTrainer = TRAINER.getBattle().getOppositeTrainer(TRAINER);
         return oppositeTrainer.getRandomActivePokemon();
     }
 
     @Nullable
     protected Pokemon getRandomAdjacentEnemyPokemon() {
-        return this.trainer.getRandomAdjacentEnemyPokemon(this);
+        return TRAINER.getRandomAdjacentEnemyPokemon(this);
+    }
+
+    protected void addStatModifier(@Nonnull IStat stat, @Nonnull IBattle source, double modifier) {
+        STAT_MODIFIERS.get(stat).put(source, modifier);
+    }
+
+    protected void removeStatModifier(@Nonnull IBattle... sources) {
+        for (Map<IBattle, Double> iBattleDoubleMap : STAT_MODIFIERS.values()) {
+            for (IBattle source : sources) {
+                iBattleDoubleMap.remove(source);
+            }
+        }
+    }
+
+    protected int getToxicN() {
+        return toxicN;
+    }
+
+    protected void increaseToxicN() {
+        toxicN++;
+    }
+
+    protected void resetToxicN() {
+        toxicN = 1;
+    }
+
+    @Nonnull
+    public String[] getTypesString() {
+        List<String> types = new ArrayList<>();
+
+        for (Type type : TYPES) {
+            types.add(type.getName());
+        }
+
+        return types.toArray(new String[]{});
+    }
+
+    @Nonnull
+    public String getStatsStringWithoutHP() {
+        Map<Stat, Integer> stats = getStats();
+        stats.remove(Stat.HP);
+
+        return stats
+                .entrySet()
+                .stream()
+                .map((entry) -> entry.getValue() + " " + entry.getKey().getAbbreviation())
+                .collect(Collectors.joining(" / "));
     }
 
 }

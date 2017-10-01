@@ -13,7 +13,7 @@ interface IBattle {
 
     default void onOwnSendBack(@Nonnull Pokemon pokemon) {}
 
-    default void onEnemySendBack(@Nonnull Pokemon pokemon) {}
+    default void onEnemySendBack(@Nonnull Pokemon user, @Nonnull Pokemon enemy) {}
 
     default void onOwnSendOut(@Nonnull Pokemon pokemon) {}
 
@@ -72,6 +72,10 @@ interface IBattle {
     }
 
     default boolean canApplyStatus(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Status status) {
+        return true;
+    }
+
+    default boolean canSwitch(@Nonnull Pokemon pokemon) {
         return true;
     }
 

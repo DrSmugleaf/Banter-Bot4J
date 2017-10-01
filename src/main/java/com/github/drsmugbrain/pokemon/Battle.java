@@ -135,7 +135,8 @@ public class Battle extends Setup {
         }
     }
 
-    public List<Pokemon> getTargetList(Pokemon pokemon) {
+    @Nonnull
+    public List<Pokemon> getTargetList(@Nonnull Pokemon pokemon) {
         List<Pokemon> targets = new ArrayList<>();
 
         for (Trainer trainer : TRAINERS.values()) {
@@ -158,11 +159,63 @@ public class Battle extends Setup {
         return ACTIONS.get(ACTIONS.size() - 1);
     }
 
+    @Nullable
+    protected Action getLastAction(@Nonnull Pokemon pokemon) {
+        for (int i = ACTIONS.size() - 1; i >= 0; i--) {
+            Action currentAction = ACTIONS.get(i);
+            if (currentAction.getAttacker() == pokemon) {
+                return currentAction;
+            }
+        }
+
+        return null;
+    }
+
     @Nonnull
-    protected Trainer getOppositeTrainer(Trainer trainer) {
+    protected Trainer getOppositeTrainer(@Nonnull Trainer trainer) {
         List<Trainer> trainers = new ArrayList<>(TRAINERS.values());
         trainers.remove(trainer);
         return trainers.get(0);
+    }
+
+    @Nonnull
+    protected List<Action> getHitBy(@Nonnull Pokemon pokemon) {
+        List<Action> hitBy = new ArrayList<>();
+
+        for (Action action : ACTIONS) {
+            if (action.getDefender() == pokemon) {
+                hitBy.add(action);
+            }
+        }
+
+        return hitBy;
+    }
+
+    @Nullable
+    protected Action getLastHitBy(@Nonnull Pokemon pokemon) {
+        for (Action action : ACTIONS) {
+            if (action.getDefender() == pokemon) {
+                return action;
+            }
+        }
+
+        return null;
+    }
+
+    protected boolean movedThisTurn(@Nonnull Pokemon pokemon) {
+        for (int i = ACTIONS.size() - 1; i >= 0; i--) {
+            Action currentAction = ACTIONS.get(i);
+
+            if (currentAction.getTurn() != turn) {
+                break;
+            }
+
+            if (currentAction.getAttacker() == pokemon) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

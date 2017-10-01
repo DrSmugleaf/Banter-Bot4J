@@ -1109,7 +1109,7 @@ public enum Pokemons {
         return this.HEIGHT;
     }
 
-    public Pokemons setHeight(double height) {
+    private Pokemons setHeight(double height) {
         this.HEIGHT = HEIGHT;
         return this;
     }
@@ -1118,7 +1118,7 @@ public enum Pokemons {
         return this.SUFFIX;
     }
 
-    public void setSuffix(String suffix) {
+    private void setSuffix(String suffix) {
         this.SUFFIX = suffix;
     }
 

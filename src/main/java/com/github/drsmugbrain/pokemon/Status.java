@@ -133,30 +133,30 @@ public enum Status implements IBattle {
         }
 
         @Override
-        public void onOwnTurnStart(@Nonnull Pokemon pokemon) {
-            Generation generation = pokemon.getBattle().getGeneration();
+        public boolean onOwnAttemptAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+            Generation generation = attacker.getBattle().getGeneration();
 
             switch (generation) {
                 case I:
-                    break;
+                    return true;
                 case II:
                     if (Math.random() < 0.1) {
-                        pokemon.setCanAttackThisTurn(false);
-                        this.remove(pokemon);
+                        this.remove(attacker);
+                        return false;
+                    } else {
+                        return false;
                     }
                 case III:
-                    if (Math.random() < 0.2) {
-                        this.remove(pokemon);
-                    }
-                    break;
                 case IV:
-                    break;
                 case V:
-                    break;
                 case VI:
-                    break;
                 case VII:
-                    break;
+                    if (Math.random() < 0.2) {
+                        this.remove(attacker);
+                        return true;
+                    } else {
+                        return false;
+                    }
                 default:
                     throw new InvalidGenerationException(generation);
             }
@@ -312,8 +312,8 @@ public enum Status implements IBattle {
         }
 
         @Override
-        public void onOwnTurnStart(@Nonnull Pokemon pokemon) {
-            pokemon.setCanAttackThisTurn(false);
+        public boolean onOwnAttemptAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+            return false;
         }
     };
 

@@ -118,6 +118,7 @@ public enum Type {
     private List<Type> WEAK_BY = new ArrayList<>();
     private List<Type> RESISTED_BY = new ArrayList<>();
     private List<Type> IGNORED_BY = new ArrayList<>();
+
     Type(@Nonnull String name) {
         Holder.MAP.put(name.toLowerCase(), this);
         this.NAME = name;
@@ -128,11 +129,11 @@ public enum Type {
             return 0.0;
         }
 
-        if(pokemonType.getWeaknesses().contains(attackType)) {
+        if (pokemonType.getWeaknesses().contains(attackType)) {
             return 2.0;
         }
 
-        if(pokemonType.getResistances().contains(attackType)) {
+        if (pokemonType.getResistances().contains(attackType)) {
             return 0.5;
         }
 

@@ -115,7 +115,8 @@ public class SmogonImporter {
             }
         }
 
-        return new Pokemon(pokemon, item, nature, ability, gender, 100, individualValues, effortValues, moves);
+//        return new Pokemon(pokemon, item, nature, ability, gender, 100, individualValues, effortValues, moves);
+        return null;
     }
 
     public static List<Pokemon> parsePokemons(String export) throws DiscordException {

@@ -24,9 +24,6 @@ public class Trainer extends Player {
 
     public Trainer(@Nonnull Long id, @Nonnull String name, @Nonnull Pokemon... pokemons) {
         super(id, name);
-        for (Pokemon pokemon : pokemons) {
-            pokemon.setTrainer(this);
-        }
         this.POKEMONS.addAll(Arrays.asList(pokemons));
     }
 
@@ -148,7 +145,7 @@ public class Trainer extends Player {
     }
 
     public void addAction(Pokemon pokemon, Move move, Pokemon target) {
-        Action action = new Action(move, pokemon, target);
+        Action action = new Action(move, pokemon, target, battle.getTurn());
         pokemon.setAction(action);
         this.ACTIONS.add(action);
 

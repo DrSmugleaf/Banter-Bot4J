@@ -1,30 +1,36 @@
 package com.github.drsmugbrain.pokemon;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by DrSmugleaf on 03/07/2017.
  */
 public class VolatileStatus {
 
     private final BaseVolatileStatus BASE_VOLATILE_STATUS;
-    private final Pokemon APPLIER;
+    private final Action ACTION;
     private final int DURATION;
 
-    protected VolatileStatus(BaseVolatileStatus baseVolatileStatus, Pokemon applier, int duration) {
-        this.BASE_VOLATILE_STATUS = baseVolatileStatus;
-        this.APPLIER = applier;
-        this.DURATION = duration;
+    protected VolatileStatus(
+            @Nonnull BaseVolatileStatus baseVolatileStatus,
+            @Nonnull Action action,
+            int duration
+    ) {
+        BASE_VOLATILE_STATUS = baseVolatileStatus;
+        ACTION = action;
+        DURATION = duration;
     }
 
     public BaseVolatileStatus getBaseVolatileStatus() {
-        return this.BASE_VOLATILE_STATUS;
+        return BASE_VOLATILE_STATUS;
     }
 
-    public Pokemon getApplier() {
-        return this.APPLIER;
+    public Action getAction() {
+        return ACTION;
     }
 
     public int getDuration() {
-        return this.DURATION;
+        return DURATION;
     }
 
 }

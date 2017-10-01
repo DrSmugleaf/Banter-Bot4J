@@ -4,49 +4,46 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by DrSmugleaf on 16/09/2017.
  */
 public class Action extends Move {
 
+    @Nonnull
     private final Move MOVE;
+
+    @Nonnull
     private final Pokemon ATTACKER;
+
+    @Nonnull
     private Pokemon DEFENDER;
+
+    @Nullable
     private Integer DAMAGE;
+
+    @Nullable
     private Boolean CRITICAL;
+
+    @Nonnull
     private final List<BaseVolatileStatus> ATTACKER_VOLATILE_STATUSES = new ArrayList<>();
+
+    @Nonnull
     private final List<BaseVolatileStatus> DEFENDER_VOLATILE_STATUSES = new ArrayList<>();
 
-    Action(@Nonnull Move move, @Nonnull Pokemon attacker, @Nonnull Pokemon defender) {
+    private final int TURN;
+
+    Action(@Nonnull Move move, @Nonnull Pokemon attacker, @Nonnull Pokemon defender, int turn) {
         super(move.getBaseMove());
 
         MOVE = move;
         ATTACKER = attacker;
         DEFENDER = defender;
 
-        ATTACKER_VOLATILE_STATUSES.addAll(
-                attacker.getVolatileStatuses().stream().map(VolatileStatus::getBaseVolatileStatus).collect(Collectors.toList())
-        );
-        DEFENDER_VOLATILE_STATUSES.addAll(
-                defender.getVolatileStatuses().stream().map(VolatileStatus::getBaseVolatileStatus).collect(Collectors.toList())
-        );
-    }
+        ATTACKER_VOLATILE_STATUSES.addAll(attacker.getVolatileStatuses().keySet());
+        DEFENDER_VOLATILE_STATUSES.addAll(defender.getVolatileStatuses().keySet());
 
-    Action(@Nonnull Move move, @Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Integer damage, @Nonnull Boolean critical) {
-        super(move.getBaseMove());
-        MOVE = move;
-        ATTACKER = attacker;
-        DEFENDER = defender;
-        DAMAGE = damage;
-        CRITICAL = critical;
-        for (VolatileStatus volatileStatus : attacker.getVolatileStatuses()) {
-            ATTACKER_VOLATILE_STATUSES.add(volatileStatus.getBaseVolatileStatus());
-        }
-        for (VolatileStatus volatileStatus : defender.getVolatileStatuses()) {
-            DEFENDER_VOLATILE_STATUSES.add(volatileStatus.getBaseVolatileStatus());
-        }
+        TURN = turn;
     }
 
     @Nonnull
@@ -73,9 +70,17 @@ public class Action extends Move {
         return DAMAGE;
     }
 
-    @Nonnull
+    protected void setDamage(int damage) {
+        DAMAGE = damage;
+    }
+
+    @Nullable
     public Boolean isCritical() {
         return CRITICAL;
+    }
+
+    protected void setCritical(boolean bool) {
+        CRITICAL = bool;
     }
 
     @Nonnull
@@ -86,6 +91,10 @@ public class Action extends Move {
     @Nonnull
     public List<BaseVolatileStatus> getDefenderVolatileStatuses() {
         return DEFENDER_VOLATILE_STATUSES;
+    }
+
+    public int getTurn() {
+        return TURN;
     }
 
     @Override
@@ -109,6 +118,6 @@ public class Action extends Move {
     }
 
     protected void tryUse() {
-        super.tryUse(ATTACKER, DEFENDER);
+        super.tryUse(ATTACKER, DEFENDER, this);
     }
 }

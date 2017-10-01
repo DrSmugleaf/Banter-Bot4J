@@ -1,6 +1,7 @@
 package com.github.drsmugbrain.pokemon;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -326,6 +327,7 @@ public enum Item implements IBattle {
         this(name, ItemCategory.DEFAULT);
     }
 
+    @Nonnull
     public static Item getItem(@Nonnull String item) {
         item = item.toLowerCase();
         if (!Holder.MAP.containsKey(item)) {
@@ -335,10 +337,12 @@ public enum Item implements IBattle {
         return Holder.MAP.get(item);
     }
 
+    @Nonnull
     public String getName() {
         return this.NAME;
     }
 
+    @Nullable
     public ItemCategory getCategory() {
         return this.CATEGORY;
     }

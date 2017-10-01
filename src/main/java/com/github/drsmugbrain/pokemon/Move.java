@@ -27,6 +27,15 @@ public class Move {
         this.priority = baseMove.getPriority();
     }
 
+    private Move(Move move) {
+        BASE_MOVE = move.getBaseMove();
+        type = move.getType();
+        category = move.getCategory();
+        pp = move.getPP();
+        power = move.getPower();
+        priority = move.getPriority();
+    }
+
     public BaseMove getBaseMove() {
         return this.BASE_MOVE;
     }
@@ -101,27 +110,40 @@ public class Move {
         this.damageMultiplier = 1.0;
     }
 
-    protected int use(@Nonnull Pokemon attacker, @Nonnull Pokemon defender) {
+    protected int use(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
         PokemonMoveEvent event = new PokemonMoveEvent(attacker, this);
         EventDispatcher.dispatch(event);
-        decreasePP(1);
-        return getBaseMove().use(attacker, defender, attacker.getBattle(), this);
+        return getBaseMove().use(attacker, defender, attacker.getBattle(), action);
+    }
+
+    protected int useAsZMove(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+        attacker.removeItem();
+        return getBaseMove().useAsZMove(attacker, defender, attacker.getBattle(), action);
     }
 
     protected int useAsZMove(@Nonnull Pokemon attacker, @Nonnull Pokemon defender) {
-        decreasePP(1);
-        attacker.removeItem();
-        return getBaseMove().useAsZMove(attacker, defender, attacker.getBattle(), this);
+        Action action = new Action(this, attacker, defender, attacker.getBattle().getTurn());
+        return useAsZMove(attacker, defender, action);
     }
 
     protected int miss(@Nonnull Pokemon defender) {
         return getBaseMove().miss(defender);
     }
 
+    protected int tryUse(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+        if (getBaseMove().hits(attacker, defender, attacker.getBattle(), this)) {
+            decreasePP(1);
+            return use(attacker, defender, action);
+        } else {
+            return miss(defender);
+        }
+    }
 
     protected int tryUse(@Nonnull Pokemon attacker, @Nonnull Pokemon defender) {
+        Action action = new Action(this, attacker, defender, attacker.getBattle().getTurn());
+
         if (getBaseMove().hits(attacker, defender, attacker.getBattle(), this)) {
-            return use(attacker, defender);
+            return use(attacker, defender, action);
         } else {
             return miss(defender);
         }
