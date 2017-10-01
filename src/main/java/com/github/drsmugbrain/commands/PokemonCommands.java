@@ -91,28 +91,39 @@ public class PokemonCommands {
 
     @Command
     public static void pokemon(MessageReceivedEvent event, List<String> args) {
-        List<Pokemon> pokemons = new ArrayList<>();
+        IUser user1 = event.getAuthor();
+        long id = user1.getLongID();
+        String name = user1.getName();
 
+        Trainer trainer1 = null;
         try {
-            pokemons = SmogonImporter.parsePokemons(String.join(" ", args));
+            TrainerBuilder trainerBuilder = new TrainerBuilder();
+            trainerBuilder
+                    .setID(id)
+                    .setName(name)
+                    .addPokemons(String.join(" ", args));
+            trainer1 = trainerBuilder.build();
         } catch (DiscordException e) {
             Bot.sendMessage(event.getChannel(), e.getMessage());
         }
 
-        IUser user1 = event.getAuthor();
-        Trainer trainer1 = new Trainer(event.getAuthor().getLongID(), event.getAuthor().getName(), pokemons.toArray(new Pokemon[]{}));
-        if (PokemonCommands.awaitingTrainer.isEmpty()) {
-            PokemonCommands.awaitingTrainer.put(event.getAuthor(), trainer1);
+        if (awaitingTrainer.isEmpty()) {
+            awaitingTrainer.put(event.getAuthor(), trainer1);
             return;
         }
 
-        Entry<IUser, Trainer> userTrainerEntry = PokemonCommands.awaitingTrainer.entrySet().iterator().next();
+        Entry<IUser, Trainer> userTrainerEntry = awaitingTrainer.entrySet().iterator().next();
+
         IUser user2 = userTrainerEntry.getKey();
         Trainer trainer2 = userTrainerEntry.getValue();
+
         Setup setup = new Setup(Generation.VII, Variation.SINGLE_BATTLE);
+
         List<Trainer> trainers = new ArrayList<>();
+
         trainers.add(trainer1);
         trainers.add(trainer2);
+
         Battle battle = new Battle(setup, trainers);
 
         PokemonCommands.BATTLES.put(user1, battle);

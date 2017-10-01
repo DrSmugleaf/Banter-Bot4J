@@ -22,9 +22,16 @@ public class Trainer extends Player {
     private boolean ready = false;
     private TrainerStatus status = TrainerStatus.NONE;
 
-    public Trainer(@Nonnull Long id, @Nonnull String name, @Nonnull Pokemon... pokemons) {
+    public Trainer(@Nonnull Long id, @Nonnull String name, @Nonnull PokemonBuilder... pokemonBuilders) {
         super(id, name);
-        this.POKEMONS.addAll(Arrays.asList(pokemons));
+
+        List<Pokemon> pokemons = new ArrayList<>();
+        for (PokemonBuilder pokemonBuilder : pokemonBuilders) {
+            pokemonBuilder.setTrainer(this);
+            pokemons.add(pokemonBuilder.build());
+        }
+
+        this.POKEMONS.addAll(pokemons);
     }
 
     protected void addPokemon(Pokemon pokemon) {

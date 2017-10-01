@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  */
 public class SmogonImporter {
 
-    public static Pokemon parsePokemon(String export) throws DiscordException {
+    public static PokemonBuilder parsePokemon(String export) throws DiscordException {
         export = export.trim();
         String[] exportArray = export.split("\n");
 
@@ -44,11 +44,14 @@ public class SmogonImporter {
         } else {
             nameString = exportArray[0].trim();
         }
+
         if (nameString.contains("(M)") || nameString.contains("(F)")) {
             nameString = nameString.replaceAll("\\(M\\)|\\(F\\)", "");
             Matcher matcher = Pattern.compile("(\\(\\w\\))").matcher(nameString);
             matcher.find();
             gender = Gender.getGender(matcher.group());
+        } else {
+            gender = Gender.getRandomGender();
         }
 
         String abilityString = null;
@@ -115,13 +118,25 @@ public class SmogonImporter {
             }
         }
 
-//        return new Pokemon(pokemon, item, nature, ability, gender, 100, individualValues, effortValues, moves);
-        return null;
+        PokemonBuilder pokemonBuilder = new PokemonBuilder();
+        pokemonBuilder
+                .setBasePokemon(pokemon)
+                .setNickname(nameString)
+                .setItem(item)
+                .setNature(nature)
+                .setAbility(ability)
+                .setGender(gender)
+                .setLevel(100)
+                .setIndividualValues(individualValues)
+                .setEffortValues(effortValues)
+                .setMoves(moves);
+
+        return pokemonBuilder;
     }
 
-    public static List<Pokemon> parsePokemons(String export) throws DiscordException {
+    public static List<PokemonBuilder> parsePokemons(String export) throws DiscordException {
         String[] exportArray = export.split("\n\n");
-        List<Pokemon> pokemons = new ArrayList<>();
+        List<PokemonBuilder> pokemons = new ArrayList<>();
 
         for (String s : exportArray) {
             pokemons.add(SmogonImporter.parsePokemon(s));
