@@ -1,6 +1,5 @@
 package com.github.drsmugbrain.pokemon;
 
-import com.github.drsmugbrain.DiscordException;
 import com.github.drsmugbrain.pokemon.events.*;
 
 import javax.annotation.Nonnull;
@@ -19,7 +18,7 @@ public class Battle extends Setup {
     private final Map<Trainer, List<Pokemon>> POKEMONS_SENT_OUT_THIS_TURN = new HashMap<>();
     private final List<Action> ACTIONS = new ArrayList<>();
 
-    protected Battle(@Nonnull Setup setup, @Nonnull List<TrainerBuilder> trainers) throws DiscordException {
+    protected Battle(@Nonnull Setup setup, @Nonnull List<TrainerBuilder> trainers) throws UserException {
         super(setup);
 
         for (TrainerBuilder trainerBuilder : trainers) {

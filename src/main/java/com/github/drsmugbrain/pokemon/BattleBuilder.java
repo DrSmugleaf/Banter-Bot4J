@@ -1,7 +1,5 @@
 package com.github.drsmugbrain.pokemon;
 
-import com.github.drsmugbrain.DiscordException;
-
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +15,7 @@ public class BattleBuilder {
 
     public BattleBuilder() {}
 
-    public Battle build() throws DiscordException {
+    public Battle build() throws UserException {
         return new Battle(SETUP, TRAINERS);
     }
 

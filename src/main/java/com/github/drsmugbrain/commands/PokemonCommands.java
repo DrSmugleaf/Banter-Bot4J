@@ -1,6 +1,5 @@
 package com.github.drsmugbrain.commands;
 
-import com.github.drsmugbrain.DiscordException;
 import com.github.drsmugbrain.pokemon.*;
 import com.github.drsmugbrain.pokemon.events.*;
 import com.github.drsmugbrain.util.Bot;
@@ -120,7 +119,7 @@ public class PokemonCommands {
         Battle battle = null;
         try {
             battle = battleBuilder.build();
-        } catch (DiscordException e) {
+        } catch (UserException e) {
             Bot.sendMessage(event.getChannel(), e.getMessage());
         }
 

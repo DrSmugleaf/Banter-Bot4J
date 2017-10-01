@@ -1,7 +1,5 @@
 package com.github.drsmugbrain.pokemon;
 
-import com.github.drsmugbrain.DiscordException;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -20,7 +18,7 @@ public class TrainerBuilder {
 
     public TrainerBuilder() {}
 
-    protected Trainer build() throws DiscordException {
+    protected Trainer build() throws UserException {
         PokemonBuilder[] pokemons = new PokemonBuilder[pokemonStrings.size()];
 
         for (int i = 0; i < pokemonStrings.size(); i++) {

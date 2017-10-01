@@ -1,7 +1,5 @@
 package com.github.drsmugbrain.pokemon;
 
-import com.github.drsmugbrain.DiscordException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,12 +12,12 @@ import java.util.regex.Pattern;
  */
 public class SmogonImporter {
 
-    public static PokemonBuilder parsePokemon(String export) throws DiscordException {
+    public static PokemonBuilder parsePokemon(String export) throws UserException {
         export = export.trim();
         String[] exportArray = export.split("\n");
 
         if (export.length() == 0) {
-            throw new DiscordException("Add a Pokemon in Smogon format to the command to start. Example:\n" +
+            throw new UserException("Add a Pokemon in Smogon format to the command to start. Example:\n" +
                     "-pokemon Serperior @ Leftovers\n" +
                     "Ability: Contrary\n" +
                     "EVs: 252 SpA / 4 SpD / 252 Spe\n" +
@@ -87,7 +85,7 @@ public class SmogonImporter {
         }
 
         if (movesStringArray.size() == 0) {
-            throw new DiscordException(nameString + " has no moves.");
+            throw new UserException(nameString + " has no moves.");
         }
 
         Pokemons pokemon = Pokemons.getPokemon(nameString);
@@ -134,7 +132,7 @@ public class SmogonImporter {
         return pokemonBuilder;
     }
 
-    public static List<PokemonBuilder> parsePokemons(String export) throws DiscordException {
+    public static List<PokemonBuilder> parsePokemons(String export) throws UserException {
         String[] exportArray = export.split("\n\n");
         List<PokemonBuilder> pokemons = new ArrayList<>();
 
