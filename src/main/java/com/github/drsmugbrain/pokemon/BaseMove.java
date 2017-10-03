@@ -1709,7 +1709,52 @@ public enum BaseMove implements IBattle {
     },
     CUT("Cut"),
     DARK_PULSE("Dark Pulse"),
-    DARK_VOID("Dark Void"),
+    DARK_VOID("Dark Void") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
+            int damage = super.use(user, target, battle, action);
+
+            List<Pokemon> adjacentEnemyPokemons = user.getTrainer().getAdjacentEnemyPokemons(user);
+
+            Generation generation = battle.getGeneration();
+            switch (generation) {
+                case I:
+                case II:
+                case III:
+                case IV:
+                case V:
+                case VI:
+                    for (Pokemon adjacentEnemyPokemon : adjacentEnemyPokemons) {
+                        if (Math.random() < 0.8) {
+                            adjacentEnemyPokemon.setStatus(Status.SLEEP);
+                        }
+                    }
+                    break;
+                case VII:
+                    for (Pokemon adjacentEnemyPokemon : adjacentEnemyPokemons) {
+                        if (Math.random() < 0.5) {
+                            adjacentEnemyPokemon.setStatus(Status.SLEEP);
+                        }
+                    }
+                    break;
+                default:
+                    throw new InvalidGenerationException(generation);
+            }
+
+            return damage;
+        }
+
+        @Override
+        public boolean hits(Pokemon attacker, Pokemon defender, Battle battle, Move move) {
+            if (battle.getGeneration() == Generation.VII) {
+                if (attacker.getBasePokemon() != Pokemons.DARKRAI) {
+                    return false;
+                }
+            }
+
+            return super.hits(attacker, defender, battle, move);
+        }
+    },
     DARKEST_LARIAT("Darkest Lariat"),
     DAZZLING_GLEAM("Dazzling Gleam"),
     DEFEND_ORDER("Defend Order"),

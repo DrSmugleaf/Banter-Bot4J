@@ -72,10 +72,12 @@ public class Pokemon {
 
     private boolean abilitySuppressed = false;
 
+    @Nullable
     private Pokemon damagedThisTurn = null;
 
     private double weight;
 
+    @Nonnull
     private final List<Tag> TAGS = new ArrayList<>();
 
     private int toxicN = 1;
