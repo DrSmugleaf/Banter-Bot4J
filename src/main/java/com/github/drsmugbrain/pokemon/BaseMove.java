@@ -1815,7 +1815,19 @@ public enum BaseMove implements IBattle {
             return super.useAsZMove(user, target, battle, action);
         }
     },
-    DEFENSE_CURL("Defense Curl"),
+    DEFENSE_CURL("Defense Curl") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
+            BaseVolatileStatus.DEFENSE_CURL.apply(user, user, action);
+            return super.use(user, target, battle, action);
+        }
+
+        @Override
+        protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
+            user.raiseStatStage(BattleStat.ACCURACY, 1);
+            return super.useAsZMove(user, target, battle, action);
+        }
+    },
     DEFOG("Defog"),
     DESTINY_BOND("Destiny Bond"),
     DETECT("Detect"),
