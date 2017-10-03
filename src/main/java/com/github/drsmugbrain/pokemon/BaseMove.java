@@ -1808,7 +1808,13 @@ public enum BaseMove implements IBattle {
         }
     },
     DAZZLING_GLEAM("Dazzling Gleam"),
-    DEFEND_ORDER("Defend Order"),
+    DEFEND_ORDER("Defend Order") {
+        @Override
+        protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
+            user.raiseStatStage(Stat.DEFENSE, 1);
+            return super.useAsZMove(user, target, battle, action);
+        }
+    },
     DEFENSE_CURL("Defense Curl"),
     DEFOG("Defog"),
     DESTINY_BOND("Destiny Bond"),
