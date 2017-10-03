@@ -1755,7 +1755,58 @@ public enum BaseMove implements IBattle {
             return super.hits(attacker, defender, battle, move);
         }
     },
-    DARKEST_LARIAT("Darkest Lariat"),
+    DARKEST_LARIAT("Darkest Lariat") {
+        @Override
+        protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, Move move) {
+            if (getCategory() == Category.OTHER) {
+                return 0;
+            }
+
+            int attackStat;
+            int defenseStat;
+            int level = attacker.getLevel();
+            int attackPower = this.POWER;
+            double stabMultiplier = attacker.getStabMultiplier(move);
+            double effectiveness = Type.getDamageMultiplier(defender.getTypes(), getType());
+            double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
+
+            if (getCategory() == Category.PHYSICAL) {
+                attackStat = attacker.getStat(Stat.ATTACK);
+                defenseStat = defender.getStatWithoutStages(Stat.DEFENSE);
+            } else if (getCategory() == Category.SPECIAL) {
+                attackStat = attacker.getStat(Stat.SPECIAL_ATTACK);
+                defenseStat = defender.getStatWithoutStages(Stat.SPECIAL_DEFENSE);
+            } else {
+                throw new InvalidCategoryException(getCategory());
+            }
+
+            return (int) (((((2 * level / 5 + 2) * attackStat * attackPower / defenseStat) / 50) + 2) * stabMultiplier * effectiveness * randomNumber);
+        }
+
+        @Override
+        public boolean hits(Pokemon attacker, Pokemon defender, Battle battle, Move move) {
+            if (defender.isImmune(move)) {
+                return false;
+            }
+
+            if (getAccuracy() == 0) {
+                return true;
+            }
+
+            if (attacker.getBattle().getGeneration() == Generation.I) {
+                if (Math.random() < 0.004) {
+                    return false;
+                }
+            }
+
+            double probability = getAccuracy() * (attacker.getAccuracy() / defender.getEvasionWithoutStatChanges());
+            if (probability > 1 || probability < Math.random()) {
+                return true;
+            }
+
+            return false;
+        }
+    },
     DAZZLING_GLEAM("Dazzling Gleam"),
     DEFEND_ORDER("Defend Order"),
     DEFENSE_CURL("Defense Curl"),

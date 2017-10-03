@@ -32,7 +32,7 @@ public enum BattleStat implements IStat {
         return pokemon.getStatStage(stat).getStatMultiplier(stat);
     }
 
-    public double calculateWithoutStages(Pokemon pokemon, Stat stat) {
+    public double calculateWithoutStages(Pokemon pokemon, BattleStat stat) {
         return Stage.ZERO.getStatMultiplier(stat);
     }
 

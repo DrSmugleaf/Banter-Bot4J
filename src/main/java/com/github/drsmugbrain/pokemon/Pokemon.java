@@ -638,6 +638,10 @@ public class Pokemon {
         return STAT_STAGES.get(BattleStat.EVASION).getEvasionMultiplier();
     }
 
+    protected double getEvasionWithoutStatChanges() {
+        return BattleStat.EVASION.calculateWithoutStages(this, BattleStat.EVASION);
+    }
+
     public boolean isFainted() {
         return hp <= 0;
     }
