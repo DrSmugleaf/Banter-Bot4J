@@ -133,7 +133,35 @@ public enum BaseVolatileStatus implements IBattle {
     DEFENSE_CURL("Defense Curl"),
     GLOWING("Glowing"),
     ROOTING("Rooting"),
-    MAGIC_COAT("Magic Coat"),
+    MAGIC_COAT("Magic Coat") {
+        @Override
+        public boolean onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+            Generation generation = attacker.getBattle().getGeneration();
+
+            switch (generation) {
+                case I:
+                    break;
+                case II:
+                    break;
+                case III:
+                    break;
+                case IV:
+                    break;
+                case V:
+                    if (action.getBaseMove() == BaseMove.DEFOG) {
+                        action.reflect();
+                        return false;
+                    }
+                    break;
+                case VI:
+                    break;
+                case VII:
+                    break;
+            }
+
+            return true;
+        }
+    },
     MAGNETIC_LEVITATION("Magnetic Levitation"),
     MINIMIZE("Minimize"),
     PROTECTION("Protection"),
@@ -325,7 +353,11 @@ public enum BaseVolatileStatus implements IBattle {
 
             return true;
         }
-    };
+    },
+
+    MIST("Mist", null),
+
+    SAFEGUARD("Safeguard", 5);
 
     private final String NAME;
     private final Integer DURATION;

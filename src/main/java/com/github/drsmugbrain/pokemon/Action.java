@@ -88,9 +88,17 @@ public class Action extends Move {
         return ATTACKER_VOLATILE_STATUSES;
     }
 
+    protected boolean attackerHasVolatileStatus(@Nonnull BaseVolatileStatus status) {
+        return ATTACKER_VOLATILE_STATUSES.contains(status);
+    }
+
     @Nonnull
     public List<BaseVolatileStatus> getDefenderVolatileStatuses() {
         return DEFENDER_VOLATILE_STATUSES;
+    }
+
+    protected boolean defenderHasVolatileStatus(@Nonnull BaseVolatileStatus status) {
+        return DEFENDER_VOLATILE_STATUSES.contains(status);
     }
 
     public int getTurn() {
@@ -120,4 +128,10 @@ public class Action extends Move {
     protected void tryUse() {
         super.tryUse(ATTACKER, DEFENDER, this);
     }
+
+    protected void reflect() {
+        Action action = new Action(MOVE, DEFENDER, ATTACKER, DEFENDER.getBattle().getTurn());
+        action.MOVE.getBaseMove().use(action.ATTACKER, action.DEFENDER, action.ATTACKER.getBattle(), action);
+    }
+
 }

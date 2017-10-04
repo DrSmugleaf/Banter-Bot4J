@@ -36,6 +36,9 @@ public class Trainer extends Player {
     @Nonnull
     private TrainerStatus status = TrainerStatus.NONE;
 
+    @Nonnull
+    private final List<EntryHazard> HAZARDS = new ArrayList<>();
+
     protected Trainer(@Nonnull Long id, @Nonnull String name, @Nonnull Battle battle, @Nonnull PokemonBuilder... pokemonBuilders) {
         super(id, name);
 
@@ -312,6 +315,25 @@ public class Trainer extends Player {
         }
 
         return false;
+    }
+
+    protected void removeVolatileStatus(@Nonnull BaseVolatileStatus... volatileStatuses) {
+        for (Pokemon pokemon : ACTIVE_POKEMONS) {
+            pokemon.removeVolatileStatus(volatileStatuses);
+        }
+    }
+
+    protected void addEntryHazard(@Nonnull EntryHazard hazard) {
+        HAZARDS.add(hazard);
+    }
+
+    @Nonnull
+    public List<EntryHazard> getHazards() {
+        return new ArrayList<>(HAZARDS);
+    }
+
+    protected void removeEntryHazard(@Nonnull EntryHazard... hazards) {
+        HAZARDS.removeAll(Arrays.asList(hazards));
     }
 
 }

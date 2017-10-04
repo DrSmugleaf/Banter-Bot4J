@@ -1828,7 +1828,123 @@ public enum BaseMove implements IBattle {
             return super.useAsZMove(user, target, battle, action);
         }
     },
-    DEFOG("Defog"),
+    DEFOG("Defog") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
+            int damage = super.use(user, target, battle, action);
+
+            Trainer enemyTrainer = target.getTrainer();
+            Generation generation = user.getBattle().getGeneration();
+            switch (generation) {
+                case I:
+                case II:
+                case III:
+                case IV:
+                    target.lowerStatStage(BattleStat.EVASION, 1);
+
+                    battle.setWeather(Weather.FOG);
+
+                    enemyTrainer.removeVolatileStatus(
+                            BaseVolatileStatus.LIGHT_SCREEN,
+                            BaseVolatileStatus.REFLECT,
+                            BaseVolatileStatus.SAFEGUARD,
+                            BaseVolatileStatus.MIST
+                    );
+
+                    enemyTrainer.removeEntryHazard(
+                            EntryHazard.SPIKES,
+                            EntryHazard.TOXIC_SPIKES,
+                            EntryHazard.STEALTH_ROCK
+                    );
+                    break;
+                case V:
+                    if (!action.defenderHasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+                        target.lowerStatStage(BattleStat.EVASION, 1);
+                    }
+
+                    battle.setWeather(Weather.FOG);
+
+                    enemyTrainer.removeVolatileStatus(
+                            BaseVolatileStatus.LIGHT_SCREEN,
+                            BaseVolatileStatus.REFLECT,
+                            BaseVolatileStatus.SAFEGUARD,
+                            BaseVolatileStatus.MIST
+                    );
+
+                    enemyTrainer.removeEntryHazard(
+                            EntryHazard.SPIKES,
+                            EntryHazard.TOXIC_SPIKES,
+                            EntryHazard.STEALTH_ROCK
+                    );
+                    break;
+                case VI:
+                    if (!action.defenderHasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+                        target.lowerStatStage(BattleStat.EVASION, 1);
+                    }
+
+                    battle.setWeather(Weather.FOG);
+
+                    enemyTrainer.removeVolatileStatus(
+                            BaseVolatileStatus.LIGHT_SCREEN,
+                            BaseVolatileStatus.REFLECT,
+                            BaseVolatileStatus.SAFEGUARD,
+                            BaseVolatileStatus.MIST
+                    );
+
+                    enemyTrainer.removeEntryHazard(
+                            EntryHazard.SPIKES,
+                            EntryHazard.TOXIC_SPIKES,
+                            EntryHazard.STEALTH_ROCK,
+                            EntryHazard.STICKY_WEB
+                    );
+                    user.getTrainer().removeEntryHazard(
+                            EntryHazard.SPIKES,
+                            EntryHazard.TOXIC_SPIKES,
+                            EntryHazard.STEALTH_ROCK,
+                            EntryHazard.STICKY_WEB
+                    );
+                    break;
+                case VII:
+                    if (!action.defenderHasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+                        target.lowerStatStage(BattleStat.EVASION, 1);
+                    }
+
+                    battle.setWeather(Weather.FOG);
+
+                    enemyTrainer.removeVolatileStatus(
+                            BaseVolatileStatus.LIGHT_SCREEN,
+                            BaseVolatileStatus.REFLECT,
+                            BaseVolatileStatus.SAFEGUARD,
+                            BaseVolatileStatus.MIST,
+                            BaseVolatileStatus.AURORA_VEIL
+                    );
+
+                    enemyTrainer.removeEntryHazard(
+                            EntryHazard.SPIKES,
+                            EntryHazard.TOXIC_SPIKES,
+                            EntryHazard.STEALTH_ROCK,
+                            EntryHazard.STICKY_WEB
+                    );
+                    user.getTrainer().removeEntryHazard(
+                            EntryHazard.SPIKES,
+                            EntryHazard.TOXIC_SPIKES,
+                            EntryHazard.STEALTH_ROCK,
+                            EntryHazard.STICKY_WEB
+                    );
+                    break;
+                default:
+                    throw new InvalidGenerationException(generation);
+            }
+
+            return damage;
+        }
+
+        @Override
+        protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
+            user.raiseStatStage(BattleStat.ACCURACY, 1);
+            return super.useAsZMove(user, target, battle, action);
+        }
+    },
     DESTINY_BOND("Destiny Bond"),
     DETECT("Detect"),
     DEVASTATING_DRAKE("Devastating Drake"),

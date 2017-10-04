@@ -66,6 +66,12 @@ public class Battle extends Setup {
         this.weather = weather;
     }
 
+    protected void removeWeather(@Nonnull Weather weather) {
+        if (this.weather == weather) {
+            this.weather = null;
+        }
+    }
+
     public void sendOut(Trainer trainer, Pokemon pokemon) {
         POKEMONS_SENT_OUT_THIS_TURN.putIfAbsent(trainer, new ArrayList<>());
         POKEMONS_SENT_OUT_THIS_TURN.get(trainer).add(pokemon);
