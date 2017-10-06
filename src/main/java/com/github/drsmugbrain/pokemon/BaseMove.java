@@ -1945,7 +1945,56 @@ public enum BaseMove implements IBattle {
             return super.useAsZMove(user, target, battle, action);
         }
     },
-    DESTINY_BOND("Destiny Bond"),
+    DESTINY_BOND("Destiny Bond") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
+            int damage = super.use(user, target, battle, action);
+
+            user.addTag(Tag.DESTINY_BOND);
+
+            return damage;
+        }
+
+        @Override
+        protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
+            target.retarget(user);
+            return super.useAsZMove(user, target, battle, action);
+        }
+
+        @Override
+        public boolean hits(Pokemon attacker, Pokemon defender, Battle battle, Move move) {
+            Generation generation = attacker.getBattle().getGeneration();
+            switch (generation) {
+                case I:
+                case II:
+                case III:
+                case IV:
+                case V:
+                case VI:
+                    return super.hits(attacker, defender, battle, move);
+                case VII:
+                    Action lastAction = attacker.getLastAction();
+                    if (lastAction == null) {
+                        break;
+                    }
+
+                    Boolean hit = lastAction.hit();
+                    if(hit == null) {
+                        break;
+                    }
+
+                    if (lastAction.getBaseMove() == DESTINY_BOND && hit) {
+                        return false;
+                    }
+
+                    break;
+                default:
+                    throw new InvalidGenerationException(generation);
+            }
+
+            return super.hits(attacker, defender, battle, move);
+        }
+    },
     DETECT("Detect"),
     DEVASTATING_DRAKE("Devastating Drake"),
     DIAMOND_STORM("Diamond Storm"),

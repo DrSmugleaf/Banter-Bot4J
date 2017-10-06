@@ -630,6 +630,10 @@ public class Pokemon {
         return TAGS.contains(tag);
     }
 
+    protected void removeTag(@Nonnull Tag... tags) {
+        TAGS.removeAll(Arrays.asList(tags));
+    }
+
     protected double getAccuracy() {
         return STAT_STAGES.get(BattleStat.ACCURACY).getAccuracyMultiplier();
     }
@@ -722,6 +726,10 @@ public class Pokemon {
                 .stream()
                 .map((entry) -> entry.getValue() + " " + entry.getKey().getAbbreviation())
                 .collect(Collectors.joining(" / "));
+    }
+
+    protected boolean isAlly(@Nonnull Pokemon pokemon) {
+        return TRAINER.getActivePokemon(pokemon) > -1;
     }
 
 }

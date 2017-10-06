@@ -1,6 +1,7 @@
 package com.github.drsmugbrain.pokemon;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by DrSmugleaf on 18/09/2017.
@@ -44,6 +45,8 @@ interface IBattle {
     default void onPokemonFailAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {}
 
     default void onEnemyFailAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {}
+
+    default void onOwnFaint(@Nullable Pokemon attacker, @Nonnull Pokemon defender) {}
 
     default void onOwnTurnEnd(@Nonnull Pokemon pokemon) {}
 

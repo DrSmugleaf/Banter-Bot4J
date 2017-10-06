@@ -25,6 +25,9 @@ public class Action extends Move {
     @Nullable
     private Boolean CRITICAL;
 
+    @Nullable
+    private Boolean HIT;
+
     @Nonnull
     private final List<BaseVolatileStatus> ATTACKER_VOLATILE_STATUSES = new ArrayList<>();
 
@@ -81,6 +84,15 @@ public class Action extends Move {
 
     protected void setCritical(boolean bool) {
         CRITICAL = bool;
+    }
+
+    @Nullable
+    public Boolean hit() {
+        return HIT;
+    }
+
+    protected void setHit(boolean bool) {
+        HIT = bool;
     }
 
     @Nonnull
