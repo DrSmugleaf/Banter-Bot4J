@@ -88,7 +88,7 @@ public class SmogonImporter {
             throw new UserException(nameString + " has no moves.");
         }
 
-        Pokemons pokemon = Pokemons.getPokemon(nameString);
+        Species pokemon = Species.getPokemon(nameString);
         Item item = Item.getItem(itemString);
         Ability ability = Ability.getAbility(abilityString);
         Nature nature = Nature.getNature(natureString);

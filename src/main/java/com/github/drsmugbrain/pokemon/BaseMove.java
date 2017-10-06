@@ -1443,22 +1443,22 @@ public enum BaseMove implements IBattle {
                             break;
                         }
 
-                        Pokemons userPokemon = user.getBasePokemon();
-                        Pokemons targetPokemon = target.getBasePokemon();
+                        Species userPokemon = user.getBasePokemon();
+                        Species targetPokemon = target.getBasePokemon();
                         if (targetItem == Item.GRISEOUS_ORB) {
-                            if (userPokemon == Pokemons.GIRATINA || targetPokemon == Pokemons.GIRATINA) {
+                            if (userPokemon == Species.GIRATINA || targetPokemon == Species.GIRATINA) {
                                 break;
                             }
                         }
 
                         if (targetItemCategory == ItemCategory.ARCEUS_PLATE) {
-                            if (Pokemons.isArceus(user) || Pokemons.isArceus(target)) {
+                            if (Species.isArceus(user) || Species.isArceus(target)) {
                                 break;
                             }
                         }
 
                         if (targetItemCategory == ItemCategory.GENESECT_DRIVE) {
-                            if (user.getBasePokemon() == Pokemons.GENESECT || target.getBasePokemon() == Pokemons.GENESECT) {
+                            if (user.getBasePokemon() == Species.GENESECT || target.getBasePokemon() == Species.GENESECT) {
                                 break;
                             }
                         }
@@ -1472,22 +1472,22 @@ public enum BaseMove implements IBattle {
                             break;
                         }
 
-                        Pokemons userPokemon = user.getBasePokemon();
-                        Pokemons targetPokemon = target.getBasePokemon();
+                        Species userPokemon = user.getBasePokemon();
+                        Species targetPokemon = target.getBasePokemon();
                         if (targetItem == Item.GRISEOUS_ORB) {
-                            if (userPokemon == Pokemons.GIRATINA || targetPokemon == Pokemons.GIRATINA) {
+                            if (userPokemon == Species.GIRATINA || targetPokemon == Species.GIRATINA) {
                                 break;
                             }
                         }
 
                         if (targetItemCategory == ItemCategory.ARCEUS_PLATE) {
-                            if (Pokemons.isArceus(user) || Pokemons.isArceus(target)) {
+                            if (Species.isArceus(user) || Species.isArceus(target)) {
                                 break;
                             }
                         }
 
                         if (targetItemCategory == ItemCategory.GENESECT_DRIVE) {
-                            if (user.getBasePokemon() == Pokemons.GENESECT || target.getBasePokemon() == Pokemons.GENESECT) {
+                            if (user.getBasePokemon() == Species.GENESECT || target.getBasePokemon() == Species.GENESECT) {
                                 break;
                             }
                         }
@@ -1501,7 +1501,7 @@ public enum BaseMove implements IBattle {
                         }
 
                         if (targetItemCategory == ItemCategory.SILVALLY_MEMORY) {
-                            if (Pokemons.isSilvally(user) || Pokemons.isSilvally(target)) {
+                            if (Species.isSilvally(user) || Species.isSilvally(target)) {
                                 break;
                             }
                         }
@@ -1747,7 +1747,7 @@ public enum BaseMove implements IBattle {
         @Override
         public boolean hits(Pokemon attacker, Pokemon defender, Battle battle, Move move) {
             if (battle.getGeneration() == Generation.VII) {
-                if (attacker.getBasePokemon() != Pokemons.DARKRAI) {
+                if (attacker.getBasePokemon() != Species.DARKRAI) {
                     return false;
                 }
             }

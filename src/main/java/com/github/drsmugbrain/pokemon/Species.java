@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * Created by DrSmugleaf on 11/08/2017.
  */
-public enum Pokemons {
+public enum Species {
 
     ABRA("Abra"),
     ALAKAZAM("Alakazam"),
@@ -914,7 +914,7 @@ public enum Pokemons {
         for (int i = 0; i < pokemons.length(); i++) {
             JSONObject jsonPokemon = pokemons.getJSONObject(i);
             String name = jsonPokemon.getString("name");
-            Pokemons pokemon = Pokemons.getPokemon(name);
+            Species pokemon = Species.getPokemon(name);
 
             JSONObject alts = jsonPokemon.getJSONArray("alts").getJSONObject(0);
             int hp = alts.getInt("hp");
@@ -962,7 +962,7 @@ public enum Pokemons {
 
             JSONArray jsonEvolutions = jsonPokemon.getJSONArray("evos");
             for (int j = 0; j < jsonEvolutions.length(); j++) {
-                Pokemons evolution = Pokemons.getPokemon(jsonEvolutions.getString(j));
+                Species evolution = Species.getPokemon(jsonEvolutions.getString(j));
                 pokemon.addEvolutions(evolution);
             }
         }
@@ -974,17 +974,17 @@ public enum Pokemons {
     private final List<Type> TYPES = new ArrayList<>();
     private final List<Tier> TIERS = new ArrayList<>();
     private final Map<Stat, Integer> STATS = new HashMap<>();
-    private final List<Pokemons> EVOLUTIONS = new ArrayList<>();
+    private final List<Species> EVOLUTIONS = new ArrayList<>();
     private Double WEIGHT = null;
     private Double HEIGHT = null;
     private String SUFFIX = null;
 
-    Pokemons(@Nonnull String name) {
+    Species(@Nonnull String name) {
         Holder.MAP.put(name.toLowerCase(), this);
         this.NAME = name;
     }
 
-    public static Pokemons getPokemon(@Nonnull String pokemon) {
+    public static Species getPokemon(@Nonnull String pokemon) {
         pokemon = pokemon.toLowerCase();
         if (!Holder.MAP.containsKey(pokemon)) {
             throw new NullPointerException("Pokemon " + pokemon + " doesn't exist");
@@ -1009,12 +1009,12 @@ public enum Pokemons {
         return this.GENERATIONS;
     }
 
-    private Pokemons addGenerations(Generation... generations) {
+    private Species addGenerations(Generation... generations) {
         Collections.addAll(this.GENERATIONS, generations);
         return this;
     }
 
-    private Pokemons setGenerations(Generation... generations) {
+    private Species setGenerations(Generation... generations) {
         this.GENERATIONS.clear();
         return this.addGenerations(generations);
     }
@@ -1023,12 +1023,12 @@ public enum Pokemons {
         return this.ABILITIES;
     }
 
-    private Pokemons addAbilities(Ability... abilities) {
+    private Species addAbilities(Ability... abilities) {
         Collections.addAll(this.ABILITIES, abilities);
         return this;
     }
 
-    private Pokemons setAbilities(Ability... abilities) {
+    private Species setAbilities(Ability... abilities) {
         this.ABILITIES.clear();
         return this.addAbilities(abilities);
     }
@@ -1037,12 +1037,12 @@ public enum Pokemons {
         return this.TYPES;
     }
 
-    private Pokemons addTypes(Type... types) {
+    private Species addTypes(Type... types) {
         Collections.addAll(this.TYPES, types);
         return this;
     }
 
-    private Pokemons setTypes(Type... types) {
+    private Species setTypes(Type... types) {
         this.TYPES.clear();
         return this;
     }
@@ -1051,12 +1051,12 @@ public enum Pokemons {
         return this.TIERS;
     }
 
-    private Pokemons addTiers(Tier... tiers) {
+    private Species addTiers(Tier... tiers) {
         Collections.addAll(this.TIERS, tiers);
         return this;
     }
 
-    private Pokemons setTiers(Tier... tiers) {
+    private Species setTiers(Tier... tiers) {
         this.TIERS.clear();
         return this;
     }
@@ -1065,33 +1065,33 @@ public enum Pokemons {
         return this.STATS;
     }
 
-    private Pokemons addStats(Pair<Stat, Integer>... stats) {
+    private Species addStats(Pair<Stat, Integer>... stats) {
         for (Pair<Stat, Integer> stat : stats) {
             this.STATS.put(stat.getKey(), stat.getValue());
         }
         return this;
     }
 
-    private Pokemons addStats(Stat stat, int amount) {
+    private Species addStats(Stat stat, int amount) {
         this.STATS.put(stat, amount);
         return this;
     }
 
-    private Pokemons setStats(Pair<Stat, Integer>... stats) {
+    private Species setStats(Pair<Stat, Integer>... stats) {
         this.STATS.clear();
         return this.addStats(stats);
     }
 
-    public List<Pokemons> getEvolutions() {
+    public List<Species> getEvolutions() {
         return this.EVOLUTIONS;
     }
 
-    private Pokemons addEvolutions(Pokemons... evolutions) {
+    private Species addEvolutions(Species... evolutions) {
         Collections.addAll(this.EVOLUTIONS, evolutions);
         return this;
     }
 
-    private Pokemons setEvolutions(Pokemons... evolutions) {
+    private Species setEvolutions(Species... evolutions) {
         this.EVOLUTIONS.clear();
         return this.addEvolutions(evolutions);
     }
@@ -1100,7 +1100,7 @@ public enum Pokemons {
         return this.WEIGHT;
     }
 
-    private Pokemons setWeight(double weight) {
+    private Species setWeight(double weight) {
         this.WEIGHT = weight;
         return this;
     }
@@ -1109,7 +1109,7 @@ public enum Pokemons {
         return this.HEIGHT;
     }
 
-    private Pokemons setHeight(double height) {
+    private Species setHeight(double height) {
         this.HEIGHT = HEIGHT;
         return this;
     }
@@ -1123,7 +1123,7 @@ public enum Pokemons {
     }
 
     private static class Holder {
-        static Map<String, Pokemons> MAP = new HashMap<>();
+        static Map<String, Species> MAP = new HashMap<>();
     }
 
 }

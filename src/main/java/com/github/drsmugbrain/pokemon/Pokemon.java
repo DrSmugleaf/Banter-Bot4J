@@ -16,7 +16,7 @@ public class Pokemon {
     private final Trainer TRAINER;
 
     @Nonnull
-    private final Pokemons BASE_POKEMON;
+    private final Species BASE_POKEMON;
 
     @Nonnull
     private final String NICKNAME;
@@ -84,7 +84,7 @@ public class Pokemon {
 
     protected Pokemon(
             @Nonnull Trainer trainer,
-            @Nonnull Pokemons basePokemon,
+            @Nonnull Species basePokemon,
             @Nonnull String nickname,
             @Nonnull Ability ability,
             @Nullable Item item,
@@ -200,7 +200,7 @@ public class Pokemon {
     }
 
     @Nonnull
-    public Pokemons getBasePokemon() {
+    public Species getBasePokemon() {
         return BASE_POKEMON;
     }
 
