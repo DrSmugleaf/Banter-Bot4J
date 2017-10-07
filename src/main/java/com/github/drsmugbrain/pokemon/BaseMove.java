@@ -1995,7 +1995,18 @@ public enum BaseMove implements IBattle {
             return super.hits(attacker, defender, battle, move);
         }
     },
-    DETECT("Detect"),
+    DETECT("Detect") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
+            return PROTECT.use(user, target, battle, action);
+        }
+
+        @Override
+        protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
+            user.raiseStatStage(BattleStat.EVASION, 1);
+            return super.useAsZMove(user, target, battle, action);
+        }
+    },
     DEVASTATING_DRAKE("Devastating Drake"),
     DIAMOND_STORM("Diamond Storm"),
     DIG("Dig"),
