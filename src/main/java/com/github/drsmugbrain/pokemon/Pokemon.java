@@ -39,7 +39,7 @@ public class Pokemon {
     private int LEVEL;
 
     @Nonnull
-    private final Map<IStat, Stat> STATS = getDefaultStats();
+    private final Map<IStat, Stat> STATS = new LinkedHashMap<>();
 
     @Nonnull
     private final Map<IStat, Map<IBattle, Double>> STAT_MODIFIERS = getDefaultStatModifiers();
@@ -111,24 +111,10 @@ public class Pokemon {
 
             builder.setEV(stat, ev);
         }
+        STATS.putAll(builder.build());
 
         MOVES.addAll(moves);
         weight = basePokemon.getWeight();
-    }
-
-    @Nonnull
-    private static Map<IStat, Stat> getDefaultStats() {
-        Map<IStat, Stat> stats = new LinkedHashMap<>();
-
-        for (PermanentStat stat : PermanentStat.values()) {
-            stats.put(stat, new Stat(stat, 31, 0));
-        }
-
-        for (BattleStat stat : BattleStat.values()) {
-            stats.put(stat, new Stat(stat, 31, 0));
-        }
-
-        return stats;
     }
 
     @Nonnull
