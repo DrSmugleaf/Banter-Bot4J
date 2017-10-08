@@ -482,7 +482,9 @@ public class Pokemon {
         List<BaseMove> baseMoveList = Arrays.asList(moves);
 
         for (Move move : MOVES) {
-            if (baseMoveList.contains(move));
+            if (baseMoveList.contains(move.getBaseMove())) {
+                return true;
+            }
         }
 
         return false;
