@@ -30,7 +30,7 @@ public enum BaseMove implements IBattle {
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
             int damage = super.use(user, target, battle, action);
             if (Math.random() < this.EFFECT_RATE) {
-                target.lowerStatStage(Stat.SPECIAL_DEFENSE, 1);
+                target.lowerStatStage(PermanentStat.SPECIAL_DEFENSE, 1);
             }
             return damage;
         }
@@ -82,7 +82,7 @@ public enum BaseMove implements IBattle {
 
         @Override
         protected int useAsZMove(@Nonnull Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStatStage(Stat.SPEED, 1);
+            user.raiseStatStage(PermanentStat.SPEED, 1);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -105,7 +105,7 @@ public enum BaseMove implements IBattle {
 
         @Override
         protected int useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, Action action) {
-            user.raiseStatStage(Stat.SPEED, 2);
+            user.raiseStatStage(PermanentStat.SPEED, 2);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -122,7 +122,7 @@ public enum BaseMove implements IBattle {
     AQUA_RING("Aqua Ring") {
         @Override
         protected int useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, Action action) {
-            user.raiseStatStage(Stat.DEFENSE, 1);
+            user.raiseStatStage(PermanentStat.DEFENSE, 1);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -164,7 +164,7 @@ public enum BaseMove implements IBattle {
     AROMATIC_MIST("Aromatic Mist") {
         @Override
         protected int useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, Action action) {
-            user.raiseStatStage(Stat.SPECIAL_DEFENSE, 2);
+            user.raiseStatStage(PermanentStat.SPECIAL_DEFENSE, 2);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -346,7 +346,7 @@ public enum BaseMove implements IBattle {
 
         @Override
         protected int useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, Action action) {
-            user.raiseStatStage(Stat.SPEED, 1);
+            user.raiseStatStage(PermanentStat.SPEED, 1);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -447,7 +447,7 @@ public enum BaseMove implements IBattle {
                 if (pokemon.getTypes().contains(this.getType())) {
                     stabMultiplier = pokemon.getStabMultiplier(action);
                 }
-                damage = (int) (((pokemon.getStat(Stat.ATTACK) / 10) + 5) * stabMultiplier);
+                damage = (int) (((pokemon.getStat(PermanentStat.ATTACK) / 10) + 5) * stabMultiplier);
                 totalDamage += damage;
                 target.damage(damage);
             }
@@ -528,10 +528,10 @@ public enum BaseMove implements IBattle {
                 case III:
                 case IV:
                 case V:
-                    return defender.getStat(Stat.HP) / 16;
+                    return defender.getStat(PermanentStat.HP) / 16;
                 case VI:
                 case VII:
-                    return defender.getStat(Stat.HP) / 8;
+                    return defender.getStat(PermanentStat.HP) / 8;
                 default:
                     throw new InvalidGenerationException(attacker.getBattle().getGeneration());
             }
@@ -577,7 +577,7 @@ public enum BaseMove implements IBattle {
     BLOCK("Block") {
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStatStage(Stat.DEFENSE, 1);
+            user.raiseStatStage(PermanentStat.DEFENSE, 1);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -671,8 +671,8 @@ public enum BaseMove implements IBattle {
     BRINE("Brine") {
         @Override
         public int getPower(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
-            int defenderCurrentHP = target.getCurrentStat(Stat.HP);
-            int defenderMaxHP = target.getStat(Stat.HP);
+            int defenderCurrentHP = target.getCurrentStat(PermanentStat.HP);
+            int defenderMaxHP = target.getStat(PermanentStat.HP);
             if (defenderCurrentHP <= defenderMaxHP / 2) {
                 return this.POWER * 2;
             } else {
@@ -774,7 +774,7 @@ public enum BaseMove implements IBattle {
 
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStatStage(Stat.SPECIAL_DEFENSE, 2);
+            user.raiseStatStage(PermanentStat.SPECIAL_DEFENSE, 2);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -782,11 +782,11 @@ public enum BaseMove implements IBattle {
     CELEBRATE("Celebrate") {
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStatStage(Stat.ATTACK, 1);
-            user.raiseStatStage(Stat.DEFENSE, 1);
-            user.raiseStatStage(Stat.SPECIAL_ATTACK, 1);
-            user.raiseStatStage(Stat.SPECIAL_DEFENSE, 1);
-            user.raiseStatStage(Stat.SPEED, 1);
+            user.raiseStatStage(PermanentStat.ATTACK, 1);
+            user.raiseStatStage(PermanentStat.DEFENSE, 1);
+            user.raiseStatStage(PermanentStat.SPECIAL_ATTACK, 1);
+            user.raiseStatStage(PermanentStat.SPECIAL_DEFENSE, 1);
+            user.raiseStatStage(PermanentStat.SPEED, 1);
 
             return super.useAsZMove(user, target, battle, action);
         }
@@ -805,7 +805,7 @@ public enum BaseMove implements IBattle {
                 case V:
                 case VI:
                 case VII:
-                    user.raiseStatStage(Stat.SPECIAL_DEFENSE, 1);
+                    user.raiseStatStage(PermanentStat.SPECIAL_DEFENSE, 1);
                     break;
                 default:
                     throw new InvalidGenerationException(battle.getGeneration());
@@ -816,7 +816,7 @@ public enum BaseMove implements IBattle {
 
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStatStage(Stat.SPECIAL_DEFENSE, 1);
+            user.raiseStatStage(PermanentStat.SPECIAL_DEFENSE, 1);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -839,11 +839,11 @@ public enum BaseMove implements IBattle {
             double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
 
             if (this.getCategory() == Category.PHYSICAL) {
-                attackStat = attacker.getStat(Stat.ATTACK);
-                defenseStat = defender.getStatWithoutStages(Stat.DEFENSE);
+                attackStat = attacker.getStat(PermanentStat.ATTACK);
+                defenseStat = defender.getStatWithoutStages(PermanentStat.DEFENSE);
             } else if (this.getCategory() == Category.SPECIAL) {
-                attackStat = attacker.getStat(Stat.SPECIAL_ATTACK);
-                defenseStat = defender.getStatWithoutStages(Stat.SPECIAL_DEFENSE);
+                attackStat = attacker.getStat(PermanentStat.SPECIAL_ATTACK);
+                defenseStat = defender.getStatWithoutStages(PermanentStat.SPECIAL_DEFENSE);
             } else {
                 throw new InvalidCategoryException(this.getCategory());
             }
@@ -917,10 +917,10 @@ public enum BaseMove implements IBattle {
                 case III:
                 case IV:
                 case V:
-                    return defender.getStat(Stat.HP) / 16;
+                    return defender.getStat(PermanentStat.HP) / 16;
                 case VI:
                 case VII:
-                    return defender.getStat(Stat.HP) / 8;
+                    return defender.getStat(PermanentStat.HP) / 8;
                 default:
                     throw new InvalidGenerationException(attacker.getBattle().getGeneration());
             }
@@ -1054,14 +1054,14 @@ public enum BaseMove implements IBattle {
     CONFIDE("Confide") {
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStatStage(Stat.SPECIAL_DEFENSE, 1);
+            user.raiseStatStage(PermanentStat.SPECIAL_DEFENSE, 1);
             return super.useAsZMove(user, target, battle, action);
         }
     },
     CONFUSE_RAY("Confuse Ray") {
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStatStage(Stat.SPECIAL_ATTACK, 1);
+            user.raiseStatStage(PermanentStat.SPECIAL_ATTACK, 1);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -1108,11 +1108,11 @@ public enum BaseMove implements IBattle {
 
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStatStage(Stat.ATTACK, 1);
-            user.raiseStatStage(Stat.DEFENSE, 1);
-            user.raiseStatStage(Stat.SPECIAL_ATTACK, 1);
-            user.raiseStatStage(Stat.SPECIAL_DEFENSE, 1);
-            user.raiseStatStage(Stat.SPEED, 1);
+            user.raiseStatStage(PermanentStat.ATTACK, 1);
+            user.raiseStatStage(PermanentStat.DEFENSE, 1);
+            user.raiseStatStage(PermanentStat.SPECIAL_ATTACK, 1);
+            user.raiseStatStage(PermanentStat.SPECIAL_DEFENSE, 1);
+            user.raiseStatStage(PermanentStat.SPEED, 1);
 
             return super.useAsZMove(user, target, battle, action);
         }
@@ -1316,7 +1316,7 @@ public enum BaseMove implements IBattle {
     COSMIC_POWER("Cosmic Power") {
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStatStage(Stat.SPECIAL_DEFENSE, 1);
+            user.raiseStatStage(PermanentStat.SPECIAL_DEFENSE, 1);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -1535,7 +1535,7 @@ public enum BaseMove implements IBattle {
 
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStatStage(Stat.SPECIAL_DEFENSE, 1);
+            user.raiseStatStage(PermanentStat.SPECIAL_DEFENSE, 1);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -1552,7 +1552,7 @@ public enum BaseMove implements IBattle {
                 case II:
                 case III:
                     if (chance < 0.2) {
-                        target.lowerStatStage(Stat.SPECIAL_DEFENSE, 1);
+                        target.lowerStatStage(PermanentStat.SPECIAL_DEFENSE, 1);
                     }
                     break;
                 case IV:
@@ -1560,7 +1560,7 @@ public enum BaseMove implements IBattle {
                 case VI:
                 case VII:
                     if (chance < 0.2) {
-                        target.lowerStatStage(Stat.DEFENSE, 1);
+                        target.lowerStatStage(PermanentStat.DEFENSE, 1);
                     }
                     break;
                 default:
@@ -1574,8 +1574,8 @@ public enum BaseMove implements IBattle {
     CRUSH_GRIP("Crush Grip") {
         @Override
         public int getPower(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
-            int targetCurrentHP = target.getCurrentStat(Stat.HP);
-            int targetMaxHP = target.getStat(Stat.HP);
+            int targetCurrentHP = target.getCurrentStat(PermanentStat.HP);
+            int targetMaxHP = target.getStat(PermanentStat.HP);
 
             switch (user.getBattle().getGeneration()) {
                 case I:
@@ -1601,9 +1601,9 @@ public enum BaseMove implements IBattle {
                 user.damage(50.0);
                 BaseVolatileStatus.CURSE.apply(user, target, action);
             } else {
-                user.lowerStatStage(Stat.SPEED, 1);
-                user.raiseStatStage(Stat.ATTACK, 1);
-                user.raiseStatStage(Stat.DEFENSE, 1);
+                user.lowerStatStage(PermanentStat.SPEED, 1);
+                user.raiseStatStage(PermanentStat.ATTACK, 1);
+                user.raiseStatStage(PermanentStat.DEFENSE, 1);
             }
 
             return damage;
@@ -1614,7 +1614,7 @@ public enum BaseMove implements IBattle {
             if (user.isType(Type.GHOST)) {
                 user.heal(100.0);
             } else {
-                user.raiseStatStage(Stat.ATTACK, 1);
+                user.raiseStatStage(PermanentStat.ATTACK, 1);
             }
 
             return super.useAsZMove(user, target, battle, action);
@@ -1776,11 +1776,11 @@ public enum BaseMove implements IBattle {
             double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
 
             if (getCategory() == Category.PHYSICAL) {
-                attackStat = attacker.getStat(Stat.ATTACK);
-                defenseStat = defender.getStatWithoutStages(Stat.DEFENSE);
+                attackStat = attacker.getStat(PermanentStat.ATTACK);
+                defenseStat = defender.getStatWithoutStages(PermanentStat.DEFENSE);
             } else if (getCategory() == Category.SPECIAL) {
-                attackStat = attacker.getStat(Stat.SPECIAL_ATTACK);
-                defenseStat = defender.getStatWithoutStages(Stat.SPECIAL_DEFENSE);
+                attackStat = attacker.getStat(PermanentStat.SPECIAL_ATTACK);
+                defenseStat = defender.getStatWithoutStages(PermanentStat.SPECIAL_DEFENSE);
             } else {
                 throw new InvalidCategoryException(getCategory());
             }
@@ -1816,7 +1816,7 @@ public enum BaseMove implements IBattle {
     DEFEND_ORDER("Defend Order") {
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStatStage(Stat.DEFENSE, 1);
+            user.raiseStatStage(PermanentStat.DEFENSE, 1);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -2770,12 +2770,12 @@ public enum BaseMove implements IBattle {
     private final String NAME;
     private final List<Status> STATUS_EFFECTS = new ArrayList<>();
     private final Map<BaseVolatileStatus, Integer> VOLATILE_STATUS_EFFECTS_CHANCE = new HashMap<>();
-    private final Map<Stat, Integer> RAISES_OWN_STATS = new HashMap<>();
-    private final Map<Stat, Integer> LOWERS_OWN_STATS = new HashMap<>();
-    private final Map<Stat, Integer> RAISES_ENEMY_STATS = new HashMap<>();
-    private final Map<Stat, Integer> LOWERS_ENEMY_STATS = new HashMap<>();
-    private final Map<Stat, Integer> RAISES_TARGET_STATS = new HashMap<>();
-    private final Map<Stat, Integer> LOWERS_TARGET_STATS = new HashMap<>();
+    private final Map<PermanentStat, Integer> RAISES_OWN_STATS = new HashMap<>();
+    private final Map<PermanentStat, Integer> LOWERS_OWN_STATS = new HashMap<>();
+    private final Map<PermanentStat, Integer> RAISES_ENEMY_STATS = new HashMap<>();
+    private final Map<PermanentStat, Integer> LOWERS_ENEMY_STATS = new HashMap<>();
+    private final Map<PermanentStat, Integer> RAISES_TARGET_STATS = new HashMap<>();
+    private final Map<PermanentStat, Integer> LOWERS_TARGET_STATS = new HashMap<>();
     protected int POWER;
     protected Integer EFFECT_RATE = null;
     private Type TYPE;
@@ -2955,15 +2955,15 @@ public enum BaseMove implements IBattle {
         return this;
     }
 
-    protected BaseMove setRaisesOwnStats(int amount, @Nonnull Stat... stats) {
-        for (Stat stat : stats) {
+    protected BaseMove setRaisesOwnStats(int amount, @Nonnull PermanentStat... stats) {
+        for (PermanentStat stat : stats) {
             this.RAISES_OWN_STATS.put(stat, amount);
         }
         return this;
     }
 
-    protected BaseMove setLowersOwnStats(int amount, @Nonnull Stat... stats) {
-        for (Stat stat : stats) {
+    protected BaseMove setLowersOwnStats(int amount, @Nonnull PermanentStat... stats) {
+        for (PermanentStat stat : stats) {
             this.LOWERS_OWN_STATS.put(stat, amount);
         }
         return this;
@@ -2979,15 +2979,15 @@ public enum BaseMove implements IBattle {
         return this;
     }
 
-    protected BaseMove setRaisesEnemyStats(int amount, @Nonnull Stat... stats) {
-        for (Stat stat : stats) {
+    protected BaseMove setRaisesEnemyStats(int amount, @Nonnull PermanentStat... stats) {
+        for (PermanentStat stat : stats) {
             this.RAISES_ENEMY_STATS.put(stat, amount);
         }
         return this;
     }
 
-    protected BaseMove setLowersEnemyStats(int amount, @Nonnull Stat... stats) {
-        for (Stat stat : stats) {
+    protected BaseMove setLowersEnemyStats(int amount, @Nonnull PermanentStat... stats) {
+        for (PermanentStat stat : stats) {
             this.LOWERS_ENEMY_STATS.put(stat, amount);
         }
         return this;
@@ -3003,15 +3003,15 @@ public enum BaseMove implements IBattle {
         return this;
     }
 
-    protected BaseMove setRaisesTargetStats(int amount, @Nonnull Stat... stats) {
-        for (Stat stat : stats) {
+    protected BaseMove setRaisesTargetStats(int amount, @Nonnull PermanentStat... stats) {
+        for (PermanentStat stat : stats) {
             this.RAISES_TARGET_STATS.put(stat, amount);
         }
         return this;
     }
 
-    protected BaseMove setLowersTargetStats(int amount, @Nonnull Stat... stats) {
-        for (Stat stat : stats) {
+    protected BaseMove setLowersTargetStats(int amount, @Nonnull PermanentStat... stats) {
+        for (PermanentStat stat : stats) {
             this.LOWERS_TARGET_STATS.put(stat, amount);
         }
         return this;
@@ -3374,11 +3374,11 @@ public enum BaseMove implements IBattle {
         double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
 
         if (this.CATEGORY == Category.PHYSICAL) {
-            attackStat = attacker.getStat(Stat.ATTACK);
-            defenseStat = defender.getStat(Stat.DEFENSE);
+            attackStat = attacker.getStat(PermanentStat.ATTACK);
+            defenseStat = defender.getStat(PermanentStat.DEFENSE);
         } else if (this.CATEGORY == Category.SPECIAL) {
-            attackStat = attacker.getStat(Stat.SPECIAL_ATTACK);
-            defenseStat = defender.getStat(Stat.SPECIAL_DEFENSE);
+            attackStat = attacker.getStat(PermanentStat.SPECIAL_ATTACK);
+            defenseStat = defender.getStat(PermanentStat.SPECIAL_DEFENSE);
         } else {
             throw new InvalidCategoryException(this.CATEGORY);
         }

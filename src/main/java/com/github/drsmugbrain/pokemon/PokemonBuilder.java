@@ -18,8 +18,8 @@ public class PokemonBuilder {
     private Ability ability;
     private Gender gender;
     private int level;
-    private Map<Stat, Integer> individualValues;
-    private Map<Stat, Integer> effortValues;
+    private Map<PermanentStat, Integer> individualValues;
+    private Map<PermanentStat, Integer> effortValues;
     private List<Move> moves;
 
     protected PokemonBuilder() {}
@@ -128,23 +128,23 @@ public class PokemonBuilder {
     }
 
     @Nullable
-    public Map<Stat, Integer> getIndividualValues() {
+    public Map<PermanentStat, Integer> getIndividualValues() {
         return individualValues;
     }
 
     @Nonnull
-    public PokemonBuilder setIndividualValues(@Nonnull Map<Stat, Integer> individualValues) {
+    public PokemonBuilder setIndividualValues(@Nonnull Map<PermanentStat, Integer> individualValues) {
         this.individualValues = individualValues;
         return this;
     }
 
     @Nullable
-    public Map<Stat, Integer> getEffortValues() {
+    public Map<PermanentStat, Integer> getEffortValues() {
         return effortValues;
     }
 
     @Nonnull
-    public PokemonBuilder setEffortValues(@Nonnull Map<Stat, Integer> effortValues) {
+    public PokemonBuilder setEffortValues(@Nonnull Map<PermanentStat, Integer> effortValues) {
         this.effortValues = effortValues;
         return this;
     }

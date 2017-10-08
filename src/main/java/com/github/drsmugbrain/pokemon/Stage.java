@@ -48,7 +48,7 @@ public enum Stage {
     }
 
     public double getStatMultiplier(IStat stat) {
-        if (stat instanceof Stat) {
+        if (stat instanceof PermanentStat) {
             return this.MAIN_STAT_MULTIPLIER;
         } else if (stat instanceof BattleStat) {
             if (stat == BattleStat.ACCURACY) {

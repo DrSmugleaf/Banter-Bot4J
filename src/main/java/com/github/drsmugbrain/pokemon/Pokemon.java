@@ -39,13 +39,7 @@ public class Pokemon {
     private int LEVEL;
 
     @Nonnull
-    private final Map<Stat, Integer> INDIVIDUAL_VALUES = getDefaultIndividualValues();
-
-    @Nonnull
-    private final Map<Stat, Integer> EFFORT_VALUES = getDefaultEffortValues();
-
-    @Nonnull
-    private final Map<IStat, Stage> STAT_STAGES = getDefaultStatStages();
+    private final Map<IStat, Stat> STATS = getDefaultStats();
 
     @Nonnull
     private final Map<IStat, Map<IBattle, Double>> STAT_MODIFIERS = getDefaultStatModifiers();
@@ -53,7 +47,7 @@ public class Pokemon {
     @Nonnull
     private CriticalHitStage criticalHitStage = CriticalHitStage.ZERO;
 
-    private int hp = this.getStat(Stat.HP);
+    private int hp = this.getStat(PermanentStat.HP);
 
     @Nonnull
     private final Map<BaseVolatileStatus, VolatileStatus> VOLATILE_STATUSES = new LinkedHashMap<>();
@@ -91,8 +85,8 @@ public class Pokemon {
             @Nonnull Nature nature,
             @Nonnull Gender gender,
             @Nonnull Integer level,
-            @Nonnull Map<Stat, Integer> individualValues,
-            @Nonnull Map<Stat, Integer> effortValues,
+            @Nonnull Map<PermanentStat, Integer> individualValues,
+            @Nonnull Map<PermanentStat, Integer> effortValues,
             @Nonnull List<Move> moves
     ) {
         TRAINER = trainer;
@@ -103,54 +97,45 @@ public class Pokemon {
         NATURE = nature;
         GENDER = gender;
         LEVEL = level;
-        INDIVIDUAL_VALUES.putAll(individualValues);
-        EFFORT_VALUES.putAll(effortValues);
+
+        StatBuilder builder = new StatBuilder();
+        for (Map.Entry<PermanentStat, Integer> entry : individualValues.entrySet()) {
+            IStat stat = entry.getKey();
+            int iv = entry.getValue();
+
+            builder.setIV(stat, iv);
+        }
+        for (Map.Entry<PermanentStat, Integer> entry : effortValues.entrySet()) {
+            IStat stat = entry.getKey();
+            int ev = entry.getValue();
+
+            builder.setEV(stat, ev);
+        }
+
         MOVES.addAll(moves);
         weight = basePokemon.getWeight();
     }
 
     @Nonnull
-    private static Map<Stat, Integer> getDefaultIndividualValues() {
-        Map<Stat, Integer> individualValues = new EnumMap<>(Stat.class);
+    private static Map<IStat, Stat> getDefaultStats() {
+        Map<IStat, Stat> stats = new LinkedHashMap<>();
 
-        for (Stat stat : Stat.values()) {
-            individualValues.put(stat, 31);
+        for (PermanentStat stat : PermanentStat.values()) {
+            stats.put(stat, new Stat(stat, 31, 0));
         }
 
-        return individualValues;
-    }
-
-    @Nonnull
-    private static Map<Stat, Integer> getDefaultEffortValues() {
-        Map<Stat, Integer> effortValues = new EnumMap<>(Stat.class);
-
-        for (Stat stat : Stat.values()) {
-            effortValues.put(stat, 0);
+        for (BattleStat stat : BattleStat.values()) {
+            stats.put(stat, new Stat(stat, 31, 0));
         }
 
-        return effortValues;
-    }
-
-    @Nonnull
-    private static Map<IStat, Stage> getDefaultStatStages() {
-        Map<IStat, Stage> statStages = new HashMap<>();
-
-        for (Stat stat : Stat.values()) {
-            statStages.put(stat, Stage.ZERO);
-        }
-
-        for (BattleStat battleStat : BattleStat.values()) {
-            statStages.put(battleStat, Stage.ZERO);
-        }
-
-        return statStages;
+        return stats;
     }
 
     @Nonnull
     private static Map<IStat, Map<IBattle, Double>> getDefaultStatModifiers() {
         Map<IStat, Map<IBattle, Double>> statModifiers = new HashMap<>();
 
-        for (Stat stat : Stat.values()) {
+        for (PermanentStat stat : PermanentStat.values()) {
             statModifiers.put(stat, new HashMap<>());
         }
 
@@ -172,12 +157,12 @@ public class Pokemon {
                         "EVs: %d HP / %d Atk / %d Def / %d SpA / %d SpD / %d Spe\n" +
                         "%s Nature",
                         BASE_POKEMON.getName(), item, ABILITY.getName(),
-                        EFFORT_VALUES.get(Stat.HP),
-                        EFFORT_VALUES.get(Stat.ATTACK),
-                        EFFORT_VALUES.get(Stat.DEFENSE),
-                        EFFORT_VALUES.get(Stat.SPECIAL_ATTACK),
-                        EFFORT_VALUES.get(Stat.SPECIAL_DEFENSE),
-                        EFFORT_VALUES.get(Stat.SPEED),
+                        STATS.get(PermanentStat.HP).getEV(),
+                        STATS.get(PermanentStat.ATTACK).getEV(),
+                        STATS.get(PermanentStat.DEFENSE).getEV(),
+                        STATS.get(PermanentStat.SPECIAL_ATTACK).getEV(),
+                        STATS.get(PermanentStat.SPECIAL_DEFENSE).getEV(),
+                        STATS.get(PermanentStat.SPEED).getEV(),
                         NATURE.getName()
                 )
         );
@@ -298,10 +283,10 @@ public class Pokemon {
     }
 
     @Nonnull
-    public Map<Stat, Integer> getStats() {
-        Map<Stat, Integer> stats = new EnumMap<>(Stat.class);
+    public Map<PermanentStat, Integer> getStats() {
+        Map<PermanentStat, Integer> stats = new EnumMap<>(PermanentStat.class);
 
-        for (Stat stat : Stat.values()) {
+        for (PermanentStat stat : PermanentStat.values()) {
             stats.put(stat, getCurrentStat(stat));
         }
 
@@ -309,39 +294,49 @@ public class Pokemon {
     }
 
     @Nonnull
-    public Integer getIndividualValue(@Nonnull Stat stat) {
-        return INDIVIDUAL_VALUES.get(stat);
+    public Integer getIndividualValue(@Nonnull PermanentStat stat) {
+        return STATS.get(stat).getIV();
     }
 
     @Nonnull
-    public Integer getEffortValue(@Nonnull Stat stat) {
-        return EFFORT_VALUES.get(stat);
+    public Integer getEffortValue(@Nonnull PermanentStat stat) {
+        return STATS.get(stat).getEV();
     }
 
     @Nonnull
     public Map<IStat, Stage> getStatStages() {
-        return new HashMap<>(STAT_STAGES);
+        Map<IStat, Stage> stages = new LinkedHashMap<>();
+
+        for (Stat stat : STATS.values()) {
+            stages.put(stat, stat.getStage());
+        }
+
+        return stages;
     }
 
     @Nonnull
     public Stage getStatStage(@Nonnull IStat stat) {
-        return STAT_STAGES.get(stat);
+        return STATS.get(stat).getStage();
     }
-
 
     protected void setStatStage(@Nonnull IStat stat, int amount) {
         Stage newStage = Stage.getStage(amount);
-        STAT_STAGES.put(stat, newStage);
+        STATS.get(stat).setStage(newStage);
     }
 
     protected void setStatStage(@Nonnull Map<IStat, Stage> stages) {
-        STAT_STAGES.putAll(stages);
+        for (Map.Entry<IStat, Stage> entry : stages.entrySet()) {
+            IStat stat = entry.getKey();
+            Stage stage = entry.getValue();
+
+            STATS.get(stat).setStage(stage);
+        }
     }
 
     protected void raiseStatStage(@Nonnull IStat stat, int amount) {
-        int currentStage = STAT_STAGES.get(stat).getStage();
+        int currentStage = STATS.get(stat).getStage().getStage();
         Stage newStage = Stage.getStage(currentStage + amount);
-        STAT_STAGES.put(stat, newStage);
+        STATS.get(stat).setStage(newStage);
     }
 
     protected void lowerStatStage(@Nonnull IStat stat, int amount) {
@@ -349,35 +344,39 @@ public class Pokemon {
     }
 
     protected void resetStatStages() {
-        STAT_STAGES.putAll(getDefaultStatStages());
+        for (Stat stat : STATS.values()) {
+            stat.setStage(Stage.ZERO);
+        }
     }
 
     protected void resetLoweredStatStages() {
-        for (Map.Entry<IStat, Stage> iStatStageEntry : STAT_STAGES.entrySet()) {
-            IStat stat = iStatStageEntry.getKey();
-            Stage stage = iStatStageEntry.getValue();
-
-            if (stage.getStage() < Stage.ZERO.getStage()) {
-                STAT_STAGES.put(stat, Stage.ZERO);
+        for (Stat stat : STATS.values()) {
+            if (stat.getStage().getStage() < Stage.ZERO.getStage()) {
+                stat.setStage(Stage.ZERO);
             }
         }
     }
 
     @Nonnull
-    public Integer getBaseStat(@Nonnull Stat stat) {
+    public Integer getBaseStat(@Nonnull PermanentStat stat) {
         return BASE_POKEMON.getStats().get(stat);
     }
 
-    public int getStat(@Nonnull Stat stat) {
-        return stat.calculate(this, stat, TRAINER.getBattle().getGeneration(), STAT_STAGES.get(stat).getStatMultiplier(stat));
+    public int getStat(@Nonnull PermanentStat stat) {
+        Generation generation = TRAINER.getBattle().getGeneration();
+        double multiplier = STATS.get(stat).getStage().getStatMultiplier(stat);
+
+        return stat.calculate(this, stat, generation, multiplier);
     }
 
-    public int getStatWithoutStages(@Nonnull Stat stat) {
-        return stat.calculateWithoutStages(this, stat, TRAINER.getBattle().getGeneration());
+    public int getStatWithoutStages(@Nonnull PermanentStat stat) {
+        Generation generation = TRAINER.getBattle().getGeneration();
+
+        return stat.calculateWithoutStages(this, stat, generation);
     }
 
-    public int getCurrentStat(@Nonnull Stat stat) {
-        if (stat == Stat.HP) {
+    public int getCurrentStat(@Nonnull PermanentStat stat) {
+        if (stat == PermanentStat.HP) {
             return hp;
         }
 
@@ -437,13 +436,13 @@ public class Pokemon {
     }
 
     protected void damage(double percentage) {
-        int maxHP = getStat(Stat.HP);
+        int maxHP = getStat(PermanentStat.HP);
         int amount = (int) (maxHP * (percentage / 100.0d));
         damage(amount);
     }
 
     protected void heal(int amount) {
-        int maxHP = getStat(Stat.HP);
+        int maxHP = getStat(PermanentStat.HP);
 
         if (hp + amount > maxHP) {
             amount = maxHP - hp;
@@ -456,7 +455,7 @@ public class Pokemon {
     }
 
     protected void heal(double percentage) {
-        int maxHP = getStat(Stat.HP);
+        int maxHP = getStat(PermanentStat.HP);
         int healedHP = (int) (maxHP * (percentage / 100.0d));
         this.heal(healedHP);
     }
@@ -634,11 +633,11 @@ public class Pokemon {
     }
 
     protected double getAccuracy() {
-        return STAT_STAGES.get(BattleStat.ACCURACY).getAccuracyMultiplier();
+        return STATS.get(BattleStat.ACCURACY).getStage().getAccuracyMultiplier();
     }
 
     protected double getEvasion() {
-        return STAT_STAGES.get(BattleStat.EVASION).getEvasionMultiplier();
+        return STATS.get(BattleStat.EVASION).getStage().getEvasionMultiplier();
     }
 
     protected double getEvasionWithoutStatChanges() {
@@ -717,8 +716,8 @@ public class Pokemon {
 
     @Nonnull
     public String getStatsStringWithoutHP() {
-        Map<Stat, Integer> stats = getStats();
-        stats.remove(Stat.HP);
+        Map<PermanentStat, Integer> stats = getStats();
+        stats.remove(PermanentStat.HP);
 
         return stats
                 .entrySet()

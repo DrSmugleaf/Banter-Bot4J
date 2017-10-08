@@ -14,7 +14,7 @@ public enum Status implements IBattle {
         @Override
         protected boolean apply(Pokemon pokemon) {
             if (pokemon.getBattle().getGeneration() == Generation.I) {
-                pokemon.addStatModifier(Stat.ATTACK, BURN, 0.5);
+                pokemon.addStatModifier(PermanentStat.ATTACK, BURN, 0.5);
             }
 
             return super.apply(pokemon);
@@ -166,7 +166,7 @@ public enum Status implements IBattle {
         @Override
         protected boolean apply(Pokemon pokemon) {
             if (pokemon.getBattle().getGeneration() == Generation.I) {
-                pokemon.addStatModifier(Stat.SPEED, PARALYSIS, 0.5);
+                pokemon.addStatModifier(PermanentStat.SPEED, PARALYSIS, 0.5);
             }
 
             return super.apply(pokemon);
@@ -194,7 +194,7 @@ public enum Status implements IBattle {
         public double statMultiplier(@Nonnull Pokemon pokemon, @Nonnull IStat stat) {
             Generation generation = pokemon.getBattle().getGeneration();
 
-            if (stat == Stat.SPEED) {
+            if (stat == PermanentStat.SPEED) {
                 switch (generation) {
                     case I:
                         break;

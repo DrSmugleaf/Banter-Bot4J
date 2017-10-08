@@ -96,22 +96,22 @@ public class SmogonImporter {
         for (String move : movesStringArray) {
             moves.add(new Move(BaseMove.getMove(move)));
         }
-        Map<Stat, Integer> individualValues = new HashMap<>();
-        Map<Stat, Integer> effortValues = new HashMap<>();
+        Map<PermanentStat, Integer> individualValues = new HashMap<>();
+        Map<PermanentStat, Integer> effortValues = new HashMap<>();
         if (effortValuesStringArray != null) {
             for (String s : effortValuesStringArray) {
                 if (s.contains("HP")) {
-                    effortValues.put(Stat.HP, Integer.valueOf(s.replace("HP", "").trim()));
+                    effortValues.put(PermanentStat.HP, Integer.valueOf(s.replace("HP", "").trim()));
                 } else if (s.contains("Atk")) {
-                    effortValues.put(Stat.ATTACK, Integer.valueOf(s.replace("Atk", "").trim()));
+                    effortValues.put(PermanentStat.ATTACK, Integer.valueOf(s.replace("Atk", "").trim()));
                 } else if (s.contains("Def")) {
-                    effortValues.put(Stat.DEFENSE, Integer.valueOf(s.replace("Def", "").trim()));
+                    effortValues.put(PermanentStat.DEFENSE, Integer.valueOf(s.replace("Def", "").trim()));
                 } else if (s.contains("SpA")) {
-                    effortValues.put(Stat.SPECIAL_ATTACK, Integer.valueOf(s.replace("SpA", "").trim()));
+                    effortValues.put(PermanentStat.SPECIAL_ATTACK, Integer.valueOf(s.replace("SpA", "").trim()));
                 } else if (s.contains("SpD")) {
-                    effortValues.put(Stat.SPECIAL_DEFENSE, Integer.valueOf(s.replace("SpD", "").trim()));
+                    effortValues.put(PermanentStat.SPECIAL_DEFENSE, Integer.valueOf(s.replace("SpD", "").trim()));
                 } else if (s.contains("Spe")) {
-                    effortValues.put(Stat.SPEED, Integer.valueOf(s.replace("Spe", "").trim()));
+                    effortValues.put(PermanentStat.SPEED, Integer.valueOf(s.replace("Spe", "").trim()));
                 }
             }
         }

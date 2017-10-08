@@ -3,85 +3,56 @@ package com.github.drsmugbrain.pokemon;
 import javax.annotation.Nonnull;
 
 /**
- * Created by DrSmugleaf on 04/06/2017.
+ * Created by DrSmugleaf on 08/10/2017.
  */
-public enum Stat implements IStat {
+public class Stat implements IStat {
 
-    HP("Health", "HP") {
-        @Override
-        public int calculate(Pokemon pokemon, Stat stat, Generation generation, Double stageMultiplier) {
-            int baseStat = pokemon.getBaseStat(stat);
-            int iv = pokemon.getIndividualValue(stat);
-            int ev = pokemon.getEffortValue(stat);
-            int level = pokemon.getLevel();
-            switch (generation) {
-                case I:
-                case II:
-                    return (int) ((((((baseStat + iv) * 2) + (Math.sqrt(ev) / 4)) * level) / 100) + level + 10);
-                case III:
-                case IV:
-                case V:
-                case VI:
-                case VII:
-                    return ((((((2 * baseStat) + iv + (ev / 4))) * level) / 100) + level + 10);
-                default:
-                    throw new InvalidGenerationException(generation);
-            }
-        }
+    @Nonnull
+    private final IStat STAT;
 
-        @Override
-        public int calculateWithoutStages(Pokemon pokemon, Stat stat, Generation generation) {
-            return this.calculate(pokemon, stat, generation, 1.0);
-        }
-    },
-    ATTACK("Attack", "Atk"),
-    DEFENSE("Defense", "Def"),
-    SPECIAL_ATTACK("Special Attack", "SpA"),
-    SPECIAL_DEFENSE("Special Defense", "SpD"),
-    SPEED("Speed", "Spe");
+    private final int IV;
 
-    private final String NAME;
-    private final String ABBREVIATION;
+    private final int EV;
 
-    Stat(@Nonnull String name, @Nonnull String abbreviation) {
-        this.NAME = name;
-        this.ABBREVIATION = abbreviation;
+    @Nonnull
+    private Stage STAGE = Stage.ZERO;
+
+    Stat(@Nonnull IStat stat, int iv, int ev) {
+        STAT = stat;
+        IV = iv;
+        EV = ev;
     }
 
     @Nonnull
+    public IStat getStat() {
+        return STAT;
+    }
+
+    @Nonnull
+    @Override
     public String getName() {
-        return this.NAME;
+        return STAT.getName();
     }
 
     @Nonnull
     public String getAbbreviation() {
-        return this.ABBREVIATION;
+        return STAT.getAbbreviation();
     }
 
-    public int calculate(Pokemon pokemon, Stat stat, Generation generation, Double stageMultiplier) {
-        int baseStat = pokemon.getBaseStat(stat);
-        int iv = pokemon.getIndividualValue(stat);
-        int ev = pokemon.getEffortValue(stat);
-        int level = pokemon.getLevel();
-
-        switch (generation) {
-            case I:
-            case II:
-                return (int) ((int) (((((baseStat + iv) * 2 + (Math.sqrt(ev) / 4)) * level) / 100) + 5) * stageMultiplier);
-            case III:
-            case IV:
-            case V:
-            case VI:
-            case VII:
-                double natureMultiplier = pokemon.getNature().getNatureMultiplier(stat);
-                return (int) ((int) (((int) ((((2.0 * baseStat + iv + (ev / 4.0)) * level) / 100.0) + 5.0)) * natureMultiplier) * stageMultiplier);
-            default:
-                throw new InvalidGenerationException(generation);
-        }
+    public int getIV() {
+        return IV;
     }
 
-    public int calculateWithoutStages(Pokemon pokemon, Stat stat, Generation generation) {
-        return this.calculate(pokemon, stat, generation, 1.0);
+    public int getEV() {
+        return EV;
+    }
+
+    public Stage getStage() {
+        return STAGE;
+    }
+
+    protected void setStage(@Nonnull Stage stage) {
+        STAGE = stage;
     }
 
 }

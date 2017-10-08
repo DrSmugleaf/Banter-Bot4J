@@ -11,37 +11,37 @@ import java.util.Map;
 public enum Nature {
 
     HARDY(0, "Hardy", null, null),
-    LONELY(1, "Lonely", Stat.ATTACK, Stat.DEFENSE),
-    BRAVE(2, "Brave", Stat.ATTACK, Stat.SPEED),
-    ADAMANT(3, "Adamant", Stat.ATTACK, Stat.SPECIAL_ATTACK),
-    NAUGHTY(4, "Naughty", Stat.ATTACK, Stat.SPECIAL_DEFENSE),
-    BOLD(5, "Bold", Stat.DEFENSE, Stat.ATTACK),
+    LONELY(1, "Lonely", PermanentStat.ATTACK, PermanentStat.DEFENSE),
+    BRAVE(2, "Brave", PermanentStat.ATTACK, PermanentStat.SPEED),
+    ADAMANT(3, "Adamant", PermanentStat.ATTACK, PermanentStat.SPECIAL_ATTACK),
+    NAUGHTY(4, "Naughty", PermanentStat.ATTACK, PermanentStat.SPECIAL_DEFENSE),
+    BOLD(5, "Bold", PermanentStat.DEFENSE, PermanentStat.ATTACK),
     DOCILE(6, "Docile", null, null),
-    RELAXED(7, "Relaxed", Stat.DEFENSE, Stat.SPEED),
-    IMPISH(8, "Impish", Stat.DEFENSE, Stat.SPECIAL_ATTACK),
-    LAX(9, "Lax", Stat.DEFENSE, Stat.SPECIAL_DEFENSE),
-    TIMID(10, "Timid", Stat.SPEED, Stat.ATTACK),
-    HASTY(11, "Hasty", Stat.SPEED, Stat.DEFENSE),
+    RELAXED(7, "Relaxed", PermanentStat.DEFENSE, PermanentStat.SPEED),
+    IMPISH(8, "Impish", PermanentStat.DEFENSE, PermanentStat.SPECIAL_ATTACK),
+    LAX(9, "Lax", PermanentStat.DEFENSE, PermanentStat.SPECIAL_DEFENSE),
+    TIMID(10, "Timid", PermanentStat.SPEED, PermanentStat.ATTACK),
+    HASTY(11, "Hasty", PermanentStat.SPEED, PermanentStat.DEFENSE),
     SERIOUS(12, "Serious", null, null),
-    JOLLY(13, "Jolly", Stat.SPEED, Stat.SPECIAL_ATTACK),
-    NAIVE(14, "Naive", Stat.SPEED, Stat.SPECIAL_DEFENSE),
-    MODEST(15, "Modest", Stat.SPECIAL_ATTACK, Stat.ATTACK),
-    MILD(16, "Mild", Stat.SPECIAL_ATTACK, Stat.DEFENSE),
-    QUIET(17, "Quiet", Stat.SPECIAL_ATTACK, Stat.SPEED),
+    JOLLY(13, "Jolly", PermanentStat.SPEED, PermanentStat.SPECIAL_ATTACK),
+    NAIVE(14, "Naive", PermanentStat.SPEED, PermanentStat.SPECIAL_DEFENSE),
+    MODEST(15, "Modest", PermanentStat.SPECIAL_ATTACK, PermanentStat.ATTACK),
+    MILD(16, "Mild", PermanentStat.SPECIAL_ATTACK, PermanentStat.DEFENSE),
+    QUIET(17, "Quiet", PermanentStat.SPECIAL_ATTACK, PermanentStat.SPEED),
     BASHFUL(18, "Rashful", null, null),
-    RASH(19, "Rash", Stat.SPECIAL_ATTACK, Stat.SPECIAL_DEFENSE),
-    CALM(20, "Calm", Stat.SPECIAL_DEFENSE, Stat.ATTACK),
-    GENTLE(21, "Gentle", Stat.SPECIAL_DEFENSE, Stat.DEFENSE),
-    SASSY(22, "Sassy", Stat.SPECIAL_DEFENSE, Stat.SPEED),
-    CAREFUL(23, "Careful", Stat.SPECIAL_DEFENSE, Stat.SPECIAL_ATTACK),
+    RASH(19, "Rash", PermanentStat.SPECIAL_ATTACK, PermanentStat.SPECIAL_DEFENSE),
+    CALM(20, "Calm", PermanentStat.SPECIAL_DEFENSE, PermanentStat.ATTACK),
+    GENTLE(21, "Gentle", PermanentStat.SPECIAL_DEFENSE, PermanentStat.DEFENSE),
+    SASSY(22, "Sassy", PermanentStat.SPECIAL_DEFENSE, PermanentStat.SPEED),
+    CAREFUL(23, "Careful", PermanentStat.SPECIAL_DEFENSE, PermanentStat.SPECIAL_ATTACK),
     QUIRKY(24, "Quirky", null, null);
 
     private final Integer ID;
     private final String NAME;
-    private final Stat INCREASED_STAT;
-    private final Stat DECREASED_STAT;
+    private final PermanentStat INCREASED_STAT;
+    private final PermanentStat DECREASED_STAT;
 
-    Nature(@Nonnull Integer id, @Nonnull String name, @Nullable Stat increasedStat, @Nullable Stat decreasedStat) {
+    Nature(@Nonnull Integer id, @Nonnull String name, @Nullable PermanentStat increasedStat, @Nullable PermanentStat decreasedStat) {
         Holder.MAP.put(name, this);
         this.ID = id;
         this.NAME = name;
@@ -69,16 +69,16 @@ public enum Nature {
     }
 
     @Nullable
-    public Stat getIncreasedStat() {
+    public PermanentStat getIncreasedStat() {
         return this.INCREASED_STAT;
     }
 
     @Nullable
-    public Stat getDecreasedStat() {
+    public PermanentStat getDecreasedStat() {
         return this.DECREASED_STAT;
     }
 
-    public double getNatureMultiplier(@Nonnull Stat stat) {
+    public double getNatureMultiplier(@Nonnull PermanentStat stat) {
         if (this.getIncreasedStat() != null && this.getIncreasedStat().equals(stat)) {
             return 1.1;
         } else if (this.getDecreasedStat() != null && this.getDecreasedStat().equals(stat)) {

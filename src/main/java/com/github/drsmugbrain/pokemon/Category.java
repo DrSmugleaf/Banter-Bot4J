@@ -11,14 +11,14 @@ import java.util.Objects;
  */
 public enum Category {
 
-    PHYSICAL("Physical", Stat.ATTACK),
-    SPECIAL("Special", Stat.SPECIAL_ATTACK),
+    PHYSICAL("Physical", PermanentStat.ATTACK),
+    SPECIAL("Special", PermanentStat.SPECIAL_ATTACK),
     OTHER("Other", null);
 
     private final String NAME;
-    private final Stat STAT;
+    private final PermanentStat STAT;
 
-    Category(@Nonnull String name, @Nullable Stat stat) {
+    Category(@Nonnull String name, @Nullable PermanentStat stat) {
         Holder.MAP.put(name.toLowerCase(), this);
         this.NAME = name;
         this.STAT = stat;
@@ -41,7 +41,7 @@ public enum Category {
     }
 
     @Nullable
-    public Stat getStat() {
+    public PermanentStat getStat() {
         return this.STAT;
     }
 

@@ -19,16 +19,18 @@ public enum BattleStat implements IStat {
     }
 
     @Nonnull
+    @Override
     public String getName() {
         return this.NAME;
     }
 
     @Nonnull
+    @Override
     public String getAbbreviation() {
         return this.ABBREVIATION;
     }
 
-    public double calculate(Pokemon pokemon, Stat stat) {
+    public double calculate(Pokemon pokemon, PermanentStat stat) {
         return pokemon.getStatStage(stat).getStatMultiplier(stat);
     }
 

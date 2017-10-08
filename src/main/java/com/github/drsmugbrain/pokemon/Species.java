@@ -929,12 +929,12 @@ public enum Species {
             double height = alts.getDouble("height");
 
             pokemon
-                    .addStats(Stat.HP, hp)
-                    .addStats(Stat.ATTACK, attack)
-                    .addStats(Stat.DEFENSE, defense)
-                    .addStats(Stat.SPECIAL_ATTACK, specialAttack)
-                    .addStats(Stat.SPECIAL_DEFENSE, specialDefense)
-                    .addStats(Stat.SPEED, speed)
+                    .addStats(PermanentStat.HP, hp)
+                    .addStats(PermanentStat.ATTACK, attack)
+                    .addStats(PermanentStat.DEFENSE, defense)
+                    .addStats(PermanentStat.SPECIAL_ATTACK, specialAttack)
+                    .addStats(PermanentStat.SPECIAL_DEFENSE, specialDefense)
+                    .addStats(PermanentStat.SPEED, speed)
                     .setWeight(weight)
                     .setHeight(height);
 
@@ -975,7 +975,7 @@ public enum Species {
     private final List<Ability> ABILITIES = new ArrayList<>();
     private final List<Type> TYPES = new ArrayList<>();
     private final List<Tier> TIERS = new ArrayList<>();
-    private final Map<Stat, Integer> STATS = new HashMap<>();
+    private final Map<PermanentStat, Integer> STATS = new HashMap<>();
     private final List<Species> EVOLUTIONS = new ArrayList<>();
     private Double WEIGHT = null;
     private Double HEIGHT = null;
@@ -1084,23 +1084,23 @@ public enum Species {
         return this;
     }
 
-    public Map<Stat, Integer> getStats() {
+    public Map<PermanentStat, Integer> getStats() {
         return this.STATS;
     }
 
-    private Species addStats(Pair<Stat, Integer>... stats) {
-        for (Pair<Stat, Integer> stat : stats) {
+    private Species addStats(Pair<PermanentStat, Integer>... stats) {
+        for (Pair<PermanentStat, Integer> stat : stats) {
             this.STATS.put(stat.getKey(), stat.getValue());
         }
         return this;
     }
 
-    private Species addStats(Stat stat, int amount) {
+    private Species addStats(PermanentStat stat, int amount) {
         this.STATS.put(stat, amount);
         return this;
     }
 
-    private Species setStats(Pair<Stat, Integer>... stats) {
+    private Species setStats(Pair<PermanentStat, Integer>... stats) {
         this.STATS.clear();
         return this.addStats(stats);
     }

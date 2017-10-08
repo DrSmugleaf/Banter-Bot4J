@@ -153,7 +153,7 @@ public class Trainer extends Player {
         List<Pokemon> alivePokemons = new ArrayList<>();
 
         for (Pokemon pokemon : this.POKEMONS) {
-            if (pokemon.getStat(Stat.HP) > 0) {
+            if (pokemon.getStat(PermanentStat.HP) > 0) {
                 alivePokemons.add(pokemon);
             }
         }
@@ -165,7 +165,7 @@ public class Trainer extends Player {
         List<Pokemon> aliveInactivePokemons = this.getAlivePokemons();
 
         aliveInactivePokemons.removeIf(this.ACTIVE_POKEMONS::contains);
-        aliveInactivePokemons.removeIf(pokemon -> pokemon.getCurrentStat(Stat.HP) <= 0);
+        aliveInactivePokemons.removeIf(pokemon -> pokemon.getCurrentStat(PermanentStat.HP) <= 0);
 
         return aliveInactivePokemons;
     }

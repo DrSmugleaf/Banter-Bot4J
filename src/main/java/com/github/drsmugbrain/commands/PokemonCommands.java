@@ -35,8 +35,8 @@ public class PokemonCommands {
         List<Pokemon> aliveInactivePokemons = battle.getTrainer(user.getLongID()).getAliveInactivePokemons();
         for (int i = 0; i < aliveInactivePokemons.size(); i++) {
             Pokemon pokemon = aliveInactivePokemons.get(i);
-            int currentHP = pokemon.getCurrentStat(Stat.HP);
-            int maxHP = pokemon.getStat(Stat.HP);
+            int currentHP = pokemon.getCurrentStat(PermanentStat.HP);
+            int maxHP = pokemon.getStat(PermanentStat.HP);
             double percentageHP = Math.round((100.0 * currentHP / maxHP) * 10) / 10.0;
             builder.appendField(
                     i+1 + ": " + pokemon.getName() + " (" + String.join(" ", pokemon.getTypesString()) + ")",
@@ -73,8 +73,8 @@ public class PokemonCommands {
 
         int i = 1;
         for (Pokemon pokemon : trainer.getBattle().getTargetList(trainer.getPokemonInFocus())) {
-            int currentHP = pokemon.getCurrentStat(Stat.HP);
-            int maxHP = pokemon.getStat(Stat.HP);
+            int currentHP = pokemon.getCurrentStat(PermanentStat.HP);
+            int maxHP = pokemon.getStat(PermanentStat.HP);
             double percentageHP = Math.round((100.0 * currentHP / maxHP) * 10) / 10.0;
 
             builder.appendField(
@@ -221,7 +221,7 @@ public class PokemonCommands {
 
         for (Long id : event.getBattle().getTrainers().keySet()) {
             response.delete(0, response.length());
-            String hpLoss = decimalFormat.format(100.0 * event.getDamage() / defender.getStat(Stat.HP));
+            String hpLoss = decimalFormat.format(100.0 * event.getDamage() / defender.getStat(PermanentStat.HP));
 
             if (!defender.getTrainer().getID().equals(id)) {
                 response.append("The opposing ");
