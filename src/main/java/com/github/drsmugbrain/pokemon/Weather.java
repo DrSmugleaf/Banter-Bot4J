@@ -17,8 +17,34 @@ public enum Weather implements IBattle {
 
             return true;
         }
+
+        @Override
+        public double damageMultiplier(@Nonnull Pokemon attacker, @Nonnull Action action) {
+            Type type = action.getType();
+
+            if (type == Type.FIRE) {
+                return 1.5;
+            } else if (type == Type.WATER) {
+                return 0.5;
+            }
+
+            return 1.0;
+        }
     },
-    RAIN("Rain"),
+    RAIN("Rain") {
+        @Override
+        public double damageMultiplier(@Nonnull Pokemon attacker, @Nonnull Action action) {
+            Type type = action.getType();
+
+            if (type == Type.FIRE) {
+                return 0.5;
+            } else if (type == Type.WATER) {
+                return 1.5;
+            }
+
+            return 1.0;
+        }
+    },
     HEAVY_RAIN("Heavy Rain"),
     HAIL("Hail"),
     SANDSTORM("Sandstorm"),

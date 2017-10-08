@@ -3333,7 +3333,9 @@ public enum BaseMove implements IBattle {
         int attackStat;
         int defenseStat;
         int level = attacker.getLevel();
-        if (attacker.getBattle().getGeneration() == Generation.I && isCritical(action)) {
+
+        Battle battle = attacker.getBattle();
+        if (battle.getGeneration() == Generation.I && isCritical(action)) {
             level *= 2;
         }
         int attackPower = this.POWER;
@@ -3343,24 +3345,7 @@ public enum BaseMove implements IBattle {
             targets = 0.75;
         }
 
-        double weatherMultiplier = 1.0;
-        Weather weather = attacker.getBattle().getWeather();
-        Type moveType = action.getType();
-        if (
-                (moveType == Type.WATER &&
-                 weather == Weather.RAIN) ||
-                (moveType == Type.FIRE &&
-                 weather == Weather.HARSH_SUNSHINE)
-                ) {
-            weatherMultiplier = 1.5;
-        } else if (
-                (moveType == Type.WATER &&
-                 weather == Weather.HARSH_SUNSHINE) ||
-                (moveType == Type.FIRE &&
-                 weather == Weather.RAIN)
-                ) {
-            weatherMultiplier = 0.5;
-        }
+        double weatherMultiplier = battle.getWeather().damageMultiplier(attacker, action);
 
         Generation generation = attacker.getBattle().getGeneration();
         double criticalMultiplier = 1.0;
