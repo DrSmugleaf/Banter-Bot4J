@@ -113,6 +113,7 @@ public class Move {
     protected int use(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
         PokemonMoveEvent event = new PokemonMoveEvent(attacker, this);
         EventDispatcher.dispatch(event);
+        action.setHit(defender, true);
         return getBaseMove().use(attacker, defender, attacker.getBattle(), action);
     }
 
@@ -126,7 +127,8 @@ public class Move {
         return useAsZMove(attacker, defender, action);
     }
 
-    protected int miss(@Nonnull Pokemon defender) {
+    protected int miss(@Nonnull Pokemon defender, @Nonnull Action action) {
+        action.setHit(defender, false);
         return getBaseMove().miss(defender);
     }
 
@@ -135,7 +137,7 @@ public class Move {
             decreasePP(1);
             return use(attacker, defender, action);
         } else {
-            return miss(defender);
+            return miss(defender, action);
         }
     }
 
@@ -145,7 +147,7 @@ public class Move {
         if (getBaseMove().hits(attacker, defender, attacker.getBattle(), this)) {
             return use(attacker, defender, action);
         } else {
-            return miss(defender);
+            return miss(defender, action);
         }
     }
 

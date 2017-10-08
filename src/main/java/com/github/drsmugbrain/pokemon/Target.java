@@ -21,6 +21,7 @@ public enum Target {
     SELF_OR_ADJACENT_ALLY("Self or adjacent ally"),
     ADJACENT_ALLY("Adjacent ally");
 
+    @Nonnull
     private final String NAME;
 
     Target(@Nonnull String name) {
@@ -28,6 +29,7 @@ public enum Target {
         this.NAME = name;
     }
 
+    @Nonnull
     public static Target getTarget(@Nonnull String target) {
         target = target.toLowerCase();
         if (!Holder.MAP.containsKey(target)) {
@@ -42,6 +44,7 @@ public enum Target {
         return this.NAME;
     }
 
+    @Nonnull
     public String getName() {
         return this.NAME;
     }

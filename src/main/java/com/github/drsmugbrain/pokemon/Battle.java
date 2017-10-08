@@ -191,7 +191,7 @@ public class Battle extends Setup {
         List<Action> hitBy = new ArrayList<>();
 
         for (Action action : ACTIONS) {
-            if (action.getDefender() == pokemon) {
+            if (action.getTarget() == pokemon) {
                 hitBy.add(action);
             }
         }
@@ -202,7 +202,7 @@ public class Battle extends Setup {
     @Nullable
     protected Action getLastHitBy(@Nonnull Pokemon pokemon) {
         for (Action action : ACTIONS) {
-            if (action.getDefender() == pokemon) {
+            if (action.getTarget() == pokemon) {
                 return action;
             }
         }

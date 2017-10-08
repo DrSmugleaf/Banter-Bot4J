@@ -416,11 +416,8 @@ public class Pokemon {
     protected int damage(@Nonnull Action action) {
         damagedThisTurn = action.getAttacker();
 
-        int amount = action.getMove().getBaseMove().getDamage(action.getAttacker(), action.getDefender(), action);
-
-        action.setDamage(amount);
+        int amount = action.getMove().getBaseMove().getDamage(action.getAttacker(), action.getTarget(), action);
         damage(amount);
-
         return amount;
     }
 
@@ -525,7 +522,7 @@ public class Pokemon {
     }
 
     protected void executeTurn() {
-        if (hp <= 0) {
+        if (isFainted()) {
             return;
         }
 
@@ -652,7 +649,7 @@ public class Pokemon {
 
     protected void retarget(@Nonnull Pokemon pokemon) {
         if (action != null) {
-            action.setDefender(pokemon);
+            action.setTarget(pokemon);
         }
     }
 

@@ -9,25 +9,30 @@ import java.util.Map;
  */
 public enum Hit {
 
-    SELECTED_TARGET("Selected Target"),
-    ADJACENT_FOES("All Adjacent Foes"),
-    SELF("Self"),
-    SELF_OR_ALLY("Self or Ally"),
-    RANDOM_TARGET("Random Target"),
-    FIELD("Field"),
-    ENEMY_SIDE("Enemy Side"),
-    TEAM("Team"),
-    ALLY("Ally"),
-    ALL_ADJACENT("All Adjacent Pokémon"),
-    ALL("All"),
-    ADJACENT_ALLY("Adjacent Ally"),
-    SPECIAL("Special");
+    SELECTED_TARGET("Selected Target", false),
+    ADJACENT_FOES("All Adjacent Foes", true),
+    SELF("Self", false),
+    SELF_OR_ALLY("Self or Ally", false),
+    RANDOM_TARGET("Random Target", false),
+    FIELD("Field", true),
+    ENEMY_SIDE("Enemy Side", true),
+    TEAM("Team", true),
+    ALLY("Ally", false),
+    ALL_ADJACENT("All Adjacent Pokémon", true),
+    ALL("All", true),
+    ADJACENT_ALLY("Adjacent Ally", false),
+    SPECIAL("Special", false);
 
+    @Nonnull
     private final String NAME;
 
-    Hit(@Nonnull String name) {
+    @Nonnull
+    private final Boolean MULTIPLE;
+
+    Hit(@Nonnull String name, boolean multiple) {
         Holder.MAP.put(name.toLowerCase(), this);
-        this.NAME = name;
+        NAME = name;
+        MULTIPLE = multiple;
     }
 
     public static Hit getHit(@Nonnull String hit) {
@@ -41,11 +46,16 @@ public enum Hit {
 
     @Override
     public String toString() {
-        return this.NAME;
+        return NAME;
     }
 
+    @Nonnull
     public String getName() {
-        return this.NAME;
+        return NAME;
+    }
+
+    public boolean hitsMultiple() {
+        return MULTIPLE;
     }
 
     private static class Holder {

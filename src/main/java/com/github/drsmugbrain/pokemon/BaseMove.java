@@ -508,7 +508,7 @@ public enum BaseMove implements IBattle {
             if (!target.hasVolatileStatus(BaseVolatileStatus.BOUND)) {
                 BaseVolatileStatus.BOUND.apply(user, target, action);
             } else if (lastAction.getBaseMove() == BaseMove.BIND &&
-                       lastAction.getDefender() == target) {
+                       lastAction.getTarget() == target) {
                 action.increasePP(1);
             }
 
@@ -516,14 +516,14 @@ public enum BaseMove implements IBattle {
         }
 
         @Override
-        protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, Move move) {
+        protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, Action action) {
             switch (attacker.getBattle().getGeneration()) {
                 case I:
-                    if (defender.isImmune(move)) {
+                    if (defender.isImmune(action)) {
                         return 0;
                     }
 
-                    return super.getDamage(attacker, defender, move);
+                    return super.getDamage(attacker, defender, action);
                 case II:
                 case III:
                 case IV:
@@ -825,7 +825,7 @@ public enum BaseMove implements IBattle {
     CHATTER("Chatter"),
     CHIP_AWAY("Chip Away") {
         @Override
-        protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, Move move) {
+        protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, Action action) {
             if (this.getCategory() == Category.OTHER) {
                 return 0;
             }
@@ -834,7 +834,7 @@ public enum BaseMove implements IBattle {
             int defenseStat;
             int level = attacker.getLevel();
             int attackPower = this.POWER;
-            double stabMultiplier = attacker.getStabMultiplier(move);
+            double stabMultiplier = attacker.getStabMultiplier(action);
             double effectiveness = Type.getDamageMultiplier(defender.getTypes(), this.getType());
             double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
 
@@ -897,7 +897,7 @@ public enum BaseMove implements IBattle {
             if (!target.hasVolatileStatus(BaseVolatileStatus.BOUND)) {
                 BaseVolatileStatus.BOUND.apply(user, target, action);
             } else if (lastAction.getBaseMove() == BaseMove.CLAMP &&
-                       lastAction.getDefender() == target) {
+                       lastAction.getTarget() == target) {
                 action.increasePP(1);
             }
 
@@ -905,14 +905,14 @@ public enum BaseMove implements IBattle {
         }
 
         @Override
-        protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, Move move) {
+        protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, Action action) {
             switch (attacker.getBattle().getGeneration()) {
                 case I:
-                    if (defender.isImmune(move)) {
+                    if (defender.isImmune(action)) {
                         return 0;
                     }
 
-                    return super.getDamage(attacker, defender, move);
+                    return super.getDamage(attacker, defender, action);
                 case II:
                 case III:
                 case IV:
@@ -1342,16 +1342,21 @@ public enum BaseMove implements IBattle {
                 return this.miss(user);
             }
 
+            Integer actionDamage = lastAction.getDamage(user);
+            if (actionDamage == null) {
+                return this.miss(user);
+            }
+
             switch (battle.getGeneration()) {
                 case I:
-                    if (lastAction.getDamage() > 0
+                    if (actionDamage > 0
                         && (lastAction.getType() == Type.NORMAL || lastAction.getType() == Type.FIGHTING)
                         && lastAction.getBaseMove() != COUNTER) {
                         int damage;
-                        if (lastAction.getDefenderVolatileStatuses().contains(BaseVolatileStatus.SUBSTITUTE)) {
-                            damage = lastAction.getBaseMove().getDamage(lastAction.getAttacker(), lastAction.getDefender(), lastAction.getMove());
+                        if (lastAction.getTargetVolatileStatuses().contains(BaseVolatileStatus.SUBSTITUTE)) {
+                            damage = lastAction.getBaseMove().getDamage(lastAction.getAttacker(), lastAction.getTarget(), lastAction);
                         } else {
-                            damage = lastAction.getDamage() * 2;
+                            damage = actionDamage * 2;
                         }
                         target.damage(damage);
                         return damage;
@@ -1362,23 +1367,23 @@ public enum BaseMove implements IBattle {
                 case IV:
                 case V:
                 case VI:
-                    if (lastAction.getDefenderVolatileStatuses().contains(BaseVolatileStatus.SUBSTITUTE)) {
+                    if (lastAction.getTargetVolatileStatuses().contains(BaseVolatileStatus.SUBSTITUTE)) {
                         return this.miss(user);
                     }
 
                     if (lastAction.getCategory() == Category.PHYSICAL) {
-                        int damage = lastAction.getDamage() * 2;
+                        int damage = actionDamage * 2;
                         target.damage(damage);
                         return damage;
                     }
                     break;
                 case VII:
-                    if (lastAction.getDefenderVolatileStatuses().contains(BaseVolatileStatus.SUBSTITUTE)) {
+                    if (lastAction.getTargetVolatileStatuses().contains(BaseVolatileStatus.SUBSTITUTE)) {
                         return this.miss(user);
                     }
 
                     if (lastAction.getCategory() == Category.PHYSICAL) {
-                        int damage = lastAction.getDamage() * 2;
+                        int damage = actionDamage * 2;
                         if (damage == 0) {
                             damage = 1;
                         }
@@ -1757,7 +1762,7 @@ public enum BaseMove implements IBattle {
     },
     DARKEST_LARIAT("Darkest Lariat") {
         @Override
-        protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, Move move) {
+        protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, Action action) {
             if (getCategory() == Category.OTHER) {
                 return 0;
             }
@@ -1766,7 +1771,7 @@ public enum BaseMove implements IBattle {
             int defenseStat;
             int level = attacker.getLevel();
             int attackPower = this.POWER;
-            double stabMultiplier = attacker.getStabMultiplier(move);
+            double stabMultiplier = attacker.getStabMultiplier(action);
             double effectiveness = Type.getDamageMultiplier(defender.getTypes(), getType());
             double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
 
@@ -1858,7 +1863,7 @@ public enum BaseMove implements IBattle {
                     );
                     break;
                 case V:
-                    if (!action.defenderHasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+                    if (!action.targetHasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
                         target.lowerStatStage(BattleStat.EVASION, 1);
                     }
 
@@ -1878,7 +1883,7 @@ public enum BaseMove implements IBattle {
                     );
                     break;
                 case VI:
-                    if (!action.defenderHasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+                    if (!action.targetHasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
                         target.lowerStatStage(BattleStat.EVASION, 1);
                     }
 
@@ -1905,7 +1910,7 @@ public enum BaseMove implements IBattle {
                     );
                     break;
                 case VII:
-                    if (!action.defenderHasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+                    if (!action.targetHasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
                         target.lowerStatStage(BattleStat.EVASION, 1);
                     }
 
@@ -1978,7 +1983,7 @@ public enum BaseMove implements IBattle {
                         break;
                     }
 
-                    Boolean hit = lastAction.hit();
+                    Boolean hit = lastAction.hit(attacker);
                     if(hit == null) {
                         break;
                     }
@@ -3316,7 +3321,11 @@ public enum BaseMove implements IBattle {
         return this;
     }
 
-    protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, Move move) {
+    protected boolean isCritical(@Nonnull Action action) {
+        return true;
+    }
+
+    protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, Action action) {
         if (this.CATEGORY == Category.OTHER) {
             return 0;
         }
@@ -3324,8 +3333,58 @@ public enum BaseMove implements IBattle {
         int attackStat;
         int defenseStat;
         int level = attacker.getLevel();
+        if (attacker.getBattle().getGeneration() == Generation.I && isCritical(action)) {
+            level *= 2;
+        }
         int attackPower = this.POWER;
-        double stabMultiplier = attacker.getStabMultiplier(move);
+
+        double targets = 1.0;
+        if (getPokemonHit().hitsMultiple()) {
+            targets = 0.75;
+        }
+
+        double weatherMultiplier = 1.0;
+        Weather weather = attacker.getBattle().getWeather();
+        Type moveType = action.getType();
+        if (
+                (moveType == Type.WATER &&
+                 weather == Weather.RAIN) ||
+                (moveType == Type.FIRE &&
+                 weather == Weather.HARSH_SUNSHINE)
+                ) {
+            weatherMultiplier = 1.5;
+        } else if (
+                (moveType == Type.WATER &&
+                 weather == Weather.HARSH_SUNSHINE) ||
+                (moveType == Type.FIRE &&
+                 weather == Weather.RAIN)
+                ) {
+            weatherMultiplier = 0.5;
+        }
+
+        Generation generation = attacker.getBattle().getGeneration();
+        double criticalMultiplier = 1.0;
+        if (isCritical(action)) {
+            action.setCritical(defender, true);
+            switch (generation) {
+                case I:
+                    break;
+                case II:
+                case III:
+                case IV:
+                case V:
+                    criticalMultiplier = 2.0;
+                    break;
+                case VI:
+                case VII:
+                    criticalMultiplier = 1.5;
+                    break;
+                default:
+                    throw new InvalidGenerationException(generation);
+            }
+        }
+
+        double stabMultiplier = attacker.getStabMultiplier(action);
         double effectiveness = Type.getDamageMultiplier(defender.getTypes(), this.TYPE);
         double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
 
@@ -3339,7 +3398,13 @@ public enum BaseMove implements IBattle {
             throw new InvalidCategoryException(this.CATEGORY);
         }
 
-        return (int) (((((2 * level / 5 + 2) * attackStat * attackPower / defenseStat) / 50) + 2) * stabMultiplier * effectiveness * randomNumber);
+        int damage = (int) (
+                (((((2 * level) / 5 + 2) * attackPower * attackStat / defenseStat) / 50) + 2)
+                * targets * weatherMultiplier * criticalMultiplier * randomNumber *  stabMultiplier * effectiveness
+        );
+        action.setDamage(defender, damage);
+
+        return damage;
     }
 
     public boolean canUseMove(@Nonnull Pokemon user) {
