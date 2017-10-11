@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 /**
  * Created by DrSmugleaf on 18/09/2017.
  */
-interface IBattle {
+public interface IBattle {
 
     default void onTrainerTurnStart(@Nonnull Trainer trainer, @Nonnull Pokemon pokemon) {}
 

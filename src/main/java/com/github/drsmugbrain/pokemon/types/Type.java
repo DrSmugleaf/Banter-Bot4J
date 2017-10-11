@@ -1,5 +1,8 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.types;
 
+import com.github.drsmugbrain.pokemon.Action;
+import com.github.drsmugbrain.pokemon.IBattle;
+import com.github.drsmugbrain.pokemon.Pokemon;
 import org.json.JSONArray;
 
 import javax.annotation.Nonnull;

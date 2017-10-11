@@ -1,4 +1,9 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.types;
+
+import com.github.drsmugbrain.pokemon.Action;
+import com.github.drsmugbrain.pokemon.IBattle;
+import com.github.drsmugbrain.pokemon.Move;
+import com.github.drsmugbrain.pokemon.Pokemon;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

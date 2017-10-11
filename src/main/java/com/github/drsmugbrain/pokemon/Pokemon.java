@@ -2,6 +2,8 @@ package com.github.drsmugbrain.pokemon;
 
 import com.github.drsmugbrain.pokemon.events.*;
 import com.github.drsmugbrain.pokemon.stats.*;
+import com.github.drsmugbrain.pokemon.types.ITypes;
+import com.github.drsmugbrain.pokemon.types.Type;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

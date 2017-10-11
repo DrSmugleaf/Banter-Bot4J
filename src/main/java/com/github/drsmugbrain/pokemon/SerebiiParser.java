@@ -1,5 +1,6 @@
 package com.github.drsmugbrain.pokemon;
 
+import com.github.drsmugbrain.pokemon.types.Type;
 import com.github.drsmugbrain.util.Bot;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;

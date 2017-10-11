@@ -4,6 +4,7 @@ import com.github.drsmugbrain.pokemon.events.EventDispatcher;
 import com.github.drsmugbrain.pokemon.events.PokemonDodgeEvent;
 import com.github.drsmugbrain.pokemon.stats.BattleStat;
 import com.github.drsmugbrain.pokemon.stats.PermanentStat;
+import com.github.drsmugbrain.pokemon.types.Type;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
