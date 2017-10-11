@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 /**
  * Created by DrSmugleaf on 18/06/2017.
  */
-public enum BaseVolatileStatus implements IBattle {
+public enum BaseVolatileStatus implements IModifier {
 
     BOUND("Bound") {
         @Nullable

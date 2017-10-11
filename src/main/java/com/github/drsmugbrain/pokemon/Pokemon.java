@@ -38,7 +38,7 @@ public class Pokemon implements ITypes, IStats {
     private int LEVEL;
 
     @Nonnull
-    private final Map<IStat, Map<IBattle, Double>> STAT_MODIFIERS = getDefaultStatModifiers();
+    private final Map<IStat, Map<IModifier, Double>> STAT_MODIFIERS = getDefaultStatModifiers();
 
     @Nonnull
     private CriticalHitStage criticalHitStage = CriticalHitStage.ZERO;
@@ -117,8 +117,8 @@ public class Pokemon implements ITypes, IStats {
     }
 
     @Nonnull
-    private static Map<IStat, Map<IBattle, Double>> getDefaultStatModifiers() {
-        Map<IStat, Map<IBattle, Double>> statModifiers = new HashMap<>();
+    private static Map<IStat, Map<IModifier, Double>> getDefaultStatModifiers() {
+        Map<IStat, Map<IModifier, Double>> statModifiers = new HashMap<>();
 
         for (PermanentStat stat : PermanentStat.values()) {
             statModifiers.put(stat, new HashMap<>());
@@ -557,13 +557,13 @@ public class Pokemon implements ITypes, IStats {
         return TRAINER.getRandomAdjacentEnemyPokemon(this);
     }
 
-    protected void addStatModifier(@Nonnull IStat stat, @Nonnull IBattle source, double modifier) {
+    protected void addStatModifier(@Nonnull IStat stat, @Nonnull IModifier source, double modifier) {
         STAT_MODIFIERS.get(stat).put(source, modifier);
     }
 
-    protected void removeStatModifier(@Nonnull IBattle... sources) {
-        for (Map<IBattle, Double> iBattleDoubleMap : STAT_MODIFIERS.values()) {
-            for (IBattle source : sources) {
+    protected void removeStatModifier(@Nonnull IModifier... sources) {
+        for (Map<IModifier, Double> iBattleDoubleMap : STAT_MODIFIERS.values()) {
+            for (IModifier source : sources) {
                 iBattleDoubleMap.remove(source);
             }
         }

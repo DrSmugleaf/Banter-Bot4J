@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by DrSmugleaf on 07/06/2017.
  */
-public enum Weather implements IBattle {
+public enum Weather implements IModifier {
 
     SUNSHINE("Sunshine"),
     HARSH_SUNSHINE("Harsh Sunshine") {

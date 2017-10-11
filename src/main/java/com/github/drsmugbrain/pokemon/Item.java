@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Created by DrSmugleaf on 09/06/2017.
  */
-public enum Item implements IBattle {
+public enum Item implements IModifier {
 
     ABOMASITE("Abomasite", ItemCategory.MEGA_STONE),
     ABSOLITE("Absolite", ItemCategory.MEGA_STONE),

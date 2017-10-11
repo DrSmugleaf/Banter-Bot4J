@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * Created by DrSmugleaf on 07/06/2017.
  */
-public enum Ability implements IBattle {
+public enum Ability implements IModifier {
 
     ADAPTABILITY("Adaptability"),
     AERILATE("Aerilate"),

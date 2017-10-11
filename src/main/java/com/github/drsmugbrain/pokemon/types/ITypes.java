@@ -1,7 +1,7 @@
 package com.github.drsmugbrain.pokemon.types;
 
 import com.github.drsmugbrain.pokemon.Action;
-import com.github.drsmugbrain.pokemon.IBattle;
+import com.github.drsmugbrain.pokemon.IModifier;
 import com.github.drsmugbrain.pokemon.Move;
 import com.github.drsmugbrain.pokemon.Pokemon;
 
@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 11/10/2017.
  */
-public interface ITypes extends IBattle {
+public interface ITypes extends IModifier {
 
     @Nonnull
     List<Type> TYPES = new ArrayList<>();

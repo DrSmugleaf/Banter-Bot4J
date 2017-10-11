@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * Created by DrSmugleaf on 17/06/2017.
  */
-public enum BaseMove implements IBattle {
+public enum BaseMove implements IModifier {
 
     SWITCH("Switch"),
     _10000000_VOLT_THUNDERBOLT("10,000,000 Volt Thunderbolt"),

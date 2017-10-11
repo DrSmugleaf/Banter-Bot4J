@@ -1,7 +1,7 @@
 package com.github.drsmugbrain.pokemon.types;
 
 import com.github.drsmugbrain.pokemon.Action;
-import com.github.drsmugbrain.pokemon.IBattle;
+import com.github.drsmugbrain.pokemon.IModifier;
 import com.github.drsmugbrain.pokemon.Pokemon;
 import org.json.JSONArray;
 
@@ -11,7 +11,7 @@ import java.util.*;
 /**
  * Created by DrSmugleaf on 05/06/2017.
  */
-public enum Type implements IBattle {
+public enum Type implements IModifier {
 
     TYPELESS("Typeless"),
     CURSE("???"),

@@ -12,7 +12,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Created by DrSmugleaf on 08/06/2017.
  */
-public enum Status implements IBattle {
+public enum Status implements IModifier {
 
     BURN("Burn") {
         @Override
