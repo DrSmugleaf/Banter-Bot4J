@@ -595,7 +595,7 @@ public class Pokemon {
         return hp <= 0;
     }
 
-    protected void retarget(@Nullable Pokemon pokemon) {
+    protected void retarget(@Nonnull Pokemon pokemon) {
         if (action != null) {
             action.setTarget(pokemon);
         }
