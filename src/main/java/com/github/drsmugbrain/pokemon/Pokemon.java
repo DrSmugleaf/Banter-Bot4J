@@ -10,7 +10,7 @@ import java.util.*;
 /**
  * Created by DrSmugleaf on 29/09/2017.
  */
-public class Pokemon {
+public class Pokemon implements ITypes {
 
     @Nonnull
     private final Trainer TRAINER;
@@ -20,9 +20,6 @@ public class Pokemon {
 
     @Nonnull
     private final String NICKNAME;
-
-    @Nonnull
-    private final List<Type> TYPES = new ArrayList<>();
 
     @Nonnull
     private final Ability ABILITY;
@@ -91,6 +88,7 @@ public class Pokemon {
     ) {
         TRAINER = trainer;
         BASE_POKEMON = basePokemon;
+        setTypes(basePokemon.getTypes());
         NICKNAME = nickname;
         ABILITY = ability;
         this.item = item;
@@ -186,31 +184,6 @@ public class Pokemon {
     @Nonnull
     public String getNickname() {
         return NICKNAME;
-    }
-
-    @Nonnull
-    public List<Type> getTypes() {
-        return new ArrayList<>(TYPES);
-    }
-
-    @Nonnull
-    public boolean isType(@Nonnull Type... types) {
-        for (Type type : types) {
-            if (!TYPES.contains(type)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    protected void setTypes(@Nonnull Collection<Type> types) {
-        TYPES.clear();
-        TYPES.addAll(types);
-    }
-
-    protected void setTypes(@Nonnull Type... types) {
-        setTypes(Arrays.asList(types));
     }
 
     @Nonnull
@@ -567,16 +540,6 @@ public class Pokemon {
 
     protected boolean movedThisTurn() {
         return TRAINER.getBattle().movedThisTurn(this);
-    }
-
-    protected boolean isImmune(@Nonnull Move move) {
-        for (Type type : TYPES) {
-            if (type.getImmunities().contains(move.getType())) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     protected void addTag(@Nonnull Tag tag) {
