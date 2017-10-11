@@ -1,11 +1,11 @@
 package com.github.drsmugbrain.pokemon;
 
 import com.github.drsmugbrain.pokemon.events.*;
+import com.github.drsmugbrain.pokemon.stats.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Created by DrSmugleaf on 29/09/2017.
@@ -39,7 +39,7 @@ public class Pokemon {
     private int LEVEL;
 
     @Nonnull
-    private final Map<IStat, Stat> STATS = new LinkedHashMap<>();
+    private final Stats STATS;
 
     @Nonnull
     private final Map<IStat, Map<IBattle, Double>> STAT_MODIFIERS = getDefaultStatModifiers();
@@ -47,7 +47,7 @@ public class Pokemon {
     @Nonnull
     private CriticalHitStage criticalHitStage = CriticalHitStage.ZERO;
 
-    private int hp = this.getStat(PermanentStat.HP);
+    private int hp;
 
     @Nonnull
     private final Map<BaseVolatileStatus, VolatileStatus> VOLATILE_STATUSES = new LinkedHashMap<>();
@@ -111,7 +111,9 @@ public class Pokemon {
 
             builder.setEV(stat, ev);
         }
-        STATS.putAll(builder.build());
+        STATS = new Stats(builder);
+
+        hp = PermanentStat.HP.calculate(this);
 
         MOVES.addAll(moves);
         weight = basePokemon.getWeight();
@@ -136,6 +138,12 @@ public class Pokemon {
     public String export() {
         String string = "";
 
+        int hpEV = STATS.get(PermanentStat.HP).getEV();
+        int atkEV = STATS.get(PermanentStat.ATTACK).getEV();
+        int defEV = STATS.get(PermanentStat.DEFENSE).getEV();
+        int spaEV = STATS.get(PermanentStat.SPECIAL_ATTACK).getEV();
+        int spdEV = STATS.get(PermanentStat.SPECIAL_DEFENSE).getEV();
+        int speEV = STATS.get(PermanentStat.SPEED).getEV();
         string = string.concat(
                 String.format(
                         "%s @ %s\n" +
@@ -143,12 +151,7 @@ public class Pokemon {
                         "EVs: %d HP / %d Atk / %d Def / %d SpA / %d SpD / %d Spe\n" +
                         "%s Nature",
                         BASE_POKEMON.getName(), item, ABILITY.getName(),
-                        STATS.get(PermanentStat.HP).getEV(),
-                        STATS.get(PermanentStat.ATTACK).getEV(),
-                        STATS.get(PermanentStat.DEFENSE).getEV(),
-                        STATS.get(PermanentStat.SPECIAL_ATTACK).getEV(),
-                        STATS.get(PermanentStat.SPECIAL_DEFENSE).getEV(),
-                        STATS.get(PermanentStat.SPEED).getEV(),
+                        hpEV, atkEV, defEV, spaEV, spdEV, speEV,
                         NATURE.getName()
                 )
         );
@@ -269,104 +272,66 @@ public class Pokemon {
     }
 
     @Nonnull
-    public Map<PermanentStat, Integer> getStats() {
-        Map<PermanentStat, Integer> stats = new EnumMap<>(PermanentStat.class);
-
-        for (PermanentStat stat : PermanentStat.values()) {
-            stats.put(stat, getCurrentStat(stat));
-        }
-
-        return stats;
+    protected Stats getStats() {
+        return STATS;
     }
 
     @Nonnull
-    public Integer getIndividualValue(@Nonnull PermanentStat stat) {
-        return STATS.get(stat).getIV();
+    public Stat getStat(@Nonnull IStat stat) {
+        return STATS.get(stat);
+    }
+
+    public double calculateStat(@Nonnull IStat stat) {
+        return STATS.get(stat).calculate(this);
+    }
+
+    protected double calculateStatWithoutStages(@Nonnull IStat stat) {
+        return STATS.get(stat).calculateWithoutStages(this);
+    }
+
+    protected void setStages(@Nonnull Pokemon pokemon) {
+        Map<IStat, Stage> stages = pokemon.getStats().getStages();
+        STATS.setStages(stages);
+    }
+
+    protected void raiseStage(int amount, IStat... stats) {
+        STATS.raiseStage(amount, stats);
+    }
+
+    protected void lowerStage(int amount, IStat... stats) {
+        STATS.lowerStage(amount, stats);
+    }
+
+    protected void resetStages() {
+        STATS.resetStages();
+    }
+
+    protected void resetLoweredStages() {
+        STATS.resetLoweredStages();
     }
 
     @Nonnull
-    public Integer getEffortValue(@Nonnull PermanentStat stat) {
-        return STATS.get(stat).getEV();
-    }
+    public String getStatsStringWithoutHP() {
+        StringBuilder builder = new StringBuilder();
+        PermanentStat[] stats = PermanentStat.values();
+        for (int i = 0; i < stats.length; i++) {
+            PermanentStat stat = stats[i];
+            if (stat == PermanentStat.HP) {
+                continue;
+            }
 
-    @Nonnull
-    public Map<IStat, Stage> getStatStages() {
-        Map<IStat, Stage> stages = new LinkedHashMap<>();
+            int value = (int) STATS.get(stat).calculate(this);
+            builder
+                    .append(value)
+                    .append(" ")
+                    .append(stat.getAbbreviation());
 
-        for (Stat stat : STATS.values()) {
-            stages.put(stat, stat.getStage());
-        }
-
-        return stages;
-    }
-
-    @Nonnull
-    public Stage getStatStage(@Nonnull IStat stat) {
-        return STATS.get(stat).getStage();
-    }
-
-    protected void setStatStage(@Nonnull IStat stat, int amount) {
-        Stage newStage = Stage.getStage(amount);
-        STATS.get(stat).setStage(newStage);
-    }
-
-    protected void setStatStage(@Nonnull Map<IStat, Stage> stages) {
-        for (Map.Entry<IStat, Stage> entry : stages.entrySet()) {
-            IStat stat = entry.getKey();
-            Stage stage = entry.getValue();
-
-            STATS.get(stat).setStage(stage);
-        }
-    }
-
-    protected void raiseStatStage(@Nonnull IStat stat, int amount) {
-        int currentStage = STATS.get(stat).getStage().getStage();
-        Stage newStage = Stage.getStage(currentStage + amount);
-        STATS.get(stat).setStage(newStage);
-    }
-
-    protected void lowerStatStage(@Nonnull IStat stat, int amount) {
-        raiseStatStage(stat, -amount);
-    }
-
-    protected void resetStatStages() {
-        for (Stat stat : STATS.values()) {
-            stat.setStage(Stage.ZERO);
-        }
-    }
-
-    protected void resetLoweredStatStages() {
-        for (Stat stat : STATS.values()) {
-            if (stat.getStage().getStage() < Stage.ZERO.getStage()) {
-                stat.setStage(Stage.ZERO);
+            if (i != stats.length - 1) {
+                builder.append((" / "));
             }
         }
-    }
 
-    @Nonnull
-    public Integer getBaseStat(@Nonnull PermanentStat stat) {
-        return BASE_POKEMON.getStats().get(stat);
-    }
-
-    public int getStat(@Nonnull PermanentStat stat) {
-        Generation generation = TRAINER.getBattle().getGeneration();
-        double multiplier = STATS.get(stat).getStage().getStatMultiplier(stat);
-
-        return stat.calculate(this, stat, generation, multiplier);
-    }
-
-    public int getStatWithoutStages(@Nonnull PermanentStat stat) {
-        Generation generation = TRAINER.getBattle().getGeneration();
-
-        return stat.calculateWithoutStages(this, stat, generation);
-    }
-
-    public int getCurrentStat(@Nonnull PermanentStat stat) {
-        if (stat == PermanentStat.HP) {
-            return hp;
-        }
-
-        return getStat(stat);
+        return builder.toString();
     }
 
     protected void raiseCriticalHitStage(int amount) {
@@ -392,10 +357,12 @@ public class Pokemon {
         this.abilitySuppressed = bool;
     }
 
-    protected void kill() {
-        TRAINER.removeActivePokemon(this);
-        Event event = new PokemonDeathEvent(this);
-        EventDispatcher.dispatch(event);
+    public int getHP() {
+        return hp;
+    }
+
+    public int getMaxHP() {
+        return (int) STATS.get(PermanentStat.HP).calculate(this);
     }
 
     protected int damage(@Nonnull Action action) {
@@ -422,13 +389,13 @@ public class Pokemon {
     }
 
     protected void damage(double percentage) {
-        int maxHP = getStat(PermanentStat.HP);
+        int maxHP = getMaxHP();
         int amount = (int) (maxHP * (percentage / 100.0d));
         damage(amount);
     }
 
     protected void heal(int amount) {
-        int maxHP = getStat(PermanentStat.HP);
+        int maxHP = getMaxHP();
 
         if (hp + amount > maxHP) {
             amount = maxHP - hp;
@@ -441,9 +408,15 @@ public class Pokemon {
     }
 
     protected void heal(double percentage) {
-        int maxHP = getStat(PermanentStat.HP);
+        int maxHP = getMaxHP();
         int healedHP = (int) (maxHP * (percentage / 100.0d));
         this.heal(healedHP);
+    }
+
+    protected void kill() {
+        TRAINER.removeActivePokemon(this);
+        Event event = new PokemonDeathEvent(this);
+        EventDispatcher.dispatch(event);
     }
 
     @Nullable
@@ -618,23 +591,11 @@ public class Pokemon {
         TAGS.removeAll(Arrays.asList(tags));
     }
 
-    protected double getAccuracy() {
-        return STATS.get(BattleStat.ACCURACY).getStage().getAccuracyMultiplier();
-    }
-
-    protected double getEvasion() {
-        return STATS.get(BattleStat.EVASION).getStage().getEvasionMultiplier();
-    }
-
-    protected double getEvasionWithoutStatChanges() {
-        return BattleStat.EVASION.calculateWithoutStages(this, BattleStat.EVASION);
-    }
-
     public boolean isFainted() {
         return hp <= 0;
     }
 
-    protected void retarget(@Nonnull Pokemon pokemon) {
+    protected void retarget(@Nullable Pokemon pokemon) {
         if (action != null) {
             action.setTarget(pokemon);
         }
@@ -698,18 +659,6 @@ public class Pokemon {
         }
 
         return types.toArray(new String[]{});
-    }
-
-    @Nonnull
-    public String getStatsStringWithoutHP() {
-        Map<PermanentStat, Integer> stats = getStats();
-        stats.remove(PermanentStat.HP);
-
-        return stats
-                .entrySet()
-                .stream()
-                .map((entry) -> entry.getValue() + " " + entry.getKey().getAbbreviation())
-                .collect(Collectors.joining(" / "));
     }
 
     protected boolean isAlly(@Nonnull Pokemon pokemon) {

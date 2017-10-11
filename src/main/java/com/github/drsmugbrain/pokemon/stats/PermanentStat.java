@@ -1,6 +1,12 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.stats;
+
+import com.github.drsmugbrain.pokemon.Generation;
+import com.github.drsmugbrain.pokemon.InvalidGenerationException;
+import com.github.drsmugbrain.pokemon.Pokemon;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by DrSmugleaf on 04/06/2017.
@@ -9,11 +15,15 @@ public enum PermanentStat implements IStat {
 
     HP("Health", "HP") {
         @Override
-        public int calculate(Pokemon pokemon, PermanentStat stat, Generation generation, Double stageMultiplier) {
-            int baseStat = pokemon.getBaseStat(stat);
-            int iv = pokemon.getIndividualValue(stat);
-            int ev = pokemon.getEffortValue(stat);
+        public int calculate(@Nonnull Pokemon pokemon) {
+            Stat stat = pokemon.getStat(this);
+
+            int baseStat = stat.getBase(pokemon.getBasePokemon());
+            int iv = stat.getIV();
+            int ev = stat.getEV();
             int level = pokemon.getLevel();
+
+            Generation generation = pokemon.getBattle().getGeneration();
             switch (generation) {
                 case I:
                 case II:
@@ -30,8 +40,8 @@ public enum PermanentStat implements IStat {
         }
 
         @Override
-        public int calculateWithoutStages(Pokemon pokemon, PermanentStat stat, Generation generation) {
-            return this.calculate(pokemon, stat, generation, 1.0);
+        public int calculateWithoutStages(@Nonnull Pokemon pokemon) {
+            return this.calculate(pokemon);
         }
     },
     ATTACK("Attack", "Atk"),
@@ -40,12 +50,26 @@ public enum PermanentStat implements IStat {
     SPECIAL_DEFENSE("Special Defense", "SpD"),
     SPEED("Speed", "Spe");
 
+    @Nonnull
     private final String NAME;
+
+    @Nonnull
     private final String ABBREVIATION;
 
     PermanentStat(@Nonnull String name, @Nonnull String abbreviation) {
+        Holder.MAP.put(name.toLowerCase(), this);
         this.NAME = name;
         this.ABBREVIATION = abbreviation;
+    }
+
+    @Nonnull
+    public static PermanentStat getStat(@Nonnull String name) {
+        name = name.toLowerCase();
+        if (!Holder.MAP.containsKey(name)) {
+            throw new NullPointerException("PermanentStat " + name + " doesn't exist");
+        }
+
+        return Holder.MAP.get(name);
     }
 
     @Nonnull
@@ -60,12 +84,16 @@ public enum PermanentStat implements IStat {
         return this.ABBREVIATION;
     }
 
-    public int calculate(Pokemon pokemon, PermanentStat stat, Generation generation, Double stageMultiplier) {
-        int baseStat = pokemon.getBaseStat(stat);
-        int iv = pokemon.getIndividualValue(stat);
-        int ev = pokemon.getEffortValue(stat);
-        int level = pokemon.getLevel();
+    public int calculate(@Nonnull Pokemon pokemon) {
+        Stat stat = pokemon.getStat(this);
 
+        int baseStat = stat.getBase(pokemon.getBasePokemon());
+        int iv = stat.getIV();
+        int ev = stat.getEV();
+        int level = pokemon.getLevel();
+        double stageMultiplier = stat.getStage().getStage();
+
+        Generation generation = pokemon.getBattle().getGeneration();
         switch (generation) {
             case I:
             case II:
@@ -75,15 +103,19 @@ public enum PermanentStat implements IStat {
             case V:
             case VI:
             case VII:
-                double natureMultiplier = pokemon.getNature().getNatureMultiplier(stat);
+                double natureMultiplier = pokemon.getNature().getNatureMultiplier(this);
                 return (int) ((int) (((int) ((((2.0 * baseStat + iv + (ev / 4.0)) * level) / 100.0) + 5.0)) * natureMultiplier) * stageMultiplier);
             default:
                 throw new InvalidGenerationException(generation);
         }
     }
 
-    public int calculateWithoutStages(Pokemon pokemon, PermanentStat stat, Generation generation) {
-        return this.calculate(pokemon, stat, generation, 1.0);
+    public int calculateWithoutStages(@Nonnull Pokemon pokemon) {
+        return this.calculate(pokemon);
+    }
+
+    private static class Holder {
+        static Map<String, PermanentStat> MAP = new HashMap<>();
     }
 
 }

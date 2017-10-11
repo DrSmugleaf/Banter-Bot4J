@@ -1,5 +1,6 @@
 package com.github.drsmugbrain.pokemon;
 
+import com.github.drsmugbrain.pokemon.stats.PermanentStat;
 import com.github.drsmugbrain.util.Bot;
 import javafx.util.Pair;
 import org.json.JSONArray;

@@ -1,4 +1,4 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.stats;
 
 import javax.annotation.Nonnull;
 
@@ -10,7 +10,10 @@ public enum BattleStat implements IStat {
     ACCURACY("Accuracy", "Acc"),
     EVASION("Evasion", "Eva");
 
+    @Nonnull
     private final String NAME;
+
+    @Nonnull
     private final String ABBREVIATION;
 
     BattleStat(@Nonnull String name, @Nonnull String abbreviation) {
@@ -28,14 +31,6 @@ public enum BattleStat implements IStat {
     @Override
     public String getAbbreviation() {
         return this.ABBREVIATION;
-    }
-
-    public double calculate(Pokemon pokemon, PermanentStat stat) {
-        return pokemon.getStatStage(stat).getStatMultiplier(stat);
-    }
-
-    public double calculateWithoutStages(Pokemon pokemon, BattleStat stat) {
-        return Stage.ZERO.getStatMultiplier(stat);
     }
 
 }

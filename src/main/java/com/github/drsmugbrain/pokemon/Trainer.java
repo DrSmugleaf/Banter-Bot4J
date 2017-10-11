@@ -5,7 +5,10 @@ import com.google.common.collect.Lists;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -153,7 +156,7 @@ public class Trainer extends Player {
         List<Pokemon> alivePokemons = new ArrayList<>();
 
         for (Pokemon pokemon : this.POKEMONS) {
-            if (pokemon.getStat(PermanentStat.HP) > 0) {
+            if (!pokemon.isFainted()) {
                 alivePokemons.add(pokemon);
             }
         }
@@ -165,7 +168,7 @@ public class Trainer extends Player {
         List<Pokemon> aliveInactivePokemons = this.getAlivePokemons();
 
         aliveInactivePokemons.removeIf(this.ACTIVE_POKEMONS::contains);
-        aliveInactivePokemons.removeIf(pokemon -> pokemon.getCurrentStat(PermanentStat.HP) <= 0);
+        aliveInactivePokemons.removeIf(Pokemon::isFainted);
 
         return aliveInactivePokemons;
     }

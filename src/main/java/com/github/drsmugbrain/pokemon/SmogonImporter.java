@@ -1,5 +1,7 @@
 package com.github.drsmugbrain.pokemon;
 
+import com.github.drsmugbrain.pokemon.stats.PermanentStat;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.stats;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -8,7 +8,7 @@ import java.util.*;
  */
 public class StatBuilder {
 
-    private static final List<IStat> ISTATS = new ArrayList<>();
+    public static final List<IStat> ISTATS = new ArrayList<>();
     private final Map<IStat, Stat> STATS = new LinkedHashMap<>();
 
     static {
@@ -44,15 +44,15 @@ public class StatBuilder {
         return STATS;
     }
 
-    protected void put(@Nonnull IStat stat) {
+    public void put(@Nonnull IStat stat) {
         STATS.put(stat, new Stat(stat, 31, 0));
     }
 
-    protected void put(@Nonnull Stat stat) {
-        STATS.put(stat.getStat(), stat);
+    public void put(@Nonnull Stat stat) {
+        STATS.put(stat.getIStat(), stat);
     }
 
-    protected void setIV(@Nonnull IStat stat, int iv) {
+    public void setIV(@Nonnull IStat stat, int iv) {
         if (!STATS.containsKey(stat)) {
             STATS.put(stat, new Stat(stat, iv, 0));
             return;
@@ -62,7 +62,7 @@ public class StatBuilder {
         STATS.put(stat, new Stat(stat, mapStat.getIV(), mapStat.getIV()));
     }
 
-    protected void setEV(@Nonnull IStat stat, int ev) {
+    public void setEV(@Nonnull IStat stat, int ev) {
         if (!STATS.containsKey(stat)) {
             STATS.put(stat, new Stat(stat, 31, ev));
             return;

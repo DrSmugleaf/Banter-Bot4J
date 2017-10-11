@@ -1,5 +1,7 @@
 package com.github.drsmugbrain.pokemon;
 
+import com.github.drsmugbrain.pokemon.stats.IStat;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -58,7 +60,7 @@ interface IBattle {
 
     default void onEnemyItemUsed(@Nonnull Pokemon user, @Nonnull Item item) {}
 
-    default boolean hits(Pokemon attacker, Pokemon defender, Battle battle, Move move) {
+    default boolean hits(@Nonnull Action action) {
         return true;
     }
 
