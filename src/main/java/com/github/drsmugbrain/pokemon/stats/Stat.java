@@ -20,7 +20,7 @@ public class Stat implements IStat {
     @Nonnull
     private Stage STAGE = Stage.ZERO;
 
-    Stat(@Nonnull IStat stat, int iv, int ev) {
+    protected Stat(@Nonnull IStat stat, int iv, int ev) {
         STAT = stat;
         IV = iv;
         EV = ev;

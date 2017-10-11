@@ -222,7 +222,7 @@ public class PokemonCommands {
 
         for (Long id : event.getBattle().getTrainers().keySet()) {
             response.delete(0, response.length());
-            String hpLoss = decimalFormat.format(100.0 * event.getDamage() / defender.calculateStat(PermanentStat.HP));
+            String hpLoss = decimalFormat.format(100.0 * event.getDamage() / defender.calculate(PermanentStat.HP));
 
             if (!defender.getTrainer().getID().equals(id)) {
                 response.append("The opposing ");

@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * Created by DrSmugleaf on 29/09/2017.
  */
-public class Pokemon implements ITypes {
+public class Pokemon implements ITypes, IStats {
 
     @Nonnull
     private final Trainer TRAINER;
@@ -36,9 +36,6 @@ public class Pokemon implements ITypes {
     private final Gender GENDER;
 
     private int LEVEL;
-
-    @Nonnull
-    private final Stats STATS;
 
     @Nonnull
     private final Map<IStat, Map<IBattle, Double>> STAT_MODIFIERS = getDefaultStatModifiers();
@@ -111,7 +108,7 @@ public class Pokemon implements ITypes {
 
             builder.setEV(stat, ev);
         }
-        STATS = new Stats(builder);
+        STATS.putAll(builder.build());
 
         hp = (int) PermanentStat.HP.calculate(this);
 
@@ -246,43 +243,12 @@ public class Pokemon implements ITypes {
         LEVEL = level;
     }
 
-    @Nonnull
-    protected Stats getStats() {
-        return STATS;
-    }
-
-    @Nonnull
-    public Stat getStat(@Nonnull IStat stat) {
-        return STATS.get(stat);
-    }
-
-    public double calculateStat(@Nonnull IStat stat) {
+    public double calculate(@Nonnull IStat stat) {
         return STATS.get(stat).calculate(this);
     }
 
-    protected double calculateStatWithoutStages(@Nonnull IStat stat) {
+    public double calculateWithoutStages(@Nonnull IStat stat) {
         return STATS.get(stat).calculateWithoutStages(this);
-    }
-
-    protected void setStages(@Nonnull Pokemon pokemon) {
-        Map<IStat, Stage> stages = pokemon.getStats().getStages();
-        STATS.setStages(stages);
-    }
-
-    protected void raiseStage(int amount, IStat... stats) {
-        STATS.raiseStage(amount, stats);
-    }
-
-    protected void lowerStage(int amount, IStat... stats) {
-        STATS.lowerStage(amount, stats);
-    }
-
-    protected void resetStages() {
-        STATS.resetStages();
-    }
-
-    protected void resetLoweredStages() {
-        STATS.resetLoweredStages();
     }
 
     @Nonnull

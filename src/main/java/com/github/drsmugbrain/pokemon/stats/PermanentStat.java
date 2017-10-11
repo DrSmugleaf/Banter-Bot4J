@@ -16,7 +16,7 @@ public enum PermanentStat implements IStat {
     HP("Health", "HP") {
         @Override
         public double calculate(@Nonnull Pokemon pokemon) {
-            Stat stat = pokemon.getStat(this);
+            Stat stat = pokemon.get(this);
 
             int baseStat = stat.getBase(pokemon.getBasePokemon());
             int iv = stat.getIV();
@@ -86,7 +86,7 @@ public enum PermanentStat implements IStat {
 
     @Override
     public double calculate(@Nonnull Pokemon pokemon) {
-        Stat stat = pokemon.getStat(this);
+        Stat stat = pokemon.get(this);
 
         int baseStat = stat.getBase(pokemon.getBasePokemon());
         int iv = stat.getIV();
@@ -113,7 +113,7 @@ public enum PermanentStat implements IStat {
 
     @Override
     public double calculateWithoutStages(@Nonnull Pokemon pokemon) {
-        Stat stat = pokemon.getStat(this);
+        Stat stat = pokemon.get(this);
 
         int baseStat = stat.getBase(pokemon.getBasePokemon());
         int iv = stat.getIV();

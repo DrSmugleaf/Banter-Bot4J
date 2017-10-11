@@ -39,7 +39,7 @@ public class StatBuilder {
         STATS.putAll(stats);
     }
 
-    protected Map<IStat, Stat> build() {
+    public Map<IStat, Stat> build() {
         finalizeStats();
         return STATS;
     }
