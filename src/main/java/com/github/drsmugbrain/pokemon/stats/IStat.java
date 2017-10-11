@@ -1,5 +1,7 @@
 package com.github.drsmugbrain.pokemon.stats;
 
+import com.github.drsmugbrain.pokemon.Pokemon;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -12,5 +14,9 @@ public interface IStat {
 
     @Nonnull
     String getAbbreviation();
+
+    double calculate(@Nonnull Pokemon pokemon);
+
+    double calculateWithoutStages(@Nonnull Pokemon pokemon);
 
 }

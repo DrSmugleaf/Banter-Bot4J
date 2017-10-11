@@ -236,7 +236,6 @@ public enum Type implements IBattle {
         return modifier;
     }
 
-
     private static class Holder {
         static Map<String, Type> MAP = new HashMap<>();
     }

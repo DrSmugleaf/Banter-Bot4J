@@ -87,23 +87,11 @@ public class Stat implements IStat {
     }
 
     public double calculate(@Nonnull Pokemon pokemon) {
-        if (STAT instanceof BattleStat) {
-            return STAGE.getStatMultiplier(STAT);
-        } else if (STAT instanceof PermanentStat) {
-            return PermanentStat.getStat(STAT.getName()).calculate(pokemon);
-        }
-
-        throw new IllegalStateException("Invalid stat: " + STAT);
+        return STAT.calculate(pokemon);
     }
 
     public double calculateWithoutStages(@Nonnull Pokemon pokemon) {
-        if (STAT instanceof BattleStat) {
-            return 1.0;
-        } else if (STAT instanceof PermanentStat) {
-            return PermanentStat.getStat(STAT.getName()).calculateWithoutStages(pokemon);
-        }
-
-        throw new IllegalStateException("Invalid stat: " + STAT);
+        return STAT.calculateWithoutStages(pokemon);
     }
 
 }

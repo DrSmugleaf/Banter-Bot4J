@@ -113,7 +113,7 @@ public class Pokemon implements ITypes {
         }
         STATS = new Stats(builder);
 
-        hp = PermanentStat.HP.calculate(this);
+        hp = (int) PermanentStat.HP.calculate(this);
 
         MOVES.addAll(moves);
         weight = basePokemon.getWeight();

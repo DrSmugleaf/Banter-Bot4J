@@ -15,7 +15,7 @@ public enum PermanentStat implements IStat {
 
     HP("Health", "HP") {
         @Override
-        public int calculate(@Nonnull Pokemon pokemon) {
+        public double calculate(@Nonnull Pokemon pokemon) {
             Stat stat = pokemon.getStat(this);
 
             int baseStat = stat.getBase(pokemon.getBasePokemon());
@@ -40,7 +40,7 @@ public enum PermanentStat implements IStat {
         }
 
         @Override
-        public int calculateWithoutStages(@Nonnull Pokemon pokemon) {
+        public double calculateWithoutStages(@Nonnull Pokemon pokemon) {
             return this.calculate(pokemon);
         }
     },
@@ -84,7 +84,8 @@ public enum PermanentStat implements IStat {
         return this.ABBREVIATION;
     }
 
-    public int calculate(@Nonnull Pokemon pokemon) {
+    @Override
+    public double calculate(@Nonnull Pokemon pokemon) {
         Stat stat = pokemon.getStat(this);
 
         int baseStat = stat.getBase(pokemon.getBasePokemon());
@@ -110,8 +111,31 @@ public enum PermanentStat implements IStat {
         }
     }
 
-    public int calculateWithoutStages(@Nonnull Pokemon pokemon) {
-        return this.calculate(pokemon);
+    @Override
+    public double calculateWithoutStages(@Nonnull Pokemon pokemon) {
+        Stat stat = pokemon.getStat(this);
+
+        int baseStat = stat.getBase(pokemon.getBasePokemon());
+        int iv = stat.getIV();
+        int ev = stat.getEV();
+        int level = pokemon.getLevel();
+        double stageMultiplier = 1.0;
+
+        Generation generation = pokemon.getBattle().getGeneration();
+        switch (generation) {
+            case I:
+            case II:
+                return (int) ((int) (((((baseStat + iv) * 2 + (Math.sqrt(ev) / 4)) * level) / 100) + 5) * stageMultiplier);
+            case III:
+            case IV:
+            case V:
+            case VI:
+            case VII:
+                double natureMultiplier = pokemon.getNature().getNatureMultiplier(this);
+                return (int) ((int) (((int) ((((2.0 * baseStat + iv + (ev / 4.0)) * level) / 100.0) + 5.0)) * natureMultiplier) * stageMultiplier);
+            default:
+                throw new InvalidGenerationException(generation);
+        }
     }
 
     private static class Holder {

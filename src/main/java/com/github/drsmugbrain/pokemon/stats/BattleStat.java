@@ -1,5 +1,7 @@
 package com.github.drsmugbrain.pokemon.stats;
 
+import com.github.drsmugbrain.pokemon.Pokemon;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -31,6 +33,16 @@ public enum BattleStat implements IStat {
     @Override
     public String getAbbreviation() {
         return this.ABBREVIATION;
+    }
+
+    @Override
+    public double calculate(@Nonnull Pokemon pokemon) {
+        return pokemon.getStat(this).getStage().getStatMultiplier(this);
+    }
+
+    @Override
+    public double calculateWithoutStages(@Nonnull Pokemon pokemon) {
+        return 1.0;
     }
 
 }
