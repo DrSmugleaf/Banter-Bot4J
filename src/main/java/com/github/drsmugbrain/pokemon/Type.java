@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * Created by DrSmugleaf on 05/06/2017.
  */
-public enum Type {
+public enum Type implements IBattle {
 
     TYPELESS("Typeless"),
     CURSE("???"),
@@ -124,36 +124,6 @@ public enum Type {
         this.NAME = name;
     }
 
-    public static double getDamageMultiplier(@Nonnull Type pokemonType, @Nonnull Type attackType) {
-        if (pokemonType.getImmunities().contains(attackType)) {
-            return 0.0;
-        }
-
-        if (pokemonType.getWeaknesses().contains(attackType)) {
-            return 2.0;
-        }
-
-        if (pokemonType.getResistances().contains(attackType)) {
-            return 0.5;
-        }
-
-        return 1.0;
-    }
-
-    public static double getDamageMultiplier(@Nonnull List<Type> pokemonTypes, @Nonnull Type attackType) {
-        Double multiplier = 1.0;
-
-        for (Type pokemonType : pokemonTypes) {
-            multiplier *= Type.getDamageMultiplier(pokemonType, attackType);
-        }
-
-        return multiplier;
-    }
-
-    public static double getDamageMultiplier(@Nonnull Type[] pokemonTypes, @Nonnull Type attackType) {
-        return Type.getDamageMultiplier(Arrays.asList(pokemonTypes), attackType);
-    }
-
     @Nonnull
     public static Type getType(@Nonnull String type) {
         type = type.toLowerCase();
@@ -239,6 +209,30 @@ public enum Type {
     public List<Type> getImmunities() {
         return this.IMMUNE_TO;
     }
+
+    @Override
+    public double damageMultiplier(@Nonnull Pokemon attacker, @Nonnull Action action) {
+        Pokemon target = action.getTarget();
+        Type attackType = action.getType();
+
+        double modifier = 1.0;
+        for (Type type : target.getTypes()) {
+            if (type.getImmunities().contains(attackType)) {
+                return 0.0;
+            }
+
+            if (type.getWeaknesses().contains(attackType)) {
+                modifier *= 2;
+            }
+
+            if (type.getResistances().contains(attackType)) {
+                modifier /= 2;
+            }
+        }
+
+        return modifier;
+    }
+
 
     private static class Holder {
         static Map<String, Type> MAP = new HashMap<>();
