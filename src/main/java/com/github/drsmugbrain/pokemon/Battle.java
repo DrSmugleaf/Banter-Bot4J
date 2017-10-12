@@ -58,7 +58,7 @@ public class Battle extends Setup {
         return TURN_ORDER;
     }
 
-    protected Weather getWeather() {
+    public Weather getWeather() {
         return weather;
     }
 

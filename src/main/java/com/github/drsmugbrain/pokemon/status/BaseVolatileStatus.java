@@ -1,5 +1,6 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.status;
 
+import com.github.drsmugbrain.pokemon.*;
 import com.github.drsmugbrain.pokemon.types.Type;
 
 import javax.annotation.Nonnull;
@@ -53,7 +54,7 @@ public enum BaseVolatileStatus implements IModifier {
 
         @Override
         public void onTrainerTurnStart(@Nonnull Trainer trainer, @Nonnull Pokemon pokemon) {
-            pokemon.getVolatileStatus(this).getAction().getAttacker().setValidMoves(BaseMove.BIND);
+            pokemon.STATUSES.getVolatileStatus(this).getAction().getAttacker().setValidMoves(BaseMove.BIND);
         }
 
         @Override
@@ -61,7 +62,7 @@ public enum BaseVolatileStatus implements IModifier {
             Generation generation = user.getBattle().getGeneration();
 
             if (generation != Generation.I) {
-                Action action = user.getVolatileStatus(this).getAction();
+                Action action = user.STATUSES.getVolatileStatus(this).getAction();
                 Pokemon applier = action.getAttacker();
                 if (applier == enemy) {
                     remove(user, enemy, action);
@@ -177,7 +178,7 @@ public enum BaseVolatileStatus implements IModifier {
 
     AURORA_VEIL("Aurora Veil", 5) {
         @Override
-        protected void apply(Pokemon user, Pokemon target, Action action) {
+        public void apply(Pokemon user, Pokemon target, Action action) {
             if (user.getBattle().getWeather() != Weather.HAIL) {
                 this.fail();
                 return;
@@ -236,7 +237,7 @@ public enum BaseVolatileStatus implements IModifier {
             }
 
             if (baseMove.physicalContact()) {
-                attacker.setStatus(Status.POISON);
+                attacker.STATUSES.setStatus(Status.POISON);
             }
 
             return false;
@@ -255,7 +256,7 @@ public enum BaseVolatileStatus implements IModifier {
         @Override
         public boolean onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
             if (action.getBaseMove().physicalContact()) {
-                attacker.setStatus(Status.BURN);
+                attacker.STATUSES.setStatus(Status.BURN);
             }
 
             return true;
@@ -288,7 +289,7 @@ public enum BaseVolatileStatus implements IModifier {
         }
 
         @Override
-        protected void remove(Pokemon user, Pokemon target, Move move) {
+        public void remove(Pokemon user, Pokemon target, Move move) {
             super.remove(user, target, move);
         }
     },
@@ -385,21 +386,21 @@ public enum BaseVolatileStatus implements IModifier {
 
     protected void apply(Pokemon user, Pokemon target, Action action, int duration) {
         VolatileStatus volatileStatus = new VolatileStatus(this, action, duration);
-        target.addVolatileStatus(volatileStatus);
+        target.STATUSES.addVolatileStatus(volatileStatus);
     }
 
-    protected void apply(Pokemon user, Pokemon target, Action action) {
+    public void apply(Pokemon user, Pokemon target, Action action) {
         this.apply(user, target, action, getDuration(user, target, action));
     }
 
-    protected void remove(Pokemon user, Pokemon target, Move move) {
-        target.removeVolatileStatus(this);
+    public void remove(Pokemon user, Pokemon target, Move move) {
+        target.STATUSES.removeVolatileStatus(this);
     }
 
     protected void fail() {}
 
     protected void breakStatus(Pokemon target) {
-        target.removeVolatileStatus(this);
+        target.STATUSES.removeVolatileStatus(this);
     }
 
     protected void onTurnStart(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {}

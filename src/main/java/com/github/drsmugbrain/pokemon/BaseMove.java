@@ -4,6 +4,9 @@ import com.github.drsmugbrain.pokemon.events.EventDispatcher;
 import com.github.drsmugbrain.pokemon.events.PokemonDodgeEvent;
 import com.github.drsmugbrain.pokemon.stats.BattleStat;
 import com.github.drsmugbrain.pokemon.stats.PermanentStat;
+import com.github.drsmugbrain.pokemon.status.BaseVolatileStatus;
+import com.github.drsmugbrain.pokemon.status.Status;
+import com.github.drsmugbrain.pokemon.status.VolatileStatus;
 import com.github.drsmugbrain.pokemon.types.Type;
 
 import javax.annotation.Nonnull;
@@ -152,7 +155,7 @@ public enum BaseMove implements IModifier {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
             for (Pokemon pokemon : user.getTrainer().getPokemons()) {
-                pokemon.resetStatus();
+                pokemon.STATUSES.resetStatus();
             }
 
             return super.use(user, target, battle, action);
@@ -410,10 +413,10 @@ public enum BaseMove implements IModifier {
                 return this.miss(target);
             }
 
-            Collection<VolatileStatus> volatileStatuses = user.getVolatileStatuses().values();
+            Collection<VolatileStatus> volatileStatuses = user.STATUSES.getVolatileStatuses().values();
             volatileStatuses.removeIf(status -> status.getBaseVolatileStatus() == BaseVolatileStatus.INFATUATION);
 
-            target.addVolatileStatus(volatileStatuses);
+            target.STATUSES.addVolatileStatus(volatileStatuses);
             target.setStages(user);
             user.getTrainer().switchPokemon(user, target);
             return super.use(user, target, battle, action);
@@ -441,7 +444,7 @@ public enum BaseMove implements IModifier {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
             List<Pokemon> validPokemons = user.getTrainer().getAlivePokemons();
-            validPokemons.removeIf(pokemon -> pokemon.getStatus() != null);
+            validPokemons.removeIf(pokemon -> pokemon.STATUSES.getStatus() != null);
 
             int totalDamage = 0;
             int damage;
@@ -508,7 +511,7 @@ public enum BaseMove implements IModifier {
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
             Action lastAction = user.getLastAction();
 
-            if (!target.hasVolatileStatus(BaseVolatileStatus.BOUND)) {
+            if (!target.STATUSES.hasVolatileStatus(BaseVolatileStatus.BOUND)) {
                 BaseVolatileStatus.BOUND.apply(user, target, action);
             } else if (lastAction.getBaseMove() == BaseMove.BIND &&
                        lastAction.getTarget() == target) {
@@ -601,9 +604,9 @@ public enum BaseMove implements IModifier {
     BOUNCE("Bounce") {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
-            if (!user.hasVolatileStatus(BaseVolatileStatus.BOUNCE)) {
+            if (!user.STATUSES.hasVolatileStatus(BaseVolatileStatus.BOUNCE)) {
                 VolatileStatus status = new VolatileStatus(BaseVolatileStatus.BOUNCE, action, 2);
-                user.addVolatileStatus(status);
+                user.STATUSES.addVolatileStatus(status);
                 return 0;
             }
 
@@ -634,7 +637,7 @@ public enum BaseMove implements IModifier {
                     }
                 case IV:
                     for (Pokemon pokemon : target.getTrainer().getActivePokemons()) {
-                        pokemon.removeVolatileStatus(BaseVolatileStatus.LIGHT_SCREEN, BaseVolatileStatus.REFLECT);
+                        pokemon.STATUSES.removeVolatileStatus(BaseVolatileStatus.LIGHT_SCREEN, BaseVolatileStatus.REFLECT);
                     }
                     break;
                 case V:
@@ -645,7 +648,7 @@ public enum BaseMove implements IModifier {
                     }
 
                     for (Pokemon pokemon : target.getTrainer().getActivePokemons()) {
-                        pokemon.removeVolatileStatus(BaseVolatileStatus.LIGHT_SCREEN, BaseVolatileStatus.REFLECT, BaseVolatileStatus.AURORA_VEIL);
+                        pokemon.STATUSES.removeVolatileStatus(BaseVolatileStatus.LIGHT_SCREEN, BaseVolatileStatus.REFLECT, BaseVolatileStatus.AURORA_VEIL);
                     }
                     break;
                 default:
@@ -713,7 +716,7 @@ public enum BaseMove implements IModifier {
                 case V:
                 case VI:
                 case VII:
-                    if (user.getStatus() == Status.FREEZE) {
+                    if (user.STATUSES.getStatus() == Status.FREEZE) {
                         Status.FREEZE.remove(user);
                     }
                     break;
@@ -843,7 +846,7 @@ public enum BaseMove implements IModifier {
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
             Action lastAction = user.getLastAction();
 
-            if (!target.hasVolatileStatus(BaseVolatileStatus.BOUND)) {
+            if (!target.STATUSES.hasVolatileStatus(BaseVolatileStatus.BOUND)) {
                 BaseVolatileStatus.BOUND.apply(user, target, action);
             } else if (lastAction.getBaseMove() == BaseMove.CLAMP &&
                        lastAction.getTarget() == target) {
@@ -953,7 +956,7 @@ public enum BaseMove implements IModifier {
             switch (battle.getGeneration()) {
                 case I:
                 case II:
-                    if (!target.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+                    if (!target.STATUSES.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
                         return super.use(user, target, battle, action, repeats);
                     }
 
@@ -967,7 +970,7 @@ public enum BaseMove implements IModifier {
                             this.use(target, firstHitDamage);
                         }
 
-                        if (!target.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+                        if (!target.STATUSES.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
                             break;
                         }
                     }
@@ -1348,7 +1351,7 @@ public enum BaseMove implements IModifier {
 
             Item targetItem = target.getItem();
             ItemCategory targetItemCategory = targetItem.getCategory();
-            if (!user.hasItem() && target.hasItem() && !target.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+            if (!user.hasItem() && target.hasItem() && !target.STATUSES.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
                 switch (battle.getGeneration()) {
                     case I:
                     case II:
@@ -1556,7 +1559,7 @@ public enum BaseMove implements IModifier {
             switch (generation) {
                 case I:
                 case II:
-                    if (defender.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+                    if (defender.STATUSES.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
                         return false;
                     }
                     break;
@@ -1653,14 +1656,14 @@ public enum BaseMove implements IModifier {
                 case VI:
                     for (Pokemon adjacentEnemyPokemon : adjacentEnemyPokemons) {
                         if (Math.random() < 0.8) {
-                            adjacentEnemyPokemon.setStatus(Status.SLEEP);
+                            adjacentEnemyPokemon.STATUSES.setStatus(Status.SLEEP);
                         }
                     }
                     break;
                 case VII:
                     for (Pokemon adjacentEnemyPokemon : adjacentEnemyPokemons) {
                         if (Math.random() < 0.5) {
-                            adjacentEnemyPokemon.setStatus(Status.SLEEP);
+                            adjacentEnemyPokemon.STATUSES.setStatus(Status.SLEEP);
                         }
                     }
                     break;
@@ -1983,7 +1986,7 @@ public enum BaseMove implements IModifier {
                 case V:
                 case VI:
                 case VII:
-                    if (user.getStatus() == Status.FREEZE) {
+                    if (user.STATUSES.getStatus() == Status.FREEZE) {
                         Status.FREEZE.remove(user);
                     }
                     break;
@@ -2005,7 +2008,7 @@ public enum BaseMove implements IModifier {
                 case V:
                 case VI:
                 case VII:
-                    if (user.getStatus() == Status.FREEZE) {
+                    if (user.STATUSES.getStatus() == Status.FREEZE) {
                         Status.FREEZE.remove(user);
                     }
                     break;
@@ -2052,7 +2055,7 @@ public enum BaseMove implements IModifier {
                 case V:
                 case VI:
                 case VII:
-                    if (user.getStatus() == Status.FREEZE) {
+                    if (user.STATUSES.getStatus() == Status.FREEZE) {
                         Status.FREEZE.remove(user);
                     }
                     break;
@@ -2103,12 +2106,12 @@ public enum BaseMove implements IModifier {
                             pokemon.resetStages();
                             pokemon.removeStatModifier(Status.BURN, Status.PARALYSIS);
 //                            pokemon.removeVolatileStatus(); // TODO: Removes effects of focus energy, dire hit, mist, guard spec, x accuracy, leech sed, disable, reflect, light screen
-                            pokemon.removeVolatileStatus(BaseVolatileStatus.CONFUSION);
-                            if (pokemon.getStatus() == Status.BADLY_POISONED) {
-                                pokemon.setStatus(Status.POISON);
+                            pokemon.STATUSES.removeVolatileStatus(BaseVolatileStatus.CONFUSION);
+                            if (pokemon.STATUSES.getStatus() == Status.BADLY_POISONED) {
+                                pokemon.STATUSES.setStatus(Status.POISON);
                             }
                             if (pokemon != user) {
-                                pokemon.resetStatus();
+                                pokemon.STATUSES.resetStatus();
                             }
                         }
                     }
@@ -2121,7 +2124,7 @@ public enum BaseMove implements IModifier {
                 case VII:
                     for (Trainer battleTrainer : battle.getTrainers().values()) {
                         for (Pokemon pokemon : battleTrainer.getActivePokemons()) {
-                            if (battle.getGeneration() == Generation.III && pokemon.hasVolatileStatus(BaseVolatileStatus.PROTECTION)) {
+                            if (battle.getGeneration() == Generation.III && pokemon.STATUSES.hasVolatileStatus(BaseVolatileStatus.PROTECTION)) {
                                 this.miss(user);
                             }
                             pokemon.resetStages();
@@ -2393,7 +2396,7 @@ public enum BaseMove implements IModifier {
                 case V:
                 case VI:
                 case VII:
-                    if (user.getStatus() == Status.FREEZE) {
+                    if (user.STATUSES.getStatus() == Status.FREEZE) {
                         Status.FREEZE.remove(user);
                     }
                     break;
@@ -2420,7 +2423,7 @@ public enum BaseMove implements IModifier {
                 case V:
                 case VI:
                 case VII:
-                    if (user.getStatus() == Status.FREEZE) {
+                    if (user.STATUSES.getStatus() == Status.FREEZE) {
                         Status.FREEZE.remove(user);
                     }
                     break;
@@ -2514,7 +2517,7 @@ public enum BaseMove implements IModifier {
                 case V:
                 case VI:
                 case VII:
-                    if (user.getStatus() == Status.FREEZE) {
+                    if (user.STATUSES.getStatus() == Status.FREEZE) {
                         Status.FREEZE.remove(user);
                     }
                     break;
@@ -2594,7 +2597,7 @@ public enum BaseMove implements IModifier {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
             if (battle.getGeneration() == Generation.II) {
-                if (target.getStatus() == Status.FREEZE && Math.random() < 0.3) {
+                if (target.STATUSES.getStatus() == Status.FREEZE && Math.random() < 0.3) {
                     Status.FREEZE.remove(user);
                 }
             }

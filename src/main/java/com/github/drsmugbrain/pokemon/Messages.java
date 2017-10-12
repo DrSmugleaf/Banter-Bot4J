@@ -1,6 +1,8 @@
 package com.github.drsmugbrain.pokemon;
 
 import com.github.drsmugbrain.pokemon.stats.PermanentStat;
+import com.github.drsmugbrain.pokemon.status.Status;
+import com.github.drsmugbrain.pokemon.status.VolatileStatus;
 import com.github.drsmugbrain.pokemon.types.Type;
 
 import javax.annotation.Nonnull;

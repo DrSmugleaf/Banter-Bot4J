@@ -1,6 +1,7 @@
 package com.github.drsmugbrain.pokemon;
 
 import com.github.drsmugbrain.pokemon.events.*;
+import com.github.drsmugbrain.pokemon.status.BaseVolatileStatus;
 import com.google.common.collect.Lists;
 
 import javax.annotation.Nonnull;
@@ -322,7 +323,7 @@ public class Trainer extends Player {
 
     protected void removeVolatileStatus(@Nonnull BaseVolatileStatus... volatileStatuses) {
         for (Pokemon pokemon : ACTIVE_POKEMONS) {
-            pokemon.removeVolatileStatus(volatileStatuses);
+            pokemon.STATUSES.removeVolatileStatus(volatileStatuses);
         }
     }
 

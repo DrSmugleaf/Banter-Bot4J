@@ -1,5 +1,7 @@
 package com.github.drsmugbrain.pokemon;
 
+import com.github.drsmugbrain.pokemon.status.BaseVolatileStatus;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
@@ -38,15 +40,15 @@ public class Action extends Move {
 
     private final int TURN;
 
-    Action(@Nonnull Move move, @Nonnull Pokemon attacker, @Nonnull Pokemon target, int turn) {
+    public Action(@Nonnull Move move, @Nonnull Pokemon attacker, @Nonnull Pokemon target, int turn) {
         super(move.getBaseMove());
 
         MOVE = move;
         ATTACKER = attacker;
         TARGET = target;
 
-        ATTACKER_VOLATILE_STATUSES.addAll(attacker.getVolatileStatuses().keySet());
-        TARGET_VOLATILE_STATUSES.addAll(target.getVolatileStatuses().keySet());
+        ATTACKER_VOLATILE_STATUSES.addAll(attacker.STATUSES.getVolatileStatuses().keySet());
+        TARGET_VOLATILE_STATUSES.addAll(target.STATUSES.getVolatileStatuses().keySet());
 
         TURN = turn;
     }
@@ -157,7 +159,7 @@ public class Action extends Move {
         super.tryUse(ATTACKER, TARGET, this);
     }
 
-    protected void reflect() {
+    public void reflect() {
         Action action = new Action(MOVE, TARGET, ATTACKER, TARGET.getBattle().getTurn());
         action.MOVE.getBaseMove().use(action.ATTACKER, action.TARGET, action.ATTACKER.getBattle(), action);
     }

@@ -2,6 +2,7 @@ package com.github.drsmugbrain.pokemon;
 
 import com.github.drsmugbrain.pokemon.events.*;
 import com.github.drsmugbrain.pokemon.stats.*;
+import com.github.drsmugbrain.pokemon.status.*;
 import com.github.drsmugbrain.pokemon.types.ITypes;
 import com.github.drsmugbrain.pokemon.types.Type;
 
@@ -19,6 +20,9 @@ public class Pokemon implements ITypes, IStats {
 
     @Nonnull
     private final Species BASE_POKEMON;
+
+    @Nonnull
+    private final List<Type> TYPES = new ArrayList<>();
 
     @Nonnull
     private final String NICKNAME;
@@ -46,7 +50,7 @@ public class Pokemon implements ITypes, IStats {
     private int hp;
 
     @Nonnull
-    private final Map<BaseVolatileStatus, VolatileStatus> VOLATILE_STATUSES = new LinkedHashMap<>();
+    public final Statuses STATUSES = new Statuses();
 
     @Nonnull
     private final List<Move> MOVES = new ArrayList<>();
@@ -56,9 +60,6 @@ public class Pokemon implements ITypes, IStats {
 
     @Nullable
     private Action action = null;
-
-    @Nullable
-    private Status status = null;
 
     private boolean abilitySuppressed = false;
 
@@ -329,7 +330,7 @@ public class Pokemon implements ITypes, IStats {
         }
     }
 
-    protected void damage(double percentage) {
+    public void damage(double percentage) {
         int maxHP = getMaxHP();
         int amount = (int) (maxHP * (percentage / 100.0d));
         damage(amount);
@@ -358,19 +359,6 @@ public class Pokemon implements ITypes, IStats {
         TRAINER.removeActivePokemon(this);
         Event event = new PokemonDeathEvent(this);
         EventDispatcher.dispatch(event);
-    }
-
-    @Nullable
-    public Status getStatus() {
-        return status;
-    }
-
-    protected void resetStatus() {
-        status = null;
-    }
-
-    protected void setStatus(@Nonnull Status status) {
-        this.status = status;
     }
 
     protected boolean hasAllMoves(BaseMove... moves) {
@@ -417,7 +405,7 @@ public class Pokemon implements ITypes, IStats {
         return new ArrayList<>(VALID_MOVES);
     }
 
-    protected void setValidMoves(@Nonnull BaseMove... moves) {
+    public void setValidMoves(@Nonnull BaseMove... moves) {
         VALID_MOVES.clear();
         VALID_MOVES.addAll(Arrays.asList(moves));
     }
@@ -438,36 +426,6 @@ public class Pokemon implements ITypes, IStats {
         VALID_MOVES.clear();
         for (Move move : MOVES) {
             VALID_MOVES.add(move.getBaseMove());
-        }
-    }
-
-    protected void addVolatileStatus(@Nonnull Collection<VolatileStatus> statuses) {
-        for (VolatileStatus volatileStatus : statuses) {
-            VOLATILE_STATUSES.put(volatileStatus.getBaseVolatileStatus(), volatileStatus);
-        }
-    }
-
-    protected void addVolatileStatus(@Nonnull VolatileStatus... statuses) {
-        addVolatileStatus(Arrays.asList(statuses));
-    }
-
-    @Nullable
-    protected VolatileStatus getVolatileStatus(@Nonnull BaseVolatileStatus status) {
-        return VOLATILE_STATUSES.get(status);
-    }
-
-    @Nonnull
-    public Map<BaseVolatileStatus, VolatileStatus> getVolatileStatuses() {
-        return new LinkedHashMap<>(VOLATILE_STATUSES);
-    }
-
-    protected boolean hasVolatileStatus(@Nonnull BaseVolatileStatus status) {
-        return VOLATILE_STATUSES.containsKey(status);
-    }
-
-    protected void removeVolatileStatus(@Nonnull BaseVolatileStatus... statuses) {
-        for (BaseVolatileStatus baseVolatileStatus : statuses) {
-            VOLATILE_STATUSES.remove(baseVolatileStatus);
         }
     }
 
@@ -557,11 +515,11 @@ public class Pokemon implements ITypes, IStats {
         return TRAINER.getRandomAdjacentEnemyPokemon(this);
     }
 
-    protected void addStatModifier(@Nonnull IStat stat, @Nonnull IModifier source, double modifier) {
+    public void addStatModifier(@Nonnull IStat stat, @Nonnull IModifier source, double modifier) {
         STAT_MODIFIERS.get(stat).put(source, modifier);
     }
 
-    protected void removeStatModifier(@Nonnull IModifier... sources) {
+    public void removeStatModifier(@Nonnull IModifier... sources) {
         for (Map<IModifier, Double> iBattleDoubleMap : STAT_MODIFIERS.values()) {
             for (IModifier source : sources) {
                 iBattleDoubleMap.remove(source);
@@ -569,15 +527,15 @@ public class Pokemon implements ITypes, IStats {
         }
     }
 
-    protected int getToxicN() {
+    public int getToxicN() {
         return toxicN;
     }
 
-    protected void increaseToxicN() {
+    public void increaseToxicN() {
         toxicN++;
     }
 
-    protected void resetToxicN() {
+    public void resetToxicN() {
         toxicN = 1;
     }
 

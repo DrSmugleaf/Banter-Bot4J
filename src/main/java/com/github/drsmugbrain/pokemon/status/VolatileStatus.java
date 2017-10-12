@@ -1,4 +1,6 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.status;
+
+import com.github.drsmugbrain.pokemon.Action;
 
 import javax.annotation.Nonnull;
 
@@ -11,7 +13,7 @@ public class VolatileStatus {
     private final Action ACTION;
     private final int DURATION;
 
-    protected VolatileStatus(
+    public VolatileStatus(
             @Nonnull BaseVolatileStatus baseVolatileStatus,
             @Nonnull Action action,
             int duration

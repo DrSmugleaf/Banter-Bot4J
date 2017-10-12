@@ -1,5 +1,6 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.status;
 
+import com.github.drsmugbrain.pokemon.*;
 import com.github.drsmugbrain.pokemon.stats.IStat;
 import com.github.drsmugbrain.pokemon.stats.PermanentStat;
 import com.github.drsmugbrain.pokemon.types.Type;
@@ -25,7 +26,7 @@ public enum Status implements IModifier {
         }
 
         @Override
-        protected void remove(Pokemon pokemon) {
+        public void remove(Pokemon pokemon) {
             if (pokemon.getBattle().getGeneration() == Generation.I) {
                 pokemon.removeStatModifier(BURN);
             }
@@ -177,7 +178,7 @@ public enum Status implements IModifier {
         }
 
         @Override
-        protected void remove(Pokemon pokemon) {
+        public void remove(Pokemon pokemon) {
             if (pokemon.getBattle().getGeneration() == Generation.I) {
                 pokemon.removeStatModifier(PARALYSIS);
             }
@@ -244,7 +245,7 @@ public enum Status implements IModifier {
     },
     BADLY_POISONED("Badly poisoned") {
         @Override
-        protected void remove(Pokemon user) {
+        public void remove(Pokemon user) {
             user.resetToxicN();
             super.remove(user);
         }
@@ -339,13 +340,13 @@ public enum Status implements IModifier {
 
     @OverridingMethodsMustInvokeSuper
     protected boolean apply(Pokemon pokemon) {
-        pokemon.setStatus(this);
+        pokemon.STATUSES.setStatus(this);
         return true;
     }
 
     @OverridingMethodsMustInvokeSuper
-    protected void remove(Pokemon pokemon) {
-        pokemon.resetStatus();
+    public void remove(Pokemon pokemon) {
+        pokemon.STATUSES.resetStatus();
     }
 
 }
