@@ -1,5 +1,8 @@
 package com.github.drsmugbrain.pokemon.status;
 
+import com.github.drsmugbrain.pokemon.Action;
+import com.github.drsmugbrain.pokemon.Pokemon;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -7,6 +10,8 @@ import javax.annotation.Nonnull;
  */
 public interface IStatus {
 
-    void apply(@Nonnull BaseVolatileStatus status);
+    void apply(@Nonnull Pokemon pokemon, @Nonnull Action action);
+
+    void remove(@Nonnull Pokemon pokemon);
 
 }

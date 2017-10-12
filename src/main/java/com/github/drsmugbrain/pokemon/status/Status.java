@@ -7,26 +7,25 @@ import com.github.drsmugbrain.pokemon.types.Type;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by DrSmugleaf on 08/06/2017.
  */
-public enum Status implements IModifier {
+public enum Status implements IStatus, IModifier {
 
     BURN("Burn") {
         @Override
-        protected boolean apply(Pokemon pokemon) {
+        public void apply(@Nonnull Pokemon pokemon, @Nonnull Action action) {
             if (pokemon.getBattle().getGeneration() == Generation.I) {
                 pokemon.addStatModifier(PermanentStat.ATTACK, BURN, 0.5);
             }
 
-            return super.apply(pokemon);
+            super.apply(pokemon, action);
         }
 
         @Override
-        public void remove(Pokemon pokemon) {
+        public void remove(@Nonnull Pokemon pokemon) {
             if (pokemon.getBattle().getGeneration() == Generation.I) {
                 pokemon.removeStatModifier(BURN);
             }
@@ -169,16 +168,16 @@ public enum Status implements IModifier {
     },
     PARALYSIS("Paralysis") {
         @Override
-        protected boolean apply(Pokemon pokemon) {
+        public void apply(@Nonnull Pokemon pokemon, @Nonnull Action action) {
             if (pokemon.getBattle().getGeneration() == Generation.I) {
                 pokemon.addStatModifier(PermanentStat.SPEED, PARALYSIS, 0.5);
             }
 
-            return super.apply(pokemon);
+            super.apply(pokemon, action);
         }
 
         @Override
-        public void remove(Pokemon pokemon) {
+        public void remove(@Nonnull Pokemon pokemon) {
             if (pokemon.getBattle().getGeneration() == Generation.I) {
                 pokemon.removeStatModifier(PARALYSIS);
             }
@@ -245,7 +244,7 @@ public enum Status implements IModifier {
     },
     BADLY_POISONED("Badly poisoned") {
         @Override
-        public void remove(Pokemon user) {
+        public void remove(@Nonnull Pokemon user) {
             user.resetToxicN();
             super.remove(user);
         }
@@ -338,14 +337,13 @@ public enum Status implements IModifier {
         return null;
     }
 
-    @OverridingMethodsMustInvokeSuper
-    protected boolean apply(Pokemon pokemon) {
+    @Override
+    public void apply(@Nonnull Pokemon pokemon, @Nonnull Action action) {
         pokemon.STATUSES.setStatus(this);
-        return true;
     }
 
-    @OverridingMethodsMustInvokeSuper
-    public void remove(Pokemon pokemon) {
+    @Override
+    public void remove(@Nonnull Pokemon pokemon) {
         pokemon.STATUSES.resetStatus();
     }
 

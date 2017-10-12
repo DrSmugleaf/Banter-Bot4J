@@ -324,7 +324,7 @@ public enum BaseMove implements IModifier {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
             if (Gender.isOppositeGender(user, target)) {
-                BaseVolatileStatus.INFATUATION.apply(user, target, action);
+                BaseVolatileStatus.INFATUATION.apply(user, action);
                 return super.use(user, target, battle, action);
             } else {
                 return this.miss(target);
@@ -346,7 +346,7 @@ public enum BaseMove implements IModifier {
                 return this.miss(target);
             }
 
-            BaseVolatileStatus.AURORA_VEIL.apply(user, target, action);
+            BaseVolatileStatus.AURORA_VEIL.apply(user, action);
             return super.use(user, target, battle, action);
         }
 
@@ -430,13 +430,13 @@ public enum BaseMove implements IModifier {
     },
     BEAK_BLAST("Beak Blast") {
         @Override
-        public void onTurnStart(@Nonnull Battle battle, @Nonnull Pokemon user) {
-            BaseVolatileStatus.BEAK_BLAST.apply(user, user, null);
+        public void onTurnStart(@Nonnull Action action) {
+            BaseVolatileStatus.BEAK_BLAST.apply(action.getAttacker(), action);
         }
 
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
-            BaseVolatileStatus.BEAK_BLAST.remove(user, target, action);
+            BaseVolatileStatus.BEAK_BLAST.remove(user);
             return super.use(user, target, battle, action);
         }
     },
@@ -502,7 +502,7 @@ public enum BaseMove implements IModifier {
     BIDE("Bide") {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
-            BaseVolatileStatus.BIDE.apply(user, target, action);
+            BaseVolatileStatus.BIDE.apply(user, action);
             return super.use(user, target, battle, action);
         }
     },
@@ -512,7 +512,7 @@ public enum BaseMove implements IModifier {
             Action lastAction = user.getLastAction();
 
             if (!target.STATUSES.hasVolatileStatus(BaseVolatileStatus.BOUND)) {
-                BaseVolatileStatus.BOUND.apply(user, target, action);
+                BaseVolatileStatus.BOUND.apply(user, action);
             } else if (lastAction.getBaseMove() == BaseMove.BIND &&
                        lastAction.getTarget() == target) {
                 action.increasePP(1);
@@ -784,7 +784,7 @@ public enum BaseMove implements IModifier {
     CHARGE("Charge") {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
-            BaseVolatileStatus.CHARGE.apply(user, target, action);
+            BaseVolatileStatus.CHARGE.apply(user, action);
 
             switch (battle.getGeneration()) {
                 case I:
@@ -847,7 +847,7 @@ public enum BaseMove implements IModifier {
             Action lastAction = user.getLastAction();
 
             if (!target.STATUSES.hasVolatileStatus(BaseVolatileStatus.BOUND)) {
-                BaseVolatileStatus.BOUND.apply(user, target, action);
+                BaseVolatileStatus.BOUND.apply(user, action);
             } else if (lastAction.getBaseMove() == BaseMove.CLAMP &&
                        lastAction.getTarget() == target) {
                 action.increasePP(1);
@@ -1449,7 +1449,7 @@ public enum BaseMove implements IModifier {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
             for (Pokemon pokemon : user.getTrainer().getActivePokemons()) {
-                BaseVolatileStatus.CRAFTY_SHIELD.apply(user, pokemon, action);
+                BaseVolatileStatus.CRAFTY_SHIELD.apply(user, action);
             }
 
             return super.use(user, target, battle, action);
@@ -1521,7 +1521,7 @@ public enum BaseMove implements IModifier {
 
             if (user.TYPES.isType(Type.GHOST)) {
                 user.damage(50.0);
-                BaseVolatileStatus.CURSE.apply(user, target, action);
+                BaseVolatileStatus.CURSE.apply(user, action);
             } else {
                 user.STATS.lowerStages(1, PermanentStat.SPEED);
                 user.STATS.raiseStages(1, PermanentStat.ATTACK);
@@ -1709,7 +1709,7 @@ public enum BaseMove implements IModifier {
     DEFENSE_CURL("Defense Curl") {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
-            BaseVolatileStatus.DEFENSE_CURL.apply(user, user, action);
+            BaseVolatileStatus.DEFENSE_CURL.apply(user, action);
             return super.use(user, target, battle, action);
         }
 

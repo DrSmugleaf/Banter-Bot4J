@@ -4,21 +4,20 @@ import com.github.drsmugbrain.pokemon.*;
 import com.github.drsmugbrain.pokemon.types.Type;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Created by DrSmugleaf on 18/06/2017.
  */
-public enum BaseVolatileStatus implements IModifier {
+public enum BaseVolatileStatus implements IStatus, IModifier {
 
     BOUND("Bound") {
-        @Nullable
+        @Nonnull
         @Override
-        public Integer getDuration(Pokemon user, Pokemon target, Move move) {
+        public Integer getDuration(@Nonnull Action action) {
             double random = Math.random();
             Integer duration;
 
-            Generation generation = user.getBattle().getGeneration();
+            Generation generation = action.getAttacker().getBattle().getGeneration();
             switch (generation) {
                 case I:
                 case II:
@@ -65,7 +64,7 @@ public enum BaseVolatileStatus implements IModifier {
                 Action action = user.STATUSES.getVolatileStatus(this).getAction();
                 Pokemon applier = action.getAttacker();
                 if (applier == enemy) {
-                    remove(user, enemy, action);
+                    remove(user);
                 }
             }
         }
@@ -178,13 +177,13 @@ public enum BaseVolatileStatus implements IModifier {
 
     AURORA_VEIL("Aurora Veil", 5) {
         @Override
-        public void apply(Pokemon user, Pokemon target, Action action) {
+        public void apply(@Nonnull Pokemon user, @Nonnull Action action) {
             if (user.getBattle().getWeather() != Weather.HAIL) {
                 this.fail();
                 return;
             }
 
-            super.apply(user, target, action);
+            super.apply(user, action);
         }
 
         @Override
@@ -289,8 +288,8 @@ public enum BaseVolatileStatus implements IModifier {
         }
 
         @Override
-        public void remove(Pokemon user, Pokemon target, Move move) {
-            super.remove(user, target, move);
+        public void remove(@Nonnull Pokemon user) {
+            super.remove(user);
         }
     },
 
@@ -358,14 +357,14 @@ public enum BaseVolatileStatus implements IModifier {
         }
     },
 
-    MIST("Mist", null),
+    MIST("Mist", Integer.MAX_VALUE),
 
     SAFEGUARD("Safeguard", 5);
 
     private final String NAME;
     private final Integer DURATION;
 
-    BaseVolatileStatus(@Nonnull String name, @Nullable Integer duration) {
+    BaseVolatileStatus(@Nonnull String name, @Nonnull Integer duration) {
         this.NAME = name;
         this.DURATION = duration;
     }
@@ -379,22 +378,21 @@ public enum BaseVolatileStatus implements IModifier {
         return NAME;
     }
 
-    @Nullable
-    public Integer getDuration(Pokemon user, Pokemon target, Move move) {
+    @Nonnull
+    public Integer getDuration(@Nonnull Action action) {
         return DURATION;
     }
 
-    protected void apply(Pokemon user, Pokemon target, Action action, int duration) {
-        VolatileStatus volatileStatus = new VolatileStatus(this, action, duration);
-        target.STATUSES.addVolatileStatus(volatileStatus);
+    @Override
+    public void apply(@Nonnull Pokemon pokemon, @Nonnull Action action) {
+        int duration = getDuration(action);
+        VolatileStatus status = new VolatileStatus(this, action, duration);
+        pokemon.STATUSES.addVolatileStatus(status);
     }
 
-    public void apply(Pokemon user, Pokemon target, Action action) {
-        this.apply(user, target, action, getDuration(user, target, action));
-    }
-
-    public void remove(Pokemon user, Pokemon target, Move move) {
-        target.STATUSES.removeVolatileStatus(this);
+    @Override
+    public void remove(@Nonnull Pokemon pokemon) {
+        pokemon.STATUSES.removeVolatileStatus(this);
     }
 
     protected void fail() {}

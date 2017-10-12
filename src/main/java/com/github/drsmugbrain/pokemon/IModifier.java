@@ -13,7 +13,7 @@ public interface IModifier {
 
     default void onTrainerTurnStart(@Nonnull Trainer trainer, @Nonnull Pokemon pokemon) {}
 
-    default void onTurnStart(@Nonnull Battle battle, @Nonnull Pokemon pokemon) {}
+    default void onTurnStart(@Nonnull Action action) {}
 
     default void onOwnSendBack(@Nonnull Pokemon pokemon) {}
 
