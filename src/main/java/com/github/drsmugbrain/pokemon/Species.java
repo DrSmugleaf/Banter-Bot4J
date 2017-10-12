@@ -3,7 +3,6 @@ package com.github.drsmugbrain.pokemon;
 import com.github.drsmugbrain.pokemon.stats.PermanentStat;
 import com.github.drsmugbrain.pokemon.types.Type;
 import com.github.drsmugbrain.util.Bot;
-import javafx.util.Pair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -1090,21 +1089,9 @@ public enum Species {
         return this.STATS;
     }
 
-    private Species addStats(Pair<PermanentStat, Integer>... stats) {
-        for (Pair<PermanentStat, Integer> stat : stats) {
-            this.STATS.put(stat.getKey(), stat.getValue());
-        }
-        return this;
-    }
-
     private Species addStats(PermanentStat stat, int amount) {
         this.STATS.put(stat, amount);
         return this;
-    }
-
-    private Species setStats(Pair<PermanentStat, Integer>... stats) {
-        this.STATS.clear();
-        return this.addStats(stats);
     }
 
     public List<Species> getEvolutions() {

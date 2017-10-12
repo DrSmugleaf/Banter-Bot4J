@@ -13,7 +13,7 @@ import java.util.*;
 /**
  * Created by DrSmugleaf on 29/09/2017.
  */
-public class Pokemon implements ITypes, IStats {
+public class Pokemon implements ITypes {
 
     @Nonnull
     private final Trainer TRAINER;
@@ -40,6 +40,9 @@ public class Pokemon implements ITypes, IStats {
     private final Gender GENDER;
 
     private int LEVEL;
+
+    @Nonnull
+    public final Stats STATS;
 
     @Nonnull
     private final Map<IStat, Map<IModifier, Double>> STAT_MODIFIERS = getDefaultStatModifiers();
@@ -109,7 +112,7 @@ public class Pokemon implements ITypes, IStats {
 
             builder.setEV(stat, ev);
         }
-        STATS.putAll(builder.build());
+        STATS = new Stats(builder);
 
         hp = (int) PermanentStat.HP.calculate(this);
 

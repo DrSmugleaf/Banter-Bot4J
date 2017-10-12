@@ -36,7 +36,7 @@ public enum BaseMove implements IModifier {
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
             int damage = super.use(user, target, battle, action);
             if (Math.random() < this.EFFECT_RATE) {
-                target.lowerStages(1, PermanentStat.SPECIAL_DEFENSE);
+                target.STATS.lowerStages(1, PermanentStat.SPECIAL_DEFENSE);
             }
             return damage;
         }
@@ -44,7 +44,7 @@ public enum BaseMove implements IModifier {
     ACID_ARMOR("Acid Armor") {
         @Override
         public int useAsZMove(@Nonnull Pokemon user, @Nullable Pokemon target, Battle battle, Action action) {
-            user.resetLoweredStages();
+            user.STATS.resetLoweredStages();
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -88,14 +88,14 @@ public enum BaseMove implements IModifier {
 
         @Override
         protected int useAsZMove(@Nonnull Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStages(1, PermanentStat.SPEED);
+            user.STATS.raiseStages(1, PermanentStat.SPEED);
             return super.useAsZMove(user, target, battle, action);
         }
     },
     AGILITY("Agility") {
         @Override
         public int useAsZMove(@Nonnull Pokemon user, @Nullable Pokemon target, @Nullable Battle battle, Action action) {
-            user.resetLoweredStages();
+            user.STATS.resetLoweredStages();
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -111,14 +111,14 @@ public enum BaseMove implements IModifier {
 
         @Override
         protected int useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, Action action) {
-            user.raiseStages(2, PermanentStat.SPEED);
+            user.STATS.raiseStages(2, PermanentStat.SPEED);
             return super.useAsZMove(user, target, battle, action);
         }
     },
     AMNESIA("Amnesia") {
         @Override
         public int useAsZMove(@Nonnull Pokemon user, @Nullable Pokemon target, @Nullable Battle battle, Action action) {
-            user.resetLoweredStages();
+            user.STATS.resetLoweredStages();
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -128,7 +128,7 @@ public enum BaseMove implements IModifier {
     AQUA_RING("Aqua Ring") {
         @Override
         protected int useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, Action action) {
-            user.raiseStages(1, PermanentStat.DEFENSE);
+            user.STATS.raiseStages(1, PermanentStat.DEFENSE);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -170,7 +170,7 @@ public enum BaseMove implements IModifier {
     AROMATIC_MIST("Aromatic Mist") {
         @Override
         protected int useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, Action action) {
-            user.raiseStages(2, PermanentStat.SPECIAL_DEFENSE);
+            user.STATS.raiseStages(2, PermanentStat.SPECIAL_DEFENSE);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -333,7 +333,7 @@ public enum BaseMove implements IModifier {
 
         @Override
         protected int useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, Action action) {
-            user.resetLoweredStages();
+            user.STATS.resetLoweredStages();
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -352,7 +352,7 @@ public enum BaseMove implements IModifier {
 
         @Override
         protected int useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, Action action) {
-            user.raiseStages(1, PermanentStat.SPEED);
+            user.STATS.raiseStages(1, PermanentStat.SPEED);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -365,7 +365,7 @@ public enum BaseMove implements IModifier {
 
         @Override
         protected int useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, Action action) {
-            user.resetLoweredStages();
+            user.STATS.resetLoweredStages();
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -402,7 +402,7 @@ public enum BaseMove implements IModifier {
     BARRIER("Barrier") {
         @Override
         protected int useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, Action action) {
-            user.resetLoweredStages();
+            user.STATS.resetLoweredStages();
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -417,14 +417,14 @@ public enum BaseMove implements IModifier {
             volatileStatuses.removeIf(status -> status.getBaseVolatileStatus() == BaseVolatileStatus.INFATUATION);
 
             target.STATUSES.addVolatileStatus(volatileStatuses);
-            target.setStages(user);
+            target.STATS.setStages(user);
             user.getTrainer().switchPokemon(user, target);
             return super.use(user, target, battle, action);
         }
 
         @Override
         protected int useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, Action action) {
-            user.resetLoweredStages();
+            user.STATS.resetLoweredStages();
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -567,7 +567,7 @@ public enum BaseMove implements IModifier {
     BLOCK("Block") {
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStages(1, PermanentStat.DEFENSE);
+            user.STATS.raiseStages(1, PermanentStat.DEFENSE);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -764,7 +764,7 @@ public enum BaseMove implements IModifier {
 
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStages(2, PermanentStat.SPECIAL_DEFENSE);
+            user.STATS.raiseStages(2, PermanentStat.SPECIAL_DEFENSE);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -772,11 +772,11 @@ public enum BaseMove implements IModifier {
     CELEBRATE("Celebrate") {
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStages(1, PermanentStat.ATTACK);
-            user.raiseStages(1, PermanentStat.DEFENSE);
-            user.raiseStages(1, PermanentStat.SPECIAL_ATTACK);
-            user.raiseStages(1, PermanentStat.SPECIAL_DEFENSE);
-            user.raiseStages(1, PermanentStat.SPEED);
+            user.STATS.raiseStages(1, PermanentStat.ATTACK);
+            user.STATS.raiseStages(1, PermanentStat.DEFENSE);
+            user.STATS.raiseStages(1, PermanentStat.SPECIAL_ATTACK);
+            user.STATS.raiseStages(1, PermanentStat.SPECIAL_DEFENSE);
+            user.STATS.raiseStages(1, PermanentStat.SPEED);
 
             return super.useAsZMove(user, target, battle, action);
         }
@@ -795,7 +795,7 @@ public enum BaseMove implements IModifier {
                 case V:
                 case VI:
                 case VII:
-                    user.raiseStages(1, PermanentStat.SPECIAL_DEFENSE);
+                    user.STATS.raiseStages(1, PermanentStat.SPECIAL_DEFENSE);
                     break;
                 default:
                     throw new InvalidGenerationException(battle.getGeneration());
@@ -806,7 +806,7 @@ public enum BaseMove implements IModifier {
 
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStages(1, PermanentStat.SPECIAL_DEFENSE);
+            user.STATS.raiseStages(1, PermanentStat.SPECIAL_DEFENSE);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -898,7 +898,7 @@ public enum BaseMove implements IModifier {
     CLEAR_SMOG("Clear Smog") {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
-            target.resetStages();
+            target.STATS.resetStages();
             return super.use(user, target, battle, action);
         }
     },
@@ -906,7 +906,7 @@ public enum BaseMove implements IModifier {
     COIL("Coil") {
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.resetLoweredStages();
+            user.STATS.resetLoweredStages();
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -990,14 +990,14 @@ public enum BaseMove implements IModifier {
     CONFIDE("Confide") {
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStages(1, PermanentStat.SPECIAL_DEFENSE);
+            user.STATS.raiseStages(1, PermanentStat.SPECIAL_DEFENSE);
             return super.useAsZMove(user, target, battle, action);
         }
     },
     CONFUSE_RAY("Confuse Ray") {
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStages(1, PermanentStat.SPECIAL_ATTACK);
+            user.STATS.raiseStages(1, PermanentStat.SPECIAL_ATTACK);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -1044,11 +1044,11 @@ public enum BaseMove implements IModifier {
 
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStages(1, PermanentStat.ATTACK);
-            user.raiseStages(1, PermanentStat.DEFENSE);
-            user.raiseStages(1, PermanentStat.SPECIAL_ATTACK);
-            user.raiseStages(1, PermanentStat.SPECIAL_DEFENSE);
-            user.raiseStages(1, PermanentStat.SPEED);
+            user.STATS.raiseStages(1, PermanentStat.ATTACK);
+            user.STATS.raiseStages(1, PermanentStat.DEFENSE);
+            user.STATS.raiseStages(1, PermanentStat.SPECIAL_ATTACK);
+            user.STATS.raiseStages(1, PermanentStat.SPECIAL_DEFENSE);
+            user.STATS.raiseStages(1, PermanentStat.SPEED);
 
             return super.useAsZMove(user, target, battle, action);
         }
@@ -1172,7 +1172,7 @@ public enum BaseMove implements IModifier {
 
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStages(1, BattleStat.ACCURACY);
+            user.STATS.raiseStages(1, BattleStat.ACCURACY);
 
             Move copiedMove = null;
 
@@ -1252,21 +1252,21 @@ public enum BaseMove implements IModifier {
     COSMIC_POWER("Cosmic Power") {
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStages(1, PermanentStat.SPECIAL_DEFENSE);
+            user.STATS.raiseStages(1, PermanentStat.SPECIAL_DEFENSE);
             return super.useAsZMove(user, target, battle, action);
         }
     },
     COTTON_GUARD("Cotton Guard") {
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.resetLoweredStages();
+            user.STATS.resetLoweredStages();
             return super.useAsZMove(user, target, battle, action);
         }
     },
     COTTON_SPORE("Cotton Spore") {
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.resetLoweredStages();
+            user.STATS.resetLoweredStages();
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -1457,7 +1457,7 @@ public enum BaseMove implements IModifier {
 
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStages(1, PermanentStat.SPECIAL_DEFENSE);
+            user.STATS.raiseStages(1, PermanentStat.SPECIAL_DEFENSE);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -1474,7 +1474,7 @@ public enum BaseMove implements IModifier {
                 case II:
                 case III:
                     if (chance < 0.2) {
-                        target.lowerStages(1, PermanentStat.SPECIAL_DEFENSE);
+                        target.STATS.lowerStages(1, PermanentStat.SPECIAL_DEFENSE);
                     }
                     break;
                 case IV:
@@ -1482,7 +1482,7 @@ public enum BaseMove implements IModifier {
                 case VI:
                 case VII:
                     if (chance < 0.2) {
-                        target.lowerStages(1, PermanentStat.DEFENSE);
+                        target.STATS.lowerStages(1, PermanentStat.DEFENSE);
                     }
                     break;
                 default:
@@ -1523,9 +1523,9 @@ public enum BaseMove implements IModifier {
                 user.damage(50.0);
                 BaseVolatileStatus.CURSE.apply(user, target, action);
             } else {
-                user.lowerStages(1, PermanentStat.SPEED);
-                user.raiseStages(1, PermanentStat.ATTACK);
-                user.raiseStages(1, PermanentStat.DEFENSE);
+                user.STATS.lowerStages(1, PermanentStat.SPEED);
+                user.STATS.raiseStages(1, PermanentStat.ATTACK);
+                user.STATS.raiseStages(1, PermanentStat.DEFENSE);
             }
 
             return damage;
@@ -1536,7 +1536,7 @@ public enum BaseMove implements IModifier {
             if (user.isType(Type.GHOST)) {
                 user.heal(100.0);
             } else {
-                user.raiseStages(1, PermanentStat.ATTACK);
+                user.STATS.raiseStages(1, PermanentStat.ATTACK);
             }
 
             return super.useAsZMove(user, target, battle, action);
@@ -1702,7 +1702,7 @@ public enum BaseMove implements IModifier {
     DEFEND_ORDER("Defend Order") {
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStages(1, PermanentStat.DEFENSE);
+            user.STATS.raiseStages(1, PermanentStat.DEFENSE);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -1715,7 +1715,7 @@ public enum BaseMove implements IModifier {
 
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStages(1, BattleStat.ACCURACY);
+            user.STATS.raiseStages(1, BattleStat.ACCURACY);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -1731,7 +1731,7 @@ public enum BaseMove implements IModifier {
                 case II:
                 case III:
                 case IV:
-                    target.lowerStages(1, BattleStat.EVASION);
+                    target.STATS.lowerStages(1, BattleStat.EVASION);
 
                     battle.setWeather(Weather.FOG);
 
@@ -1750,7 +1750,7 @@ public enum BaseMove implements IModifier {
                     break;
                 case V:
                     if (!action.targetHasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
-                        target.lowerStages(1, BattleStat.EVASION);
+                        target.STATS.lowerStages(1, BattleStat.EVASION);
                     }
 
                     battle.setWeather(Weather.FOG);
@@ -1770,7 +1770,7 @@ public enum BaseMove implements IModifier {
                     break;
                 case VI:
                     if (!action.targetHasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
-                        target.lowerStages(1, BattleStat.EVASION);
+                        target.STATS.lowerStages(1, BattleStat.EVASION);
                     }
 
                     battle.setWeather(Weather.FOG);
@@ -1797,7 +1797,7 @@ public enum BaseMove implements IModifier {
                     break;
                 case VII:
                     if (!action.targetHasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
-                        target.lowerStages(1, BattleStat.EVASION);
+                        target.STATS.lowerStages(1, BattleStat.EVASION);
                     }
 
                     battle.setWeather(Weather.FOG);
@@ -1832,7 +1832,7 @@ public enum BaseMove implements IModifier {
 
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStages(1, BattleStat.ACCURACY);
+            user.STATS.raiseStages(1, BattleStat.ACCURACY);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -1895,7 +1895,7 @@ public enum BaseMove implements IModifier {
 
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.raiseStages(1, BattleStat.EVASION);
+            user.STATS.raiseStages(1, BattleStat.EVASION);
             return super.useAsZMove(user, target, battle, action);
         }
     },
@@ -2103,7 +2103,7 @@ public enum BaseMove implements IModifier {
                 case I:
                     for (Trainer battleTrainer : battle.getTrainers().values()) {
                         for (Pokemon pokemon : battleTrainer.getActivePokemons()) {
-                            pokemon.resetStages();
+                            pokemon.STATS.resetStages();
                             pokemon.removeStatModifier(Status.BURN, Status.PARALYSIS);
 //                            pokemon.removeVolatileStatus(); // TODO: Removes effects of focus energy, dire hit, mist, guard spec, x accuracy, leech sed, disable, reflect, light screen
                             pokemon.STATUSES.removeVolatileStatus(BaseVolatileStatus.CONFUSION);
@@ -2127,7 +2127,7 @@ public enum BaseMove implements IModifier {
                             if (battle.getGeneration() == Generation.III && pokemon.STATUSES.hasVolatileStatus(BaseVolatileStatus.PROTECTION)) {
                                 this.miss(user);
                             }
-                            pokemon.resetStages();
+                            pokemon.STATS.resetStages();
                         }
                     }
                     break;

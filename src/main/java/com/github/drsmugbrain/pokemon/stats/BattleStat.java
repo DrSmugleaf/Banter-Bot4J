@@ -37,7 +37,7 @@ public enum BattleStat implements IStat {
 
     @Override
     public double calculate(@Nonnull Pokemon pokemon) {
-        return pokemon.get(this).getStage().getStatMultiplier(this);
+        return pokemon.STATS.get(this).getStage().getStatMultiplier(this);
     }
 
     @Override
