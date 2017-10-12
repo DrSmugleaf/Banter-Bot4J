@@ -219,7 +219,7 @@ public enum Type implements IModifier {
         Type attackType = action.getType();
 
         double modifier = 1.0;
-        for (Type type : target.getTypes()) {
+        for (Type type : target.TYPES.getTypes()) {
             if (type.getImmunities().contains(attackType)) {
                 return 0.0;
             }

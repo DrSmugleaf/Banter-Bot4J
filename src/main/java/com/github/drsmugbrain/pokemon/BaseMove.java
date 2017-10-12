@@ -450,7 +450,7 @@ public enum BaseMove implements IModifier {
             int damage;
             for (Pokemon pokemon : validPokemons) {
                 double stabMultiplier = 1.0;
-                if (pokemon.getTypes().contains(this.getType())) {
+                if (pokemon.TYPES.getTypes().contains(this.getType())) {
                     stabMultiplier = pokemon.getStabMultiplier(action);
                 }
                 damage = (int) (((pokemon.calculate(PermanentStat.ATTACK) / 10) + 5) * stabMultiplier);
@@ -526,7 +526,7 @@ public enum BaseMove implements IModifier {
             int damage;
             switch (attacker.getBattle().getGeneration()) {
                 case I:
-                    if (defender.isImmune(action)) {
+                    if (defender.TYPES.isImmune(action)) {
                         return 0;
                     }
 
@@ -643,7 +643,7 @@ public enum BaseMove implements IModifier {
                 case V:
                 case VI:
                 case VII:
-                    if (target.isImmune(action)) {
+                    if (target.TYPES.isImmune(action)) {
                         break;
                     }
 
@@ -722,14 +722,14 @@ public enum BaseMove implements IModifier {
                     break;
             }
 
-            List<Type> types = user.getTypes();
+            List<Type> types = user.TYPES.getTypes();
             if (types.contains(Type.FIRE)) {
                 types.remove(Type.FIRE);
                 if (types.size() == 0) {
                     types.add(Type.TYPELESS);
                 }
 
-                user.setTypes(types);
+                user.TYPES.setTypes(types);
             }
 
             return super.use(user, target, battle, action);
@@ -737,7 +737,7 @@ public enum BaseMove implements IModifier {
 
         @Override
         public boolean hits(@Nonnull Action action) {
-            if (!action.getAttacker().isType(Type.FIRE)) {
+            if (!action.getAttacker().TYPES.isType(Type.FIRE)) {
                 return false;
             }
 
@@ -748,7 +748,7 @@ public enum BaseMove implements IModifier {
     CAMOUFLAGE("Camouflage") {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
-            user.setTypes(Type.NORMAL);
+            user.TYPES.setTypes(Type.NORMAL);
             return super.use(user, target, battle, action);
         }
     },
@@ -861,7 +861,7 @@ public enum BaseMove implements IModifier {
             int damage;
             switch (attacker.getBattle().getGeneration()) {
                 case I:
-                    if (defender.isImmune(action)) {
+                    if (defender.TYPES.isImmune(action)) {
                         return 0;
                     }
 
@@ -1009,7 +1009,7 @@ public enum BaseMove implements IModifier {
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
             switch (battle.getGeneration()) {
                 case I:
-                    user.setTypes(target.getTypes());
+                    user.TYPES.setTypes(target.TYPES.getTypes());
                     break;
                 case II:
                 case III:
@@ -1020,7 +1020,7 @@ public enum BaseMove implements IModifier {
                     int randomIndex = ThreadLocalRandom.current().nextInt(moveTypes.size());
                     Type randomType = moveTypes.get(randomIndex);
 
-                    user.setTypes(randomType);
+                    user.TYPES.setTypes(randomType);
                     break;
                 }
                 case V: {
@@ -1029,13 +1029,13 @@ public enum BaseMove implements IModifier {
                     int randomIndex = ThreadLocalRandom.current().nextInt(moveTypes.size());
                     Type randomType = moveTypes.get(randomIndex);
 
-                    user.setTypes(randomType);
+                    user.TYPES.setTypes(randomType);
                     break;
                 }
                 case VI:
                 case VII:
                     Type firstMoveType = user.getMoves().get(0).getType();
-                    user.setTypes(firstMoveType);
+                    user.TYPES.setTypes(firstMoveType);
                     break;
             }
 
@@ -1097,7 +1097,7 @@ public enum BaseMove implements IModifier {
                     typesResisted.addAll(moveType.getResistances());
                     typesResisted.addAll(moveType.getImmunities());
 
-                    typesResisted.removeAll(user.getTypes());
+                    typesResisted.removeAll(user.TYPES.getTypes());
 
                     if (typesResisted.isEmpty()) {
                         return this.miss(target);
@@ -1110,7 +1110,7 @@ public enum BaseMove implements IModifier {
             int randomIndex = ThreadLocalRandom.current().nextInt(typesResisted.size());
             Type randomType = typesResisted.get(randomIndex);
 
-            user.setTypes(randomType);
+            user.TYPES.setTypes(randomType);
 
             return super.use(user, target, battle, action);
         }
@@ -1519,7 +1519,7 @@ public enum BaseMove implements IModifier {
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
             int damage = super.use(user, target, battle, action);
 
-            if (user.isType(Type.GHOST)) {
+            if (user.TYPES.isType(Type.GHOST)) {
                 user.damage(50.0);
                 BaseVolatileStatus.CURSE.apply(user, target, action);
             } else {
@@ -1533,7 +1533,7 @@ public enum BaseMove implements IModifier {
 
         @Override
         protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-            if (user.isType(Type.GHOST)) {
+            if (user.TYPES.isType(Type.GHOST)) {
                 user.heal(100.0);
             } else {
                 user.STATS.raiseStages(1, PermanentStat.ATTACK);
@@ -1574,13 +1574,13 @@ public enum BaseMove implements IModifier {
                 // In a Triple Battle, if the user gains the Ghost type before Curse executes,
                 // Curse will prioritize the opponent directly opposite the user as its target.
                 case V:
-                    if (attacker.isType(Type.GHOST) && attacker == defender) {
+                    if (attacker.TYPES.isType(Type.GHOST) && attacker == defender) {
                         attacker.retarget(attacker.getEnemyOppositePokemon());
                     }
                     break;
                 case VI:
                 case VII:
-                    if (attacker.isType(Type.GHOST) && attacker == defender) {
+                    if (attacker.TYPES.isType(Type.GHOST) && attacker == defender) {
 
                         Variation variation = attacker.getBattle().getVariation();
                         switch (variation) {
@@ -3257,7 +3257,7 @@ public enum BaseMove implements IModifier {
         }
 
         double stabMultiplier = attacker.getStabMultiplier(action);
-        double effectiveness = defender.getTypes().get(0).damageMultiplier(attacker, action);
+        double effectiveness = defender.TYPES.getTypes().get(0).damageMultiplier(attacker, action);
         double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
 
         if (this.CATEGORY == Category.PHYSICAL) {
@@ -3324,7 +3324,7 @@ public enum BaseMove implements IModifier {
         }
 
         double stabMultiplier = attacker.getStabMultiplier(action);
-        double effectiveness = defender.getTypes().get(0).damageMultiplier(attacker, action);
+        double effectiveness = defender.TYPES.getTypes().get(0).damageMultiplier(attacker, action);
         double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
 
         if (this.CATEGORY == Category.PHYSICAL) {
@@ -3385,7 +3385,7 @@ public enum BaseMove implements IModifier {
         Pokemon attacker = action.getAttacker();
         Pokemon defender = action.getTarget();
 
-        if (defender.isImmune(action)) {
+        if (defender.TYPES.isImmune(action)) {
             return false;
         }
 
@@ -3413,7 +3413,7 @@ public enum BaseMove implements IModifier {
         Pokemon attacker = action.getAttacker();
         Pokemon defender = action.getTarget();
 
-        if (defender.isImmune(action)) {
+        if (defender.TYPES.isImmune(action)) {
             return false;
         }
 

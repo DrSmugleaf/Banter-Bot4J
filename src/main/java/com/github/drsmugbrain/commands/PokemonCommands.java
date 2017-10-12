@@ -40,7 +40,7 @@ public class PokemonCommands {
             int maxHP = pokemon.getMaxHP();
             double percentageHP = Math.round((100.0 * currentHP / maxHP) * 10) / 10.0;
             builder.appendField(
-                    i+1 + ": " + pokemon.getName() + " (" + String.join(" ", pokemon.getTypesString()) + ")",
+                    i+1 + ": " + pokemon.getName() + " (" + String.join(" ", pokemon.TYPES.getTypesString()) + ")",
                     "HP: " + percentageHP + "% (" + currentHP + "/" + maxHP + ")\n" +
                             "Ability: " + pokemon.getAbility().getName() + " / Item: " + (pokemon.getItem() != null ? pokemon.getItem().getName() : "None") + "\n" +
                             "Stats: " + pokemon.getStatsStringWithoutHP(),

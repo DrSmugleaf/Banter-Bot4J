@@ -2,9 +2,8 @@ package com.github.drsmugbrain.pokemon;
 
 import com.github.drsmugbrain.pokemon.events.*;
 import com.github.drsmugbrain.pokemon.stats.*;
-import com.github.drsmugbrain.pokemon.status.*;
-import com.github.drsmugbrain.pokemon.types.ITypes;
-import com.github.drsmugbrain.pokemon.types.Type;
+import com.github.drsmugbrain.pokemon.status.Statuses;
+import com.github.drsmugbrain.pokemon.types.Types;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -13,7 +12,7 @@ import java.util.*;
 /**
  * Created by DrSmugleaf on 29/09/2017.
  */
-public class Pokemon implements ITypes {
+public class Pokemon {
 
     @Nonnull
     private final Trainer TRAINER;
@@ -22,7 +21,7 @@ public class Pokemon implements ITypes {
     private final Species BASE_POKEMON;
 
     @Nonnull
-    private final List<Type> TYPES = new ArrayList<>();
+    public final Types TYPES;
 
     @Nonnull
     private final String NICKNAME;
@@ -35,6 +34,7 @@ public class Pokemon implements ITypes {
 
     @Nullable
     private Item item;
+
 
     @Nonnull
     private final Gender GENDER;
@@ -91,7 +91,7 @@ public class Pokemon implements ITypes {
     ) {
         TRAINER = trainer;
         BASE_POKEMON = basePokemon;
-        setTypes(basePokemon.getTypes());
+        TYPES = new Types(basePokemon.getTypes());
         NICKNAME = nickname;
         ABILITY = ability;
         this.item = item;
@@ -540,17 +540,6 @@ public class Pokemon implements ITypes {
 
     public void resetToxicN() {
         toxicN = 1;
-    }
-
-    @Nonnull
-    public String[] getTypesString() {
-        List<String> types = new ArrayList<>();
-
-        for (Type type : TYPES) {
-            types.add(type.getName());
-        }
-
-        return types.toArray(new String[]{});
     }
 
     protected boolean isAlly(@Nonnull Pokemon pokemon) {
