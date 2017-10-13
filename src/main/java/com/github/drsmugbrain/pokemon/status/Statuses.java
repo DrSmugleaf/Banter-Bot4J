@@ -21,7 +21,7 @@ public class Statuses {
 
     public Statuses() {}
 
-    private static final Map<IStat, Map<IModifier, Double>> defaultModifiers() {
+    private static Map<IStat, Map<IModifier, Double>> defaultModifiers() {
         Map<IStat, Map<IModifier, Double>> statModifiers = new HashMap<>();
 
         for (IStat istat : StatBuilder.ISTATS) {
