@@ -3272,7 +3272,7 @@ public enum BaseMove implements IModifier {
 
         int damage = (int) (
                 (((((2 * level) / 5 + 2) * attackPower * attackStat / defenseStat) / 50) + 2)
-                * targets * weatherMultiplier * criticalMultiplier * randomNumber *  stabMultiplier * effectiveness
+                * targets * weatherMultiplier * criticalMultiplier * randomNumber * stabMultiplier * effectiveness
         );
         action.setDamage(defender, damage);
 
@@ -3339,7 +3339,7 @@ public enum BaseMove implements IModifier {
 
         int damage = (int) (
                 (((((2 * level) / 5 + 2) * attackPower * attackStat / defenseStat) / 50) + 2)
-                * targets * weatherMultiplier * criticalMultiplier * randomNumber *  stabMultiplier * effectiveness
+                * targets * weatherMultiplier * criticalMultiplier * randomNumber * stabMultiplier * effectiveness
         );
         action.setDamage(defender, damage);
 
