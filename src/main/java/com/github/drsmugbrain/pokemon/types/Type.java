@@ -1,8 +1,5 @@
 package com.github.drsmugbrain.pokemon.types;
 
-import com.github.drsmugbrain.pokemon.Action;
-import com.github.drsmugbrain.pokemon.IModifier;
-import com.github.drsmugbrain.pokemon.Pokemon;
 import org.json.JSONArray;
 
 import javax.annotation.Nonnull;
@@ -11,7 +8,7 @@ import java.util.*;
 /**
  * Created by DrSmugleaf on 05/06/2017.
  */
-public enum Type implements IModifier {
+public enum Type {
 
     TYPELESS("Typeless"),
     CURSE("???"),
@@ -211,29 +208,6 @@ public enum Type implements IModifier {
     @Nonnull
     public List<Type> getImmunities() {
         return this.IMMUNE_TO;
-    }
-
-    @Override
-    public double damageMultiplier(@Nonnull Pokemon attacker, @Nonnull Action action) {
-        Pokemon target = action.getTarget();
-        Type attackType = action.getType();
-
-        double modifier = 1.0;
-        for (Type type : target.TYPES.getTypes()) {
-            if (type.getImmunities().contains(attackType)) {
-                return 0.0;
-            }
-
-            if (type.getWeaknesses().contains(attackType)) {
-                modifier *= 2;
-            }
-
-            if (type.getResistances().contains(attackType)) {
-                modifier /= 2;
-            }
-        }
-
-        return modifier;
     }
 
     private static class Holder {

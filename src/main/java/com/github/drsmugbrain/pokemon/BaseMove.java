@@ -3257,7 +3257,7 @@ public enum BaseMove implements IModifier {
         }
 
         double stabMultiplier = attacker.getStabMultiplier(action);
-        double effectiveness = defender.TYPES.getTypes().get(0).damageMultiplier(attacker, action);
+        double effectiveness = defender.TYPES.damageMultiplier(attacker, action);
         double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
 
         if (this.CATEGORY == Category.PHYSICAL) {
@@ -3324,7 +3324,7 @@ public enum BaseMove implements IModifier {
         }
 
         double stabMultiplier = attacker.getStabMultiplier(action);
-        double effectiveness = defender.TYPES.getTypes().get(0).damageMultiplier(attacker, action);
+        double effectiveness = defender.TYPES.damageMultiplier(attacker, action);
         double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
 
         if (this.CATEGORY == Category.PHYSICAL) {
