@@ -1,8 +1,8 @@
 package com.github.drsmugbrain.pokemon.types;
 
-import com.github.drsmugbrain.pokemon.Action;
+import com.github.drsmugbrain.pokemon.moves.Action;
 import com.github.drsmugbrain.pokemon.IModifier;
-import com.github.drsmugbrain.pokemon.Move;
+import com.github.drsmugbrain.pokemon.moves.Move;
 import com.github.drsmugbrain.pokemon.Pokemon;
 
 import javax.annotation.Nonnull;

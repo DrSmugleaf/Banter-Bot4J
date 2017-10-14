@@ -1,5 +1,6 @@
 package com.github.drsmugbrain.pokemon;
 
+import com.github.drsmugbrain.pokemon.moves.Move;
 import com.github.drsmugbrain.pokemon.stats.PermanentStat;
 
 import javax.annotation.Nonnull;

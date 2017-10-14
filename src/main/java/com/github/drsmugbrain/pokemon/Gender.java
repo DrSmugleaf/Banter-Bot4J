@@ -49,7 +49,7 @@ public enum Gender { // TODO: Add list of Genderless Pokemon / Pokemon gender ra
         }
     }
 
-    protected static boolean isOppositeGender(@Nonnull Pokemon pokemon1, @Nonnull Pokemon pokemon2) {
+    public static boolean isOppositeGender(@Nonnull Pokemon pokemon1, @Nonnull Pokemon pokemon2) {
         switch (pokemon1.getGender()) {
             case MALE:
                 return pokemon2.getGender() == Gender.FEMALE;
@@ -62,7 +62,7 @@ public enum Gender { // TODO: Add list of Genderless Pokemon / Pokemon gender ra
         }
     }
 
-    protected static boolean isInfatuatable(@Nonnull Pokemon attacker, @Nonnull Pokemon defender) {
+    public static boolean isInfatuatable(@Nonnull Pokemon attacker, @Nonnull Pokemon defender) {
         if (defender.getAbility() == Ability.OBLIVIOUS) {
             return false;
         }

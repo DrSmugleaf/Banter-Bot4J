@@ -1,5 +1,6 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.moves;
 
+import com.github.drsmugbrain.pokemon.Pokemon;
 import com.github.drsmugbrain.pokemon.events.EventDispatcher;
 import com.github.drsmugbrain.pokemon.events.PokemonMoveEvent;
 import com.github.drsmugbrain.pokemon.types.Type;
@@ -19,7 +20,7 @@ public class Move {
     private Integer priority;
     private double damageMultiplier = 1.0;
 
-    Move(BaseMove baseMove) {
+    public Move(BaseMove baseMove) {
         this.BASE_MOVE = baseMove;
         this.type = baseMove.getType();
         this.category = baseMove.getCategory();

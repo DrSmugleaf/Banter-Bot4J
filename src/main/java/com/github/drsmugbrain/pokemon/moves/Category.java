@@ -1,4 +1,4 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.moves;
 
 import com.github.drsmugbrain.pokemon.stats.PermanentStat;
 

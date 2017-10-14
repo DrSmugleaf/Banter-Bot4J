@@ -1,5 +1,6 @@
 package com.github.drsmugbrain.pokemon;
 
+import com.github.drsmugbrain.pokemon.moves.Move;
 import com.github.drsmugbrain.pokemon.stats.PermanentStat;
 import com.github.drsmugbrain.pokemon.status.Status;
 import com.github.drsmugbrain.pokemon.status.VolatileStatus;

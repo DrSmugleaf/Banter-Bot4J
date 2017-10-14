@@ -1,4 +1,6 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.stats;
+
+import com.github.drsmugbrain.pokemon.moves.Category;
 
 /**
  * Created by DrSmugleaf on 14/07/2017.

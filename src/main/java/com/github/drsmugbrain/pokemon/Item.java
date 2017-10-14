@@ -347,7 +347,7 @@ public enum Item implements IModifier {
         return this.CATEGORY;
     }
 
-    protected void use(@Nonnull Pokemon user, @Nonnull Battle battle) {}
+    public void use(@Nonnull Pokemon user, @Nonnull Battle battle) {}
 
     private static class Holder {
         static Map<String, Item> MAP = new HashMap<>();

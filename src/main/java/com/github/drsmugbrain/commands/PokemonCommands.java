@@ -2,6 +2,8 @@ package com.github.drsmugbrain.commands;
 
 import com.github.drsmugbrain.pokemon.*;
 import com.github.drsmugbrain.pokemon.events.*;
+import com.github.drsmugbrain.pokemon.moves.BaseMove;
+import com.github.drsmugbrain.pokemon.moves.Move;
 import com.github.drsmugbrain.pokemon.stats.PermanentStat;
 import com.github.drsmugbrain.util.Bot;
 import sx.blah.discord.api.events.EventSubscriber;

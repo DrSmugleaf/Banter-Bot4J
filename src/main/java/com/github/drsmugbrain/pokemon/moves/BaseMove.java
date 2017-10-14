@@ -1,16 +1,21 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.moves;
 
+import com.github.drsmugbrain.pokemon.*;
 import com.github.drsmugbrain.pokemon.events.EventDispatcher;
 import com.github.drsmugbrain.pokemon.events.PokemonDodgeEvent;
-import com.github.drsmugbrain.pokemon.stats.BattleStat;
-import com.github.drsmugbrain.pokemon.stats.PermanentStat;
+import com.github.drsmugbrain.pokemon.stats.*;
 import com.github.drsmugbrain.pokemon.status.BaseVolatileStatus;
 import com.github.drsmugbrain.pokemon.status.Status;
 import com.github.drsmugbrain.pokemon.status.VolatileStatus;
 import com.github.drsmugbrain.pokemon.types.Type;
+import com.github.drsmugbrain.util.Bot;
+import com.opencsv.CSVReader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -522,7 +527,7 @@ public enum BaseMove implements IModifier {
         }
 
         @Override
-        protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+        public int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
             int damage;
             switch (attacker.getBattle().getGeneration()) {
                 case I:
@@ -815,7 +820,7 @@ public enum BaseMove implements IModifier {
     CHATTER("Chatter"),
     CHIP_AWAY("Chip Away") {
         @Override
-        protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+        public int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
             return super.getDamageWithoutDefenderStages(attacker, defender, action);
         }
 
@@ -857,7 +862,7 @@ public enum BaseMove implements IModifier {
         }
 
         @Override
-        protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+        public int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
             int damage;
             switch (attacker.getBattle().getGeneration()) {
                 case I:
@@ -1689,7 +1694,7 @@ public enum BaseMove implements IModifier {
     },
     DARKEST_LARIAT("Darkest Lariat") {
         @Override
-        protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+        public int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
             return super.getDamageWithoutDefenderStages(attacker, defender, action);
         }
 
@@ -2654,6 +2659,57 @@ public enum BaseMove implements IModifier {
     ZEN_HEADBUTT("Zen Headbutt"),
     ZING_ZAP("Zing Zap");
 
+    static {
+        CSVReader reader = null;
+        try {
+            reader = new CSVReader(new FileReader("moves.csv"), ',');
+        } catch (FileNotFoundException e) {
+            Bot.LOGGER.error("Error parsing moves.csv", e);
+        }
+
+        String[] nextLine;
+        try {
+            while ((nextLine = reader.readNext()) != null) {
+                BaseMove move = BaseMove.getMove(nextLine[0]);
+                move
+                        .setType(Type.getType(nextLine[1]))
+                        .setCategory(Category.getCategory(nextLine[2]))
+                        .setPP(Integer.parseInt(nextLine[3]))
+                        .setPower(Integer.parseInt(nextLine[4]))
+                        .setAccuracy(Integer.parseInt(nextLine[5]))
+                        .setBattleEffect(nextLine[6])
+                        .setInDepthEffect(nextLine[7].isEmpty() ? null : nextLine[7])
+                        .setSecondaryEffect(nextLine[8])
+                        .setEffectRate(nextLine[9].isEmpty() ? null : Integer.valueOf(nextLine[9]))
+                        .setIsSelfZMove(Boolean.parseBoolean(nextLine[10]))
+                        .setCorrespondingZMove(nextLine[11].isEmpty() ? null : BaseMove.getMove(nextLine[11]))
+                        .setZMoveItem(nextLine[12].isEmpty() ? null : Item.getItem(nextLine[12]))
+                        .setDetailedEffect(nextLine[13].isEmpty() ? null : nextLine[13])
+                        .setZMovePower(nextLine[14].isEmpty() ? null : Integer.valueOf(nextLine[14]))
+                        .setIsZMove(Boolean.parseBoolean(nextLine[15]))
+                        .setZMoveRequiredPokemon(nextLine[16].isEmpty() ? null : nextLine[16].split(","))
+                        .setZMoveRequiredMove(nextLine[17].isEmpty() ? null : BaseMove.getMove(nextLine[17]))
+                        .setZMoveMovesThatTurnIntoThis(nextLine[18].isEmpty() ? null : nextLine[18].split(","))
+                        .setBaseCriticalHitRate(nextLine[19].isEmpty() ? null : CriticalHitStage.getStageByPercentage(Double.parseDouble(nextLine[19])))
+                        .setPriority(Integer.parseInt(nextLine[20]))
+                        .setTarget(nextLine[21].isEmpty() ? null : Target.getTarget(nextLine[21]))
+                        .setPokemonHit(Hit.getHit(nextLine[22]))
+                        .setPhysicalContact(Boolean.parseBoolean(nextLine[23]))
+                        .setSoundType(Boolean.parseBoolean(nextLine[24]))
+                        .setPunchMove(Boolean.parseBoolean(nextLine[25]))
+                        .setSnatchable(Boolean.parseBoolean(nextLine[26]))
+                        .setZMove(Boolean.parseBoolean(nextLine[27]))
+                        .setDefrostsWhenUsed(Boolean.parseBoolean(nextLine[28]))
+                        .setHitsOppositeSideInTriples(Boolean.parseBoolean(nextLine[29]))
+                        .setReflected(Boolean.parseBoolean(nextLine[30]))
+                        .setBlocked(Boolean.parseBoolean(nextLine[31]))
+                        .setCopyable(Boolean.parseBoolean(nextLine[32]));
+            }
+        } catch (IOException e) {
+            Bot.LOGGER.error("Error reading line in moves.csv", e);
+        }
+    }
+
     private final String NAME;
     private final List<Status> STATUS_EFFECTS = new ArrayList<>();
     private final Map<BaseVolatileStatus, Integer> VOLATILE_STATUS_EFFECTS_CHANCE = new HashMap<>();
@@ -3212,7 +3268,7 @@ public enum BaseMove implements IModifier {
         return true;
     }
 
-    protected int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+    public int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
         if (this.CATEGORY == Category.OTHER) {
             return 0;
         }

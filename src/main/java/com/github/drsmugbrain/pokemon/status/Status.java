@@ -1,6 +1,10 @@
 package com.github.drsmugbrain.pokemon.status;
 
 import com.github.drsmugbrain.pokemon.*;
+import com.github.drsmugbrain.pokemon.moves.Action;
+import com.github.drsmugbrain.pokemon.moves.BaseMove;
+import com.github.drsmugbrain.pokemon.moves.Category;
+import com.github.drsmugbrain.pokemon.moves.Move;
 import com.github.drsmugbrain.pokemon.stats.IStat;
 import com.github.drsmugbrain.pokemon.stats.PermanentStat;
 import com.github.drsmugbrain.pokemon.types.Type;

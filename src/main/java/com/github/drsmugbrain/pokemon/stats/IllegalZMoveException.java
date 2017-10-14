@@ -1,4 +1,4 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.stats;
 
 /**
  * Created by DrSmugleaf on 18/06/2017.

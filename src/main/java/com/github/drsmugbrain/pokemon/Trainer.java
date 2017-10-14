@@ -1,6 +1,9 @@
 package com.github.drsmugbrain.pokemon;
 
 import com.github.drsmugbrain.pokemon.events.*;
+import com.github.drsmugbrain.pokemon.moves.Action;
+import com.github.drsmugbrain.pokemon.moves.EntryHazard;
+import com.github.drsmugbrain.pokemon.moves.Move;
 import com.github.drsmugbrain.pokemon.status.BaseVolatileStatus;
 import com.google.common.collect.Lists;
 
@@ -119,7 +122,7 @@ public class Trainer extends Player {
     }
 
     @Nonnull
-    protected List<Pokemon> getAdjacentEnemyPokemons(Pokemon pokemon) {
+    public List<Pokemon> getAdjacentEnemyPokemons(Pokemon pokemon) {
         Trainer opposingTrainer = this.BATTLE.getOppositeTrainer(this);
         List<Pokemon> opposingPokemons = opposingTrainer.getActivePokemons();
         int index = this.ACTIVE_POKEMONS.indexOf(pokemon);
@@ -307,7 +310,7 @@ public class Trainer extends Player {
         }
     }
 
-    protected boolean hasOpponentOnField() {
+    public boolean hasOpponentOnField() {
         for (Trainer trainer : this.BATTLE.getTrainers().values()) {
             if (trainer == this) {
                 continue;
@@ -321,7 +324,7 @@ public class Trainer extends Player {
         return false;
     }
 
-    protected void removeVolatileStatus(@Nonnull BaseVolatileStatus... volatileStatuses) {
+    public void removeVolatileStatus(@Nonnull BaseVolatileStatus... volatileStatuses) {
         for (Pokemon pokemon : ACTIVE_POKEMONS) {
             pokemon.STATUSES.removeVolatileStatus(volatileStatuses);
         }
@@ -336,7 +339,7 @@ public class Trainer extends Player {
         return new ArrayList<>(HAZARDS);
     }
 
-    protected void removeEntryHazard(@Nonnull EntryHazard... hazards) {
+    public void removeEntryHazard(@Nonnull EntryHazard... hazards) {
         HAZARDS.removeAll(Arrays.asList(hazards));
     }
 

@@ -1,6 +1,8 @@
 package com.github.drsmugbrain.pokemon;
 
 import com.github.drsmugbrain.pokemon.events.*;
+import com.github.drsmugbrain.pokemon.moves.Action;
+import com.github.drsmugbrain.pokemon.moves.Move;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,7 +38,7 @@ public class Battle extends Setup {
     }
 
     @Nullable
-    protected Action getAction(Pokemon attacker) {
+    public Action getAction(Pokemon attacker) {
         for (Action action : ACTIONS) {
             if (action.getAttacker() == attacker) {
                 return action;
@@ -54,7 +56,7 @@ public class Battle extends Setup {
         return TRAINERS.get(id);
     }
 
-    protected List<Action> getTurnOrder() {
+    public List<Action> getTurnOrder() {
         return TURN_ORDER;
     }
 
@@ -62,7 +64,7 @@ public class Battle extends Setup {
         return weather;
     }
 
-    protected void setWeather(Weather weather) {
+    public void setWeather(Weather weather) {
         this.weather = weather;
     }
 
@@ -159,7 +161,7 @@ public class Battle extends Setup {
     }
 
     @Nullable
-    protected Action getLastAction() {
+    public Action getLastAction() {
         if (ACTIONS.size() == 0) {
             return null;
         }

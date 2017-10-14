@@ -1,6 +1,9 @@
 package com.github.drsmugbrain.pokemon;
 
 import com.github.drsmugbrain.pokemon.events.*;
+import com.github.drsmugbrain.pokemon.moves.Action;
+import com.github.drsmugbrain.pokemon.moves.BaseMove;
+import com.github.drsmugbrain.pokemon.moves.Move;
 import com.github.drsmugbrain.pokemon.stats.*;
 import com.github.drsmugbrain.pokemon.status.Statuses;
 import com.github.drsmugbrain.pokemon.types.Types;
@@ -204,11 +207,11 @@ public class Pokemon {
         return item;
     }
 
-    protected void setItem(@Nonnull Item item) {
+    public void setItem(@Nonnull Item item) {
         this.item = item;
     }
 
-    protected boolean hasItem() {
+    public boolean hasItem() {
         return item != null;
     }
 
@@ -217,13 +220,13 @@ public class Pokemon {
     }
 
     @Nullable
-    protected Item removeItem() {
+    public Item removeItem() {
         Item item = this.item;
         this.item = null;
         return item;
     }
 
-    protected void stealItem(@Nonnull Pokemon thief) {
+    public void stealItem(@Nonnull Pokemon thief) {
         Item item = this.removeItem();
 
         if (item == null) {
@@ -279,7 +282,7 @@ public class Pokemon {
         return builder.toString();
     }
 
-    protected void raiseCriticalHitStage(int amount) {
+    public void raiseCriticalHitStage(int amount) {
         int currentStage = criticalHitStage.getStage();
         CriticalHitStage newStage = CriticalHitStage.getStage(currentStage + amount);
         criticalHitStage = newStage;
@@ -298,7 +301,7 @@ public class Pokemon {
         return abilitySuppressed;
     }
 
-    protected void setAbilitySuppressed(boolean bool) {
+    public void setAbilitySuppressed(boolean bool) {
         this.abilitySuppressed = bool;
     }
 
@@ -310,7 +313,7 @@ public class Pokemon {
         return (int) STATS.get(PermanentStat.HP).calculate(this);
     }
 
-    protected int damage(@Nonnull Action action) {
+    public int damage(@Nonnull Action action) {
         damagedThisTurn = action.getAttacker();
 
         int amount = action.getMove().getBaseMove().getDamage(action.getAttacker(), action.getTarget(), action);
@@ -318,7 +321,7 @@ public class Pokemon {
         return amount;
     }
 
-    protected void damage(int amount) {
+    public void damage(int amount) {
         if (hp - amount < 0) {
             amount = hp;
         }
@@ -339,7 +342,7 @@ public class Pokemon {
         damage(amount);
     }
 
-    protected void heal(int amount) {
+    public void heal(int amount) {
         int maxHP = getMaxHP();
 
         if (hp + amount > maxHP) {
@@ -352,7 +355,7 @@ public class Pokemon {
         EventDispatcher.dispatch(event);
     }
 
-    protected void heal(double percentage) {
+    public void heal(double percentage) {
         int maxHP = getMaxHP();
         int healedHP = (int) (maxHP * (percentage / 100.0d));
         this.heal(healedHP);
@@ -432,11 +435,11 @@ public class Pokemon {
         }
     }
 
-    protected boolean isDamagedThisTurn() {
+    public boolean isDamagedThisTurn() {
         return damagedThisTurn != null;
     }
 
-    protected boolean isDamagedThisTurnBy(@Nonnull Pokemon pokemon) {
+    public boolean isDamagedThisTurnBy(@Nonnull Pokemon pokemon) {
         return damagedThisTurn == pokemon;
     }
 
@@ -444,38 +447,38 @@ public class Pokemon {
         return weight;
     }
 
-    protected void setWeight(double weight) {
+    public void setWeight(double weight) {
         this.weight = weight;
     }
 
-    protected double getStabMultiplier(@Nonnull Move move) {
+    public double getStabMultiplier(@Nonnull Move move) {
         return 1.0;
     }
 
     @Nullable
-    protected Action getLastAction() {
+    public Action getLastAction() {
         return TRAINER.getBattle().getLastAction(this);
     }
 
     @Nonnull
-    protected List<Action> getHitBy() {
+    public List<Action> getHitBy() {
         return TRAINER.getBattle().getHitBy(this);
     }
 
     @Nullable
-    protected Action getLastHitBy() {
+    public Action getLastHitBy() {
         return TRAINER.getBattle().getLastHitBy(this);
     }
 
-    protected boolean movedThisTurn() {
+    public boolean movedThisTurn() {
         return TRAINER.getBattle().movedThisTurn(this);
     }
 
-    protected void addTag(@Nonnull Tag tag) {
+    public void addTag(@Nonnull Tag tag) {
         TAGS.add(tag);
     }
 
-    protected boolean hasTag(@Nonnull Tag tag) {
+    public boolean hasTag(@Nonnull Tag tag) {
         return TAGS.contains(tag);
     }
 
@@ -487,14 +490,14 @@ public class Pokemon {
         return hp <= 0;
     }
 
-    protected void retarget(@Nonnull Pokemon pokemon) {
+    public void retarget(@Nonnull Pokemon pokemon) {
         if (action != null) {
             action.setTarget(pokemon);
         }
     }
 
     @Nullable
-    protected Pokemon getEnemyOppositePokemon() {
+    public Pokemon getEnemyOppositePokemon() {
         int index = TRAINER.getActivePokemons().indexOf(this);
         Trainer oppositeTrainer = TRAINER.getBattle().getOppositeTrainer(TRAINER);
         Pokemon oppositePokemon = null;
@@ -508,13 +511,13 @@ public class Pokemon {
     }
 
     @Nullable
-    protected Pokemon getRandomActiveEnemyPokemon() {
+    public Pokemon getRandomActiveEnemyPokemon() {
         Trainer oppositeTrainer = TRAINER.getBattle().getOppositeTrainer(TRAINER);
         return oppositeTrainer.getRandomActivePokemon();
     }
 
     @Nullable
-    protected Pokemon getRandomAdjacentEnemyPokemon() {
+    public Pokemon getRandomAdjacentEnemyPokemon() {
         return TRAINER.getRandomAdjacentEnemyPokemon(this);
     }
 

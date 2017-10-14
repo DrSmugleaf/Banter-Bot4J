@@ -1,6 +1,6 @@
 package com.github.drsmugbrain.pokemon.events;
 
-import com.github.drsmugbrain.pokemon.Move;
+import com.github.drsmugbrain.pokemon.moves.Move;
 import com.github.drsmugbrain.pokemon.Pokemon;
 
 import javax.annotation.Nonnull;

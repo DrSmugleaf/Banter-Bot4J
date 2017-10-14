@@ -1,4 +1,4 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.stats;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

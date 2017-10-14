@@ -1,5 +1,6 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.moves;
 
+import com.github.drsmugbrain.pokemon.Pokemon;
 import com.github.drsmugbrain.pokemon.status.BaseVolatileStatus;
 
 import javax.annotation.Nonnull;
@@ -77,7 +78,7 @@ public class Action extends Move {
         return TARGET;
     }
 
-    protected void setTarget(@Nonnull Pokemon target) {
+    public void setTarget(@Nonnull Pokemon target) {
         TARGET = target;
     }
 
@@ -155,7 +156,7 @@ public class Action extends Move {
         return super.use(attacker, defender, action);
     }
 
-    protected void tryUse() {
+    public void tryUse() {
         super.tryUse(ATTACKER, TARGET, this);
     }
 
