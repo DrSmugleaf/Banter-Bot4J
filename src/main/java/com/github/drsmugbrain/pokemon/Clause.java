@@ -2,6 +2,7 @@ package com.github.drsmugbrain.pokemon;
 
 import com.github.drsmugbrain.pokemon.ability.Abilities;
 import com.github.drsmugbrain.pokemon.moves.BaseMove;
+import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 import com.github.drsmugbrain.pokemon.trainer.Trainer;
 import com.github.drsmugbrain.pokemon.types.Type;
 

@@ -1,7 +1,7 @@
 package com.github.drsmugbrain.pokemon.ability;
 
 import com.github.drsmugbrain.pokemon.IModifier;
-import com.github.drsmugbrain.pokemon.Pokemon;
+import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 import org.json.JSONArray;
 
 import javax.annotation.Nonnull;

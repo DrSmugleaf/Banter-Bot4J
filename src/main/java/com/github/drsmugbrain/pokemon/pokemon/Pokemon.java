@@ -1,5 +1,9 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.pokemon;
 
+import com.github.drsmugbrain.pokemon.Battle;
+import com.github.drsmugbrain.pokemon.IModifier;
+import com.github.drsmugbrain.pokemon.Item;
+import com.github.drsmugbrain.pokemon.Nature;
 import com.github.drsmugbrain.pokemon.ability.Abilities;
 import com.github.drsmugbrain.pokemon.ability.Ability;
 import com.github.drsmugbrain.pokemon.events.*;
@@ -212,7 +216,7 @@ public class Pokemon {
         return item != null;
     }
 
-    protected boolean hasItem(@Nonnull Item item) {
+    public boolean hasItem(@Nonnull Item item) {
         return this.item == item;
     }
 
@@ -243,7 +247,7 @@ public class Pokemon {
         return LEVEL;
     }
 
-    protected void setLevel(int level) {
+    public void setLevel(int level) {
         LEVEL = level;
     }
 
@@ -356,11 +360,11 @@ public class Pokemon {
         EventDispatcher.dispatch(event);
     }
 
-    protected boolean hasAllMoves(BaseMove... moves) {
+    public boolean hasAllMoves(BaseMove... moves) {
         return MOVES.containsAll(Arrays.asList(moves));
     }
 
-    protected boolean hasOneMove(BaseMove... moves) {
+    public boolean hasOneMove(BaseMove... moves) {
         List<BaseMove> baseMoveList = Arrays.asList(moves);
 
         for (Move move : MOVES) {
@@ -405,7 +409,7 @@ public class Pokemon {
         VALID_MOVES.addAll(Arrays.asList(moves));
     }
 
-    protected void executeTurn() {
+    public void executeTurn() {
         if (isFainted()) {
             return;
         }
@@ -415,7 +419,7 @@ public class Pokemon {
         }
     }
 
-    protected void finishTurn() {
+    public void finishTurn() {
         action = null;
         damagedThisTurn = null;
         VALID_MOVES.clear();

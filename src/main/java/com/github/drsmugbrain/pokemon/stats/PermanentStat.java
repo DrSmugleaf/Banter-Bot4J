@@ -2,7 +2,7 @@ package com.github.drsmugbrain.pokemon.stats;
 
 import com.github.drsmugbrain.pokemon.Generation;
 import com.github.drsmugbrain.pokemon.InvalidGenerationException;
-import com.github.drsmugbrain.pokemon.Pokemon;
+import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;

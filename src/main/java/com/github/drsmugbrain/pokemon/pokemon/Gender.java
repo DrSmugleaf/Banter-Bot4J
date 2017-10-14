@@ -1,4 +1,4 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.pokemon;
 
 import com.github.drsmugbrain.pokemon.ability.Abilities;
 

@@ -4,6 +4,7 @@ import com.github.drsmugbrain.pokemon.*;
 import com.github.drsmugbrain.pokemon.events.*;
 import com.github.drsmugbrain.pokemon.moves.BaseMove;
 import com.github.drsmugbrain.pokemon.moves.Move;
+import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 import com.github.drsmugbrain.pokemon.stats.PermanentStat;
 import com.github.drsmugbrain.pokemon.trainer.Trainer;
 import com.github.drsmugbrain.pokemon.trainer.TrainerBuilder;

@@ -3,6 +3,9 @@ package com.github.drsmugbrain.pokemon;
 import com.github.drsmugbrain.pokemon.ability.Abilities;
 import com.github.drsmugbrain.pokemon.moves.BaseMove;
 import com.github.drsmugbrain.pokemon.moves.Move;
+import com.github.drsmugbrain.pokemon.pokemon.Gender;
+import com.github.drsmugbrain.pokemon.pokemon.PokemonBuilder;
+import com.github.drsmugbrain.pokemon.pokemon.Species;
 import com.github.drsmugbrain.pokemon.stats.PermanentStat;
 import com.github.drsmugbrain.pokemon.trainer.UserException;
 

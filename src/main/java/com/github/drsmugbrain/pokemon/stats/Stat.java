@@ -1,7 +1,7 @@
 package com.github.drsmugbrain.pokemon.stats;
 
-import com.github.drsmugbrain.pokemon.Pokemon;
-import com.github.drsmugbrain.pokemon.Species;
+import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
+import com.github.drsmugbrain.pokemon.pokemon.Species;
 
 import javax.annotation.Nonnull;
 

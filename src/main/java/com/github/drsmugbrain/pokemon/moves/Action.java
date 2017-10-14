@@ -1,6 +1,6 @@
 package com.github.drsmugbrain.pokemon.moves;
 
-import com.github.drsmugbrain.pokemon.Pokemon;
+import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 import com.github.drsmugbrain.pokemon.status.BaseVolatileStatus;
 
 import javax.annotation.Nonnull;

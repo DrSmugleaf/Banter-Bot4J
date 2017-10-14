@@ -1,7 +1,7 @@
 package com.github.drsmugbrain.pokemon.trainer;
 
 import com.github.drsmugbrain.pokemon.Battle;
-import com.github.drsmugbrain.pokemon.PokemonBuilder;
+import com.github.drsmugbrain.pokemon.pokemon.PokemonBuilder;
 import com.github.drsmugbrain.pokemon.SmogonImporter;
 
 import javax.annotation.Nonnull;

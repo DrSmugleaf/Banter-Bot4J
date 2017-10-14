@@ -1,6 +1,6 @@
 package com.github.drsmugbrain.pokemon.moves;
 
-import com.github.drsmugbrain.pokemon.Pokemon;
+import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 import com.github.drsmugbrain.pokemon.events.EventDispatcher;
 import com.github.drsmugbrain.pokemon.events.PokemonMoveEvent;
 import com.github.drsmugbrain.pokemon.types.Type;

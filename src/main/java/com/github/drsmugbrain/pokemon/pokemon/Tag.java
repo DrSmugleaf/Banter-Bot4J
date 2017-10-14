@@ -1,4 +1,6 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.pokemon;
+
+import com.github.drsmugbrain.pokemon.IModifier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

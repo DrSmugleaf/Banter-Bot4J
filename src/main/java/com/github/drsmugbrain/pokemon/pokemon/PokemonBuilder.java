@@ -1,5 +1,7 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.pokemon;
 
+import com.github.drsmugbrain.pokemon.Item;
+import com.github.drsmugbrain.pokemon.Nature;
 import com.github.drsmugbrain.pokemon.ability.Abilities;
 import com.github.drsmugbrain.pokemon.moves.Move;
 import com.github.drsmugbrain.pokemon.stats.PermanentStat;
@@ -27,7 +29,7 @@ public class PokemonBuilder {
     private Map<PermanentStat, Integer> effortValues;
     private List<Move> moves;
 
-    protected PokemonBuilder() {}
+    public PokemonBuilder() {}
 
     public Pokemon build() {
         return new Pokemon(

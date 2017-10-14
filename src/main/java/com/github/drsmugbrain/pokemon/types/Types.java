@@ -3,7 +3,7 @@ package com.github.drsmugbrain.pokemon.types;
 import com.github.drsmugbrain.pokemon.moves.Action;
 import com.github.drsmugbrain.pokemon.IModifier;
 import com.github.drsmugbrain.pokemon.moves.Move;
-import com.github.drsmugbrain.pokemon.Pokemon;
+import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

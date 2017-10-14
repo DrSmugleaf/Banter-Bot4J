@@ -3,6 +3,7 @@ package com.github.drsmugbrain.pokemon;
 import com.github.drsmugbrain.pokemon.events.*;
 import com.github.drsmugbrain.pokemon.moves.Action;
 import com.github.drsmugbrain.pokemon.moves.Move;
+import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 import com.github.drsmugbrain.pokemon.trainer.Trainer;
 import com.github.drsmugbrain.pokemon.trainer.TrainerBuilder;
 import com.github.drsmugbrain.pokemon.trainer.TrainerStatus;
@@ -174,7 +175,7 @@ public class Battle extends Setup {
     }
 
     @Nullable
-    protected Action getLastAction(@Nonnull Pokemon pokemon) {
+    public Action getLastAction(@Nonnull Pokemon pokemon) {
         for (int i = ACTIONS.size() - 1; i >= 0; i--) {
             Action currentAction = ACTIONS.get(i);
             if (currentAction.getAttacker() == pokemon) {
@@ -193,7 +194,7 @@ public class Battle extends Setup {
     }
 
     @Nonnull
-    protected List<Action> getHitBy(@Nonnull Pokemon pokemon) {
+    public List<Action> getHitBy(@Nonnull Pokemon pokemon) {
         List<Action> hitBy = new ArrayList<>();
 
         for (Action action : ACTIONS) {
@@ -206,7 +207,7 @@ public class Battle extends Setup {
     }
 
     @Nullable
-    protected Action getLastHitBy(@Nonnull Pokemon pokemon) {
+    public Action getLastHitBy(@Nonnull Pokemon pokemon) {
         for (Action action : ACTIONS) {
             if (action.getTarget() == pokemon) {
                 return action;
@@ -216,7 +217,7 @@ public class Battle extends Setup {
         return null;
     }
 
-    protected boolean movedThisTurn(@Nonnull Pokemon pokemon) {
+    public boolean movedThisTurn(@Nonnull Pokemon pokemon) {
         for (int i = ACTIONS.size() - 1; i >= 0; i--) {
             Action currentAction = ACTIONS.get(i);
 
