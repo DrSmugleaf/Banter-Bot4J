@@ -1,12 +1,12 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.external;
 
+import com.github.drsmugbrain.pokemon.Item;
 import com.github.drsmugbrain.pokemon.moves.BaseMove;
 import com.github.drsmugbrain.pokemon.moves.Category;
 import com.github.drsmugbrain.pokemon.moves.Hit;
 import com.github.drsmugbrain.pokemon.moves.Target;
 import com.github.drsmugbrain.pokemon.types.Type;
 import com.github.drsmugbrain.util.Bot;
-import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
@@ -14,8 +14,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,10 +27,6 @@ import java.util.stream.Collectors;
  * Created by DrSmugleaf on 16/06/2017.
  */
 public class SerebiiParser {
-
-    public static void parse() {
-
-    }
 
     public static void printMoveListAsEnums() {
         Document doc1 = null;

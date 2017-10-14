@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  */
 public class SmogonImporter {
 
-    public static PokemonBuilder parsePokemon(String export) throws UserException {
+    public static PokemonBuilder importPokemon(String export) throws UserException {
         export = export.trim();
         String[] exportArray = export.split("\n");
 
@@ -136,12 +136,12 @@ public class SmogonImporter {
         return pokemonBuilder;
     }
 
-    public static List<PokemonBuilder> parsePokemons(String export) throws UserException {
+    public static List<PokemonBuilder> importPokemons(String export) throws UserException {
         String[] exportArray = export.split("\n\n");
         List<PokemonBuilder> pokemons = new ArrayList<>();
 
         for (String s : exportArray) {
-            pokemons.add(SmogonImporter.parsePokemon(s));
+            pokemons.add(SmogonImporter.importPokemon(s));
         }
 
         return pokemons;

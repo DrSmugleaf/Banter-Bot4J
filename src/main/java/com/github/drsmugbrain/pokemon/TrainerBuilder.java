@@ -22,7 +22,7 @@ public class TrainerBuilder {
         PokemonBuilder[] pokemons = new PokemonBuilder[pokemonStrings.size()];
 
         for (int i = 0; i < pokemonStrings.size(); i++) {
-            PokemonBuilder pokemon = SmogonImporter.parsePokemon(pokemonStrings.get(i));
+            PokemonBuilder pokemon = SmogonImporter.importPokemon(pokemonStrings.get(i));
             pokemons[i] = pokemon;
         }
 
