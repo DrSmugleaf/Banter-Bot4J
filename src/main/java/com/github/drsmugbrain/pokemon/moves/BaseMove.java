@@ -1,10 +1,10 @@
 package com.github.drsmugbrain.pokemon.moves;
 
 import com.github.drsmugbrain.pokemon.*;
-import com.github.drsmugbrain.pokemon.ability.Abilities;
 import com.github.drsmugbrain.pokemon.events.EventDispatcher;
 import com.github.drsmugbrain.pokemon.events.PokemonDodgeEvent;
-import com.github.drsmugbrain.pokemon.stats.*;
+import com.github.drsmugbrain.pokemon.stats.BattleStat;
+import com.github.drsmugbrain.pokemon.stats.PermanentStat;
 import com.github.drsmugbrain.pokemon.status.BaseVolatileStatus;
 import com.github.drsmugbrain.pokemon.status.Status;
 import com.github.drsmugbrain.pokemon.status.VolatileStatus;
@@ -2672,6 +2672,7 @@ public enum BaseMove implements IModifier {
 
         String[] nextLine;
         try {
+            reader.readNext();
             while ((nextLine = reader.readNext()) != null) {
                 BaseMove move = BaseMove.getMove(nextLine[0]);
                 move
