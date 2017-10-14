@@ -1,6 +1,6 @@
 package com.github.drsmugbrain.pokemon.external;
 
-import com.github.drsmugbrain.pokemon.Item;
+import com.github.drsmugbrain.pokemon.item.Items;
 import com.github.drsmugbrain.pokemon.moves.BaseMove;
 import com.github.drsmugbrain.pokemon.moves.Category;
 import com.github.drsmugbrain.pokemon.moves.Hit;
@@ -129,7 +129,7 @@ public class SerebiiParser {
             Boolean zMove = null;
             String correspondingZMove = null;
             Integer zMovePower = null;
-            Item zMoveItem = null;
+            Items zMoveItem = null;
             List<String> zMoveRequiredPokemon = new ArrayList<>();
             List<BaseMove> zMoveRequiredMove = new ArrayList<>();
             Boolean defrostsWhenUsed = null;
@@ -176,22 +176,22 @@ public class SerebiiParser {
                                 name = propertyValue.html().split("<br>")[0];
                                 switch (name) {
                                     case "10,000,000 Volt Thunderbolt":
-                                        zMoveItem = Item.PIKASHUNIUM_Z;
+                                        zMoveItem = Items.PIKASHUNIUM_Z;
                                         zMoveRequiredPokemon.add("Pikachu");
                                         zMoveRequiredMove.add(BaseMove.THUNDERBOLT);
                                         break;
                                     case "Catastropika":
-                                        zMoveItem = Item.PIKANIUM_Z;
+                                        zMoveItem = Items.PIKANIUM_Z;
                                         zMoveRequiredPokemon.add("Pikachu");
                                         zMoveRequiredMove.add(BaseMove.VOLT_TACKLE);
                                         break;
                                     case "Extreme Evoboost":
-                                        zMoveItem = Item.EEVIUM_Z;
+                                        zMoveItem = Items.EEVIUM_Z;
                                         zMoveRequiredPokemon.add("Eevee");
                                         zMoveRequiredMove.add(BaseMove.LAST_RESORT);
                                         break;
                                     case "Guardian of Alola":
-                                        zMoveItem = Item.TAPUNIUM_Z;
+                                        zMoveItem = Items.TAPUNIUM_Z;
                                         zMoveRequiredPokemon.add("Tapu Bulu");
                                         zMoveRequiredPokemon.add("Tapu Fini");
                                         zMoveRequiredPokemon.add("Tapu Koko");
@@ -199,32 +199,32 @@ public class SerebiiParser {
                                         zMoveRequiredMove.add(BaseMove.NATURES_MADNESS);
                                         break;
                                     case "Malicious Moonsault":
-                                        zMoveItem = Item.INCINIUM_Z;
+                                        zMoveItem = Items.INCINIUM_Z;
                                         zMoveRequiredPokemon.add("Incineroar");
                                         zMoveRequiredMove.add(BaseMove.DARKEST_LARIAT);
                                         break;
                                     case "Oceanic Operetta":
-                                        zMoveItem = Item.PRIMARIUM_Z;
+                                        zMoveItem = Items.PRIMARIUM_Z;
                                         zMoveRequiredPokemon.add("Primarina");
                                         zMoveRequiredMove.add(BaseMove.SPARKLING_ARIA);
                                         break;
                                     case "Pulverizing Pancake":
-                                        zMoveItem = Item.SNORLIUM_Z;
+                                        zMoveItem = Items.SNORLIUM_Z;
                                         zMoveRequiredPokemon.add("Snorlax");
                                         zMoveRequiredMove.add(BaseMove.GIGA_IMPACT);
                                         break;
                                     case "Sinister Arrow Raid":
-                                        zMoveItem = Item.DECIDIUM_Z;
+                                        zMoveItem = Items.DECIDIUM_Z;
                                         zMoveRequiredPokemon.add("Decidueye");
                                         zMoveRequiredMove.add(BaseMove.SPIRIT_SHACKLE);
                                         break;
                                     case "Soul-Stealing 7-Star Strike":
-                                        zMoveItem = Item.MARSHADIUM_Z;
+                                        zMoveItem = Items.MARSHADIUM_Z;
                                         zMoveRequiredPokemon.add("Marshadow");
                                         zMoveRequiredMove.add(BaseMove.SPECTRAL_THIEF);
                                         break;
                                     case "Stoked Sparksurfer":
-                                        zMoveItem = Item.ALORAICHIUM_Z;
+                                        zMoveItem = Items.ALORAICHIUM_Z;
                                         zMoveRequiredPokemon.add("Raichu-Alola");
                                         zMoveRequiredMove.add(BaseMove.THUNDERBOLT);
                                         break;
@@ -422,58 +422,58 @@ public class SerebiiParser {
             if (isSelfZMove || (!isSelfZMove && correspondingZMove == null)) {
                 switch (type) {
                     case NORMAL:
-                        zMoveItem = Item.NORMALIUM_Z;
+                        zMoveItem = Items.NORMALIUM_Z;
                         break;
                     case FIRE:
-                        zMoveItem = Item.FIRIUM_Z;
+                        zMoveItem = Items.FIRIUM_Z;
                         break;
                     case WATER:
-                        zMoveItem = Item.WATERIUM_Z;
+                        zMoveItem = Items.WATERIUM_Z;
                         break;
                     case ELECTRIC:
-                        zMoveItem = Item.ELECTRIUM_Z;
+                        zMoveItem = Items.ELECTRIUM_Z;
                         break;
                     case GRASS:
-                        zMoveItem = Item.GRASSIUM_Z;
+                        zMoveItem = Items.GRASSIUM_Z;
                         break;
                     case ICE:
-                        zMoveItem = Item.ICIUM_Z;
+                        zMoveItem = Items.ICIUM_Z;
                         break;
                     case FIGHTING:
-                        zMoveItem = Item.FIGHTINIUM_Z;
+                        zMoveItem = Items.FIGHTINIUM_Z;
                         break;
                     case POISON:
-                        zMoveItem = Item.POISONIUM_Z;
+                        zMoveItem = Items.POISONIUM_Z;
                         break;
                     case GROUND:
-                        zMoveItem = Item.GROUNDIUM_Z;
+                        zMoveItem = Items.GROUNDIUM_Z;
                         break;
                     case FLYING:
-                        zMoveItem = Item.FLYINIUM_Z;
+                        zMoveItem = Items.FLYINIUM_Z;
                         break;
                     case PSYCHIC:
-                        zMoveItem = Item.PSYCHIUM_Z;
+                        zMoveItem = Items.PSYCHIUM_Z;
                         break;
                     case BUG:
-                        zMoveItem = Item.BUGINIUM_Z;
+                        zMoveItem = Items.BUGINIUM_Z;
                         break;
                     case ROCK:
-                        zMoveItem = Item.ROCKIUM_Z;
+                        zMoveItem = Items.ROCKIUM_Z;
                         break;
                     case GHOST:
-                        zMoveItem = Item.GHOSTIUM_Z;
+                        zMoveItem = Items.GHOSTIUM_Z;
                         break;
                     case DRAGON:
-                        zMoveItem = Item.DRAGONIUM_Z;
+                        zMoveItem = Items.DRAGONIUM_Z;
                         break;
                     case DARK:
-                        zMoveItem = Item.DARKINIUM_Z;
+                        zMoveItem = Items.DARKINIUM_Z;
                         break;
                     case STEEL:
-                        zMoveItem = Item.STEELIUM_Z;
+                        zMoveItem = Items.STEELIUM_Z;
                         break;
                     case FAIRY:
-                        zMoveItem = Item.FAIRIUM_Z;
+                        zMoveItem = Items.FAIRIUM_Z;
                         break;
                 }
             }

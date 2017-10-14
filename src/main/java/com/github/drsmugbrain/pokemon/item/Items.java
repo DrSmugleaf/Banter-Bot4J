@@ -1,5 +1,6 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.item;
 
+import com.github.drsmugbrain.pokemon.IModifier;
 import com.github.drsmugbrain.pokemon.battle.Battle;
 import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 
@@ -11,7 +12,7 @@ import java.util.Map;
 /**
  * Created by DrSmugleaf on 09/06/2017.
  */
-public enum Item implements IModifier {
+public enum Items implements IModifier {
 
     ABOMASITE("Abomasite", ItemCategory.MEGA_STONE),
     ABSOLITE("Absolite", ItemCategory.MEGA_STONE),
@@ -320,18 +321,18 @@ public enum Item implements IModifier {
     private final String NAME;
     private final ItemCategory CATEGORY;
 
-    Item(@Nonnull String name, @Nonnull ItemCategory category) {
+    Items(@Nonnull String name, @Nonnull ItemCategory category) {
         Holder.MAP.put(name.toLowerCase(), this);
         this.NAME = name;
         this.CATEGORY = category;
     }
 
-    Item(@Nonnull String name) {
+    Items(@Nonnull String name) {
         this(name, ItemCategory.DEFAULT);
     }
 
     @Nonnull
-    public static Item getItem(@Nonnull String item) {
+    public static Items getItem(@Nonnull String item) {
         item = item.toLowerCase();
         if (!Holder.MAP.containsKey(item)) {
             throw new NullPointerException("Item " + item + " doesn't exist");
@@ -353,7 +354,7 @@ public enum Item implements IModifier {
     public void use(@Nonnull Pokemon user, @Nonnull Battle battle) {}
 
     private static class Holder {
-        static Map<String, Item> MAP = new HashMap<>();
+        static Map<String, Items> MAP = new HashMap<>();
     }
 
 }

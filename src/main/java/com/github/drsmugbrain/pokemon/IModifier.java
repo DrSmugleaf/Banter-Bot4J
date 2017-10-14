@@ -1,6 +1,7 @@
 package com.github.drsmugbrain.pokemon;
 
 import com.github.drsmugbrain.pokemon.battle.Battle;
+import com.github.drsmugbrain.pokemon.item.Items;
 import com.github.drsmugbrain.pokemon.moves.Action;
 import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 import com.github.drsmugbrain.pokemon.stats.IStat;
@@ -61,9 +62,9 @@ public interface IModifier {
 
     default void onTurnEnd(@Nonnull Battle battle, @Nonnull Pokemon pokemon) {}
 
-    default void onOwnItemUsed(@Nonnull Pokemon user, @Nonnull Item item) {}
+    default void onOwnItemUsed(@Nonnull Pokemon user, @Nonnull Items item) {}
 
-    default void onEnemyItemUsed(@Nonnull Pokemon user, @Nonnull Item item) {}
+    default void onEnemyItemUsed(@Nonnull Pokemon user, @Nonnull Items item) {}
 
     default boolean hits(@Nonnull Action action) {
         return true;

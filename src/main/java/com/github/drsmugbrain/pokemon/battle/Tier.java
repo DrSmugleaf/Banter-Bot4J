@@ -1,6 +1,6 @@
 package com.github.drsmugbrain.pokemon.battle;
 
-import com.github.drsmugbrain.pokemon.Item;
+import com.github.drsmugbrain.pokemon.item.Items;
 import com.github.drsmugbrain.pokemon.ability.Abilities;
 import com.github.drsmugbrain.pokemon.moves.BaseMove;
 
@@ -79,12 +79,12 @@ public enum Tier {
                         "Zekrom"
                 )
                 .setBannedItems(
-                        Item.GENGARITE,
-                        Item.KANGASKHANITE,
-                        Item.LUCARIONITE,
-                        Item.MAWILITE,
-                        Item.SALAMENCITE,
-                        Item.SOUL_DEW
+                        Items.GENGARITE,
+                        Items.KANGASKHANITE,
+                        Items.LUCARIONITE,
+                        Items.MAWILITE,
+                        Items.SALAMENCITE,
+                        Items.SOUL_DEW
                 )
                 .setBannedMoves(BaseMove.SWAGGER);
 
@@ -120,10 +120,10 @@ public enum Tier {
                         "Zygarde"
                 )
                 .setBannedItems(
-                        Item.ALAKAZITE,
-                        Item.HERACRONITE,
-                        Item.MEDICHAMITE,
-                        Item.PINSIRITE
+                        Items.ALAKAZITE,
+                        Items.HERACRONITE,
+                        Items.MEDICHAMITE,
+                        Items.PINSIRITE
                 )
                 .setBannedAbilities(
                         Abilities.DRIZZLE,
@@ -157,7 +157,7 @@ public enum Tier {
                         "Yanmega",
                         "Zoroark"
                 )
-                .setBannedItems(Item.HOUNDOOMINITE)
+                .setBannedItems(Items.HOUNDOOMINITE)
                 .setBannedAbilities(
                         Abilities.DRIZZLE,
                         Abilities.DROUGHT,
@@ -278,8 +278,8 @@ public enum Tier {
                         "Zekrom"
                 )
                 .setBannedItems(
-                        Item.SALAMENCITE,
-                        Item.SOUL_DEW
+                        Items.SALAMENCITE,
+                        Items.SOUL_DEW
                 )
                 .setBannedMoves(
                         BaseMove.DARK_VOID
@@ -292,7 +292,7 @@ public enum Tier {
     private final List<String> BANNED_POKEMONS = new ArrayList<>();
     private final List<BaseMove> BANNED_MOVES = new ArrayList<>();
     private final List<Tier> BANNED_TIERS = new ArrayList<>();
-    private final List<Item> BANNED_ITEMS = new ArrayList<>();
+    private final List<Items> BANNED_ITEMS = new ArrayList<>();
     private final List<Abilities> BANNED_ABILITIES = new ArrayList<>();
 
     Tier(@Nonnull String name, @Nonnull String abbreviation, @Nonnull Clause... clauses) {
@@ -400,16 +400,16 @@ public enum Tier {
     }
 
     @Nonnull
-    public List<Item> getBannedItems() {
+    public List<Items> getBannedItems() {
         return this.BANNED_ITEMS;
     }
 
-    private Tier addBannedItems(Item... items) {
+    private Tier addBannedItems(Items... items) {
         Collections.addAll(this.BANNED_ITEMS, items);
         return this;
     }
 
-    private Tier setBannedItems(Item... items) {
+    private Tier setBannedItems(Items... items) {
         this.BANNED_ITEMS.clear();
         return this.addBannedItems(items);
     }

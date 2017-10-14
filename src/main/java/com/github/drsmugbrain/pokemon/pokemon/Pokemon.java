@@ -1,12 +1,13 @@
 package com.github.drsmugbrain.pokemon.pokemon;
 
-import com.github.drsmugbrain.pokemon.battle.Battle;
 import com.github.drsmugbrain.pokemon.IModifier;
-import com.github.drsmugbrain.pokemon.Item;
 import com.github.drsmugbrain.pokemon.Nature;
 import com.github.drsmugbrain.pokemon.ability.Abilities;
 import com.github.drsmugbrain.pokemon.ability.Ability;
+import com.github.drsmugbrain.pokemon.battle.Battle;
 import com.github.drsmugbrain.pokemon.events.*;
+import com.github.drsmugbrain.pokemon.item.Item;
+import com.github.drsmugbrain.pokemon.item.Items;
 import com.github.drsmugbrain.pokemon.moves.Action;
 import com.github.drsmugbrain.pokemon.moves.BaseMove;
 import com.github.drsmugbrain.pokemon.moves.CriticalHitStage;
@@ -43,9 +44,8 @@ public class Pokemon {
     @Nonnull
     private final Nature NATURE;
 
-    @Nullable
-    private Item item;
-
+    @Nonnull
+    private Item ITEM;
 
     @Nonnull
     private final Gender GENDER;
@@ -90,7 +90,7 @@ public class Pokemon {
             @Nonnull Species basePokemon,
             @Nonnull String nickname,
             @Nonnull Abilities ability,
-            @Nullable Item item,
+            @Nullable Items item,
             @Nonnull Nature nature,
             @Nonnull Gender gender,
             @Nonnull Integer level,
@@ -103,7 +103,7 @@ public class Pokemon {
         TYPES = new Types(basePokemon.getTypes());
         NICKNAME = nickname;
         ABILITY = new Ability(ability);
-        this.item = item;
+        this.ITEM = new Item(item);
         NATURE = nature;
         GENDER = gender;
         LEVEL = level;
@@ -160,7 +160,7 @@ public class Pokemon {
                         "Ability: %s\n" +
                         "EVs: %d HP / %d Atk / %d Def / %d SpA / %d SpD / %d Spe\n" +
                         "%s Nature",
-                        BASE_POKEMON.getName(), item, ABILITY.getName(),
+                        BASE_POKEMON.getName(), ITEM, ABILITY.getName(),
                         hpEV, atkEV, defEV, spaEV, spdEV, speEV,
                         NATURE.getName()
                 )
@@ -204,31 +204,31 @@ public class Pokemon {
     }
 
     @Nullable
-    public Item getItem() {
-        return item;
+    public Items getItem() {
+        return ITEM.get();
     }
 
-    public void setItem(@Nonnull Item item) {
-        this.item = item;
+    public void setItem(@Nonnull Items item) {
+        ITEM.set(item);
     }
 
     public boolean hasItem() {
-        return item != null;
+        return ITEM.get() != null;
     }
 
-    public boolean hasItem(@Nonnull Item item) {
-        return this.item == item;
+    public boolean hasItem(@Nonnull Items item) {
+        return this.ITEM.get() == item;
     }
 
     @Nullable
-    public Item removeItem() {
-        Item item = this.item;
-        this.item = null;
+    public Items removeItem() {
+        Items item = ITEM.get();
+        ITEM.set(null);
         return item;
     }
 
     public void stealItem(@Nonnull Pokemon thief) {
-        Item item = this.removeItem();
+        Items item = this.removeItem();
 
         if (item == null) {
             return;

@@ -1,6 +1,6 @@
 package com.github.drsmugbrain.pokemon.battle;
 
-import com.github.drsmugbrain.pokemon.Item;
+import com.github.drsmugbrain.pokemon.item.Items;
 import com.github.drsmugbrain.pokemon.ability.Abilities;
 import com.github.drsmugbrain.pokemon.moves.BaseMove;
 import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
@@ -31,15 +31,15 @@ public enum Clause {
         public boolean isValid(Battle battle) {
             for (Trainer trainer : battle.getTrainers().values()) {
                 for (Pokemon pokemon : trainer.getPokemons()) {
-                    if (pokemon.hasItem(Item.LEPPA_BERRY) && pokemon.hasAllMoves(BaseMove.RECYCLE, BaseMove.HEAL_PULSE) && pokemon.hasOneMove(recycleLeppaBannedMoves)) {
+                    if (pokemon.hasItem(Items.LEPPA_BERRY) && pokemon.hasAllMoves(BaseMove.RECYCLE, BaseMove.HEAL_PULSE) && pokemon.hasOneMove(recycleLeppaBannedMoves)) {
                         return false;
                     }
 
-                    if (pokemon.hasItem(Item.LEPPA_BERRY) && pokemon.hasAllMoves(BaseMove.RECYCLE, BaseMove.PAIN_SPLIT)) {
+                    if (pokemon.hasItem(Items.LEPPA_BERRY) && pokemon.hasAllMoves(BaseMove.RECYCLE, BaseMove.PAIN_SPLIT)) {
                         return false;
                     }
 
-                    if (pokemon.hasItem(Item.LEPPA_BERRY) && pokemon.hasAllMoves(BaseMove.RECYCLE, BaseMove.FLING)) {
+                    if (pokemon.hasItem(Items.LEPPA_BERRY) && pokemon.hasAllMoves(BaseMove.RECYCLE, BaseMove.FLING)) {
                         return false;
                     }
                 }
@@ -140,7 +140,7 @@ public enum Clause {
                 Pokemon[] pokemons = trainer.getPokemons();
 
                 for (int i = 0; i < pokemons.length; i++) {
-                    if (pokemons[i].getItem() == Item.SOUL_DEW) {
+                    if (pokemons[i].getItem() == Items.SOUL_DEW) {
                         return false;
                     }
 
@@ -206,10 +206,10 @@ public enum Clause {
         @Override
         public boolean isValid(Battle battle) {
             for (Trainer trainer : battle.getTrainers().values()) {
-                Map<Item, Integer> itemCount = new HashMap<>();
+                Map<Items, Integer> itemCount = new HashMap<>();
 
                 for (Pokemon pokemon : trainer.getPokemons()) {
-                    Item item = pokemon.getItem();
+                    Items item = pokemon.getItem();
 
                     if (itemCount.containsKey(item)) {
                         if (itemCount.get(item) == 2) {

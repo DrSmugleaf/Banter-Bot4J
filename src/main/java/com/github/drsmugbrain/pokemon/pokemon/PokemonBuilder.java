@@ -1,6 +1,6 @@
 package com.github.drsmugbrain.pokemon.pokemon;
 
-import com.github.drsmugbrain.pokemon.Item;
+import com.github.drsmugbrain.pokemon.item.Items;
 import com.github.drsmugbrain.pokemon.Nature;
 import com.github.drsmugbrain.pokemon.ability.Abilities;
 import com.github.drsmugbrain.pokemon.moves.Move;
@@ -20,7 +20,7 @@ public class PokemonBuilder {
     private Trainer trainer;
     private Species basePokemon;
     private String nickname;
-    private Item item;
+    private Items item;
     private Nature nature;
     private Abilities ability;
     private Gender gender;
@@ -81,12 +81,12 @@ public class PokemonBuilder {
     }
 
     @Nullable
-    public Item getItem() {
+    public Items getItem() {
         return item;
     }
 
     @Nonnull
-    public PokemonBuilder setItem(@Nonnull Item item) {
+    public PokemonBuilder setItem(@Nonnull Items item) {
         this.item = item;
         return this;
     }

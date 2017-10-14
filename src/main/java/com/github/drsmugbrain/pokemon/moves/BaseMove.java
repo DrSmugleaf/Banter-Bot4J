@@ -4,6 +4,8 @@ import com.github.drsmugbrain.pokemon.*;
 import com.github.drsmugbrain.pokemon.battle.*;
 import com.github.drsmugbrain.pokemon.events.EventDispatcher;
 import com.github.drsmugbrain.pokemon.events.PokemonDodgeEvent;
+import com.github.drsmugbrain.pokemon.item.Items;
+import com.github.drsmugbrain.pokemon.item.ItemCategory;
 import com.github.drsmugbrain.pokemon.pokemon.Gender;
 import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 import com.github.drsmugbrain.pokemon.pokemon.Species;
@@ -477,7 +479,7 @@ public enum BaseMove implements IModifier {
     },
     BELCH("Belch") {
         @Override
-        public void onOwnItemUsed(@Nonnull Pokemon user, @Nonnull Item item) {
+        public void onOwnItemUsed(@Nonnull Pokemon user, @Nonnull Items item) {
             if (item.getCategory() == ItemCategory.BERRY) {
                 user.addTag(Tag.BERRY_USED);
             }
@@ -690,7 +692,7 @@ public enum BaseMove implements IModifier {
     BUG_BITE("Bug Bite") {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
-            Item berry = target.getItem();
+            Items berry = target.getItem();
             target.removeItem();
             berry.use(user, battle);
             return super.use(user, target, battle, action);
@@ -1363,7 +1365,7 @@ public enum BaseMove implements IModifier {
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
             int damage = super.use(user, target, battle, action);
 
-            Item targetItem = target.getItem();
+            Items targetItem = target.getItem();
             ItemCategory targetItemCategory = targetItem.getCategory();
             if (!user.hasItem() && target.hasItem() && !target.STATUSES.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
                 switch (battle.getGeneration()) {
@@ -1373,7 +1375,7 @@ public enum BaseMove implements IModifier {
                         target.stealItem(user);
                         break;
                     case IV:
-                        if (target.ABILITY.get() == MULTITYPE || targetItem == Item.GRISEOUS_ORB) {
+                        if (target.ABILITY.get() == MULTITYPE || targetItem == Items.GRISEOUS_ORB) {
                             break;
                         }
 
@@ -1386,7 +1388,7 @@ public enum BaseMove implements IModifier {
 
                         Species userPokemon = user.getBasePokemon();
                         Species targetPokemon = target.getBasePokemon();
-                        if (targetItem == Item.GRISEOUS_ORB) {
+                        if (targetItem == Items.GRISEOUS_ORB) {
                             if (userPokemon == Species.GIRATINA || targetPokemon == Species.GIRATINA) {
                                 break;
                             }
@@ -1415,7 +1417,7 @@ public enum BaseMove implements IModifier {
 
                         Species userPokemon = user.getBasePokemon();
                         Species targetPokemon = target.getBasePokemon();
-                        if (targetItem == Item.GRISEOUS_ORB) {
+                        if (targetItem == Items.GRISEOUS_ORB) {
                             if (userPokemon == Species.GIRATINA || targetPokemon == Species.GIRATINA) {
                                 break;
                             }
@@ -2693,7 +2695,7 @@ public enum BaseMove implements IModifier {
                         .setEffectRate(nextLine[9].isEmpty() ? null : Integer.valueOf(nextLine[9]))
                         .setIsSelfZMove(Boolean.parseBoolean(nextLine[10]))
                         .setCorrespondingZMove(nextLine[11].isEmpty() ? null : BaseMove.getMove(nextLine[11]))
-                        .setZMoveItem(nextLine[12].isEmpty() ? null : Item.getItem(nextLine[12]))
+                        .setZMoveItem(nextLine[12].isEmpty() ? null : Items.getItem(nextLine[12]))
                         .setDetailedEffect(nextLine[13].isEmpty() ? null : nextLine[13])
                         .setZMovePower(nextLine[14].isEmpty() ? null : Integer.valueOf(nextLine[14]))
                         .setIsZMove(Boolean.parseBoolean(nextLine[15]))
@@ -2741,7 +2743,7 @@ public enum BaseMove implements IModifier {
     private BaseMove Z_MOVE_REQUIRED_MOVE = null;
     private final List<BaseMove> Z_MOVE_MOVES_THAT_TURN_INTO_THIS = new ArrayList<>();
     private boolean IS_SELF_Z_MOVE = false;
-    private Item Z_MOVE_ITEM;
+    private Items Z_MOVE_ITEM;
     private String BATTLE_EFFECT;
     private String IN_DEPTH_EFFECT;
     private String SECONDARY_EFFECT;
@@ -2826,7 +2828,7 @@ public enum BaseMove implements IModifier {
         return this;
     }
 
-    private BaseMove setZMoveItem(@Nullable Item item) {
+    private BaseMove setZMoveItem(@Nullable Items item) {
         this.Z_MOVE_ITEM = item;
         return this;
     }
@@ -3174,7 +3176,7 @@ public enum BaseMove implements IModifier {
     }
 
     @Nullable
-    public Item getZMoveItem() {
+    public Items getZMoveItem() {
         return this.Z_MOVE_ITEM;
     }
 
