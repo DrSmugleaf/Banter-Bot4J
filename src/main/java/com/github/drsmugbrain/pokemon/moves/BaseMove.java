@@ -21,6 +21,8 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
+import static com.github.drsmugbrain.pokemon.ability.Abilities.MULTITYPE;
+
 /**
  * Created by DrSmugleaf on 17/06/2017.
  */
@@ -1235,7 +1237,7 @@ public enum BaseMove implements IModifier {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
             if (target.movedThisTurn()) {
-                switch (target.getAbility()) {
+                switch (target.ABILITY.get()) {
                     case MULTITYPE:
                     case STANCE_CHANGE:
                     case SCHOOLING:
@@ -1247,7 +1249,7 @@ public enum BaseMove implements IModifier {
                     case POWER_CONSTRUCT:
                         break;
                     default:
-                        target.setAbilitySuppressed(true);
+                        target.ABILITY.setSuppressed(true);
                 }
             }
 
@@ -1365,7 +1367,7 @@ public enum BaseMove implements IModifier {
                         target.stealItem(user);
                         break;
                     case IV:
-                        if (target.getAbility() == Abilities.MULTITYPE || targetItem == Item.GRISEOUS_ORB) {
+                        if (target.ABILITY.get() == MULTITYPE || targetItem == Item.GRISEOUS_ORB) {
                             break;
                         }
 

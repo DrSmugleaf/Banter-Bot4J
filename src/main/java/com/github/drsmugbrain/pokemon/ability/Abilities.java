@@ -283,7 +283,7 @@ public enum Abilities implements IModifier {
     @Override
     @OverridingMethodsMustInvokeSuper
     public void onOwnSendOut(@Nonnull Pokemon pokemon) {
-        pokemon.setAbilitySuppressed(false);
+        pokemon.ABILITY.setSuppressed(false);
     }
 
     private static class Holder {

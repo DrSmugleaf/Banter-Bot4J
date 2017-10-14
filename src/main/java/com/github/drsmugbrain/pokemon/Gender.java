@@ -65,7 +65,7 @@ public enum Gender { // TODO: Add list of Genderless Pokemon / Pokemon gender ra
     }
 
     public static boolean isInfatuatable(@Nonnull Pokemon attacker, @Nonnull Pokemon defender) {
-        if (defender.getAbility() == Abilities.OBLIVIOUS) {
+        if (defender.ABILITY.get() == Abilities.OBLIVIOUS) {
             return false;
         }
 

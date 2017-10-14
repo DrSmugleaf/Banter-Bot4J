@@ -33,7 +33,7 @@ public class Pokemon {
     private final String NICKNAME;
 
     @Nonnull
-    private final Ability ABILITY;
+    public final Ability ABILITY;
 
     @Nonnull
     private final Nature NATURE;
@@ -69,8 +69,6 @@ public class Pokemon {
 
     @Nullable
     private Action action = null;
-
-    private boolean abilitySuppressed = false;
 
     @Nullable
     private Pokemon damagedThisTurn = null;
@@ -196,11 +194,6 @@ public class Pokemon {
     }
 
     @Nonnull
-    public Abilities getAbility() {
-        return ABILITY.get();
-    }
-
-    @Nonnull
     public Nature getNature() {
         return NATURE;
     }
@@ -298,14 +291,6 @@ public class Pokemon {
 
     protected void setAction(@Nonnull Action action) {
         this.action = action;
-    }
-
-    public boolean getAbilitySuppressed() {
-        return abilitySuppressed;
-    }
-
-    public void setAbilitySuppressed(boolean bool) {
-        this.abilitySuppressed = bool;
     }
 
     public int getHP() {

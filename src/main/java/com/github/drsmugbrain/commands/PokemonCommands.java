@@ -44,7 +44,7 @@ public class PokemonCommands {
             builder.appendField(
                     i+1 + ": " + pokemon.getName() + " (" + String.join(" ", pokemon.TYPES.getTypesString()) + ")",
                     "HP: " + percentageHP + "% (" + currentHP + "/" + maxHP + ")\n" +
-                            "Ability: " + pokemon.getAbility().getName() + " / Item: " + (pokemon.getItem() != null ? pokemon.getItem().getName() : "None") + "\n" +
+                            "Ability: " + pokemon.ABILITY.get().getName() + " / Item: " + (pokemon.getItem() != null ? pokemon.getItem().getName() : "None") + "\n" +
                             "Stats: " + pokemon.getStatsStringWithoutHP(),
                     true
             );

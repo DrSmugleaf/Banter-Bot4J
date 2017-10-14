@@ -10,6 +10,8 @@ public class Ability {
     @Nonnull
     private final Abilities ABILITY;
 
+    private boolean suppressed = false;
+
     public Ability(@Nonnull Abilities ability) {
         ABILITY = ability;
     }
@@ -22,6 +24,14 @@ public class Ability {
     @Nonnull
     public Abilities get() {
         return ABILITY;
+    }
+
+    public boolean isSuppressed() {
+        return suppressed;
+    }
+
+    public void setSuppressed(boolean bool) {
+        suppressed = bool;
     }
 
 }

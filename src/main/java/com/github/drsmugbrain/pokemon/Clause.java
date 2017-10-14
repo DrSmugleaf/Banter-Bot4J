@@ -64,7 +64,7 @@ public enum Clause {
         public boolean isValid(Battle battle) {
             for (Trainer trainer : battle.getTrainers().values()) {
                 for (Pokemon pokemon : trainer.getPokemons()) {
-                    if (pokemon.getAbility() == Abilities.MOODY) {
+                    if (pokemon.ABILITY.get() == Abilities.MOODY) {
                         return false;
                     }
                 }
@@ -113,7 +113,7 @@ public enum Clause {
                 Map<Abilities, Integer> abilityCount = new HashMap<>();
 
                 for (Pokemon pokemon : trainer.getPokemons()) {
-                    Abilities ability = pokemon.getAbility();
+                    Abilities ability = pokemon.ABILITY.get();
 
                     if (abilityCount.containsKey(ability)) {
                         if (abilityCount.get(ability) == 2) {

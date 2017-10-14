@@ -620,7 +620,7 @@ public enum Messages {
         public String getMessage(Pokemon user, Pokemon target, Move move, Abilities ability) {
             String userName = user.getNickname();
             String targetName = target.getNickname();
-            String targetAbilityName = target.getAbility().getName();
+            String targetAbilityName = target.ABILITY.get().getName();
             String abilityName = ability.getName();
 
             if (ability != null) {
@@ -629,7 +629,7 @@ public enum Messages {
                         return String.format("%s copied %s's %s Ability!", userName, targetName, targetAbilityName);
                 }
 
-                switch (user.getAbility()) {
+                switch (user.ABILITY.get()) {
                     case TRACE:
                         return String.format("%s traced %s's %s!", userName, targetName, abilityName);
                     case POWER_OF_ALCHEMY:
@@ -646,7 +646,7 @@ public enum Messages {
                 }
             }
 
-            switch (user.getAbility()) {
+            switch (user.ABILITY.get()) {
                 case AIR_LOCK:
                 case CLOUD_NINE:
                     return "The effects of the weather disappeared!";
@@ -676,8 +676,8 @@ public enum Messages {
 
             throw new IllegalArgumentException(
                     "No valid message for:\n" +
-                    "User ability: " + user.getAbility() + "\n" +
-                    "Target ability: " + target.getAbility() + "\n" +
+                    "User ability: " + user.ABILITY.get() + "\n" +
+                    "Target ability: " + target.ABILITY.get() + "\n" +
                     "Ability: " + ability
             );
         }
