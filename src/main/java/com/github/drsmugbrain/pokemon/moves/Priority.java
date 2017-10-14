@@ -1,6 +1,4 @@
-package com.github.drsmugbrain.pokemon.stats;
-
-import com.github.drsmugbrain.pokemon.moves.BaseMove;
+package com.github.drsmugbrain.pokemon.moves;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
