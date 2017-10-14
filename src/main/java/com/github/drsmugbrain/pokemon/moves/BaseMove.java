@@ -1,6 +1,7 @@
 package com.github.drsmugbrain.pokemon.moves;
 
 import com.github.drsmugbrain.pokemon.*;
+import com.github.drsmugbrain.pokemon.ability.Abilities;
 import com.github.drsmugbrain.pokemon.events.EventDispatcher;
 import com.github.drsmugbrain.pokemon.events.PokemonDodgeEvent;
 import com.github.drsmugbrain.pokemon.stats.*;
@@ -1364,7 +1365,7 @@ public enum BaseMove implements IModifier {
                         target.stealItem(user);
                         break;
                     case IV:
-                        if (target.getAbility() == Ability.MULTITYPE || targetItem == Item.GRISEOUS_ORB) {
+                        if (target.getAbility() == Abilities.MULTITYPE || targetItem == Item.GRISEOUS_ORB) {
                             break;
                         }
 

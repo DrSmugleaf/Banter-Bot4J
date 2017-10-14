@@ -1,5 +1,7 @@
 package com.github.drsmugbrain.pokemon;
 
+import com.github.drsmugbrain.pokemon.ability.Abilities;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -63,7 +65,7 @@ public enum Gender { // TODO: Add list of Genderless Pokemon / Pokemon gender ra
     }
 
     public static boolean isInfatuatable(@Nonnull Pokemon attacker, @Nonnull Pokemon defender) {
-        if (defender.getAbility() == Ability.OBLIVIOUS) {
+        if (defender.getAbility() == Abilities.OBLIVIOUS) {
             return false;
         }
 

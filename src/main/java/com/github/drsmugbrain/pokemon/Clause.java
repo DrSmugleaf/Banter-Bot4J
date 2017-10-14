@@ -1,5 +1,6 @@
 package com.github.drsmugbrain.pokemon;
 
+import com.github.drsmugbrain.pokemon.ability.Abilities;
 import com.github.drsmugbrain.pokemon.moves.BaseMove;
 import com.github.drsmugbrain.pokemon.types.Type;
 
@@ -63,7 +64,7 @@ public enum Clause {
         public boolean isValid(Battle battle) {
             for (Trainer trainer : battle.getTrainers().values()) {
                 for (Pokemon pokemon : trainer.getPokemons()) {
-                    if (pokemon.getAbility() == Ability.MOODY) {
+                    if (pokemon.getAbility() == Abilities.MOODY) {
                         return false;
                     }
                 }
@@ -109,10 +110,10 @@ public enum Clause {
         @Override
         public boolean isValid(Battle battle) {
             for (Trainer trainer : battle.getTrainers().values()) {
-                Map<Ability, Integer> abilityCount = new HashMap<>();
+                Map<Abilities, Integer> abilityCount = new HashMap<>();
 
                 for (Pokemon pokemon : trainer.getPokemons()) {
-                    Ability ability = pokemon.getAbility();
+                    Abilities ability = pokemon.getAbility();
 
                     if (abilityCount.containsKey(ability)) {
                         if (abilityCount.get(ability) == 2) {

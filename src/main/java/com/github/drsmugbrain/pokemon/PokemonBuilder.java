@@ -1,5 +1,6 @@
 package com.github.drsmugbrain.pokemon;
 
+import com.github.drsmugbrain.pokemon.ability.Abilities;
 import com.github.drsmugbrain.pokemon.moves.Move;
 import com.github.drsmugbrain.pokemon.stats.PermanentStat;
 
@@ -18,7 +19,7 @@ public class PokemonBuilder {
     private String nickname;
     private Item item;
     private Nature nature;
-    private Ability ability;
+    private Abilities ability;
     private Gender gender;
     private int level;
     private Map<PermanentStat, Integer> individualValues;
@@ -99,12 +100,12 @@ public class PokemonBuilder {
     }
 
     @Nullable
-    public Ability getAbility() {
+    public Abilities getAbility() {
         return ability;
     }
 
     @Nonnull
-    public PokemonBuilder setAbility(@Nonnull Ability ability) {
+    public PokemonBuilder setAbility(@Nonnull Abilities ability) {
         this.ability = ability;
         return this;
     }

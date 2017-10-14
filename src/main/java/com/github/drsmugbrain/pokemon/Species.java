@@ -1,5 +1,6 @@
 package com.github.drsmugbrain.pokemon;
 
+import com.github.drsmugbrain.pokemon.ability.Abilities;
 import com.github.drsmugbrain.pokemon.stats.PermanentStat;
 import com.github.drsmugbrain.pokemon.types.Type;
 import com.github.drsmugbrain.util.Bot;
@@ -947,7 +948,7 @@ public enum Species {
 
             JSONArray jsonAbilities = alts.getJSONArray("abilities");
             for (int j = 0; j < jsonAbilities.length(); j++) {
-                Ability ability = Ability.getAbility(jsonAbilities.getString(j));
+                Abilities ability = Abilities.getAbility(jsonAbilities.getString(j));
                 pokemon.addAbilities(ability);
             }
 
@@ -973,7 +974,7 @@ public enum Species {
 
     private final String NAME;
     private final List<Generation> GENERATIONS = new ArrayList<>();
-    private final List<Ability> ABILITIES = new ArrayList<>();
+    private final List<Abilities> ABILITIES = new ArrayList<>();
     private final List<Type> TYPES = new ArrayList<>();
     private final List<Tier> TIERS = new ArrayList<>();
     private final Map<PermanentStat, Integer> STATS = new HashMap<>();
@@ -1043,16 +1044,16 @@ public enum Species {
         return this.addGenerations(generations);
     }
 
-    public List<Ability> getAbilities() {
+    public List<Abilities> getAbilities() {
         return this.ABILITIES;
     }
 
-    private Species addAbilities(Ability... abilities) {
+    private Species addAbilities(Abilities... abilities) {
         Collections.addAll(this.ABILITIES, abilities);
         return this;
     }
 
-    private Species setAbilities(Ability... abilities) {
+    private Species setAbilities(Abilities... abilities) {
         this.ABILITIES.clear();
         return this.addAbilities(abilities);
     }

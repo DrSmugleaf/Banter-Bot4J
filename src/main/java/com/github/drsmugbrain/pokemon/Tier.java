@@ -1,5 +1,6 @@
 package com.github.drsmugbrain.pokemon;
 
+import com.github.drsmugbrain.pokemon.ability.Abilities;
 import com.github.drsmugbrain.pokemon.moves.BaseMove;
 
 import javax.annotation.Nonnull;
@@ -124,9 +125,9 @@ public enum Tier {
                         Item.PINSIRITE
                 )
                 .setBannedAbilities(
-                        Ability.DRIZZLE,
-                        Ability.DROUGHT,
-                        Ability.SHADOW_TAG
+                        Abilities.DRIZZLE,
+                        Abilities.DROUGHT,
+                        Abilities.SHADOW_TAG
                 )
                 .setBannedMoves(BaseMove.SWAGGER);
 
@@ -157,9 +158,9 @@ public enum Tier {
                 )
                 .setBannedItems(Item.HOUNDOOMINITE)
                 .setBannedAbilities(
-                        Ability.DRIZZLE,
-                        Ability.DROUGHT,
-                        Ability.SHADOW_TAG
+                        Abilities.DRIZZLE,
+                        Abilities.DROUGHT,
+                        Abilities.SHADOW_TAG
                 )
                 .setBannedMoves(BaseMove.SWAGGER);
 
@@ -183,9 +184,9 @@ public enum Tier {
                         "Sigilyph"
                 )
                 .setBannedAbilities(
-                        Ability.DRIZZLE,
-                        Ability.DROUGHT,
-                        Ability.SHADOW_TAG
+                        Abilities.DRIZZLE,
+                        Abilities.DROUGHT,
+                        Abilities.SHADOW_TAG
                 )
                 .setBannedMoves(BaseMove.SWAGGER);
 
@@ -214,9 +215,9 @@ public enum Tier {
                         "Vigoroth"
                 )
                 .setBannedAbilities(
-                        Ability.DRIZZLE,
-                        Ability.DROUGHT,
-                        Ability.SHADOW_TAG
+                        Abilities.DRIZZLE,
+                        Abilities.DROUGHT,
+                        Abilities.SHADOW_TAG
                 )
                 .setBannedMoves(
                         BaseMove.SWAGGER,
@@ -291,7 +292,7 @@ public enum Tier {
     private final List<BaseMove> BANNED_MOVES = new ArrayList<>();
     private final List<Tier> BANNED_TIERS = new ArrayList<>();
     private final List<Item> BANNED_ITEMS = new ArrayList<>();
-    private final List<Ability> BANNED_ABILITIES = new ArrayList<>();
+    private final List<Abilities> BANNED_ABILITIES = new ArrayList<>();
 
     Tier(@Nonnull String name, @Nonnull String abbreviation, @Nonnull Clause... clauses) {
         Holder.MAP.put(abbreviation.toLowerCase(), this);
@@ -413,16 +414,16 @@ public enum Tier {
     }
 
     @Nonnull
-    public List<Ability> getBannedAbilities() {
+    public List<Abilities> getBannedAbilities() {
         return this.BANNED_ABILITIES;
     }
 
-    private Tier addBannedAbilities(Ability... abilities) {
+    private Tier addBannedAbilities(Abilities... abilities) {
         Collections.addAll(this.BANNED_ABILITIES, abilities);
         return this;
     }
 
-    private Tier setBannedAbilities(Ability... abilities) {
+    private Tier setBannedAbilities(Abilities... abilities) {
         this.BANNED_ABILITIES.clear();
         return this.addBannedAbilities(abilities);
     }

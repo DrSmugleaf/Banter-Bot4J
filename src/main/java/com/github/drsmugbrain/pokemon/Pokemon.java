@@ -1,5 +1,7 @@
 package com.github.drsmugbrain.pokemon;
 
+import com.github.drsmugbrain.pokemon.ability.Abilities;
+import com.github.drsmugbrain.pokemon.ability.Ability;
 import com.github.drsmugbrain.pokemon.events.*;
 import com.github.drsmugbrain.pokemon.moves.Action;
 import com.github.drsmugbrain.pokemon.moves.BaseMove;
@@ -84,7 +86,7 @@ public class Pokemon {
             @Nonnull Trainer trainer,
             @Nonnull Species basePokemon,
             @Nonnull String nickname,
-            @Nonnull Ability ability,
+            @Nonnull Abilities ability,
             @Nullable Item item,
             @Nonnull Nature nature,
             @Nonnull Gender gender,
@@ -97,7 +99,7 @@ public class Pokemon {
         BASE_POKEMON = basePokemon;
         TYPES = new Types(basePokemon.getTypes());
         NICKNAME = nickname;
-        ABILITY = ability;
+        ABILITY = new Ability(ability);
         this.item = item;
         NATURE = nature;
         GENDER = gender;
@@ -194,8 +196,8 @@ public class Pokemon {
     }
 
     @Nonnull
-    public Ability getAbility() {
-        return ABILITY;
+    public Abilities getAbility() {
+        return ABILITY.get();
     }
 
     @Nonnull

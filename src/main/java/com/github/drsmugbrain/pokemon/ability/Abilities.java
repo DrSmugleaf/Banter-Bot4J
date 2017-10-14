@@ -1,5 +1,7 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.ability;
 
+import com.github.drsmugbrain.pokemon.IModifier;
+import com.github.drsmugbrain.pokemon.Pokemon;
 import org.json.JSONArray;
 
 import javax.annotation.Nonnull;
@@ -9,7 +11,7 @@ import java.util.*;
 /**
  * Created by DrSmugleaf on 07/06/2017.
  */
-public enum Ability implements IModifier {
+public enum Abilities implements IModifier {
 
     ADAPTABILITY("Adaptability"),
     AERILATE("Aerilate"),
@@ -247,13 +249,13 @@ public enum Ability implements IModifier {
     private String NAME;
     private boolean suppressed = false;
 
-    Ability(@Nonnull String name) {
+    Abilities(@Nonnull String name) {
         Holder.MAP.put(name, this);
         this.NAME = name;
     }
 
     @Nonnull
-    public static Ability getAbility(@Nonnull String ability) {
+    public static Abilities getAbility(@Nonnull String ability) {
         if(!Holder.MAP.containsKey(ability)) {
             throw new NullPointerException("Ability " + ability + " doesn't exist");
         }
@@ -262,15 +264,15 @@ public enum Ability implements IModifier {
     }
 
     @Nonnull
-    public static Ability[] getAbilities(@Nonnull JSONArray abilities) {
-        List<Ability> abilityList = new ArrayList<>();
+    public static Abilities[] getAbilities(@Nonnull JSONArray abilities) {
+        List<Abilities> abilityList = new ArrayList<>();
 
         for (int i = 0; i < abilities.length(); i++) {
-            Ability ability = Ability.getAbility(abilities.getString(i));
+            Abilities ability = Abilities.getAbility(abilities.getString(i));
             abilityList.add(ability);
         }
 
-        return abilityList.toArray(new Ability[0]);
+        return abilityList.toArray(new Abilities[0]);
     }
 
     @Nonnull
@@ -285,7 +287,7 @@ public enum Ability implements IModifier {
     }
 
     private static class Holder {
-        static Map<String, Ability> MAP = new HashMap<>();
+        static Map<String, Abilities> MAP = new HashMap<>();
     }
 
 }

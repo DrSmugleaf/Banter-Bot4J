@@ -1,5 +1,6 @@
 package com.github.drsmugbrain.pokemon;
 
+import com.github.drsmugbrain.pokemon.ability.Abilities;
 import com.github.drsmugbrain.pokemon.moves.BaseMove;
 import com.github.drsmugbrain.pokemon.moves.Move;
 import com.github.drsmugbrain.pokemon.stats.PermanentStat;
@@ -94,7 +95,7 @@ public class SmogonImporter {
 
         Species pokemon = Species.getPokemon(nameString);
         Item item = Item.getItem(itemString);
-        Ability ability = Ability.getAbility(abilityString);
+        Abilities ability = Abilities.getAbility(abilityString);
         Nature nature = Nature.getNature(natureString);
         List<Move> moves = new ArrayList<>();
         for (String move : movesStringArray) {
