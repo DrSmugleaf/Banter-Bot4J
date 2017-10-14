@@ -1,7 +1,7 @@
 package com.github.drsmugbrain.pokemon.pokemon;
 
-import com.github.drsmugbrain.pokemon.Generation;
-import com.github.drsmugbrain.pokemon.Tier;
+import com.github.drsmugbrain.pokemon.battle.Generation;
+import com.github.drsmugbrain.pokemon.battle.Tier;
 import com.github.drsmugbrain.pokemon.ability.Abilities;
 import com.github.drsmugbrain.pokemon.stats.PermanentStat;
 import com.github.drsmugbrain.pokemon.types.Type;

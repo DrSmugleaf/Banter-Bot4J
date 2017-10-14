@@ -1,6 +1,9 @@
 package com.github.drsmugbrain.pokemon.status;
 
 import com.github.drsmugbrain.pokemon.*;
+import com.github.drsmugbrain.pokemon.battle.Battle;
+import com.github.drsmugbrain.pokemon.battle.Generation;
+import com.github.drsmugbrain.pokemon.battle.InvalidGenerationException;
 import com.github.drsmugbrain.pokemon.moves.Action;
 import com.github.drsmugbrain.pokemon.moves.BaseMove;
 import com.github.drsmugbrain.pokemon.moves.Category;

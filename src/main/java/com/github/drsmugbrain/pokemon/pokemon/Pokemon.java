@@ -1,6 +1,6 @@
 package com.github.drsmugbrain.pokemon.pokemon;
 
-import com.github.drsmugbrain.pokemon.Battle;
+import com.github.drsmugbrain.pokemon.battle.Battle;
 import com.github.drsmugbrain.pokemon.IModifier;
 import com.github.drsmugbrain.pokemon.Item;
 import com.github.drsmugbrain.pokemon.Nature;

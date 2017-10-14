@@ -1,4 +1,4 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.battle;
 
 import com.github.drsmugbrain.pokemon.trainer.TrainerBuilder;
 import com.github.drsmugbrain.pokemon.trainer.UserException;

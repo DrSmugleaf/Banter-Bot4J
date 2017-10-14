@@ -1,6 +1,6 @@
 package com.github.drsmugbrain.pokemon.trainer;
 
-import com.github.drsmugbrain.pokemon.Battle;
+import com.github.drsmugbrain.pokemon.battle.Battle;
 import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 import com.github.drsmugbrain.pokemon.pokemon.PokemonBuilder;
 import com.github.drsmugbrain.pokemon.events.*;

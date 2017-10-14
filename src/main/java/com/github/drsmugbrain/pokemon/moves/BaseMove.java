@@ -1,6 +1,7 @@
 package com.github.drsmugbrain.pokemon.moves;
 
 import com.github.drsmugbrain.pokemon.*;
+import com.github.drsmugbrain.pokemon.battle.*;
 import com.github.drsmugbrain.pokemon.events.EventDispatcher;
 import com.github.drsmugbrain.pokemon.events.PokemonDodgeEvent;
 import com.github.drsmugbrain.pokemon.pokemon.Gender;

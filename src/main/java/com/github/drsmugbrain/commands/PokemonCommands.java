@@ -1,6 +1,6 @@
 package com.github.drsmugbrain.commands;
 
-import com.github.drsmugbrain.pokemon.*;
+import com.github.drsmugbrain.pokemon.battle.*;
 import com.github.drsmugbrain.pokemon.events.*;
 import com.github.drsmugbrain.pokemon.moves.BaseMove;
 import com.github.drsmugbrain.pokemon.moves.Move;

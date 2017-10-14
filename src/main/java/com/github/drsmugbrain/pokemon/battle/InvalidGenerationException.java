@@ -1,4 +1,4 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.battle;
 
 /**
  * Created by DrSmugleaf on 28/06/2017.

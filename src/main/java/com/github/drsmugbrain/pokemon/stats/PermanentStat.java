@@ -1,7 +1,7 @@
 package com.github.drsmugbrain.pokemon.stats;
 
-import com.github.drsmugbrain.pokemon.Generation;
-import com.github.drsmugbrain.pokemon.InvalidGenerationException;
+import com.github.drsmugbrain.pokemon.battle.Generation;
+import com.github.drsmugbrain.pokemon.battle.InvalidGenerationException;
 import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 
 import javax.annotation.Nonnull;
