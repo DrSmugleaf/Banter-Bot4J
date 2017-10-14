@@ -1,11 +1,12 @@
 package com.github.drsmugbrain.pokemon.moves;
 
-import com.github.drsmugbrain.pokemon.*;
+import com.github.drsmugbrain.pokemon.IModifier;
 import com.github.drsmugbrain.pokemon.battle.*;
 import com.github.drsmugbrain.pokemon.events.EventDispatcher;
 import com.github.drsmugbrain.pokemon.events.PokemonDodgeEvent;
-import com.github.drsmugbrain.pokemon.item.Items;
+import com.github.drsmugbrain.pokemon.item.Item;
 import com.github.drsmugbrain.pokemon.item.ItemCategory;
+import com.github.drsmugbrain.pokemon.item.Items;
 import com.github.drsmugbrain.pokemon.pokemon.Gender;
 import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 import com.github.drsmugbrain.pokemon.pokemon.Species;
@@ -69,7 +70,7 @@ public enum BaseMove implements IModifier {
     ACROBATICS("Acrobatics") { // Flying Gem is consumed before the power calculation is made
         @Override
         public int getPower(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
-            if (target.getItem() == null) {
+            if (target.ITEM.has()) {
                 return this.POWER * 2;
             } else {
                 return this.POWER;
@@ -258,7 +259,7 @@ public enum BaseMove implements IModifier {
 
         @Override
         protected int useAsZMove(@Nonnull Pokemon user, Pokemon target, @Nullable Battle battle, Action action) {
-            user.removeItem();
+            user.ITEM.remove();
 
             List<Move> teamMoves = new ArrayList<>();
             for (Pokemon pokemon : user.getTrainer().getPokemons()) {
@@ -506,12 +507,11 @@ public enum BaseMove implements IModifier {
     BESTOW("Bestow") {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
-            if (target.hasItem() || user.getItem() == null) {
+            if (target.ITEM.has() || !user.ITEM.has()) {
                 return this.miss(target);
             }
 
-            target.setItem(user.getItem());
-            user.removeItem();
+            target.ITEM.steal(user);
             return super.use(user, target, battle, action);
         }
     },
@@ -529,7 +529,7 @@ public enum BaseMove implements IModifier {
 
             if (!target.STATUSES.hasVolatileStatus(BaseVolatileStatus.BOUND)) {
                 BaseVolatileStatus.BOUND.apply(user, action);
-            } else if (lastAction.getBaseMove() == BaseMove.BIND &&
+            } else if (lastAction != null && lastAction.getBaseMove() == BaseMove.BIND &&
                        lastAction.getTarget() == target) {
                 action.increasePP(1);
             }
@@ -692,9 +692,11 @@ public enum BaseMove implements IModifier {
     BUG_BITE("Bug Bite") {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
-            Items berry = target.getItem();
-            target.removeItem();
-            berry.use(user, battle);
+            Item item = target.ITEM;
+            if (item.getCategory() == ItemCategory.BERRY) {
+                item.use(user);
+            }
+
             return super.use(user, target, battle, action);
         }
     },
@@ -1233,7 +1235,7 @@ public enum BaseMove implements IModifier {
                 return super.miss(user);
             }
 
-            user.removeItem();
+            user.ITEM.remove();
             if (copiedMove.getCategory() != Category.OTHER) {
                 return copiedMove.useAsZMove(user, target);
             } else {
@@ -1365,21 +1367,22 @@ public enum BaseMove implements IModifier {
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
             int damage = super.use(user, target, battle, action);
 
-            Items targetItem = target.getItem();
-            ItemCategory targetItemCategory = targetItem.getCategory();
-            if (!user.hasItem() && target.hasItem() && !target.STATUSES.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+            Item userItem = user.ITEM;
+            Items targetItem = target.ITEM.get();
+            ItemCategory targetItemCategory = targetItem != null ? targetItem.getCategory() : null;
+            if (!userItem.has() && target.ITEM.has() && !target.STATUSES.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
                 switch (battle.getGeneration()) {
                     case I:
                     case II:
                     case III:
-                        target.stealItem(user);
+                        userItem.steal(target);
                         break;
                     case IV:
                         if (target.ABILITY.get() == MULTITYPE || targetItem == Items.GRISEOUS_ORB) {
                             break;
                         }
 
-                        target.stealItem(user);
+                        userItem.steal(target);
                         break;
                     case V: {
                         if (user.isFainted()) {
@@ -1406,7 +1409,7 @@ public enum BaseMove implements IModifier {
                             }
                         }
 
-                        target.stealItem(user);
+                        userItem.steal(target);
                         break;
                     }
                     case VI:
@@ -1449,7 +1452,7 @@ public enum BaseMove implements IModifier {
                             }
                         }
 
-                        target.stealItem(user);
+                        userItem.steal(target);
                         break;
                     }
                     default:
@@ -3423,7 +3426,7 @@ public enum BaseMove implements IModifier {
             return false;
         }
 
-        return this.Z_MOVE_ITEM == user.getItem() && !Collections.disjoint(this.Z_MOVE_MOVES_THAT_TURN_INTO_THIS, user.getMoves());
+        return this.Z_MOVE_ITEM == user.ITEM.get() && !Collections.disjoint(this.Z_MOVE_MOVES_THAT_TURN_INTO_THIS, user.getMoves());
     }
 
     protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {

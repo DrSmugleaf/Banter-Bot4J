@@ -31,15 +31,15 @@ public enum Clause {
         public boolean isValid(Battle battle) {
             for (Trainer trainer : battle.getTrainers().values()) {
                 for (Pokemon pokemon : trainer.getPokemons()) {
-                    if (pokemon.hasItem(Items.LEPPA_BERRY) && pokemon.hasAllMoves(BaseMove.RECYCLE, BaseMove.HEAL_PULSE) && pokemon.hasOneMove(recycleLeppaBannedMoves)) {
+                    if (pokemon.ITEM.has(Items.LEPPA_BERRY) && pokemon.hasAllMoves(BaseMove.RECYCLE, BaseMove.HEAL_PULSE) && pokemon.hasOneMove(recycleLeppaBannedMoves)) {
                         return false;
                     }
 
-                    if (pokemon.hasItem(Items.LEPPA_BERRY) && pokemon.hasAllMoves(BaseMove.RECYCLE, BaseMove.PAIN_SPLIT)) {
+                    if (pokemon.ITEM.has(Items.LEPPA_BERRY) && pokemon.hasAllMoves(BaseMove.RECYCLE, BaseMove.PAIN_SPLIT)) {
                         return false;
                     }
 
-                    if (pokemon.hasItem(Items.LEPPA_BERRY) && pokemon.hasAllMoves(BaseMove.RECYCLE, BaseMove.FLING)) {
+                    if (pokemon.ITEM.has(Items.LEPPA_BERRY) && pokemon.hasAllMoves(BaseMove.RECYCLE, BaseMove.FLING)) {
                         return false;
                     }
                 }
@@ -140,12 +140,12 @@ public enum Clause {
                 Pokemon[] pokemons = trainer.getPokemons();
 
                 for (int i = 0; i < pokemons.length; i++) {
-                    if (pokemons[i].getItem() == Items.SOUL_DEW) {
+                    if (pokemons[i].ITEM.has(Items.SOUL_DEW)) {
                         return false;
                     }
 
                     for (int j = i + 1; j < pokemons.length; j++) {
-                        if (i != j && pokemons[i].getItem() == pokemons[j].getItem()) {
+                        if (i != j && pokemons[i].ITEM.has(pokemons[j].ITEM.get())) {
                             return false;
                         }
                     }
@@ -209,7 +209,7 @@ public enum Clause {
                 Map<Items, Integer> itemCount = new HashMap<>();
 
                 for (Pokemon pokemon : trainer.getPokemons()) {
-                    Items item = pokemon.getItem();
+                    Items item = pokemon.ITEM.get();
 
                     if (itemCount.containsKey(item)) {
                         if (itemCount.get(item) == 2) {

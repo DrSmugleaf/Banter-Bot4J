@@ -120,7 +120,7 @@ public class Move {
     }
 
     protected int useAsZMove(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
-        attacker.removeItem();
+        attacker.ITEM.remove();
         return getBaseMove().useAsZMove(attacker, defender, attacker.getBattle(), action);
     }
 

@@ -45,7 +45,7 @@ public class Pokemon {
     private final Nature NATURE;
 
     @Nonnull
-    private Item ITEM;
+    public final Item ITEM;
 
     @Nonnull
     private final Gender GENDER;
@@ -160,7 +160,7 @@ public class Pokemon {
                         "Ability: %s\n" +
                         "EVs: %d HP / %d Atk / %d Def / %d SpA / %d SpD / %d Spe\n" +
                         "%s Nature",
-                        BASE_POKEMON.getName(), ITEM, ABILITY.getName(),
+                        BASE_POKEMON.getName(), ITEM.getName(), ABILITY.getName(),
                         hpEV, atkEV, defEV, spaEV, spdEV, speEV,
                         NATURE.getName()
                 )
@@ -201,40 +201,6 @@ public class Pokemon {
     @Nonnull
     public Nature getNature() {
         return NATURE;
-    }
-
-    @Nullable
-    public Items getItem() {
-        return ITEM.get();
-    }
-
-    public void setItem(@Nonnull Items item) {
-        ITEM.set(item);
-    }
-
-    public boolean hasItem() {
-        return ITEM.get() != null;
-    }
-
-    public boolean hasItem(@Nonnull Items item) {
-        return this.ITEM.get() == item;
-    }
-
-    @Nullable
-    public Items removeItem() {
-        Items item = ITEM.get();
-        ITEM.set(null);
-        return item;
-    }
-
-    public void stealItem(@Nonnull Pokemon thief) {
-        Items item = this.removeItem();
-
-        if (item == null) {
-            return;
-        }
-
-        thief.setItem(item);
     }
 
     @Nonnull
