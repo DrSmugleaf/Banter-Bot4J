@@ -32,11 +32,11 @@ public class Item {
         return item;
     }
 
-    public boolean has() {
+    public boolean is() {
         return item != null;
     }
 
-    public boolean has(@Nullable Items item) {
+    public boolean is(@Nullable Items item) {
         return this.item == item;
     }
 

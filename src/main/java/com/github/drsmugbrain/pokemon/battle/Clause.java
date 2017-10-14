@@ -31,15 +31,15 @@ public enum Clause {
         public boolean isValid(Battle battle) {
             for (Trainer trainer : battle.getTrainers().values()) {
                 for (Pokemon pokemon : trainer.getPokemons()) {
-                    if (pokemon.ITEM.has(Items.LEPPA_BERRY) && pokemon.hasAllMoves(BaseMove.RECYCLE, BaseMove.HEAL_PULSE) && pokemon.hasOneMove(recycleLeppaBannedMoves)) {
+                    if (pokemon.ITEM.is(Items.LEPPA_BERRY) && pokemon.hasAllMoves(BaseMove.RECYCLE, BaseMove.HEAL_PULSE) && pokemon.hasOneMove(recycleLeppaBannedMoves)) {
                         return false;
                     }
 
-                    if (pokemon.ITEM.has(Items.LEPPA_BERRY) && pokemon.hasAllMoves(BaseMove.RECYCLE, BaseMove.PAIN_SPLIT)) {
+                    if (pokemon.ITEM.is(Items.LEPPA_BERRY) && pokemon.hasAllMoves(BaseMove.RECYCLE, BaseMove.PAIN_SPLIT)) {
                         return false;
                     }
 
-                    if (pokemon.ITEM.has(Items.LEPPA_BERRY) && pokemon.hasAllMoves(BaseMove.RECYCLE, BaseMove.FLING)) {
+                    if (pokemon.ITEM.is(Items.LEPPA_BERRY) && pokemon.hasAllMoves(BaseMove.RECYCLE, BaseMove.FLING)) {
                         return false;
                     }
                 }
@@ -140,12 +140,12 @@ public enum Clause {
                 Pokemon[] pokemons = trainer.getPokemons();
 
                 for (int i = 0; i < pokemons.length; i++) {
-                    if (pokemons[i].ITEM.has(Items.SOUL_DEW)) {
+                    if (pokemons[i].ITEM.is(Items.SOUL_DEW)) {
                         return false;
                     }
 
                     for (int j = i + 1; j < pokemons.length; j++) {
-                        if (i != j && pokemons[i].ITEM.has(pokemons[j].ITEM.get())) {
+                        if (i != j && pokemons[i].ITEM.is(pokemons[j].ITEM.get())) {
                             return false;
                         }
                     }

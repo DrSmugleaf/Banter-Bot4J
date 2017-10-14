@@ -70,7 +70,7 @@ public enum BaseMove implements IModifier {
     ACROBATICS("Acrobatics") { // Flying Gem is consumed before the power calculation is made
         @Override
         public int getPower(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
-            if (target.ITEM.has()) {
+            if (target.ITEM.is()) {
                 return this.POWER * 2;
             } else {
                 return this.POWER;
@@ -507,7 +507,7 @@ public enum BaseMove implements IModifier {
     BESTOW("Bestow") {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
-            if (target.ITEM.has() || !user.ITEM.has()) {
+            if (target.ITEM.is() || !user.ITEM.is()) {
                 return this.miss(target);
             }
 
@@ -1370,7 +1370,7 @@ public enum BaseMove implements IModifier {
             Item userItem = user.ITEM;
             Items targetItem = target.ITEM.get();
             ItemCategory targetItemCategory = targetItem != null ? targetItem.getCategory() : null;
-            if (!userItem.has() && target.ITEM.has() && !target.STATUSES.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+            if (!userItem.is() && target.ITEM.is() && !target.STATUSES.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
                 switch (battle.getGeneration()) {
                     case I:
                     case II:
