@@ -1,7 +1,5 @@
 package com.github.drsmugbrain.pokemon.moves;
 
-import com.github.drsmugbrain.pokemon.moves.Category;
-
 /**
  * Created by DrSmugleaf on 14/07/2017.
  */

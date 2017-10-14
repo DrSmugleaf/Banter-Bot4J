@@ -2776,85 +2776,85 @@ public enum BaseMove implements IModifier {
         return Holder.MAP.get(move);
     }
 
-    protected BaseMove setType(@Nonnull Type type) {
+    private BaseMove setType(@Nonnull Type type) {
         this.TYPE = type;
         return this;
     }
 
-    protected BaseMove setCategory(@Nonnull Category category) {
+    private BaseMove setCategory(@Nonnull Category category) {
         this.CATEGORY = category;
         return this;
     }
 
-    protected BaseMove setEffect(@Nonnull MoveEffect effect) {
+    private BaseMove setEffect(@Nonnull MoveEffect effect) {
         this.EFFECT = effect;
         return this;
     }
 
-    protected BaseMove setPP(int pp) {
+    private BaseMove setPP(int pp) {
         this.PP = pp;
         return this;
     }
 
-    protected BaseMove setPower(int power) {
+    private BaseMove setPower(int power) {
         this.POWER = power;
         return this;
     }
 
-    protected BaseMove setAccuracy(int accuracy) {
+    private BaseMove setAccuracy(int accuracy) {
         this.ACCURACY = accuracy;
         return this;
     }
 
-    protected BaseMove setIsZMove(boolean bool) {
+    private BaseMove setIsZMove(boolean bool) {
         this.IS_Z_MOVE = bool;
         return this;
     }
 
-    protected BaseMove setIsSelfZMove(boolean bool) {
+    private BaseMove setIsSelfZMove(boolean bool) {
         this.IS_SELF_Z_MOVE = bool;
         return this;
     }
 
-    protected BaseMove setZMoveItem(@Nullable Item item) {
+    private BaseMove setZMoveItem(@Nullable Item item) {
         this.Z_MOVE_ITEM = item;
         return this;
     }
 
-    protected BaseMove setZMoveRequiredPokemon(@Nullable String... pokemon) {
+    private BaseMove setZMoveRequiredPokemon(@Nullable String... pokemon) {
         if (pokemon != null) {
             this.Z_MOVE_REQUIRED_POKEMON.addAll(Arrays.asList(pokemon));
         }
         return this;
     }
 
-    protected BaseMove setZMoveRequiredMove(@Nullable BaseMove move) {
+    private BaseMove setZMoveRequiredMove(@Nullable BaseMove move) {
         this.Z_MOVE_REQUIRED_MOVE = move;
         return this;
     }
 
-    protected BaseMove setZMoveMovesThatTurnIntoThis(@Nullable BaseMove move) {
+    private BaseMove setZMoveMovesThatTurnIntoThis(@Nullable BaseMove move) {
         if (move != null) {
             this.Z_MOVE_MOVES_THAT_TURN_INTO_THIS.add(move);
         }
         return this;
     }
 
-    protected BaseMove setZMoveMovesThatTurnIntoThis(@Nullable String move) {
+    private BaseMove setZMoveMovesThatTurnIntoThis(@Nullable String move) {
         if (move != null) {
             this.setZMoveMovesThatTurnIntoThis(BaseMove.getMove(move));
         }
         return this;
     }
 
-    protected BaseMove setZMoveMovesThatTurnIntoThis(@Nullable BaseMove... moves) {
+    private BaseMove setZMoveMovesThatTurnIntoThis(@Nullable BaseMove... moves) {
         if (moves != null) {
             this.Z_MOVE_MOVES_THAT_TURN_INTO_THIS.addAll(Arrays.asList(moves));
         }
         return this;
     }
 
-    protected BaseMove setZMoveMovesThatTurnIntoThis(@Nullable String... moves) {
+    private BaseMove setZMoveMovesThatTurnIntoThis(@Nullable String... moves) {
         if (moves != null) {
             for (String move : moves) {
                 this.setZMoveMovesThatTurnIntoThis(move);
@@ -2863,190 +2863,195 @@ public enum BaseMove implements IModifier {
         return this;
     }
 
-    protected BaseMove setBattleEffect(@Nonnull String battleEffect) {
+    private BaseMove setBattleEffect(@Nonnull String battleEffect) {
         this.BATTLE_EFFECT = battleEffect;
         return this;
     }
 
-    protected BaseMove setInDepthEffect(@Nullable String inDepthEffect) {
+    private BaseMove setInDepthEffect(@Nullable String inDepthEffect) {
         this.IN_DEPTH_EFFECT = inDepthEffect;
         return this;
     }
 
-    protected BaseMove setSecondaryEffect(@Nonnull String secondaryEffect) {
+    private BaseMove setSecondaryEffect(@Nonnull String secondaryEffect) {
         this.SECONDARY_EFFECT = secondaryEffect;
         return this;
     }
 
-    protected BaseMove setEffectRate(@Nullable Integer effectRate) {
+    private BaseMove setEffectRate(@Nullable Integer effectRate) {
         this.EFFECT_RATE = effectRate;
         return this;
     }
 
-    protected BaseMove setStatusEffects(@Nonnull Status... statuses) {
+    private BaseMove setStatusEffects(@Nonnull Status... statuses) {
         this.STATUS_EFFECTS.addAll(Arrays.asList(statuses));
         return this;
     }
 
-    protected BaseMove setVolatileStatusEffect(int chance, @Nonnull BaseVolatileStatus status) {
+    private BaseMove setVolatileStatusEffect(int chance, @Nonnull BaseVolatileStatus status) {
         this.VOLATILE_STATUS_EFFECTS_CHANCE.put(status, chance);
         return this;
     }
 
-    protected BaseMove setVolatileStatusEffect(@Nonnull BaseVolatileStatus status) {
+    private BaseMove setVolatileStatusEffect(@Nonnull BaseVolatileStatus status) {
         this.VOLATILE_STATUS_EFFECTS_CHANCE.put(status, this.EFFECT_RATE);
         return this;
     }
 
-    protected BaseMove setRaisesOwnStats(int amount, @Nonnull PermanentStat... stats) {
+    private BaseMove setRaisesOwnStats(int amount, @Nonnull PermanentStat... stats) {
         for (PermanentStat stat : stats) {
             this.RAISES_OWN_STATS.put(stat, amount);
         }
         return this;
     }
 
-    protected BaseMove setLowersOwnStats(int amount, @Nonnull PermanentStat... stats) {
+    private BaseMove setLowersOwnStats(int amount, @Nonnull PermanentStat... stats) {
         for (PermanentStat stat : stats) {
             this.LOWERS_OWN_STATS.put(stat, amount);
         }
         return this;
     }
 
-    protected BaseMove setRaisesOwnRandomStat(int amount) {
+    private BaseMove setRaisesOwnRandomStat(int amount) {
         this.RAISES_OWN_RANDOM_STAT = amount;
         return this;
     }
 
-    protected BaseMove setLowersOwnRandomStat(int amount) {
+    private BaseMove setLowersOwnRandomStat(int amount) {
         this.LOWERS_OWN_RANDOM_STAT = amount;
         return this;
     }
 
-    protected BaseMove setRaisesEnemyStats(int amount, @Nonnull PermanentStat... stats) {
+    private BaseMove setRaisesEnemyStats(int amount, @Nonnull PermanentStat... stats) {
         for (PermanentStat stat : stats) {
             this.RAISES_ENEMY_STATS.put(stat, amount);
         }
         return this;
     }
 
-    protected BaseMove setLowersEnemyStats(int amount, @Nonnull PermanentStat... stats) {
+    private BaseMove setLowersEnemyStats(int amount, @Nonnull PermanentStat... stats) {
         for (PermanentStat stat : stats) {
             this.LOWERS_ENEMY_STATS.put(stat, amount);
         }
         return this;
     }
 
-    protected BaseMove setRaisesEnemyRandomStat(int amount) {
+    private BaseMove setRaisesEnemyRandomStat(int amount) {
         this.RAISES_ENEMY_RANDOM_STAT = amount;
         return this;
     }
 
-    protected BaseMove setLowersEnemyRandomStat(int amount) {
+    private BaseMove setLowersEnemyRandomStat(int amount) {
         this.LOWERS_ENEMY_RANDOM_STAT = amount;
         return this;
     }
 
-    protected BaseMove setRaisesTargetStats(int amount, @Nonnull PermanentStat... stats) {
+    private BaseMove setRaisesTargetStats(int amount, @Nonnull PermanentStat... stats) {
         for (PermanentStat stat : stats) {
             this.RAISES_TARGET_STATS.put(stat, amount);
         }
         return this;
     }
 
-    protected BaseMove setLowersTargetStats(int amount, @Nonnull PermanentStat... stats) {
+    private BaseMove setLowersTargetStats(int amount, @Nonnull PermanentStat... stats) {
         for (PermanentStat stat : stats) {
             this.LOWERS_TARGET_STATS.put(stat, amount);
         }
         return this;
     }
 
-    protected BaseMove setRaisesTargetRandomStat(int amount) {
+    private BaseMove setRaisesTargetRandomStat(int amount) {
         this.RAISES_TARGET_RANDOM_STAT = amount;
         return this;
     }
 
-    protected BaseMove setLowersTargetRandomStat(int amount) {
+    private BaseMove setLowersTargetRandomStat(int amount) {
         this.LOWERS_TARGET_RANDOM_STAT = amount;
         return this;
     }
 
-    protected BaseMove setCorrespondingZMove(@Nullable BaseMove correspondingZMove) {
+    private BaseMove setCorrespondingZMove(@Nullable BaseMove correspondingZMove) {
         this.CORRESPONDING_Z_MOVE = correspondingZMove;
         return this;
     }
 
-    protected BaseMove setZMovePower(@Nullable Integer power) {
+    private BaseMove setZMovePower(@Nullable Integer power) {
         this.Z_MOVE_POWER = power;
         return this;
     }
 
-    protected BaseMove setDetailedEffect(@Nullable String detailedEffect) {
+    private BaseMove setDetailedEffect(@Nullable String detailedEffect) {
         this.DETAILED_EFFECT = detailedEffect;
         return this;
     }
 
-    protected BaseMove setPriority(int priority) {
+    private BaseMove setPriority(int priority) {
         this.PRIORITY = priority;
         return this;
     }
 
-    protected BaseMove setTarget(@Nullable Target target) {
+    private BaseMove setTarget(@Nullable Target target) {
         this.TARGET = target;
         return this;
     }
 
-    protected BaseMove setPokemonHit(@Nonnull Hit hit) {
+    private BaseMove setPokemonHit(@Nonnull Hit hit) {
         this.POKEMON_HIT = hit;
         return this;
     }
 
-    protected BaseMove setPhysicalContact(boolean bool) {
+    private BaseMove setPhysicalContact(boolean bool) {
         this.PHYSICAL_CONTACT = bool;
         return this;
     }
 
-    protected BaseMove setSoundType(boolean bool) {
+    private BaseMove setSoundType(boolean bool) {
         this.SOUND_TYPE = bool;
         return this;
     }
 
-    protected BaseMove setPunchMove(boolean bool) {
+    private BaseMove setPunchMove(boolean bool) {
         this.PUNCH_MOVE = bool;
         return this;
     }
 
-    protected BaseMove setSnatchable(boolean bool) {
+    private BaseMove setSnatchable(boolean bool) {
         this.SNATCHABLE = bool;
         return this;
     }
 
-    protected BaseMove setZMove(boolean bool) {
+    private BaseMove setZMove(boolean bool) {
         this.Z_MOVE = bool;
         return this;
     }
 
-    protected BaseMove setDefrostsWhenUsed(boolean bool) {
+    private BaseMove setDefrostsWhenUsed(boolean bool) {
         this.DEFROSTS_WHEN_USED = bool;
         return this;
     }
 
-    protected BaseMove setHitsOppositeSideInTriples(boolean bool) {
+    private BaseMove setHitsOppositeSideInTriples(boolean bool) {
         this.HITS_OPPOSITE_SIDE_IN_TRIPLES = bool;
         return this;
     }
 
-    protected BaseMove setReflected(boolean bool) {
+    private BaseMove setReflected(boolean bool) {
         this.REFLECTED = bool;
         return this;
     }
 
-    protected BaseMove setBlocked(boolean bool) {
+    private BaseMove setBlocked(boolean bool) {
         this.BLOCKED = bool;
         return this;
     }
 
-    protected BaseMove setCopyable(boolean bool) {
+    private BaseMove setCopyable(boolean bool) {
         this.COPYABLE = bool;
+        return this;
+    }
+
+    private BaseMove setBaseCriticalHitRate(@Nullable CriticalHitStage baseCriticalHitRate) {
+        this.BASE_CRITICAL_HIT_RATE = baseCriticalHitRate;
         return this;
     }
 
@@ -3257,11 +3262,6 @@ public enum BaseMove implements IModifier {
 
     public CriticalHitStage getBaseCriticalHitRate() {
         return this.BASE_CRITICAL_HIT_RATE;
-    }
-
-    protected BaseMove setBaseCriticalHitRate(@Nullable CriticalHitStage baseCriticalHitRate) {
-        this.BASE_CRITICAL_HIT_RATE = baseCriticalHitRate;
-        return this;
     }
 
     protected boolean isCritical(@Nonnull Action action) {
