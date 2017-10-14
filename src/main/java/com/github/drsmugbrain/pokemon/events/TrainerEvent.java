@@ -1,6 +1,6 @@
 package com.github.drsmugbrain.pokemon.events;
 
-import com.github.drsmugbrain.pokemon.Trainer;
+import com.github.drsmugbrain.pokemon.trainer.Trainer;
 
 import javax.annotation.Nonnull;
 

@@ -1,4 +1,8 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.trainer;
+
+import com.github.drsmugbrain.pokemon.Battle;
+import com.github.drsmugbrain.pokemon.PokemonBuilder;
+import com.github.drsmugbrain.pokemon.SmogonImporter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,7 +22,7 @@ public class TrainerBuilder {
 
     public TrainerBuilder() {}
 
-    protected Trainer build() throws UserException {
+    public Trainer build() throws UserException {
         PokemonBuilder[] pokemons = new PokemonBuilder[pokemonStrings.size()];
 
         for (int i = 0; i < pokemonStrings.size(); i++) {
@@ -62,7 +66,7 @@ public class TrainerBuilder {
         return this;
     }
 
-    protected TrainerBuilder setBattle(@Nonnull Battle battle) {
+    public TrainerBuilder setBattle(@Nonnull Battle battle) {
         this.battle = battle;
         return this;
     }

@@ -1,4 +1,4 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.trainer;
 
 import javax.annotation.Nonnull;
 

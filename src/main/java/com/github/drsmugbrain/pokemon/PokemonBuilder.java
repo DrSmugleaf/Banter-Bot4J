@@ -3,6 +3,7 @@ package com.github.drsmugbrain.pokemon;
 import com.github.drsmugbrain.pokemon.ability.Abilities;
 import com.github.drsmugbrain.pokemon.moves.Move;
 import com.github.drsmugbrain.pokemon.stats.PermanentStat;
+import com.github.drsmugbrain.pokemon.trainer.Trainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,7 +29,7 @@ public class PokemonBuilder {
 
     protected PokemonBuilder() {}
 
-    protected Pokemon build() {
+    public Pokemon build() {
         return new Pokemon(
                 trainer,
                 basePokemon,

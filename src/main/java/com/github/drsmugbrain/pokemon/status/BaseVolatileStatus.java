@@ -2,6 +2,7 @@ package com.github.drsmugbrain.pokemon.status;
 
 import com.github.drsmugbrain.pokemon.*;
 import com.github.drsmugbrain.pokemon.moves.*;
+import com.github.drsmugbrain.pokemon.trainer.Trainer;
 import com.github.drsmugbrain.pokemon.types.Type;
 
 import javax.annotation.Nonnull;

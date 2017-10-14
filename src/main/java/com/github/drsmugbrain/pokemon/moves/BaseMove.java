@@ -8,6 +8,7 @@ import com.github.drsmugbrain.pokemon.stats.PermanentStat;
 import com.github.drsmugbrain.pokemon.status.BaseVolatileStatus;
 import com.github.drsmugbrain.pokemon.status.Status;
 import com.github.drsmugbrain.pokemon.status.VolatileStatus;
+import com.github.drsmugbrain.pokemon.trainer.Trainer;
 import com.github.drsmugbrain.pokemon.types.Type;
 import com.github.drsmugbrain.util.Bot;
 import com.opencsv.CSVReader;

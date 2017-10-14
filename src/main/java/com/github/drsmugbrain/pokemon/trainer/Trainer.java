@@ -1,5 +1,8 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.trainer;
 
+import com.github.drsmugbrain.pokemon.Battle;
+import com.github.drsmugbrain.pokemon.Pokemon;
+import com.github.drsmugbrain.pokemon.PokemonBuilder;
 import com.github.drsmugbrain.pokemon.events.*;
 import com.github.drsmugbrain.pokemon.moves.Action;
 import com.github.drsmugbrain.pokemon.moves.EntryHazard;
@@ -60,16 +63,16 @@ public class Trainer extends Player {
         this.POKEMONS.addAll(pokemons);
     }
 
-    protected void addPokemon(Pokemon pokemon) {
+    public void addPokemon(Pokemon pokemon) {
         this.POKEMONS.add(pokemon);
     }
 
-    protected void removePokemon(Pokemon pokemon) {
+    public void removePokemon(Pokemon pokemon) {
         this.POKEMONS.remove(pokemon);
         this.ACTIVE_POKEMONS.remove(pokemon);
     }
 
-    protected void removeActivePokemon(Pokemon pokemon) {
+    public void removeActivePokemon(Pokemon pokemon) {
         this.ACTIVE_POKEMONS.remove(pokemon);
     }
 
@@ -112,7 +115,7 @@ public class Trainer extends Player {
     }
 
     @Nullable
-    protected Pokemon getRandomActivePokemon() {
+    public Pokemon getRandomActivePokemon() {
         if (this.ACTIVE_POKEMONS.isEmpty()) {
             return null;
         }
@@ -146,7 +149,7 @@ public class Trainer extends Player {
     }
 
     @Nullable
-    protected Pokemon getRandomAdjacentEnemyPokemon(Pokemon pokemon) {
+    public Pokemon getRandomAdjacentEnemyPokemon(Pokemon pokemon) {
         List<Pokemon> adjacentEnemyPokemons = this.getAdjacentEnemyPokemons(pokemon);
         if (adjacentEnemyPokemons.isEmpty()) {
             return null;
@@ -201,7 +204,7 @@ public class Trainer extends Player {
     }
 
     @Nonnull
-    protected List<Action> getActions() {
+    public List<Action> getActions() {
         return this.ACTIONS;
     }
 
@@ -220,7 +223,7 @@ public class Trainer extends Player {
         EventDispatcher.dispatch(event);
     }
 
-    protected void sendOut(Pokemon pokemon) {
+    public void sendOut(Pokemon pokemon) {
         this.ACTIVE_POKEMONS.add(pokemon);
         this.setStatus(TrainerStatus.WAITING);
     }
@@ -296,11 +299,11 @@ public class Trainer extends Player {
         return this.status;
     }
 
-    protected void setStatus(TrainerStatus status) {
+    public void setStatus(TrainerStatus status) {
         this.status = status;
     }
 
-    protected void finishTurn() {
+    public void finishTurn() {
         if (this.ACTIVE_POKEMONS.size() < 1) {
             this.setStatus(TrainerStatus.CHOOSING_POKEMON);
             TrainerChoosingPokemonEvent event = new TrainerChoosingPokemonEvent(this);

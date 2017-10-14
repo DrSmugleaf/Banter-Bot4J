@@ -9,6 +9,7 @@ import com.github.drsmugbrain.pokemon.moves.CriticalHitStage;
 import com.github.drsmugbrain.pokemon.moves.Move;
 import com.github.drsmugbrain.pokemon.stats.*;
 import com.github.drsmugbrain.pokemon.status.Statuses;
+import com.github.drsmugbrain.pokemon.trainer.Trainer;
 import com.github.drsmugbrain.pokemon.types.Types;
 
 import javax.annotation.Nonnull;
@@ -289,7 +290,7 @@ public class Pokemon {
         return action;
     }
 
-    protected void setAction(@Nonnull Action action) {
+    public void setAction(@Nonnull Action action) {
         this.action = action;
     }
 

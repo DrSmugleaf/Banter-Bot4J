@@ -1,5 +1,8 @@
 package com.github.drsmugbrain.pokemon;
 
+import com.github.drsmugbrain.pokemon.trainer.TrainerBuilder;
+import com.github.drsmugbrain.pokemon.trainer.UserException;
+
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;

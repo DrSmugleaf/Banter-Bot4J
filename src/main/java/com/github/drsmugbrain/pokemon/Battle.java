@@ -3,6 +3,10 @@ package com.github.drsmugbrain.pokemon;
 import com.github.drsmugbrain.pokemon.events.*;
 import com.github.drsmugbrain.pokemon.moves.Action;
 import com.github.drsmugbrain.pokemon.moves.Move;
+import com.github.drsmugbrain.pokemon.trainer.Trainer;
+import com.github.drsmugbrain.pokemon.trainer.TrainerBuilder;
+import com.github.drsmugbrain.pokemon.trainer.TrainerStatus;
+import com.github.drsmugbrain.pokemon.trainer.UserException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -182,7 +186,7 @@ public class Battle extends Setup {
     }
 
     @Nonnull
-    protected Trainer getOppositeTrainer(@Nonnull Trainer trainer) {
+    public Trainer getOppositeTrainer(@Nonnull Trainer trainer) {
         List<Trainer> trainers = new ArrayList<>(TRAINERS.values());
         trainers.remove(trainer);
         return trainers.get(0);

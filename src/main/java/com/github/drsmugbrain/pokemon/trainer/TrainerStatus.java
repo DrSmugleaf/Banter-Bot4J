@@ -1,4 +1,4 @@
-package com.github.drsmugbrain.pokemon;
+package com.github.drsmugbrain.pokemon.trainer;
 
 /**
  * Created by DrSmugleaf on 18/07/2017.
