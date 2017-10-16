@@ -17,13 +17,21 @@ public class Item {
         this.item = item;
     }
 
-    @Nonnull
+    @Nullable
     public String getName() {
+        if (item == null) {
+            return null;
+        }
+
         return item.getName();
     }
 
-    @Nonnull
+    @Nullable
     public ItemCategory getCategory() {
+        if (item == null) {
+            return null;
+        }
+
         return item.getCategory();
     }
 
@@ -38,6 +46,14 @@ public class Item {
 
     public boolean is(@Nullable Items item) {
         return this.item == item;
+    }
+
+    public boolean is(@Nullable ItemCategory category) {
+        if (item == null && category == null) {
+            return true;
+        }
+
+        return item != null && item.getCategory() == category;
     }
 
     public Items remove() {
