@@ -1,6 +1,7 @@
 package com.github.drsmugbrain.pokemon.moves;
 
 import com.github.drsmugbrain.pokemon.IModifier;
+import com.github.drsmugbrain.pokemon.ability.Abilities;
 import com.github.drsmugbrain.pokemon.battle.*;
 import com.github.drsmugbrain.pokemon.events.EventDispatcher;
 import com.github.drsmugbrain.pokemon.events.PokemonDodgeEvent;
@@ -29,8 +30,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
-
-import static com.github.drsmugbrain.pokemon.ability.Abilities.MULTITYPE;
 
 /**
  * Created by DrSmugleaf on 17/06/2017.
@@ -1377,7 +1376,7 @@ public enum BaseMove implements IModifier, IMoves {
                         userItem.steal(target);
                         break;
                     case IV:
-                        if (target.ABILITY.get() == MULTITYPE || targetItem == Items.GRISEOUS_ORB) {
+                        if (target.ABILITY.get() == Abilities.MULTITYPE || targetItem == Items.GRISEOUS_ORB) {
                             break;
                         }
 
@@ -2674,53 +2673,131 @@ public enum BaseMove implements IModifier, IMoves {
 
     private static List<String[]> csv;
 
+    @Nonnull
     private final String NAME;
+
+    @Nonnull
     private final List<Status> STATUS_EFFECTS = new ArrayList<>();
+
+    @Nonnull
     private final Map<BaseVolatileStatus, Integer> VOLATILE_STATUS_EFFECTS_CHANCE = new HashMap<>();
+
+    @Nonnull
     private final Map<PermanentStat, Integer> RAISES_OWN_STATS = new HashMap<>();
+
+    @Nonnull
     private final Map<PermanentStat, Integer> LOWERS_OWN_STATS = new HashMap<>();
+
+    @Nonnull
     private final Map<PermanentStat, Integer> RAISES_ENEMY_STATS = new HashMap<>();
+
+    @Nonnull
     private final Map<PermanentStat, Integer> LOWERS_ENEMY_STATS = new HashMap<>();
+
+    @Nonnull
     private final Map<PermanentStat, Integer> RAISES_TARGET_STATS = new HashMap<>();
+
+    @Nonnull
     private final Map<PermanentStat, Integer> LOWERS_TARGET_STATS = new HashMap<>();
+
     protected final int POWER;
+
+    @Nullable
     protected final Integer EFFECT_RATE;
+
+    @Nonnull
     private final Type TYPE;
+
+    @Nonnull
     private final Category CATEGORY;
+
     private final MoveEffect EFFECT = null;
+
     private final int PP;
+
     private final int ACCURACY;
+
     private final boolean IS_Z_MOVE;
+
+    @Nonnull
     private final List<Species> Z_MOVE_REQUIRED_POKEMON;
-    private final String Z_MOVE_REQUIRED_MOVE;
-    private final List<String> Z_MOVE_MOVES_THAT_TURN_INTO_THIS;
+
+    @Nonnull
+    private final BaseMoves.Single Z_MOVE_REQUIRED_MOVES;
+
+    @Nonnull
+    private final BaseMoves Z_PRECURSOR_MOVES;
+
     private final boolean IS_SELF_Z_MOVE;
+
+    @Nullable
     private final Items Z_MOVE_ITEM;
+
+    @Nonnull
     private final String BATTLE_EFFECT;
+
+    @Nullable
     private final String IN_DEPTH_EFFECT;
+
+    @Nonnull
     private final String SECONDARY_EFFECT;
+
+    @Nonnull
     private final Integer RAISES_OWN_RANDOM_STAT = null;
+
+    @Nonnull
     private final Integer LOWERS_OWN_RANDOM_STAT = null;
+
+    @Nonnull
     private final Integer RAISES_ENEMY_RANDOM_STAT = null;
+
+    @Nonnull
     private final Integer LOWERS_ENEMY_RANDOM_STAT = null;
+
+    @Nonnull
     private final Integer RAISES_TARGET_RANDOM_STAT = null;
+
+    @Nonnull
     private final Integer LOWERS_TARGET_RANDOM_STAT = null;
-    private final String CORRESPONDING_Z_MOVE;
+
+    @Nonnull
+    private final BaseMoves.Single CORRESPONDING_Z_MOVE;
+
+    @Nullable
     private final Integer Z_MOVE_POWER;
+
+    @Nullable
     private final String DETAILED_EFFECT;
+
+    @Nullable
     private final CriticalHitStage BASE_CRITICAL_HIT_RATE;
+
     private final int PRIORITY;
+
+    @Nonnull
     private final Target TARGET;
+
+    @Nonnull
     private final Hit POKEMON_HIT;
+
     private final boolean PHYSICAL_CONTACT;
+
     private final boolean SOUND_TYPE;
+
     private final boolean PUNCH_MOVE;
+
     private final boolean SNATCHABLE;
+
     private final boolean Z_MOVE;
+
     private final boolean DEFROSTS_WHEN_USED;
+
     private final boolean HITS_OPPOSITE_SIDE_IN_TRIPLES;
+
     private final boolean REFLECTED;
+
     private final boolean BLOCKED;
+
     private final boolean COPYABLE;
 
     BaseMove(@Nonnull String name) {
@@ -2743,7 +2820,7 @@ public enum BaseMove implements IModifier, IMoves {
         SECONDARY_EFFECT = line[8];
         EFFECT_RATE = line[9].isEmpty() ? null : Integer.valueOf(line[9]);
         IS_SELF_Z_MOVE = Boolean.parseBoolean(line[10]);
-        CORRESPONDING_Z_MOVE = line[11].isEmpty() ? null : line[11];
+        CORRESPONDING_Z_MOVE = new BaseMoves.Single(line[11]);
         Z_MOVE_ITEM = line[12].isEmpty() ? null : Items.getItem(line[12]);
         DETAILED_EFFECT = line[13].isEmpty() ? null : line[13];
         Z_MOVE_POWER = line[14].isEmpty() ? null : Integer.valueOf(line[14]);
@@ -2755,19 +2832,13 @@ public enum BaseMove implements IModifier, IMoves {
                 species.add(Species.getPokemon(s));
             }
         }
-        Z_MOVE_REQUIRED_POKEMON = species;
+        Z_MOVE_REQUIRED_POKEMON = Collections.unmodifiableList(species);
 
-        Z_MOVE_REQUIRED_MOVE = line[17].isEmpty() ? null : line[17];
-
-        List<String> movesThatTurn = new ArrayList<>();
-        if (!line[18].isEmpty()) {
-            movesThatTurn.addAll(Arrays.asList(line[18].split(",")));
-        }
-        Z_MOVE_MOVES_THAT_TURN_INTO_THIS = movesThatTurn;
-
+        Z_MOVE_REQUIRED_MOVES = new BaseMoves.Single(line[17]);
+        Z_PRECURSOR_MOVES = new BaseMoves(line[18].split(","));
         BASE_CRITICAL_HIT_RATE = line[19].isEmpty() ? null : CriticalHitStage.getStageByPercentage(Double.parseDouble(line[19]));
         PRIORITY = Integer.parseInt(line[20]);
-        TARGET = line[21].isEmpty() ? null : Target.getTarget(line[21]);
+        TARGET = Target.getTarget(line[21]);
         POKEMON_HIT = Hit.getHit(line[22]);
         PHYSICAL_CONTACT = Boolean.parseBoolean(line[23]);
         SOUND_TYPE = Boolean.parseBoolean(line[24]);
@@ -2779,7 +2850,6 @@ public enum BaseMove implements IModifier, IMoves {
         REFLECTED = Boolean.parseBoolean(line[30]);
         BLOCKED = Boolean.parseBoolean(line[31]);
         COPYABLE = Boolean.parseBoolean(line[32]);
-
     }
 
     @Nonnull
@@ -2845,7 +2915,6 @@ public enum BaseMove implements IModifier, IMoves {
         return this.CATEGORY;
     }
 
-    @Nonnull
     public MoveEffect getEffect() {
         return this.EFFECT;
     }
@@ -2934,8 +3003,8 @@ public enum BaseMove implements IModifier, IMoves {
     }
 
     @Nullable
-    public String getCorrespondingZMove() {
-        return this.CORRESPONDING_Z_MOVE;
+    public BaseMove getCorrespondingZMove() {
+        return CORRESPONDING_Z_MOVE.get();
     }
 
     @Nullable
@@ -2957,19 +3026,19 @@ public enum BaseMove implements IModifier, IMoves {
         return this.IS_Z_MOVE;
     }
 
-    @Nullable
-    public String[] getZMoveRequiredPokemon() {
-        return this.Z_MOVE_REQUIRED_POKEMON.toArray(new String[]{});
+    @Nonnull
+    public List<Species> getZMoveRequiredPokemon() {
+        return new ArrayList<>(Z_MOVE_REQUIRED_POKEMON);
     }
 
     @Nullable
-    public String getZMoveRequiredMoves() {
-        return this.Z_MOVE_REQUIRED_MOVE;
+    public BaseMove getZMoveRequiredMoves() {
+        return Z_MOVE_REQUIRED_MOVES.get();
     }
 
-    @Nullable
-    public BaseMove[] getZMoveMovesThatTurnIntoThis() {
-        return this.Z_MOVE_MOVES_THAT_TURN_INTO_THIS.toArray(new BaseMove[]{});
+    @Nonnull
+    public List<BaseMove> getPrecursorMoves() {
+        return Z_PRECURSOR_MOVES.get();
     }
     
     @Nullable
@@ -3182,11 +3251,11 @@ public enum BaseMove implements IModifier, IMoves {
     }
 
     public boolean canUseZMove(@Nonnull Pokemon user) {
-        if (!this.Z_MOVE_REQUIRED_POKEMON.isEmpty() && !this.Z_MOVE_REQUIRED_POKEMON.contains(user.getName())) {
+        if (!Z_MOVE_REQUIRED_POKEMON.contains(user.getBasePokemon())) {
             return false;
         }
 
-        return this.Z_MOVE_ITEM == user.ITEM.get() && !Collections.disjoint(this.Z_MOVE_MOVES_THAT_TURN_INTO_THIS, user.getMoves());
+        return this.Z_MOVE_ITEM == user.ITEM.get() && !Collections.disjoint(getPrecursorMoves(), user.getMoves());
     }
 
     protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {

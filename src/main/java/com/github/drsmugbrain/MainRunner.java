@@ -4,7 +4,6 @@ import com.github.drsmugbrain.commands.PokemonCommands;
 import com.github.drsmugbrain.models.Guild;
 import com.github.drsmugbrain.models.Member;
 import com.github.drsmugbrain.models.User;
-import com.github.drsmugbrain.pokemon.moves.BaseMove;
 import com.github.drsmugbrain.util.Bot;
 import com.github.drsmugbrain.util.Env;
 import sx.blah.discord.api.IDiscordClient;
