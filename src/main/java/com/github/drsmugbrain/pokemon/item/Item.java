@@ -13,7 +13,7 @@ public class Item {
     @Nullable
     private Items item;
 
-    public Item(@Nonnull Items item) {
+    public Item(@Nullable Items item) {
         this.item = item;
     }
 
