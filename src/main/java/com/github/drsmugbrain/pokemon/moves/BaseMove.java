@@ -1387,8 +1387,8 @@ public enum BaseMove implements IModifier, IMoves {
                             break;
                         }
 
-                        Species userPokemon = user.getBasePokemon();
-                        Species targetPokemon = target.getBasePokemon();
+                        Species userPokemon = user.getSpecies();
+                        Species targetPokemon = target.getSpecies();
                         if (targetItem == Items.GRISEOUS_ORB) {
                             if (userPokemon == Species.GIRATINA || targetPokemon == Species.GIRATINA) {
                                 break;
@@ -1402,7 +1402,7 @@ public enum BaseMove implements IModifier, IMoves {
                         }
 
                         if (targetItemCategory == ItemCategory.GENESECT_DRIVE) {
-                            if (user.getBasePokemon() == Species.GENESECT || target.getBasePokemon() == Species.GENESECT) {
+                            if (user.getSpecies() == Species.GENESECT || target.getSpecies() == Species.GENESECT) {
                                 break;
                             }
                         }
@@ -1416,8 +1416,8 @@ public enum BaseMove implements IModifier, IMoves {
                             break;
                         }
 
-                        Species userPokemon = user.getBasePokemon();
-                        Species targetPokemon = target.getBasePokemon();
+                        Species userPokemon = user.getSpecies();
+                        Species targetPokemon = target.getSpecies();
                         if (targetItem == Items.GRISEOUS_ORB) {
                             if (userPokemon == Species.GIRATINA || targetPokemon == Species.GIRATINA) {
                                 break;
@@ -1431,7 +1431,7 @@ public enum BaseMove implements IModifier, IMoves {
                         }
 
                         if (targetItemCategory == ItemCategory.GENESECT_DRIVE) {
-                            if (user.getBasePokemon() == Species.GENESECT || target.getBasePokemon() == Species.GENESECT) {
+                            if (user.getSpecies() == Species.GENESECT || target.getSpecies() == Species.GENESECT) {
                                 break;
                             }
                         }
@@ -1696,7 +1696,7 @@ public enum BaseMove implements IModifier, IMoves {
             Pokemon attacker = action.getAttacker();
             Generation generation = attacker.getBattle().getGeneration();
             if (generation == Generation.VII) {
-                if (attacker.getBasePokemon() != Species.DARKRAI) {
+                if (attacker.getSpecies() != Species.DARKRAI) {
                     return false;
                 }
             }
@@ -3251,7 +3251,7 @@ public enum BaseMove implements IModifier, IMoves {
     }
 
     public boolean canUseZMove(@Nonnull Pokemon user) {
-        if (!Z_MOVE_REQUIRED_POKEMON.contains(user.getBasePokemon())) {
+        if (!Z_MOVE_REQUIRED_POKEMON.contains(user.getSpecies())) {
             return false;
         }
 

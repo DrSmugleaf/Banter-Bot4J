@@ -18,7 +18,7 @@ public enum PermanentStat implements IStat {
         public double calculate(@Nonnull Pokemon pokemon) {
             Stat stat = pokemon.STATS.get(this);
 
-            int baseStat = stat.getBase(pokemon.getBasePokemon());
+            int baseStat = stat.getBase(pokemon.getSpecies());
             int iv = stat.getIV();
             int ev = stat.getEV();
             int level = pokemon.getLevel();
@@ -88,7 +88,7 @@ public enum PermanentStat implements IStat {
     public double calculate(@Nonnull Pokemon pokemon) {
         Stat stat = pokemon.STATS.get(this);
 
-        int baseStat = stat.getBase(pokemon.getBasePokemon());
+        int baseStat = stat.getBase(pokemon.getSpecies());
         int iv = stat.getIV();
         int ev = stat.getEV();
         int level = pokemon.getLevel();
@@ -115,7 +115,7 @@ public enum PermanentStat implements IStat {
     public double calculateWithoutStages(@Nonnull Pokemon pokemon) {
         Stat stat = pokemon.STATS.get(this);
 
-        int baseStat = stat.getBase(pokemon.getBasePokemon());
+        int baseStat = stat.getBase(pokemon.getSpecies());
         int iv = stat.getIV();
         int ev = stat.getEV();
         int level = pokemon.getLevel();

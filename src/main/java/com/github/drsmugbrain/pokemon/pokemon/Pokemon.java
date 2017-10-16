@@ -30,7 +30,7 @@ public class Pokemon {
     private final Trainer TRAINER;
 
     @Nonnull
-    private final Species BASE_POKEMON;
+    private final Species SPECIES;
 
     @Nonnull
     public final Types TYPES;
@@ -87,7 +87,7 @@ public class Pokemon {
 
     protected Pokemon(
             @Nonnull Trainer trainer,
-            @Nonnull Species basePokemon,
+            @Nonnull Species species,
             @Nonnull String nickname,
             @Nonnull Abilities ability,
             @Nullable Items item,
@@ -99,8 +99,8 @@ public class Pokemon {
             @Nonnull List<Move> moves
     ) {
         TRAINER = trainer;
-        BASE_POKEMON = basePokemon;
-        TYPES = new Types(basePokemon.getTypes());
+        SPECIES = species;
+        TYPES = new Types(species.getTypes());
         NICKNAME = nickname;
         ABILITY = new Ability(ability);
         this.ITEM = new Item(item);
@@ -126,7 +126,7 @@ public class Pokemon {
         hp = (int) PermanentStat.HP.calculate(this);
 
         MOVES.addAll(moves);
-        weight = basePokemon.getWeight();
+        weight = species.getWeight();
     }
 
     @Nonnull
@@ -160,7 +160,7 @@ public class Pokemon {
                         "Ability: %s\n" +
                         "EVs: %d HP / %d Atk / %d Def / %d SpA / %d SpD / %d Spe\n" +
                         "%s Nature",
-                        BASE_POKEMON.getName(), ITEM.getName(), ABILITY.getName(),
+                        SPECIES.getName(), ITEM.getName(), ABILITY.getName(),
                         hpEV, atkEV, defEV, spaEV, spdEV, speEV,
                         NATURE.getName()
                 )
@@ -184,13 +184,13 @@ public class Pokemon {
     }
 
     @Nonnull
-    public Species getBasePokemon() {
-        return BASE_POKEMON;
+    public Species getSpecies() {
+        return SPECIES;
     }
 
     @Nonnull
     public String getName() {
-        return BASE_POKEMON.getName();
+        return SPECIES.getName();
     }
 
     @Nonnull
