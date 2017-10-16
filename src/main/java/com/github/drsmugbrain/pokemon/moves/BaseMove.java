@@ -35,9 +35,8 @@ import static com.github.drsmugbrain.pokemon.ability.Abilities.MULTITYPE;
 /**
  * Created by DrSmugleaf on 17/06/2017.
  */
-public enum BaseMove implements IModifier {
+public enum BaseMove implements IModifier, IMoves {
 
-    SWITCH("Switch"),
     _10000000_VOLT_THUNDERBOLT("10,000,000 Volt Thunderbolt"),
     ABSORB("Absorb") {
         @Override
@@ -693,7 +692,7 @@ public enum BaseMove implements IModifier {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
             Item item = target.ITEM;
-            if (item.getCategory() == ItemCategory.BERRY) {
+            if (item.is(ItemCategory.BERRY)) {
                 item.use(user);
             }
 
@@ -2673,57 +2672,7 @@ public enum BaseMove implements IModifier {
     ZEN_HEADBUTT("Zen Headbutt"),
     ZING_ZAP("Zing Zap");
 
-    static {
-        CSVReader reader = null;
-        try {
-            reader = new CSVReader(new FileReader("moves.csv"), ',');
-        } catch (FileNotFoundException e) {
-            Bot.LOGGER.error("Error parsing moves.csv", e);
-        }
-
-        String[] nextLine;
-        try {
-            reader.readNext();
-            while ((nextLine = reader.readNext()) != null) {
-                BaseMove move = BaseMove.getMove(nextLine[0]);
-                move
-                        .setType(Type.getType(nextLine[1]))
-                        .setCategory(Category.getCategory(nextLine[2]))
-                        .setPP(Integer.parseInt(nextLine[3]))
-                        .setPower(Integer.parseInt(nextLine[4]))
-                        .setAccuracy(Integer.parseInt(nextLine[5]))
-                        .setBattleEffect(nextLine[6])
-                        .setInDepthEffect(nextLine[7].isEmpty() ? null : nextLine[7])
-                        .setSecondaryEffect(nextLine[8])
-                        .setEffectRate(nextLine[9].isEmpty() ? null : Integer.valueOf(nextLine[9]))
-                        .setIsSelfZMove(Boolean.parseBoolean(nextLine[10]))
-                        .setCorrespondingZMove(nextLine[11].isEmpty() ? null : BaseMove.getMove(nextLine[11]))
-                        .setZMoveItem(nextLine[12].isEmpty() ? null : Items.getItem(nextLine[12]))
-                        .setDetailedEffect(nextLine[13].isEmpty() ? null : nextLine[13])
-                        .setZMovePower(nextLine[14].isEmpty() ? null : Integer.valueOf(nextLine[14]))
-                        .setIsZMove(Boolean.parseBoolean(nextLine[15]))
-                        .setZMoveRequiredPokemon(nextLine[16].isEmpty() ? null : nextLine[16].split(","))
-                        .setZMoveRequiredMove(nextLine[17].isEmpty() ? null : BaseMove.getMove(nextLine[17]))
-                        .setZMoveMovesThatTurnIntoThis(nextLine[18].isEmpty() ? null : nextLine[18].split(","))
-                        .setBaseCriticalHitRate(nextLine[19].isEmpty() ? null : CriticalHitStage.getStageByPercentage(Double.parseDouble(nextLine[19])))
-                        .setPriority(Integer.parseInt(nextLine[20]))
-                        .setTarget(nextLine[21].isEmpty() ? null : Target.getTarget(nextLine[21]))
-                        .setPokemonHit(Hit.getHit(nextLine[22]))
-                        .setPhysicalContact(Boolean.parseBoolean(nextLine[23]))
-                        .setSoundType(Boolean.parseBoolean(nextLine[24]))
-                        .setPunchMove(Boolean.parseBoolean(nextLine[25]))
-                        .setSnatchable(Boolean.parseBoolean(nextLine[26]))
-                        .setZMove(Boolean.parseBoolean(nextLine[27]))
-                        .setDefrostsWhenUsed(Boolean.parseBoolean(nextLine[28]))
-                        .setHitsOppositeSideInTriples(Boolean.parseBoolean(nextLine[29]))
-                        .setReflected(Boolean.parseBoolean(nextLine[30]))
-                        .setBlocked(Boolean.parseBoolean(nextLine[31]))
-                        .setCopyable(Boolean.parseBoolean(nextLine[32]));
-            }
-        } catch (IOException e) {
-            Bot.LOGGER.error("Error reading line in moves.csv", e);
-        }
-    }
+    private static List<String[]> csv;
 
     private final String NAME;
     private final List<Status> STATUS_EFFECTS = new ArrayList<>();
@@ -2734,49 +2683,134 @@ public enum BaseMove implements IModifier {
     private final Map<PermanentStat, Integer> LOWERS_ENEMY_STATS = new HashMap<>();
     private final Map<PermanentStat, Integer> RAISES_TARGET_STATS = new HashMap<>();
     private final Map<PermanentStat, Integer> LOWERS_TARGET_STATS = new HashMap<>();
-    protected int POWER;
-    protected Integer EFFECT_RATE = null;
-    private Type TYPE;
-    private Category CATEGORY;
-    private MoveEffect EFFECT;
-    private int PP;
-    private int ACCURACY;
-    private boolean IS_Z_MOVE = false;
-    private final List<String> Z_MOVE_REQUIRED_POKEMON = new ArrayList<>();
-    private BaseMove Z_MOVE_REQUIRED_MOVE = null;
-    private final List<BaseMove> Z_MOVE_MOVES_THAT_TURN_INTO_THIS = new ArrayList<>();
-    private boolean IS_SELF_Z_MOVE = false;
-    private Items Z_MOVE_ITEM;
-    private String BATTLE_EFFECT;
-    private String IN_DEPTH_EFFECT;
-    private String SECONDARY_EFFECT;
-    private Integer RAISES_OWN_RANDOM_STAT = null;
-    private Integer LOWERS_OWN_RANDOM_STAT = null;
-    private Integer RAISES_ENEMY_RANDOM_STAT = null;
-    private Integer LOWERS_ENEMY_RANDOM_STAT = null;
-    private Integer RAISES_TARGET_RANDOM_STAT = null;
-    private Integer LOWERS_TARGET_RANDOM_STAT = null;
-    private BaseMove CORRESPONDING_Z_MOVE;
-    private Integer Z_MOVE_POWER;
-    private String DETAILED_EFFECT;
-    private CriticalHitStage BASE_CRITICAL_HIT_RATE;
-    private int PRIORITY;
-    private Target TARGET;
-    private Hit POKEMON_HIT;
-    private boolean PHYSICAL_CONTACT;
-    private boolean SOUND_TYPE;
-    private boolean PUNCH_MOVE;
-    private boolean SNATCHABLE;
-    private boolean Z_MOVE;
-    private boolean DEFROSTS_WHEN_USED;
-    private boolean HITS_OPPOSITE_SIDE_IN_TRIPLES;
-    private boolean REFLECTED;
-    private boolean BLOCKED;
-    private boolean COPYABLE;
+    protected final int POWER;
+    protected final Integer EFFECT_RATE;
+    private final Type TYPE;
+    private final Category CATEGORY;
+    private final MoveEffect EFFECT = null;
+    private final int PP;
+    private final int ACCURACY;
+    private final boolean IS_Z_MOVE;
+    private final List<Species> Z_MOVE_REQUIRED_POKEMON;
+    private final String Z_MOVE_REQUIRED_MOVE;
+    private final List<String> Z_MOVE_MOVES_THAT_TURN_INTO_THIS;
+    private final boolean IS_SELF_Z_MOVE;
+    private final Items Z_MOVE_ITEM;
+    private final String BATTLE_EFFECT;
+    private final String IN_DEPTH_EFFECT;
+    private final String SECONDARY_EFFECT;
+    private final Integer RAISES_OWN_RANDOM_STAT = null;
+    private final Integer LOWERS_OWN_RANDOM_STAT = null;
+    private final Integer RAISES_ENEMY_RANDOM_STAT = null;
+    private final Integer LOWERS_ENEMY_RANDOM_STAT = null;
+    private final Integer RAISES_TARGET_RANDOM_STAT = null;
+    private final Integer LOWERS_TARGET_RANDOM_STAT = null;
+    private final String CORRESPONDING_Z_MOVE;
+    private final Integer Z_MOVE_POWER;
+    private final String DETAILED_EFFECT;
+    private final CriticalHitStage BASE_CRITICAL_HIT_RATE;
+    private final int PRIORITY;
+    private final Target TARGET;
+    private final Hit POKEMON_HIT;
+    private final boolean PHYSICAL_CONTACT;
+    private final boolean SOUND_TYPE;
+    private final boolean PUNCH_MOVE;
+    private final boolean SNATCHABLE;
+    private final boolean Z_MOVE;
+    private final boolean DEFROSTS_WHEN_USED;
+    private final boolean HITS_OPPOSITE_SIDE_IN_TRIPLES;
+    private final boolean REFLECTED;
+    private final boolean BLOCKED;
+    private final boolean COPYABLE;
 
     BaseMove(@Nonnull String name) {
         Holder.MAP.put(name.toLowerCase(), this);
-        this.NAME = name;
+
+        String[] line = getLine(name);
+        if (line == null) {
+            Bot.LOGGER.error("Couldn't find csv line for move " + name);
+            System.exit(1);
+        }
+
+        NAME = name;
+        TYPE = Type.getType(line[1]);
+        CATEGORY = Category.getCategory(line[2]);
+        PP = Integer.parseInt(line[3]);
+        POWER = Integer.parseInt(line[4]);
+        ACCURACY = Integer.parseInt(line[5]);
+        BATTLE_EFFECT = line[6];
+        IN_DEPTH_EFFECT = line[7].isEmpty() ? null : line[7];
+        SECONDARY_EFFECT = line[8];
+        EFFECT_RATE = line[9].isEmpty() ? null : Integer.valueOf(line[9]);
+        IS_SELF_Z_MOVE = Boolean.parseBoolean(line[10]);
+        CORRESPONDING_Z_MOVE = line[11].isEmpty() ? null : line[11];
+        Z_MOVE_ITEM = line[12].isEmpty() ? null : Items.getItem(line[12]);
+        DETAILED_EFFECT = line[13].isEmpty() ? null : line[13];
+        Z_MOVE_POWER = line[14].isEmpty() ? null : Integer.valueOf(line[14]);
+        IS_Z_MOVE = Boolean.parseBoolean(line[15]);
+
+        List<Species> species = new ArrayList<>();
+        if (!line[16].isEmpty()) {
+            for (String s : line[16].split(",")) {
+                species.add(Species.getPokemon(s));
+            }
+        }
+        Z_MOVE_REQUIRED_POKEMON = species;
+
+        Z_MOVE_REQUIRED_MOVE = line[17].isEmpty() ? null : line[17];
+
+        List<String> movesThatTurn = new ArrayList<>();
+        if (!line[18].isEmpty()) {
+            movesThatTurn.addAll(Arrays.asList(line[18].split(",")));
+        }
+        Z_MOVE_MOVES_THAT_TURN_INTO_THIS = movesThatTurn;
+
+        BASE_CRITICAL_HIT_RATE = line[19].isEmpty() ? null : CriticalHitStage.getStageByPercentage(Double.parseDouble(line[19]));
+        PRIORITY = Integer.parseInt(line[20]);
+        TARGET = line[21].isEmpty() ? null : Target.getTarget(line[21]);
+        POKEMON_HIT = Hit.getHit(line[22]);
+        PHYSICAL_CONTACT = Boolean.parseBoolean(line[23]);
+        SOUND_TYPE = Boolean.parseBoolean(line[24]);
+        PUNCH_MOVE = Boolean.parseBoolean(line[25]);
+        SNATCHABLE = Boolean.parseBoolean(line[26]);
+        Z_MOVE = Boolean.parseBoolean(line[27]);
+        DEFROSTS_WHEN_USED = Boolean.parseBoolean(line[28]);
+        HITS_OPPOSITE_SIDE_IN_TRIPLES = Boolean.parseBoolean(line[29]);
+        REFLECTED = Boolean.parseBoolean(line[30]);
+        BLOCKED = Boolean.parseBoolean(line[31]);
+        COPYABLE = Boolean.parseBoolean(line[32]);
+
+    }
+
+    @Nonnull
+    private static List<String[]> readCsv() {
+        try {
+            FileReader fileReader = new FileReader("moves.csv");
+            CSVReader reader = new CSVReader(fileReader, ',');
+            return reader.readAll();
+        } catch (FileNotFoundException e) {
+            Bot.LOGGER.error("Moves.csv file not found", e);
+        } catch (IOException e) {
+            Bot.LOGGER.error("Error reading csv lines", e);
+        }
+
+        System.exit(1);
+        return null;
+    }
+
+    @Nullable
+    private static String[] getLine(@Nonnull String move) {
+        if (csv == null) {
+            csv = readCsv();
+        }
+
+        for (String[] line : csv) {
+            if (Objects.equals(line[0], move)) {
+                return line;
+            }
+        }
+
+        return null;
     }
 
     public static BaseMove getMove(@Nonnull String move) {
@@ -2785,289 +2819,15 @@ public enum BaseMove implements IModifier {
             return Holder.MAP.get("hidden power");
         }
         if (!Holder.MAP.containsKey(move)) {
+            for (BaseMove baseMove : BaseMove.values()) {
+                if (Objects.equals(baseMove.getName().toLowerCase(), move)) {
+                    return baseMove;
+                }
+            }
             throw new NullPointerException("Move " + move + " doesn't exist");
         }
 
         return Holder.MAP.get(move);
-    }
-
-    private BaseMove setType(@Nonnull Type type) {
-        this.TYPE = type;
-        return this;
-    }
-
-    private BaseMove setCategory(@Nonnull Category category) {
-        this.CATEGORY = category;
-        return this;
-    }
-
-    private BaseMove setEffect(@Nonnull MoveEffect effect) {
-        this.EFFECT = effect;
-        return this;
-    }
-
-    private BaseMove setPP(int pp) {
-        this.PP = pp;
-        return this;
-    }
-
-    private BaseMove setPower(int power) {
-        this.POWER = power;
-        return this;
-    }
-
-    private BaseMove setAccuracy(int accuracy) {
-        this.ACCURACY = accuracy;
-        return this;
-    }
-
-    private BaseMove setIsZMove(boolean bool) {
-        this.IS_Z_MOVE = bool;
-        return this;
-    }
-
-    private BaseMove setIsSelfZMove(boolean bool) {
-        this.IS_SELF_Z_MOVE = bool;
-        return this;
-    }
-
-    private BaseMove setZMoveItem(@Nullable Items item) {
-        this.Z_MOVE_ITEM = item;
-        return this;
-    }
-
-    private BaseMove setZMoveRequiredPokemon(@Nullable String... pokemon) {
-        if (pokemon != null) {
-            this.Z_MOVE_REQUIRED_POKEMON.addAll(Arrays.asList(pokemon));
-        }
-        return this;
-    }
-
-    private BaseMove setZMoveRequiredMove(@Nullable BaseMove move) {
-        this.Z_MOVE_REQUIRED_MOVE = move;
-        return this;
-    }
-
-    private BaseMove setZMoveMovesThatTurnIntoThis(@Nullable BaseMove move) {
-        if (move != null) {
-            this.Z_MOVE_MOVES_THAT_TURN_INTO_THIS.add(move);
-        }
-        return this;
-    }
-
-    private BaseMove setZMoveMovesThatTurnIntoThis(@Nullable String move) {
-        if (move != null) {
-            this.setZMoveMovesThatTurnIntoThis(BaseMove.getMove(move));
-        }
-        return this;
-    }
-
-    private BaseMove setZMoveMovesThatTurnIntoThis(@Nullable BaseMove... moves) {
-        if (moves != null) {
-            this.Z_MOVE_MOVES_THAT_TURN_INTO_THIS.addAll(Arrays.asList(moves));
-        }
-        return this;
-    }
-
-    private BaseMove setZMoveMovesThatTurnIntoThis(@Nullable String... moves) {
-        if (moves != null) {
-            for (String move : moves) {
-                this.setZMoveMovesThatTurnIntoThis(move);
-            }
-        }
-        return this;
-    }
-
-    private BaseMove setBattleEffect(@Nonnull String battleEffect) {
-        this.BATTLE_EFFECT = battleEffect;
-        return this;
-    }
-
-    private BaseMove setInDepthEffect(@Nullable String inDepthEffect) {
-        this.IN_DEPTH_EFFECT = inDepthEffect;
-        return this;
-    }
-
-    private BaseMove setSecondaryEffect(@Nonnull String secondaryEffect) {
-        this.SECONDARY_EFFECT = secondaryEffect;
-        return this;
-    }
-
-    private BaseMove setEffectRate(@Nullable Integer effectRate) {
-        this.EFFECT_RATE = effectRate;
-        return this;
-    }
-
-    private BaseMove setStatusEffects(@Nonnull Status... statuses) {
-        this.STATUS_EFFECTS.addAll(Arrays.asList(statuses));
-        return this;
-    }
-
-    private BaseMove setVolatileStatusEffect(int chance, @Nonnull BaseVolatileStatus status) {
-        this.VOLATILE_STATUS_EFFECTS_CHANCE.put(status, chance);
-        return this;
-    }
-
-    private BaseMove setVolatileStatusEffect(@Nonnull BaseVolatileStatus status) {
-        this.VOLATILE_STATUS_EFFECTS_CHANCE.put(status, this.EFFECT_RATE);
-        return this;
-    }
-
-    private BaseMove setRaisesOwnStats(int amount, @Nonnull PermanentStat... stats) {
-        for (PermanentStat stat : stats) {
-            this.RAISES_OWN_STATS.put(stat, amount);
-        }
-        return this;
-    }
-
-    private BaseMove setLowersOwnStats(int amount, @Nonnull PermanentStat... stats) {
-        for (PermanentStat stat : stats) {
-            this.LOWERS_OWN_STATS.put(stat, amount);
-        }
-        return this;
-    }
-
-    private BaseMove setRaisesOwnRandomStat(int amount) {
-        this.RAISES_OWN_RANDOM_STAT = amount;
-        return this;
-    }
-
-    private BaseMove setLowersOwnRandomStat(int amount) {
-        this.LOWERS_OWN_RANDOM_STAT = amount;
-        return this;
-    }
-
-    private BaseMove setRaisesEnemyStats(int amount, @Nonnull PermanentStat... stats) {
-        for (PermanentStat stat : stats) {
-            this.RAISES_ENEMY_STATS.put(stat, amount);
-        }
-        return this;
-    }
-
-    private BaseMove setLowersEnemyStats(int amount, @Nonnull PermanentStat... stats) {
-        for (PermanentStat stat : stats) {
-            this.LOWERS_ENEMY_STATS.put(stat, amount);
-        }
-        return this;
-    }
-
-    private BaseMove setRaisesEnemyRandomStat(int amount) {
-        this.RAISES_ENEMY_RANDOM_STAT = amount;
-        return this;
-    }
-
-    private BaseMove setLowersEnemyRandomStat(int amount) {
-        this.LOWERS_ENEMY_RANDOM_STAT = amount;
-        return this;
-    }
-
-    private BaseMove setRaisesTargetStats(int amount, @Nonnull PermanentStat... stats) {
-        for (PermanentStat stat : stats) {
-            this.RAISES_TARGET_STATS.put(stat, amount);
-        }
-        return this;
-    }
-
-    private BaseMove setLowersTargetStats(int amount, @Nonnull PermanentStat... stats) {
-        for (PermanentStat stat : stats) {
-            this.LOWERS_TARGET_STATS.put(stat, amount);
-        }
-        return this;
-    }
-
-    private BaseMove setRaisesTargetRandomStat(int amount) {
-        this.RAISES_TARGET_RANDOM_STAT = amount;
-        return this;
-    }
-
-    private BaseMove setLowersTargetRandomStat(int amount) {
-        this.LOWERS_TARGET_RANDOM_STAT = amount;
-        return this;
-    }
-
-    private BaseMove setCorrespondingZMove(@Nullable BaseMove correspondingZMove) {
-        this.CORRESPONDING_Z_MOVE = correspondingZMove;
-        return this;
-    }
-
-    private BaseMove setZMovePower(@Nullable Integer power) {
-        this.Z_MOVE_POWER = power;
-        return this;
-    }
-
-    private BaseMove setDetailedEffect(@Nullable String detailedEffect) {
-        this.DETAILED_EFFECT = detailedEffect;
-        return this;
-    }
-
-    private BaseMove setPriority(int priority) {
-        this.PRIORITY = priority;
-        return this;
-    }
-
-    private BaseMove setTarget(@Nullable Target target) {
-        this.TARGET = target;
-        return this;
-    }
-
-    private BaseMove setPokemonHit(@Nonnull Hit hit) {
-        this.POKEMON_HIT = hit;
-        return this;
-    }
-
-    private BaseMove setPhysicalContact(boolean bool) {
-        this.PHYSICAL_CONTACT = bool;
-        return this;
-    }
-
-    private BaseMove setSoundType(boolean bool) {
-        this.SOUND_TYPE = bool;
-        return this;
-    }
-
-    private BaseMove setPunchMove(boolean bool) {
-        this.PUNCH_MOVE = bool;
-        return this;
-    }
-
-    private BaseMove setSnatchable(boolean bool) {
-        this.SNATCHABLE = bool;
-        return this;
-    }
-
-    private BaseMove setZMove(boolean bool) {
-        this.Z_MOVE = bool;
-        return this;
-    }
-
-    private BaseMove setDefrostsWhenUsed(boolean bool) {
-        this.DEFROSTS_WHEN_USED = bool;
-        return this;
-    }
-
-    private BaseMove setHitsOppositeSideInTriples(boolean bool) {
-        this.HITS_OPPOSITE_SIDE_IN_TRIPLES = bool;
-        return this;
-    }
-
-    private BaseMove setReflected(boolean bool) {
-        this.REFLECTED = bool;
-        return this;
-    }
-
-    private BaseMove setBlocked(boolean bool) {
-        this.BLOCKED = bool;
-        return this;
-    }
-
-    private BaseMove setCopyable(boolean bool) {
-        this.COPYABLE = bool;
-        return this;
-    }
-
-    private BaseMove setBaseCriticalHitRate(@Nullable CriticalHitStage baseCriticalHitRate) {
-        this.BASE_CRITICAL_HIT_RATE = baseCriticalHitRate;
-        return this;
     }
 
     @Nonnull
@@ -3174,7 +2934,7 @@ public enum BaseMove implements IModifier {
     }
 
     @Nullable
-    public BaseMove getCorrespondingZMove() {
+    public String getCorrespondingZMove() {
         return this.CORRESPONDING_Z_MOVE;
     }
 
@@ -3203,7 +2963,7 @@ public enum BaseMove implements IModifier {
     }
 
     @Nullable
-    public BaseMove getZMoveRequiredMoves() {
+    public String getZMoveRequiredMoves() {
         return this.Z_MOVE_REQUIRED_MOVE;
     }
 
