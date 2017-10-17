@@ -234,7 +234,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
                     return true;
             }
 
-            switch (baseMove.getTarget()) {
+            switch (baseMove.TARGET) {
                 case SELF:
                 case ALL_ALLIES:
                 case ALL:
@@ -242,7 +242,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
                     return true;
             }
 
-            if (baseMove.physicalContact()) {
+            if (baseMove.PHYSICAL_CONTACT) {
                 attacker.STATUSES.setStatus(Status.POISON);
             }
 
@@ -251,7 +251,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
 
         @Override
         public double damageMultiplier(@Nonnull Pokemon attacker, @Nonnull Action action) {
-            if (action.getBaseMove().isZMove()) {
+            if (action.getBaseMove().IS_Z_MOVE) {
                 return 0.25;
             }
 
@@ -261,7 +261,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     BEAK_BLAST("Beak Blast", 1) {
         @Override
         public boolean onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
-            if (action.getBaseMove().physicalContact()) {
+            if (action.getBaseMove().PHYSICAL_CONTACT) {
                 attacker.STATUSES.setStatus(Status.BURN);
             }
 
@@ -355,7 +355,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
                     action.getCategory() == Category.OTHER
                     && attacker != defender
                     && action.getBaseMove() != BaseMove.PERISH_SONG
-                    && action.getBaseMove().getEffect() != MoveEffect.ENTRY_HAZARD
+                    && action.getBaseMove().EFFECT != MoveEffect.ENTRY_HAZARD
                 ) {
                 return false;
             }

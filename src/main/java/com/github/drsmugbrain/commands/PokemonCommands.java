@@ -64,8 +64,8 @@ public class PokemonCommands {
 
         for (BaseMove baseMove : trainer.getPokemonInFocus().getValidMoves()) {
             builder.appendField(
-                    baseMove.getName(),
-                    baseMove.getType().getName() + " " + baseMove.getPP() + "/" + baseMove.getPP(),
+                    baseMove.NAME,
+                    baseMove.TYPE.getName() + " " + baseMove.PP + "/" + baseMove.PP,
                     true
             );
         }
@@ -259,7 +259,7 @@ public class PokemonCommands {
             response
                     .append(attacker.getNickname())
                     .append(" used **")
-                    .append(event.getMove().getBaseMove().getName())
+                    .append(event.getMove().getBaseMove().NAME)
                     .append("**!");
 
             IPrivateChannel channel = Bot.client.fetchUser(id).getOrCreatePMChannel();

@@ -20,16 +20,16 @@ public class Move {
     private Integer priority;
     private double damageMultiplier = 1.0;
 
-    public Move(BaseMove baseMove) {
+    public Move(@Nonnull BaseMove baseMove) {
         this.BASE_MOVE = baseMove;
-        this.type = baseMove.getType();
-        this.category = baseMove.getCategory();
-        this.pp = baseMove.getPP();
-        this.power = baseMove.getBasePower();
-        this.priority = baseMove.getPriority();
+        this.type = baseMove.TYPE;
+        this.category = baseMove.CATEGORY;
+        this.pp = baseMove.PP;
+        this.power = baseMove.POWER;
+        this.priority = baseMove.PRIORITY;
     }
 
-    private Move(Move move) {
+    private Move(@Nonnull Move move) {
         BASE_MOVE = move.getBaseMove();
         type = move.getType();
         category = move.getCategory();
@@ -38,6 +38,7 @@ public class Move {
         priority = move.getPriority();
     }
 
+    @Nonnull
     public BaseMove getBaseMove() {
         return this.BASE_MOVE;
     }

@@ -167,7 +167,7 @@ public class Pokemon {
         );
 
         for (Move move : MOVES) {
-            string = string.concat(String.format("\n- %s", move.getBaseMove().getName()));
+            string = string.concat(String.format("\n- %s", move.getBaseMove().NAME));
         }
 
         return string;
@@ -357,7 +357,7 @@ public class Pokemon {
         moveName = moveName.toLowerCase();
 
         for (Move move : MOVES) {
-            if (Objects.equals(move.getBaseMove().getName(), moveName)) {
+            if (Objects.equals(move.getBaseMove().NAME, moveName)) {
                 return move;
             }
         }

@@ -81,7 +81,7 @@ public enum Priority {
     }
 
     public static int getPriority(@Nonnull BaseMove move) {
-        return Priority.getPriority(move.getName());
+        return Priority.getPriority(move.NAME);
     }
 
     @Nonnull

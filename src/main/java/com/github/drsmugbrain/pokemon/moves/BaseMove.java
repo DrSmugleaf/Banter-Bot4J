@@ -465,7 +465,7 @@ public enum BaseMove implements IModifier, IMoves {
             int damage;
             for (Pokemon pokemon : validPokemons) {
                 double stabMultiplier = 1.0;
-                if (pokemon.TYPES.getTypes().contains(this.getType())) {
+                if (pokemon.TYPES.getTypes().contains(this.TYPE)) {
                     stabMultiplier = pokemon.getStabMultiplier(action);
                 }
                 damage = (int) (((pokemon.calculate(PermanentStat.ATTACK) / 10) + 5) * stabMultiplier);
@@ -2674,131 +2674,89 @@ public enum BaseMove implements IModifier, IMoves {
     private static List<String[]> csv;
 
     @Nonnull
-    private final String NAME;
+    public final String NAME;
 
-    @Nonnull
-    private final List<Status> STATUS_EFFECTS = new ArrayList<>();
-
-    @Nonnull
-    private final Map<BaseVolatileStatus, Integer> VOLATILE_STATUS_EFFECTS_CHANCE = new HashMap<>();
-
-    @Nonnull
-    private final Map<PermanentStat, Integer> RAISES_OWN_STATS = new HashMap<>();
-
-    @Nonnull
-    private final Map<PermanentStat, Integer> LOWERS_OWN_STATS = new HashMap<>();
-
-    @Nonnull
-    private final Map<PermanentStat, Integer> RAISES_ENEMY_STATS = new HashMap<>();
-
-    @Nonnull
-    private final Map<PermanentStat, Integer> LOWERS_ENEMY_STATS = new HashMap<>();
-
-    @Nonnull
-    private final Map<PermanentStat, Integer> RAISES_TARGET_STATS = new HashMap<>();
-
-    @Nonnull
-    private final Map<PermanentStat, Integer> LOWERS_TARGET_STATS = new HashMap<>();
-
-    protected final int POWER;
+    public final int POWER;
 
     @Nullable
-    protected final Integer EFFECT_RATE;
+    public final Integer EFFECT_RATE;
 
     @Nonnull
-    private final Type TYPE;
+    public final Type TYPE;
 
     @Nonnull
-    private final Category CATEGORY;
+    public final Category CATEGORY;
 
-    private final MoveEffect EFFECT = null;
+    public final MoveEffect EFFECT = null;
 
-    private final int PP;
+    public final int PP;
 
-    private final int ACCURACY;
+    public final int ACCURACY;
 
-    private final boolean IS_Z_MOVE;
-
-    @Nonnull
-    private final List<Species> Z_MOVE_REQUIRED_POKEMON;
+    public final boolean IS_Z_MOVE;
 
     @Nonnull
-    private final BaseMoves.Single Z_MOVE_REQUIRED_MOVES;
+    public final List<Species> Z_MOVE_REQUIRED_POKEMON;
 
     @Nonnull
-    private final BaseMoves Z_PRECURSOR_MOVES;
+    public final BaseMoves.Single Z_MOVE_REQUIRED_MOVES;
 
-    private final boolean IS_SELF_Z_MOVE;
+    @Nonnull
+    public final BaseMoves Z_PRECURSOR_MOVES;
+
+    public final boolean IS_SELF_Z_MOVE;
 
     @Nullable
-    private final Items Z_MOVE_ITEM;
+    public final Items Z_MOVE_ITEM;
 
     @Nonnull
-    private final String BATTLE_EFFECT;
+    public final String BATTLE_EFFECT;
 
     @Nullable
-    private final String IN_DEPTH_EFFECT;
+    public final String IN_DEPTH_EFFECT;
 
     @Nonnull
-    private final String SECONDARY_EFFECT;
+    public final String SECONDARY_EFFECT;
 
     @Nonnull
-    private final Integer RAISES_OWN_RANDOM_STAT = null;
-
-    @Nonnull
-    private final Integer LOWERS_OWN_RANDOM_STAT = null;
-
-    @Nonnull
-    private final Integer RAISES_ENEMY_RANDOM_STAT = null;
-
-    @Nonnull
-    private final Integer LOWERS_ENEMY_RANDOM_STAT = null;
-
-    @Nonnull
-    private final Integer RAISES_TARGET_RANDOM_STAT = null;
-
-    @Nonnull
-    private final Integer LOWERS_TARGET_RANDOM_STAT = null;
-
-    @Nonnull
-    private final BaseMoves.Single CORRESPONDING_Z_MOVE;
+    public final BaseMoves.Single CORRESPONDING_Z_MOVE;
 
     @Nullable
-    private final Integer Z_MOVE_POWER;
+    public final Integer Z_MOVE_POWER;
 
     @Nullable
-    private final String DETAILED_EFFECT;
+    public final String DETAILED_EFFECT;
 
     @Nullable
-    private final CriticalHitStage BASE_CRITICAL_HIT_RATE;
+    public final CriticalHitStage BASE_CRITICAL_HIT_RATE;
 
-    private final int PRIORITY;
-
-    @Nonnull
-    private final Target TARGET;
+    public final int PRIORITY;
 
     @Nonnull
-    private final Hit POKEMON_HIT;
+    public final Target TARGET;
 
-    private final boolean PHYSICAL_CONTACT;
+    @Nonnull
+    public final Hit POKEMON_HIT;
 
-    private final boolean SOUND_TYPE;
+    public final boolean PHYSICAL_CONTACT;
 
-    private final boolean PUNCH_MOVE;
+    public final boolean SOUND_TYPE;
 
-    private final boolean SNATCHABLE;
+    public final boolean PUNCH_MOVE;
 
-    private final boolean Z_MOVE;
+    public final boolean SNATCHABLE;
 
-    private final boolean DEFROSTS_WHEN_USED;
+    public final boolean Z_MOVE;
 
-    private final boolean HITS_OPPOSITE_SIDE_IN_TRIPLES;
+    public final boolean DEFROSTS_WHEN_USED;
 
-    private final boolean REFLECTED;
+    public final boolean HITS_OPPOSITE_SIDE_IN_TRIPLES;
 
-    private final boolean BLOCKED;
+    public final boolean REFLECTED;
 
-    private final boolean COPYABLE;
+    public final boolean BLOCKED;
+
+    public final boolean COPYABLE;
 
     BaseMove(@Nonnull String name) {
         Holder.MAP.put(name.toLowerCase(), this);
@@ -2890,7 +2848,7 @@ public enum BaseMove implements IModifier, IMoves {
         }
         if (!Holder.MAP.containsKey(move)) {
             for (BaseMove baseMove : BaseMove.values()) {
-                if (Objects.equals(baseMove.getName().toLowerCase(), move)) {
+                if (Objects.equals(baseMove.NAME.toLowerCase(), move)) {
                     return baseMove;
                 }
             }
@@ -2900,44 +2858,18 @@ public enum BaseMove implements IModifier, IMoves {
         return Holder.MAP.get(move);
     }
 
-    @Nonnull
-    public String getName() {
-        return this.NAME;
-    }
-
-    @Nonnull
-    public Type getType() {
-        return this.TYPE;
-    }
-
-    @Nonnull
-    public Category getCategory() {
-        return this.CATEGORY;
-    }
-
-    public MoveEffect getEffect() {
-        return this.EFFECT;
-    }
-
-    public int getPP() {
-        return this.PP;
-    }
-
-    public int getBasePower() {
-        return this.POWER;
-    }
-
     public int getPower(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
         return this.POWER;
     }
 
     public int getPowerOfZMove(BaseMove originalMove) throws IllegalZMoveException {
-        int power = originalMove.getBasePower();
+        int power = originalMove.POWER;
 
         switch (originalMove) {
             case MEGA_DRAIN:
                 return 120;
-            case WEATHER_BALL:case HEX:
+            case WEATHER_BALL:
+            case HEX:
                 return 160;
             case GEAR_GRIND:
                 return 180;
@@ -2974,140 +2906,6 @@ public enum BaseMove implements IModifier, IMoves {
         throw new IllegalZMoveException(originalMove + " can't become Z-Move " + this.NAME);
     }
 
-    public int getAccuracy() {
-        return this.ACCURACY;
-    }
-
-    @Nonnull
-    public String getBattleEffect() {
-        return this.BATTLE_EFFECT;
-    }
-
-    @Nullable
-    public String inDepthEffect() {
-        return this.IN_DEPTH_EFFECT;
-    }
-
-    @Nonnull
-    public String getSecondaryEffect() {
-        return this.SECONDARY_EFFECT;
-    }
-
-    @Nullable
-    public Integer getEffectRate() {
-        return this.EFFECT_RATE;
-    }
-
-    public boolean isSelfZMove() {
-        return this.IS_SELF_Z_MOVE;
-    }
-
-    @Nullable
-    public BaseMove getCorrespondingZMove() {
-        return CORRESPONDING_Z_MOVE.get();
-    }
-
-    @Nullable
-    public Items getZMoveItem() {
-        return this.Z_MOVE_ITEM;
-    }
-
-    @Nullable
-    public String getDetailedEffect() {
-        return this.DETAILED_EFFECT;
-    }
-
-    @Nullable
-    public Integer getZMovePower() {
-        return this.Z_MOVE_POWER;
-    }
-
-    public boolean isZMove() {
-        return this.IS_Z_MOVE;
-    }
-
-    @Nonnull
-    public List<Species> getZMoveRequiredPokemon() {
-        return new ArrayList<>(Z_MOVE_REQUIRED_POKEMON);
-    }
-
-    @Nullable
-    public BaseMove getZMoveRequiredMoves() {
-        return Z_MOVE_REQUIRED_MOVES.get();
-    }
-
-    @Nonnull
-    public List<BaseMove> getPrecursorMoves() {
-        return Z_PRECURSOR_MOVES.get();
-    }
-    
-    @Nullable
-    public CriticalHitStage getCriticalHitStage() {
-        return this.BASE_CRITICAL_HIT_RATE;
-    }
-
-    public int getPriority() {
-        return this.PRIORITY;
-    }
-
-    @Nonnull
-    public Target getTarget() {
-        return this.TARGET;
-    }
-
-    @Nonnull
-    public Hit getPokemonHit() {
-        return this.POKEMON_HIT;
-    }
-
-    public boolean physicalContact() {
-        return this.PHYSICAL_CONTACT;
-    }
-
-    public boolean soundType() {
-        return this.SOUND_TYPE;
-    }
-
-    public boolean punchMove() {
-        return this.PUNCH_MOVE;
-    }
-
-    public boolean snatchable() {
-        return this.SNATCHABLE;
-    }
-
-    public boolean zMove() {
-        return this.Z_MOVE;
-    }
-
-    public boolean defrostsWhenUsed() {
-        return this.DEFROSTS_WHEN_USED;
-    }
-
-    public boolean hitsOppositeSideInTriples() {
-        return this.HITS_OPPOSITE_SIDE_IN_TRIPLES;
-    }
-
-    public boolean reflected() {
-        return this.REFLECTED;
-    }
-
-    public boolean blocked() {
-        return this.BLOCKED;
-    }
-
-    public boolean copyable() {
-        return this.COPYABLE;
-    }
-
-    public Category getCategoryOfZmove(BaseMove originalMove) {
-        return originalMove.getCategory();
-    }
-
-    public CriticalHitStage getBaseCriticalHitRate() {
-        return this.BASE_CRITICAL_HIT_RATE;
-    }
-
     protected boolean isCritical(@Nonnull Action action) {
         return true;
     }
@@ -3128,7 +2926,7 @@ public enum BaseMove implements IModifier, IMoves {
         int attackPower = this.POWER;
 
         double targets = 1.0;
-        if (getPokemonHit().hitsMultiple()) {
+        if (POKEMON_HIT.hitsMultiple()) {
             targets = 0.75;
         }
 
@@ -3195,7 +2993,7 @@ public enum BaseMove implements IModifier, IMoves {
         int attackPower = this.POWER;
 
         double targets = 1.0;
-        if (getPokemonHit().hitsMultiple()) {
+        if (POKEMON_HIT.hitsMultiple()) {
             targets = 0.75;
         }
 
@@ -3255,7 +3053,7 @@ public enum BaseMove implements IModifier, IMoves {
             return false;
         }
 
-        return this.Z_MOVE_ITEM == user.ITEM.get() && !Collections.disjoint(getPrecursorMoves(), user.getMoves());
+        return this.Z_MOVE_ITEM == user.ITEM.get() && !Collections.disjoint(Z_PRECURSOR_MOVES.get(), user.getMoves());
     }
 
     protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
@@ -3289,7 +3087,7 @@ public enum BaseMove implements IModifier, IMoves {
             return false;
         }
 
-        if (getAccuracy() == 0) {
+        if (ACCURACY == 0) {
             return true;
         }
 
@@ -3301,7 +3099,7 @@ public enum BaseMove implements IModifier, IMoves {
 
         double attackerAccuracy = attacker.calculate(BattleStat.ACCURACY);
         double defenderEvasion = defender.calculate(BattleStat.EVASION);
-        double probability = getAccuracy() * (attackerAccuracy / defenderEvasion);
+        double probability = ACCURACY * (attackerAccuracy / defenderEvasion);
         if (probability > 1 || probability < Math.random()) {
             return true;
         }
@@ -3317,7 +3115,7 @@ public enum BaseMove implements IModifier, IMoves {
             return false;
         }
 
-        if (getAccuracy() == 0) {
+        if (ACCURACY == 0) {
             return true;
         }
 
@@ -3328,7 +3126,7 @@ public enum BaseMove implements IModifier, IMoves {
         }
 
         double attackerAccuracy = attacker.calculate(BattleStat.ACCURACY);
-        double probability = getAccuracy() * attackerAccuracy;
+        double probability = ACCURACY * attackerAccuracy;
         if (probability > 1 || probability < Math.random()) {
             return true;
         }
@@ -3340,7 +3138,7 @@ public enum BaseMove implements IModifier, IMoves {
         Pokemon attacker = action.getAttacker();
         Pokemon defender = action.getTarget();
 
-        if (getAccuracy() == 0) {
+        if (ACCURACY == 0) {
             return true;
         }
 
@@ -3352,7 +3150,7 @@ public enum BaseMove implements IModifier, IMoves {
 
         double attackerAccuracy = attacker.calculate(BattleStat.ACCURACY);
         double defenderEvasion = defender.calculate(BattleStat.EVASION);
-        double probability = getAccuracy() * (attackerAccuracy / defenderEvasion);
+        double probability = ACCURACY * (attackerAccuracy / defenderEvasion);
         if (probability > 1 || probability < Math.random()) {
             return true;
         }

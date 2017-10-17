@@ -496,7 +496,7 @@ public class SerebiiParser {
                     zMovePower != null ? String.valueOf(zMovePower) : "", // Z-Move Power
                     !isSelfZMove && correspondingZMove == null ? "true" : "false", // Is Z-Move?
                     zMoveRequiredPokemon.isEmpty() ? "" : zMoveRequiredPokemon.stream().collect(Collectors.joining(",")), // Z-Move Required Pokemon
-                    zMoveRequiredMove.isEmpty() ? "" : zMoveRequiredMove.stream().map(BaseMove::getName).collect(Collectors.joining(",")), // Z-Move Required Moves
+                    zMoveRequiredMove.isEmpty() ? "" : zMoveRequiredMove.stream().map(baseMove -> baseMove.NAME).collect(Collectors.joining(",")), // Z-Move Required Moves
                     movesThatTurnIntoThis.isEmpty() ? "" : movesThatTurnIntoThis.stream().collect(Collectors.joining(",")), // Moves that turn into this
                     baseCriticalHitRate != null ? String.valueOf(baseCriticalHitRate) : "", // Base Critical Hit Rate
                     String.valueOf(priority), // Priority

@@ -437,9 +437,9 @@ public enum Messages {
                     case SACRED_FIRE:
                     case SCALD:
                     case STEAM_ERUPTION:
-                        return String.format("%s's %s melted the ice!", user.getNickname(), move.getBaseMove().getName());
+                        return String.format("%s's %s melted the ice!", user.getNickname(), move.getBaseMove().NAME);
                     default:
-                        return String.format("%s's %s heals its status!", user.getNickname(), move.getBaseMove().getName());
+                        return String.format("%s's %s heals its status!", user.getNickname(), move.getBaseMove().NAME);
                 }
             }
 
@@ -751,7 +751,7 @@ public enum Messages {
                     return String.format("%s burned itself out!", userName);
             }
 
-            throw new IllegalArgumentException("Invalid type change for move " + move.getBaseMove().getName());
+            throw new IllegalArgumentException("Invalid type change for move " + move.getBaseMove().NAME);
         }
     },
 
@@ -840,7 +840,7 @@ public enum Messages {
                 case IMPRISON:
                     return String.format("%s sealed any moves its target shares with it!", userName);
                 case DISABLE:
-                    return String.format("%s's %s was disabled!", targetName, targetMove.getBaseMove().getName());
+                    return String.format("%s's %s was disabled!", targetName, targetMove.getBaseMove().NAME);
                 case EMBARGO:
                     return String.format("%s can't use items anymore!", targetName);
                 case TORMENT:
@@ -878,7 +878,7 @@ public enum Messages {
                 case FUTURE_SIGHT:
                     return String.format("%s foresaw an attack!", userName);
                 case MIMIC:
-                    return String.format("%s learned %s!", userName, targetMove.getBaseMove().getName());
+                    return String.format("%s learned %s!", userName, targetMove.getBaseMove().NAME);
                 case LASER_FOCUS:
                     return String.format("%s concentrated intensely", userName);
                 case FOLLOW_ME:
@@ -903,7 +903,7 @@ public enum Messages {
                     return String.format("%s can't get it going!", userName);
             }
 
-            return String.format("%s's %s started!", userName, move.getBaseMove().getName());
+            return String.format("%s's %s started!", userName, move.getBaseMove().NAME);
         }
     },
 
