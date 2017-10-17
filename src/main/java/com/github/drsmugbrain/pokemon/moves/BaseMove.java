@@ -2794,7 +2794,7 @@ public enum BaseMove implements IModifier, IMoves {
 
         Z_MOVE_REQUIRED_MOVES = new BaseMoves.Single(line[17]);
         Z_PRECURSOR_MOVES = new BaseMoves(line[18].split(","));
-        BASE_CRITICAL_HIT_RATE = line[19].isEmpty() ? null : CriticalHitStage.getStageByPercentage(Double.parseDouble(line[19]));
+        BASE_CRITICAL_HIT_RATE = line[19].isEmpty() ? null : CriticalHitStage.getStage(Double.parseDouble(line[19]));
         PRIORITY = Integer.parseInt(line[20]);
         TARGET = Target.getTarget(line[21]);
         POKEMON_HIT = Hit.getHit(line[22]);
@@ -2859,7 +2859,7 @@ public enum BaseMove implements IModifier, IMoves {
     }
 
     public int getPower(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
-        return this.POWER;
+        return POWER;
     }
 
     public int getPowerOfZMove(BaseMove originalMove) throws IllegalZMoveException {
@@ -2903,7 +2903,7 @@ public enum BaseMove implements IModifier, IMoves {
             return 200;
         }
 
-        throw new IllegalZMoveException(originalMove + " can't become Z-Move " + this.NAME);
+        throw new IllegalZMoveException(originalMove + " can't become Z-Move " + NAME);
     }
 
     protected boolean isCritical(@Nonnull Action action) {
@@ -2911,7 +2911,7 @@ public enum BaseMove implements IModifier, IMoves {
     }
 
     public int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
-        if (this.CATEGORY == Category.OTHER) {
+        if (CATEGORY == Category.OTHER) {
             return 0;
         }
 
@@ -2923,7 +2923,7 @@ public enum BaseMove implements IModifier, IMoves {
         if (battle.getGeneration() == Generation.I && isCritical(action)) {
             level *= 2;
         }
-        int attackPower = this.POWER;
+        int attackPower = POWER;
 
         double targets = 1.0;
         if (POKEMON_HIT.hitsMultiple()) {
@@ -2958,14 +2958,14 @@ public enum BaseMove implements IModifier, IMoves {
         double effectiveness = defender.TYPES.damageMultiplier(attacker, action);
         double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
 
-        if (this.CATEGORY == Category.PHYSICAL) {
+        if (CATEGORY == Category.PHYSICAL) {
             attackStat = attacker.calculate(PermanentStat.ATTACK);
             defenseStat = defender.calculate(PermanentStat.DEFENSE);
-        } else if (this.CATEGORY == Category.SPECIAL) {
+        } else if (CATEGORY == Category.SPECIAL) {
             attackStat = attacker.calculate(PermanentStat.SPECIAL_ATTACK);
             defenseStat = defender.calculate(PermanentStat.SPECIAL_DEFENSE);
         } else {
-            throw new InvalidCategoryException(this.CATEGORY);
+            throw new InvalidCategoryException(CATEGORY);
         }
 
         int damage = (int) (
@@ -2978,7 +2978,7 @@ public enum BaseMove implements IModifier, IMoves {
     }
 
     protected int getDamageWithoutDefenderStages(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
-        if (this.CATEGORY == Category.OTHER) {
+        if (CATEGORY == Category.OTHER) {
             return 0;
         }
 
@@ -2990,7 +2990,7 @@ public enum BaseMove implements IModifier, IMoves {
         if (battle.getGeneration() == Generation.I && isCritical(action)) {
             level *= 2;
         }
-        int attackPower = this.POWER;
+        int attackPower = POWER;
 
         double targets = 1.0;
         if (POKEMON_HIT.hitsMultiple()) {
@@ -3025,14 +3025,14 @@ public enum BaseMove implements IModifier, IMoves {
         double effectiveness = defender.TYPES.damageMultiplier(attacker, action);
         double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
 
-        if (this.CATEGORY == Category.PHYSICAL) {
+        if (CATEGORY == Category.PHYSICAL) {
             attackStat = attacker.calculate(PermanentStat.ATTACK);
             defenseStat = defender.calculateWithoutStages(PermanentStat.DEFENSE);
-        } else if (this.CATEGORY == Category.SPECIAL) {
+        } else if (CATEGORY == Category.SPECIAL) {
             attackStat = attacker.calculate(PermanentStat.SPECIAL_ATTACK);
             defenseStat = defender.calculateWithoutStages(PermanentStat.SPECIAL_DEFENSE);
         } else {
-            throw new InvalidCategoryException(this.CATEGORY);
+            throw new InvalidCategoryException(CATEGORY);
         }
 
         int damage = (int) (
@@ -3053,7 +3053,7 @@ public enum BaseMove implements IModifier, IMoves {
             return false;
         }
 
-        return this.Z_MOVE_ITEM == user.ITEM.get() && !Collections.disjoint(Z_PRECURSOR_MOVES.get(), user.getMoves());
+        return Z_MOVE_ITEM == user.ITEM.get() && !Collections.disjoint(Z_PRECURSOR_MOVES.get(), user.getMoves());
     }
 
     protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
@@ -3063,7 +3063,7 @@ public enum BaseMove implements IModifier, IMoves {
     protected int use(Pokemon user, Pokemon target, Battle battle, Action action, @Nonnull Integer repeats) {
         int damage = 0;
         for (int i = 0; i < repeats; i++) {
-            damage += this.use(user, target, battle, action);
+            damage += use(user, target, battle, action);
         }
         return damage;
     }
@@ -3159,7 +3159,7 @@ public enum BaseMove implements IModifier, IMoves {
     }
 
     protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
-        return this.use(user, target, battle, action);
+        return use(user, target, battle, action);
     }
 
     protected int miss(@Nonnull Pokemon defender) {

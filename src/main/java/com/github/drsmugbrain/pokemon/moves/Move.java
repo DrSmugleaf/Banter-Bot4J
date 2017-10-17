@@ -12,21 +12,33 @@ import javax.annotation.Nonnull;
  */
 public class Move {
 
+    @Nonnull
     private final BaseMove BASE_MOVE;
+
+    @Nonnull
     private Type type;
+
+    @Nonnull
     private Category category;
+
+    @Nonnull
     private Integer pp;
+
+    @Nonnull
     private Integer power;
+
+    @Nonnull
     private Integer priority;
+
     private double damageMultiplier = 1.0;
 
     public Move(@Nonnull BaseMove baseMove) {
-        this.BASE_MOVE = baseMove;
-        this.type = baseMove.TYPE;
-        this.category = baseMove.CATEGORY;
-        this.pp = baseMove.PP;
-        this.power = baseMove.POWER;
-        this.priority = baseMove.PRIORITY;
+        BASE_MOVE = baseMove;
+        type = baseMove.TYPE;
+        category = baseMove.CATEGORY;
+        pp = baseMove.PP;
+        power = baseMove.POWER;
+        priority = baseMove.PRIORITY;
     }
 
     private Move(@Nonnull Move move) {
@@ -40,29 +52,29 @@ public class Move {
 
     @Nonnull
     public BaseMove getBaseMove() {
-        return this.BASE_MOVE;
+        return BASE_MOVE;
     }
 
     @Nonnull
     public Type getType() {
-        return this.type;
+        return type;
     }
 
-    protected void setType(Type type) {
+    protected void setType(@Nonnull Type type) {
         this.type = type;
     }
 
     @Nonnull
     public Category getCategory() {
-        return this.category;
+        return category;
     }
 
-    protected void setCategory(Category category) {
+    protected void setCategory(@Nonnull Category category) {
         this.category = category;
     }
 
     public int getPP() {
-        return this.pp;
+        return pp;
     }
 
     protected void setPP(int pp) {
@@ -70,23 +82,24 @@ public class Move {
     }
 
     protected void increasePP(int amount) {
-        this.setPP(this.getPP() + amount);
+        setPP(pp + amount);
     }
 
     protected void decreasePP(int amount) {
-        this.increasePP(-amount);
+        increasePP(-amount);
     }
 
     public int getPower() {
-        return this.power;
+        return power;
     }
 
     protected void setPower(int power) {
         this.power = power;
     }
 
+    @Nonnull
     public Integer getPriority() {
-        return this.priority;
+        return priority;
     }
 
     protected void setPriority(int priority) {
@@ -94,23 +107,23 @@ public class Move {
     }
 
     public double getDamageMultiplier() {
-        return this.damageMultiplier;
+        return damageMultiplier;
     }
 
     protected void setDamageMultiplier(double multiplier) {
-        this.damageMultiplier = multiplier;
+        damageMultiplier = multiplier;
     }
 
     protected void incrementDamageMultiplier(double multiplier) {
-        this.setDamageMultiplier(this.getDamageMultiplier() + multiplier);
+        setDamageMultiplier(damageMultiplier + multiplier);
     }
 
     protected void decreaseDamageMultiplier(double multiplier) {
-        this.incrementDamageMultiplier(-multiplier);
+        incrementDamageMultiplier(-multiplier);
     }
 
     protected void resetDamageMultiplier() {
-        this.damageMultiplier = 1.0;
+        damageMultiplier = 1.0;
     }
 
     protected int use(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {

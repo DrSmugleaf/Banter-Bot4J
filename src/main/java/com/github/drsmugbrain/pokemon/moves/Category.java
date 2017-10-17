@@ -17,19 +17,26 @@ public enum Category {
     SPECIAL("Special", PermanentStat.SPECIAL_ATTACK),
     OTHER("Other", null);
 
+    @Nonnull
     private final String NAME;
+
+    @Nullable
     private final PermanentStat STAT;
 
     Category(@Nonnull String name, @Nullable PermanentStat stat) {
         Holder.MAP.put(name.toLowerCase(), this);
-        this.NAME = name;
-        this.STAT = stat;
+        NAME = name;
+        STAT = stat;
     }
 
     @Nonnull
     public static Category getCategory(@Nonnull String category) {
         category = category.toLowerCase();
-        if (Objects.equals(category, "non-damaging")) return Holder.MAP.get("other");
+
+        if (Objects.equals(category, "non-damaging")) {
+            return Holder.MAP.get("other");
+        }
+
         if (!Holder.MAP.containsKey(category)) {
             throw new NullPointerException("Category " + category + " doesn't exist");
         }
@@ -39,12 +46,12 @@ public enum Category {
 
     @Nonnull
     public String getName() {
-        return this.NAME;
+        return NAME;
     }
 
     @Nullable
     public PermanentStat getStat() {
-        return this.STAT;
+        return STAT;
     }
 
     private static class Holder {

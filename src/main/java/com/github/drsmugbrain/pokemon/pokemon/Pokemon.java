@@ -250,7 +250,7 @@ public class Pokemon {
     }
 
     public void raiseCriticalHitStage(int amount) {
-        int currentStage = criticalHitStage.getStage();
+        int currentStage = criticalHitStage.INDEX;
         CriticalHitStage newStage = CriticalHitStage.getStage(currentStage + amount);
         criticalHitStage = newStage;
     }

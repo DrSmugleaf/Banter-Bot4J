@@ -26,7 +26,7 @@ public enum Target {
 
     Target(@Nonnull String name) {
         Holder.MAP.put(name.toLowerCase(), this);
-        this.NAME = name;
+        NAME = name;
     }
 
     @Nonnull
@@ -39,14 +39,15 @@ public enum Target {
         return Holder.MAP.get(target);
     }
 
+    @Nonnull
     @Override
     public String toString() {
-        return this.NAME;
+        return NAME;
     }
 
     @Nonnull
     public String getName() {
-        return this.NAME;
+        return NAME;
     }
 
     private static class Holder {

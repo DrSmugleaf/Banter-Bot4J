@@ -1,7 +1,6 @@
 package com.github.drsmugbrain.pokemon.moves;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,45 +15,39 @@ public enum CriticalHitStage {
     THREE(3, 100),
     FOUR(4, 100);
 
-    private final int STAGE;
-    private final double PERCENTAGE;
+    public final int INDEX;
+    public final double PERCENTAGE;
 
-    CriticalHitStage(int stage, double percentage) {
-        Holder.MAP.put(stage, this);
-        this.STAGE = stage;
-        this.PERCENTAGE = percentage;
+    CriticalHitStage(int index, double percentage) {
+        Holder.MAP.put(index, this);
+        INDEX = index;
+        PERCENTAGE = percentage;
     }
 
     @Nonnull
-    public static CriticalHitStage getStage(int stage) {
-        if (stage >= 4) return Holder.MAP.get(4);
-        if (stage <= 0) return Holder.MAP.get(0);
-        if (!Holder.MAP.containsKey(stage)) {
-            throw new NullPointerException("CriticalHitStage " + stage + " doesn't exist");
+    public static CriticalHitStage getStage(int index) {
+        if (index <= 0) return Holder.MAP.get(0);
+        if (index >= 4) return Holder.MAP.get(4);
+
+        if (!Holder.MAP.containsKey(index)) {
+            throw new NullPointerException("CriticalHitStage " + index + " doesn't exist");
         }
 
-        return Holder.MAP.get(stage);
+        return Holder.MAP.get(index);
     }
 
-    @Nullable
-    public static CriticalHitStage getStageByPercentage(double percentage) {
+    @Nonnull
+    public static CriticalHitStage getStage(double percentage) {
         for (CriticalHitStage criticalHitStage : CriticalHitStage.values()) {
             if (criticalHitStage.PERCENTAGE == percentage) return criticalHitStage;
         }
-        return null;
+
+        throw new NullPointerException("CriticalHitStage with percentage " + percentage + " doesn't exist");
     }
 
 //    public static CriticalHitStage getStage(Pokemon pokemon, BaseMove move) {
 //        return CriticalHitStage.getStage(move.getBaseCriticalHitRate().getStage() + pokemon.getCriticalHitStage().getStage());
 //    }
-
-    public int getStage() {
-        return this.STAGE;
-    }
-
-    public double getCriticalChance() {
-        return this.PERCENTAGE;
-    }
 
     private static class Holder {
         static Map<Integer, CriticalHitStage> MAP = new HashMap<>();

@@ -12,12 +12,14 @@ public enum EntryHazard {
     STICKY_WEB("Sticky Web"),
     TOXIC_SPIKES("Toxic Spikes");
 
+    @Nonnull
     private final String NAME;
 
     EntryHazard(@Nonnull String name) {
-        this.NAME = name;
+        NAME = name;
     }
 
+    @Nonnull
     public String getName() {
         return NAME;
     }

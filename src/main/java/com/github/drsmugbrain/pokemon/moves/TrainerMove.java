@@ -9,6 +9,7 @@ public enum TrainerMove implements IMoves {
 
     SWITCH("Switch");
 
+    @Nonnull
     private final String NAME;
 
     TrainerMove(@Nonnull String name) {
