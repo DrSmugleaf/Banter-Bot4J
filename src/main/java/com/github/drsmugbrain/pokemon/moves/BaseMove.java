@@ -1917,7 +1917,35 @@ public enum BaseMove implements IModifier, IMoves {
         }
     },
     DEVASTATING_DRAKE("Devastating Drake"),
-    DIAMOND_STORM("Diamond Storm"),
+    DIAMOND_STORM("Diamond Storm") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
+            int damage = super.use(user, target, battle, action);
+
+            double random = ThreadLocalRandom.current().nextDouble();
+            switch (action.getGeneration()) {
+                case I:
+                case II:
+                case III:
+                case IV:
+                case V:
+                case VI:
+                    if (random < 0.5) {
+                        user.STATS.raiseStages(1, PermanentStat.DEFENSE);
+                    }
+                    break;
+                case VII:
+                    if (random < 0.5) {
+                        user.STATS.raiseStages(2, PermanentStat.DEFENSE);
+                    }
+                    break;
+                default:
+                    throw new InvalidGenerationException(action.getGeneration());
+            }
+
+            return damage;
+        }
+    },
     DIG("Dig"),
     DISABLE("Disable"),
     DISARMING_VOICE("Disarming Voice"),
