@@ -128,7 +128,7 @@ public class SmogonImporter {
 
         PokemonBuilder pokemonBuilder = new PokemonBuilder();
         pokemonBuilder
-                .setBasePokemon(pokemon)
+                .setSpecies(pokemon)
                 .setNickname(nameString)
                 .setItem(item)
                 .setNature(nature)

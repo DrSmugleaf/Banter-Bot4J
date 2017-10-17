@@ -18,7 +18,7 @@ import java.util.Map;
 public class PokemonBuilder {
 
     private Trainer trainer;
-    private Species basePokemon;
+    private Species species;
     private String nickname;
     private Items item;
     private Nature nature;
@@ -34,7 +34,7 @@ public class PokemonBuilder {
     public Pokemon build() {
         return new Pokemon(
                 trainer,
-                basePokemon,
+                species,
                 nickname,
                 ability,
                 item,
@@ -59,13 +59,13 @@ public class PokemonBuilder {
     }
 
     @Nullable
-    public Species getBasePokemon() {
-        return basePokemon;
+    public Species getSpecies() {
+        return species;
     }
 
     @Nonnull
-    public PokemonBuilder setBasePokemon(@Nonnull Species basePokemon) {
-        this.basePokemon = basePokemon;
+    public PokemonBuilder setSpecies(@Nonnull Species species) {
+        this.species = species;
         return this;
     }
 
