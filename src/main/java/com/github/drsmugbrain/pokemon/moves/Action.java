@@ -1,11 +1,16 @@
 package com.github.drsmugbrain.pokemon.moves;
 
+import com.github.drsmugbrain.pokemon.battle.Battle;
+import com.github.drsmugbrain.pokemon.battle.Generation;
 import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 import com.github.drsmugbrain.pokemon.status.BaseVolatileStatus;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by DrSmugleaf on 16/09/2017.
@@ -127,8 +132,18 @@ public class Action extends Move {
         return TARGET_VOLATILE_STATUSES.contains(status);
     }
 
+    @Nonnull
+    public Battle getBattle() {
+        return ATTACKER.getBattle();
+    }
+
     public int getTurn() {
         return TURN;
+    }
+
+    @Nonnull
+    public Generation getGeneration() {
+        return ATTACKER.getBattle().getGeneration();
     }
 
     @Override
