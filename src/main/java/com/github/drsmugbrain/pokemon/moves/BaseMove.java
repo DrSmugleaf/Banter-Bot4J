@@ -1946,7 +1946,18 @@ public enum BaseMove implements IModifier, IMoves {
             return damage;
         }
     },
-    DIG("Dig"),
+    DIG("Dig") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
+            if (!action.attackerHasVolatileStatus(BaseVolatileStatus.SEMI_INVULNERABLE)) {
+                BaseVolatileStatus.SEMI_INVULNERABLE.apply(action.getAttacker(), action);
+                return 0;
+            } else {
+                BaseVolatileStatus.SEMI_INVULNERABLE.remove(action.getAttacker());
+                return super.use(user, target, battle, action);
+            }
+        }
+    },
     DISABLE("Disable"),
     DISARMING_VOICE("Disarming Voice"),
     DISCHARGE("Discharge"),

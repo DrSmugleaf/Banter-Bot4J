@@ -1,6 +1,7 @@
 package com.github.drsmugbrain.pokemon.status;
 
 import com.github.drsmugbrain.pokemon.*;
+import com.github.drsmugbrain.pokemon.ability.Abilities;
 import com.github.drsmugbrain.pokemon.battle.Battle;
 import com.github.drsmugbrain.pokemon.battle.Generation;
 import com.github.drsmugbrain.pokemon.battle.InvalidGenerationException;
@@ -175,7 +176,76 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     MINIMIZE("Minimize"),
     PROTECTION("Protection"),
     RECHARGING("Recharging"),
-    SEMI_INVULNERABLE("Semi-invulnerable"),
+    SEMI_INVULNERABLE("Semi-invulnerable", 1) {
+        @Override
+        public boolean onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+            VolatileStatus status = defender.STATUSES.getVolatileStatus(this);
+            if (status == null) {
+                throw new IllegalStateException("Dig status not found on defending pokemon");
+            }
+
+            if (defender.STATUSES.hasVolatileStatus(TAKING_AIM)) {
+                return true;
+            }
+
+            if (defender.ABILITY.get() == Abilities.NO_GUARD || attacker.ABILITY.get() == Abilities.NO_GUARD) {
+                return true;
+            }
+
+
+            BaseMove move = action.getBaseMove();
+            BaseMove statusMove = status.getAction().getBaseMove();
+
+            if (action.getGeneration() == Generation.I) {
+                switch (move) {
+                    case SWIFT:
+                    case TRANSFORM:
+                    case BIDE:
+                        return true;
+                }
+            }
+
+            switch (statusMove) {
+                case FLY:
+                case BOUNCE:
+                case SKY_DROP:
+                    switch (move) {
+                        case GUST:
+                        case SMACK_DOWN:
+                        case SKY_UPPERCUT:
+                        case THUNDER:
+                        case TWISTER:
+                        case HURRICANE:
+                        case GRAVITY:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case DIG:
+                    switch (move) {
+                        case EARTHQUAKE:
+                        case MAGNITUDE:
+                        case FISSURE:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case DIVE:
+                    switch (move) {
+                        case SURF:
+                        case WHIRLPOOL:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case SHADOW_FORCE:
+                case PHANTOM_FORCE:
+                    return false;
+            }
+
+            return false;
+        }
+    },
     SUBSTITUTE("Substitute"),
     TAKING_AIM("Taking aim"),
     TAKING_IN_SUNLIGHT("Taking in sunlight"),
