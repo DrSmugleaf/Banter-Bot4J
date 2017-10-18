@@ -178,10 +178,22 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     RECHARGING("Recharging"),
     SEMI_INVULNERABLE("Semi-invulnerable", 1) {
         @Override
+        public void onTrainerTurnStart(@Nonnull Trainer trainer, @Nonnull Pokemon pokemon) {
+            VolatileStatus status = pokemon.STATUSES.getVolatileStatus(this);
+            if (status == null) {
+                throw new IllegalStateException("Semi-invulnerable status not found on defending pokemon");
+            }
+
+            BaseMove statusMove = status.getAction().getBaseMove();
+
+            pokemon.MOVES.setValid(statusMove);
+        }
+
+        @Override
         public boolean onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
             VolatileStatus status = defender.STATUSES.getVolatileStatus(this);
             if (status == null) {
-                throw new IllegalStateException("Dig status not found on defending pokemon");
+                throw new IllegalStateException("Semi-invulnerable status not found on defending pokemon");
             }
 
             if (defender.STATUSES.hasVolatileStatus(TAKING_AIM)) {
