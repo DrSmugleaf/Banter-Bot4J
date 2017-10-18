@@ -9,9 +9,9 @@ import com.github.drsmugbrain.pokemon.events.*;
 import com.github.drsmugbrain.pokemon.item.Item;
 import com.github.drsmugbrain.pokemon.item.Items;
 import com.github.drsmugbrain.pokemon.moves.Action;
-import com.github.drsmugbrain.pokemon.moves.BaseMove;
 import com.github.drsmugbrain.pokemon.moves.CriticalHitStage;
 import com.github.drsmugbrain.pokemon.moves.Move;
+import com.github.drsmugbrain.pokemon.moves.Moves;
 import com.github.drsmugbrain.pokemon.stats.*;
 import com.github.drsmugbrain.pokemon.status.Statuses;
 import com.github.drsmugbrain.pokemon.trainer.Trainer;
@@ -67,10 +67,7 @@ public class Pokemon {
     public final Statuses STATUSES = new Statuses();
 
     @Nonnull
-    private final List<Move> MOVES = new ArrayList<>();
-
-    @Nonnull
-    private final List<BaseMove> VALID_MOVES = new ArrayList<>();
+    public final Moves MOVES;
 
     @Nullable
     private Action action = null;
@@ -125,7 +122,7 @@ public class Pokemon {
 
         hp = (int) PermanentStat.HP.calculate(this);
 
-        MOVES.addAll(moves);
+        MOVES = new Moves(moves);
         weight = species.getWeight();
     }
 
@@ -166,7 +163,7 @@ public class Pokemon {
                 )
         );
 
-        for (Move move : MOVES) {
+        for (Move move : MOVES.get()) {
             string = string.concat(String.format("\n- %s", move.getBaseMove().NAME));
         }
 
@@ -326,55 +323,6 @@ public class Pokemon {
         EventDispatcher.dispatch(event);
     }
 
-    public boolean hasAllMoves(BaseMove... moves) {
-        return MOVES.containsAll(Arrays.asList(moves));
-    }
-
-    public boolean hasOneMove(BaseMove... moves) {
-        List<BaseMove> baseMoveList = Arrays.asList(moves);
-
-        for (Move move : MOVES) {
-            if (baseMoveList.contains(move.getBaseMove())) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public boolean hasOneMove(String moveName) {
-        BaseMove baseMove = BaseMove.getMove(moveName);
-        return hasOneMove(baseMove);
-    }
-
-    @Nonnull
-    public List<Move> getMoves() {
-        return new ArrayList<>(MOVES);
-    }
-
-    @Nullable
-    public Move getMove(String moveName) {
-        moveName = moveName.toLowerCase();
-
-        for (Move move : MOVES) {
-            if (Objects.equals(move.getBaseMove().NAME, moveName)) {
-                return move;
-            }
-        }
-
-        return null;
-    }
-
-    @Nonnull
-    public List<BaseMove> getValidMoves() {
-        return new ArrayList<>(VALID_MOVES);
-    }
-
-    public void setValidMoves(@Nonnull BaseMove... moves) {
-        VALID_MOVES.clear();
-        VALID_MOVES.addAll(Arrays.asList(moves));
-    }
-
     public void executeTurn() {
         if (isFainted()) {
             return;
@@ -388,10 +336,7 @@ public class Pokemon {
     public void finishTurn() {
         action = null;
         damagedThisTurn = null;
-        VALID_MOVES.clear();
-        for (Move move : MOVES) {
-            VALID_MOVES.add(move.getBaseMove());
-        }
+        MOVES.resetValid();
     }
 
     public boolean isDamagedThisTurn() {

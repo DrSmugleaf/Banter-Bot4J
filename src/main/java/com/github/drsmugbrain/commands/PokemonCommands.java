@@ -62,7 +62,7 @@ public class PokemonCommands {
 
         builder.withTitle("Which move do you want to use?");
 
-        for (BaseMove baseMove : trainer.getPokemonInFocus().getValidMoves()) {
+        for (BaseMove baseMove : trainer.getPokemonInFocus().MOVES.getValid()) {
             builder.appendField(
                     baseMove.NAME,
                     baseMove.TYPE.getName() + " " + baseMove.PP + "/" + baseMove.PP,
@@ -169,12 +169,12 @@ public class PokemonCommands {
                 break;
             }
             case CHOOSING_MOVE:
-                if (!trainer.getPokemonInFocus().hasOneMove(message)) {
+                if (!trainer.getPokemonInFocus().MOVES.hasOne(message)) {
                     Bot.sendMessage(event.getChannel(), "Invalid move name.");
                     return;
                 }
 
-                trainer.setChosenMove(trainer.getPokemonInFocus().getMove(message));
+                trainer.setChosenMove(trainer.getPokemonInFocus().MOVES.get(message));
                 break;
             case CHOOSING_TARGET: {
                 Scanner scanner = new Scanner(message).useDelimiter("[^0-9]+");

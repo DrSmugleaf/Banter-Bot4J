@@ -61,7 +61,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
 
         @Override
         public void onTrainerTurnStart(@Nonnull Trainer trainer, @Nonnull Pokemon pokemon) {
-            pokemon.STATUSES.getVolatileStatus(this).getAction().getAttacker().setValidMoves(BaseMove.BIND);
+            pokemon.STATUSES.getVolatileStatus(this).getAction().getAttacker().MOVES.setValid(BaseMove.BIND);
         }
 
         @Override
@@ -191,7 +191,6 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
             if (defender.ABILITY.get() == Abilities.NO_GUARD || attacker.ABILITY.get() == Abilities.NO_GUARD) {
                 return true;
             }
-
 
             BaseMove move = action.getBaseMove();
             BaseMove statusMove = status.getAction().getBaseMove();
@@ -361,7 +360,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     BOUNCE("Bounce", 1) {
         @Override
         public void onTrainerTurnStart(@Nonnull Trainer trainer, @Nonnull Pokemon pokemon) {
-            pokemon.setValidMoves(BaseMove.BOUNCE);
+            pokemon.MOVES.setValid(BaseMove.BOUNCE);
         }
 
         @Override

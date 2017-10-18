@@ -31,15 +31,15 @@ public enum Clause {
         public boolean isValid(Battle battle) {
             for (Trainer trainer : battle.getTrainers().values()) {
                 for (Pokemon pokemon : trainer.getPokemons()) {
-                    if (pokemon.ITEM.is(Items.LEPPA_BERRY) && pokemon.hasAllMoves(BaseMove.RECYCLE, BaseMove.HEAL_PULSE) && pokemon.hasOneMove(recycleLeppaBannedMoves)) {
+                    if (pokemon.ITEM.is(Items.LEPPA_BERRY) && pokemon.MOVES.hasAll(BaseMove.RECYCLE, BaseMove.HEAL_PULSE) && pokemon.MOVES.hasOne(recycleLeppaBannedMoves)) {
                         return false;
                     }
 
-                    if (pokemon.ITEM.is(Items.LEPPA_BERRY) && pokemon.hasAllMoves(BaseMove.RECYCLE, BaseMove.PAIN_SPLIT)) {
+                    if (pokemon.ITEM.is(Items.LEPPA_BERRY) && pokemon.MOVES.hasAll(BaseMove.RECYCLE, BaseMove.PAIN_SPLIT)) {
                         return false;
                     }
 
-                    if (pokemon.ITEM.is(Items.LEPPA_BERRY) && pokemon.hasAllMoves(BaseMove.RECYCLE, BaseMove.FLING)) {
+                    if (pokemon.ITEM.is(Items.LEPPA_BERRY) && pokemon.MOVES.hasAll(BaseMove.RECYCLE, BaseMove.FLING)) {
                         return false;
                     }
                 }
@@ -53,7 +53,7 @@ public enum Clause {
         public boolean isValid(Battle battle) {
             for (Trainer trainer : battle.getTrainers().values()) {
                 for (Pokemon pokemon : trainer.getPokemons()) {
-                    if (pokemon.hasOneMove(BaseMove.DOUBLE_TEAM, BaseMove.MINIMIZE)) {
+                    if (pokemon.MOVES.hasOne(BaseMove.DOUBLE_TEAM, BaseMove.MINIMIZE)) {
                         return false;
                     }
                 }
@@ -81,7 +81,7 @@ public enum Clause {
         public boolean isValid(Battle battle) {
             for (Trainer trainer : battle.getTrainers().values()) {
                 for (Pokemon pokemon : trainer.getPokemons()) {
-                    if (pokemon.hasOneMove(BaseMove.FISSURE, BaseMove.GUILLOTINE, BaseMove.HORN_DRILL, BaseMove.SHEER_COLD)) {
+                    if (pokemon.MOVES.hasOne(BaseMove.FISSURE, BaseMove.GUILLOTINE, BaseMove.HORN_DRILL, BaseMove.SHEER_COLD)) {
                         return false;
                     }
                 }
@@ -178,7 +178,7 @@ public enum Clause {
         public boolean isValid(Battle battle) {
             for (Trainer trainer : battle.getTrainers().values()) {
                 for (Pokemon pokemon : trainer.getPokemons()) {
-                    if (pokemon.hasOneMove(BaseMove.SWAGGER)) {
+                    if (pokemon.MOVES.hasOne(BaseMove.SWAGGER)) {
                         return false;
                     }
                 }
@@ -233,7 +233,7 @@ public enum Clause {
                 boolean onePokemonHasBatonPass = false;
 
                 for (Pokemon pokemon : trainer.getPokemons()) {
-                    if (pokemon.hasOneMove(BaseMove.BATON_PASS)) {
+                    if (pokemon.MOVES.hasOne(BaseMove.BATON_PASS)) {
                         if (onePokemonHasBatonPass) {
                             return false;
                         }

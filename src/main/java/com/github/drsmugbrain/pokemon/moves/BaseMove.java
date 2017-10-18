@@ -194,7 +194,7 @@ public enum BaseMove implements IModifier, IMoves {
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
             List<Move> teamMoves = new ArrayList<>();
             for (Pokemon pokemon : user.getTrainer().getPokemons()) {
-                teamMoves.addAll(pokemon.getMoves());
+                teamMoves.addAll(pokemon.MOVES.get());
             }
             teamMoves.removeIf((teamMove) -> {
                 BaseMove baseMove = teamMove.getBaseMove();
@@ -261,7 +261,7 @@ public enum BaseMove implements IModifier, IMoves {
 
             List<Move> teamMoves = new ArrayList<>();
             for (Pokemon pokemon : user.getTrainer().getPokemons()) {
-                teamMoves.addAll(pokemon.getMoves());
+                teamMoves.addAll(pokemon.MOVES.get());
             }
             teamMoves.removeIf((teamMove) -> {
                 BaseMove baseMove = teamMove.getBaseMove();
@@ -1030,7 +1030,7 @@ public enum BaseMove implements IModifier, IMoves {
                 case II:
                 case III:
                 case IV: {
-                    List<Type> moveTypes = user.getMoves().stream().map(Move::getType).collect(Collectors.toList());
+                    List<Type> moveTypes = user.MOVES.get().stream().map(Move::getType).collect(Collectors.toList());
                     moveTypes.remove(Type.CURSE);
 
                     int randomIndex = ThreadLocalRandom.current().nextInt(moveTypes.size());
@@ -1040,7 +1040,7 @@ public enum BaseMove implements IModifier, IMoves {
                     break;
                 }
                 case V: {
-                    List<Type> moveTypes = user.getMoves().stream().map(Move::getType).collect(Collectors.toList());
+                    List<Type> moveTypes = user.MOVES.get().stream().map(Move::getType).collect(Collectors.toList());
 
                     int randomIndex = ThreadLocalRandom.current().nextInt(moveTypes.size());
                     Type randomType = moveTypes.get(randomIndex);
@@ -1050,7 +1050,7 @@ public enum BaseMove implements IModifier, IMoves {
                 }
                 case VI:
                 case VII:
-                    Type firstMoveType = user.getMoves().get(0).getType();
+                    Type firstMoveType = user.MOVES.get().get(0).getType();
                     user.TYPES.setTypes(firstMoveType);
                     break;
             }
@@ -1958,7 +1958,13 @@ public enum BaseMove implements IModifier, IMoves {
             }
         }
     },
-    DISABLE("Disable"),
+    DISABLE("Disable") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
+
+            return super.use(user, target, battle, action);
+        }
+    },
     DISARMING_VOICE("Disarming Voice"),
     DISCHARGE("Discharge"),
     DIVE("Dive"),
@@ -3092,7 +3098,7 @@ public enum BaseMove implements IModifier, IMoves {
             return false;
         }
 
-        return Z_MOVE_ITEM == user.ITEM.get() && !Collections.disjoint(Z_PRECURSOR_MOVES.get(), user.getMoves());
+        return Z_MOVE_ITEM == user.ITEM.get() && !Collections.disjoint(Z_PRECURSOR_MOVES.get(), user.MOVES.get());
     }
 
     protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
