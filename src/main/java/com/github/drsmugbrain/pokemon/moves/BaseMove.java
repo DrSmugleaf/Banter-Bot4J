@@ -564,13 +564,13 @@ public enum BaseMove implements IModifier, IMoves {
         }
 
         @Override
-        public boolean hits(@Nonnull Action action) {
+        public boolean hits(@Nonnull Pokemon target, @Nonnull Action action) {
             Generation generation = action.getAttacker().getBattle().getGeneration();
             if (generation == Generation.I) {
                 return super.hitsIgnoreTypes(action);
             }
 
-            return super.hits(action);
+            return super.hits(target, action);
         }
     },
     BITE("Bite"),
@@ -752,12 +752,12 @@ public enum BaseMove implements IModifier, IMoves {
         }
 
         @Override
-        public boolean hits(@Nonnull Action action) {
+        public boolean hits(@Nonnull Pokemon target, @Nonnull Action action) {
             if (!action.getAttacker().TYPES.isType(Type.FIRE)) {
                 return false;
             }
 
-            return super.hits(action);
+            return super.hits(target, action);
         }
     },
     CALM_MIND("Calm Mind"),
@@ -836,7 +836,7 @@ public enum BaseMove implements IModifier, IMoves {
         }
 
         @Override
-        public boolean hits(@Nonnull Action action) {
+        public boolean hits(@Nonnull Pokemon target, @Nonnull Action action) {
             return super.hitsWithoutDefenderStages(action);
         }
     },
@@ -901,13 +901,13 @@ public enum BaseMove implements IModifier, IMoves {
         }
 
         @Override
-        public boolean hits(@Nonnull Action action) {
+        public boolean hits(@Nonnull Pokemon target, @Nonnull Action action) {
             Generation generation = action.getAttacker().getBattle().getGeneration();
             if (generation == Generation.I) {
                 return super.hitsIgnoreTypes(action);
             }
 
-            return super.hits(action);
+            return super.hits(target, action);
         }
     },
     CLANGING_SCALES("Clanging Scales"),
@@ -1351,13 +1351,13 @@ public enum BaseMove implements IModifier, IMoves {
         }
 
         @Override
-        public boolean hits(@Nonnull Action action) {
+        public boolean hits(@Nonnull Pokemon target, @Nonnull Action action) {
             Generation generation = action.getAttacker().getBattle().getGeneration();
             if (generation == Generation.I) {
                 return super.hitsIgnoreTypes(action);
             }
 
-            return super.hits(action);
+            return super.hits(target, action);
         }
     },
     COVET("Covet") {
@@ -1560,7 +1560,7 @@ public enum BaseMove implements IModifier, IMoves {
         }
 
         @Override
-        public boolean hits(@Nonnull Action action) {
+        public boolean hits(@Nonnull Pokemon target, @Nonnull Action action) {
             Pokemon attacker = action.getAttacker();
             Pokemon defender = action.getTarget();
 
@@ -1651,7 +1651,7 @@ public enum BaseMove implements IModifier, IMoves {
                     throw new InvalidGenerationException(generation);
             }
 
-            return super.hits(action);
+            return super.hits(target, action);
         }
     },
     CUT("Cut"),
@@ -1692,7 +1692,7 @@ public enum BaseMove implements IModifier, IMoves {
         }
 
         @Override
-        public boolean hits(@Nonnull Action action) {
+        public boolean hits(@Nonnull Pokemon target, @Nonnull Action action) {
             Pokemon attacker = action.getAttacker();
             Generation generation = attacker.getBattle().getGeneration();
             if (generation == Generation.VII) {
@@ -1701,7 +1701,7 @@ public enum BaseMove implements IModifier, IMoves {
                 }
             }
 
-            return super.hits(action);
+            return super.hits(target, action);
         }
     },
     DARKEST_LARIAT("Darkest Lariat") {
@@ -1711,7 +1711,7 @@ public enum BaseMove implements IModifier, IMoves {
         }
 
         @Override
-        public boolean hits(@Nonnull Action action) {
+        public boolean hits(@Nonnull Pokemon target, @Nonnull Action action) {
             return super.hitsWithoutDefenderStages(action);
         }
     },
@@ -1870,7 +1870,7 @@ public enum BaseMove implements IModifier, IMoves {
         }
 
         @Override
-        public boolean hits(@Nonnull Action action) {
+        public boolean hits(@Nonnull Pokemon target, @Nonnull Action action) {
             Pokemon attacker = action.getAttacker();
             Generation generation = attacker.getBattle().getGeneration();
             switch (generation) {
@@ -1880,7 +1880,7 @@ public enum BaseMove implements IModifier, IMoves {
                 case IV:
                 case V:
                 case VI:
-                    return super.hits(action);
+                    return super.hits(target, action);
                 case VII:
                     Action lastAction = attacker.getLastAction();
                     if (lastAction == null) {
@@ -1901,7 +1901,7 @@ public enum BaseMove implements IModifier, IMoves {
                     throw new InvalidGenerationException(generation);
             }
 
-            return super.hits(action);
+            return super.hits(target, action);
         }
     },
     DETECT("Detect") {
@@ -1961,8 +1961,74 @@ public enum BaseMove implements IModifier, IMoves {
     DISABLE("Disable") {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
+            int duration;
+            switch (action.getGeneration()) {
+                case I:
+                    List<Move> targetMoves = new ArrayList<>(target.MOVES.get());
+                    targetMoves.removeIf(move -> move.getPP() <= 0);
+
+                    int randomIndex = ThreadLocalRandom.current().nextInt(targetMoves.size());
+                    Move randomMove = targetMoves.get(randomIndex);
+                    duration = ThreadLocalRandom.current().nextInt(6 + 1);
+
+                    target.MOVES.disable(duration, randomMove);
+
+                    return super.use(user, target, battle, action);
+                case II:
+                    duration = ThreadLocalRandom.current().nextInt(2, 8 + 1);
+                    break;
+                case III:
+                    duration = ThreadLocalRandom.current().nextInt(2, 5 + 1);
+                    break;
+                case IV:
+                    duration = ThreadLocalRandom.current().nextInt(4, 7 + 1);
+                    break;
+                case V:
+                case VI:
+                case VII:
+                    duration = 4;
+                    break;
+                default:
+                    throw new InvalidGenerationException(action.getGeneration());
+            }
+
+            Action lastAction = target.getLastAction();
+            target.MOVES.disable(duration, lastAction);
 
             return super.use(user, target, battle, action);
+        }
+
+        @Override
+        public boolean hits(@Nonnull Pokemon target, @Nonnull Action action) {
+            if (target.MOVES.hasDisabled() || !target.MOVES.hasPP()) {
+                return false;
+            }
+
+            switch (action.getGeneration()) {
+                case I:
+                    break;
+                case II:
+                case III:
+                case IV:
+                case V:
+                case VI:
+                case VII:
+                    Action lastAction = target.getLastAction();
+                    if (lastAction == null || lastAction.getBaseMove() == STRUGGLE) {
+                        return false;
+                    }
+                    break;
+                default:
+                    throw new InvalidGenerationException(action.getGeneration());
+            }
+
+            return super.hits(target, action);
+        }
+
+        @Override
+        protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {
+            user.STATS.resetLoweredStages();
+            return super.useAsZMove(user, target, battle, action);
         }
     },
     DISARMING_VOICE("Disarming Voice"),
@@ -3124,7 +3190,7 @@ public enum BaseMove implements IModifier, IMoves {
     }
 
     @Override
-    public boolean hits(@Nonnull Action action) {
+    public boolean hits(@Nonnull Pokemon target, @Nonnull Action action) {
         Pokemon attacker = action.getAttacker();
         Pokemon defender = action.getTarget();
 

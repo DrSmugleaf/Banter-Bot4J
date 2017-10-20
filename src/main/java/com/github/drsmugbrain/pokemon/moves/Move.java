@@ -149,7 +149,7 @@ public class Move {
     }
 
     protected int tryUse(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
-        if (getBaseMove().hits(action)) {
+        if (getBaseMove().hits(defender, action)) {
             decreasePP(1);
             return use(attacker, defender, action);
         } else {
@@ -160,7 +160,7 @@ public class Move {
     protected int tryUse(@Nonnull Pokemon attacker, @Nonnull Pokemon defender) {
         Action action = new Action(this, attacker, defender, attacker.getBattle().getTurn());
 
-        if (getBaseMove().hits(action)) {
+        if (getBaseMove().hits(defender, action)) {
             return use(attacker, defender, action);
         } else {
             return miss(defender, action);

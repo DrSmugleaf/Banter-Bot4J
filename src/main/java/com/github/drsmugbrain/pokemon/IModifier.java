@@ -66,7 +66,7 @@ public interface IModifier {
 
     default void onEnemyItemUsed(@Nonnull Pokemon user, @Nonnull Items item) {}
 
-    default boolean hits(@Nonnull Action action) {
+    default boolean hits(@Nonnull Pokemon target, @Nonnull Action action) {
         return true;
     }
 

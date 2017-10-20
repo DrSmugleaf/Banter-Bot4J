@@ -2,10 +2,7 @@ package com.github.drsmugbrain.pokemon.moves;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 19/10/2017.
@@ -17,6 +14,9 @@ public class Moves {
 
     @Nonnull
     private final List<BaseMove> VALID_MOVES = new ArrayList<>();
+
+    @Nonnull
+    private final Map<Move, Integer> DISABLED_MOVES = new HashMap<>();
 
     public Moves(@Nonnull List<Move> moves) {
         MOVES = new ArrayList<>(moves);
@@ -55,6 +55,44 @@ public class Moves {
     public void setValid(@Nonnull BaseMove... moves) {
         VALID_MOVES.clear();
         VALID_MOVES.addAll(Arrays.asList(moves));
+    }
+
+    @Nonnull
+    public Map<Move, Integer> getDisabled() {
+        return new HashMap<>(DISABLED_MOVES);
+    }
+
+    public boolean hasDisabled() {
+        return !DISABLED_MOVES.isEmpty();
+    }
+
+    private void disable(int duration, @Nonnull List<Move> moves) {
+        for (Move move : moves) {
+            DISABLED_MOVES.put(move, duration);
+        }
+    }
+
+    public void disable(int duration, @Nonnull Move... moves) {
+        List<Move> moveList = Arrays.asList(moves);
+        disable(duration, moveList);
+    }
+
+    public void disable(int duration, @Nonnull Action... actions) {
+        List<Move> moveList = new ArrayList<>();
+        for (Action action : actions) {
+            moveList.add(action.getMove());
+        }
+        disable(duration, moveList);
+    }
+
+    public boolean hasPP() {
+        for (Move move : MOVES) {
+            if (move.getPP() > 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public boolean hasAll(@Nonnull BaseMove... moves) {
