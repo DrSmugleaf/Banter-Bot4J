@@ -2033,7 +2033,18 @@ public enum BaseMove implements IModifier, IMoves {
     },
     DISARMING_VOICE("Disarming Voice"),
     DISCHARGE("Discharge"),
-    DIVE("Dive"),
+    DIVE("Dive") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
+            if (!action.attackerHasVolatileStatus(BaseVolatileStatus.SEMI_INVULNERABLE)) {
+                BaseVolatileStatus.SEMI_INVULNERABLE.apply(action.getAttacker(), action);
+                return 0;
+            } else {
+                BaseVolatileStatus.SEMI_INVULNERABLE.remove(action.getAttacker());
+                return super.use(user, target, battle, action);
+            }
+        }
+    },
     DIZZY_PUNCH("Dizzy Punch"),
     DOOM_DESIRE("Doom Desire"),
     DOUBLE_HIT("Double Hit"),
