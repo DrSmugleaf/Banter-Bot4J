@@ -2045,7 +2045,21 @@ public enum BaseMove implements IModifier, IMoves {
             }
         }
     },
-    DIZZY_PUNCH("Dizzy Punch"),
+    DIZZY_PUNCH("Dizzy Punch") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
+            if (action.getGeneration() == Generation.I) {
+                return super.use(user, target, battle, action);
+            } else {
+                int damage = super.use(user, target, battle, action);
+                if (Math.random() < this.EFFECT_RATE) {
+                    VolatileStatus status = new VolatileStatus(BaseVolatileStatus.CONFUSION, action);
+                    target.STATUSES.addVolatileStatus(status);
+                }
+                return damage;
+            }
+        }
+    },
     DOOM_DESIRE("Doom Desire"),
     DOUBLE_HIT("Double Hit"),
     DOUBLE_KICK("Double Kick"),

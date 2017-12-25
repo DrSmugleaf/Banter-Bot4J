@@ -23,6 +23,13 @@ public class VolatileStatus {
         DURATION = duration;
     }
 
+    public VolatileStatus(
+            @Nonnull BaseVolatileStatus baseVolatileStatus,
+            @Nonnull Action action
+    ) {
+        this(baseVolatileStatus, action, baseVolatileStatus.getDuration(action));
+    }
+
     public BaseVolatileStatus getBaseVolatileStatus() {
         return BASE_VOLATILE_STATUS;
     }

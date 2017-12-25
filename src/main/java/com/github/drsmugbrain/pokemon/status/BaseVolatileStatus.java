@@ -9,6 +9,7 @@ import com.github.drsmugbrain.pokemon.trainer.Trainer;
 import com.github.drsmugbrain.pokemon.types.Type;
 
 import javax.annotation.Nonnull;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by DrSmugleaf on 18/06/2017.
@@ -113,7 +114,13 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
         }
     },
     CANT_ESCAPE("Can't escape"),
-    CONFUSION("Confusion"),
+    CONFUSION("Confusion") {
+        @Nonnull
+        @Override
+        public Integer getDuration(@Nonnull Action action) {
+            return ThreadLocalRandom.current().nextInt(1, 4 + 1);
+        }
+    },
     CURSE("Curse") {
         @Override
         public void onTurnEnd(@Nonnull Battle battle, @Nonnull Pokemon pokemon) {
