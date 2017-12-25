@@ -3052,7 +3052,7 @@ public enum BaseMove implements IModifier, IMoves {
             targets = 0.75;
         }
 
-        double weatherMultiplier = battle.getWeather().damageMultiplier(attacker, action);
+        double weatherMultiplier = battle.getWeather().damageMultiplier(action);
 
         Generation generation = attacker.getBattle().getGeneration();
         double criticalMultiplier = 1.0;
@@ -3077,7 +3077,7 @@ public enum BaseMove implements IModifier, IMoves {
         }
 
         double stabMultiplier = attacker.getStabMultiplier(action);
-        double effectiveness = defender.TYPES.damageMultiplier(attacker, action);
+        double effectiveness = defender.TYPES.damageMultiplier(action);
         double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
 
         if (CATEGORY == Category.PHYSICAL) {
@@ -3119,7 +3119,7 @@ public enum BaseMove implements IModifier, IMoves {
             targets = 0.75;
         }
 
-        double weatherMultiplier = battle.getWeather().damageMultiplier(attacker, action);
+        double weatherMultiplier = battle.getWeather().damageMultiplier(action);
 
         Generation generation = attacker.getBattle().getGeneration();
         double criticalMultiplier = 1.0;
@@ -3144,7 +3144,7 @@ public enum BaseMove implements IModifier, IMoves {
         }
 
         double stabMultiplier = attacker.getStabMultiplier(action);
-        double effectiveness = defender.TYPES.damageMultiplier(attacker, action);
+        double effectiveness = defender.TYPES.damageMultiplier(action);
         double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
 
         if (CATEGORY == Category.PHYSICAL) {

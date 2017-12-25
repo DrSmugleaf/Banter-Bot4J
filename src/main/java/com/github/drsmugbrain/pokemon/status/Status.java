@@ -66,8 +66,8 @@ public enum Status implements IStatus, IModifier {
         }
 
         @Override
-        public double damageMultiplier(@Nonnull Pokemon attacker, @Nonnull Action action) {
-            Generation generation = attacker.getBattle().getGeneration();
+        public double damageMultiplier(@Nonnull Action action) {
+            Generation generation = action.getGeneration();
 
             switch (generation) {
                 case I:

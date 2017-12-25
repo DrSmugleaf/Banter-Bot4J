@@ -2,10 +2,7 @@ package com.github.drsmugbrain.pokemon.status;
 
 import com.github.drsmugbrain.pokemon.*;
 import com.github.drsmugbrain.pokemon.ability.Abilities;
-import com.github.drsmugbrain.pokemon.battle.Battle;
-import com.github.drsmugbrain.pokemon.battle.Generation;
-import com.github.drsmugbrain.pokemon.battle.InvalidGenerationException;
-import com.github.drsmugbrain.pokemon.battle.Weather;
+import com.github.drsmugbrain.pokemon.battle.*;
 import com.github.drsmugbrain.pokemon.moves.*;
 import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 import com.github.drsmugbrain.pokemon.trainer.Trainer;
@@ -275,7 +272,15 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
         }
 
         @Override
-        public double damageMultiplier(@Nonnull Pokemon attacker, @Nonnull Action action) {
+        public double enemyDamageMultiplier(@Nonnull Pokemon pokemon, @Nonnull Action action) {
+            if (action.getCategory() == Category.PHYSICAL || action.getCategory() == Category.SPECIAL) {
+                if (action.getBattle().getVariation() == Variation.SINGLE_BATTLE) {
+                    return 0.5;
+                } else {
+                    return 0.333;
+                }
+            }
+
             return 0.5;
         }
     },
@@ -331,7 +336,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
         }
 
         @Override
-        public double damageMultiplier(@Nonnull Pokemon attacker, @Nonnull Action action) {
+        public double damageMultiplier(@Nonnull Action action) {
             if (action.getBaseMove().IS_Z_MOVE) {
                 return 0.25;
             }
@@ -385,8 +390,8 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     REFLECT("Reflect"),
     CHARGE("Charge", 2) {
         @Override
-        public double damageMultiplier(@Nonnull Pokemon attacker, @Nonnull Action action) {
-            Generation generation = attacker.getBattle().getGeneration();
+        public double damageMultiplier(@Nonnull Action action) {
+            Generation generation = action.getGeneration();
 
             switch (generation) {
                 case I:

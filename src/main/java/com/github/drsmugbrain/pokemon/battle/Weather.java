@@ -25,7 +25,7 @@ public enum Weather implements IModifier {
         }
 
         @Override
-        public double damageMultiplier(@Nonnull Pokemon attacker, @Nonnull Action action) {
+        public double damageMultiplier(@Nonnull Action action) {
             Type type = action.getType();
 
             if (type == Type.FIRE) {
@@ -39,7 +39,7 @@ public enum Weather implements IModifier {
     },
     RAIN("Rain") {
         @Override
-        public double damageMultiplier(@Nonnull Pokemon attacker, @Nonnull Action action) {
+        public double damageMultiplier(@Nonnull Action action) {
             Type type = action.getType();
 
             if (type == Type.FIRE) {

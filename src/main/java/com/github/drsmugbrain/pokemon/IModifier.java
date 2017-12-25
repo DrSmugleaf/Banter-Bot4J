@@ -1,6 +1,7 @@
 package com.github.drsmugbrain.pokemon;
 
 import com.github.drsmugbrain.pokemon.battle.Battle;
+import com.github.drsmugbrain.pokemon.battle.Weather;
 import com.github.drsmugbrain.pokemon.item.Items;
 import com.github.drsmugbrain.pokemon.moves.Action;
 import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
@@ -70,7 +71,19 @@ public interface IModifier {
         return true;
     }
 
-    default double damageMultiplier(@Nonnull Pokemon attacker, @Nonnull Action action) {
+    default double ownDamageMultiplier(@Nonnull Pokemon pokemon, @Nonnull Action action) {
+        return 1.0;
+    }
+
+    default double enemyDamageMultiplier(@Nonnull Pokemon pokemon, @Nonnull Action action) {
+        return 1.0;
+    }
+
+    default double damageMultiplier(@Nonnull Action action) {
+        return 1.0;
+    }
+
+    default double damageMultiplier(@Nonnull Weather weather, @Nonnull Pokemon pokemon) {
         return 1.0;
     }
 

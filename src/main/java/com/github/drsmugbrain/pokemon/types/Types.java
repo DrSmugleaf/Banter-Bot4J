@@ -3,7 +3,6 @@ package com.github.drsmugbrain.pokemon.types;
 import com.github.drsmugbrain.pokemon.moves.Action;
 import com.github.drsmugbrain.pokemon.IModifier;
 import com.github.drsmugbrain.pokemon.moves.Move;
-import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -60,7 +59,7 @@ public class Types implements IModifier {
     }
 
     @Override
-    public double damageMultiplier(@Nonnull Pokemon attacker, @Nonnull Action action) {
+    public double damageMultiplier(@Nonnull Action action) {
         Type moveType = action.getType();
 
         double modifier = 1.0;
