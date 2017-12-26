@@ -1,6 +1,7 @@
 package com.github.drsmugbrain.pokemon.pokemon;
 
 import com.github.drsmugbrain.pokemon.IModifier;
+import com.github.drsmugbrain.pokemon.moves.Action;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -21,9 +22,10 @@ public enum Tag implements IModifier {
 
         @Override
         public void onOwnTurnStart(@Nonnull Pokemon pokemon) {
-            pokemon.removeTag(this);
+            remove(pokemon);
         }
-    };
+    },
+    DOOM_DESIRE("Doom Desire");
 
     private final String NAME;
 
@@ -34,6 +36,14 @@ public enum Tag implements IModifier {
     @Nonnull
     public String getName() {
         return NAME;
+    }
+
+    public void apply(@Nonnull Pokemon pokemon, @Nullable Action action) {
+        pokemon.TAGS.put(this, action);
+    }
+
+    public void remove(@Nonnull Pokemon pokemon) {
+        pokemon.TAGS.remove(this);
     }
 
 }

@@ -78,7 +78,7 @@ public class Pokemon {
     private double weight;
 
     @Nonnull
-    private final List<Tag> TAGS = new ArrayList<>();
+    public final Map<Tag, Action> TAGS = new HashMap<>();
 
     private int toxicN = 1;
 
@@ -376,18 +376,6 @@ public class Pokemon {
 
     public boolean movedThisTurn() {
         return TRAINER.getBattle().movedThisTurn(this);
-    }
-
-    public void addTag(@Nonnull Tag tag) {
-        TAGS.add(tag);
-    }
-
-    public boolean hasTag(@Nonnull Tag tag) {
-        return TAGS.contains(tag);
-    }
-
-    protected void removeTag(@Nonnull Tag... tags) {
-        TAGS.removeAll(Arrays.asList(tags));
     }
 
     public boolean isFainted() {

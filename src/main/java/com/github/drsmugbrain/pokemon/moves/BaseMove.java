@@ -480,13 +480,13 @@ public enum BaseMove implements IModifier, IMoves {
         @Override
         public void onOwnItemUsed(@Nonnull Pokemon user, @Nonnull Items item) {
             if (item.getCategory() == ItemCategory.BERRY) {
-                user.addTag(Tag.BERRY_USED);
+                user.TAGS.put(Tag.BERRY_USED, null);
             }
         }
 
         @Override
         public boolean canUseMove(@Nonnull Pokemon user) {
-            return user.hasTag(Tag.BERRY_USED);
+            return user.TAGS.containsKey(Tag.BERRY_USED);
         }
     },
     BELLY_DRUM("Belly Drum") {
@@ -536,7 +536,7 @@ public enum BaseMove implements IModifier, IMoves {
         }
 
         @Override
-        public int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+        public int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action, @Nullable DamageTags... tags) {
             int damage;
             switch (attacker.getBattle().getGeneration()) {
                 case I:
@@ -831,8 +831,8 @@ public enum BaseMove implements IModifier, IMoves {
     CHATTER("Chatter"),
     CHIP_AWAY("Chip Away") {
         @Override
-        public int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
-            return super.getDamageWithoutDefenderStages(attacker, defender, action);
+        public int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action, @Nullable DamageTags... tags) {
+            return super.getDamage(attacker, defender, action, DamageTags.NO_STAGES);
         }
 
         @Override
@@ -873,7 +873,7 @@ public enum BaseMove implements IModifier, IMoves {
         }
 
         @Override
-        public int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+        public int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action, @Nullable DamageTags... tags) {
             int damage;
             switch (attacker.getBattle().getGeneration()) {
                 case I:
@@ -1706,8 +1706,8 @@ public enum BaseMove implements IModifier, IMoves {
     },
     DARKEST_LARIAT("Darkest Lariat") {
         @Override
-        public int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
-            return super.getDamageWithoutDefenderStages(attacker, defender, action);
+        public int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action, @Nullable DamageTags... tags) {
+            return super.getDamage(attacker, defender, action, DamageTags.NO_STAGES);
         }
 
         @Override
@@ -1858,7 +1858,7 @@ public enum BaseMove implements IModifier, IMoves {
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
             int damage = super.use(user, target, battle, action);
 
-            user.addTag(Tag.DESTINY_BOND);
+            user.TAGS.put(Tag.DESTINY_BOND, action);
 
             return damage;
         }
@@ -2060,7 +2060,41 @@ public enum BaseMove implements IModifier, IMoves {
             }
         }
     },
-    DOOM_DESIRE("Doom Desire"),
+    DOOM_DESIRE("Doom Desire") {
+//        @Override
+//        protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
+//            switch (action.getGeneration()) {
+//                case I:
+//                case II:
+//                case III:
+//                    if (!user.TAGS.containsKey(Tag.DOOM_DESIRE)) {
+//                        Tag.DOOM_DESIRE.apply(user, action);
+//                        message(user, target, action);
+//                        return 0;
+//                    } else {
+//                        Pokemon tagTarget = user.TAGS.get(Tag.DOOM_DESIRE).getTarget();
+//                        int damage = getDamage(user, tagTarget, action);
+//                        target.damage(damage);
+//                    }
+//                    break;
+//                case IV:
+//                    break;
+//                case V:
+//                    break;
+//                case VI:
+//                    break;
+//                case VII:
+//                    break;
+//                default:
+//                    throw new InvalidGenerationException(action.getGeneration());
+//            }
+//        }
+
+        @Override
+        public int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action, @Nullable DamageTags... tags) {
+            return super.getDamage(attacker, defender, action, DamageTags.NO_CRITICAL, DamageTags.NO_EFFECTIVENESS, DamageTags.NO_STAB);
+        }
+    },
     DOUBLE_HIT("Double Hit"),
     DOUBLE_KICK("Double Kick"),
     DOUBLE_SLAP("Double Slap"),
@@ -3046,7 +3080,11 @@ public enum BaseMove implements IModifier, IMoves {
         return true;
     }
 
-    public int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+    public int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action, @Nullable DamageTags... tags) {
+        List<DamageTags> damageTags = new ArrayList<>();
+        if (tags != null) {
+            damageTags = Arrays.asList(tags);
+        }
         if (CATEGORY == Category.OTHER) {
             return 0;
         }
@@ -3054,11 +3092,6 @@ public enum BaseMove implements IModifier, IMoves {
         double attackStat;
         double defenseStat;
         int level = attacker.getLevel();
-
-        Battle battle = attacker.getBattle();
-        if (battle.getGeneration() == Generation.I && isCritical(action)) {
-            level *= 2;
-        }
         int attackPower = POWER;
 
         double targets = 1.0;
@@ -3066,14 +3099,14 @@ public enum BaseMove implements IModifier, IMoves {
             targets = 0.75;
         }
 
-        double weatherMultiplier = battle.getWeather().damageMultiplier(action);
+        double weatherMultiplier = action.getBattle().getWeather().damageMultiplier(action);
 
-        Generation generation = attacker.getBattle().getGeneration();
         double criticalMultiplier = 1.0;
-        if (isCritical(action)) {
+        if (!damageTags.contains(DamageTags.NO_CRITICAL) && isCritical(action)) {
             action.setCritical(defender, true);
-            switch (generation) {
+            switch (action.getGeneration()) {
                 case I:
+                    level *= 2;
                     break;
                 case II:
                 case III:
@@ -3086,87 +3119,35 @@ public enum BaseMove implements IModifier, IMoves {
                     criticalMultiplier = 1.5;
                     break;
                 default:
-                    throw new InvalidGenerationException(generation);
+                    throw new InvalidGenerationException(action.getGeneration());
             }
         }
 
-        double stabMultiplier = attacker.getStabMultiplier(action);
-        double effectiveness = defender.TYPES.damageMultiplier(action);
+        double stabMultiplier = 1.0;
+        if (!damageTags.contains(DamageTags.NO_STAB)) {
+            stabMultiplier = attacker.getStabMultiplier(action);
+        }
+
+        double effectiveness = 1.0;
+        if (!damageTags.contains(DamageTags.NO_EFFECTIVENESS)) {
+            effectiveness = defender.TYPES.damageMultiplier(action);
+        }
         double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
 
         if (CATEGORY == Category.PHYSICAL) {
             attackStat = attacker.calculate(PermanentStat.ATTACK);
-            defenseStat = defender.calculate(PermanentStat.DEFENSE);
-        } else if (CATEGORY == Category.SPECIAL) {
-            attackStat = attacker.calculate(PermanentStat.SPECIAL_ATTACK);
-            defenseStat = defender.calculate(PermanentStat.SPECIAL_DEFENSE);
-        } else {
-            throw new InvalidCategoryException(CATEGORY);
-        }
-
-        int damage = (int) (
-                (((((2 * level) / 5 + 2) * attackPower * attackStat / defenseStat) / 50) + 2)
-                * targets * weatherMultiplier * criticalMultiplier * randomNumber * stabMultiplier * effectiveness
-        );
-        action.setDamage(defender, damage);
-
-        return damage;
-    }
-
-    protected int getDamageWithoutDefenderStages(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
-        if (CATEGORY == Category.OTHER) {
-            return 0;
-        }
-
-        double attackStat;
-        double defenseStat;
-        int level = attacker.getLevel();
-
-        Battle battle = attacker.getBattle();
-        if (battle.getGeneration() == Generation.I && isCritical(action)) {
-            level *= 2;
-        }
-        int attackPower = POWER;
-
-        double targets = 1.0;
-        if (POKEMON_HIT.hitsMultiple()) {
-            targets = 0.75;
-        }
-
-        double weatherMultiplier = battle.getWeather().damageMultiplier(action);
-
-        Generation generation = attacker.getBattle().getGeneration();
-        double criticalMultiplier = 1.0;
-        if (isCritical(action)) {
-            action.setCritical(defender, true);
-            switch (generation) {
-                case I:
-                    break;
-                case II:
-                case III:
-                case IV:
-                case V:
-                    criticalMultiplier = 2.0;
-                    break;
-                case VI:
-                case VII:
-                    criticalMultiplier = 1.5;
-                    break;
-                default:
-                    throw new InvalidGenerationException(generation);
+            if (damageTags.contains(DamageTags.NO_STAGES)) {
+                defenseStat = defender.calculateWithoutStages(PermanentStat.DEFENSE);
+            } else {
+                defenseStat = defender.calculate(PermanentStat.DEFENSE);
             }
-        }
-
-        double stabMultiplier = attacker.getStabMultiplier(action);
-        double effectiveness = defender.TYPES.damageMultiplier(action);
-        double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
-
-        if (CATEGORY == Category.PHYSICAL) {
-            attackStat = attacker.calculate(PermanentStat.ATTACK);
-            defenseStat = defender.calculateWithoutStages(PermanentStat.DEFENSE);
         } else if (CATEGORY == Category.SPECIAL) {
             attackStat = attacker.calculate(PermanentStat.SPECIAL_ATTACK);
-            defenseStat = defender.calculateWithoutStages(PermanentStat.SPECIAL_DEFENSE);
+            if (damageTags.contains(DamageTags.NO_STAGES)) {
+                defenseStat = defender.calculateWithoutStages(PermanentStat.SPECIAL_DEFENSE);
+            } else {
+                defenseStat = defender.calculate(PermanentStat.SPECIAL_DEFENSE);
+            }
         } else {
             throw new InvalidCategoryException(CATEGORY);
         }
@@ -3212,6 +3193,10 @@ public enum BaseMove implements IModifier, IMoves {
     protected int use(Pokemon user, Battle battle) {
         // TODO: Random target choice
         return 0;
+    }
+
+    protected void message(@Nonnull Pokemon user, @Nonnull Pokemon target, @Nonnull Action action) {
+
     }
 
     @Override
