@@ -1,7 +1,6 @@
 package com.github.drsmugbrain.pokemon.battle;
 
 import com.github.drsmugbrain.pokemon.events.*;
-import com.github.drsmugbrain.pokemon.moves.Action;
 import com.github.drsmugbrain.pokemon.moves.Move;
 import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 import com.github.drsmugbrain.pokemon.trainer.Trainer;
@@ -21,12 +20,13 @@ public class Battle extends Setup {
     private final Map<Long, Trainer> TRAINERS = new LinkedHashMap<>();
     private final List<Action> TURN_ORDER = new ArrayList<>();
     private Weather weather;
-    private int turn = 1;
     private final Map<Trainer, List<Pokemon>> POKEMONS_SENT_OUT_THIS_TURN = new HashMap<>();
-    private final List<Action> ACTIONS = new ArrayList<>();
+    private final List<Turn> TURNS = new ArrayList<>();
 
     protected Battle(@Nonnull Setup setup, @Nonnull List<TrainerBuilder> trainers) throws UserException {
         super(setup);
+
+        TURNS.add(new Turn(this));
 
         for (TrainerBuilder trainerBuilder : trainers) {
             trainerBuilder.setBattle(this);
@@ -44,7 +44,7 @@ public class Battle extends Setup {
 
     @Nullable
     public Action getAction(Pokemon attacker) {
-        for (Action action : ACTIONS) {
+        for (Action action : getCurrentTurn().getActions()) {
             if (action.getAttacker() == attacker) {
                 return action;
             }
@@ -107,7 +107,7 @@ public class Battle extends Setup {
     }
 
     public void addAction(Trainer trainer, Pokemon pokemon, Move move, Pokemon target) {
-        trainer.addAction(pokemon, move, target);
+        trainer.addAction(this, move, target, pokemon);
         for (Trainer trainer1 : TRAINERS.values()) {
             if (trainer1.getStatus() != TrainerStatus.WAITING) {
                 return;
@@ -117,12 +117,16 @@ public class Battle extends Setup {
         executeTurn();
     }
 
-    public void executeTurn() {
+    public void executeTurn() { // Move to Turn
+        TURNS.add(new Turn(this));
+
         for (Trainer trainer : TRAINERS.values()) {
             TURN_ORDER.addAll(trainer.getActions());
             trainer.resetChosenMove();
             trainer.resetActions();
         }
+
+        List<Action> ACTIONS = getCurrentTurn().getActions();
 
         Collections.shuffle(ACTIONS);
         ACTIONS.sort((action1, action2) -> action2.getPriority().compareTo(action1.getPriority()));
@@ -135,10 +139,11 @@ public class Battle extends Setup {
         finishTurn();
     }
 
-    private void finishTurn() {
+    private void finishTurn() { // Move to Turn
+        List<Action> ACTIONS = getCurrentTurn().getActions();
         ACTIONS.clear();
         POKEMONS_SENT_OUT_THIS_TURN.clear();
-        turn++;
+        TURNS.add(new Turn(this));
 
         for (Trainer trainer : TRAINERS.values()) {
             trainer.finishTurn();
@@ -162,11 +167,30 @@ public class Battle extends Setup {
     }
 
     public int getTurn() {
-        return turn;
+        return getCurrentTurn().getID();
+    }
+
+    @Nonnull
+    public Turn getCurrentTurn() {
+        return TURNS.get(TURNS.size() - 1);
+    }
+
+    @Nonnull
+    public Action createAction(@Nonnull Move move, @Nonnull Pokemon attacker, @Nonnull Pokemon target) {
+        Action action = new Action(move, attacker, target, getCurrentTurn().getID());
+        getCurrentTurn().addAction(action);
+        return action;
+    }
+
+    public Action replaceAction(@Nonnull Action oldAction, @Nonnull Move move, @Nonnull Pokemon attacker, @Nonnull Pokemon target) {
+        Action action = new Action(move, attacker, target, getCurrentTurn().getID());
+        getCurrentTurn().replaceAction(oldAction, action);
+        return action;
     }
 
     @Nullable
     public Action getLastAction() {
+        List<Action> ACTIONS = getCurrentTurn().getActions();
         if (ACTIONS.size() == 0) {
             return null;
         }
@@ -176,6 +200,7 @@ public class Battle extends Setup {
 
     @Nullable
     public Action getLastAction(@Nonnull Pokemon pokemon) {
+        List<Action> ACTIONS = getCurrentTurn().getActions();
         for (int i = ACTIONS.size() - 1; i >= 0; i--) {
             Action currentAction = ACTIONS.get(i);
             if (currentAction.getAttacker() == pokemon) {
@@ -196,6 +221,7 @@ public class Battle extends Setup {
     @Nonnull
     public List<Action> getHitBy(@Nonnull Pokemon pokemon) {
         List<Action> hitBy = new ArrayList<>();
+        List<Action> ACTIONS = getCurrentTurn().getActions();
 
         for (Action action : ACTIONS) {
             if (action.getTarget() == pokemon) {
@@ -208,6 +234,7 @@ public class Battle extends Setup {
 
     @Nullable
     public Action getLastHitBy(@Nonnull Pokemon pokemon) {
+        List<Action> ACTIONS = getCurrentTurn().getActions();
         for (Action action : ACTIONS) {
             if (action.getTarget() == pokemon) {
                 return action;
@@ -218,10 +245,11 @@ public class Battle extends Setup {
     }
 
     public boolean movedThisTurn(@Nonnull Pokemon pokemon) {
+        List<Action> ACTIONS = getCurrentTurn().getActions();
         for (int i = ACTIONS.size() - 1; i >= 0; i--) {
             Action currentAction = ACTIONS.get(i);
 
-            if (currentAction.getTurn() != turn) {
+            if (currentAction.getTurn() != getTurn()) {
                 break;
             }
 

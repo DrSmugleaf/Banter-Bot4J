@@ -1,7 +1,6 @@
-package com.github.drsmugbrain.pokemon.moves;
+package com.github.drsmugbrain.pokemon.battle;
 
-import com.github.drsmugbrain.pokemon.battle.Battle;
-import com.github.drsmugbrain.pokemon.battle.Generation;
+import com.github.drsmugbrain.pokemon.moves.Move;
 import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 import com.github.drsmugbrain.pokemon.status.BaseVolatileStatus;
 
@@ -46,7 +45,7 @@ public class Action extends Move {
 
     private final int TURN;
 
-    public Action(@Nonnull Move move, @Nonnull Pokemon attacker, @Nonnull Pokemon target, int turn) {
+    protected Action(@Nonnull Move move, @Nonnull Pokemon attacker, @Nonnull Pokemon target, int turn) {
         super(move.getBaseMove());
 
         MOVE = move;
@@ -74,7 +73,7 @@ public class Action extends Move {
         return DEFENDERS;
     }
 
-    protected void addDefender(@Nonnull Pokemon pokemon) {
+    public void addDefender(@Nonnull Pokemon pokemon) {
         DEFENDERS.add(pokemon);
     }
 
@@ -92,7 +91,7 @@ public class Action extends Move {
         return DAMAGE.get(pokemon);
     }
 
-    protected void setDamage(@Nonnull Pokemon pokemon, int damage) {
+    public void setDamage(@Nonnull Pokemon pokemon, int damage) {
         DAMAGE.put(pokemon, damage);
     }
 
@@ -101,7 +100,7 @@ public class Action extends Move {
         return CRITICAL.get(pokemon);
     }
 
-    protected void setCritical(@Nonnull Pokemon pokemon, boolean bool) {
+    public void setCritical(@Nonnull Pokemon pokemon, boolean bool) {
         CRITICAL.put(pokemon, bool);
     }
 
@@ -110,7 +109,7 @@ public class Action extends Move {
         return HIT.get(pokemon);
     }
 
-    protected void setHit(@Nonnull Pokemon pokemon, boolean bool) {
+    public void setHit(@Nonnull Pokemon pokemon, boolean bool) {
         HIT.put(pokemon, bool);
     }
 
@@ -119,7 +118,7 @@ public class Action extends Move {
         return ATTACKER_VOLATILE_STATUSES;
     }
 
-    protected boolean attackerHasVolatileStatus(@Nonnull BaseVolatileStatus status) {
+    public boolean attackerHasVolatileStatus(@Nonnull BaseVolatileStatus status) {
         return ATTACKER_VOLATILE_STATUSES.contains(status);
     }
 
@@ -128,7 +127,7 @@ public class Action extends Move {
         return TARGET_VOLATILE_STATUSES;
     }
 
-    protected boolean targetHasVolatileStatus(@Nonnull BaseVolatileStatus status) {
+    public boolean targetHasVolatileStatus(@Nonnull BaseVolatileStatus status) {
         return TARGET_VOLATILE_STATUSES.contains(status);
     }
 
@@ -152,17 +151,17 @@ public class Action extends Move {
     }
 
     @Override
-    protected void setPP(int pp) {
+    public void setPP(int pp) {
         MOVE.setPP(pp);
     }
 
     @Override
-    protected void increasePP(int amount) {
+    public void increasePP(int amount) {
         MOVE.increasePP(amount);
     }
 
     @Override
-    protected void decreasePP(int amount) {
+    public void decreasePP(int amount) {
         MOVE.decreasePP(amount);
     }
 
@@ -176,8 +175,8 @@ public class Action extends Move {
     }
 
     public void reflect() {
-        Action action = new Action(MOVE, TARGET, ATTACKER, TARGET.getBattle().getTurn());
-        action.MOVE.getBaseMove().use(action.ATTACKER, action.TARGET, action.ATTACKER.getBattle(), action);
+        Action action = getBattle().replaceAction(this, MOVE, TARGET, ATTACKER);
+        action.MOVE.useAsReflect(action.ATTACKER, action.TARGET, action.ATTACKER.getBattle(), action);
     }
 
 }

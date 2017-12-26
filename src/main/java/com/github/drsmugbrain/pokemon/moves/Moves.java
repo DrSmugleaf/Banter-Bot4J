@@ -1,5 +1,7 @@
 package com.github.drsmugbrain.pokemon.moves;
 
+import com.github.drsmugbrain.pokemon.battle.Action;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;

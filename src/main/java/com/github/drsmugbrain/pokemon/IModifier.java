@@ -3,7 +3,7 @@ package com.github.drsmugbrain.pokemon;
 import com.github.drsmugbrain.pokemon.battle.Battle;
 import com.github.drsmugbrain.pokemon.battle.Weather;
 import com.github.drsmugbrain.pokemon.item.Items;
-import com.github.drsmugbrain.pokemon.moves.Action;
+import com.github.drsmugbrain.pokemon.battle.Action;
 import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 import com.github.drsmugbrain.pokemon.stats.IStat;
 import com.github.drsmugbrain.pokemon.status.Status;

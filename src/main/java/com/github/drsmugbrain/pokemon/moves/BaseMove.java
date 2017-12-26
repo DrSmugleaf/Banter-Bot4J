@@ -1183,7 +1183,7 @@ public enum BaseMove implements IModifier, IMoves {
                 return miss(target);
             }
 
-            return copiedMove.tryUse(user, target);
+            return copiedMove.tryUse(user, target, action);
         }
 
         @Override
@@ -1235,9 +1235,9 @@ public enum BaseMove implements IModifier, IMoves {
 
             user.ITEM.remove();
             if (copiedMove.getCategory() != Category.OTHER) {
-                return copiedMove.useAsZMove(user, target);
+                return copiedMove.replaceAsZMove(action, user, target);
             } else {
-                return copiedMove.tryUse(user, target);
+                return copiedMove.tryUse(action);
             }
         }
     },

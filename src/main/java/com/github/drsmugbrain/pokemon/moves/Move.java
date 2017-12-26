@@ -1,8 +1,10 @@
 package com.github.drsmugbrain.pokemon.moves;
 
-import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
+import com.github.drsmugbrain.pokemon.battle.Action;
+import com.github.drsmugbrain.pokemon.battle.Battle;
 import com.github.drsmugbrain.pokemon.events.EventDispatcher;
 import com.github.drsmugbrain.pokemon.events.PokemonMoveEvent;
+import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 import com.github.drsmugbrain.pokemon.types.Type;
 
 import javax.annotation.Nonnull;
@@ -77,15 +79,15 @@ public class Move {
         return pp;
     }
 
-    protected void setPP(int pp) {
+    public void setPP(int pp) {
         this.pp = pp;
     }
 
-    protected void increasePP(int amount) {
+    public void increasePP(int amount) {
         setPP(pp + amount);
     }
 
-    protected void decreasePP(int amount) {
+    public void decreasePP(int amount) {
         increasePP(-amount);
     }
 
@@ -138,8 +140,8 @@ public class Move {
         return getBaseMove().useAsZMove(attacker, defender, attacker.getBattle(), action);
     }
 
-    protected int useAsZMove(@Nonnull Pokemon attacker, @Nonnull Pokemon defender) {
-        Action action = new Action(this, attacker, defender, attacker.getBattle().getTurn());
+    protected int replaceAsZMove(@Nonnull Action oldAction, @Nonnull Pokemon attacker, @Nonnull Pokemon defender) {
+        Action action = attacker.getBattle().replaceAction(oldAction, this, attacker, defender);
         return useAsZMove(attacker, defender, action);
     }
 
@@ -157,14 +159,16 @@ public class Move {
         }
     }
 
-    protected int tryUse(@Nonnull Pokemon attacker, @Nonnull Pokemon defender) {
-        Action action = new Action(this, attacker, defender, attacker.getBattle().getTurn());
-
-        if (getBaseMove().hits(defender, action)) {
-            return use(attacker, defender, action);
+    protected int tryUse(@Nonnull Action action) {
+        if (getBaseMove().hits(action.getTarget(), action)) {
+            return use(action.getAttacker(), action.getTarget(), action);
         } else {
-            return miss(defender, action);
+            return miss(action.getTarget(), action);
         }
+    }
+
+    public void useAsReflect(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Battle battle, @Nonnull Action action) {
+        BASE_MOVE.use(attacker, defender, battle, action);
     }
 
 }

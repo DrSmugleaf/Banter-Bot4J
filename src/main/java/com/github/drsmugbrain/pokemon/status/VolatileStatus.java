@@ -1,6 +1,6 @@
 package com.github.drsmugbrain.pokemon.status;
 
-import com.github.drsmugbrain.pokemon.moves.Action;
+import com.github.drsmugbrain.pokemon.battle.Action;
 
 import javax.annotation.Nonnull;
 

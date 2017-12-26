@@ -4,7 +4,7 @@ import com.github.drsmugbrain.pokemon.battle.Battle;
 import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 import com.github.drsmugbrain.pokemon.pokemon.PokemonBuilder;
 import com.github.drsmugbrain.pokemon.events.*;
-import com.github.drsmugbrain.pokemon.moves.Action;
+import com.github.drsmugbrain.pokemon.battle.Action;
 import com.github.drsmugbrain.pokemon.moves.EntryHazard;
 import com.github.drsmugbrain.pokemon.moves.Move;
 import com.github.drsmugbrain.pokemon.status.BaseVolatileStatus;
@@ -180,8 +180,8 @@ public class Trainer extends Player {
         return aliveInactivePokemons;
     }
 
-    public void addAction(Pokemon pokemon, Move move, Pokemon target) {
-        Action action = new Action(move, pokemon, target, BATTLE.getTurn());
+    public void addAction(Battle battle, Move move, Pokemon target, Pokemon pokemon) {
+        Action action = battle.createAction(move, pokemon, target);
         pokemon.setAction(action);
         this.ACTIONS.add(action);
 

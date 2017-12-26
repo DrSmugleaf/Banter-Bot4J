@@ -8,7 +8,7 @@ import com.github.drsmugbrain.pokemon.battle.Battle;
 import com.github.drsmugbrain.pokemon.events.*;
 import com.github.drsmugbrain.pokemon.item.Item;
 import com.github.drsmugbrain.pokemon.item.Items;
-import com.github.drsmugbrain.pokemon.moves.Action;
+import com.github.drsmugbrain.pokemon.battle.Action;
 import com.github.drsmugbrain.pokemon.moves.CriticalHitStage;
 import com.github.drsmugbrain.pokemon.moves.Move;
 import com.github.drsmugbrain.pokemon.moves.Moves;
