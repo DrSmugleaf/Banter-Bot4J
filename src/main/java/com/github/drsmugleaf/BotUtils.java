@@ -1,4 +1,4 @@
-package com.github.drsmugbrain;
+package com.github.drsmugleaf;
 
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;

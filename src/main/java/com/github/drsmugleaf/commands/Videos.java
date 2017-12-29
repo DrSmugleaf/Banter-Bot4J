@@ -1,23 +1,20 @@
-package com.github.drsmugbrain.commands;
+package com.github.drsmugleaf.commands;
 
-import com.github.drsmugbrain.BotUtils;
-import com.github.drsmugbrain.CommandHandler;
-import com.github.drsmugbrain.VideoManager;
-import com.github.drsmugbrain.lavaplayer.GuildMusicManager;
-import com.github.drsmugbrain.lavaplayer.YoutubeSearch;
-import com.google.api.services.youtube.model.Video;
+import com.github.drsmugleaf.BotUtils;
+import com.github.drsmugleaf.CommandHandler;
+import com.github.drsmugleaf.VideoManager;
+import com.github.drsmugleaf.lavaplayer.GuildMusicManager;
+import com.github.drsmugleaf.lavaplayer.YoutubeSearch;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import org.apache.commons.lang3.ObjectUtils;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

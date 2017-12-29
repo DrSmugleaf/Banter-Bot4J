@@ -1,6 +1,6 @@
-package com.github.drsmugbrain.lavaplayer;
+package com.github.drsmugleaf.lavaplayer;
 
-import com.github.drsmugbrain.Settings;
+import com.github.drsmugleaf.Settings;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;

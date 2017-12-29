@@ -1,4 +1,4 @@
-package com.github.drsmugbrain;
+package com.github.drsmugleaf;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

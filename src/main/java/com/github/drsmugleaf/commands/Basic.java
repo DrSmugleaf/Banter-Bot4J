@@ -1,4 +1,4 @@
-package com.github.drsmugbrain.commands;
+package com.github.drsmugleaf.commands;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IVoiceChannel;

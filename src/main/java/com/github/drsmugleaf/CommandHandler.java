@@ -1,7 +1,7 @@
-package com.github.drsmugbrain;
+package com.github.drsmugleaf;
 
-import com.github.drsmugbrain.commands.Basic;
-import com.github.drsmugbrain.commands.Videos;
+import com.github.drsmugleaf.commands.Basic;
+import com.github.drsmugleaf.commands.Videos;
 import com.google.api.services.youtube.YouTube;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
