@@ -40,3 +40,4 @@ buildNumber.properties
 
 # private settings
 Settings.java
+*.env
