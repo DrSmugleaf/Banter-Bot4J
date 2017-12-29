@@ -1,4 +1,4 @@
-package com.github.drsmugbrain.commands;
+package com.github.drsmugleaf.commands;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

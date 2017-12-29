@@ -1,6 +1,6 @@
-package com.github.drsmugbrain.lavaplayer;
+package com.github.drsmugleaf.lavaplayer;
 
-import com.github.drsmugbrain.VideoManager;
+import com.github.drsmugleaf.VideoManager;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;

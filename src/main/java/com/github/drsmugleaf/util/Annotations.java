@@ -1,4 +1,4 @@
-package com.github.drsmugbrain.util;
+package com.github.drsmugleaf.util;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -62,7 +62,7 @@ public class Annotations {
     public static List<Method> findMethodsWithAnnotations(Class<? extends Annotation> annotation) {
         Iterable<Class> classes = null;
         try {
-            classes = Annotations.getClasses("com.github.drsmugbrain.commands");
+            classes = Annotations.getClasses("com.github.drsmugleaf.commands");
         } catch(ClassNotFoundException | IOException | URISyntaxException e) {
             Bot.LOGGER.error("Error getting classes in commands package", e);
         }

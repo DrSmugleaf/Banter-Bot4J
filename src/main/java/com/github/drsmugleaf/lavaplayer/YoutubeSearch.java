@@ -1,7 +1,7 @@
-package com.github.drsmugbrain.lavaplayer;
+package com.github.drsmugleaf.lavaplayer;
 
-import com.github.drsmugbrain.util.Bot;
-import com.github.drsmugbrain.util.Env;
+import com.github.drsmugleaf.util.Bot;
+import com.github.drsmugleaf.util.Env;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;

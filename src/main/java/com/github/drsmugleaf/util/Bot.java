@@ -1,4 +1,4 @@
-package com.github.drsmugbrain.util;
+package com.github.drsmugleaf.util;
 
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;

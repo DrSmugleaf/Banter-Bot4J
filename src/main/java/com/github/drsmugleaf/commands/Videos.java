@@ -1,10 +1,10 @@
-package com.github.drsmugbrain.commands;
+package com.github.drsmugleaf.commands;
 
-import com.github.drsmugbrain.util.Bot;
-import com.github.drsmugbrain.CommandHandler;
-import com.github.drsmugbrain.VideoManager;
-import com.github.drsmugbrain.lavaplayer.GuildMusicManager;
-import com.github.drsmugbrain.lavaplayer.YoutubeSearch;
+import com.github.drsmugleaf.util.Bot;
+import com.github.drsmugleaf.CommandHandler;
+import com.github.drsmugleaf.VideoManager;
+import com.github.drsmugleaf.lavaplayer.GuildMusicManager;
+import com.github.drsmugleaf.lavaplayer.YoutubeSearch;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;

@@ -1,7 +1,7 @@
-package com.github.drsmugbrain;
+package com.github.drsmugleaf;
 
-import com.github.drsmugbrain.util.Bot;
-import com.github.drsmugbrain.util.Env;
+import com.github.drsmugleaf.util.Bot;
+import com.github.drsmugleaf.util.Env;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;

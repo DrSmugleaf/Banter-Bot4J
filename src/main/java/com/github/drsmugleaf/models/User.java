@@ -1,6 +1,6 @@
-package com.github.drsmugbrain.models;
+package com.github.drsmugleaf.models;
 
-import com.github.drsmugbrain.util.Bot;
+import com.github.drsmugleaf.util.Bot;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 

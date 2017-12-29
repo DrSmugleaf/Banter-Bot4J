@@ -1,4 +1,4 @@
-package com.github.drsmugbrain.lavaplayer;
+package com.github.drsmugleaf.lavaplayer;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;

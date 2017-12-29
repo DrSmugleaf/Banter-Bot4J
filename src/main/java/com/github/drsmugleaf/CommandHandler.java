@@ -1,8 +1,8 @@
-package com.github.drsmugbrain;
+package com.github.drsmugleaf;
 
-import com.github.drsmugbrain.models.Member;
-import com.github.drsmugbrain.util.Annotations;
-import com.github.drsmugbrain.util.Bot;
+import com.github.drsmugleaf.models.Member;
+import com.github.drsmugleaf.util.Annotations;
+import com.github.drsmugleaf.util.Bot;
 import com.google.api.services.youtube.YouTube;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -34,7 +34,7 @@ public class CommandHandler {
         AudioSourceManagers.registerRemoteSources(playerManager);
         AudioSourceManagers.registerLocalSource(playerManager);
 
-        List<Method> commands = Annotations.findMethodsWithAnnotations(com.github.drsmugbrain.commands.Command.class);
+        List<Method> commands = Annotations.findMethodsWithAnnotations(com.github.drsmugleaf.commands.Command.class);
         if(commands != null) {
             commands.forEach((method -> {
                 Command command = (event, args) -> {
@@ -47,7 +47,7 @@ public class CommandHandler {
                     }
                 };
 
-                String commandName = method.getAnnotation(com.github.drsmugbrain.commands.Command.class).name();
+                String commandName = method.getAnnotation(com.github.drsmugleaf.commands.Command.class).name();
                 if (!commandName.isEmpty()) {
                     commandMap.put(commandName, command);
                 } else {

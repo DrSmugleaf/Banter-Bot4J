@@ -1,7 +1,7 @@
-package com.github.drsmugbrain.commands;
+package com.github.drsmugleaf.commands;
 
-import com.github.drsmugbrain.models.Member;
-import com.github.drsmugbrain.util.Bot;
+import com.github.drsmugleaf.models.Member;
+import com.github.drsmugleaf.util.Bot;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;

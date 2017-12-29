@@ -1,10 +1,10 @@
-package com.github.drsmugbrain;
+package com.github.drsmugleaf;
 
-import com.github.drsmugbrain.models.Guild;
-import com.github.drsmugbrain.models.Member;
-import com.github.drsmugbrain.models.User;
-import com.github.drsmugbrain.util.Bot;
-import com.github.drsmugbrain.util.Env;
+import com.github.drsmugleaf.models.Guild;
+import com.github.drsmugleaf.models.Member;
+import com.github.drsmugleaf.models.User;
+import com.github.drsmugleaf.util.Bot;
+import com.github.drsmugleaf.util.Env;
 import sx.blah.discord.api.IDiscordClient;
 
 /**
