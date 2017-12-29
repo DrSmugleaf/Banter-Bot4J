@@ -87,14 +87,14 @@ public enum BaseMove implements IModifier, IMoves {
     AFTER_YOU("After You") {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
-            List<Action> turnOrder = battle.getTurnOrder();
+            List<Action> turnOrder = battle.getCurrentTurn().getTurnOrder();
             Action userAction = battle.getAction(user);
             Action targetAction = battle.getAction(target);
             int userActionIndex = turnOrder.indexOf(userAction);
             int targetActionIndex = turnOrder.indexOf(targetAction);
 
             if (targetActionIndex > userActionIndex) {
-                battle.getTurnOrder().add(userActionIndex + 1, battle.getTurnOrder().remove(targetActionIndex));
+                battle.getCurrentTurn().changeTurnOrder(userActionIndex + 1, targetActionIndex);
                 return super.use(user, target, battle, action);
             } else {
                 return miss(target);

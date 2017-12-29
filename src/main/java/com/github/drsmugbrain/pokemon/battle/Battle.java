@@ -18,9 +18,7 @@ import java.util.*;
 public class Battle extends Setup {
 
     private final Map<Long, Trainer> TRAINERS = new LinkedHashMap<>();
-    private final List<Action> TURN_ORDER = new ArrayList<>();
     private Weather weather;
-    private final Map<Trainer, List<Pokemon>> POKEMONS_SENT_OUT_THIS_TURN = new HashMap<>();
     private final List<Turn> TURNS = new ArrayList<>();
 
     protected Battle(@Nonnull Setup setup, @Nonnull List<TrainerBuilder> trainers) throws UserException {
@@ -43,26 +41,18 @@ public class Battle extends Setup {
     }
 
     @Nullable
-    public Action getAction(Pokemon attacker) {
-        for (Action action : getCurrentTurn().getActions()) {
-            if (action.getAttacker() == attacker) {
-                return action;
-            }
-        }
-
-        return null;
+    public Action getAction(@Nonnull Pokemon attacker) {
+        return attacker.getAction();
     }
 
+    @Nonnull
     public Map<Long, Trainer> getTrainers() {
         return new HashMap<>(TRAINERS);
     }
 
+    @Nullable
     public Trainer getTrainer(Long id) {
         return TRAINERS.get(id);
-    }
-
-    public List<Action> getTurnOrder() {
-        return TURN_ORDER;
     }
 
     public Weather getWeather() {
@@ -80,8 +70,7 @@ public class Battle extends Setup {
     }
 
     public void sendOut(Trainer trainer, Pokemon pokemon) {
-        POKEMONS_SENT_OUT_THIS_TURN.putIfAbsent(trainer, new ArrayList<>());
-        POKEMONS_SENT_OUT_THIS_TURN.get(trainer).add(pokemon);
+        getCurrentTurn().sendOut(trainer, pokemon);
         trainer.sendOut(pokemon);
 
         for (Trainer trainer1 : TRAINERS.values()) {
@@ -90,11 +79,9 @@ public class Battle extends Setup {
             }
         }
 
-        for (Map.Entry<Trainer, List<Pokemon>> trainerListEntry : POKEMONS_SENT_OUT_THIS_TURN.entrySet()) {
-            for (Pokemon pokemon1 : trainerListEntry.getValue()) {
-                Event event = new TrainerSendOutPokemonEvent(pokemon1);
-                EventDispatcher.dispatch(event);
-            }
+        for (Pokemon pokemon1 : getCurrentTurn().getPokemonsSentOut().values()) {
+            Event event = new TrainerSendOutPokemonEvent(pokemon1);
+            EventDispatcher.dispatch(event);
         }
 
         for (Trainer trainer1 : TRAINERS.values()) {
@@ -117,32 +104,12 @@ public class Battle extends Setup {
         executeTurn();
     }
 
-    public void executeTurn() { // Move to Turn
-        TURNS.add(new Turn(this));
-
-        for (Trainer trainer : TRAINERS.values()) {
-            TURN_ORDER.addAll(trainer.getActions());
-            trainer.resetChosenMove();
-            trainer.resetActions();
-        }
-
-        List<Action> ACTIONS = getCurrentTurn().getActions();
-
-        Collections.shuffle(ACTIONS);
-        ACTIONS.sort((action1, action2) -> action2.getPriority().compareTo(action1.getPriority()));
-
-        for (Action action : ACTIONS) {
-            action.getAttacker().executeTurn();
-            action.getAttacker().finishTurn();
-        }
-
-        finishTurn();
+    public void executeTurn() {
+        getCurrentTurn().execute(TRAINERS.values());
+        nextTurn();
     }
 
-    private void finishTurn() { // Move to Turn
-        List<Action> ACTIONS = getCurrentTurn().getActions();
-        ACTIONS.clear();
-        POKEMONS_SENT_OUT_THIS_TURN.clear();
+    public void nextTurn() {
         TURNS.add(new Turn(this));
 
         for (Trainer trainer : TRAINERS.values()) {
@@ -153,6 +120,7 @@ public class Battle extends Setup {
             Event event = new BattleTurnStartEvent(this);
             EventDispatcher.dispatch(event);
         }
+
     }
 
     @Nonnull
@@ -177,39 +145,69 @@ public class Battle extends Setup {
 
     @Nonnull
     public Action createAction(@Nonnull Move move, @Nonnull Pokemon attacker, @Nonnull Pokemon target) {
-        Action action = new Action(move, attacker, target, getCurrentTurn().getID());
-        getCurrentTurn().addAction(action);
-        return action;
+        return new Action(move, attacker, target, getCurrentTurn().getID());
     }
 
-    public Action replaceAction(@Nonnull Action oldAction, @Nonnull Move move, @Nonnull Pokemon attacker, @Nonnull Pokemon target) {
-        Action action = new Action(move, attacker, target, getCurrentTurn().getID());
-        getCurrentTurn().replaceAction(oldAction, action);
-        return action;
+    @Nonnull
+    public List<Action> getAllActions() {
+        List<Action> actions = new ArrayList<>();
+
+        for (Turn turn : TURNS) {
+            actions.addAll(turn.getTurnOrder());
+        }
+
+        return actions;
+    }
+
+    @Nonnull
+    public List<Action> getAllActionsReverse() {
+        List<Action> actions = new ArrayList<>();
+
+        for (int i = TURNS.size() - 1; i >= 0; i--) {
+            Turn turn = TURNS.get(i);
+            List<Action> turnOrder = turn.getTurnOrder();
+            for (int j = turnOrder.size() - 1; j >= 0; j--) {
+                actions.add(turnOrder.get(j));
+            }
+        }
+
+        return actions;
     }
 
     @Nullable
     public Action getLastAction() {
-        List<Action> ACTIONS = getCurrentTurn().getActions();
-        if (ACTIONS.size() == 0) {
-            return null;
-        }
-
-        return ACTIONS.get(ACTIONS.size() - 1);
-    }
-
-    @Nullable
-    public Action getLastAction(@Nonnull Pokemon pokemon) {
-        List<Action> ACTIONS = getCurrentTurn().getActions();
-        for (int i = ACTIONS.size() - 1; i >= 0; i--) {
-            Action currentAction = ACTIONS.get(i);
-            if (currentAction.getAttacker() == pokemon) {
-                return currentAction;
+        for (int i = TURNS.size() - 1; i >= 0; i--) {
+            Turn turn = TURNS.get(i);
+            List<Action> turnOrder = turn.getTurnOrder();
+            if (!turnOrder.isEmpty()) {
+                return turnOrder.get(turnOrder.size() - 1);
             }
         }
 
         return null;
     }
+
+    @Nullable
+    public Action getLastAction(@Nonnull Pokemon pokemon) {
+        for (int i = TURNS.size() - 1; i >= 0; i--) {
+            Turn turn = TURNS.get(i);
+            List<Action> turnOrder = turn.getTurnOrder();
+            if (!turnOrder.isEmpty()) {
+                for (Action action : turnOrder) {
+                    if (action.getAttacker() == pokemon) {
+                        return action;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public Action replaceAction(@Nonnull Action oldAction, @Nonnull Move move, @Nonnull Pokemon attacker, @Nonnull Pokemon target) {
+        return new Action(move, attacker, target, getCurrentTurn().getID());
+    }
+
 
     @Nonnull
     public Trainer getOppositeTrainer(@Nonnull Trainer trainer) {
@@ -221,9 +219,8 @@ public class Battle extends Setup {
     @Nonnull
     public List<Action> getHitBy(@Nonnull Pokemon pokemon) {
         List<Action> hitBy = new ArrayList<>();
-        List<Action> ACTIONS = getCurrentTurn().getActions();
 
-        for (Action action : ACTIONS) {
+        for (Action action : getAllActions()) {
             if (action.getTarget() == pokemon) {
                 hitBy.add(action);
             }
@@ -234,8 +231,7 @@ public class Battle extends Setup {
 
     @Nullable
     public Action getLastHitBy(@Nonnull Pokemon pokemon) {
-        List<Action> ACTIONS = getCurrentTurn().getActions();
-        for (Action action : ACTIONS) {
+        for (Action action : getAllActionsReverse()) {
             if (action.getTarget() == pokemon) {
                 return action;
             }
@@ -245,15 +241,8 @@ public class Battle extends Setup {
     }
 
     public boolean movedThisTurn(@Nonnull Pokemon pokemon) {
-        List<Action> ACTIONS = getCurrentTurn().getActions();
-        for (int i = ACTIONS.size() - 1; i >= 0; i--) {
-            Action currentAction = ACTIONS.get(i);
-
-            if (currentAction.getTurn() != getTurn()) {
-                break;
-            }
-
-            if (currentAction.getAttacker() == pokemon) {
+        for (Action action : getCurrentTurn().getTurnOrder()) {
+            if (action.getAttacker() == pokemon) {
                 return true;
             }
         }

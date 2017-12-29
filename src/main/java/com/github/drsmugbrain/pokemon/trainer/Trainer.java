@@ -205,7 +205,7 @@ public class Trainer extends Player {
 
     @Nonnull
     public List<Action> getActions() {
-        return this.ACTIONS;
+        return new ArrayList<>(this.ACTIONS);
     }
 
     public void resetActions() {
