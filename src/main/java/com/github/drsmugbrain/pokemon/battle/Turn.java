@@ -17,7 +17,7 @@ public class Turn {
     private final Map<Trainer, Pokemon> POKEMONS_SENT_OUT = new HashMap<>();
 
     @Nonnull
-    private final List<Action> TURN_ORDER = new ArrayList<>();
+    private final List<Action> ACTIONS = new ArrayList<>();
 
     private boolean executed = false;
 
@@ -39,11 +39,11 @@ public class Turn {
     }
 
     public void changeTurnOrder(int addAt, int removeFrom) {
-        TURN_ORDER.add(addAt, TURN_ORDER.remove(removeFrom));
+        ACTIONS.add(addAt, ACTIONS.remove(removeFrom));
     }
 
     public List<Action> getTurnOrder() {
-        return new ArrayList<>(TURN_ORDER);
+        return new ArrayList<>(ACTIONS);
     }
 
     protected void execute(@Nonnull Collection<Trainer> trainers) {
@@ -54,15 +54,15 @@ public class Turn {
         executed = true;
 
         for (Trainer trainer : trainers) {
-            TURN_ORDER.addAll(trainer.getActions());
+            ACTIONS.addAll(trainer.getActions());
             trainer.resetChosenMove();
             trainer.resetActions();
         }
 
-        Collections.shuffle(TURN_ORDER);
-        TURN_ORDER.sort((action1, action2) -> action2.getPriority().compareTo(action1.getPriority()));
+        Collections.shuffle(ACTIONS);
+        ACTIONS.sort((action1, action2) -> action2.getPriority().compareTo(action1.getPriority()));
 
-        for (Action action : TURN_ORDER) {
+        for (Action action : ACTIONS) {
             action.getAttacker().executeTurn();
             action.getAttacker().finishTurn();
         }
@@ -71,8 +71,24 @@ public class Turn {
     }
 
     protected void finish() {
-        TURN_ORDER.clear();
+        ACTIONS.clear();
         POKEMONS_SENT_OUT.clear();
+    }
+
+    @Nonnull
+    protected List<Action> getHitBy(@Nonnull Pokemon pokemon) {
+        List<Action> hitBy = new ArrayList<>();
+
+        for (int i = ACTIONS.size() - 1; i >= 0; i--) {
+            Action action = ACTIONS.get(i);
+            if (!action.hit().containsKey(pokemon) || !action.hit().get(pokemon)) {
+                continue;
+            }
+
+            hitBy.add(action);
+        }
+
+        return hitBy;
     }
 
 }

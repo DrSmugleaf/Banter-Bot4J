@@ -1,6 +1,7 @@
 package com.github.drsmugbrain.pokemon.battle;
 
 import com.github.drsmugbrain.pokemon.events.*;
+import com.github.drsmugbrain.pokemon.moves.BaseMove;
 import com.github.drsmugbrain.pokemon.moves.Move;
 import com.github.drsmugbrain.pokemon.pokemon.Pokemon;
 import com.github.drsmugbrain.pokemon.trainer.Trainer;
@@ -220,10 +221,8 @@ public class Battle extends Setup {
     public List<Action> getHitBy(@Nonnull Pokemon pokemon) {
         List<Action> hitBy = new ArrayList<>();
 
-        for (Action action : getAllActions()) {
-            if (action.getTarget() == pokemon) {
-                hitBy.add(action);
-            }
+        for (Turn turn : TURNS) {
+            hitBy.addAll(turn.getHitBy(pokemon));
         }
 
         return hitBy;
@@ -231,13 +230,25 @@ public class Battle extends Setup {
 
     @Nullable
     public Action getLastHitBy(@Nonnull Pokemon pokemon) {
-        for (Action action : getAllActionsReverse()) {
-            if (action.getTarget() == pokemon) {
-                return action;
+        List<Action> hitBy = getHitBy(pokemon);
+
+        if (hitBy.isEmpty()) {
+            return null;
+        }
+
+        return hitBy.get(hitBy.size() - 1);
+    }
+
+    public boolean wasHitByThisTurn(@Nonnull Pokemon pokemon, @Nonnull BaseMove move) {
+        List<Action> hitBy = getCurrentTurn().getHitBy(pokemon);
+
+        for (Action action : hitBy) {
+            if (action.getBaseMove() == move) {
+                return true;
             }
         }
 
-        return null;
+        return false;
     }
 
     public boolean movedThisTurn(@Nonnull Pokemon pokemon) {

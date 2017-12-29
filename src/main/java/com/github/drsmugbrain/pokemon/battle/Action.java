@@ -6,10 +6,7 @@ import com.github.drsmugbrain.pokemon.status.BaseVolatileStatus;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 16/09/2017.
@@ -102,6 +99,11 @@ public class Action extends Move {
 
     public void setCritical(@Nonnull Pokemon pokemon, boolean bool) {
         CRITICAL.put(pokemon, bool);
+    }
+
+    @Nonnull
+    public Map<Pokemon, Boolean> hit() {
+        return new HashMap<>(HIT);
     }
 
     @Nullable
