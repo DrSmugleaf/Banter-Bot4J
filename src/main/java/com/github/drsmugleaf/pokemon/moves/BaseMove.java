@@ -528,7 +528,7 @@ public enum BaseMove implements IModifier, IMoves {
             if (!target.STATUSES.hasVolatileStatus(BaseVolatileStatus.BOUND)) {
                 BaseVolatileStatus.BOUND.apply(user, action);
             } else if (lastAction != null && lastAction.getBaseMove() == BaseMove.BIND &&
-                       lastAction.getTarget() == target) {
+                       lastAction.getTargetPokemon() == target) {
                 action.increasePP(1);
             }
 
@@ -567,7 +567,7 @@ public enum BaseMove implements IModifier, IMoves {
         public boolean hits(@Nonnull Pokemon target, @Nonnull Action action) {
             Generation generation = action.getAttacker().getBattle().getGeneration();
             if (generation == Generation.I) {
-                return super.hitsIgnoreTypes(action);
+                return super.hitsIgnoreTypes(target, action);
             }
 
             return super.hits(target, action);
@@ -837,7 +837,7 @@ public enum BaseMove implements IModifier, IMoves {
 
         @Override
         public boolean hits(@Nonnull Pokemon target, @Nonnull Action action) {
-            return super.hitsWithoutDefenderStages(action);
+            return super.hitsWithoutDefenderStages(target, action);
         }
     },
     CIRCLE_THROW("Circle Throw") {
@@ -865,7 +865,7 @@ public enum BaseMove implements IModifier, IMoves {
             if (!target.STATUSES.hasVolatileStatus(BaseVolatileStatus.BOUND)) {
                 BaseVolatileStatus.BOUND.apply(user, action);
             } else if (lastAction.getBaseMove() == BaseMove.CLAMP &&
-                       lastAction.getTarget() == target) {
+                       lastAction.getTargetPokemon() == target) {
                 action.increasePP(1);
             }
 
@@ -904,7 +904,7 @@ public enum BaseMove implements IModifier, IMoves {
         public boolean hits(@Nonnull Pokemon target, @Nonnull Action action) {
             Generation generation = action.getAttacker().getBattle().getGeneration();
             if (generation == Generation.I) {
-                return super.hitsIgnoreTypes(action);
+                return super.hitsIgnoreTypes(target, action);
             }
 
             return super.hits(target, action);
@@ -1237,7 +1237,7 @@ public enum BaseMove implements IModifier, IMoves {
             if (copiedMove.getCategory() != Category.OTHER) {
                 return copiedMove.replaceAsZMove(action, user, target);
             } else {
-                return copiedMove.tryUse(action);
+                return copiedMove.tryUse(target, action);
             }
         }
     },
@@ -1306,7 +1306,7 @@ public enum BaseMove implements IModifier, IMoves {
                         && lastAction.getBaseMove() != COUNTER) {
                         int damage;
                         if (lastAction.getTargetVolatileStatuses().contains(BaseVolatileStatus.SUBSTITUTE)) {
-                            damage = lastAction.getBaseMove().getDamage(lastAction.getAttacker(), lastAction.getTarget(), lastAction);
+                            damage = lastAction.getBaseMove().getDamage(lastAction.getAttacker(), lastAction.getTargetPokemon(), lastAction);
                         } else {
                             damage = actionDamage * 2;
                         }
@@ -1354,7 +1354,7 @@ public enum BaseMove implements IModifier, IMoves {
         public boolean hits(@Nonnull Pokemon target, @Nonnull Action action) {
             Generation generation = action.getAttacker().getBattle().getGeneration();
             if (generation == Generation.I) {
-                return super.hitsIgnoreTypes(action);
+                return super.hitsIgnoreTypes(target, action);
             }
 
             return super.hits(target, action);
@@ -1562,13 +1562,12 @@ public enum BaseMove implements IModifier, IMoves {
         @Override
         public boolean hits(@Nonnull Pokemon target, @Nonnull Action action) {
             Pokemon attacker = action.getAttacker();
-            Pokemon defender = action.getTarget();
 
             if (action.targetHasVolatileStatus(BaseVolatileStatus.CURSE)) {
                 return false;
             }
 
-            if (!defender.getTrainer().hasOpponentOnField()) {
+            if (!target.getTrainer().hasOpponentOnField()) {
                 return false;
             }
 
@@ -1576,7 +1575,7 @@ public enum BaseMove implements IModifier, IMoves {
             switch (generation) {
                 case I:
                 case II:
-                    if (defender.STATUSES.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+                    if (target.STATUSES.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
                         return false;
                     }
                     break;
@@ -1591,13 +1590,13 @@ public enum BaseMove implements IModifier, IMoves {
                 // In a Triple Battle, if the user gains the Ghost type before Curse executes,
                 // Curse will prioritize the opponent directly opposite the user as its target.
                 case V:
-                    if (attacker.TYPES.isType(Type.GHOST) && attacker == defender) {
+                    if (attacker.TYPES.isType(Type.GHOST) && attacker == target) {
                         attacker.retarget(attacker.getEnemyOppositePokemon());
                     }
                     break;
                 case VI:
                 case VII:
-                    if (attacker.TYPES.isType(Type.GHOST) && attacker == defender) {
+                    if (attacker.TYPES.isType(Type.GHOST) && attacker == target) {
 
                         Variation variation = attacker.getBattle().getVariation();
                         switch (variation) {
@@ -1712,7 +1711,7 @@ public enum BaseMove implements IModifier, IMoves {
 
         @Override
         public boolean hits(@Nonnull Pokemon target, @Nonnull Action action) {
-            return super.hitsWithoutDefenderStages(action);
+            return super.hitsWithoutDefenderStages(target, action);
         }
     },
     DAZZLING_GLEAM("Dazzling Gleam"),
@@ -2072,7 +2071,7 @@ public enum BaseMove implements IModifier, IMoves {
 //                        message(user, target, action);
 //                        return 0;
 //                    } else {
-//                        Pokemon tagTarget = user.TAGS.get(Tag.DOOM_DESIRE).getTarget();
+//                        Pokemon tagTarget = user.TAGS.get(Tag.DOOM_DESIRE).getTargetPokemon();
 //                        int damage = getDamage(user, tagTarget, action);
 //                        target.damage(damage);
 //                    }
@@ -3202,9 +3201,8 @@ public enum BaseMove implements IModifier, IMoves {
     @Override
     public boolean hits(@Nonnull Pokemon target, @Nonnull Action action) {
         Pokemon attacker = action.getAttacker();
-        Pokemon defender = action.getTarget();
 
-        if (defender.TYPES.isImmune(action)) {
+        if (target.TYPES.isImmune(action)) {
             return false;
         }
 
@@ -3219,7 +3217,7 @@ public enum BaseMove implements IModifier, IMoves {
         }
 
         double attackerAccuracy = attacker.calculate(BattleStat.ACCURACY);
-        double defenderEvasion = defender.calculate(BattleStat.EVASION);
+        double defenderEvasion = target.calculate(BattleStat.EVASION);
         double probability = ACCURACY * (attackerAccuracy / defenderEvasion);
         if (probability > 1 || probability < Math.random()) {
             return true;
@@ -3228,9 +3226,9 @@ public enum BaseMove implements IModifier, IMoves {
         return false;
     }
 
-    public boolean hitsWithoutDefenderStages(@Nonnull Action action) {
+    public boolean hitsWithoutDefenderStages(@Nonnull Pokemon target, @Nonnull Action action) {
         Pokemon attacker = action.getAttacker();
-        Pokemon defender = action.getTarget();
+        Pokemon defender = action.getTargetPokemon();
 
         if (defender.TYPES.isImmune(action)) {
             return false;
@@ -3255,9 +3253,9 @@ public enum BaseMove implements IModifier, IMoves {
         return false;
     }
 
-    public boolean hitsIgnoreTypes(@Nonnull Action action) {
+    public boolean hitsIgnoreTypes(@Nonnull Pokemon target, @Nonnull Action action) {
         Pokemon attacker = action.getAttacker();
-        Pokemon defender = action.getTarget();
+        Pokemon defender = action.getTargetPokemon();
 
         if (ACCURACY == 0) {
             return true;

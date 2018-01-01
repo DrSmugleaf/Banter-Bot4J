@@ -3,6 +3,7 @@ package com.github.drsmugleaf.pokemon.battle;
 import com.github.drsmugleaf.pokemon.moves.Move;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.status.BaseVolatileStatus;
+import com.github.drsmugleaf.pokemon.trainer.Trainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,8 +23,13 @@ public class Action extends Move {
     @Nonnull
     private final List<Pokemon> DEFENDERS = new ArrayList<>();
 
+    private int TARGET_POSITION;
+
     @Nonnull
-    private Pokemon TARGET;
+    private Pokemon TARGET_POKEMON;
+
+    @Nonnull
+    private Trainer TARGET_TEAM;
 
     @Nonnull
     private Map<Pokemon, Integer> DAMAGE = new LinkedHashMap<>();
@@ -47,7 +53,9 @@ public class Action extends Move {
 
         MOVE = move;
         ATTACKER = attacker;
-        TARGET = target;
+        TARGET_POSITION = target.getTrainer().getActivePokemon(target);
+        TARGET_POKEMON = target;
+        TARGET_TEAM = target.getTrainer();
 
         ATTACKER_VOLATILE_STATUSES.addAll(attacker.STATUSES.getVolatileStatuses().keySet());
         TARGET_VOLATILE_STATUSES.addAll(target.STATUSES.getVolatileStatuses().keySet());
@@ -74,13 +82,24 @@ public class Action extends Move {
         DEFENDERS.add(pokemon);
     }
 
+    public int getTargetPosition() {
+        return TARGET_POSITION;
+    }
+
     @Nonnull
-    public Pokemon getTarget() {
-        return TARGET;
+    public Pokemon getTargetPokemon() {
+        return TARGET_POKEMON;
+    }
+
+    @Nonnull
+    public Trainer getTargetTeam() {
+        return TARGET_TEAM;
     }
 
     public void setTarget(@Nonnull Pokemon target) {
-        TARGET = target;
+        TARGET_POSITION = target.getTrainer().getActivePokemon(target);
+        TARGET_POKEMON = target;
+        TARGET_TEAM = target.getTrainer();
     }
 
     @Nullable
@@ -173,12 +192,18 @@ public class Action extends Move {
     }
 
     public void tryUse() {
-        super.tryUse(ATTACKER, TARGET, this);
+        Pokemon target = TARGET_TEAM.getActivePokemon(TARGET_POSITION);
+        if (target == null) {
+            miss(TARGET_POKEMON, this);
+            return;
+        }
+
+        super.tryUse(ATTACKER, target, this);
     }
 
-    public void reflect() {
-        Action action = getBattle().replaceAction(this, MOVE, TARGET, ATTACKER);
-        action.MOVE.useAsReflect(action.ATTACKER, action.TARGET, action.ATTACKER.getBattle(), action);
+    public void reflect(@Nonnull Pokemon reflector) {
+        Action action = getBattle().replaceAction(this, MOVE, reflector, ATTACKER);
+        action.MOVE.useAsReflect(action.ATTACKER, action.TARGET_POKEMON, action.ATTACKER.getBattle(), action);
     }
 
 }

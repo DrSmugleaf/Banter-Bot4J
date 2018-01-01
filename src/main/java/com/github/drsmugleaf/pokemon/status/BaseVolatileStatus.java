@@ -163,7 +163,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
                     break;
                 case V:
                     if (action.getBaseMove() == BaseMove.DEFOG) {
-                        action.reflect();
+                        action.reflect(defender);
                         return false;
                     }
                     break;

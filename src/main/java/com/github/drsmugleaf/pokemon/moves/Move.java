@@ -159,11 +159,11 @@ public class Move {
         }
     }
 
-    protected int tryUse(@Nonnull Action action) {
-        if (getBaseMove().hits(action.getTarget(), action)) {
-            return use(action.getAttacker(), action.getTarget(), action);
+    protected int tryUse(@Nonnull Pokemon target, @Nonnull Action action) {
+        if (getBaseMove().hits(target, action)) {
+            return use(action.getAttacker(), target, action);
         } else {
-            return miss(action.getTarget(), action);
+            return miss(target, action);
         }
     }
 

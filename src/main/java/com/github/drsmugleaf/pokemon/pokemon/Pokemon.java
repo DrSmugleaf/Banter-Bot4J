@@ -272,7 +272,7 @@ public class Pokemon {
     public int damage(@Nonnull Action action) {
         damagedThisTurn = action.getAttacker();
 
-        int amount = action.getMove().getBaseMove().getDamage(action.getAttacker(), action.getTarget(), action);
+        int amount = action.getMove().getBaseMove().getDamage(action.getAttacker(), this, action);
         damage(amount);
         return amount;
     }
