@@ -148,7 +148,7 @@ public enum Abilities implements IModifier {
     SAP_SIPPER("Sap Sipper"),
     SCRAPPY("Scrappy"),
     SERENE_GRACE("Serene Grace"),
-    SHADOW_TAG("Shadow Tag"),
+    SHADOW_TAG("Shadow Tags"),
     SHED_SKIN("Shed Skin"),
     SHEER_FORCE("Sheer Force"),
     SHELL_ARMOR("Shell Armor"),

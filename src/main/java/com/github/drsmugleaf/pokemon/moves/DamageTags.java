@@ -8,6 +8,8 @@ public enum DamageTags {
     NO_CRITICAL,
     NO_EFFECTIVENESS,
     NO_STAB,
-    NO_STAGES
+    NO_STAGES,
+    PHYSICAL,
+    SPECIAL
 
 }

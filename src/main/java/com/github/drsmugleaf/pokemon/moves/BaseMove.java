@@ -11,7 +11,7 @@ import com.github.drsmugleaf.pokemon.item.Items;
 import com.github.drsmugleaf.pokemon.pokemon.Gender;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.pokemon.Species;
-import com.github.drsmugleaf.pokemon.pokemon.Tag;
+import com.github.drsmugleaf.pokemon.pokemon.Tags;
 import com.github.drsmugleaf.pokemon.stats.BattleStat;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon.status.BaseVolatileStatus;
@@ -480,13 +480,13 @@ public enum BaseMove implements IModifier, IMoves {
         @Override
         public void onOwnItemUsed(@Nonnull Pokemon user, @Nonnull Items item) {
             if (item.getCategory() == ItemCategory.BERRY) {
-                user.TAGS.put(Tag.BERRY_USED, null);
+                user.TAGS.put(Tags.BERRY_USED, null);
             }
         }
 
         @Override
         public boolean canUseMove(@Nonnull Pokemon user) {
-            return user.TAGS.containsKey(Tag.BERRY_USED);
+            return user.TAGS.containsKey(Tags.BERRY_USED);
         }
     },
     BELLY_DRUM("Belly Drum") {
@@ -1857,7 +1857,7 @@ public enum BaseMove implements IModifier, IMoves {
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
             int damage = super.use(user, target, battle, action);
 
-            user.TAGS.put(Tag.DESTINY_BOND, action);
+            user.TAGS.put(Tags.DESTINY_BOND, action);
 
             return damage;
         }
@@ -2060,38 +2060,30 @@ public enum BaseMove implements IModifier, IMoves {
         }
     },
     DOOM_DESIRE("Doom Desire") {
-//        @Override
-//        protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
-//            switch (action.getGeneration()) {
-//                case I:
-//                case II:
-//                case III:
-//                    if (!user.TAGS.containsKey(Tag.DOOM_DESIRE)) {
-//                        Tag.DOOM_DESIRE.apply(user, action);
-//                        message(user, target, action);
-//                        return 0;
-//                    } else {
-//                        Pokemon tagTarget = user.TAGS.get(Tag.DOOM_DESIRE).getTargetPokemon();
-//                        int damage = getDamage(user, tagTarget, action);
-//                        target.damage(damage);
-//                    }
-//                    break;
-//                case IV:
-//                    break;
-//                case V:
-//                    break;
-//                case VI:
-//                    break;
-//                case VII:
-//                    break;
-//                default:
-//                    throw new InvalidGenerationException(action.getGeneration());
-//            }
-//        }
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
+            if (!user.TAGS.containsKey(Tags.DOOM_DESIRE)) {
+                Tags.DOOM_DESIRE.apply(user, action);
+            }
+            return 0;
+        }
 
         @Override
         public int getDamage(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action, @Nullable DamageTags... tags) {
-            return super.getDamage(attacker, defender, action, DamageTags.NO_CRITICAL, DamageTags.NO_EFFECTIVENESS, DamageTags.NO_STAB);
+            switch (action.getGeneration()) {
+                case I:
+                case II:
+                case III:
+                    return super.getDamage(attacker, defender, action, DamageTags.PHYSICAL, DamageTags.NO_CRITICAL, DamageTags.NO_EFFECTIVENESS, DamageTags.NO_STAB);
+                case IV:
+                    return super.getDamage(attacker, defender, action, DamageTags.SPECIAL, DamageTags.NO_CRITICAL, DamageTags.NO_EFFECTIVENESS, DamageTags.NO_STAB);
+                case V:
+                case VI:
+                case VII:
+                    return super.getDamage(attacker, defender, action, DamageTags.SPECIAL);
+                default:
+                    throw new InvalidGenerationException(action.getGeneration());
+            }
         }
     },
     DOUBLE_HIT("Double Hit"),
@@ -3084,6 +3076,14 @@ public enum BaseMove implements IModifier, IMoves {
         if (tags != null) {
             damageTags = Arrays.asList(tags);
         }
+
+        Category category = CATEGORY;
+        if (damageTags.contains(DamageTags.PHYSICAL)) {
+            category = Category.PHYSICAL;
+        } else if (damageTags.contains(DamageTags.SPECIAL)) {
+            category = Category.SPECIAL;
+        }
+
         if (CATEGORY == Category.OTHER) {
             return 0;
         }
@@ -3133,14 +3133,14 @@ public enum BaseMove implements IModifier, IMoves {
         }
         double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
 
-        if (CATEGORY == Category.PHYSICAL) {
+        if (category == Category.PHYSICAL) {
             attackStat = attacker.calculate(PermanentStat.ATTACK);
             if (damageTags.contains(DamageTags.NO_STAGES)) {
                 defenseStat = defender.calculateWithoutStages(PermanentStat.DEFENSE);
             } else {
                 defenseStat = defender.calculate(PermanentStat.DEFENSE);
             }
-        } else if (CATEGORY == Category.SPECIAL) {
+        } else if (category == Category.SPECIAL) {
             attackStat = attacker.calculate(PermanentStat.SPECIAL_ATTACK);
             if (damageTags.contains(DamageTags.NO_STAGES)) {
                 defenseStat = defender.calculateWithoutStages(PermanentStat.SPECIAL_DEFENSE);
@@ -3148,7 +3148,7 @@ public enum BaseMove implements IModifier, IMoves {
                 defenseStat = defender.calculate(PermanentStat.SPECIAL_DEFENSE);
             }
         } else {
-            throw new InvalidCategoryException(CATEGORY);
+            throw new InvalidCategoryException(category);
         }
 
         int damage = (int) (
