@@ -1,2 +1,2 @@
-# BlueBot by BlueBrain and DrSmugleaf
-based on [d4jexamplebot](https://github.com/decyg/d4jexamplebot)
+# Banter Bot4J
+[![Discord](https://discordapp.com/api/guilds/260158980343463937/embed.png)](https://discord.gg/yyDWNBr)
