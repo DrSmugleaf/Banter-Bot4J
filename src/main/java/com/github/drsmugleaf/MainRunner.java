@@ -4,7 +4,6 @@ import com.github.drsmugleaf.models.Guild;
 import com.github.drsmugleaf.models.Member;
 import com.github.drsmugleaf.models.User;
 import com.github.drsmugleaf.util.Bot;
-import com.github.drsmugleaf.util.Env;
 import sx.blah.discord.api.IDiscordClient;
 
 /**
@@ -13,12 +12,11 @@ import sx.blah.discord.api.IDiscordClient;
 public class MainRunner {
 
     public static void main(String[] args){
-        IDiscordClient cli = Bot.buildClient(Env.readFile().get("DISCORD_TOKEN"));
+        IDiscordClient cli = Bot.buildClient(Env.get("DISCORD_TOKEN"));
 
         // Register a listener via the EventSubscriber annotation which allows for organisation and delegation of events
         cli.getDispatcher().registerListener(new CommandHandler());
         cli.getDispatcher().registerListeners(Guild.class, User.class, Member.class);
-        Env.readFile();
         new Database();
 
         User.createTable(Database.conn);
