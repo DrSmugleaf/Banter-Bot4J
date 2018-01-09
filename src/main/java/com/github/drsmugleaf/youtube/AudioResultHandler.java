@@ -23,28 +23,28 @@ public class AudioResultHandler implements AudioLoadResultHandler {
     private final String SEARCH_STRING;
 
     public AudioResultHandler(@Nonnull IChannel channel, @Nonnull IUser submitter, @Nonnull String searchString) {
-        this.MUSIC_MANAGER = Youtube.getGuildMusicManager(channel.getGuild());
-        this.CHANNEL = channel;
-        this.SUBMITTER = submitter;
-        this.SEARCH_STRING = searchString;
+        MUSIC_MANAGER = Youtube.getGuildMusicManager(channel.getGuild());
+        CHANNEL = channel;
+        SUBMITTER = submitter;
+        SEARCH_STRING = searchString;
     }
 
     public IChannel getChannel() {
-        return this.CHANNEL;
+        return CHANNEL;
     }
 
     public IUser getSubmitter() {
-        return this.SUBMITTER;
+        return SUBMITTER;
     }
 
     public String getSearchString() {
-        return this.SEARCH_STRING;
+        return SEARCH_STRING;
     }
 
     @Override
     public void trackLoaded(AudioTrack track) {
-        Song song = new Song(track, this.CHANNEL, this.SUBMITTER);
-        this.MUSIC_MANAGER.getScheduler().queue(song);
+        Song song = new Song(track, CHANNEL, SUBMITTER);
+        MUSIC_MANAGER.getScheduler().queue(song);
     }
 
     @Override
@@ -53,11 +53,11 @@ public class AudioResultHandler implements AudioLoadResultHandler {
         List<Song> songs = new ArrayList<>();
 
         for (AudioTrack track : tracks) {
-            Song song = new Song(track, this.CHANNEL, this.SUBMITTER);
+            Song song = new Song(track, CHANNEL, SUBMITTER);
             songs.add(song);
         }
 
-        this.MUSIC_MANAGER.getScheduler().queue(songs);
+        MUSIC_MANAGER.getScheduler().queue(songs);
     }
 
     @Override

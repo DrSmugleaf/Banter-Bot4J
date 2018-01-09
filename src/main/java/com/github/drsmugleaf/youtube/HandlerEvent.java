@@ -10,11 +10,11 @@ public abstract class HandlerEvent extends Event {
     private final AudioResultHandler HANDLER;
 
     protected HandlerEvent(@Nonnull AudioResultHandler handler) {
-        this.HANDLER = handler;
+        HANDLER = handler;
     }
 
     public AudioResultHandler getHandler() {
-        return this.HANDLER;
+        return HANDLER;
     }
 
 }

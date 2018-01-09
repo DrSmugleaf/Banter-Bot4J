@@ -14,15 +14,15 @@ public class AudioProvider implements IAudioProvider {
     private byte[] lastFrame;
 
     public AudioProvider(AudioPlayer player) {
-        this.AUDIO_PLAYER = player;
+        AUDIO_PLAYER = player;
     }
 
     @Override
     public boolean isReady() {
-        AudioFrame frame = this.AUDIO_PLAYER.provide();
+        AudioFrame frame = AUDIO_PLAYER.provide();
 
         if (frame != null) {
-            this.lastFrame = frame.data;
+            lastFrame = frame.data;
             return true;
         }
 
@@ -31,8 +31,8 @@ public class AudioProvider implements IAudioProvider {
 
     @Override
     public byte[] provide() {
-        if (this.lastFrame == null) {
-            this.lastFrame = this.AUDIO_PLAYER.provide().data;
+        if (lastFrame == null) {
+            lastFrame = AUDIO_PLAYER.provide().data;
         }
 
         byte[] data = lastFrame.clone();

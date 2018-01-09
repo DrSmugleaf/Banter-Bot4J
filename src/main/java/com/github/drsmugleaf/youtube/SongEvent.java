@@ -12,12 +12,12 @@ public abstract class SongEvent extends Event {
 
     protected SongEvent(@Nullable Song song) {
         super();
-        this.SONG = song;
+        SONG = song;
     }
 
     @Nullable
     public Song getSong() {
-        return this.SONG;
+        return SONG;
     }
 
 }

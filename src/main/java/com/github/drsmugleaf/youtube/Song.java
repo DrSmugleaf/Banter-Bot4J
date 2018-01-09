@@ -17,25 +17,25 @@ public class Song {
     private final IUser SUBMITTER;
 
     protected Song(@Nonnull AudioTrack track, @Nonnull IChannel channel, @Nonnull IUser submitter) {
-        this.TRACK = track;
-        this.CHANNEL = channel;
-        this.SUBMITTER = submitter;
+        TRACK = track;
+        CHANNEL = channel;
+        SUBMITTER = submitter;
     }
 
     public AudioTrack getTrack() {
-        return this.TRACK;
+        return TRACK;
     }
 
     public IGuild getGuild() {
-        return this.CHANNEL.getGuild();
+        return CHANNEL.getGuild();
     }
 
     public IChannel getChannel() {
-        return this.CHANNEL;
+        return CHANNEL;
     }
 
     public IUser getSubmitter() {
-        return this.SUBMITTER;
+        return SUBMITTER;
     }
 
 }

@@ -13,11 +13,11 @@ public class LoadFailedEvent extends HandlerEvent {
 
     protected LoadFailedEvent(@Nonnull AudioResultHandler handler, @Nonnull FriendlyException exception) {
         super(handler);
-        this.EXCEPTION = exception;
+        EXCEPTION = exception;
     }
 
     public FriendlyException getException() {
-        return this.EXCEPTION;
+        return EXCEPTION;
     }
 
 }

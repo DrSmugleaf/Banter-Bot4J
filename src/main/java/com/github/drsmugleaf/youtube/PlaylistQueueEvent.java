@@ -11,11 +11,11 @@ public class PlaylistQueueEvent extends Event {
     private final List<Song> SONGS;
 
     protected PlaylistQueueEvent(@Nonnull List<Song> songs) {
-        this.SONGS = songs;
+        SONGS = songs;
     }
 
     public List<Song> getSongs() {
-        return this.SONGS;
+        return SONGS;
     }
 
 }

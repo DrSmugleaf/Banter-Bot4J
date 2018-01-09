@@ -27,12 +27,12 @@ public class TrackScheduler extends AudioEventAdapter {
     private Song currentSong = null;
 
     public TrackScheduler(@Nonnull AudioPlayer player) {
-        this.PLAYER = player;
+        PLAYER = player;
     }
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
-        Event event = new SongStartEvent(this.currentSong);
+        Event event = new SongStartEvent(currentSong);
         EventDispatcher.dispatch(event);
     }
 
@@ -41,14 +41,14 @@ public class TrackScheduler extends AudioEventAdapter {
         switch (endReason) {
             case STOPPED:
             case CLEANUP:
-                this.QUEUE.clear();
-                this.currentSong = null;
+                QUEUE.clear();
+                currentSong = null;
                 return;
         }
 
         if (endReason.mayStartNext) {
-            if (this.hasNextSong()) {
-                this.play(this.QUEUE.poll(), false);
+            if (hasNextSong()) {
+                play(QUEUE.poll(), false);
             }
         }
     }
@@ -62,65 +62,65 @@ public class TrackScheduler extends AudioEventAdapter {
             songs.add(new Song(currentSong.getTrack().makeClone(), currentSong.getChannel(), currentSong.getSubmitter()));
         }
 
-        songs.addAll(this.QUEUE);
+        songs.addAll(QUEUE);
 
         return songs;
     }
 
     @Nonnull
     public List<Song> getQueue() {
-        return new ArrayList<>(this.QUEUE);
+        return new ArrayList<>(QUEUE);
     }
 
     @Nullable
     public Song getCurrentSong() {
-        return this.currentSong;
+        return currentSong;
     }
 
     public boolean hasNextSong() {
-        return this.QUEUE.size() > 0;
+        return QUEUE.size() > 0;
     }
 
     public boolean isPlaying() {
-        return this.PLAYER.getPlayingTrack() != null;
+        return PLAYER.getPlayingTrack() != null;
     }
 
     public boolean isPaused() {
-        return this.PLAYER.isPaused();
+        return PLAYER.isPaused();
     }
 
     private boolean play(@Nullable Song song, boolean noInterrupt) {
-        if (!this.isPlaying() || !noInterrupt || song == null) {
-            this.currentSong = song;
+        if (!isPlaying() || !noInterrupt || song == null) {
+            currentSong = song;
             if (song == null) {
                 return PLAYER.startTrack(null, false);
             }
         }
 
-        return this.PLAYER.startTrack(song.getTrack(), noInterrupt);
+        return PLAYER.startTrack(song.getTrack(), noInterrupt);
     }
 
     public void queue(@Nonnull Song song) {
-        if (!this.play(song, true)) {
+        if (!play(song, true)) {
             Event event = new SongQueueEvent(song);
             EventDispatcher.dispatch(event);
-            this.QUEUE.offer(song);
+            QUEUE.offer(song);
         }
     }
 
     public void queue(@Nonnull List<Song> songs) {
         if (songs.size() == 1) {
-            this.queue(songs.get(0));
+            queue(songs.get(0));
             return;
         }
 
         Song firstSong = songs.remove(0);
-        if (!this.play(firstSong, true)) {
-            this.QUEUE.offer(firstSong);
+        if (!play(firstSong, true)) {
+            QUEUE.offer(firstSong);
         }
 
         for (Song song : songs) {
-            this.QUEUE.offer(song);
+            QUEUE.offer(song);
         }
 
         Event event = new PlaylistQueueEvent(songs);
@@ -132,15 +132,15 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public void pause() {
-        this.PLAYER.setPaused(true);
+        PLAYER.setPaused(true);
     }
 
     public void resume() {
-        this.PLAYER.setPaused(false);
+        PLAYER.setPaused(false);
     }
 
     public void stop() {
-        this.PLAYER.stopTrack();
+        PLAYER.stopTrack();
     }
 
 }

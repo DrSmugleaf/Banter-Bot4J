@@ -15,20 +15,20 @@ public class GuildMusicManager {
     private final TrackScheduler SCHEDULER;
 
     public GuildMusicManager(@Nonnull AudioPlayerManager manager) {
-        this.PLAYER = manager.createPlayer();
-        this.PROVIDER = new AudioProvider(this.PLAYER);
-        this.SCHEDULER = new TrackScheduler(this.PLAYER);
-        this.PLAYER.addListener(this.SCHEDULER);
+        PLAYER = manager.createPlayer();
+        PROVIDER = new AudioProvider(PLAYER);
+        SCHEDULER = new TrackScheduler(PLAYER);
+        PLAYER.addListener(SCHEDULER);
     }
 
     @Nonnull
     public AudioProvider getProvider() {
-        return this.PROVIDER;
+        return PROVIDER;
     }
 
     @Nonnull
     public TrackScheduler getScheduler() {
-        return this.SCHEDULER;
+        return SCHEDULER;
     }
 
 }
