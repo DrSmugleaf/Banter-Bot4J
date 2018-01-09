@@ -38,19 +38,18 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        this.currentSong = null;
+        switch (endReason) {
+            case STOPPED:
+            case CLEANUP:
+                this.QUEUE.clear();
+                this.currentSong = null;
+                return;
+        }
 
         if (endReason.mayStartNext) {
             if (this.hasNextSong()) {
                 this.play(this.QUEUE.poll(), false);
             }
-        }
-
-        switch (endReason) {
-            case STOPPED:
-            case CLEANUP:
-                this.QUEUE.clear();
-                break;
         }
     }
 
@@ -90,10 +89,14 @@ public class TrackScheduler extends AudioEventAdapter {
         return this.PLAYER.isPaused();
     }
 
-    private boolean play(@Nonnull Song song, boolean noInterrupt) {
-        if (!this.isPlaying() || !noInterrupt) {
+    private boolean play(@Nullable Song song, boolean noInterrupt) {
+        if (!this.isPlaying() || !noInterrupt || song == null) {
             this.currentSong = song;
+            if (song == null) {
+                return PLAYER.startTrack(null, false);
+            }
         }
+
         return this.PLAYER.startTrack(song.getTrack(), noInterrupt);
     }
 
@@ -125,10 +128,7 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public void skip() {
-        this.PLAYER.startTrack(null, false);
-        if (this.hasNextSong()) {
-            this.PLAYER.startTrack(this.QUEUE.poll().getTrack(), false);
-        }
+        play(QUEUE.poll(), false);
     }
 
     public void pause() {

@@ -378,6 +378,9 @@ public class Youtube {
     @SongEventHandler(event = SongStartEvent.class)
     public static void handle(@Nonnull SongStartEvent event) {
         Song song = event.getSong();
+        if (song == null) {
+            return;
+        }
         String response = String.format("Now playing `%s`.", song.getTrack().getInfo().title);
         Bot.sendMessage(song.getChannel(), response);
     }
@@ -385,6 +388,9 @@ public class Youtube {
     @SongEventHandler(event = SongQueueEvent.class)
     public static void handle(@Nonnull SongQueueEvent event) {
         Song song = event.getSong();
+        if (song == null) {
+            return;
+        }
         String response = String.format("Added `%s` to the queue.", song.getTrack().getInfo().title);
         Bot.sendMessage(song.getChannel(), response);
     }
