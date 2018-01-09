@@ -13,7 +13,7 @@ public class VolatileStatus {
     private final Action ACTION;
     private final int DURATION;
 
-    public VolatileStatus(
+    protected VolatileStatus(
             @Nonnull BaseVolatileStatus baseVolatileStatus,
             @Nonnull Action action,
             int duration
@@ -23,7 +23,7 @@ public class VolatileStatus {
         DURATION = duration;
     }
 
-    public VolatileStatus(
+    protected VolatileStatus(
             @Nonnull BaseVolatileStatus baseVolatileStatus,
             @Nonnull Action action
     ) {

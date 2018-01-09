@@ -480,13 +480,13 @@ public enum BaseMove implements IModifier, IMoves {
         @Override
         public void onOwnItemUsed(@Nonnull Pokemon user, @Nonnull Items item) {
             if (item.getCategory() == ItemCategory.BERRY) {
-                user.TAGS.put(Tags.BERRY_USED, null);
+                Tags.BERRY_USED.apply(user, null);
             }
         }
 
         @Override
         public boolean canUseMove(@Nonnull Pokemon user) {
-            return user.TAGS.containsKey(Tags.BERRY_USED);
+            return Tags.BERRY_USED.has(user);
         }
     },
     BELLY_DRUM("Belly Drum") {
@@ -619,8 +619,7 @@ public enum BaseMove implements IModifier, IMoves {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
             if (!user.STATUSES.hasVolatileStatus(BaseVolatileStatus.BOUNCE)) {
-                VolatileStatus status = new VolatileStatus(BaseVolatileStatus.BOUNCE, action, 2);
-                user.STATUSES.addVolatileStatus(status);
+                BaseVolatileStatus.BOUNCE.apply(user, action);
                 return 0;
             }
 
@@ -1857,7 +1856,7 @@ public enum BaseMove implements IModifier, IMoves {
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
             int damage = super.use(user, target, battle, action);
 
-            user.TAGS.put(Tags.DESTINY_BOND, action);
+            Tags.DESTINY_BOND.apply(user, action);
 
             return damage;
         }
@@ -2052,8 +2051,7 @@ public enum BaseMove implements IModifier, IMoves {
             } else {
                 int damage = super.use(user, target, battle, action);
                 if (Math.random() < this.EFFECT_RATE) {
-                    VolatileStatus status = new VolatileStatus(BaseVolatileStatus.CONFUSION, action);
-                    target.STATUSES.addVolatileStatus(status);
+                    BaseVolatileStatus.CONFUSION.apply(target, action);
                 }
                 return damage;
             }
@@ -2062,7 +2060,7 @@ public enum BaseMove implements IModifier, IMoves {
     DOOM_DESIRE("Doom Desire") {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
-            if (!user.TAGS.containsKey(Tags.DOOM_DESIRE)) {
+            if (!Tags.DOOM_DESIRE.has(user)) {
                 Tags.DOOM_DESIRE.apply(user, action);
             }
             return 0;

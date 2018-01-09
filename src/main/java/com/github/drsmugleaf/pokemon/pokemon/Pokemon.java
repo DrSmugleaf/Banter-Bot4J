@@ -78,7 +78,7 @@ public class Pokemon {
     private double weight;
 
     @Nonnull
-    public final Map<Tags, Action> TAGS = new HashMap<>();
+    public final List<Tag> TAGS = new ArrayList<>();
 
     private int toxicN = 1;
 
