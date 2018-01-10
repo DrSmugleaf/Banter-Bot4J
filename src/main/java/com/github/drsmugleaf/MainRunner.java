@@ -1,5 +1,6 @@
 package com.github.drsmugleaf;
 
+import com.github.drsmugleaf.commands.Handler;
 import com.github.drsmugleaf.models.Guild;
 import com.github.drsmugleaf.models.Member;
 import com.github.drsmugleaf.models.User;
@@ -15,7 +16,7 @@ public class MainRunner {
         IDiscordClient cli = Bot.buildClient(Env.get("DISCORD_TOKEN"));
 
         // Register a listener via the EventSubscriber annotation which allows for organisation and delegation of events
-        cli.getDispatcher().registerListener(new CommandHandler());
+        cli.getDispatcher().registerListener(new Handler());
         cli.getDispatcher().registerListeners(Guild.class, User.class, Member.class);
         new Database();
 
