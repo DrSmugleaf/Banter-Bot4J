@@ -76,7 +76,7 @@ public class Youtube {
             userVoiceChannel.join();
         }
 
-        String searchString = String.join("", args);
+        String searchString = String.join(" ", args);
         SearchResult search;
         try {
             search = API.search(searchString);
