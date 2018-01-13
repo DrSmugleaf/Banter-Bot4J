@@ -2,7 +2,6 @@ package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.util.Bot;
 import com.github.drsmugleaf.youtube.*;
-import com.google.api.services.youtube.model.SearchResult;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
@@ -77,20 +76,8 @@ public class Youtube {
         }
 
         String searchString = String.join(" ", args);
-        SearchResult search;
-        try {
-            search = API.search(searchString);
-        } catch (SearchErrorException e) {
-            Bot.sendMessage(channel, "Error searching for `" + searchString + "`.");
-            return;
-        }
-        if (search == null) {
-            Bot.sendMessage(channel, "No results found for `" + searchString + "`.");
-            return;
-        }
 
-        String videoID = search.getId().getVideoId();
-        Youtube.PLAYER_MANAGER.loadItem(videoID, new AudioResultHandler(channel, author, searchString));
+        Youtube.PLAYER_MANAGER.loadItem(searchString, new AudioResultHandler(channel, author, searchString));
     }
 
     @Command
