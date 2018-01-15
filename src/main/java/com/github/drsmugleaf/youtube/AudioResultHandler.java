@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.youtube;
 
-import com.github.drsmugleaf.commands.Youtube;
+import com.github.drsmugleaf.commands.Music;
 import com.github.drsmugleaf.util.Bot;
 import com.google.api.services.youtube.model.SearchResult;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
@@ -25,7 +25,7 @@ public class AudioResultHandler implements AudioLoadResultHandler {
     private final String SEARCH_STRING;
 
     public AudioResultHandler(@Nonnull IChannel channel, @Nonnull IUser submitter, @Nonnull String searchString) {
-        MUSIC_MANAGER = Youtube.getGuildMusicManager(channel.getGuild());
+        MUSIC_MANAGER = Music.getGuildMusicManager(channel.getGuild());
         CHANNEL = channel;
         SUBMITTER = submitter;
         SEARCH_STRING = searchString;
@@ -78,7 +78,7 @@ public class AudioResultHandler implements AudioLoadResultHandler {
         }
 
         String videoID = search.getId().getVideoId();
-        Youtube.getAudioPlayerManager().loadItem(videoID, new AudioSearchResultHandler(CHANNEL, SUBMITTER, SEARCH_STRING));
+        Music.getAudioPlayerManager().loadItem(videoID, new AudioSearchResultHandler(CHANNEL, SUBMITTER, SEARCH_STRING));
     }
 
     @Override

@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by DrSmugleaf on 04/09/2017.
  */
-public class Youtube {
+public class Music {
 
     private static final AudioPlayerManager PLAYER_MANAGER = new DefaultAudioPlayerManager();
     private static final Map<IGuild, GuildMusicManager> MUSIC_MANAGERS = new HashMap<>();
@@ -36,7 +36,7 @@ public class Youtube {
 
     static {
         AudioSourceManagers.registerRemoteSources(PLAYER_MANAGER);
-        EventDispatcher.registerListener(new Youtube());
+        EventDispatcher.registerListener(new Music());
     }
 
     public static synchronized GuildMusicManager getGuildMusicManager(IGuild guild) {
