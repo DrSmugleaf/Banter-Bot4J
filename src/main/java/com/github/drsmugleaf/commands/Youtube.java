@@ -9,6 +9,7 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import javafx.util.Pair;
+import org.jetbrains.annotations.Contract;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.EmbedBuilder;
@@ -46,6 +47,12 @@ public class Youtube {
         guild.getAudioManager().setAudioProvider(musicManager.getProvider());
 
         return musicManager;
+    }
+
+    @Contract(pure = true)
+    @Nonnull
+    public static AudioPlayerManager getAudioPlayerManager() {
+        return PLAYER_MANAGER;
     }
 
     @Command
