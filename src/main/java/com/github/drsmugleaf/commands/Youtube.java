@@ -35,13 +35,13 @@ public class Youtube {
             .build();
 
     static {
-        AudioSourceManagers.registerRemoteSources(Youtube.PLAYER_MANAGER);
+        AudioSourceManagers.registerRemoteSources(PLAYER_MANAGER);
         EventDispatcher.registerListener(new Youtube());
     }
 
     public static synchronized GuildMusicManager getGuildMusicManager(IGuild guild) {
-        GuildMusicManager musicManager = Youtube.MUSIC_MANAGERS.computeIfAbsent(
-                guild, k -> new GuildMusicManager(Youtube.PLAYER_MANAGER)
+        GuildMusicManager musicManager = MUSIC_MANAGERS.computeIfAbsent(
+                guild, k -> new GuildMusicManager(PLAYER_MANAGER)
         );
 
         guild.getAudioManager().setAudioProvider(musicManager.getProvider());
@@ -84,7 +84,7 @@ public class Youtube {
 
         String searchString = String.join(" ", args);
 
-        Youtube.PLAYER_MANAGER.loadItem(searchString, new AudioResultHandler(channel, author, searchString));
+        PLAYER_MANAGER.loadItem(searchString, new AudioResultHandler(channel, author, searchString));
     }
 
     @Command
@@ -97,7 +97,7 @@ public class Youtube {
             return;
         }
 
-        GuildMusicManager musicManager = Youtube.getGuildMusicManager(guild);
+        GuildMusicManager musicManager = getGuildMusicManager(guild);
         if (musicManager.getScheduler().getCurrentSong() == null) {
             Bot.sendMessage(channel, "There isn't a song currently playing.");
             return;
@@ -117,14 +117,14 @@ public class Youtube {
             return;
         }
 
-        Youtube.SKIP_VOTES.computeIfAbsent(guild, k -> new ArrayList<>());
+        SKIP_VOTES.computeIfAbsent(guild, k -> new ArrayList<>());
 
-        if (Youtube.SKIP_VOTES.get(guild).contains(author)) {
+        if (SKIP_VOTES.get(guild).contains(author)) {
             Bot.sendMessage(channel, "You have already voted to skip this song.");
             return;
         }
 
-        Youtube.SKIP_VOTES.get(guild).add(author);
+        SKIP_VOTES.get(guild).add(author);
 
         List<IUser> users = botVoiceChannel.getUsersHere();
         int humanUsers = 0;
@@ -134,11 +134,11 @@ public class Youtube {
             }
         }
 
-        int votes = Youtube.SKIP_VOTES.get(guild).size();
+        int votes = SKIP_VOTES.get(guild).size();
         int requiredVotes = humanUsers / 2;
 
         if (votes >= requiredVotes || author == musicManager.getScheduler().getCurrentSong().getSubmitter()) {
-            Youtube.SKIP_VOTES.get(guild).clear();
+            SKIP_VOTES.get(guild).clear();
             musicManager.getScheduler().skip();
             Bot.sendMessage(channel, "Skipped the current song.");
         } else {
@@ -163,7 +163,7 @@ public class Youtube {
             return;
         }
 
-        GuildMusicManager musicManager = Youtube.getGuildMusicManager(guild);
+        GuildMusicManager musicManager = getGuildMusicManager(guild);
         if (!musicManager.getScheduler().isPlaying()) {
             Bot.sendMessage(channel, "There isn't a song currently playing.");
             return;
@@ -207,7 +207,7 @@ public class Youtube {
             return;
         }
 
-        GuildMusicManager musicManager = Youtube.getGuildMusicManager(guild);
+        GuildMusicManager musicManager = getGuildMusicManager(guild);
         if (!musicManager.getScheduler().isPlaying()) {
             Bot.sendMessage(channel, "There isn't a song currently playing.");
             return;
@@ -251,16 +251,16 @@ public class Youtube {
             return;
         }
 
-        GuildMusicManager musicManager = Youtube.getGuildMusicManager(guild);
+        GuildMusicManager musicManager = getGuildMusicManager(guild);
         if (musicManager.getScheduler().getCurrentSong() == null) {
             Bot.sendMessage(channel, "There aren't any songs currently playing or in the queue.");
             return;
         }
 
-        TrackScheduler scheduler = Youtube.getGuildMusicManager(guild).getScheduler();
+        TrackScheduler scheduler = getGuildMusicManager(guild).getScheduler();
 
         Pair<IGuild, IUser> pair = new Pair<>(guild, author);
-        Youtube.UNDO_STOP_CACHE.put(pair, scheduler.cloneSongs());
+        UNDO_STOP_CACHE.put(pair, scheduler.cloneSongs());
 
         scheduler.stop();
         Bot.sendMessage(
@@ -282,15 +282,15 @@ public class Youtube {
 
         IUser author = event.getAuthor();
         Pair<IGuild, IUser> pair = new Pair<>(guild, author);
-        List<Song> songs = Youtube.UNDO_STOP_CACHE.getIfPresent(pair);
+        List<Song> songs = UNDO_STOP_CACHE.getIfPresent(pair);
         if (songs == null) {
             Bot.sendMessage(channel, "You haven't stopped any songs in the last minute.");
             return;
         }
 
-        Youtube.UNDO_STOP_CACHE.invalidate(pair);
+        UNDO_STOP_CACHE.invalidate(pair);
 
-        TrackScheduler scheduler = Youtube.getGuildMusicManager(guild).getScheduler();
+        TrackScheduler scheduler = getGuildMusicManager(guild).getScheduler();
         songs.addAll(scheduler.cloneSongs());
         scheduler.stop();
         scheduler.queue(songs);
@@ -308,7 +308,7 @@ public class Youtube {
             return;
         }
 
-        TrackScheduler scheduler = Youtube.getGuildMusicManager(guild).getScheduler();
+        TrackScheduler scheduler = getGuildMusicManager(guild).getScheduler();
         Song currentSong = scheduler.getCurrentSong();
         if (currentSong == null) {
             Bot.sendMessage(channel, "There are no songs currently playing or in the queue.");
