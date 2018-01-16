@@ -2084,7 +2084,13 @@ public enum BaseMove implements IModifier, IMoves {
             }
         }
     },
-    DOUBLE_HIT("Double Hit"),
+    DOUBLE_HIT("Double Hit") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
+            super.use(user, target, battle, action);
+            return super.use(user, target, battle, action);
+        }
+    },
     DOUBLE_KICK("Double Kick"),
     DOUBLE_SLAP("Double Slap"),
     DOUBLE_TEAM("Double Team"),
