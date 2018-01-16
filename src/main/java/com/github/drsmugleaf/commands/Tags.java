@@ -35,14 +35,39 @@ enum Tags {
             return "You don't have permission to use that command.";
         }
     },
+    SAME_VOICE_CHANNEL {
+        @Override
+        public boolean valid(@Nonnull MessageReceivedEvent event) {
+            if (!GUILD_ONLY.valid(event)) {
+                return false;
+            }
+
+            IGuild guild = event.getGuild();
+            IUser author = event.getAuthor();
+            IVoiceChannel authorVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
+            IUser bot = event.getClient().getOurUser();
+            IVoiceChannel botVoiceChannel = bot.getVoiceStateForGuild(guild).getChannel();
+
+            return botVoiceChannel == authorVoiceChannel;
+        }
+
+        @Override
+        public String message() {
+            return "You aren't in the same voice channel as me.";
+        }
+    },
     VOICE_ONLY {
         @Override
         public boolean valid(@Nonnull MessageReceivedEvent event) {
+            if (!GUILD_ONLY.valid(event)) {
+                return false;
+            }
+
             IGuild guild = event.getGuild();
             IUser author = event.getAuthor();
             IVoiceChannel authorVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
 
-            return guild != null && authorVoiceChannel != null;
+            return authorVoiceChannel != null;
         }
 
         @Override
