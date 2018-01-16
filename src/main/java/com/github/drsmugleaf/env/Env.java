@@ -1,4 +1,4 @@
-package com.github.drsmugleaf;
+package com.github.drsmugleaf.env;
 
 import com.github.drsmugleaf.util.Bot;
 
@@ -31,8 +31,8 @@ public class Env {
     }
 
     @Nullable
-    public static String get(@Nonnull String key) {
-        return env.getProperty(key);
+    public static String get(@Nonnull Keys key) {
+        return env.getProperty(key.name());
     }
 
 }

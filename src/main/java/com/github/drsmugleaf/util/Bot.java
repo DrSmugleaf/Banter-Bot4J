@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.util;
 
-import com.github.drsmugleaf.Env;
+import com.github.drsmugleaf.env.Env;
+import com.github.drsmugleaf.env.Keys;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,7 @@ import java.util.List;
 public class Bot {
 
     public static IDiscordClient client = null;
-    public static final String BOT_PREFIX = Env.get("BOT_PREFIX");
+    public static final String BOT_PREFIX = Env.get(Keys.BOT_PREFIX);
     public static final Long[] OWNERS = {159650451447480320L, 109067752286715904L};
     public static final Logger LOGGER = initLogger();
 

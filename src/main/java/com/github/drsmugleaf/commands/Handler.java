@@ -1,11 +1,11 @@
 package com.github.drsmugleaf.commands;
 
-import com.github.drsmugleaf.Command;
 import com.github.drsmugleaf.models.Member;
 import com.github.drsmugleaf.util.Annotations;
 import com.github.drsmugleaf.util.Bot;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.Permissions;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
@@ -18,13 +18,33 @@ import java.util.*;
 public class Handler {
 
     @Nonnull
-    private static final Map<String, Command> COMMANDS = new HashMap<>();
+    private static final Map<String, ICommand> COMMANDS = new HashMap<>();
 
     static {
-        List<Method> commands = Annotations.findMethodsWithAnnotations(com.github.drsmugleaf.commands.Command.class);
-        if (commands != null) {
-            for (Method method : commands) {
-                Command command = (event, args) -> {
+        List<Method> commands = Annotations.findMethodsWithAnnotations(Command.class);
+        for (Method method : commands) {
+            Command annotation = method.getAnnotation(Command.class);
+
+            ICommand command = new ICommand() {
+                @Override
+                void run(@Nonnull MessageReceivedEvent event, @Nonnull List<String> args) {
+                    if (event.getGuild() != null) {
+                        List<Permissions> annotationPermissions = Arrays.asList(annotation.permissions());
+                        EnumSet<Permissions> authorPermissions = event.getAuthor().getPermissionsForGuild(event.getGuild());
+
+                        if (!annotationPermissions.isEmpty() && Collections.disjoint(authorPermissions, Arrays.asList(annotation.permissions()))) {
+                            Bot.sendMessage(event.getChannel(), "You don't have permission to use that command.");
+                            return;
+                        }
+                    }
+
+                    for (Tags tags : annotation.tags()) {
+                        if (!tags.valid(event)) {
+                            Bot.sendMessage(event.getChannel(), tags.message());
+                            return;
+                        }
+                    }
+
                     try {
                         method.invoke(method.getClass(), event, args);
                     } catch (InvocationTargetException e) {
@@ -32,14 +52,14 @@ public class Handler {
                     } catch (IllegalAccessException e) {
                         Bot.LOGGER.error("Error running command", e);
                     }
-                };
-
-                String commandName = method.getAnnotation(com.github.drsmugleaf.commands.Command.class).name();
-                if (!commandName.isEmpty()) {
-                    COMMANDS.put(commandName, command);
-                } else {
-                    COMMANDS.put(method.getName(), command);
                 }
+            };
+
+            String commandName = annotation.name();
+            if (!commandName.isEmpty()) {
+                COMMANDS.put(commandName, command);
+            } else {
+                COMMANDS.put(method.getName(), command);
             }
         }
     }
@@ -70,7 +90,7 @@ public class Handler {
         argsList.remove(0);
 
         if (COMMANDS.containsKey(commandString)) {
-            COMMANDS.get(commandString).runCommand(event, argsList);
+            COMMANDS.get(commandString).run(event, argsList);
         }
     }
 
