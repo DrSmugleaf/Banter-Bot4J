@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.commands;
 
-import com.github.drsmugleaf.Command;
 import com.github.drsmugleaf.models.Member;
 import com.github.drsmugleaf.util.Annotations;
 import com.github.drsmugleaf.util.Bot;
@@ -18,13 +17,13 @@ import java.util.*;
 public class Handler {
 
     @Nonnull
-    private static final Map<String, Command> COMMANDS = new HashMap<>();
+    private static final Map<String, ICommand> COMMANDS = new HashMap<>();
 
     static {
         List<Method> commands = Annotations.findMethodsWithAnnotations(com.github.drsmugleaf.commands.Command.class);
         if (commands != null) {
             for (Method method : commands) {
-                Command command = (event, args) -> {
+                ICommand command = (event, args) -> {
                     try {
                         method.invoke(method.getClass(), event, args);
                     } catch (InvocationTargetException e) {
