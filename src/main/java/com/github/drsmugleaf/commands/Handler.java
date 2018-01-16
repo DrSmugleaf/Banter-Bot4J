@@ -5,6 +5,7 @@ import com.github.drsmugleaf.util.Annotations;
 import com.github.drsmugleaf.util.Bot;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.Permissions;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
@@ -25,6 +26,14 @@ public class Handler {
             Command annotation = method.getAnnotation(Command.class);
 
             ICommand command = (event, args) -> {
+                if (event.getGuild() != null) {
+                    EnumSet<Permissions> authorPermissions = event.getAuthor().getPermissionsForGuild(event.getGuild());
+                    if (Collections.disjoint(authorPermissions, Arrays.asList(annotation.permissions()))) {
+                        Bot.sendMessage(event.getChannel(), "You don't have permission to use this command.");
+                        return;
+                    }
+                }
+
                 for (Tags tags : annotation.tags()) {
                     if (!tags.valid(event)) {
                         Bot.sendMessage(event.getChannel(), tags.message());

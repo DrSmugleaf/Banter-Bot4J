@@ -147,7 +147,7 @@ public class Music {
         }
     }
 
-    @Command
+    @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS})
     public static void pause(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
@@ -158,10 +158,6 @@ public class Music {
         }
 
         IUser author = event.getAuthor();
-        if (!author.getPermissionsForGuild(guild).contains(Permissions.VOICE_MUTE_MEMBERS)) {
-            Bot.sendMessage(channel, "You don't have permission pause the song that's currently playing.");
-            return;
-        }
 
         GuildMusicManager musicManager = getGuildMusicManager(guild);
         if (!musicManager.getScheduler().isPlaying()) {
@@ -191,7 +187,7 @@ public class Music {
         Bot.sendMessage(channel, "Paused the current song.");
     }
 
-    @Command
+    @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS})
     public static void resume(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
@@ -202,10 +198,6 @@ public class Music {
         }
 
         IUser author = event.getAuthor();
-        if (!author.getPermissionsForGuild(guild).contains(Permissions.VOICE_MUTE_MEMBERS)) {
-            Bot.sendMessage(channel, "You don't have permission pause the song that's currently playing.");
-            return;
-        }
 
         GuildMusicManager musicManager = getGuildMusicManager(guild);
         if (!musicManager.getScheduler().isPlaying()) {
@@ -235,7 +227,7 @@ public class Music {
         Bot.sendMessage(channel, "Resumed the current song.");
     }
 
-    @Command
+    @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS})
     public static void stop(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
@@ -246,10 +238,6 @@ public class Music {
         }
 
         IUser author = event.getAuthor();
-        if (!author.getPermissionsForGuild(guild).contains(Permissions.VOICE_MUTE_MEMBERS)) {
-            Bot.sendMessage(channel, "You don't have permission to stop all songs currently queued.");
-            return;
-        }
 
         GuildMusicManager musicManager = getGuildMusicManager(guild);
         if (musicManager.getScheduler().getCurrentSong() == null) {
