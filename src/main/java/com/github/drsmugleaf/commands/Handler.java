@@ -31,7 +31,7 @@ public class Handler {
                     if (event.getGuild() != null) {
                         EnumSet<Permissions> authorPermissions = event.getAuthor().getPermissionsForGuild(event.getGuild());
                         if (Collections.disjoint(authorPermissions, Arrays.asList(annotation.permissions()))) {
-                            Bot.sendMessage(event.getChannel(), "You don't have permission to use this command.");
+                            Bot.sendMessage(event.getChannel(), "You don't have permission to use that command.");
                             return;
                         }
                     }
