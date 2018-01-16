@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by DrSmugleaf on 16/01/2018.
  */
-public enum Tags {
+enum Tags {
 
     OWNER_ONLY {
         @Override
