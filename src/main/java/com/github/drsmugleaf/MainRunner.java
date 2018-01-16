@@ -3,6 +3,7 @@ package com.github.drsmugleaf;
 import com.github.drsmugleaf.commands.Handler;
 import com.github.drsmugleaf.env.Env;
 import com.github.drsmugleaf.env.Keys;
+import com.github.drsmugleaf.models.Database;
 import com.github.drsmugleaf.models.Guild;
 import com.github.drsmugleaf.models.Member;
 import com.github.drsmugleaf.models.User;

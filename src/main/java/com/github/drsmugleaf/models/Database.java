@@ -1,4 +1,4 @@
-package com.github.drsmugleaf;
+package com.github.drsmugleaf.models;
 
 import com.github.drsmugleaf.env.Env;
 import com.github.drsmugleaf.env.Keys;
