@@ -19,6 +19,7 @@ enum Tags {
             return event.getGuild() != null;
         }
 
+        @Nonnull
         @Override
         public String message() {
             return "That command must be used in a server channel.";
@@ -30,6 +31,7 @@ enum Tags {
             return Bot.isOwner(event.getAuthor().getLongID());
         }
 
+        @Nonnull
         @Override
         public String message() {
             return "You don't have permission to use that command.";
@@ -51,6 +53,7 @@ enum Tags {
             return botVoiceChannel == authorVoiceChannel;
         }
 
+        @Nonnull
         @Override
         public String message() {
             return "You aren't in the same voice channel as me.";
@@ -70,6 +73,7 @@ enum Tags {
             return authorVoiceChannel != null;
         }
 
+        @Nonnull
         @Override
         public String message() {
             return "You must be in a voice channel to use that command.";
@@ -78,6 +82,7 @@ enum Tags {
 
     public abstract boolean valid(@Nonnull MessageReceivedEvent event);
 
+    @Nonnull
     public abstract String message();
 
 }
