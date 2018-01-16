@@ -29,8 +29,10 @@ public class Handler {
                 @Override
                 void run(@Nonnull MessageReceivedEvent event, @Nonnull List<String> args) {
                     if (event.getGuild() != null) {
+                        List<Permissions> annotationPermissions = Arrays.asList(annotation.permissions());
                         EnumSet<Permissions> authorPermissions = event.getAuthor().getPermissionsForGuild(event.getGuild());
-                        if (Collections.disjoint(authorPermissions, Arrays.asList(annotation.permissions()))) {
+
+                        if (!annotationPermissions.isEmpty() && Collections.disjoint(authorPermissions, Arrays.asList(annotation.permissions()))) {
                             Bot.sendMessage(event.getChannel(), "You don't have permission to use that command.");
                             return;
                         }
