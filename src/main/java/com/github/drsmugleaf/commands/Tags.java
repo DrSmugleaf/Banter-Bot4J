@@ -42,7 +42,7 @@ enum Tags {
             IUser author = event.getAuthor();
             IVoiceChannel authorVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
 
-            return authorVoiceChannel != null;
+            return guild != null && authorVoiceChannel != null;
         }
 
         @Override
