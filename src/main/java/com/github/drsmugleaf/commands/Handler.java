@@ -20,7 +20,7 @@ public class Handler {
     private static final Map<String, ICommand> COMMANDS = new HashMap<>();
 
     static {
-        List<Method> commands = Annotations.findMethodsWithAnnotations(com.github.drsmugleaf.commands.Command.class);
+        List<Method> commands = Annotations.findMethodsWithAnnotations(Command.class);
         if (commands != null) {
             for (Method method : commands) {
                 ICommand command = (event, args) -> {
@@ -33,7 +33,7 @@ public class Handler {
                     }
                 };
 
-                String commandName = method.getAnnotation(com.github.drsmugleaf.commands.Command.class).name();
+                String commandName = method.getAnnotation(Command.class).name();
                 if (!commandName.isEmpty()) {
                     COMMANDS.put(commandName, command);
                 } else {
