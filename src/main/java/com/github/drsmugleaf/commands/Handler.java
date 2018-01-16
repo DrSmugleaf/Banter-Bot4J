@@ -21,24 +21,22 @@ public class Handler {
 
     static {
         List<Method> commands = Annotations.findMethodsWithAnnotations(Command.class);
-        if (commands != null) {
-            for (Method method : commands) {
-                ICommand command = (event, args) -> {
-                    try {
-                        method.invoke(method.getClass(), event, args);
-                    } catch (InvocationTargetException e) {
-                        Bot.LOGGER.error("Error running command", e.getCause());
-                    } catch (IllegalAccessException e) {
-                        Bot.LOGGER.error("Error running command", e);
-                    }
-                };
-
-                String commandName = method.getAnnotation(Command.class).name();
-                if (!commandName.isEmpty()) {
-                    COMMANDS.put(commandName, command);
-                } else {
-                    COMMANDS.put(method.getName(), command);
+        for (Method method : commands) {
+            ICommand command = (event, args) -> {
+                try {
+                    method.invoke(method.getClass(), event, args);
+                } catch (InvocationTargetException e) {
+                    Bot.LOGGER.error("Error running command", e.getCause());
+                } catch (IllegalAccessException e) {
+                    Bot.LOGGER.error("Error running command", e);
                 }
+            };
+
+            String commandName = method.getAnnotation(Command.class).name();
+            if (!commandName.isEmpty()) {
+                COMMANDS.put(commandName, command);
+            } else {
+                COMMANDS.put(method.getName(), command);
             }
         }
     }
