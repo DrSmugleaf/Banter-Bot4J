@@ -18,13 +18,8 @@ import java.util.List;
  */
 public class Owner {
 
-    @Command
+    @Command(tags = {Tags.OWNER_ONLY})
     public static void avatar(MessageReceivedEvent event, List<String> args) {
-        if(!Bot.isOwner(event.getAuthor().getLongID())) {
-            Bot.sendMessage(event.getChannel(), "You don't have permission to change the bot's image");
-            return;
-        }
-
         try {
             URL url = new URL(args.get(0));
             URLConnection connection = url.openConnection();
@@ -50,25 +45,15 @@ public class Owner {
         }
     }
 
-    @Command
+    @Command(tags = {Tags.OWNER_ONLY})
     public static void name(MessageReceivedEvent event, List<String> args) {
-        if(!Bot.isOwner(event.getAuthor().getLongID())) {
-            Bot.sendMessage(event.getChannel(), "You don't have permission to change the bot's name");
-            return;
-        }
-
         String name = String.join(" ", args);
         event.getClient().changeUsername(String.join(" ", args));
         Bot.sendMessage(event.getChannel(), "Changed the bot's name to " + name);
     }
 
-    @Command
+    @Command(tags = {Tags.OWNER_ONLY})
     public static void playing(MessageReceivedEvent event, List<String> args) {
-        if(!Bot.isOwner(event.getAuthor().getLongID())) {
-            Bot.sendMessage(event.getChannel(), "You don't have permission to change the bot's playing status");
-            return;
-        }
-
         if(args.isEmpty()) {
             event.getClient().changePlayingText(null);
             Bot.sendMessage(event.getChannel(), "Reset the bot's playing status");

@@ -14,4 +14,6 @@ public @interface Command {
 
     String name() default "";
 
+    Tags[] tags() default {};
+
 }

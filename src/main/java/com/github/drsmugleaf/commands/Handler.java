@@ -22,7 +22,16 @@ public class Handler {
     static {
         List<Method> commands = Annotations.findMethodsWithAnnotations(Command.class);
         for (Method method : commands) {
+            Command annotation = method.getAnnotation(Command.class);
+
             ICommand command = (event, args) -> {
+                for (Tags tags : annotation.tags()) {
+                    if (!tags.valid(event)) {
+                        Bot.sendMessage(event.getChannel(), tags.message());
+                        return;
+                    }
+                }
+
                 try {
                     method.invoke(method.getClass(), event, args);
                 } catch (InvocationTargetException e) {
@@ -32,7 +41,7 @@ public class Handler {
                 }
             };
 
-            String commandName = method.getAnnotation(Command.class).name();
+            String commandName = annotation.name();
             if (!commandName.isEmpty()) {
                 COMMANDS.put(commandName, command);
             } else {
