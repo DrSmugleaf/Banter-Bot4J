@@ -25,28 +25,31 @@ public class Handler {
         for (Method method : commands) {
             Command annotation = method.getAnnotation(Command.class);
 
-            ICommand command = (event, args) -> {
-                if (event.getGuild() != null) {
-                    EnumSet<Permissions> authorPermissions = event.getAuthor().getPermissionsForGuild(event.getGuild());
-                    if (Collections.disjoint(authorPermissions, Arrays.asList(annotation.permissions()))) {
-                        Bot.sendMessage(event.getChannel(), "You don't have permission to use this command.");
-                        return;
+            ICommand command = new ICommand() {
+                @Override
+                void run(@Nonnull MessageReceivedEvent event, @Nonnull List<String> args) {
+                    if (event.getGuild() != null) {
+                        EnumSet<Permissions> authorPermissions = event.getAuthor().getPermissionsForGuild(event.getGuild());
+                        if (Collections.disjoint(authorPermissions, Arrays.asList(annotation.permissions()))) {
+                            Bot.sendMessage(event.getChannel(), "You don't have permission to use this command.");
+                            return;
+                        }
                     }
-                }
 
-                for (Tags tags : annotation.tags()) {
-                    if (!tags.valid(event)) {
-                        Bot.sendMessage(event.getChannel(), tags.message());
-                        return;
+                    for (Tags tags : annotation.tags()) {
+                        if (!tags.valid(event)) {
+                            Bot.sendMessage(event.getChannel(), tags.message());
+                            return;
+                        }
                     }
-                }
 
-                try {
-                    method.invoke(method.getClass(), event, args);
-                } catch (InvocationTargetException e) {
-                    Bot.LOGGER.error("Error running command", e.getCause());
-                } catch (IllegalAccessException e) {
-                    Bot.LOGGER.error("Error running command", e);
+                    try {
+                        method.invoke(method.getClass(), event, args);
+                    } catch (InvocationTargetException e) {
+                        Bot.LOGGER.error("Error running command", e.getCause());
+                    } catch (IllegalAccessException e) {
+                        Bot.LOGGER.error("Error running command", e);
+                    }
                 }
             };
 
@@ -85,7 +88,7 @@ public class Handler {
         argsList.remove(0);
 
         if (COMMANDS.containsKey(commandString)) {
-            COMMANDS.get(commandString).runCommand(event, argsList);
+            COMMANDS.get(commandString).run(event, argsList);
         }
     }
 

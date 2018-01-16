@@ -2,14 +2,14 @@ package com.github.drsmugleaf.commands;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
- * Created by declan on 04/04/2017.
+ * Created by DrSmugleaf on 16/01/2018.
  */
-public interface ICommand {
+public abstract class ICommand {
 
-    // Interface for a command to be implemented in the command map
-    void runCommand(MessageReceivedEvent event, List<String> args);
+    abstract void run(@Nonnull MessageReceivedEvent event, @Nonnull List<String> args);
 
 }
