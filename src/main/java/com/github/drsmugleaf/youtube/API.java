@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.youtube;
 
-import com.github.drsmugleaf.Env;
+import com.github.drsmugleaf.env.Env;
+import com.github.drsmugleaf.env.Keys;
 import com.github.drsmugleaf.util.Bot;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -33,7 +34,7 @@ public class API {
             throw new SearchErrorException(e);
         }
 
-        String apiKey = Env.get("GOOGLE_KEY");
+        String apiKey = Env.get(Keys.GOOGLE_KEY);
         request.setKey(apiKey);
         request.setQ(query);
         request.setType("video");
