@@ -2091,7 +2091,47 @@ public enum BaseMove implements IModifier, IMoves {
             return super.use(user, target, battle, action);
         }
     },
-    DOUBLE_KICK("Double Kick"),
+    DOUBLE_KICK("Double Kick") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
+            switch (action.getGeneration()) {
+                case I: {
+                    if (target.STATUSES.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+                        int damage = super.use(user, target, battle, action);
+                        if (!target.STATUSES.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+                            return damage;
+                        }
+                        target.damage(damage);
+                        return damage;
+                    }
+                    int damage = super.use(user, target, battle, action);
+                    target.damage(damage);
+                    return damage;
+                }
+                case II: {
+                    if (target.STATUSES.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+                        int damage = super.use(user, target, battle, action);
+                        if (!target.STATUSES.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+                            return damage;
+                        }
+                        super.use(user, target, battle, action);
+                        return damage;
+                    }
+                    super.use(user, target, battle, action);
+                    return super.use(user, target, battle, action);
+                }
+                case III:
+                case IV:
+                case V:
+                case VI:
+                case VII:
+                    super.use(user, target, battle, action);
+                    return super.use(user, target, battle, action);
+                default:
+                    throw new InvalidGenerationException(action.getGeneration());
+            }
+        }
+    },
     DOUBLE_SLAP("Double Slap"),
     DOUBLE_TEAM("Double Team"),
     DOUBLE_EDGE("Double-Edge"),
