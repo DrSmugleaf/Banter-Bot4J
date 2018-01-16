@@ -1,7 +1,6 @@
 package com.github.drsmugleaf.util;
 
-import org.jetbrains.annotations.Nullable;
-
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -9,7 +8,9 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 /**
  * Created by DrSmugleaf on 21/05/2017.
@@ -58,7 +59,7 @@ public class Annotations {
         return classes;
     }
 
-    @Nullable
+    @Nonnull
     public static List<Method> findMethodsWithAnnotations(Class<? extends Annotation> annotation) {
         Iterable<Class> classes = null;
         try {
@@ -68,7 +69,7 @@ public class Annotations {
         }
 
         List<Method> methodList = new ArrayList<>();
-        if(classes == null) return null;
+        if(classes == null) return methodList;
         classes.forEach((Class cls) -> {
             for (Method method : cls.getMethods()) {
                 if (method.isAnnotationPresent(annotation)) {

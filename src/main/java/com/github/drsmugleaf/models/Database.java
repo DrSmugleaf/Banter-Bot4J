@@ -1,7 +1,8 @@
-package com.github.drsmugleaf;
+package com.github.drsmugleaf.models;
 
+import com.github.drsmugleaf.env.Env;
+import com.github.drsmugleaf.env.Keys;
 import com.github.drsmugleaf.util.Bot;
-import com.github.drsmugleaf.util.Env;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
@@ -17,7 +18,7 @@ import java.util.regex.Pattern;
  */
 public class Database {
 
-    private static final String URI = Env.readFile().get("DATABASE_URI");
+    private static final String URI = Env.get(Keys.DATABASE_URI);
     private static final Map<String, String> CREDENTIALS = getCredentials(URI);
     private static final String URL = CREDENTIALS.get("url");
     private static final String USERNAME = CREDENTIALS.get("username");
