@@ -55,15 +55,10 @@ public class Music {
         return PLAYER_MANAGER;
     }
 
-    @Command
+    @Command(tags = {Tags.GUILD_ONLY})
     public static void play(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
-
-        if (guild == null) {
-            Bot.sendMessage(channel, "This command must be used in a server channel.");
-            return;
-        }
 
         try {
             event.getMessage().delete();
@@ -87,15 +82,10 @@ public class Music {
         PLAYER_MANAGER.loadItem(searchString, new AudioResultHandler(channel, author, searchString));
     }
 
-    @Command
+    @Command(tags = {Tags.GUILD_ONLY})
     public static void skip(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
-
-        if (guild == null) {
-            Bot.sendMessage(channel, "This command must be used in a server channel.");
-            return;
-        }
 
         GuildMusicManager musicManager = getGuildMusicManager(guild);
         if (musicManager.getScheduler().getCurrentSong() == null) {
@@ -147,15 +137,10 @@ public class Music {
         }
     }
 
-    @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS})
+    @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY})
     public static void pause(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
-
-        if (guild == null) {
-            Bot.sendMessage(channel, "This command must be used in a server channel.");
-            return;
-        }
 
         IUser author = event.getAuthor();
 
@@ -187,15 +172,10 @@ public class Music {
         Bot.sendMessage(channel, "Paused the current song.");
     }
 
-    @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS})
+    @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY})
     public static void resume(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
-
-        if (guild == null) {
-            Bot.sendMessage(channel, "This command must be used in a server channel.");
-            return;
-        }
 
         IUser author = event.getAuthor();
 
@@ -227,15 +207,10 @@ public class Music {
         Bot.sendMessage(channel, "Resumed the current song.");
     }
 
-    @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS})
+    @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY})
     public static void stop(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
-
-        if (guild == null) {
-            Bot.sendMessage(channel, "This command must be used in a server channel.");
-            return;
-        }
 
         IUser author = event.getAuthor();
 
@@ -258,15 +233,10 @@ public class Music {
         );
     }
 
-    @Command
+    @Command(tags = {Tags.GUILD_ONLY})
     public static void undostop(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
-
-        if (guild == null) {
-            Bot.sendMessage(channel, "This command must be used in a server channel.");
-            return;
-        }
 
         IUser author = event.getAuthor();
         Pair<IGuild, IUser> pair = new Pair<>(guild, author);
@@ -285,16 +255,11 @@ public class Music {
         Bot.sendMessage(channel, "Restored all stopped songs.");
     }
 
-    @Command
+    @Command(tags = {Tags.GUILD_ONLY})
     public static void queue(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
         IUser author = event.getAuthor();
-
-        if (guild == null) {
-            Bot.sendMessage(channel, "This command must be used in a server channel.");
-            return;
-        }
 
         TrackScheduler scheduler = getGuildMusicManager(guild).getScheduler();
         Song currentSong = scheduler.getCurrentSong();

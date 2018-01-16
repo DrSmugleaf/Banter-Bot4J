@@ -10,6 +10,17 @@ import javax.annotation.Nonnull;
  */
 enum Tags {
 
+    GUILD_ONLY {
+        @Override
+        public boolean valid(@Nonnull MessageReceivedEvent event) {
+            return event.getGuild() != null;
+        }
+
+        @Override
+        public String message() {
+            return "That command must be used in a server channel.";
+        }
+    },
     OWNER_ONLY {
         @Override
         public boolean valid(@Nonnull MessageReceivedEvent event) {
