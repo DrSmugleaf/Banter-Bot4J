@@ -55,7 +55,7 @@ public class Music {
         return PLAYER_MANAGER;
     }
 
-    @Command(tags = {Tags.GUILD_ONLY})
+    @Command(tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY})
     public static void play(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
@@ -65,16 +65,12 @@ public class Music {
         } catch (MissingPermissionsException ignored) {}
 
         IUser author = event.getAuthor();
-        IVoiceChannel userVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
-        if (userVoiceChannel == null) {
-            Bot.sendMessage(channel, "You must be in a voice channel to use this command.");
-            return;
-        }
+        IVoiceChannel authorVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
 
         IUser bot = event.getClient().getOurUser();
         IVoiceChannel botVoiceChannel = bot.getVoiceStateForGuild(guild).getChannel();
-        if (botVoiceChannel != userVoiceChannel) {
-            userVoiceChannel.join();
+        if (botVoiceChannel != authorVoiceChannel) {
+            authorVoiceChannel.join();
         }
 
         String searchString = String.join(" ", args);
@@ -82,7 +78,7 @@ public class Music {
         PLAYER_MANAGER.loadItem(searchString, new AudioResultHandler(channel, author, searchString));
     }
 
-    @Command(tags = {Tags.GUILD_ONLY})
+    @Command(tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY})
     public static void skip(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
@@ -94,15 +90,11 @@ public class Music {
         }
 
         IUser author = event.getAuthor();
-        IChannel userVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
-        if (userVoiceChannel == null) {
-            Bot.sendMessage(channel, "You aren't in a voice channel.");
-            return;
-        }
+        IChannel authorVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
 
         IUser bot = event.getClient().getOurUser();
         IChannel botVoiceChannel = bot.getVoiceStateForGuild(guild).getChannel();
-        if (userVoiceChannel != botVoiceChannel) {
+        if (authorVoiceChannel != botVoiceChannel) {
             Bot.sendMessage(channel, "You aren't in the same voice channel as me.");
             return;
         }
@@ -137,7 +129,7 @@ public class Music {
         }
     }
 
-    @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY})
+    @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY})
     public static void pause(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
@@ -150,15 +142,11 @@ public class Music {
             return;
         }
 
-        IChannel userVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
-        if (userVoiceChannel == null) {
-            Bot.sendMessage(channel, "You aren't in a voice channel.");
-            return;
-        }
+        IChannel authorVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
 
         IUser bot = event.getClient().getOurUser();
         IChannel botVoiceChannel = bot.getVoiceStateForGuild(guild).getChannel();
-        if (userVoiceChannel != botVoiceChannel) {
+        if (authorVoiceChannel != botVoiceChannel) {
             Bot.sendMessage(channel, "You aren't in the same voice channel as me.");
             return;
         }
@@ -172,7 +160,7 @@ public class Music {
         Bot.sendMessage(channel, "Paused the current song.");
     }
 
-    @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY})
+    @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY})
     public static void resume(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
@@ -185,15 +173,11 @@ public class Music {
             return;
         }
 
-        IChannel userVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
-        if (userVoiceChannel == null) {
-            Bot.sendMessage(channel, "You aren't in a voice channel.");
-            return;
-        }
+        IChannel authorVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
 
         IUser bot = event.getClient().getOurUser();
         IChannel botVoiceChannel = bot.getVoiceStateForGuild(guild).getChannel();
-        if (userVoiceChannel != botVoiceChannel) {
+        if (authorVoiceChannel != botVoiceChannel) {
             Bot.sendMessage(channel, "You aren't in the same voice channel as me.");
             return;
         }

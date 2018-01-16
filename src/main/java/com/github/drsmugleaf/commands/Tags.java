@@ -2,6 +2,9 @@ package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.util.Bot;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IGuild;
+import sx.blah.discord.handle.obj.IUser;
+import sx.blah.discord.handle.obj.IVoiceChannel;
 
 import javax.annotation.Nonnull;
 
@@ -30,6 +33,21 @@ enum Tags {
         @Override
         public String message() {
             return "You don't have permission to use that command.";
+        }
+    },
+    VOICE_ONLY {
+        @Override
+        public boolean valid(@Nonnull MessageReceivedEvent event) {
+            IGuild guild = event.getGuild();
+            IUser author = event.getAuthor();
+            IVoiceChannel authorVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
+
+            return authorVoiceChannel != null;
+        }
+
+        @Override
+        public String message() {
+            return "You must be in a voice channel to use that command.";
         }
     };
 
