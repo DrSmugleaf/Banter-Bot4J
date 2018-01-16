@@ -20,6 +20,10 @@ public class Owner {
 
     @Command(tags = {Tags.OWNER_ONLY})
     public static void avatar(MessageReceivedEvent event, List<String> args) {
+        if (args.isEmpty()) {
+            Bot.sendMessage(event.getChannel(), "You didn't provide a link to change the bot's image to.");
+        }
+
         try {
             URL url = new URL(args.get(0));
             URLConnection connection = url.openConnection();
