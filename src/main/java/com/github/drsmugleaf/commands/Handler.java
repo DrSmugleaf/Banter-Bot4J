@@ -18,14 +18,14 @@ import java.util.*;
 public class Handler {
 
     @Nonnull
-    private static final Map<String, ICommand> COMMANDS = new HashMap<>();
+    private static final Map<String, AbstractCommand> COMMANDS = new HashMap<>();
 
     static {
         List<Method> commands = Annotations.findMethodsWithAnnotations(Command.class);
         for (Method method : commands) {
             Command annotation = method.getAnnotation(Command.class);
 
-            ICommand command = new ICommand() {
+            AbstractCommand command = new AbstractCommand() {
                 @Override
                 void run(@Nonnull MessageReceivedEvent event, @Nonnull List<String> args) {
                     if (event.getGuild() != null) {

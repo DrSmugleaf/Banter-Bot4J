@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 16/01/2018.
  */
-abstract class ICommand {
+abstract class AbstractCommand {
 
     abstract void run(@Nonnull MessageReceivedEvent event, @Nonnull List<String> args);
 
