@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 /**
@@ -19,37 +20,44 @@ import java.util.Arrays;
  */
 public class BanterBot4J {
 
-    public static IDiscordClient client = null;
-    public static final String BOT_PREFIX = Env.get(Keys.BOT_PREFIX);
-    public static final Long[] OWNERS = {109067752286715904L};
+    @Nonnull
+    private static IDiscordClient client = buildClient();
+
+    @Nonnull
+    public static final String BOT_PREFIX = getBotPrefix();
+
+    @Nonnull
+    private static final Long[] OWNERS = {109067752286715904L};
+
+    @Nonnull
     public static final Logger LOGGER = initLogger();
+
+    private static IDiscordClient buildClient() {
+        ClientBuilder clientBuilder = new ClientBuilder();
+        String token = Env.get(Keys.DISCORD_TOKEN);
+        clientBuilder.withToken(token).withRecommendedShardCount();
+        return clientBuilder.build();
+    }
+
+    private static String getBotPrefix() {
+        String envPrefix = Env.get(Keys.BOT_PREFIX);
+        return envPrefix == null ? "!" : envPrefix;
+    }
 
     private static Logger initLogger() {
         return LoggerFactory.getLogger(BanterBot4J.class);
     }
 
     public static void main(String[] args){
-        IDiscordClient cli = buildClient(Env.get(Keys.DISCORD_TOKEN));
-
-        // Register a listener via the EventSubscriber annotation which allows for organisation and delegation of events
-        cli.getDispatcher().registerListener(new Handler());
-        cli.getDispatcher().registerListeners(Guild.class, User.class, Member.class);
+        client.getDispatcher().registerListener(new Handler());
+        client.getDispatcher().registerListeners(Guild.class, User.class, Member.class);
         new Database();
 
         User.createTable(Database.conn);
         Guild.createTable(Database.conn);
         Member.createTable(Database.conn);
-        // Only login after all events are registered otherwise some may be missed.
-        cli.login();
-    }
 
-    public static IDiscordClient buildClient(String token){
-        ClientBuilder clientBuilder = new ClientBuilder();
-        clientBuilder
-                .withToken(token)
-                .withRecommendedShardCount();
-        client = clientBuilder.build();
-        return client;
+        client.login();
     }
 
     public static boolean isOwner(Long userID) {
