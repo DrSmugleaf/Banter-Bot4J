@@ -31,14 +31,14 @@ public class Handler {
                     EnumSet<Permissions> authorPermissions = event.getAuthor().getPermissionsForGuild(event.getGuild());
 
                     if (!annotationPermissions.isEmpty() && Collections.disjoint(authorPermissions, Arrays.asList(annotation.permissions()))) {
-                        Bot.sendMessage(event.getChannel(), "You don't have permission to use that command.");
+                        AbstractCommand.sendMessage(event.getChannel(), "You don't have permission to use that command.");
                         return;
                     }
                 }
 
                 for (Tags tags : annotation.tags()) {
                     if (!tags.valid(event)) {
-                        Bot.sendMessage(event.getChannel(), tags.message());
+                        AbstractCommand.sendMessage(event.getChannel(), tags.message());
                         return;
                     }
                 }

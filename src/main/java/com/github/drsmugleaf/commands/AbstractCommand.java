@@ -17,9 +17,9 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 17/01/2018.
  */
-abstract class AbstractCommand {
+public abstract class AbstractCommand {
 
-    protected static void sendMessage(@Nonnull IChannel channel, @Nonnull String message) {
+    public static void sendMessage(@Nonnull IChannel channel, @Nonnull String message) {
         RequestBuffer.request(() -> {
             try {
                 channel.sendMessage(message);
@@ -30,7 +30,7 @@ abstract class AbstractCommand {
         });
     }
 
-    protected static void sendMessage(@Nonnull IChannel channel, @Nonnull EmbedObject embed) {
+    public static void sendMessage(@Nonnull IChannel channel, @Nonnull EmbedObject embed) {
         RequestBuffer.request(() -> {
             try {
                 channel.sendMessage(embed);
@@ -42,7 +42,7 @@ abstract class AbstractCommand {
     }
 
     @Nullable
-    protected static IRole getHighestRole(List<IRole> roles) {
+    public static IRole getHighestRole(List<IRole> roles) {
         if (roles.isEmpty()) {
             return null;
         }
@@ -52,7 +52,7 @@ abstract class AbstractCommand {
     }
 
     @Nullable
-    protected static IRole getHighestRole(IUser user, IGuild guild) {
+    public static IRole getHighestRole(IUser user, IGuild guild) {
         List<IRole> roles = user.getRolesForGuild(guild);
         return getHighestRole(roles);
     }
