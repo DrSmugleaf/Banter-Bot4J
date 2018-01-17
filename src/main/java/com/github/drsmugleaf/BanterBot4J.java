@@ -21,7 +21,7 @@ import java.util.Arrays;
 public class BanterBot4J {
 
     @Nonnull
-    private static IDiscordClient client = buildClient();
+    private static final IDiscordClient CLIENT = buildClient();
 
     @Nonnull
     public static final String BOT_PREFIX = getBotPrefix();
@@ -49,15 +49,15 @@ public class BanterBot4J {
     }
 
     public static void main(String[] args){
-        client.getDispatcher().registerListener(new Handler());
-        client.getDispatcher().registerListeners(Guild.class, User.class, Member.class);
+        CLIENT.getDispatcher().registerListener(new Handler());
+        CLIENT.getDispatcher().registerListeners(Guild.class, User.class, Member.class);
         new Database();
 
         User.createTable(Database.conn);
         Guild.createTable(Database.conn);
         Member.createTable(Database.conn);
 
-        client.login();
+        CLIENT.login();
     }
 
     public static boolean isOwner(Long userID) {
