@@ -2,7 +2,7 @@ package com.github.drsmugleaf.youtube;
 
 import com.github.drsmugleaf.env.Env;
 import com.github.drsmugleaf.env.Keys;
-import com.github.drsmugleaf.util.Bot;
+import com.github.drsmugleaf.BanterBot4J;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
@@ -30,7 +30,7 @@ public class API {
         try {
             request = youtube.search().list("id");
         } catch (IOException e) {
-            Bot.LOGGER.error("Error creating search for youtube video: " + query, e);
+            BanterBot4J.LOGGER.error("Error creating search for youtube video: " + query, e);
             throw new SearchErrorException(e);
         }
 
@@ -44,13 +44,13 @@ public class API {
         try {
             searchResponse = request.execute();
         } catch (IOException e) {
-            Bot.LOGGER.error("Error executing search for youtube video: " + query, e);
+            BanterBot4J.LOGGER.error("Error executing search for youtube video: " + query, e);
             throw new SearchErrorException(e);
         }
 
         List<SearchResult> searchItems = searchResponse.getItems();
         if (searchItems.size() == 0) {
-            Bot.LOGGER.warn("No search results found for youtube video: " + query);
+            BanterBot4J.LOGGER.warn("No search results found for youtube video: " + query);
             return null;
         }
 

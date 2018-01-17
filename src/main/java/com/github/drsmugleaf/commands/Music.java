@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.commands;
 
-import com.github.drsmugleaf.util.Bot;
+import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.youtube.*;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by DrSmugleaf on 04/09/2017.
  */
-public class Music {
+public class Music extends AbstractCommand {
 
     private static final AudioPlayerManager PLAYER_MANAGER = new DefaultAudioPlayerManager();
     private static final Map<IGuild, GuildMusicManager> MUSIC_MANAGERS = new HashMap<>();
@@ -85,7 +85,7 @@ public class Music {
 
         GuildMusicManager musicManager = getGuildMusicManager(guild);
         if (musicManager.getScheduler().getCurrentSong() == null) {
-            Bot.sendMessage(channel, "There isn't a song currently playing.");
+            sendMessage(channel, "There isn't a song currently playing.");
             return;
         }
 
@@ -93,7 +93,7 @@ public class Music {
 
         IUser author = event.getAuthor();
         if (SKIP_VOTES.get(guild).contains(author)) {
-            Bot.sendMessage(channel, "You have already voted to skip this song.");
+            sendMessage(channel, "You have already voted to skip this song.");
             return;
         }
 
@@ -115,10 +115,10 @@ public class Music {
         if (votes >= requiredVotes || author == musicManager.getScheduler().getCurrentSong().getSubmitter()) {
             SKIP_VOTES.get(guild).clear();
             musicManager.getScheduler().skip();
-            Bot.sendMessage(channel, "Skipped the current song.");
+            sendMessage(channel, "Skipped the current song.");
         } else {
             String response = String.format("Votes: %d/%d", votes, requiredVotes);
-            Bot.sendMessage(channel, response);
+            sendMessage(channel, response);
         }
     }
 
@@ -129,17 +129,17 @@ public class Music {
 
         GuildMusicManager musicManager = getGuildMusicManager(guild);
         if (!musicManager.getScheduler().isPlaying()) {
-            Bot.sendMessage(channel, "There isn't a song currently playing.");
+            sendMessage(channel, "There isn't a song currently playing.");
             return;
         }
 
         if (musicManager.getScheduler().isPaused()) {
-            Bot.sendMessage(channel, "The current song is already paused. Use " + Bot.BOT_PREFIX + "resume to resume it.");
+            sendMessage(channel, "The current song is already paused. Use " + BanterBot4J.BOT_PREFIX + "resume to resume it.");
             return;
         }
 
         musicManager.getScheduler().pause();
-        Bot.sendMessage(channel, "Paused the current song.");
+        sendMessage(channel, "Paused the current song.");
     }
 
     @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL})
@@ -149,17 +149,17 @@ public class Music {
 
         GuildMusicManager musicManager = getGuildMusicManager(guild);
         if (!musicManager.getScheduler().isPlaying()) {
-            Bot.sendMessage(channel, "There isn't a song currently playing.");
+            sendMessage(channel, "There isn't a song currently playing.");
             return;
         }
 
         if (!musicManager.getScheduler().isPaused()) {
-            Bot.sendMessage(channel, "There isn't a song currently paused.");
+            sendMessage(channel, "There isn't a song currently paused.");
             return;
         }
 
         musicManager.getScheduler().resume();
-        Bot.sendMessage(channel, "Resumed the current song.");
+        sendMessage(channel, "Resumed the current song.");
     }
 
     @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY})
@@ -171,7 +171,7 @@ public class Music {
 
         GuildMusicManager musicManager = getGuildMusicManager(guild);
         if (musicManager.getScheduler().getCurrentSong() == null) {
-            Bot.sendMessage(channel, "There aren't any songs currently playing or in the queue.");
+            sendMessage(channel, "There aren't any songs currently playing or in the queue.");
             return;
         }
 
@@ -181,10 +181,10 @@ public class Music {
         UNDO_STOP_CACHE.put(pair, scheduler.cloneSongs());
 
         scheduler.stop();
-        Bot.sendMessage(
+        sendMessage(
                 channel,
                 "Stopped and removed all songs from the queue.\n" +
-                "You have one minute to restore them back to the queue using " + Bot.BOT_PREFIX + "undostop."
+                "You have one minute to restore them back to the queue using " + BanterBot4J.BOT_PREFIX + "undostop."
         );
     }
 
@@ -197,7 +197,7 @@ public class Music {
         Pair<IGuild, IUser> pair = new Pair<>(guild, author);
         List<Song> songs = UNDO_STOP_CACHE.getIfPresent(pair);
         if (songs == null) {
-            Bot.sendMessage(channel, "You haven't stopped any songs in the last minute.");
+            sendMessage(channel, "You haven't stopped any songs in the last minute.");
             return;
         }
 
@@ -207,7 +207,7 @@ public class Music {
         songs.addAll(scheduler.cloneSongs());
         scheduler.stop();
         scheduler.queue(songs);
-        Bot.sendMessage(channel, "Restored all stopped songs.");
+        sendMessage(channel, "Restored all stopped songs.");
     }
 
     @Command(tags = {Tags.GUILD_ONLY})
@@ -219,7 +219,7 @@ public class Music {
         TrackScheduler scheduler = getGuildMusicManager(guild).getScheduler();
         Song currentSong = scheduler.getCurrentSong();
         if (currentSong == null) {
-            Bot.sendMessage(channel, "There are no songs currently playing or in the queue.");
+            sendMessage(channel, "There are no songs currently playing or in the queue.");
             return;
         }
 
@@ -274,7 +274,7 @@ public class Music {
             builder.appendField("Queue duration", queueDurationString, false);
         }
 
-        Bot.sendMessage(channel, builder.build());
+        sendMessage(channel, builder.build());
     }
 
     @SongEventHandler(event = SongStartEvent.class)
@@ -284,7 +284,7 @@ public class Music {
             return;
         }
         String response = String.format("Now playing `%s`.", song.getTrack().getInfo().title);
-        Bot.sendMessage(song.getChannel(), response);
+        sendMessage(song.getChannel(), response);
     }
 
     @SongEventHandler(event = SongQueueEvent.class)
@@ -294,27 +294,27 @@ public class Music {
             return;
         }
         String response = String.format("Added `%s` to the queue.", song.getTrack().getInfo().title);
-        Bot.sendMessage(song.getChannel(), response);
+        sendMessage(song.getChannel(), response);
     }
 
     @SongEventHandler(event = NoMatchesEvent.class)
     public static void handle(@Nonnull NoMatchesEvent event) {
         AudioResultHandler handler = event.getHandler();
         String response = String.format("No results found for %s.", handler.getSearchString());
-        Bot.sendMessage(handler.getChannel(), response);
+        sendMessage(handler.getChannel(), response);
     }
 
     @SongEventHandler(event = LoadFailedEvent.class)
     public static void handle(@Nonnull LoadFailedEvent event) {
         String response = String.format("Error playing song: %s", event.getException().getMessage());
-        Bot.sendMessage(event.getHandler().getChannel(), response);
+        sendMessage(event.getHandler().getChannel(), response);
     }
 
     @SongEventHandler(event = PlaylistQueueEvent.class)
     public static void handle(@Nonnull PlaylistQueueEvent event) {
         IChannel channel = event.getSongs().get(0).getChannel();
         String response = String.format("Added %d songs to the queue.", event.getSongs().size());
-        Bot.sendMessage(channel, response);
+        sendMessage(channel, response);
     }
 
 }

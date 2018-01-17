@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.commands;
 
-import com.github.drsmugleaf.util.Bot;
+import com.github.drsmugleaf.BanterBot4J;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
@@ -28,7 +28,7 @@ enum Tags {
     OWNER_ONLY {
         @Override
         public boolean valid(@Nonnull MessageReceivedEvent event) {
-            return Bot.isOwner(event.getAuthor().getLongID());
+            return BanterBot4J.isOwner(event.getAuthor().getLongID());
         }
 
         @Nonnull
