@@ -16,12 +16,12 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 20/05/2017.
  */
-public class Owner {
+public class Owner extends BaseCommand {
 
     @Command(tags = {Tags.OWNER_ONLY})
     public static void avatar(MessageReceivedEvent event, List<String> args) {
         if (args.isEmpty()) {
-            Bot.sendMessage(event.getChannel(), "You didn't provide a link to change the bot's image to.");
+            sendMessage(event.getChannel(), "You didn't provide a link to change the bot's image to.");
         }
 
         try {
@@ -45,7 +45,7 @@ public class Owner {
             event.getClient().changeAvatar(Image.forUrl(suffix, args.get(0)));
         } catch(IOException e) {
             Bot.LOGGER.error("Malformed URL or error opening connection", e);
-            Bot.sendMessage(event.getChannel(), "Invalid image URL");
+            sendMessage(event.getChannel(), "Invalid image URL");
         }
     }
 
@@ -53,19 +53,19 @@ public class Owner {
     public static void name(MessageReceivedEvent event, List<String> args) {
         String name = String.join(" ", args);
         event.getClient().changeUsername(String.join(" ", args));
-        Bot.sendMessage(event.getChannel(), "Changed the bot's name to " + name);
+        sendMessage(event.getChannel(), "Changed the bot's name to " + name);
     }
 
     @Command(tags = {Tags.OWNER_ONLY})
     public static void playing(MessageReceivedEvent event, List<String> args) {
         if(args.isEmpty()) {
             event.getClient().changePlayingText(null);
-            Bot.sendMessage(event.getChannel(), "Reset the bot's playing status");
+            sendMessage(event.getChannel(), "Reset the bot's playing status");
             return;
         }
 
         String game = String.join(" ", args);
         event.getClient().changePlayingText(game);
-        Bot.sendMessage(event.getChannel(), "Changed the bot's playing status to " + game);
+        sendMessage(event.getChannel(), "Changed the bot's playing status to " + game);
     }
 }
