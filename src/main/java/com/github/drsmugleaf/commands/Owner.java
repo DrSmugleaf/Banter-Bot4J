@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.commands;
 
-import com.github.drsmugleaf.util.Bot;
+import com.github.drsmugleaf.BanterBot4J;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.util.Image;
 
@@ -45,7 +45,7 @@ public class Owner extends AbstractCommand {
 
             event.getClient().changeAvatar(Image.forUrl(suffix, args.get(0)));
         } catch(IOException e) {
-            Bot.LOGGER.error("Malformed URL or error opening connection", e);
+            BanterBot4J.LOGGER.error("Malformed URL or error opening connection", e);
             sendMessage(event.getChannel(), "Invalid image URL");
         }
     }

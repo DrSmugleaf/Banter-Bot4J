@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.youtube;
 
-import com.github.drsmugleaf.util.Bot;
+import com.github.drsmugleaf.BanterBot4J;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
@@ -32,7 +32,7 @@ public class EventDispatcher {
                 try {
                     listener.invoke(listener.getDeclaringClass(), event);
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    Bot.LOGGER.error("Error invoking event handler " + listener.getName() + " for event " + event.getClass().getName(), e);
+                    BanterBot4J.LOGGER.error("Error invoking event handler " + listener.getName() + " for event " + event.getClass().getName(), e);
                 }
             }
         }

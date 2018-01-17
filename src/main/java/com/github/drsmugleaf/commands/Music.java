@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.commands;
 
-import com.github.drsmugleaf.util.Bot;
+import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.youtube.*;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -134,7 +134,7 @@ public class Music extends AbstractCommand {
         }
 
         if (musicManager.getScheduler().isPaused()) {
-            sendMessage(channel, "The current song is already paused. Use " + Bot.BOT_PREFIX + "resume to resume it.");
+            sendMessage(channel, "The current song is already paused. Use " + BanterBot4J.BOT_PREFIX + "resume to resume it.");
             return;
         }
 
@@ -184,7 +184,7 @@ public class Music extends AbstractCommand {
         sendMessage(
                 channel,
                 "Stopped and removed all songs from the queue.\n" +
-                "You have one minute to restore them back to the queue using " + Bot.BOT_PREFIX + "undostop."
+                "You have one minute to restore them back to the queue using " + BanterBot4J.BOT_PREFIX + "undostop."
         );
     }
 

@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.util;
+package com.github.drsmugleaf;
 
 import com.github.drsmugleaf.commands.Handler;
 import com.github.drsmugleaf.env.Env;
@@ -17,7 +17,7 @@ import java.util.Arrays;
 /**
  * Created by DrSmugleaf on 19/05/2017.
  */
-public class Bot {
+public class BanterBot4J {
 
     public static IDiscordClient client = null;
     public static final String BOT_PREFIX = Env.get(Keys.BOT_PREFIX);
@@ -25,7 +25,7 @@ public class Bot {
     public static final Logger LOGGER = initLogger();
 
     private static Logger initLogger() {
-        return LoggerFactory.getLogger(Bot.class);
+        return LoggerFactory.getLogger(BanterBot4J.class);
     }
 
     public static void main(String[] args){
@@ -53,7 +53,7 @@ public class Bot {
     }
 
     public static boolean isOwner(Long userID) {
-        return Arrays.stream(Bot.OWNERS).anyMatch(id -> id.equals(userID));
+        return Arrays.stream(BanterBot4J.OWNERS).anyMatch(id -> id.equals(userID));
     }
 
 }

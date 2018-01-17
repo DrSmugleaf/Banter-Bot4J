@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.models;
 
-import com.github.drsmugleaf.util.Bot;
+import com.github.drsmugleaf.BanterBot4J;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 
@@ -29,7 +29,7 @@ public class Guild {
             statement.executeUpdate();
             Guild.connection = connection;
         } catch(SQLException e) {
-            Bot.LOGGER.error("Unable to create guilds database table", e);
+            BanterBot4J.LOGGER.error("Unable to create guilds database table", e);
             System.exit(1);
         }
     }
@@ -45,7 +45,7 @@ public class Guild {
             statement.setLong(1, this.id);
             statement.executeUpdate();
         } catch(SQLException e) {
-            Bot.LOGGER.error("Error creating guild with id " + this.id, e);
+            BanterBot4J.LOGGER.error("Error creating guild with id " + this.id, e);
         }
     }
 
@@ -56,7 +56,7 @@ public class Guild {
             statement.setLong(1, this.id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            Bot.LOGGER.error("Error saving guild with id " + this.id, e);
+            BanterBot4J.LOGGER.error("Error saving guild with id " + this.id, e);
         }
     }
 

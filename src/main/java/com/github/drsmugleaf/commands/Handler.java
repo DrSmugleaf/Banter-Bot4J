@@ -2,7 +2,7 @@ package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.models.Member;
 import com.github.drsmugleaf.util.Annotations;
-import com.github.drsmugleaf.util.Bot;
+import com.github.drsmugleaf.BanterBot4J;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.Permissions;
@@ -46,9 +46,9 @@ public class Handler {
                 try {
                     method.invoke(method.getClass(), event, args);
                 } catch (InvocationTargetException e) {
-                    Bot.LOGGER.error("Error running command", e.getCause());
+                    BanterBot4J.LOGGER.error("Error running command", e.getCause());
                 } catch (IllegalAccessException e) {
-                    Bot.LOGGER.error("Error running command", e);
+                    BanterBot4J.LOGGER.error("Error running command", e);
                 }
             };
 
@@ -69,7 +69,7 @@ public class Handler {
             return;
         }
 
-        if (!argsArray[0].startsWith(Bot.BOT_PREFIX)) {
+        if (!argsArray[0].startsWith(BanterBot4J.BOT_PREFIX)) {
             return;
         }
 
@@ -82,7 +82,7 @@ public class Handler {
             }
         }
 
-        String commandString = argsArray[0].substring(Bot.BOT_PREFIX.length());
+        String commandString = argsArray[0].substring(BanterBot4J.BOT_PREFIX.length());
         List<String> argsList = new ArrayList<>(Arrays.asList(argsArray));
         argsList.remove(0);
 

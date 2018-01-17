@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.commands;
 
-import com.github.drsmugleaf.util.Bot;
+import com.github.drsmugleaf.BanterBot4J;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
@@ -24,7 +24,7 @@ public abstract class AbstractCommand {
             try {
                 channel.sendMessage(message);
             } catch (DiscordException e) {
-                Bot.LOGGER.error("Message could not be sent", e);
+                BanterBot4J.LOGGER.error("Message could not be sent", e);
                 throw e;
             }
         });
@@ -35,7 +35,7 @@ public abstract class AbstractCommand {
             try {
                 channel.sendMessage(embed);
             } catch (DiscordException e) {
-                Bot.LOGGER.error("Embed could not be sent", e);
+                BanterBot4J.LOGGER.error("Embed could not be sent", e);
                 throw e;
             }
         });
