@@ -1,7 +1,12 @@
 package com.github.drsmugleaf.util;
 
+import com.github.drsmugleaf.commands.Handler;
 import com.github.drsmugleaf.env.Env;
 import com.github.drsmugleaf.env.Keys;
+import com.github.drsmugleaf.models.Database;
+import com.github.drsmugleaf.models.Guild;
+import com.github.drsmugleaf.models.Member;
+import com.github.drsmugleaf.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.ClientBuilder;
@@ -21,6 +26,21 @@ public class Bot {
 
     private static Logger initLogger() {
         return LoggerFactory.getLogger(Bot.class);
+    }
+
+    public static void main(String[] args){
+        IDiscordClient cli = buildClient(Env.get(Keys.DISCORD_TOKEN));
+
+        // Register a listener via the EventSubscriber annotation which allows for organisation and delegation of events
+        cli.getDispatcher().registerListener(new Handler());
+        cli.getDispatcher().registerListeners(Guild.class, User.class, Member.class);
+        new Database();
+
+        User.createTable(Database.conn);
+        Guild.createTable(Database.conn);
+        Member.createTable(Database.conn);
+        // Only login after all events are registered otherwise some may be missed.
+        cli.login();
     }
 
     public static IDiscordClient buildClient(String token){
