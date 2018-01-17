@@ -22,6 +22,7 @@ public class Owner extends BaseCommand {
     public static void avatar(MessageReceivedEvent event, List<String> args) {
         if (args.isEmpty()) {
             sendMessage(event.getChannel(), "You didn't provide a link to change the bot's image to.");
+            return;
         }
 
         try {
