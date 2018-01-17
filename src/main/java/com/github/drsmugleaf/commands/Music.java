@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by DrSmugleaf on 04/09/2017.
  */
-public class Music extends BaseCommand {
+public class Music extends AbstractCommand {
 
     private static final AudioPlayerManager PLAYER_MANAGER = new DefaultAudioPlayerManager();
     private static final Map<IGuild, GuildMusicManager> MUSIC_MANAGERS = new HashMap<>();

@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 14/05/2017.
  */
-public class Admin extends BaseCommand {
+public class Admin extends AbstractCommand {
 
     @Command(permissions = {Permissions.KICK, Permissions.BAN})
     public static void blacklist(MessageReceivedEvent event, List<String> args) {

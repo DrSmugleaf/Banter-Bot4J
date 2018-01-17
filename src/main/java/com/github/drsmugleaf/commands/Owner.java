@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 20/05/2017.
  */
-public class Owner extends BaseCommand {
+public class Owner extends AbstractCommand {
 
     @Command(tags = {Tags.OWNER_ONLY})
     public static void avatar(MessageReceivedEvent event, List<String> args) {

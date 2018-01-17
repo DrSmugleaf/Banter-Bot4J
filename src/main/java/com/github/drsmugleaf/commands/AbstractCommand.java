@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by DrSmugleaf on 17/01/2018.
  */
-abstract class BaseCommand {
+abstract class AbstractCommand {
 
     protected static void sendMessage(@Nonnull IChannel channel, @Nonnull String message) {
         RequestBuffer.request(() -> {
@@ -24,7 +24,7 @@ abstract class BaseCommand {
         });
     }
 
-    protected static void sendMessage(@Nonnull IChannel channel, EmbedObject embed) {
+    protected static void sendMessage(@Nonnull IChannel channel, @Nonnull EmbedObject embed) {
         RequestBuffer.request(() -> {
             try {
                 channel.sendMessage(embed);
