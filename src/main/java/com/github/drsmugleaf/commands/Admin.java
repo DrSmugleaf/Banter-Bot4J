@@ -1,7 +1,6 @@
 package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.models.Member;
-import com.github.drsmugleaf.util.Bot;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
@@ -21,7 +20,7 @@ public class Admin extends AbstractCommand {
         Long guildID = event.getGuild().getLongID();
         List<IUser> mentions = event.getMessage().getMentions();
 
-        IRole highestAuthorRole = Bot.getHighestRole(event.getAuthor(), event.getGuild());
+        IRole highestAuthorRole = getHighestRole(event.getAuthor(), event.getGuild());
 
         mentions.forEach(mention -> {
             Member member = Member.get(mention.getLongID(), guildID);
@@ -42,7 +41,7 @@ public class Admin extends AbstractCommand {
                 return;
             }
 
-            IRole highestMentionRole = Bot.getHighestRole(mention, event.getGuild());
+            IRole highestMentionRole = getHighestRole(mention, event.getGuild());
 
             if(highestAuthorRole != null && highestMentionRole != null && highestAuthorRole.getPosition() < highestMentionRole.getPosition()) {
                 sendMessage(event.getChannel(), "You can't blacklist " + nickname + ".\n" +
