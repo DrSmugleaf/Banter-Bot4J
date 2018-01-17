@@ -18,40 +18,37 @@ import java.util.*;
 public class Handler {
 
     @Nonnull
-    private static final Map<String, AbstractCommand> COMMANDS = new HashMap<>();
+    private static final Map<String, ICommand> COMMANDS = new HashMap<>();
 
     static {
         List<Method> commands = Annotations.findMethodsWithAnnotations(Command.class);
         for (Method method : commands) {
             Command annotation = method.getAnnotation(Command.class);
 
-            AbstractCommand command = new AbstractCommand() {
-                @Override
-                void run(@Nonnull MessageReceivedEvent event, @Nonnull List<String> args) {
-                    if (event.getGuild() != null) {
-                        List<Permissions> annotationPermissions = Arrays.asList(annotation.permissions());
-                        EnumSet<Permissions> authorPermissions = event.getAuthor().getPermissionsForGuild(event.getGuild());
+            ICommand command = (event, args) -> {
+                if (event.getGuild() != null) {
+                    List<Permissions> annotationPermissions = Arrays.asList(annotation.permissions());
+                    EnumSet<Permissions> authorPermissions = event.getAuthor().getPermissionsForGuild(event.getGuild());
 
-                        if (!annotationPermissions.isEmpty() && Collections.disjoint(authorPermissions, Arrays.asList(annotation.permissions()))) {
-                            Bot.sendMessage(event.getChannel(), "You don't have permission to use that command.");
-                            return;
-                        }
+                    if (!annotationPermissions.isEmpty() && Collections.disjoint(authorPermissions, Arrays.asList(annotation.permissions()))) {
+                        Bot.sendMessage(event.getChannel(), "You don't have permission to use that command.");
+                        return;
                     }
+                }
 
-                    for (Tags tags : annotation.tags()) {
-                        if (!tags.valid(event)) {
-                            Bot.sendMessage(event.getChannel(), tags.message());
-                            return;
-                        }
+                for (Tags tags : annotation.tags()) {
+                    if (!tags.valid(event)) {
+                        Bot.sendMessage(event.getChannel(), tags.message());
+                        return;
                     }
+                }
 
-                    try {
-                        method.invoke(method.getClass(), event, args);
-                    } catch (InvocationTargetException e) {
-                        Bot.LOGGER.error("Error running command", e.getCause());
-                    } catch (IllegalAccessException e) {
-                        Bot.LOGGER.error("Error running command", e);
-                    }
+                try {
+                    method.invoke(method.getClass(), event, args);
+                } catch (InvocationTargetException e) {
+                    Bot.LOGGER.error("Error running command", e.getCause());
+                } catch (IllegalAccessException e) {
+                    Bot.LOGGER.error("Error running command", e);
                 }
             };
 
