@@ -2132,7 +2132,85 @@ public enum BaseMove implements IModifier, IMoves {
             }
         }
     },
-    DOUBLE_SLAP("Double Slap"),
+    DOUBLE_SLAP("Double Slap") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
+            int repeats;
+            double chance = ThreadLocalRandom.current().nextDouble();
+
+            switch (action.getGeneration()) {
+                case I:
+                case II:
+                case III:
+                case IV:
+                    if (chance < 0.375) {
+                        repeats = 1;
+                    } else if (chance < 0.75) {
+                        repeats = 2;
+                    } else if (chance < 0.875) {
+                        repeats = 3;
+                    } else {
+                        repeats = 4;
+                    }
+                    break;
+                case V:
+                case VI:
+                case VII:
+                    if (chance < 0.333) {
+                        repeats = 1;
+                    } else if (chance < 0.666) {
+                        repeats = 2;
+                    } else if (chance < 0.833) {
+                        repeats = 3;
+                    } else {
+                        repeats = 4;
+                    }
+                    break;
+                default:
+                    throw new InvalidGenerationException(action.getGeneration());
+            }
+
+            return use(user, target, battle, action, repeats);
+        }
+
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Action action, @Nonnull Integer repeats) {
+            switch (action.getGeneration()) {
+                case I: {
+                    boolean hadSubstitute = target.STATUSES.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE);
+                    int damage = super.use(user, target, battle, action);
+                    for (int i = 1; i < repeats; i++) {
+                        if (hadSubstitute && !target.STATUSES.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+                            break;
+                        }
+                        target.damage(damage);
+                    }
+
+                    return damage;
+                }
+                case II: {
+                    boolean hadSubstitute = target.STATUSES.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE);
+                    int damage = super.use(user, target, battle, action);
+                    for (int i = 1; i < repeats; i++) {
+                        if (hadSubstitute && !target.STATUSES.hasVolatileStatus(BaseVolatileStatus.SUBSTITUTE)) {
+                            break;
+                        }
+                        super.use(user, target, battle, action);
+                    }
+
+                    return damage;
+                }
+                case III:
+                case IV:
+                case V:
+                case VI:
+                case VII:
+                    return super.use(user, target, battle, action, repeats);
+                default:
+                    throw new InvalidGenerationException(action.getGeneration());
+            }
+        }
+    },
     DOUBLE_TEAM("Double Team"),
     DOUBLE_EDGE("Double-Edge"),
     DRACO_METEOR("Draco Meteor"),
