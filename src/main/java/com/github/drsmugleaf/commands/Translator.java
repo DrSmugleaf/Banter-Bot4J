@@ -2,6 +2,7 @@ package com.github.drsmugleaf.commands;
 
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.Permissions;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public class Translator {
 
-    @Command
+    @Command(permissions = {Permissions.MANAGE_CHANNELS}, tags = {Tags.GUILD_ONLY})
     public static void bridge(@Nonnull MessageReceivedEvent event, List<String> args) {}
 
     @EventSubscriber
