@@ -1,6 +1,11 @@
 package com.github.drsmugleaf.translator;
 
+import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by DrSmugleaf on 18/01/2018.
@@ -79,14 +84,29 @@ public enum Languages {
     Languages(@Nonnull String name, @Nonnull String code) {
         NAME = name;
         CODE = code;
+        Holder.MAP.put(NAME.toLowerCase(), this);
+        Holder.MAP.put(CODE.toLowerCase(), this);
     }
 
+    @Nullable
+    public static Languages getLanguage(@Nonnull String name) {
+        return Holder.MAP.get(name.toLowerCase());
+    }
+
+    @Contract(pure = true)
+    @Nonnull
     public String getName() {
         return NAME;
     }
 
+    @Contract(pure = true)
+    @Nonnull
     public String getCode() {
         return CODE;
+    }
+
+    private static class Holder {
+        static final Map<String, Languages> MAP = new HashMap<>();
     }
 
 }
