@@ -43,6 +43,11 @@ public class Member {
     }
 
     public void createIfNotExists() {
+        User user = new User(userID);
+        user.createIfNotExists();
+        Guild guild = new Guild(guildID);
+        guild.createIfNotExists();
+
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement(
