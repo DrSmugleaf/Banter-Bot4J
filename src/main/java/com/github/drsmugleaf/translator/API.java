@@ -2,6 +2,7 @@ package com.github.drsmugleaf.translator;
 
 import com.github.drsmugleaf.env.Env;
 import com.github.drsmugleaf.env.Keys;
+import org.json.XML;
 
 import javax.annotation.Nullable;
 import javax.net.ssl.HttpsURLConnection;
@@ -34,15 +35,14 @@ public class API {
             connection.setRequestMethod("GET");
             connection.setRequestProperty(KEY_PROPERTY, KEY);
 
-            StringBuilder translation = new StringBuilder();
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder builder = new StringBuilder();
             String line;
-            while ((line = in.readLine()) != null) {
-                translation.append(line);
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
             }
-            in.close();
 
-            return translation.toString();
+            return XML.toJSONObject(builder.toString()).getJSONObject("string").getString("content");
         } catch (IOException e) {
             e.printStackTrace();
             return null;
