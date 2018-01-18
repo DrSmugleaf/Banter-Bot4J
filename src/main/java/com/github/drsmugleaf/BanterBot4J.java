@@ -48,7 +48,7 @@ public class BanterBot4J {
         return LoggerFactory.getLogger(BanterBot4J.class);
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         CLIENT.getDispatcher().registerListener(new Handler());
         CLIENT.getDispatcher().registerListeners(Guild.class, User.class, Member.class);
         new Database();
