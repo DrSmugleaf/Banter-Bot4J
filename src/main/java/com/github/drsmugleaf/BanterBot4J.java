@@ -47,13 +47,14 @@ public class BanterBot4J {
 
     public static void main(String[] args) {
         CLIENT.getDispatcher().registerListener(new Handler());
-        CLIENT.getDispatcher().registerListeners(Guild.class, User.class, Member.class, Channel.class);
+        CLIENT.getDispatcher().registerListeners(Guild.class, User.class, Member.class, Channel.class, GuildChannel.class);
         new Database();
 
         User.createTable(Database.conn);
         Guild.createTable(Database.conn);
         Member.createTable(Database.conn);
         Channel.createTable(Database.conn);
+        GuildChannel.createTable(Database.conn);
 
         CLIENT.login();
     }
