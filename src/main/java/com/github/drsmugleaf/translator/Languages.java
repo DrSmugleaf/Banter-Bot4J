@@ -71,18 +71,18 @@ public enum Languages {
     YUCATEC_MAYA("Yucatec Maya", "yua");
 
     @Nonnull
-    private final String LANGUAGE;
+    private final String NAME;
 
     @Nonnull
     private final String CODE;
 
-    Languages(@Nonnull String language, @Nonnull String code) {
-        LANGUAGE = language;
+    Languages(@Nonnull String name, @Nonnull String code) {
+        NAME = name;
         CODE = code;
     }
 
-    public String getLanguage() {
-        return LANGUAGE;
+    public String getName() {
+        return NAME;
     }
 
     public String getCode() {
