@@ -40,7 +40,12 @@ public class Translator extends AbstractCommand {
         }
 
         IChannel firstChannel = firstChannelList.get(0);
+
         Languages firstLanguage = Languages.getLanguage(args.get(1));
+        if (firstLanguage == null) {
+            sendMessage(event.getChannel(), "Couldn't find any languages with name " + args.get(1));
+            return;
+        }
 
         List<IChannel> secondChannelList = guild.getChannelsByName(args.get(2));
         if (secondChannelList.isEmpty()) {
@@ -49,7 +54,12 @@ public class Translator extends AbstractCommand {
         }
 
         IChannel secondChannel = secondChannelList.get(0);
+
         Languages secondLanguage = Languages.getLanguage(args.get(3));
+        if (secondLanguage == null) {
+            sendMessage(event.getChannel(), "Couldn't find any languages with name " + args.get(3));
+            return;
+        }
 
         BridgedChannel firstBridgedChannel = new BridgedChannel(firstChannel.getLongID(), secondChannel.getLongID());
         BridgedChannel secondBridgedChannel = new BridgedChannel(secondChannel.getLongID(), firstChannel.getLongID());

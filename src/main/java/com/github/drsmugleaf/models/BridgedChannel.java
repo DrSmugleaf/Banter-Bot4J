@@ -116,7 +116,7 @@ public class BridgedChannel {
         try {
             statement = connection.prepareStatement(
                     "DELETE FROM bridged_channels " +
-                    "WHERE" +
+                    "WHERE " +
                     "(channel_id = ?) " +
                     "OR " +
                     "(bridged_id = ?) "
