@@ -19,6 +19,9 @@ import java.util.Arrays;
 public class BanterBot4J {
 
     @Nonnull
+    public static final Logger LOGGER = initLogger();
+
+    @Nonnull
     private static final IDiscordClient CLIENT = buildClient();
 
     @Nonnull
@@ -26,9 +29,6 @@ public class BanterBot4J {
 
     @Nonnull
     private static final Long[] OWNERS = {109067752286715904L};
-
-    @Nonnull
-    public static final Logger LOGGER = initLogger();
 
     private static IDiscordClient buildClient() {
         ClientBuilder clientBuilder = new ClientBuilder();
