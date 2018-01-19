@@ -108,12 +108,13 @@ public class Translator extends AbstractCommand {
             return;
         }
 
+        String authorName = event.getAuthor().getDisplayName(event.getGuild());
         for (BridgedChannel bridgedChannel : bridgedChannelList) {
             Languages channelLanguage = bridgedChannel.channelLanguage;
             IChannel bridged = event.getClient().getChannelByID(bridgedChannel.bridgedID);
             Languages bridgedLanguage = bridgedChannel.bridgedLanguage;
             String translation = API.translate(channelLanguage.getCode(), bridgedLanguage.getCode(), event.getMessage().getFormattedContent());
-            bridged.sendMessage(translation);
+            bridged.sendMessage("**" + authorName + "**: " + translation);
         }
     }
 
