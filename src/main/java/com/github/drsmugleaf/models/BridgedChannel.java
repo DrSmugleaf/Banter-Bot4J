@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.models;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.translator.Languages;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,7 +17,9 @@ public class BridgedChannel {
 
     private static Connection connection;
     private long channelID;
+    public Languages channelLanguage;
     private long bridgedID;
+    public Languages bridgedLanguage;
 
     public BridgedChannel(long channelID, long bridgedID) {
         this.channelID = channelID;
@@ -29,7 +32,9 @@ public class BridgedChannel {
             statement = connection.prepareStatement(
                     "CREATE TABLE IF NOT EXISTS bridged_channels (" +
                     "channel_id BIGINT REFERENCES guild_channels (channel_id) ON UPDATE CASCADE ON DELETE CASCADE," +
+                    "channel_language VARCHAR(10) NOT NULL," +
                     "bridged_id BIGINT REFERENCES guild_channels (channel_id) ON UPDATE CASCADE ON DELETE CASCADE," +
+                    "bridged_language VARCHAR(10) NOT NULL," +
                     "CONSTRAINT channel_bridged_pkey PRIMARY KEY (channel_id, bridged_id)" +
                     ")"
             );
@@ -38,27 +43,6 @@ public class BridgedChannel {
         } catch (SQLException e) {
             BanterBot4J.LOGGER.error("Unable to create table bridged_channels", e);
             System.exit(1);
-        }
-    }
-
-    public void createIfNotExists() {
-        Channel channel = new Channel(channelID);
-        channel.createIfNotExists();
-        Channel bridged = new Channel(bridgedID);
-        bridged.createIfNotExists();
-
-        PreparedStatement statement;
-        try {
-            statement = connection.prepareStatement(
-                    "INSERT INTO bridged_channels (channel_id, bridged_id) " +
-                    "VALUES(?, ?) " +
-                    "ON CONFLICT DO NOTHING"
-            );
-            statement.setLong(1, channelID);
-            statement.setLong(2, bridgedID);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            BanterBot4J.LOGGER.error("Error creating guild channel with channel id " + channelID + " and bridged id " + bridgedID, e);
         }
     }
 
@@ -76,8 +60,12 @@ public class BridgedChannel {
             BridgedChannel channel;
             while (result.next()) {
                 channelID = result.getLong("channel_id");
+                Languages channelLanguage = Languages.getLanguage(result.getString("channel_language"));
                 long bridgedID = result.getLong("bridged_id");
+                Languages bridgedLanguage = Languages.getLanguage(result.getString("bridged_language"));
                 channel = new BridgedChannel(channelID, bridgedID);
+                channel.channelLanguage = channelLanguage;
+                channel.bridgedLanguage = bridgedLanguage;
                 bridgedChannels.add(channel);
             }
 
@@ -92,22 +80,33 @@ public class BridgedChannel {
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement(
-                    "INSERT INTO bridged_channels (channel_id, bridged_id) " +
-                    "VALUES (?, ?) " +
+                    "INSERT INTO bridged_channels (channel_id, channel_language, bridged_id, bridged_language) " +
+                    "VALUES (?, ?, ?, ?) " +
                     "ON CONFLICT (channel_id, bridged_id) DO UPDATE " +
                     "SET " +
                     "channel_id = ?, " +
-                    "bridged_id = ? " +
+                    "channel_language = ?, " +
+                    "bridged_id = ?, " +
+                    "bridged_language = ? " +
                     "WHERE bridged_channels.channel_id = ? AND bridged_channels.bridged_id = ?"
             );
             statement.setLong(1, channelID);
-            statement.setLong(2, bridgedID);
-            statement.setLong(3, channelID);
-            statement.setLong(4, bridgedID);
+            statement.setString(2, channelLanguage.getCode());
+            statement.setLong(3, bridgedID);
+            statement.setString(4, bridgedLanguage.getCode());
             statement.setLong(5, channelID);
-            statement.setLong(6, bridgedID);
+            statement.setString(6, channelLanguage.getCode());
+            statement.setLong(7, bridgedID);
+            statement.setString(8, bridgedLanguage.getCode());
+            statement.setLong(9, channelID);
+            statement.setLong(10, bridgedID);
         } catch (SQLException e) {
-            BanterBot4J.LOGGER.error("Error saving bridged channel with channel id " + channelID + " and bridged id " + bridgedID, e);
+            BanterBot4J.LOGGER.error(
+                    "Error saving bridged channel with channel id " + channelID +
+                    " and channel language " + channelLanguage.getCode() +
+                    " and bridged id " + bridgedID +
+                    " and bridged language " + bridgedLanguage.getCode(), e
+            );
         }
     }
 
