@@ -71,6 +71,7 @@ public class GuildChannel {
                     "SELECT 1 FROM guild_channels " +
                     "WHERE guild_channels.channel_id = ?"
             );
+            statement.setLong(1, channelID);
             ResultSet result = statement.executeQuery();
             result.next();
             channelID = result.getLong("channel_id");
