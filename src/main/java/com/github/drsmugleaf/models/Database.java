@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  */
 public class Database {
 
-    private static final String URI = Env.get(Keys.DATABASE_URI);
+    private static final String URI = Env.get(Keys.DATABASE_URL);
     private static final Map<String, String> CREDENTIALS = getCredentials(URI);
     private static final String URL = CREDENTIALS.get("url");
     private static final String USERNAME = CREDENTIALS.get("username");
