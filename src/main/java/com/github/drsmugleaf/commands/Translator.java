@@ -38,6 +38,11 @@ public class Translator {
         secondBridgedChannel.save();
     }
 
+    @Command(permissions = {Permissions.MANAGE_CHANNELS}, tags = {Tags.GUILD_ONLY})
+    public static void unbridge(@Nonnull MessageReceivedEvent event, List<String> args) {
+        BridgedChannel.delete(Long.parseLong(args.get(0)));
+    }
+
     @EventSubscriber
     public static void handle(@Nonnull MessageReceivedEvent event) {
         IChannel channel = event.getChannel();
