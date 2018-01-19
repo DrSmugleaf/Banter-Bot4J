@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands;
 
+import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.models.BridgedChannel;
 import com.github.drsmugleaf.translator.API;
 import com.github.drsmugleaf.translator.Languages;
@@ -19,10 +20,35 @@ public class Translator extends AbstractCommand {
 
     @Command(permissions = {Permissions.MANAGE_CHANNELS}, tags = {Tags.GUILD_ONLY})
     public static void bridge(@Nonnull MessageReceivedEvent event, List<String> args) {
+        if (args.isEmpty()) {
+            sendMessage(event.getChannel(), "You didn't provide any channels or languages.\n" +
+                                            "Usage: " + BanterBot4J.BOT_PREFIX + "bridge channel1 language1 channel2 language2");
+            return;
+        }
+
+        if (args.size() < 4) {
+            sendMessage(event.getChannel(), "You didn't provide enough arguments.\n" +
+                                            "Usage: " + BanterBot4J.BOT_PREFIX + "bridge channel1 language1 channel2 language2");
+            return;
+        }
+
         IGuild guild = event.getGuild();
-        IChannel firstChannel = guild.getChannelsByName(args.get(0)).get(0);
+        List<IChannel> firstChannelList = guild.getChannelsByName(args.get(0));
+        if (firstChannelList.isEmpty()) {
+            sendMessage(event.getChannel(), "Couldn't find any channels with name " + args.get(0));
+            return;
+        }
+
+        IChannel firstChannel = firstChannelList.get(0);
         Languages firstLanguage = Languages.getLanguage(args.get(1));
-        IChannel secondChannel = guild.getChannelsByName(args.get(2)).get(0);
+
+        List<IChannel> secondChannelList = guild.getChannelsByName(args.get(2));
+        if (secondChannelList.isEmpty()) {
+            sendMessage(event.getChannel(), "Couldn't find any channels with name " + args.get(2));
+            return;
+        }
+
+        IChannel secondChannel = secondChannelList.get(0);
         Languages secondLanguage = Languages.getLanguage(args.get(3));
 
         BridgedChannel firstBridgedChannel = new BridgedChannel(firstChannel.getLongID(), secondChannel.getLongID());
@@ -47,7 +73,18 @@ public class Translator extends AbstractCommand {
 
     @Command(permissions = {Permissions.MANAGE_CHANNELS}, tags = {Tags.GUILD_ONLY})
     public static void unbridge(@Nonnull MessageReceivedEvent event, List<String> args) {
-        IChannel channel = event.getGuild().getChannelsByName(args.get(0)).get(0);
+        if (args.isEmpty()) {
+            sendMessage(event.getChannel(), "You didn't provide a channel name.");
+            return;
+        }
+
+        List<IChannel> channels = event.getGuild().getChannelsByName(args.get(0));
+        if (channels.isEmpty()) {
+            sendMessage(event.getChannel(), "No channels found with name " + args.get(0));
+            return;
+        }
+
+        IChannel channel = channels.get(0);
         BridgedChannel.delete(channel.getLongID());
 
         sendMessage(event.getChannel(), "Unbridged all channels bridged with " + channel.getName());
