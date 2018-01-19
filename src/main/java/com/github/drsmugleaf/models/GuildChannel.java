@@ -101,6 +101,7 @@ public class GuildChannel {
             statement.setLong(4, guildID);
             statement.setLong(5, channelID);
             statement.setLong(6, guildID);
+            statement.executeUpdate();
         } catch (SQLException e) {
             BanterBot4J.LOGGER.error("Error saving guild channel with channel id " + channelID + " and guild id " + guildID, e);
         }

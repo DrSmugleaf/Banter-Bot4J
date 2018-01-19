@@ -83,6 +83,7 @@ public class Channel {
             statement.setLong(1, id);
             statement.setLong(2, id);
             statement.setLong(3, id);
+            statement.executeUpdate();
         } catch (SQLException e) {
             BanterBot4J.LOGGER.error("Error saving channel with id " + id, e);
         }

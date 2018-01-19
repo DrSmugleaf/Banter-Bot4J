@@ -100,6 +100,7 @@ public class BridgedChannel {
             statement.setString(8, bridgedLanguage.getCode());
             statement.setLong(9, channelID);
             statement.setLong(10, bridgedID);
+            statement.executeUpdate();
         } catch (SQLException e) {
             BanterBot4J.LOGGER.error(
                     "Error saving bridged channel with channel id " + channelID +
