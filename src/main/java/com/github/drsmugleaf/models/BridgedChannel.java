@@ -16,9 +16,9 @@ import java.util.List;
 public class BridgedChannel {
 
     private static Connection connection;
-    private long channelID;
+    public long channelID;
     public Languages channelLanguage;
-    private long bridgedID;
+    public long bridgedID;
     public Languages bridgedLanguage;
 
     public BridgedChannel(long channelID, long bridgedID) {
