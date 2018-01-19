@@ -8,7 +8,6 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import javafx.util.Pair;
 import org.jetbrains.annotations.Contract;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.*;
@@ -16,6 +15,7 @@ import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.MissingPermissionsException;
 
 import javax.annotation.Nonnull;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +30,7 @@ public class Music extends AbstractCommand {
     private static final AudioPlayerManager PLAYER_MANAGER = new DefaultAudioPlayerManager();
     private static final Map<IGuild, GuildMusicManager> MUSIC_MANAGERS = new HashMap<>();
     private static final Map<IGuild, List<IUser>> SKIP_VOTES = new HashMap<>();
-    private static final Cache<Pair<IGuild, IUser>, List<Song>> UNDO_STOP_CACHE = CacheBuilder.newBuilder()
+    private static final Cache<SimpleEntry<IGuild, IUser>, List<Song>> UNDO_STOP_CACHE = CacheBuilder.newBuilder()
             .expireAfterWrite(1, TimeUnit.MINUTES)
             .build();
 
@@ -177,7 +177,7 @@ public class Music extends AbstractCommand {
 
         TrackScheduler scheduler = getGuildMusicManager(guild).getScheduler();
 
-        Pair<IGuild, IUser> pair = new Pair<>(guild, author);
+        SimpleEntry<IGuild, IUser> pair = new SimpleEntry<>(guild, author);
         UNDO_STOP_CACHE.put(pair, scheduler.cloneSongs());
 
         scheduler.stop();
@@ -194,7 +194,7 @@ public class Music extends AbstractCommand {
         IChannel channel = event.getChannel();
 
         IUser author = event.getAuthor();
-        Pair<IGuild, IUser> pair = new Pair<>(guild, author);
+        SimpleEntry<IGuild, IUser> pair = new SimpleEntry<>(guild, author);
         List<Song> songs = UNDO_STOP_CACHE.getIfPresent(pair);
         if (songs == null) {
             sendMessage(channel, "You haven't stopped any songs in the last minute.");
