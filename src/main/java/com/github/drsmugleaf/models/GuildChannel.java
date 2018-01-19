@@ -30,7 +30,7 @@ public class GuildChannel {
         try {
             statement = connection.prepareStatement(
                     "CREATE TABLE IF NOT EXISTS guild_channels (" +
-                    "channel_id BIGINT REFERENCES channels (id) ON UPDATE CASCADE ON DELETE CASCADE," +
+                    "channel_id BIGINT UNIQUE REFERENCES channels (id) ON UPDATE CASCADE ON DELETE CASCADE," +
                     "guild_id BIGINT REFERENCES guilds (id) ON UPDATE CASCADE ON DELETE CASCADE," +
                     "CONSTRAINT channel_guild_pkey PRIMARY KEY (channel_id, guild_id)" +
                     ")"
