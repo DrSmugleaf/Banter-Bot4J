@@ -8,6 +8,7 @@ public enum Keys {
     BOT_PREFIX,
     DATABASE_URI,
     DISCORD_TOKEN,
-    GOOGLE_KEY
+    GOOGLE_KEY,
+    AZURE_TRANSLATOR_KEY
 
 }

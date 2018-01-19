@@ -1,12 +1,10 @@
 package com.github.drsmugleaf;
 
 import com.github.drsmugleaf.commands.Handler;
+import com.github.drsmugleaf.commands.Translator;
 import com.github.drsmugleaf.env.Env;
 import com.github.drsmugleaf.env.Keys;
-import com.github.drsmugleaf.models.Database;
-import com.github.drsmugleaf.models.Guild;
-import com.github.drsmugleaf.models.Member;
-import com.github.drsmugleaf.models.User;
+import com.github.drsmugleaf.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.ClientBuilder;
@@ -48,14 +46,17 @@ public class BanterBot4J {
         return LoggerFactory.getLogger(BanterBot4J.class);
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         CLIENT.getDispatcher().registerListener(new Handler());
-        CLIENT.getDispatcher().registerListeners(Guild.class, User.class, Member.class);
+        CLIENT.getDispatcher().registerListeners(Guild.class, User.class, Member.class, Channel.class, GuildChannel.class, BridgedChannel.class, Translator.class);
         new Database();
 
         User.createTable(Database.conn);
         Guild.createTable(Database.conn);
         Member.createTable(Database.conn);
+        Channel.createTable(Database.conn);
+        GuildChannel.createTable(Database.conn);
+        BridgedChannel.createTable(Database.conn);
 
         CLIENT.login();
     }
