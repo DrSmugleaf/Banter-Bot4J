@@ -111,4 +111,22 @@ public class BridgedChannel {
         }
     }
 
+    public static void delete(long channelID) {
+        PreparedStatement statement;
+        try {
+            statement = connection.prepareStatement(
+                    "DELETE FROM bridged_channels " +
+                    "WHERE" +
+                    "(channel_id = ?) " +
+                    "OR " +
+                    "(bridged_id = ?) "
+            );
+            statement.setLong(1, channelID);
+            statement.setLong(2, channelID);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            BanterBot4J.LOGGER.error("Couldn't delete all database rows related to channel id " + channelID, e);
+        }
+    }
+
 }
