@@ -1,9 +1,11 @@
 package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.models.BridgedChannel;
+import com.github.drsmugleaf.translator.API;
 import com.github.drsmugleaf.translator.Languages;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.Permissions;
 
@@ -37,6 +39,20 @@ public class Translator {
     }
 
     @EventSubscriber
-    public static void handle(@Nonnull MessageReceivedEvent event) {}
+    public static void handle(@Nonnull MessageReceivedEvent event) {
+        IChannel channel = event.getChannel();
+        List<BridgedChannel> bridgedChannelList = BridgedChannel.get(channel.getLongID());
+        if (bridgedChannelList.isEmpty()) {
+            return;
+        }
+
+        for (BridgedChannel bridgedChannel : bridgedChannelList) {
+            Languages channelLanguage = bridgedChannel.channelLanguage;
+            IChannel bridged = event.getClient().getChannelByID(bridgedChannel.bridgedID);
+            Languages bridgedLanguage = bridgedChannel.bridgedLanguage;
+            String translation = API.translate(channelLanguage.getCode(), bridgedLanguage.getCode(), event.getMessage().getFormattedContent());
+            bridged.sendMessage(translation);
+        }
+    }
 
 }

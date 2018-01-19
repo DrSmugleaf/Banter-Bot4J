@@ -1,6 +1,7 @@
 package com.github.drsmugleaf;
 
 import com.github.drsmugleaf.commands.Handler;
+import com.github.drsmugleaf.commands.Translator;
 import com.github.drsmugleaf.env.Env;
 import com.github.drsmugleaf.env.Keys;
 import com.github.drsmugleaf.models.*;
@@ -47,7 +48,7 @@ public class BanterBot4J {
 
     public static void main(String[] args) {
         CLIENT.getDispatcher().registerListener(new Handler());
-        CLIENT.getDispatcher().registerListeners(Guild.class, User.class, Member.class, Channel.class, GuildChannel.class, BridgedChannel.class);
+        CLIENT.getDispatcher().registerListeners(Guild.class, User.class, Member.class, Channel.class, GuildChannel.class, BridgedChannel.class, Translator.class);
         new Database();
 
         User.createTable(Database.conn);
