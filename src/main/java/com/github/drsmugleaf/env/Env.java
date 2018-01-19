@@ -26,7 +26,7 @@ public class Env {
             env.load(input);
             input.close();
         } catch (IOException e) {
-            BanterBot4J.LOGGER.error("Error reading .env file", e);
+            BanterBot4J.LOGGER.warn("Error reading .env file", e);
         }
     }
 
