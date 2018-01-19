@@ -1,4 +1,9 @@
-package com.github.drsmugleaf;
+package com.github.drsmugleaf.models;
+
+import com.github.drsmugleaf.env.Env;
+import com.github.drsmugleaf.env.Keys;
+import com.github.drsmugleaf.BanterBot4J;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,38 +18,41 @@ import java.util.regex.Pattern;
  */
 public class Database {
 
-    private static final String URI = new Settings().getDatabaseUrl();
+    private static final String URI = Env.get(Keys.DATABASE_URL);
     private static final Map<String, String> CREDENTIALS = getCredentials(URI);
     private static final String URL = CREDENTIALS.get("url");
     private static final String USERNAME = CREDENTIALS.get("username");
     private static final String PASSWORD = CREDENTIALS.get("password");
     private static final String DRIVER = "org.postgresql.Driver";
+    public static final Connection conn = init();
 
     private static Connection getConnection() throws SQLException {
         try {
             Class.forName(DRIVER);
-        } catch(ClassNotFoundException ex) {
-            System.out.println("Missing PostgreSQL JDBC Driver");
+        } catch(ClassNotFoundException e) {
+            BanterBot4J.LOGGER.error("Missing PostgreSQL JDBC Driver", e);
             System.exit(1);
         }
-        Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-        return conn;
+        return DriverManager.getConnection(URL, USERNAME, PASSWORD);
     }
 
-    public static void main() {
+    @Nullable
+    public static Connection init() {
         Connection connection = null;
         try {
             connection = getConnection();
         } catch(SQLException e) {
-            System.out.println("Database connection failed");
-            e.printStackTrace();
+            BanterBot4J.LOGGER.error("Database connection failed", e);
         }
 
         if(connection != null) {
-            System.out.println("Established database connection");
+            BanterBot4J.LOGGER.info("Established database connection");
+            return connection;
         } else {
-            System.out.println("Failed to establish database connection");
+            BanterBot4J.LOGGER.error("Failed to establish database connection");
         }
+
+        return null;
     }
 
     private static Map<String, String> getCredentials(String uri) {

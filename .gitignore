@@ -38,6 +38,6 @@ buildNumber.properties
 .idea/
 *.iml
 
-# private settings
-Settings.java
-*.env
+# Environment variables
+.env
+*.java___jb_tmp___
