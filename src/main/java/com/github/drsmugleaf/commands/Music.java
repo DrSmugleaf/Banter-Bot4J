@@ -110,14 +110,14 @@ public class Music extends AbstractCommand {
         }
 
         int votes = SKIP_VOTES.get(guild).size();
-        int requiredVotes = humanUsers / 2;
+        double requiredVotes = humanUsers / 2;
 
         if (votes >= requiredVotes || author == musicManager.getScheduler().getCurrentSong().getSubmitter()) {
             SKIP_VOTES.get(guild).clear();
             musicManager.getScheduler().skip();
             sendMessage(channel, "Skipped the current song.");
         } else {
-            String response = String.format("Votes: %d/%d", votes, requiredVotes);
+            String response = String.format("Votes: %d/%.0f", votes, requiredVotes);
             sendMessage(channel, response);
         }
     }
