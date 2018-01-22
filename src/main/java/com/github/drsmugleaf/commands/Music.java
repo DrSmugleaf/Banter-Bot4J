@@ -65,14 +65,6 @@ public class Music extends AbstractCommand {
         } catch (MissingPermissionsException ignored) {}
 
         IUser author = event.getAuthor();
-        IVoiceChannel authorVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
-
-        IUser bot = event.getClient().getOurUser();
-        IVoiceChannel botVoiceChannel = bot.getVoiceStateForGuild(guild).getChannel();
-        if (botVoiceChannel != authorVoiceChannel) {
-            authorVoiceChannel.join();
-        }
-
         String searchString = String.join(" ", args);
 
         PLAYER_MANAGER.loadItem(searchString, new AudioResultHandler(channel, author, searchString));
@@ -283,6 +275,14 @@ public class Music extends AbstractCommand {
         if (song == null) {
             return;
         }
+
+        IGuild guild = song.getGuild();
+        IVoiceChannel authorVoiceChannel = song.getSubmitter().getVoiceStateForGuild(guild).getChannel();
+        IVoiceChannel botVoiceChannel = authorVoiceChannel.getClient().getOurUser().getVoiceStateForGuild(guild).getChannel();
+        if (botVoiceChannel != authorVoiceChannel) {
+            authorVoiceChannel.join();
+        }
+
         String response = String.format("Now playing `%s`.", song.getTrack().getInfo().title);
         sendMessage(song.getChannel(), response);
     }
