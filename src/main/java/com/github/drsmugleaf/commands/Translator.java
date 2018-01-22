@@ -8,6 +8,7 @@ import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
+import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
 
 import javax.annotation.Nonnull;
@@ -102,13 +103,18 @@ public class Translator extends AbstractCommand {
 
     @EventSubscriber
     public static void handle(@Nonnull MessageReceivedEvent event) {
+        IUser author = event.getAuthor();
+        if (author.isBot()) {
+            return;
+        }
+
         IChannel channel = event.getChannel();
         List<BridgedChannel> bridgedChannelList = BridgedChannel.get(channel.getLongID());
         if (bridgedChannelList.isEmpty()) {
             return;
         }
 
-        String authorName = event.getAuthor().getDisplayName(event.getGuild());
+        String authorName = author.getDisplayName(event.getGuild());
         for (BridgedChannel bridgedChannel : bridgedChannelList) {
             Languages channelLanguage = bridgedChannel.channelLanguage;
             IChannel bridged = event.getClient().getChannelByID(bridgedChannel.bridgedID);
