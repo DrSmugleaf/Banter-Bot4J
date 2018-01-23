@@ -6,6 +6,7 @@ import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
+import sx.blah.discord.util.RoleBuilder;
 
 import java.util.List;
 
@@ -54,9 +55,10 @@ public class Color extends AbstractCommand {
         }
 
         if (roles.isEmpty()) {
-            IRole newRole = guild.createRole();
-            newRole.changeName("color-" + author.getStringID());
-            newRole.changeColor(color);
+            IRole newRole = new RoleBuilder(guild)
+                    .withName("color-" + author.getStringID())
+                    .withColor(color)
+                    .build();
             author.addRole(newRole);
         } else {
             IRole role = roles.get(0);
