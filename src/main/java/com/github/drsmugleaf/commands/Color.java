@@ -34,7 +34,7 @@ public class Color extends AbstractCommand {
             if (usersByRole.isEmpty()) {
                 role.delete();
             }
-            String hexCode = String.format("#%06x", role.getColor().getRGB() & 0x00FFFFFF);
+            String hexCode = String.format("#%06x", role.getColor().getRGB() & 0x00FFFFFF).toUpperCase();
             sendMessage(channel, "Removed your name color. It was " + hexCode);
             return;
         }
