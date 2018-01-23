@@ -53,6 +53,11 @@ public class Color extends AbstractCommand {
             try {
                 author.removeRole(role);
             } catch (MissingPermissionsException e) {
+                if (e.getMissingPermissions() == null) {
+                    sendMessage(channel, "I can't remove your name color.\n" +
+                                         "My highest role with the permission to modify roles has a lower position in the role list than your color role.");
+                    return;
+                }
                 String missingPermissions = e.getMissingPermissions().stream().map(Permissions::name).collect(Collectors.joining(", "));
                 sendMessage(channel, "I don't have permission to change your name color.\n" +
                                      "Missing permissions: " + missingPermissions);
@@ -92,6 +97,11 @@ public class Color extends AbstractCommand {
             try {
                 role.changeColor(color);
             } catch (MissingPermissionsException e) {
+                if (e.getMissingPermissions() == null) {
+                    sendMessage(channel, "I can't modify your name color.\n" +
+                                         "My highest role with the permission to modify roles has a lower position in the role list than your color role.");
+                    return;
+                }
                 String missingPermissions = e.getMissingPermissions().stream().map(Permissions::name).collect(Collectors.joining(", "));
                 sendMessage(channel, "I don't have permission to change your name color.\n" +
                                      "Missing permissions: " + missingPermissions);
