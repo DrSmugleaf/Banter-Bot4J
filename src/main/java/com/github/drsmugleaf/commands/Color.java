@@ -75,14 +75,28 @@ public class Color extends AbstractCommand {
         }
 
         if (roles.isEmpty()) {
-            IRole newRole = new RoleBuilder(guild)
-                    .withName("color-" + author.getStringID())
-                    .withColor(color)
-                    .build();
-            author.addRole(newRole);
+            try {
+                IRole newRole = new RoleBuilder(guild)
+                        .withName("color-" + author.getStringID())
+                        .withColor(color)
+                        .build();
+                author.addRole(newRole);
+            } catch (MissingPermissionsException e) {
+                String missingPermissions = e.getMissingPermissions().stream().map(Permissions::name).collect(Collectors.joining(", "));
+                sendMessage(channel, "I don't have permission to change your name color.\n" +
+                                     "Missing permissions: " + missingPermissions);
+                return;
+            }
         } else {
             IRole role = roles.get(0);
-            role.changeColor(color);
+            try {
+                role.changeColor(color);
+            } catch (MissingPermissionsException e) {
+                String missingPermissions = e.getMissingPermissions().stream().map(Permissions::name).collect(Collectors.joining(", "));
+                sendMessage(channel, "I don't have permission to change your name color.\n" +
+                                     "Missing permissions: " + missingPermissions);
+                return;
+            }
         }
         sendMessage(channel, "Changed your name color to " + requestedColor);
     }
