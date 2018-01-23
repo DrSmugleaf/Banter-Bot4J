@@ -2,13 +2,12 @@ package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.BanterBot4J;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IRole;
-import sx.blah.discord.handle.obj.IUser;
+import sx.blah.discord.handle.obj.*;
+import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RoleBuilder;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by DrSmugleaf on 23/01/2018.
@@ -30,7 +29,14 @@ public class Color extends AbstractCommand {
 
             IRole role = roles.get(0);
             List<IUser> usersByRole = guild.getUsersByRole(role);
-            author.removeRole(role);
+            try {
+                author.removeRole(role);
+            } catch (MissingPermissionsException e) {
+                String missingPermissions = e.getMissingPermissions().stream().map(Permissions::name).collect(Collectors.joining(", "));
+                sendMessage(channel, "I don't have permission to change your name color.\n" +
+                                     "Missing permissions: " + missingPermissions);
+                return;
+            }
             usersByRole.remove(author);
             if (usersByRole.isEmpty()) {
                 role.delete();
