@@ -6,6 +6,7 @@ import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RoleBuilder;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,26 @@ import java.util.stream.Collectors;
  * Created by DrSmugleaf on 23/01/2018.
  */
 public class Color extends AbstractCommand {
+
+    @Nullable
+    private static java.awt.Color resolve(String string) {
+        java.awt.Color color = null;
+        try {
+            color = java.awt.Color.decode(string);
+        } catch (NumberFormatException nfe) {
+            try {
+                color = java.awt.Color.decode("#" + string);
+            } catch (NumberFormatException nfe2) {
+                try {
+                    color = (java.awt.Color) java.awt.Color.class.getField(string.trim().toUpperCase().replace(" ", "_")).get(null);
+                } catch (IllegalAccessException | NoSuchFieldException e) {
+                    BanterBot4J.LOGGER.warn("Error resolving color " + string, e);
+                }
+            }
+        }
+
+        return color;
+    }
 
     @Command(tags = {Tags.GUILD_ONLY})
     public static void color(MessageReceivedEvent event, List<String> args) {
@@ -47,17 +68,10 @@ public class Color extends AbstractCommand {
         }
 
         String requestedColor = args.get(0);
-        java.awt.Color color;
-        try {
-            color = java.awt.Color.decode(requestedColor);
-        } catch (NumberFormatException nfe) {
-            try {
-                color = (java.awt.Color) java.awt.Color.class.getField(requestedColor.trim().toUpperCase().replace(" ", "_")).get(null);
-            } catch (IllegalAccessException | NoSuchFieldException e) {
-                BanterBot4J.LOGGER.warn("Error decoding color " + requestedColor, e);
-                sendMessage(channel, "Invalid color. Make sure it is a hexadecimal string (#0000FF) or a simple color like red.");
-                return;
-            }
+        java.awt.Color color = resolve(requestedColor);
+        if (color == null) {
+            sendMessage(channel, "Invalid color. Make sure it is a hexadecimal string (0000FF) or a simple color like red.");
+            return;
         }
 
         if (roles.isEmpty()) {
@@ -71,7 +85,6 @@ public class Color extends AbstractCommand {
             role.changeColor(color);
         }
         sendMessage(channel, "Changed your name color to " + requestedColor);
-        return;
     }
 
 }
