@@ -28,8 +28,10 @@ public class Color extends AbstractCommand {
             }
 
             IRole role = roles.get(0);
+            List<IUser> usersByRole = guild.getUsersByRole(role);
             author.removeRole(role);
-            if (guild.getUsersByRole(role).isEmpty()) {
+            usersByRole.remove(author);
+            if (usersByRole.isEmpty()) {
                 role.delete();
             }
             String hexCode = String.format("#%06x", role.getColor().getRGB() & 0x00FFFFFF);
