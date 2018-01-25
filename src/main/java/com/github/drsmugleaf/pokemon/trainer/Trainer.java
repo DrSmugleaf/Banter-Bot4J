@@ -271,7 +271,7 @@ public class Trainer extends Player {
         return this.chosenMove;
     }
 
-    public void setChosenMove(Move move) {
+    public void setChosenMove(@Nonnull Move move) {
         this.chosenMove = move;
         this.setStatus(TrainerStatus.CHOOSING_TARGET);
         TrainerChooseMoveEvent event = new TrainerChooseMoveEvent(this.pokemonInFocus, move);
