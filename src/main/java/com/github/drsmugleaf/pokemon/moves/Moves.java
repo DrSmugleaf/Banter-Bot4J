@@ -34,7 +34,7 @@ public class Moves {
         name = name.toLowerCase();
 
         for (Move move : MOVES) {
-            if (Objects.equals(move.getBaseMove().NAME, name)) {
+            if (Objects.equals(move.getBaseMove().NAME.toLowerCase(), name)) {
                 return move;
             }
         }
