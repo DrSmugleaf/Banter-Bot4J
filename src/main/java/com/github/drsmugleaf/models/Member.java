@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.models;
 
-import com.github.drsmugleaf.util.Bot;
+import com.github.drsmugleaf.BanterBot4J;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 
@@ -37,12 +37,17 @@ public class Member {
             statement.executeUpdate();
             Member.connection = connection;
         } catch(SQLException e) {
-            Bot.LOGGER.error("Unable to create table members", e);
+            BanterBot4J.LOGGER.error("Unable to create table members", e);
             System.exit(1);
         }
     }
 
     public void createIfNotExists() {
+        User user = new User(userID);
+        user.createIfNotExists();
+        Guild guild = new Guild(guildID);
+        guild.createIfNotExists();
+
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement(
@@ -55,7 +60,7 @@ public class Member {
             statement.setBoolean(3, this.isBlacklisted);
             statement.executeUpdate();
         } catch(SQLException e) {
-            Bot.LOGGER.error("Error creating member with user id " + this.userID + " and guild id " + this.guildID + " with blacklist set to " + this.isBlacklisted, e);
+            BanterBot4J.LOGGER.error("Error creating member with user id " + this.userID + " and guild id " + this.guildID + " with blacklist set to " + this.isBlacklisted, e);
         }
     }
 
@@ -75,7 +80,7 @@ public class Member {
             Boolean isBlacklisted = result.getBoolean("is_blacklisted");
             return new Member(user_id, guild_id, isBlacklisted);
         } catch(SQLException e) {
-            Bot.LOGGER.error("Error retrieving member with user id " + userID + " and guild id " + guildID, e);
+            BanterBot4J.LOGGER.error("Error retrieving member with user id " + userID + " and guild id " + guildID, e);
         }
         return null;
     }
@@ -103,7 +108,7 @@ public class Member {
             statement.setLong(8, this.guildID);
             statement.executeUpdate();
         } catch(SQLException e) {
-            Bot.LOGGER.error("Error saving member with user id " + this.userID + " and guild id " + this.guildID + " with blacklist set to " + this.isBlacklisted, e);
+            BanterBot4J.LOGGER.error("Error saving member with user id " + this.userID + " and guild id " + this.guildID + " with blacklist set to " + this.isBlacklisted, e);
         }
     }
 

@@ -1,0 +1,1 @@
+worker: java -cp target/classes/:target/dependency/* com.github.drsmugleaf.BanterBot4J

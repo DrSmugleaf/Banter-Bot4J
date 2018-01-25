@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.env;
 
-import com.github.drsmugleaf.util.Bot;
+import com.github.drsmugleaf.BanterBot4J;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,7 +26,7 @@ public class Env {
             env.load(input);
             input.close();
         } catch (IOException e) {
-            Bot.LOGGER.error("Error reading .env file", e);
+            BanterBot4J.LOGGER.warn("Error reading .env file", e);
         }
     }
 

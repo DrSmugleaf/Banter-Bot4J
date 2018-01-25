@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.youtube;
 
+import com.github.drsmugleaf.commands.AbstractCommand;
 import com.github.drsmugleaf.commands.Music;
-import com.github.drsmugleaf.util.Bot;
 import com.google.api.services.youtube.model.SearchResult;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
@@ -68,12 +68,12 @@ public class AudioResultHandler implements AudioLoadResultHandler {
         try {
             search = API.search(SEARCH_STRING);
         } catch (SearchErrorException e) {
-            Bot.sendMessage(CHANNEL, "Error searching for `" + SEARCH_STRING + "`.");
+            AbstractCommand.sendMessage(CHANNEL, "Error searching for `" + SEARCH_STRING + "`.");
             return;
         }
 
         if (search == null) {
-            Bot.sendMessage(CHANNEL, "No results found for `" + SEARCH_STRING + "`.");
+            AbstractCommand.sendMessage(CHANNEL, "No results found for `" + SEARCH_STRING + "`.");
             return;
         }
 

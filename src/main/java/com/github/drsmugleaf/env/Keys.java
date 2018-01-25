@@ -6,8 +6,9 @@ package com.github.drsmugleaf.env;
 public enum Keys {
 
     BOT_PREFIX,
-    DATABASE_URI,
+    DATABASE_URL,
     DISCORD_TOKEN,
-    GOOGLE_KEY
+    GOOGLE_KEY,
+    AZURE_TRANSLATOR_KEY
 
 }

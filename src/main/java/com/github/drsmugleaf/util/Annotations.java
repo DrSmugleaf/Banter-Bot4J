@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.util;
 
+import com.github.drsmugleaf.BanterBot4J;
+
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
@@ -65,7 +67,7 @@ public class Annotations {
         try {
             classes = Annotations.getClasses("com.github.drsmugleaf.commands");
         } catch(ClassNotFoundException | IOException | URISyntaxException e) {
-            Bot.LOGGER.error("Error getting classes in commands package", e);
+            BanterBot4J.LOGGER.error("Error getting classes in commands package", e);
         }
 
         List<Method> methodList = new ArrayList<>();

@@ -2,7 +2,7 @@ package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.models.Member;
 import com.github.drsmugleaf.util.Annotations;
-import com.github.drsmugleaf.util.Bot;
+import com.github.drsmugleaf.BanterBot4J;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.Permissions;
@@ -25,33 +25,30 @@ public class Handler {
         for (Method method : commands) {
             Command annotation = method.getAnnotation(Command.class);
 
-            ICommand command = new ICommand() {
-                @Override
-                void run(@Nonnull MessageReceivedEvent event, @Nonnull List<String> args) {
-                    if (event.getGuild() != null) {
-                        List<Permissions> annotationPermissions = Arrays.asList(annotation.permissions());
-                        EnumSet<Permissions> authorPermissions = event.getAuthor().getPermissionsForGuild(event.getGuild());
+            ICommand command = (event, args) -> {
+                if (event.getGuild() != null) {
+                    List<Permissions> annotationPermissions = Arrays.asList(annotation.permissions());
+                    EnumSet<Permissions> authorPermissions = event.getAuthor().getPermissionsForGuild(event.getGuild());
 
-                        if (!annotationPermissions.isEmpty() && Collections.disjoint(authorPermissions, Arrays.asList(annotation.permissions()))) {
-                            Bot.sendMessage(event.getChannel(), "You don't have permission to use that command.");
-                            return;
-                        }
+                    if (!annotationPermissions.isEmpty() && Collections.disjoint(authorPermissions, Arrays.asList(annotation.permissions()))) {
+                        AbstractCommand.sendMessage(event.getChannel(), "You don't have permission to use that command.");
+                        return;
                     }
+                }
 
-                    for (Tags tags : annotation.tags()) {
-                        if (!tags.valid(event)) {
-                            Bot.sendMessage(event.getChannel(), tags.message());
-                            return;
-                        }
+                for (Tags tags : annotation.tags()) {
+                    if (!tags.valid(event)) {
+                        AbstractCommand.sendMessage(event.getChannel(), tags.message());
+                        return;
                     }
+                }
 
-                    try {
-                        method.invoke(method.getClass(), event, args);
-                    } catch (InvocationTargetException e) {
-                        Bot.LOGGER.error("Error running command", e.getCause());
-                    } catch (IllegalAccessException e) {
-                        Bot.LOGGER.error("Error running command", e);
-                    }
+                try {
+                    method.invoke(method.getClass(), event, args);
+                } catch (InvocationTargetException e) {
+                    BanterBot4J.LOGGER.error("Error running command", e.getCause());
+                } catch (IllegalAccessException e) {
+                    BanterBot4J.LOGGER.error("Error running command", e);
                 }
             };
 
@@ -72,7 +69,7 @@ public class Handler {
             return;
         }
 
-        if (!argsArray[0].startsWith(Bot.BOT_PREFIX)) {
+        if (!argsArray[0].startsWith(BanterBot4J.BOT_PREFIX)) {
             return;
         }
 
@@ -85,7 +82,7 @@ public class Handler {
             }
         }
 
-        String commandString = argsArray[0].substring(Bot.BOT_PREFIX.length());
+        String commandString = argsArray[0].substring(BanterBot4J.BOT_PREFIX.length());
         List<String> argsList = new ArrayList<>(Arrays.asList(argsArray));
         argsList.remove(0);
 
