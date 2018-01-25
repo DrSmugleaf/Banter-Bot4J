@@ -18,8 +18,13 @@ import java.util.*;
  */
 public class Battle extends Setup {
 
+    @Nonnull
     private final Map<Long, Trainer> TRAINERS = new LinkedHashMap<>();
-    private Weather weather;
+
+    @Nonnull
+    private Weather weather = Weather.NONE;
+
+    @Nonnull
     private final List<Turn> TURNS = new ArrayList<>();
 
     protected Battle(@Nonnull Setup setup, @Nonnull List<TrainerBuilder> trainers) throws UserException {
@@ -60,13 +65,13 @@ public class Battle extends Setup {
         return weather;
     }
 
-    public void setWeather(Weather weather) {
+    public void setWeather(@Nonnull Weather weather) {
         this.weather = weather;
     }
 
     protected void removeWeather(@Nonnull Weather weather) {
         if (this.weather == weather) {
-            this.weather = null;
+            this.weather = Weather.NONE;
         }
     }
 

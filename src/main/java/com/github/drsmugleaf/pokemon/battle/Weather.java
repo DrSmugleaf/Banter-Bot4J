@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
  */
 public enum Weather implements IModifier {
 
+    NONE("None"),
     SUNSHINE("Sunshine"),
     HARSH_SUNSHINE("Harsh Sunshine") {
         @Override
