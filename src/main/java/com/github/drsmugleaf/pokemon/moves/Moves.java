@@ -22,6 +22,9 @@ public class Moves {
 
     public Moves(@Nonnull List<Move> moves) {
         MOVES = new ArrayList<>(moves);
+        for (Move move : MOVES) {
+            VALID_MOVES.add(move.getBaseMove());
+        }
     }
 
     @Nonnull

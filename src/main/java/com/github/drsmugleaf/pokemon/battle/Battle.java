@@ -118,6 +118,11 @@ public class Battle extends Setup {
         }
 
         if (TRAINERS.values().stream().allMatch(trainer -> trainer.getStatus() != TrainerStatus.CHOOSING_POKEMON)) {
+            for (Trainer trainer : TRAINERS.values()) {
+                for (Pokemon pokemon : trainer.getActivePokemons()) {
+                    pokemon.MOVES.resetValid();
+                }
+            }
             Event event = new BattleTurnStartEvent(this);
             EventDispatcher.dispatch(event);
         }
