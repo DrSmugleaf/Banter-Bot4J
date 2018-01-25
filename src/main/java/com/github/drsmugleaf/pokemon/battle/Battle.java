@@ -136,6 +136,9 @@ public class Battle extends Setup {
     }
 
     public int getTurn() {
+        if (TURNS.isEmpty()) {
+            return 0;
+        }
         return getCurrentTurn().getID();
     }
 
