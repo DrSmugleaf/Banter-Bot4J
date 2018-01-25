@@ -22,7 +22,7 @@ public class Turn {
     private boolean executed = false;
 
     protected Turn(@Nonnull Battle battle) {
-        ID = battle.getTurn();
+        ID = battle.getTurn() + 1;
     }
 
     public int getID() {
