@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands;
 
+import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.pokemon.battle.*;
 import com.github.drsmugleaf.pokemon.events.*;
 import com.github.drsmugleaf.pokemon.moves.BaseMove;
@@ -9,7 +10,6 @@ import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
 import com.github.drsmugleaf.pokemon.trainer.TrainerBuilder;
 import com.github.drsmugleaf.pokemon.trainer.UserException;
-import com.github.drsmugleaf.util.Bot;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -25,7 +25,7 @@ import java.util.Map.Entry;
 /**
  * Created by DrSmugleaf on 11/06/2017.
  */
-public class PokemonCommands {
+public class PokemonCommands extends AbstractCommand {
 
     private static final Map<IUser, Battle> BATTLES = new HashMap<>();
     private static final Map<IUser, TrainerBuilder> awaitingTrainer = new LinkedHashMap<>();
@@ -127,7 +127,7 @@ public class PokemonCommands {
         try {
             battle = battleBuilder.build();
         } catch (UserException e) {
-            Bot.sendMessage(event.getChannel(), e.getMessage());
+            sendMessage(event.getChannel(), e.getMessage());
         }
 
         PokemonCommands.BATTLES.put(user1, battle);
@@ -158,7 +158,7 @@ public class PokemonCommands {
             case CHOOSING_POKEMON: {
                 Scanner scanner = new Scanner(message).useDelimiter("[^0-9]+");
                 if (!scanner.hasNextInt()) {
-                    Bot.sendMessage(event.getChannel(), "Invalid Pokemon ID.");
+                    sendMessage(event.getChannel(), "Invalid Pokemon ID.");
                     return;
                 }
 
@@ -170,7 +170,7 @@ public class PokemonCommands {
             }
             case CHOOSING_MOVE:
                 if (!trainer.getPokemonInFocus().MOVES.hasOne(message)) {
-                    Bot.sendMessage(event.getChannel(), "Invalid move name.");
+                    sendMessage(event.getChannel(), "Invalid move name.");
                     return;
                 }
 
@@ -179,7 +179,7 @@ public class PokemonCommands {
             case CHOOSING_TARGET: {
                 Scanner scanner = new Scanner(message).useDelimiter("[^0-9]+");
                 if (!scanner.hasNextInt()) {
-                    Bot.sendMessage(event.getChannel(), "Invalid Pokemon ID.");
+                    sendMessage(event.getChannel(), "Invalid Pokemon ID.");
                     return;
                 }
 
@@ -206,14 +206,14 @@ public class PokemonCommands {
             }
 
             response
-                    .append(Bot.client.fetchUser(trainer.getID()).getName())
+                    .append(BanterBot4J.fetchUser(trainer.getID()).getName())
                     .append("'s team:\n")
                     .append(String.join(" / ", pokemons))
                     .append("\n");
         }
 
         for (Long id : battle.getTrainers().keySet()) {
-            IUser user = Bot.client.fetchUser(id);
+            IUser user = BanterBot4J.fetchUser(id);
             IPrivateChannel channel = user.getOrCreatePMChannel();
             channel.sendMessage(response.toString());
         }
@@ -239,8 +239,8 @@ public class PokemonCommands {
                     .append(hpLoss)
                     .append("% of its health!");
 
-            IPrivateChannel channel = Bot.client.fetchUser(id).getOrCreatePMChannel();
-            Bot.sendMessage(channel, response.toString());
+            IPrivateChannel channel = BanterBot4J.fetchUser(id).getOrCreatePMChannel();
+            sendMessage(channel, response.toString());
         }
     }
 
@@ -262,15 +262,15 @@ public class PokemonCommands {
                     .append(event.getMove().getBaseMove().NAME)
                     .append("**!");
 
-            IPrivateChannel channel = Bot.client.fetchUser(id).getOrCreatePMChannel();
-            Bot.sendMessage(channel, response.toString());
+            IPrivateChannel channel = BanterBot4J.fetchUser(id).getOrCreatePMChannel();
+            sendMessage(channel, response.toString());
         }
     }
 
     @PokemonEventHandler(event = TrainerSendOutPokemonEvent.class)
     public static void handle(TrainerSendOutPokemonEvent event) {
         Trainer trainer = event.getTrainer();
-        IUser user = Bot.client.fetchUser(trainer.getID());
+        IUser user = BanterBot4J.fetchUser(trainer.getID());
         Pokemon pokemon = event.getPokemon();
         StringBuilder response = new StringBuilder();
 
@@ -296,15 +296,15 @@ public class PokemonCommands {
 
             response.append("!");
 
-            IPrivateChannel channel = Bot.client.fetchUser(id).getOrCreatePMChannel();
-            Bot.sendMessage(channel, response.toString());
+            IPrivateChannel channel = BanterBot4J.fetchUser(id).getOrCreatePMChannel();
+            sendMessage(channel, response.toString());
         }
     }
 
     @PokemonEventHandler(event = TrainerSendBackPokemonEvent.class)
     public static void handle(TrainerSendBackPokemonEvent event) {
         Trainer trainer = event.getTrainer();
-        IUser user = Bot.client.fetchUser(trainer.getID());
+        IUser user = BanterBot4J.fetchUser(trainer.getID());
         Pokemon pokemon = event.getPokemon();
         StringBuilder response = new StringBuilder();
 
@@ -331,8 +331,8 @@ public class PokemonCommands {
 
             response.append("!");
 
-            IPrivateChannel channel = Bot.client.fetchUser(id).getOrCreatePMChannel();
-            Bot.sendMessage(channel, response.toString());
+            IPrivateChannel channel = BanterBot4J.fetchUser(id).getOrCreatePMChannel();
+            sendMessage(channel, response.toString());
         }
     }
 
@@ -340,7 +340,7 @@ public class PokemonCommands {
     public static void handle(PokemonDeathEvent event) {
         Pokemon pokemon = event.getPokemon();
         Trainer trainer = event.getPokemon().getTrainer();
-        IUser user = Bot.client.fetchUser(trainer.getID());
+        IUser user = BanterBot4J.fetchUser(trainer.getID());
         StringBuilder response = new StringBuilder();
 
         for (Long id : event.getBattle().getTrainers().keySet()) {
@@ -354,19 +354,19 @@ public class PokemonCommands {
                     .append(pokemon.getNickname())
                     .append(" fainted!");
 
-            IPrivateChannel channel = Bot.client.fetchUser(id).getOrCreatePMChannel();
-            Bot.sendMessage(channel, response.toString());
+            IPrivateChannel channel = BanterBot4J.fetchUser(id).getOrCreatePMChannel();
+            sendMessage(channel, response.toString());
         }
     }
 
     @PokemonEventHandler(event = BattleTurnStartEvent.class)
     public static void handle(BattleTurnStartEvent event) {
         for (Trainer trainer : event.getBattle().getTrainers().values()) {
-            IUser user = Bot.client.fetchUser(trainer.getID());
+            IUser user = BanterBot4J.fetchUser(trainer.getID());
 
             IPrivateChannel channel = user.getOrCreatePMChannel();
-            Bot.sendMessage(channel, "**TURN " + event.getBattle().getTurn() + "**");
-            Bot.sendMessage(channel, PokemonCommands.chooseMoveEmbed(trainer));
+            sendMessage(channel, "**TURN " + event.getBattle().getTurn() + "**");
+            sendMessage(channel, PokemonCommands.chooseMoveEmbed(trainer));
         }
     }
 
@@ -374,10 +374,10 @@ public class PokemonCommands {
     public static void handle(TrainerChooseMoveEvent event) {
         Trainer trainer = event.getTrainer();
         Move move = event.getMove();
-        IUser user = Bot.client.fetchUser(trainer.getID());
+        IUser user = BanterBot4J.fetchUser(trainer.getID());
 
         IPrivateChannel channel = user.getOrCreatePMChannel();
-        Bot.sendMessage(channel, PokemonCommands.chooseTargetEmbed(trainer, move));
+        sendMessage(channel, PokemonCommands.chooseTargetEmbed(trainer, move));
     }
 
     @PokemonEventHandler(event = PokemonDodgeEvent.class)
@@ -397,18 +397,18 @@ public class PokemonCommands {
                     .append(target.getNickname())
                     .append(" avoided the attack!");
 
-            IPrivateChannel channel = Bot.client.fetchUser(id).getOrCreatePMChannel();
-            Bot.sendMessage(channel, response.toString());
+            IPrivateChannel channel = BanterBot4J.fetchUser(id).getOrCreatePMChannel();
+            sendMessage(channel, response.toString());
         }
     }
 
     @PokemonEventHandler(event = TrainerChoosingPokemonEvent.class)
     public static void handle(TrainerChoosingPokemonEvent event) {
         for (Trainer trainer : event.getTrainers()) {
-            IUser user = Bot.client.fetchUser(trainer.getID());
+            IUser user = BanterBot4J.fetchUser(trainer.getID());
             IPrivateChannel channel = user.getOrCreatePMChannel();
 
-            Bot.sendMessage(channel, PokemonCommands.sendOutPokemonEmbed(event.getBattle(), user));
+            sendMessage(channel, PokemonCommands.sendOutPokemonEmbed(event.getBattle(), user));
         }
     }
 

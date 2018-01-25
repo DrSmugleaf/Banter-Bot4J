@@ -1,12 +1,12 @@
 package com.github.drsmugleaf.pokemon.external;
 
+import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.pokemon.item.Items;
 import com.github.drsmugleaf.pokemon.moves.BaseMove;
 import com.github.drsmugleaf.pokemon.moves.Category;
 import com.github.drsmugleaf.pokemon.moves.Hit;
 import com.github.drsmugleaf.pokemon.moves.Target;
 import com.github.drsmugleaf.pokemon.types.Type;
-import com.github.drsmugleaf.util.Bot;
 import com.opencsv.CSVWriter;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
@@ -33,7 +33,7 @@ public class SerebiiParser {
         try {
             doc1 = Jsoup.connect("http://www.serebii.net/attackdex-sm/").get();
         } catch (IOException e) {
-            Bot.LOGGER.error("Error parsing Serebii move list", e);
+            BanterBot4J.LOGGER.error("Error parsing Serebii move list", e);
         }
 
         Elements movesHtml = doc1.body().select("div > table > tbody > tr > td > form > div > select > option");
@@ -50,7 +50,7 @@ public class SerebiiParser {
         try {
             doc1 = Jsoup.connect("http://www.serebii.net/attackdex-sm/").get();
         } catch (IOException e) {
-            Bot.LOGGER.error("Error getting Serebii move list", e);
+            BanterBot4J.LOGGER.error("Error getting Serebii move list", e);
             return;
         }
 
@@ -102,7 +102,7 @@ public class SerebiiParser {
             try {
                 doc = Jsoup.connect("http://www.serebii.net" + moveUrl).get();
             } catch (IOException e) {
-                Bot.LOGGER.error("Error getting Serebii page for move " + element.attr("value"), e);
+                BanterBot4J.LOGGER.error("Error getting Serebii page for move " + element.attr("value"), e);
                 continue;
             }
 
@@ -154,12 +154,12 @@ public class SerebiiParser {
                         propertyNameGroup = propertyNameRow.children();
                         propertyValueGroup = propertyValueRow.children();
                     } catch (NullPointerException | IndexOutOfBoundsException e) {
-                        Bot.LOGGER.error("Error parsing move " + element.attr("value") + ", skipping", e);
+                        BanterBot4J.LOGGER.error("Error parsing move " + element.attr("value") + ", skipping", e);
                         continue;
                     }
 
                     if (propertyNameGroup == null || propertyValueGroup == null) {
-                        Bot.LOGGER.error("Null property name or value group for move " + element.attr("value") + ", skipping");
+                        BanterBot4J.LOGGER.error("Null property name or value group for move " + element.attr("value") + ", skipping");
                         continue;
                     }
 
@@ -330,7 +330,7 @@ public class SerebiiParser {
                                 try {
                                     bulbapediaDoc = Jsoup.connect("https://bulbapedia.bulbagarden.net/wiki/" + name.replace(" ", "_").replace("'", "%27") + "_(move)").get();
                                 } catch (HttpStatusException e) {
-                                    Bot.LOGGER.error("Error getting Bulbapedia page for move " + name, e);
+                                    BanterBot4J.LOGGER.error("Error getting Bulbapedia page for move " + name, e);
                                     continue;
                                 }
                                 String bTarget = bulbapediaDoc.select("tbody > tr:nth-child(5) > td > table > tbody > tr:nth-child(3) > td > small").text();
@@ -402,7 +402,7 @@ public class SerebiiParser {
                                 copyable = propertyValue.text().equals("Yes");
                                 break;
                             default:
-                                Bot.LOGGER.error("Missing case for Serebii move property " + propertyName);
+                                BanterBot4J.LOGGER.error("Missing case for Serebii move property " + propertyName);
                                 break;
                         }
                     }

@@ -1,11 +1,11 @@
 package com.github.drsmugleaf.pokemon.pokemon;
 
+import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.pokemon.ability.Abilities;
 import com.github.drsmugleaf.pokemon.battle.Generation;
 import com.github.drsmugleaf.pokemon.battle.Tier;
-import com.github.drsmugleaf.pokemon.ability.Abilities;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon.types.Type;
-import com.github.drsmugleaf.util.Bot;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -913,7 +913,7 @@ public enum Species {
         try {
             pokemons = getPokemons();
         } catch (IOException e) {
-            Bot.LOGGER.error("Error parsing pokemons", e);
+            BanterBot4J.LOGGER.error("Error parsing pokemons", e);
             System.exit(1);
         }
 
@@ -995,7 +995,7 @@ public enum Species {
         try {
             doc = Jsoup.connect("http://www.smogon.com/dex/sm/pokemon/").get();
         } catch (IOException e) {
-            Bot.LOGGER.error("Error connecting to Smogon", e);
+            BanterBot4J.LOGGER.error("Error connecting to Smogon", e);
             throw e;
         }
 

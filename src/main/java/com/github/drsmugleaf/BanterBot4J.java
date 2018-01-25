@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
+import sx.blah.discord.handle.obj.IUser;
+import sx.blah.discord.util.*;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -63,6 +65,21 @@ public class BanterBot4J {
 
     public static boolean isOwner(Long userID) {
         return Arrays.stream(BanterBot4J.OWNERS).anyMatch(id -> id.equals(userID));
+    }
+
+    public static IUser fetchUser(long id) {
+        final IUser[] user = new IUser[1];
+
+        RequestBuffer.request(() -> {
+            try {
+                user[0] = CLIENT.fetchUser(id);
+            } catch (sx.blah.discord.util.DiscordException e) {
+                LOGGER.error("User couldn't be fetched", e);
+                throw e;
+            }
+        }).get();
+
+        return user[0];
     }
 
 }
