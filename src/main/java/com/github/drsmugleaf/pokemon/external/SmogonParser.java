@@ -8,7 +8,7 @@ import org.json.JSONObject;
  */
 public class SmogonParser {
 
-    private static void printPokemonsAsEnums(JSONArray pokemons) {
+    public static void printPokemonsAsEnums(JSONArray pokemons) {
         for (int i = 0; i < pokemons.length(); i++) {
             JSONObject pokemon = pokemons.getJSONObject(i);
             String name = pokemon.getString("name");
@@ -28,7 +28,7 @@ public class SmogonParser {
         }
     }
 
-    private static void printAbilitiesAsEnums(JSONArray abilities) {
+    public static void printAbilitiesAsEnums(JSONArray abilities) {
         for (int i = 0; i < abilities.length(); i++) {
             String name = abilities.getJSONObject(i).getString("name");
 
@@ -42,7 +42,7 @@ public class SmogonParser {
         }
     }
 
-    private static void printItemsAsEnums(JSONArray items) {
+    public static void printItemsAsEnums(JSONArray items) {
         for (int i = 0; i < items.length(); i++) {
             String name = items.getJSONObject(i).getString("name");
 
