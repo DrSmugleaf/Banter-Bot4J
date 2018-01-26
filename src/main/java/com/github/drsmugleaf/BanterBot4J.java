@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.util.*;
+import sx.blah.discord.util.RequestBuffer;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;

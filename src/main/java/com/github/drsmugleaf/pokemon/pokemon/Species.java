@@ -906,7 +906,15 @@ public enum Species {
     GRIMER_ALOLA("Grimer-Alola"),
     MUK_ALOLA("Muk-Alola"),
     EXEGGUTOR_ALOLA("Exeggutor-Alola"),
-    MAROWAK_ALOLA("Marowak-Alola");
+    MAROWAK_ALOLA("Marowak-Alola"),
+    LYCANROC_DUSK("Lycanroc-Dusk"),
+    NECROZMA_DUSK_MANE("Necrozma-Dusk Mane"),
+    NECROZMA_DAWN_WINGS("Necrozma-Dawn Wings"),
+    POIPOLE("Poipole"),
+    NAGANADEL("Naganadel"),
+    STAKATAKA("Stakataka"),
+    BLACEPHALON("Blacephalon"),
+    ZERAORA("Zeraora");
 
     static {
         JSONArray pokemons = null;
