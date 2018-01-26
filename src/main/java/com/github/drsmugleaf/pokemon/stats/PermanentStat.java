@@ -92,7 +92,7 @@ public enum PermanentStat implements IStat {
         int iv = stat.getIV();
         int ev = stat.getEV();
         int level = pokemon.getLevel();
-        double stageMultiplier = stat.getStage().getStage();
+        double stageMultiplier = stat.getStage().getStatMultiplier(this);
 
         Generation generation = pokemon.getBattle().getGeneration();
         switch (generation) {
