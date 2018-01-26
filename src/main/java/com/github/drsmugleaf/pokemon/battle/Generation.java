@@ -103,6 +103,10 @@ public enum Generation {
         return this.NAME;
     }
 
+    public String getShorthand() {
+        return SHORTHAND;
+    }
+
     public int getNewPokemon() {
         return this.NEW_POKEMON;
     }
