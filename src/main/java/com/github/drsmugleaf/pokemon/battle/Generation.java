@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.pokemon.battle;
 
+import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
 import java.util.*;
 
@@ -18,8 +20,8 @@ public enum Generation {
 
     static {
         I
-                .setNewPokemon(151)
-                .setTotalPokemon(151)
+                .setNewPokemons(151)
+                .setTotalPokemons(151)
                 .setCoreGames(
                         Game.RED_AND_GREEN,
                         Game.BLUE,
@@ -28,16 +30,16 @@ public enum Generation {
                 );
 
         II
-                .setNewPokemon(100)
-                .setTotalPokemon(251)
+                .setNewPokemons(100)
+                .setTotalPokemons(251)
                 .setCoreGames(
                         Game.GOLD_AND_SILVER,
                         Game.CRYSTAL
                 );
 
         III
-                .setNewPokemon(135)
-                .setTotalPokemon(386)
+                .setNewPokemons(135)
+                .setTotalPokemons(386)
                 .setCoreGames(
                         Game.RUBY_AND_SAPPHIRE,
                         Game.FIRERED_AND_LEAFGREEN,
@@ -45,8 +47,8 @@ public enum Generation {
                 );
 
         IV
-                .setNewPokemon(107)
-                .setTotalPokemon(493)
+                .setNewPokemons(107)
+                .setTotalPokemons(493)
                 .setCoreGames(
                         Game.DIAMOND_AND_PEARL,
                         Game.PLATINUM,
@@ -54,24 +56,24 @@ public enum Generation {
                 );
 
         V
-                .setNewPokemon(156)
-                .setTotalPokemon(649)
+                .setNewPokemons(156)
+                .setTotalPokemons(649)
                 .setCoreGames(
                         Game.BLACK_AND_WHITE,
                         Game.BLACK_2_AND_WHITE_2
                 );
 
         VI
-                .setNewPokemon(72)
-                .setTotalPokemon(721)
+                .setNewPokemons(72)
+                .setTotalPokemons(721)
                 .setCoreGames(
                         Game.X_AND_Y,
                         Game.OMEGA_RUBY_AND_ALPHA_SAPPHIRE
                 );
 
         VII
-                .setNewPokemon(81)
-                .setTotalPokemon(802)
+                .setNewPokemons(81)
+                .setTotalPokemons(802)
                 .setCoreGames(
                         Game.SUN_AND_MOON,
                         Game.ULTRA_SUN_AND_ULTRA_MOON
@@ -81,15 +83,16 @@ public enum Generation {
     private final String NAME;
     private final String SHORTHAND;
     private final List<Game> CORE_GAMES = new ArrayList<>();
-    private int NEW_POKEMON;
-    private int TOTAL_POKEMON;
+    private int NEW_POKEMONS;
+    private int TOTAL_POKEMONS;
 
     Generation(@Nonnull String name, String shorthand) {
         Holder.MAP.put(shorthand.toLowerCase(), this);
-        this.NAME = name;
-        this.SHORTHAND = shorthand;
+        NAME = name;
+        SHORTHAND = shorthand;
     }
 
+    @Nonnull
     public static Generation getGeneration(@Nonnull String shorthand) {
         shorthand = shorthand.toLowerCase();
         if (!Holder.MAP.containsKey(shorthand)) {
@@ -99,38 +102,48 @@ public enum Generation {
         return Holder.MAP.get(shorthand);
     }
 
+    @Contract(pure = true)
+    @Nonnull
     public String getName() {
-        return this.NAME;
+        return NAME;
     }
 
+    @Contract(pure = true)
+    @Nonnull
     public String getShorthand() {
         return SHORTHAND;
     }
 
-    public int getNewPokemon() {
-        return this.NEW_POKEMON;
+    @Contract(pure = true)
+    public int getNewPokemons() {
+        return NEW_POKEMONS;
     }
 
-    private Generation setNewPokemon(int amount) {
-        this.NEW_POKEMON = amount;
+    @Nonnull
+    private Generation setNewPokemons(int amount) {
+        NEW_POKEMONS = amount;
         return this;
     }
 
-    public int getTotalPokemon() {
-        return this.TOTAL_POKEMON;
+    @Contract(pure = true)
+    public int getTotalPokemons() {
+        return TOTAL_POKEMONS;
     }
 
-    private Generation setTotalPokemon(int amount) {
-        this.TOTAL_POKEMON = amount;
+    @Nonnull
+    private Generation setTotalPokemons(int amount) {
+        TOTAL_POKEMONS = amount;
         return this;
     }
 
-    public Game[] getCoreGames() {
-        return this.CORE_GAMES.toArray(new Game[]{});
+    @Nonnull
+    public List<Game> getCoreGames() {
+        return new ArrayList<>(CORE_GAMES);
     }
 
-    private Generation setCoreGames(Game... games) {
-        this.CORE_GAMES.addAll(Arrays.asList(games));
+    @Nonnull
+    private Generation setCoreGames(@Nonnull Game... games) {
+        Collections.addAll(CORE_GAMES, games);
         return this;
     }
 
