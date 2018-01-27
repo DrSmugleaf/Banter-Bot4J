@@ -984,56 +984,61 @@ public enum Species {
         for (int i = 0; i < pokemons.length(); i++) {
             JSONObject jsonPokemon = pokemons.getJSONObject(i);
             String name = jsonPokemon.getString("name");
-            Species pokemon = Species.getPokemon(name);
-
-            JSONObject alts = jsonPokemon.getJSONArray("alts").getJSONObject(0);
-            int hp = alts.getInt("hp");
-            int attack = alts.getInt("atk");
-            int defense = alts.getInt("def");
-            int specialAttack = alts.getInt("spa");
-            int specialDefense = alts.getInt("spd");
-            int speed = alts.getInt("spe");
-            double weight = alts.getDouble("weight");
-            double height = alts.getDouble("height");
-
-            pokemon
-                    .addStats(PermanentStat.HP, hp)
-                    .addStats(PermanentStat.ATTACK, attack)
-                    .addStats(PermanentStat.DEFENSE, defense)
-                    .addStats(PermanentStat.SPECIAL_ATTACK, specialAttack)
-                    .addStats(PermanentStat.SPECIAL_DEFENSE, specialDefense)
-                    .addStats(PermanentStat.SPEED, speed)
-                    .setWeight(weight)
-                    .setHeight(height);
 
             JSONArray jsonGenerations = jsonPokemon.getJSONArray("genfamily");
-            for (int j = 0; j < jsonGenerations.length(); j++) {
-                Generation generation = Generation.getGeneration(jsonGenerations.getString(j));
-                pokemon.addGenerations(generation);
+            List<Generation> genFamilies = new ArrayList<>();
+            for (int k = 0; k < jsonGenerations.length(); k++) {
+                Generation generation = Generation.getGeneration(jsonGenerations.getString(k));
+                genFamilies.add(generation);
             }
 
-            JSONArray jsonAbilities = alts.getJSONArray("abilities");
-            for (int j = 0; j < jsonAbilities.length(); j++) {
-                Abilities ability = Abilities.getAbility(jsonAbilities.getString(j));
-                pokemon.addAbilities(ability);
-            }
+            JSONArray alts = jsonPokemon.getJSONArray("alts");
+            for (int j = 0; j < alts.length(); j++) {
+                JSONObject alt = alts.getJSONObject(j);
+                String pokemonName = name;
+                String suffix = alt.getString("suffix");
+                if (!suffix.isEmpty()) {
+                    pokemonName = pokemonName.concat("-" + suffix);
+                }
+                Species pokemon = getPokemon(pokemonName);
 
-            JSONArray jsonTypes = alts.getJSONArray("types");
-            for (int j = 0; j < jsonTypes.length(); j++) {
-                Type type = Type.getType(jsonTypes.getString(j));
-                pokemon.addTypes(type);
-            }
+                int hp = alt.getInt("hp");
+                int attack = alt.getInt("atk");
+                int defense = alt.getInt("def");
+                int specialAttack = alt.getInt("spa");
+                int specialDefense = alt.getInt("spd");
+                int speed = alt.getInt("spe");
+                double weight = alt.getDouble("weight");
+                double height = alt.getDouble("height");
 
-            JSONArray jsonTiers = alts.getJSONArray("formats");
-            for (int j = 0; j < jsonTiers.length(); j++) {
-                Tier tier = Tier.getTier(jsonTiers.getString(j));
-                pokemon.addTiers(tier);
-            }
+                JSONArray jsonAbilities = alt.getJSONArray("abilities");
+                for (int k = 0; k < jsonAbilities.length(); k++) {
+                    Abilities ability = Abilities.getAbility(jsonAbilities.getString(k));
+                    pokemon.addAbilities(ability);
+                }
 
-            JSONArray jsonEvolutions = jsonPokemon.getJSONArray("evos");
-            for (int j = 0; j < jsonEvolutions.length(); j++) {
-                Species evolution = Species.getPokemon(jsonEvolutions.getString(j));
-                pokemon.addEvolutions(evolution);
+                JSONArray jsonTypes = alt.getJSONArray("types");
+                for (int k = 0; k < jsonTypes.length(); k++) {
+                    Type type = Type.getType(jsonTypes.getString(k));
+                    pokemon.addTypes(type);
+                }
+
+                JSONArray jsonTiers = alt.getJSONArray("formats");
+                for (int k = 0; k < jsonTiers.length(); k++) {
+                    Tier tier = Tier.getTier(jsonTiers.getString(k));
+                    pokemon.addTiers(tier);
+                }
+
+                pokemon
+                        .addGenerations(genFamilies)
+                        .addStats(PermanentStat.HP, hp)
+                        .addStats(PermanentStat.ATTACK, attack)
+                        .addStats(PermanentStat.DEFENSE, defense)
+                        .addStats(PermanentStat.SPECIAL_ATTACK, specialAttack)
+                        .addStats(PermanentStat.SPECIAL_DEFENSE, specialDefense)
+                        .addStats(PermanentStat.SPEED, speed)
+                        .setWeight(weight)
+                        .setHeight(height);
             }
         }
     }
@@ -1081,6 +1086,11 @@ public enum Species {
 
     private Species addGenerations(Generation... generations) {
         Collections.addAll(this.GENERATIONS, generations);
+        return this;
+    }
+
+    private Species addGenerations(Collection<Generation> generations) {
+        GENERATIONS.addAll(generations);
         return this;
     }
 
