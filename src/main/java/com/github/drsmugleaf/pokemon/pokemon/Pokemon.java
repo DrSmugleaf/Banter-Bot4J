@@ -1,7 +1,6 @@
 package com.github.drsmugleaf.pokemon.pokemon;
 
 import com.github.drsmugleaf.pokemon.IModifier;
-import com.github.drsmugleaf.pokemon.Nature;
 import com.github.drsmugleaf.pokemon.ability.Abilities;
 import com.github.drsmugleaf.pokemon.ability.Ability;
 import com.github.drsmugleaf.pokemon.battle.Battle;

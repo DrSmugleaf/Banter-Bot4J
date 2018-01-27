@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.pokemon;
+package com.github.drsmugleaf.pokemon.pokemon;
 
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 
