@@ -112,6 +112,7 @@ public enum Abilities implements IModifier {
     MULTITYPE("Multitype"),
     MUMMY("Mummy"),
     NATURAL_CURE("Natural Cure"),
+    NEUROFORCE("Neuroforce"),
     NO_GUARD("No Guard"),
     NORMALIZE("Normalize"),
     OBLIVIOUS("Oblivious"),
