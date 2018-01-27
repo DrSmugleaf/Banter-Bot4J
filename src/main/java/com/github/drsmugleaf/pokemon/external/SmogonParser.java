@@ -13,10 +13,12 @@ import java.io.IOException;
  */
 public class SmogonParser {
 
+    private static final String SMOGON_URL = "http://www.smogon.com/dex/sm/pokemon/";
+
     public static JSONArray getPokemons() throws IOException {
         Document doc;
         try {
-            doc = Jsoup.connect("http://www.smogon.com/dex/sm/pokemon/").get();
+            doc = Jsoup.connect(SMOGON_URL).get();
         } catch (IOException e) {
             BanterBot4J.LOGGER.error("Error connecting to Smogon", e);
             throw e;
