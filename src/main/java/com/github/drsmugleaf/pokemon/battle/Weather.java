@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.pokemon.battle;
 
-import com.github.drsmugleaf.pokemon.IModifier;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.status.Status;
 import com.github.drsmugleaf.pokemon.types.Type;

@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.pokemon.types;
 
 import com.github.drsmugleaf.pokemon.battle.Action;
-import com.github.drsmugleaf.pokemon.IModifier;
+import com.github.drsmugleaf.pokemon.battle.IModifier;
 import com.github.drsmugleaf.pokemon.moves.Move;
 
 import javax.annotation.Nonnull;

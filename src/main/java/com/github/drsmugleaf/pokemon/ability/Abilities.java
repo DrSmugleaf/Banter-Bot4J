@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.pokemon.ability;
 
-import com.github.drsmugleaf.pokemon.IModifier;
+import com.github.drsmugleaf.pokemon.battle.IModifier;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import org.json.JSONArray;
 

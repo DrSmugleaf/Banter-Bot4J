@@ -1,9 +1,6 @@
-package com.github.drsmugleaf.pokemon;
+package com.github.drsmugleaf.pokemon.battle;
 
-import com.github.drsmugleaf.pokemon.battle.Battle;
-import com.github.drsmugleaf.pokemon.battle.Weather;
 import com.github.drsmugleaf.pokemon.item.Items;
-import com.github.drsmugleaf.pokemon.battle.Action;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.stats.IStat;
 import com.github.drsmugleaf.pokemon.status.Status;

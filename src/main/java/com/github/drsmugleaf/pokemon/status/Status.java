@@ -1,10 +1,6 @@
 package com.github.drsmugleaf.pokemon.status;
 
-import com.github.drsmugleaf.pokemon.*;
-import com.github.drsmugleaf.pokemon.battle.Battle;
-import com.github.drsmugleaf.pokemon.battle.Generation;
-import com.github.drsmugleaf.pokemon.battle.InvalidGenerationException;
-import com.github.drsmugleaf.pokemon.battle.Action;
+import com.github.drsmugleaf.pokemon.battle.*;
 import com.github.drsmugleaf.pokemon.moves.BaseMove;
 import com.github.drsmugleaf.pokemon.moves.Category;
 import com.github.drsmugleaf.pokemon.moves.Move;

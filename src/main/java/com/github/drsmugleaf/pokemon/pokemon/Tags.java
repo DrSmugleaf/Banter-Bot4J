@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.pokemon.pokemon;
 
-import com.github.drsmugleaf.pokemon.IModifier;
+import com.github.drsmugleaf.pokemon.battle.IModifier;
 import com.github.drsmugleaf.pokemon.battle.Action;
 import com.github.drsmugleaf.pokemon.battle.InvalidGenerationException;
 import com.github.drsmugleaf.pokemon.moves.BaseMove;

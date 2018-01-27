@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.pokemon.status;
 
-import com.github.drsmugleaf.pokemon.IModifier;
+import com.github.drsmugleaf.pokemon.battle.IModifier;
 import com.github.drsmugleaf.pokemon.stats.IStat;
 import com.github.drsmugleaf.pokemon.stats.StatBuilder;
 

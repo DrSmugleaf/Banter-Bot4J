@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.pokemon.status;
 
-import com.github.drsmugleaf.pokemon.*;
 import com.github.drsmugleaf.pokemon.ability.Abilities;
 import com.github.drsmugleaf.pokemon.battle.*;
 import com.github.drsmugleaf.pokemon.moves.*;

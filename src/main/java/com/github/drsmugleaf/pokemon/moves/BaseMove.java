@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.pokemon.moves;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.pokemon.IModifier;
+import com.github.drsmugleaf.pokemon.battle.IModifier;
 import com.github.drsmugleaf.pokemon.ability.Abilities;
 import com.github.drsmugleaf.pokemon.battle.*;
 import com.github.drsmugleaf.pokemon.events.EventDispatcher;
