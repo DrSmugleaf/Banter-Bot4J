@@ -23,6 +23,7 @@ public class SmogonParser {
                                 .replace(" ", "_")
                                 .replace("-", "_")
                                 .replace("'", "")
+                                .replace(".", "")
                                 .toUpperCase()
                 );
                 if (!suffix.isEmpty()) {
