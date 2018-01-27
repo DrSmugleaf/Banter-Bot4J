@@ -1,10 +1,9 @@
-package com.github.drsmugleaf.pokemon;
+package com.github.drsmugleaf.pokemon.moves;
 
 import com.github.drsmugleaf.pokemon.ability.Abilities;
 import com.github.drsmugleaf.pokemon.battle.Battle;
 import com.github.drsmugleaf.pokemon.battle.Generation;
 import com.github.drsmugleaf.pokemon.item.Items;
-import com.github.drsmugleaf.pokemon.moves.Move;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon.status.Status;
