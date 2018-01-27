@@ -3,6 +3,7 @@ package com.github.drsmugleaf.pokemon.battle;
 import com.github.drsmugleaf.pokemon.ability.Abilities;
 import com.github.drsmugleaf.pokemon.item.Items;
 import com.github.drsmugleaf.pokemon.moves.BaseMove;
+import com.github.drsmugleaf.pokemon.pokemon.Species;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,7 +37,7 @@ public enum Tier {
                         Clause.SLEEP_CLAUSE,
                         Clause.SPECIES_CLAUSE
                 )
-                .setBannedPokemons("Mega Rayquaza")
+                .setBannedPokemons(Species.RAYQUAZA_MEGA)
                 .setBannedMoves(BaseMove.SWAGGER);
 
         OVERUSED
@@ -51,32 +52,32 @@ public enum Tier {
                 )
                 .setBannedTiers(Tier.UBER)
                 .setBannedPokemons(
-                        "Aegislash",
-                        "Arceus",
-                        "Blaziken",
-                        "Darkrai",
-                        "Deoxys",
-                        "Deoxys-A",
-                        "Deoxys-D",
-                        "Deoxys-S",
-                        "Dialga",
-                        "Genesect",
-                        "Giratina",
-                        "Giratina-O",
-                        "Greninja",
-                        "Groudon",
-                        "Ho-Oh",
-                        "Kyogre",
-                        "Kyurem-W",
-                        "Lugia",
-                        "Mewtwo",
-                        "Palkia",
-                        "Rayquaza",
-                        "Reshiram",
-                        "Shaymin-S",
-                        "Xerneas",
-                        "Yveltal",
-                        "Zekrom"
+                        Species.AEGISLASH,
+                        Species.ARCEUS,
+                        Species.BLAZIKEN,
+                        Species.DARKRAI,
+                        Species.DEOXYS,
+                        Species.DEOXYS_ATTACK,
+                        Species.DEOXYS_DEFENSE,
+                        Species.DEOXYS_SPEED,
+                        Species.DIALGA,
+                        Species.GENESECT,
+                        Species.GIRATINA,
+                        Species.GIRATINA_ORIGIN,
+                        Species.GRENINJA,
+                        Species.GROUDON,
+                        Species.HO_OH,
+                        Species.KYOGRE,
+                        Species.KYUREM_WHITE,
+                        Species.LUGIA,
+                        Species.MEWTWO,
+                        Species.PALKIA,
+                        Species.RAYQUAZA,
+                        Species.RESHIRAM,
+                        Species.SHAYMIN_SKY,
+                        Species.XERNEAS,
+                        Species.YVELTAL,
+                        Species.ZEKROM
                 )
                 .setBannedItems(
                         Items.GENGARITE,
@@ -102,22 +103,22 @@ public enum Tier {
                         Tier.OVERUSED
                 )
                 .setBannedPokemons(
-                        "Crawdaunt",
-                        "Diggersby",
-                        "Hawlucha",
-                        "Klefki",
-                        "Scolipede",
-                        "Smeargle",
-                        "Staraptor",
-                        "Terrakion",
-                        "Thundurus-T",
-                        "Togekiss",
-                        "Tornadus-T",
-                        "Venomoth",
-                        "Victini",
-                        "Volcarona",
-                        "Weavile",
-                        "Zygarde"
+                        Species.CRAWDAUNT,
+                        Species.DIGGERSBY,
+                        Species.HAWLUCHA,
+                        Species.KLEFKI,
+                        Species.SCOLIPEDE,
+                        Species.SMEARGLE,
+                        Species.STARAPTOR,
+                        Species.TERRAKION,
+                        Species.THUNDURUS_THERIAN,
+                        Species.TOGEKISS,
+                        Species.TORNADUS_THERIAN,
+                        Species.VENOMOTH,
+                        Species.VICTINI,
+                        Species.VOLCARONA,
+                        Species.WEAVILE,
+                        Species.ZYGARDE
                 )
                 .setBannedItems(
                         Items.ALAKAZITE,
@@ -147,15 +148,15 @@ public enum Tier {
                         Tier.UNDERUSED
                 )
                 .setBannedPokemons(
-                        "Dragalge",
-                        "Froslass",
-                        "Kyurem",
-                        "Moltres",
-                        "Pangoro",
-                        "Shuckle",
-                        "Tornadus",
-                        "Yanmega",
-                        "Zoroark"
+                        Species.DRAGALGE,
+                        Species.FROSLASS,
+                        Species.KYUREM,
+                        Species.MOLTRES,
+                        Species.PANGORO,
+                        Species.SHUCKLE,
+                        Species.TORNADUS,
+                        Species.YANMEGA,
+                        Species.ZOROARK
                 )
                 .setBannedItems(Items.HOUNDOOMINITE)
                 .setBannedAbilities(
@@ -181,8 +182,8 @@ public enum Tier {
                         Tier.RARELYUSED
                 )
                 .setBannedPokemons(
-                        "Combusken",
-                        "Sigilyph"
+                        Species.COMBUSKEN,
+                        Species.SIGILYPH
                 )
                 .setBannedAbilities(
                         Abilities.DRIZZLE,
@@ -207,13 +208,13 @@ public enum Tier {
                         Tier.RARELYUSED
                 )
                 .setBannedPokemons(
-                        "Barbaracle",
-                        "Carracosta",
-                        "Exeggutor",
-                        "Linoone",
-                        "Throh",
-                        "Victreebel",
-                        "Vigoroth"
+                        Species.BARBARACLE,
+                        Species.CARRACOSTA,
+                        Species.EXEGGUTOR,
+                        Species.LINOONE,
+                        Species.THROH,
+                        Species.VICTREEBEL,
+                        Species.VIGOROTH
                 )
                 .setBannedAbilities(
                         Abilities.DRIZZLE,
@@ -235,15 +236,15 @@ public enum Tier {
                         Clause.SPECIES_CLAUSE
                 )
                 .setBannedPokemons(
-                        "Gligar",
-                        "Meditite",
-                        "Misdreavus",
-                        "Murkrow",
-                        "Scyther",
-                        "Sneasel",
-                        "Swirlix",
-                        "Tangela",
-                        "Yanma"
+                        Species.GLIGAR,
+                        Species.MEDITITE,
+                        Species.MISDREAVUS,
+                        Species.MURKROW,
+                        Species.SCYTHER,
+                        Species.SNEASEL,
+                        Species.SWIRLIX,
+                        Species.TANGELA,
+                        Species.YANMA
                 )
                 .setBannedMoves(
                         BaseMove.DRAGON_RAGE,
@@ -260,22 +261,22 @@ public enum Tier {
                         Clause.SPECIES_CLAUSE
                 )
                 .setBannedPokemons(
-                        "Arceus",
-                        "Dialga",
-                        "Giratina",
-                        "Giratina-O",
-                        "Groudon",
-                        "Ho-Oh",
-                        "Kyogre",
-                        "Kyurem-W",
-                        "Lugia",
-                        "Mewtwo",
-                        "Palkia",
-                        "Rayquaza",
-                        "Reshiram",
-                        "Xerneas",
-                        "Yveltal",
-                        "Zekrom"
+                        Species.ARCEUS,
+                        Species.DIALGA,
+                        Species.GIRATINA,
+                        Species.GIRATINA_ORIGIN,
+                        Species.GROUDON,
+                        Species.HO_OH,
+                        Species.KYOGRE,
+                        Species.KYUREM_WHITE,
+                        Species.LUGIA,
+                        Species.MEWTWO,
+                        Species.PALKIA,
+                        Species.RAYQUAZA,
+                        Species.RESHIRAM,
+                        Species.XERNEAS,
+                        Species.YVELTAL,
+                        Species.ZEKROM
                 )
                 .setBannedItems(
                         Items.SALAMENCITE,
@@ -289,7 +290,7 @@ public enum Tier {
     private final String NAME;
     private final String ABBREVIATION;
     private final List<Clause> CLAUSES = new ArrayList<>();
-    private final List<String> BANNED_POKEMONS = new ArrayList<>();
+    private final List<Species> BANNED_POKEMONS = new ArrayList<>();
     private final List<BaseMove> BANNED_MOVES = new ArrayList<>();
     private final List<Tier> BANNED_TIERS = new ArrayList<>();
     private final List<Items> BANNED_ITEMS = new ArrayList<>();
@@ -355,16 +356,16 @@ public enum Tier {
     }
 
     @Nonnull
-    public List<String> getBannedPokemons() {
+    public List<Species> getBannedPokemons() {
         return this.BANNED_POKEMONS;
     }
 
-    private Tier addBannedPokemons(String... pokemons) {
+    private Tier addBannedPokemons(Species... pokemons) {
         Collections.addAll(this.BANNED_POKEMONS, pokemons);
         return this;
     }
 
-    private Tier setBannedPokemons(String... pokemons) {
+    private Tier setBannedPokemons(Species... pokemons) {
         this.BANNED_POKEMONS.clear();
         return this.addBannedPokemons(pokemons);
     }
