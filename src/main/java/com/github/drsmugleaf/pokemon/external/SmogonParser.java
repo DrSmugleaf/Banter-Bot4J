@@ -34,7 +34,14 @@ public class SmogonParser {
         return obj.getJSONArray("pokemon");
     }
 
-    public static void printPokemonsAsEnums(JSONArray pokemons) {
+    public static void printPokemonsAsEnums() {
+        JSONArray pokemons = null;
+        try {
+            pokemons = getPokemons();
+        } catch (IOException ignored) {
+            return;
+        }
+
         for (int i = 0; i < pokemons.length(); i++) {
             JSONObject pokemon = pokemons.getJSONObject(i);
             String name = pokemon.getString("name");
