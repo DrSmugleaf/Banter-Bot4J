@@ -1,12 +1,38 @@
 package com.github.drsmugleaf.pokemon.external;
 
+import com.github.drsmugleaf.BanterBot4J;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+import java.io.IOException;
 
 /**
  * Created by DrSmugleaf on 06/06/2017.
  */
 public class SmogonParser {
+
+    public static JSONArray getPokemons() throws IOException {
+        Document doc;
+        try {
+            doc = Jsoup.connect("http://www.smogon.com/dex/sm/pokemon/").get();
+        } catch (IOException e) {
+            BanterBot4J.LOGGER.error("Error connecting to Smogon", e);
+            throw e;
+        }
+
+        String docString = doc
+                .getElementsByTag("script")
+                .first()
+                .dataNodes()
+                .get(0)
+                .getWholeData()
+                .replace("dexSettings = ", "");
+        JSONObject obj = new JSONObject(docString).getJSONArray("injectRpcs").getJSONArray(1).getJSONObject(1);
+
+        return obj.getJSONArray("pokemon");
+    }
 
     public static void printPokemonsAsEnums(JSONArray pokemons) {
         for (int i = 0; i < pokemons.length(); i++) {

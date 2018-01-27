@@ -4,12 +4,11 @@ import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.pokemon.ability.Abilities;
 import com.github.drsmugleaf.pokemon.battle.Generation;
 import com.github.drsmugleaf.pokemon.battle.Tier;
+import com.github.drsmugleaf.pokemon.external.SmogonParser;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon.types.Type;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -976,7 +975,7 @@ public enum Species {
     static {
         JSONArray pokemons = null;
         try {
-            pokemons = getPokemons();
+            pokemons = SmogonParser.getPokemons();
         } catch (IOException e) {
             BanterBot4J.LOGGER.error("Error parsing pokemons", e);
             System.exit(1);
@@ -1053,27 +1052,6 @@ public enum Species {
     Species(@Nonnull String name) {
         Holder.MAP.put(name.toLowerCase(), this);
         this.NAME = name;
-    }
-
-    private static JSONArray getPokemons() throws IOException {
-        Document doc;
-        try {
-            doc = Jsoup.connect("http://www.smogon.com/dex/sm/pokemon/").get();
-        } catch (IOException e) {
-            BanterBot4J.LOGGER.error("Error connecting to Smogon", e);
-            throw e;
-        }
-
-        String docString = doc
-                .getElementsByTag("script")
-                .first()
-                .dataNodes()
-                .get(0)
-                .getWholeData()
-                .replace("dexSettings = ", "");
-        JSONObject obj = new JSONObject(docString).getJSONArray("injectRpcs").getJSONArray(1).getJSONObject(1);
-
-        return obj.getJSONArray("pokemon");
     }
 
     public static Species getPokemon(@Nonnull String pokemon) {
