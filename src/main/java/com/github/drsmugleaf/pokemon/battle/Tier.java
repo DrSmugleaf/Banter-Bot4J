@@ -14,6 +14,7 @@ import java.util.*;
  */
 public enum Tier {
 
+    ANYTHING_GOES("Anything Goes", "AG"),
     UBER("Uber", "Uber"),
     OVERUSED("OverUsed", "OU"),
     BORDERLINE("Borderline", "BL"),
