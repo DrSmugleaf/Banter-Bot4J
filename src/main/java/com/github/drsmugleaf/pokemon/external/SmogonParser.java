@@ -17,13 +17,23 @@ public class SmogonParser {
             for (int j = 0; j < alts.length(); j++) {
                 JSONObject alt = alts.getJSONObject(j);
                 String suffix = alt.getString("suffix");
-                System.out.print((name + suffix)
-                        .replace(" ", "_")
-                        .replace("-", "_")
-                        .replace("'", "")
-                        .toUpperCase()
+
+                System.out.print(
+                        name
+                                .replace(" ", "_")
+                                .replace("-", "_")
+                                .replace("'", "")
+                                .toUpperCase()
                 );
-                System.out.println("(\"" + name + suffix + "\"),");
+                if (!suffix.isEmpty()) {
+                    System.out.print("_" + suffix.toUpperCase());
+                }
+
+                System.out.print("(\"" + name);
+                if (!suffix.isEmpty()) {
+                    System.out.print("-" + suffix);
+                }
+                System.out.println("\"),");
             }
         }
     }
