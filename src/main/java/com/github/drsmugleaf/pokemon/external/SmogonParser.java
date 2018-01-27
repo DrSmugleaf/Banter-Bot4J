@@ -24,6 +24,7 @@ public class SmogonParser {
                                 .replace("-", "_")
                                 .replace("'", "")
                                 .replace(".", "")
+                                .replace("%", "")
                                 .toUpperCase()
                 );
                 if (!suffix.isEmpty()) {
