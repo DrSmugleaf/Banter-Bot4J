@@ -1,5 +1,6 @@
-package com.github.drsmugleaf.pokemon;
+package com.github.drsmugleaf.pokemon.external;
 
+import com.github.drsmugleaf.pokemon.Nature;
 import com.github.drsmugleaf.pokemon.ability.Abilities;
 import com.github.drsmugleaf.pokemon.item.Items;
 import com.github.drsmugleaf.pokemon.moves.BaseMove;
