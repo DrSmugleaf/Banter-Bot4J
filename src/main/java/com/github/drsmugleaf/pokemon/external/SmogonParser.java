@@ -29,7 +29,12 @@ public class SmogonParser {
                                 .toUpperCase()
                 );
                 if (!suffix.isEmpty()) {
-                    System.out.print("_" + suffix.toUpperCase());
+                    System.out.print(
+                            "_" +
+                            suffix
+                                    .replace("-", "_")
+                                    .toUpperCase()
+                    );
                 }
 
                 System.out.print("(\"" + name);
