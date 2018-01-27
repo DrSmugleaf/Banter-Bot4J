@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.pokemon.battle;
 
-import com.github.drsmugleaf.pokemon.item.Items;
 import com.github.drsmugleaf.pokemon.ability.Abilities;
+import com.github.drsmugleaf.pokemon.item.Items;
 import com.github.drsmugleaf.pokemon.moves.BaseMove;
 
 import javax.annotation.Nonnull;
