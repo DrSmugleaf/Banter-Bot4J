@@ -30,6 +30,9 @@ public enum Tier {
     LIMBO("Limbo", "Limbo");
 
     static {
+        ANYTHING_GOES
+                .setClauses(Clause.ENDLESS_BATTLE_CLAUSE);
+
         UBER
                 .setClauses(
                         Clause.ENDLESS_BATTLE_CLAUSE,
