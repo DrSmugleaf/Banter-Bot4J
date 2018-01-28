@@ -68,7 +68,7 @@ public enum BaseMove implements IModifier, IMoves {
     ACROBATICS("Acrobatics") { // Flying Gem is consumed before the power calculation is made
         @Override
         public int getPower(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {
-            if (target.ITEM.is()) {
+            if (!target.ITEM.is()) {
                 return this.POWER * 2;
             } else {
                 return this.POWER;
