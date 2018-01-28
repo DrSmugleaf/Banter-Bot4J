@@ -1656,40 +1656,6 @@ public enum BaseMove implements IModifier, IMoves {
     DARK_PULSE("Dark Pulse"),
     DARK_VOID("Dark Void") {
         @Override
-        protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
-            int damage = super.use(user, target, battle, action);
-
-            List<Pokemon> adjacentEnemyPokemons = user.getTrainer().getAdjacentEnemyPokemons(user);
-
-            Generation generation = battle.getGeneration();
-            switch (generation) {
-                case I:
-                case II:
-                case III:
-                case IV:
-                case V:
-                case VI:
-                    for (Pokemon adjacentEnemyPokemon : adjacentEnemyPokemons) {
-                        if (Math.random() < 0.8) {
-                            adjacentEnemyPokemon.STATUSES.setStatus(Status.SLEEP);
-                        }
-                    }
-                    break;
-                case VII:
-                    for (Pokemon adjacentEnemyPokemon : adjacentEnemyPokemons) {
-                        if (Math.random() < 0.5) {
-                            adjacentEnemyPokemon.STATUSES.setStatus(Status.SLEEP);
-                        }
-                    }
-                    break;
-                default:
-                    throw new InvalidGenerationException(generation);
-            }
-
-            return damage;
-        }
-
-        @Override
         public boolean hits(@Nonnull Pokemon target, @Nonnull Action action) {
             Pokemon attacker = action.getAttacker();
             Generation generation = attacker.getBattle().getGeneration();
