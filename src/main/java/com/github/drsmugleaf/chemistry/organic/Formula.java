@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.chemistry.organic;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * Created by DrSmugleaf on 09/02/2018.
@@ -8,11 +9,11 @@ import javax.annotation.Nonnull;
 public class Formula {
 
     public final String FORMULA_STRING;
-    public final Elements[][] FORMULA_ARRAY;
+    public final List<List<Elements>> FORMULA_LIST;
 
     protected Formula(@Nonnull FormulaBuilder builder) {
         FORMULA_STRING = builder.getFormulaString();
-        FORMULA_ARRAY = builder.getFormulaArray();
+        FORMULA_LIST = builder.getFormulaList();
     }
 
 }
