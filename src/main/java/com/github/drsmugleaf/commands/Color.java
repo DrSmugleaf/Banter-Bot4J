@@ -90,8 +90,8 @@ public class Color extends AbstractCommand {
                 String missingPermissions = e.getMissingPermissions().stream().map(Permissions::name).collect(Collectors.joining(", "));
                 sendMessage(channel, "I don't have permission to change your name color.\n" +
                                      "Missing permissions: " + missingPermissions);
-                return;
             }
+            return;
         } else {
             IRole role = roles.get(0);
             try {
@@ -107,8 +107,9 @@ public class Color extends AbstractCommand {
                                      "Missing permissions: " + missingPermissions);
                 return;
             }
+            sendMessage(channel, "Changed your name color to " + requestedColor);
+            return;
         }
-        sendMessage(channel, "Changed your name color to " + requestedColor);
     }
 
 }
