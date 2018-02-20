@@ -91,6 +91,8 @@ public class Color extends AbstractCommand {
                 sendMessage(channel, "I don't have permission to change your name color.\n" +
                                      "Missing permissions: " + missingPermissions);
             }
+
+            sendMessage(channel, "Changed your name color to " + requestedColor);
             return;
         } else {
             IRole role = roles.get(0);
