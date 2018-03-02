@@ -77,7 +77,7 @@ public class Music extends AbstractCommand {
         GuildMusicManager musicManager = getGuildMusicManager(guild);
         AudioTrack currentTrack = musicManager.getScheduler().getCurrentTrack();
         if (currentTrack == null) {
-            sendMessage(channel, "There isn't a song currently playing.");
+            sendMessage(channel, "There isn't a track currently playing.");
             return;
         }
 
@@ -85,7 +85,7 @@ public class Music extends AbstractCommand {
 
         IUser author = event.getAuthor();
         if (SKIP_VOTES.get(guild).contains(author)) {
-            sendMessage(channel, "You have already voted to skip this song.");
+            sendMessage(channel, "You have already voted to skip this track.");
             return;
         }
 
@@ -108,7 +108,7 @@ public class Music extends AbstractCommand {
         if (votes >= requiredVotes || author == trackUserData.SUBMITTER) {
             SKIP_VOTES.get(guild).clear();
             musicManager.getScheduler().skip();
-            sendMessage(channel, "Skipped the current song.");
+            sendMessage(channel, "Skipped the current track.");
         } else {
             String response = String.format("Votes: %d/%.0f", votes, requiredVotes);
             sendMessage(channel, response);
@@ -122,17 +122,17 @@ public class Music extends AbstractCommand {
 
         GuildMusicManager musicManager = getGuildMusicManager(guild);
         if (!musicManager.getScheduler().isPlaying()) {
-            sendMessage(channel, "There isn't a song currently playing.");
+            sendMessage(channel, "There isn't a track currently playing.");
             return;
         }
 
         if (musicManager.getScheduler().isPaused()) {
-            sendMessage(channel, "The current song is already paused. Use " + BanterBot4J.BOT_PREFIX + "resume to resume it.");
+            sendMessage(channel, "The current track is already paused. Use " + BanterBot4J.BOT_PREFIX + "resume to resume it.");
             return;
         }
 
         musicManager.getScheduler().pause();
-        sendMessage(channel, "Paused the current song.");
+        sendMessage(channel, "Paused the current track.");
     }
 
     @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL})
@@ -142,17 +142,17 @@ public class Music extends AbstractCommand {
 
         GuildMusicManager musicManager = getGuildMusicManager(guild);
         if (!musicManager.getScheduler().isPlaying()) {
-            sendMessage(channel, "There isn't a song currently playing.");
+            sendMessage(channel, "There isn't a track currently playing.");
             return;
         }
 
         if (!musicManager.getScheduler().isPaused()) {
-            sendMessage(channel, "There isn't a song currently paused.");
+            sendMessage(channel, "There isn't a track currently paused.");
             return;
         }
 
         musicManager.getScheduler().resume();
-        sendMessage(channel, "Resumed the current song.");
+        sendMessage(channel, "Resumed the current track.");
     }
 
     @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY})
@@ -164,7 +164,7 @@ public class Music extends AbstractCommand {
 
         GuildMusicManager musicManager = getGuildMusicManager(guild);
         if (musicManager.getScheduler().getCurrentTrack() == null) {
-            sendMessage(channel, "There aren't any songs currently playing or in the queue.");
+            sendMessage(channel, "There aren't any tracks currently playing or in the queue.");
             return;
         }
 
@@ -176,7 +176,7 @@ public class Music extends AbstractCommand {
         scheduler.stop();
         sendMessage(
                 channel,
-                "Stopped and removed all songs from the queue.\n" +
+                "Stopped and removed all tracks from the queue.\n" +
                 "You have one minute to restore them back to the queue using " + BanterBot4J.BOT_PREFIX + "undostop."
         );
     }
@@ -190,7 +190,7 @@ public class Music extends AbstractCommand {
         SimpleEntry<IGuild, IUser> pair = new SimpleEntry<>(guild, author);
         List<AudioTrack> tracks = UNDO_STOP_CACHE.getIfPresent(pair);
         if (tracks == null) {
-            sendMessage(channel, "You haven't stopped any songs in the last minute.");
+            sendMessage(channel, "You haven't stopped any tracks in the last minute.");
             return;
         }
 
@@ -200,7 +200,7 @@ public class Music extends AbstractCommand {
         tracks.addAll(scheduler.cloneTracks());
         scheduler.stop();
         scheduler.queue(tracks);
-        sendMessage(channel, "Restored all stopped songs.");
+        sendMessage(channel, "Restored all stopped tracks.");
     }
 
     @Command(tags = {Tags.GUILD_ONLY})
@@ -212,7 +212,7 @@ public class Music extends AbstractCommand {
         TrackScheduler scheduler = getGuildMusicManager(guild).getScheduler();
         AudioTrack currentTrack = scheduler.getCurrentTrack();
         if (currentTrack == null) {
-            sendMessage(channel, "There are no songs currently playing or in the queue.");
+            sendMessage(channel, "There are no tracks currently playing or in the queue.");
             return;
         }
 
@@ -244,12 +244,12 @@ public class Music extends AbstractCommand {
                 .withAuthorIcon(author.getAvatarURL())
                 .withTitle("Currently playing: " + currentTrack.getInfo().title)
                 .appendDescription("\n")
-                .appendDescription("Song status: " + trackStatus)
+                .appendDescription("Track status: " + trackStatus)
                 .appendDescription("\n")
-                .appendDescription("Song duration: " + trackDurationString)
+                .appendDescription("Track duration: " + trackDurationString)
                 .appendDescription("\n")
                 .appendDescription("Time remaining: " + trackTimeLeftString)
-                .appendField("Songs in queue", String.valueOf(queue.size()), false);
+                .appendField("Tracks in queue", String.valueOf(queue.size()), false);
 
         if (scheduler.hasNextTrack()) {
             long queueDuration = 0;
@@ -310,7 +310,7 @@ public class Music extends AbstractCommand {
 
     @TrackEventHandler(event = LoadFailedEvent.class)
     public static void handle(@Nonnull LoadFailedEvent event) {
-        String response = String.format("Error playing song: %s", event.getException().getMessage());
+        String response = String.format("Error playing track: %s", event.getException().getMessage());
         sendMessage(event.getHandler().getChannel(), response);
     }
 
@@ -319,7 +319,7 @@ public class Music extends AbstractCommand {
         List<AudioTrack> tracks = event.TRACKS;
         AudioTrack firstTrack = tracks.get(0);
         IChannel channel = firstTrack.getUserData(TrackUserData.class).CHANNEL;
-        String response = String.format("Added %d songs to the queue.", tracks.size());
+        String response = String.format("Added %d tracks to the queue.", tracks.size());
         sendMessage(channel, response);
     }
 
