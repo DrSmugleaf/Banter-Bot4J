@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by DrSmugleaf on 02/03/2018.
  */
-public class TrackInfo {
+public class TrackUserData {
 
     @Nonnull
     public final IChannel CHANNEL;
@@ -16,7 +16,7 @@ public class TrackInfo {
     @Nonnull
     public final IUser SUBMITTER;
 
-    protected TrackInfo(@Nonnull IChannel channel, @Nonnull IUser submitter) {
+    protected TrackUserData(@Nonnull IChannel channel, @Nonnull IUser submitter) {
         CHANNEL = channel;
         SUBMITTER = submitter;
     }

@@ -104,8 +104,8 @@ public class Music extends AbstractCommand {
         int votes = SKIP_VOTES.get(guild).size();
         double requiredVotes = humanUsers / 2;
 
-        TrackInfo trackInfo = currentTrack.getUserData(TrackInfo.class);
-        if (votes >= requiredVotes || author == trackInfo.SUBMITTER) {
+        TrackUserData trackUserData = currentTrack.getUserData(TrackUserData.class);
+        if (votes >= requiredVotes || author == trackUserData.SUBMITTER) {
             SKIP_VOTES.get(guild).clear();
             musicManager.getScheduler().skip();
             sendMessage(channel, "Skipped the current song.");
@@ -276,9 +276,9 @@ public class Music extends AbstractCommand {
             return;
         }
 
-        TrackInfo trackInfo = track.getUserData(TrackInfo.class);
-        IGuild guild = trackInfo.CHANNEL.getGuild();
-        IVoiceState voiceState = trackInfo.SUBMITTER.getVoiceStateForGuild(guild);
+        TrackUserData trackUserData = track.getUserData(TrackUserData.class);
+        IGuild guild = trackUserData.CHANNEL.getGuild();
+        IVoiceState voiceState = trackUserData.SUBMITTER.getVoiceStateForGuild(guild);
         IVoiceChannel authorVoiceChannel = voiceState.getChannel();
         IVoiceChannel botVoiceChannel = authorVoiceChannel.getClient().getOurUser().getVoiceStateForGuild(guild).getChannel();
         if (botVoiceChannel != authorVoiceChannel) {
@@ -286,7 +286,7 @@ public class Music extends AbstractCommand {
         }
 
         String response = String.format("Now playing `%s`.", track.getInfo().title);
-        sendMessage(trackInfo.CHANNEL, response);
+        sendMessage(trackUserData.CHANNEL, response);
     }
 
     @TrackEventHandler(event = TrackQueueEvent.class)
@@ -296,9 +296,9 @@ public class Music extends AbstractCommand {
             return;
         }
 
-        TrackInfo trackInfo = track.getUserData(TrackInfo.class);
+        TrackUserData trackUserData = track.getUserData(TrackUserData.class);
         String response = String.format("Added `%s` to the queue.", track.getInfo().title);
-        sendMessage(trackInfo.CHANNEL, response);
+        sendMessage(trackUserData.CHANNEL, response);
     }
 
     @TrackEventHandler(event = NoMatchesEvent.class)
@@ -318,7 +318,7 @@ public class Music extends AbstractCommand {
     public static void handle(@Nonnull PlaylistQueueEvent event) {
         List<AudioTrack> tracks = event.TRACKS;
         AudioTrack firstTrack = tracks.get(0);
-        IChannel channel = firstTrack.getUserData(TrackInfo.class).CHANNEL;
+        IChannel channel = firstTrack.getUserData(TrackUserData.class).CHANNEL;
         String response = String.format("Added %d songs to the queue.", tracks.size());
         sendMessage(channel, response);
     }

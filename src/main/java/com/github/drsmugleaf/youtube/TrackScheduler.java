@@ -60,8 +60,8 @@ public class TrackScheduler extends AudioEventAdapter {
 
         if (currentTrack != null) {
             AudioTrack currentTrackClone = currentTrack.makeClone();
-            System.out.println("current track data: " + currentTrack.getUserData(TrackInfo.class));
-            currentTrackClone.setUserData(currentTrack.getUserData(TrackInfo.class));
+            System.out.println("current track data: " + currentTrack.getUserData(TrackUserData.class));
+            currentTrackClone.setUserData(currentTrack.getUserData(TrackUserData.class));
             System.out.println("cloned track data: " + currentTrackClone);
             tracks.add(currentTrack.makeClone());
         }

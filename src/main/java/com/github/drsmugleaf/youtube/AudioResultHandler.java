@@ -44,8 +44,8 @@ public class AudioResultHandler implements AudioLoadResultHandler {
 
     @Override
     public void trackLoaded(AudioTrack track) {
-        TrackInfo trackInfo = new TrackInfo(CHANNEL, SUBMITTER);
-        track.setUserData(trackInfo);
+        TrackUserData trackUserData = new TrackUserData(CHANNEL, SUBMITTER);
+        track.setUserData(trackUserData);
         MUSIC_MANAGER.getScheduler().queue(track);
     }
 
