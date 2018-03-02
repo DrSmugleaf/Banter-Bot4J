@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.youtube;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+
 import javax.annotation.Nonnull;
 import java.util.List;
 
@@ -8,14 +10,14 @@ import java.util.List;
  */
 public class PlaylistQueueEvent extends Event {
 
-    private final List<Song> SONGS;
+    public final List<AudioTrack> TRACKS;
 
-    protected PlaylistQueueEvent(@Nonnull List<Song> songs) {
-        SONGS = songs;
+    protected PlaylistQueueEvent(@Nonnull List<AudioTrack> tracks) {
+        TRACKS = tracks;
     }
 
-    public List<Song> getSongs() {
-        return SONGS;
+    public List<AudioTrack> getTracks() {
+        return TRACKS;
     }
 
 }
