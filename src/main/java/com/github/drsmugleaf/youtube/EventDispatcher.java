@@ -20,7 +20,7 @@ public class EventDispatcher {
 
     public static void registerListener(@Nonnull Object listener) {
         Stream<Method> methods = Arrays.stream(listener.getClass().getMethods()).filter(
-                method -> method.isAnnotationPresent(SongEventHandler.class)
+                method -> method.isAnnotationPresent(TrackEventHandler.class)
         );
 
         EventDispatcher.LISTENERS.addAll(methods.collect(Collectors.toSet()));
@@ -28,7 +28,7 @@ public class EventDispatcher {
 
     protected static void dispatch(@Nonnull Event event) {
         for (Method listener : EventDispatcher.LISTENERS) {
-            if (listener.getAnnotation(SongEventHandler.class).event() == event.getClass()) {
+            if (listener.getAnnotation(TrackEventHandler.class).event() == event.getClass()) {
                 try {
                     listener.invoke(listener.getDeclaringClass(), event);
                 } catch (IllegalAccessException | InvocationTargetException e) {
