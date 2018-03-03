@@ -11,7 +11,6 @@ import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IUser;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,21 +44,15 @@ public class AudioResultHandler implements AudioLoadResultHandler {
 
     @Override
     public void trackLoaded(AudioTrack track) {
-        Song song = new Song(track, CHANNEL, SUBMITTER);
-        MUSIC_MANAGER.getScheduler().queue(song);
+        TrackUserData trackUserData = new TrackUserData(CHANNEL, SUBMITTER);
+        track.setUserData(trackUserData);
+        MUSIC_MANAGER.getScheduler().queue(track);
     }
 
     @Override
     public void playlistLoaded(AudioPlaylist playlist) {
         List<AudioTrack> tracks = playlist.getTracks();
-        List<Song> songs = new ArrayList<>();
-
-        for (AudioTrack track : tracks) {
-            Song song = new Song(track, CHANNEL, SUBMITTER);
-            songs.add(song);
-        }
-
-        MUSIC_MANAGER.getScheduler().queue(songs);
+        MUSIC_MANAGER.getScheduler().queue(tracks);
     }
 
     @Override

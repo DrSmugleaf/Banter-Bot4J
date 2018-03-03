@@ -30,7 +30,7 @@ public class Music extends AbstractCommand {
     private static final AudioPlayerManager PLAYER_MANAGER = new DefaultAudioPlayerManager();
     private static final Map<IGuild, GuildMusicManager> MUSIC_MANAGERS = new HashMap<>();
     private static final Map<IGuild, List<IUser>> SKIP_VOTES = new HashMap<>();
-    private static final Cache<SimpleEntry<IGuild, IUser>, List<Song>> UNDO_STOP_CACHE = CacheBuilder.newBuilder()
+    private static final Cache<SimpleEntry<IGuild, IUser>, List<AudioTrack>> UNDO_STOP_CACHE = CacheBuilder.newBuilder()
             .expireAfterWrite(1, TimeUnit.MINUTES)
             .build();
 
@@ -57,7 +57,6 @@ public class Music extends AbstractCommand {
 
     @Command(tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY})
     public static void play(MessageReceivedEvent event, List<String> args) {
-        IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
 
         try {
@@ -76,8 +75,9 @@ public class Music extends AbstractCommand {
         IChannel channel = event.getChannel();
 
         GuildMusicManager musicManager = getGuildMusicManager(guild);
-        if (musicManager.getScheduler().getCurrentSong() == null) {
-            sendMessage(channel, "There isn't a song currently playing.");
+        AudioTrack currentTrack = musicManager.getScheduler().getCurrentTrack();
+        if (currentTrack == null) {
+            sendMessage(channel, "There isn't a track currently playing.");
             return;
         }
 
@@ -85,7 +85,7 @@ public class Music extends AbstractCommand {
 
         IUser author = event.getAuthor();
         if (SKIP_VOTES.get(guild).contains(author)) {
-            sendMessage(channel, "You have already voted to skip this song.");
+            sendMessage(channel, "You have already voted to skip this track.");
             return;
         }
 
@@ -104,10 +104,11 @@ public class Music extends AbstractCommand {
         int votes = SKIP_VOTES.get(guild).size();
         double requiredVotes = humanUsers / 2;
 
-        if (votes >= requiredVotes || author == musicManager.getScheduler().getCurrentSong().getSubmitter()) {
+        TrackUserData trackUserData = currentTrack.getUserData(TrackUserData.class);
+        if (votes >= requiredVotes || author == trackUserData.SUBMITTER) {
             SKIP_VOTES.get(guild).clear();
             musicManager.getScheduler().skip();
-            sendMessage(channel, "Skipped the current song.");
+            sendMessage(channel, "Skipped the current track.");
         } else {
             String response = String.format("Votes: %d/%.0f", votes, requiredVotes);
             sendMessage(channel, response);
@@ -121,17 +122,17 @@ public class Music extends AbstractCommand {
 
         GuildMusicManager musicManager = getGuildMusicManager(guild);
         if (!musicManager.getScheduler().isPlaying()) {
-            sendMessage(channel, "There isn't a song currently playing.");
+            sendMessage(channel, "There isn't a track currently playing.");
             return;
         }
 
         if (musicManager.getScheduler().isPaused()) {
-            sendMessage(channel, "The current song is already paused. Use " + BanterBot4J.BOT_PREFIX + "resume to resume it.");
+            sendMessage(channel, "The current track is already paused. Use " + BanterBot4J.BOT_PREFIX + "resume to resume it.");
             return;
         }
 
         musicManager.getScheduler().pause();
-        sendMessage(channel, "Paused the current song.");
+        sendMessage(channel, "Paused the current track.");
     }
 
     @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL})
@@ -141,17 +142,17 @@ public class Music extends AbstractCommand {
 
         GuildMusicManager musicManager = getGuildMusicManager(guild);
         if (!musicManager.getScheduler().isPlaying()) {
-            sendMessage(channel, "There isn't a song currently playing.");
+            sendMessage(channel, "There isn't a track currently playing.");
             return;
         }
 
         if (!musicManager.getScheduler().isPaused()) {
-            sendMessage(channel, "There isn't a song currently paused.");
+            sendMessage(channel, "There isn't a track currently paused.");
             return;
         }
 
         musicManager.getScheduler().resume();
-        sendMessage(channel, "Resumed the current song.");
+        sendMessage(channel, "Resumed the current track.");
     }
 
     @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY})
@@ -162,20 +163,20 @@ public class Music extends AbstractCommand {
         IUser author = event.getAuthor();
 
         GuildMusicManager musicManager = getGuildMusicManager(guild);
-        if (musicManager.getScheduler().getCurrentSong() == null) {
-            sendMessage(channel, "There aren't any songs currently playing or in the queue.");
+        if (musicManager.getScheduler().getCurrentTrack() == null) {
+            sendMessage(channel, "There aren't any tracks currently playing or in the queue.");
             return;
         }
 
         TrackScheduler scheduler = getGuildMusicManager(guild).getScheduler();
 
         SimpleEntry<IGuild, IUser> pair = new SimpleEntry<>(guild, author);
-        UNDO_STOP_CACHE.put(pair, scheduler.cloneSongs());
+        UNDO_STOP_CACHE.put(pair, scheduler.cloneTracks());
 
         scheduler.stop();
         sendMessage(
                 channel,
-                "Stopped and removed all songs from the queue.\n" +
+                "Stopped and removed all tracks from the queue.\n" +
                 "You have one minute to restore them back to the queue using " + BanterBot4J.BOT_PREFIX + "undostop."
         );
     }
@@ -187,19 +188,19 @@ public class Music extends AbstractCommand {
 
         IUser author = event.getAuthor();
         SimpleEntry<IGuild, IUser> pair = new SimpleEntry<>(guild, author);
-        List<Song> songs = UNDO_STOP_CACHE.getIfPresent(pair);
-        if (songs == null) {
-            sendMessage(channel, "You haven't stopped any songs in the last minute.");
+        List<AudioTrack> tracks = UNDO_STOP_CACHE.getIfPresent(pair);
+        if (tracks == null) {
+            sendMessage(channel, "You haven't stopped any tracks in the last minute.");
             return;
         }
 
         UNDO_STOP_CACHE.invalidate(pair);
 
         TrackScheduler scheduler = getGuildMusicManager(guild).getScheduler();
-        songs.addAll(scheduler.cloneSongs());
+        tracks.addAll(scheduler.cloneTracks());
         scheduler.stop();
-        scheduler.queue(songs);
-        sendMessage(channel, "Restored all stopped songs.");
+        scheduler.queue(tracks);
+        sendMessage(channel, "Restored all stopped tracks.");
     }
 
     @Command(tags = {Tags.GUILD_ONLY})
@@ -209,15 +210,14 @@ public class Music extends AbstractCommand {
         IUser author = event.getAuthor();
 
         TrackScheduler scheduler = getGuildMusicManager(guild).getScheduler();
-        Song currentSong = scheduler.getCurrentSong();
-        if (currentSong == null) {
-            sendMessage(channel, "There are no songs currently playing or in the queue.");
+        AudioTrack currentTrack = scheduler.getCurrentTrack();
+        if (currentTrack == null) {
+            sendMessage(channel, "There are no tracks currently playing or in the queue.");
             return;
         }
 
-        AudioTrack track = currentSong.getTrack();
         TimeUnit msUnit = TimeUnit.MILLISECONDS;
-        long trackDuration = track.getDuration();
+        long trackDuration = currentTrack.getDuration();
         String trackDurationString = String.format(
                 "%02d:%02d:%02d",
                 msUnit.toHours(trackDuration) % 24,
@@ -225,7 +225,7 @@ public class Music extends AbstractCommand {
                 msUnit.toSeconds(trackDuration) % 60
         );
 
-        long trackTimeLeft = trackDuration - track.getPosition();
+        long trackTimeLeft = trackDuration - currentTrack.getPosition();
         String trackTimeLeftString = String.format(
                 "%02d:%02d:%02d",
                 msUnit.toHours(trackTimeLeft) % 24,
@@ -233,28 +233,28 @@ public class Music extends AbstractCommand {
                 msUnit.toSeconds(trackTimeLeft) % 60
         );
 
-        String songStatus = "Playing";
+        String trackStatus = "Playing";
         if (scheduler.isPaused()) {
-            songStatus = "Paused";
+            trackStatus = "Paused";
         }
 
-        List<Song> queue = scheduler.getQueue();
+        List<AudioTrack> queue = scheduler.getQueue();
         EmbedBuilder builder = new EmbedBuilder();
         builder.withAuthorName(author.getDisplayName(guild))
                 .withAuthorIcon(author.getAvatarURL())
-                .withTitle("Currently playing: " + track.getInfo().title)
+                .withTitle("Currently playing: " + currentTrack.getInfo().title)
                 .appendDescription("\n")
-                .appendDescription("Song status: " + songStatus)
+                .appendDescription("Track status: " + trackStatus)
                 .appendDescription("\n")
-                .appendDescription("Song duration: " + trackDurationString)
+                .appendDescription("Track duration: " + trackDurationString)
                 .appendDescription("\n")
                 .appendDescription("Time remaining: " + trackTimeLeftString)
-                .appendField("Songs in queue", String.valueOf(queue.size()), false);
+                .appendField("Tracks in queue", String.valueOf(queue.size()), false);
 
-        if (scheduler.hasNextSong()) {
+        if (scheduler.hasNextTrack()) {
             long queueDuration = 0;
-            for (Song song : queue) {
-                queueDuration += song.getTrack().getDuration();
+            for (AudioTrack track : queue) {
+                queueDuration += track.getDuration();
             }
             String queueDurationString = String.format(
                     "%02d:%02d:%02d",
@@ -269,51 +269,57 @@ public class Music extends AbstractCommand {
         sendMessage(channel, builder.build());
     }
 
-    @SongEventHandler(event = SongStartEvent.class)
-    public static void handle(@Nonnull SongStartEvent event) {
-        Song song = event.getSong();
-        if (song == null) {
+    @TrackEventHandler(event = TrackStartEvent.class)
+    public static void handle(@Nonnull TrackStartEvent event) {
+        AudioTrack track = event.TRACK;
+        if (track == null) {
             return;
         }
 
-        IGuild guild = song.getGuild();
-        IVoiceChannel authorVoiceChannel = song.getSubmitter().getVoiceStateForGuild(guild).getChannel();
+        TrackUserData trackUserData = track.getUserData(TrackUserData.class);
+        IGuild guild = trackUserData.CHANNEL.getGuild();
+        IVoiceState voiceState = trackUserData.SUBMITTER.getVoiceStateForGuild(guild);
+        IVoiceChannel authorVoiceChannel = voiceState.getChannel();
         IVoiceChannel botVoiceChannel = authorVoiceChannel.getClient().getOurUser().getVoiceStateForGuild(guild).getChannel();
         if (botVoiceChannel != authorVoiceChannel) {
             authorVoiceChannel.join();
         }
 
-        String response = String.format("Now playing `%s`.", song.getTrack().getInfo().title);
-        sendMessage(song.getChannel(), response);
+        String response = String.format("Now playing `%s`.", track.getInfo().title);
+        sendMessage(trackUserData.CHANNEL, response);
     }
 
-    @SongEventHandler(event = SongQueueEvent.class)
-    public static void handle(@Nonnull SongQueueEvent event) {
-        Song song = event.getSong();
-        if (song == null) {
+    @TrackEventHandler(event = TrackQueueEvent.class)
+    public static void handle(@Nonnull TrackQueueEvent event) {
+        AudioTrack track = event.TRACK;
+        if (track == null) {
             return;
         }
-        String response = String.format("Added `%s` to the queue.", song.getTrack().getInfo().title);
-        sendMessage(song.getChannel(), response);
+
+        TrackUserData trackUserData = track.getUserData(TrackUserData.class);
+        String response = String.format("Added `%s` to the queue.", track.getInfo().title);
+        sendMessage(trackUserData.CHANNEL, response);
     }
 
-    @SongEventHandler(event = NoMatchesEvent.class)
+    @TrackEventHandler(event = NoMatchesEvent.class)
     public static void handle(@Nonnull NoMatchesEvent event) {
         AudioResultHandler handler = event.getHandler();
         String response = String.format("No results found for %s.", handler.getSearchString());
         sendMessage(handler.getChannel(), response);
     }
 
-    @SongEventHandler(event = LoadFailedEvent.class)
+    @TrackEventHandler(event = LoadFailedEvent.class)
     public static void handle(@Nonnull LoadFailedEvent event) {
-        String response = String.format("Error playing song: %s", event.getException().getMessage());
+        String response = String.format("Error playing track: %s", event.getException().getMessage());
         sendMessage(event.getHandler().getChannel(), response);
     }
 
-    @SongEventHandler(event = PlaylistQueueEvent.class)
+    @TrackEventHandler(event = PlaylistQueueEvent.class)
     public static void handle(@Nonnull PlaylistQueueEvent event) {
-        IChannel channel = event.getSongs().get(0).getChannel();
-        String response = String.format("Added %d songs to the queue.", event.getSongs().size());
+        List<AudioTrack> tracks = event.TRACKS;
+        AudioTrack firstTrack = tracks.get(0);
+        IChannel channel = firstTrack.getUserData(TrackUserData.class).CHANNEL;
+        String response = String.format("Added %d tracks to the queue.", tracks.size());
         sendMessage(channel, response);
     }
 

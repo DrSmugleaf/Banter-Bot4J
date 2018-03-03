@@ -21,10 +21,10 @@ public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer PLAYER;
 
     @Nonnull
-    private final Queue<Song> QUEUE = new LinkedList<>();
+    private final Queue<AudioTrack> QUEUE = new LinkedList<>();
 
     @Nullable
-    private Song currentSong = null;
+    private AudioTrack currentTrack = null;
 
     public TrackScheduler(@Nonnull AudioPlayer player) {
         PLAYER = player;
@@ -32,7 +32,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
-        Event event = new SongStartEvent(currentSong);
+        Event event = new TrackStartEvent(currentTrack);
         EventDispatcher.dispatch(event);
     }
 
@@ -42,42 +42,43 @@ public class TrackScheduler extends AudioEventAdapter {
             case STOPPED:
             case CLEANUP:
                 QUEUE.clear();
-                currentSong = null;
+                currentTrack = null;
                 return;
         }
 
         if (endReason.mayStartNext) {
-            if (hasNextSong()) {
+            if (hasNextTrack()) {
                 play(QUEUE.poll(), false);
             }
         }
     }
 
     @Nonnull
-    public List<Song> cloneSongs() {
-        List<Song> songs = new ArrayList<>();
+    public List<AudioTrack> cloneTracks() {
+        List<AudioTrack> tracks = new ArrayList<>();
 
-        Song currentSong = this.currentSong;
-        if (currentSong != null) {
-            songs.add(new Song(currentSong.getTrack().makeClone(), currentSong.getChannel(), currentSong.getSubmitter()));
+        if (currentTrack != null) {
+            AudioTrack currentTrackClone = currentTrack.makeClone();
+            currentTrackClone.setUserData(currentTrack.getUserData(TrackUserData.class));
+            tracks.add(currentTrackClone);
         }
 
-        songs.addAll(QUEUE);
+        tracks.addAll(QUEUE);
 
-        return songs;
+        return tracks;
     }
 
     @Nonnull
-    public List<Song> getQueue() {
+    public List<AudioTrack> getQueue() {
         return new ArrayList<>(QUEUE);
     }
 
     @Nullable
-    public Song getCurrentSong() {
-        return currentSong;
+    public AudioTrack getCurrentTrack() {
+        return currentTrack;
     }
 
-    public boolean hasNextSong() {
+    public boolean hasNextTrack() {
         return QUEUE.size() > 0;
     }
 
@@ -89,41 +90,41 @@ public class TrackScheduler extends AudioEventAdapter {
         return PLAYER.isPaused();
     }
 
-    private boolean play(@Nullable Song song, boolean noInterrupt) {
-        if (!isPlaying() || !noInterrupt || song == null) {
-            currentSong = song;
-            if (song == null) {
+    private boolean play(@Nullable AudioTrack track, boolean noInterrupt) {
+        if (!isPlaying() || !noInterrupt || track == null) {
+            currentTrack = track;
+            if (track == null) {
                 return PLAYER.startTrack(null, false);
             }
         }
 
-        return PLAYER.startTrack(song.getTrack(), noInterrupt);
+        return PLAYER.startTrack(track, noInterrupt);
     }
 
-    public void queue(@Nonnull Song song) {
-        if (!play(song, true)) {
-            Event event = new SongQueueEvent(song);
+    public void queue(@Nonnull AudioTrack track) {
+        if (!play(track, true)) {
+            Event event = new TrackQueueEvent(track);
             EventDispatcher.dispatch(event);
-            QUEUE.offer(song);
+            QUEUE.offer(track);
         }
     }
 
-    public void queue(@Nonnull List<Song> songs) {
-        if (songs.size() == 1) {
-            queue(songs.get(0));
+    public void queue(@Nonnull List<AudioTrack> tracks) {
+        if (tracks.size() == 1) {
+            queue(tracks.get(0));
             return;
         }
 
-        Song firstSong = songs.remove(0);
-        if (!play(firstSong, true)) {
-            QUEUE.offer(firstSong);
+        AudioTrack firstTrack = tracks.remove(0);
+        if (!play(firstTrack, true)) {
+            QUEUE.offer(firstTrack);
         }
 
-        for (Song song : songs) {
-            QUEUE.offer(song);
+        for (AudioTrack track : tracks) {
+            QUEUE.offer(track);
         }
 
-        Event event = new PlaylistQueueEvent(songs);
+        Event event = new PlaylistQueueEvent(tracks);
         EventDispatcher.dispatch(event);
     }
 

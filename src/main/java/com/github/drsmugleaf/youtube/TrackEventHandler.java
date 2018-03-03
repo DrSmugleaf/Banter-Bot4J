@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface SongEventHandler {
+public @interface TrackEventHandler {
 
     @Nonnull
     Class<? extends Event> event() default Event.class;
