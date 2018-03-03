@@ -41,6 +41,8 @@ public class Handler {
                         AbstractCommand.sendMessage(event.getChannel(), tags.message());
                         return;
                     }
+
+                    tags.execute(event);
                 }
 
                 try {

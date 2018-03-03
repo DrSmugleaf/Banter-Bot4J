@@ -12,7 +12,6 @@ import org.jetbrains.annotations.Contract;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.EmbedBuilder;
-import sx.blah.discord.util.MissingPermissionsException;
 
 import javax.annotation.Nonnull;
 import java.util.AbstractMap.SimpleEntry;
@@ -55,13 +54,9 @@ public class Music extends AbstractCommand {
         return PLAYER_MANAGER;
     }
 
-    @Command(tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY})
+    @Command(tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.DELETE_COMMAND_MESSAGE})
     public static void play(MessageReceivedEvent event, List<String> args) {
         IChannel channel = event.getChannel();
-
-        try {
-            event.getMessage().delete();
-        } catch (MissingPermissionsException ignored) {}
 
         IUser author = event.getAuthor();
         String searchString = String.join(" ", args);
