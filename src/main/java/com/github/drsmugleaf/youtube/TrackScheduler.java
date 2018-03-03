@@ -32,7 +32,6 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
-        System.out.println("track started: " + track);
         Event event = new TrackStartEvent(currentTrack);
         EventDispatcher.dispatch(event);
     }
@@ -60,9 +59,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
         if (currentTrack != null) {
             AudioTrack currentTrackClone = currentTrack.makeClone();
-            System.out.println("current track data: " + currentTrack.getUserData(TrackUserData.class));
             currentTrackClone.setUserData(currentTrack.getUserData(TrackUserData.class));
-            System.out.println("cloned track data: " + currentTrackClone);
             tracks.add(currentTrack.makeClone());
         }
 
