@@ -90,13 +90,15 @@ public class Color extends AbstractCommand {
                 String missingPermissions = e.getMissingPermissions().stream().map(Permissions::name).collect(Collectors.joining(", "));
                 sendMessage(channel, "I don't have permission to change your name color.\n" +
                                      "Missing permissions: " + missingPermissions);
+                return;
             }
 
             sendMessage(channel, "Changed your name color to " + requestedColor);
             return;
         } else {
             IRole role = roles.get(0);
-            IRole oldRole = role.copy();
+            String oldHexCode = String.format("#%06x", role.getColor().getRGB() & 0x00FFFFFF).toUpperCase();
+
             try {
                 role.changeColor(color);
             } catch (MissingPermissionsException e) {
@@ -111,7 +113,6 @@ public class Color extends AbstractCommand {
                 return;
             }
 
-            String oldHexCode = String.format("#%06x", oldRole.getColor().getRGB() & 0x00FFFFFF).toUpperCase();
             sendMessage(channel, "Changed your name color to " + requestedColor + ". Your old name color's hex code was " + oldHexCode);
             return;
         }

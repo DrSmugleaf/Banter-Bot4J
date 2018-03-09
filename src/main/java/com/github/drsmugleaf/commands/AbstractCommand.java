@@ -2,10 +2,7 @@ package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.BanterBot4J;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IRole;
-import sx.blah.discord.handle.obj.IUser;
+import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.RequestBuffer;
 
@@ -19,26 +16,28 @@ import java.util.List;
  */
 public abstract class AbstractCommand {
 
-    public static void sendMessage(@Nonnull IChannel channel, @Nonnull String message) {
-        RequestBuffer.request(() -> {
+    @Nullable
+    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull String message) {
+        return RequestBuffer.request(() -> {
             try {
-                channel.sendMessage(message);
+                return channel.sendMessage(message);
             } catch (DiscordException e) {
                 BanterBot4J.LOGGER.error("Message could not be sent", e);
                 throw e;
             }
-        });
+        }).get();
     }
 
-    public static void sendMessage(@Nonnull IChannel channel, @Nonnull EmbedObject embed) {
-        RequestBuffer.request(() -> {
+    @Nullable
+    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull EmbedObject embed) {
+        return RequestBuffer.request(() -> {
             try {
-                channel.sendMessage(embed);
+                return channel.sendMessage(embed);
             } catch (DiscordException e) {
                 BanterBot4J.LOGGER.error("Embed could not be sent", e);
                 throw e;
             }
-        });
+        }).get();
     }
 
     @Nullable
