@@ -114,12 +114,18 @@ public class Member {
 
     @EventSubscriber
     public static void handle(ReadyEvent event) {
-        event.getClient().getGuilds().forEach(guild -> guild.getUsers().forEach(user -> {
-            Long guildID = guild.getLongID();
-            Long userID = user.getLongID();
-            Member memberModel = new Member(userID, guildID, false);
-            memberModel.createIfNotExists();
-        }));
+        Runnable runnable = () -> {
+            event.getClient().getGuilds().forEach(guild -> guild.getUsers().forEach(user -> {
+                Long guildID = guild.getLongID();
+                Long userID = user.getLongID();
+                Member memberModel = new Member(userID, guildID, false);
+                memberModel.createIfNotExists();
+            }));
+        };
+
+        Thread thread = new Thread(runnable);
+        thread.start();
     }
+
 
 }

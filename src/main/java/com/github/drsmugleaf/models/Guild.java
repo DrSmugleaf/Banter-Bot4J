@@ -62,11 +62,16 @@ public class Guild {
 
     @EventSubscriber
     public static void handle(ReadyEvent event) {
-        event.getClient().getGuilds().forEach(guild -> {
-            Long guildID = guild.getLongID();
-            Guild guildModel = new Guild(guildID);
-            guildModel.createIfNotExists();
-        });
+        Runnable runnable = () -> {
+            event.getClient().getGuilds().forEach(guild -> {
+                Long guildID = guild.getLongID();
+                Guild guildModel = new Guild(guildID);
+                guildModel.createIfNotExists();
+            });
+        };
+
+        Thread thread = new Thread(runnable);
+        thread.start();
     }
 
 }

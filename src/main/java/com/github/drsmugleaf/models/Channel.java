@@ -91,10 +91,15 @@ public class Channel {
 
     @EventSubscriber
     public static void handle(ReadyEvent event) {
-        for (IChannel iChannel : event.getClient().getChannels()) {
-            Channel channel = new Channel(iChannel.getLongID());
-            channel.createIfNotExists();
-        }
+        Runnable runnable = () -> {
+            for (IChannel iChannel : event.getClient().getChannels()) {
+                Channel channel = new Channel(iChannel.getLongID());
+                channel.createIfNotExists();
+            }
+        };
+
+        Thread thread = new Thread(runnable);
+        thread.start();
     }
 
 }

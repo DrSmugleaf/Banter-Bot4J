@@ -109,14 +109,19 @@ public class GuildChannel {
 
     @EventSubscriber
     public static void handle(ReadyEvent event) {
-        for (IGuild iGuild : event.getClient().getGuilds()) {
-            for (IChannel iChannel : iGuild.getChannels()) {
-                long channelID = iChannel.getLongID();
-                long guildID = iGuild.getLongID();
-                GuildChannel guildChannel = new GuildChannel(channelID, guildID);
-                guildChannel.createIfNotExists();
+        Runnable runnable = () -> {
+            for (IGuild iGuild : event.getClient().getGuilds()) {
+                for (IChannel iChannel : iGuild.getChannels()) {
+                    long channelID = iChannel.getLongID();
+                    long guildID = iGuild.getLongID();
+                    GuildChannel guildChannel = new GuildChannel(channelID, guildID);
+                    guildChannel.createIfNotExists();
+                }
             }
-        }
+        };
+
+        Thread thread = new Thread(runnable);
+        thread.start();
     }
 
 }

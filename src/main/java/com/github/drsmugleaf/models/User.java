@@ -62,11 +62,16 @@ public class User {
 
     @EventSubscriber
     public static void handle(ReadyEvent event) {
-        event.getClient().getUsers().forEach(user -> {
-            Long userID = user.getLongID();
-            User userModel = new User(userID);
-            userModel.createIfNotExists();
-        });
+        Runnable runnable = () -> {
+            event.getClient().getUsers().forEach(user -> {
+                Long userID = user.getLongID();
+                User userModel = new User(userID);
+                userModel.createIfNotExists();
+            });
+        };
+
+        Thread thread = new Thread(runnable);
+        thread.start();
     }
 
 }
