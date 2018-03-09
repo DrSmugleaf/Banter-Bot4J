@@ -9,6 +9,7 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import org.jetbrains.annotations.Contract;
+import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.EmbedBuilder;
@@ -33,10 +34,35 @@ public class Music extends AbstractCommand {
     private static final Cache<SimpleEntry<IGuild, IUser>, List<AudioTrack>> UNDO_STOP_CACHE = CacheBuilder.newBuilder()
             .expireAfterWrite(1, TimeUnit.MINUTES)
             .build();
+    private static IMessage lastMessage = null;
 
     static {
         AudioSourceManagers.registerRemoteSources(PLAYER_MANAGER);
         EventDispatcher.registerListener(new Music());
+    }
+    
+    private static void reply(@Nonnull IChannel channel, @Nonnull String message) {
+        IMessage iMessage = sendMessage(channel, message);
+
+        if (lastMessage != null) {
+            try {
+                lastMessage.delete();
+            } catch (MissingPermissionsException ignored) {}
+        }
+
+        lastMessage = iMessage;
+    }
+
+    private static void reply(@Nonnull IChannel channel, @Nonnull EmbedObject embed) {
+        IMessage iMessage = sendMessage(channel, embed);
+
+        if (lastMessage != null) {
+            try {
+                lastMessage.delete();
+            } catch (MissingPermissionsException ignored) {}
+        }
+
+        lastMessage = iMessage;
     }
 
     public static synchronized GuildMusicManager getGuildMusicManager(IGuild guild) {
@@ -55,13 +81,9 @@ public class Music extends AbstractCommand {
         return PLAYER_MANAGER;
     }
 
-    @Command(tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY})
+    @Command(tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.DELETE_COMMAND_MESSAGE})
     public static void play(MessageReceivedEvent event, List<String> args) {
         IChannel channel = event.getChannel();
-
-        try {
-            event.getMessage().delete();
-        } catch (MissingPermissionsException ignored) {}
 
         IUser author = event.getAuthor();
         String searchString = String.join(" ", args);
@@ -69,7 +91,7 @@ public class Music extends AbstractCommand {
         PLAYER_MANAGER.loadItem(searchString, new AudioResultHandler(channel, author, searchString));
     }
 
-    @Command(tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL})
+    @Command(tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL, Tags.DELETE_COMMAND_MESSAGE})
     public static void skip(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
@@ -77,7 +99,7 @@ public class Music extends AbstractCommand {
         GuildMusicManager musicManager = getGuildMusicManager(guild);
         AudioTrack currentTrack = musicManager.getScheduler().getCurrentTrack();
         if (currentTrack == null) {
-            sendMessage(channel, "There isn't a track currently playing.");
+            reply(channel, "There isn't a track currently playing.");
             return;
         }
 
@@ -85,7 +107,7 @@ public class Music extends AbstractCommand {
 
         IUser author = event.getAuthor();
         if (SKIP_VOTES.get(guild).contains(author)) {
-            sendMessage(channel, "You have already voted to skip this track.");
+            reply(channel, "You have already voted to skip this track.");
             return;
         }
 
@@ -108,54 +130,54 @@ public class Music extends AbstractCommand {
         if (votes >= requiredVotes || author == trackUserData.SUBMITTER) {
             SKIP_VOTES.get(guild).clear();
             musicManager.getScheduler().skip();
-            sendMessage(channel, "Skipped the current track.");
+            reply(channel, "Skipped the current track.");
         } else {
             String response = String.format("Votes: %d/%.0f", votes, requiredVotes);
-            sendMessage(channel, response);
+            reply(channel, response);
         }
     }
 
-    @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL})
+    @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL, Tags.DELETE_COMMAND_MESSAGE})
     public static void pause(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
 
         GuildMusicManager musicManager = getGuildMusicManager(guild);
         if (!musicManager.getScheduler().isPlaying()) {
-            sendMessage(channel, "There isn't a track currently playing.");
+            reply(channel, "There isn't a track currently playing.");
             return;
         }
 
         if (musicManager.getScheduler().isPaused()) {
-            sendMessage(channel, "The current track is already paused. Use " + BanterBot4J.BOT_PREFIX + "resume to resume it.");
+            reply(channel, "The current track is already paused. Use " + BanterBot4J.BOT_PREFIX + "resume to resume it.");
             return;
         }
 
         musicManager.getScheduler().pause();
-        sendMessage(channel, "Paused the current track.");
+        reply(channel, "Paused the current track.");
     }
 
-    @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL})
+    @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL, Tags.DELETE_COMMAND_MESSAGE})
     public static void resume(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
 
         GuildMusicManager musicManager = getGuildMusicManager(guild);
         if (!musicManager.getScheduler().isPlaying()) {
-            sendMessage(channel, "There isn't a track currently playing.");
+            reply(channel, "There isn't a track currently playing.");
             return;
         }
 
         if (!musicManager.getScheduler().isPaused()) {
-            sendMessage(channel, "There isn't a track currently paused.");
+            reply(channel, "There isn't a track currently paused.");
             return;
         }
 
         musicManager.getScheduler().resume();
-        sendMessage(channel, "Resumed the current track.");
+        reply(channel, "Resumed the current track.");
     }
 
-    @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY})
+    @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
     public static void stop(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
@@ -164,7 +186,7 @@ public class Music extends AbstractCommand {
 
         GuildMusicManager musicManager = getGuildMusicManager(guild);
         if (musicManager.getScheduler().getCurrentTrack() == null) {
-            sendMessage(channel, "There aren't any tracks currently playing or in the queue.");
+            reply(channel, "There aren't any tracks currently playing or in the queue.");
             return;
         }
 
@@ -174,14 +196,14 @@ public class Music extends AbstractCommand {
         UNDO_STOP_CACHE.put(pair, scheduler.cloneTracks());
 
         scheduler.stop();
-        sendMessage(
+        reply(
                 channel,
                 "Stopped and removed all tracks from the queue.\n" +
                 "You have one minute to restore them back to the queue using " + BanterBot4J.BOT_PREFIX + "undostop."
         );
     }
 
-    @Command(tags = {Tags.GUILD_ONLY})
+    @Command(tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
     public static void undostop(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
@@ -190,7 +212,7 @@ public class Music extends AbstractCommand {
         SimpleEntry<IGuild, IUser> pair = new SimpleEntry<>(guild, author);
         List<AudioTrack> tracks = UNDO_STOP_CACHE.getIfPresent(pair);
         if (tracks == null) {
-            sendMessage(channel, "You haven't stopped any tracks in the last minute.");
+            reply(channel, "You haven't stopped any tracks in the last minute.");
             return;
         }
 
@@ -200,10 +222,10 @@ public class Music extends AbstractCommand {
         tracks.addAll(scheduler.cloneTracks());
         scheduler.stop();
         scheduler.queue(tracks);
-        sendMessage(channel, "Restored all stopped tracks.");
+        reply(channel, "Restored all stopped tracks.");
     }
 
-    @Command(tags = {Tags.GUILD_ONLY})
+    @Command(tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
     public static void queue(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
@@ -212,7 +234,7 @@ public class Music extends AbstractCommand {
         TrackScheduler scheduler = getGuildMusicManager(guild).getScheduler();
         AudioTrack currentTrack = scheduler.getCurrentTrack();
         if (currentTrack == null) {
-            sendMessage(channel, "There are no tracks currently playing or in the queue.");
+            reply(channel, "There are no tracks currently playing or in the queue.");
             return;
         }
 
@@ -266,7 +288,7 @@ public class Music extends AbstractCommand {
             builder.appendField("Queue duration", queueDurationString, false);
         }
 
-        sendMessage(channel, builder.build());
+        reply(channel, builder.build());
     }
 
     @TrackEventHandler(event = TrackStartEvent.class)
@@ -286,7 +308,7 @@ public class Music extends AbstractCommand {
         }
 
         String response = String.format("Now playing `%s`.", track.getInfo().title);
-        sendMessage(trackUserData.CHANNEL, response);
+        reply(trackUserData.CHANNEL, response);
     }
 
     @TrackEventHandler(event = TrackQueueEvent.class)
@@ -298,20 +320,20 @@ public class Music extends AbstractCommand {
 
         TrackUserData trackUserData = track.getUserData(TrackUserData.class);
         String response = String.format("Added `%s` to the queue.", track.getInfo().title);
-        sendMessage(trackUserData.CHANNEL, response);
+        reply(trackUserData.CHANNEL, response);
     }
 
     @TrackEventHandler(event = NoMatchesEvent.class)
     public static void handle(@Nonnull NoMatchesEvent event) {
         AudioResultHandler handler = event.getHandler();
         String response = String.format("No results found for %s.", handler.getSearchString());
-        sendMessage(handler.getChannel(), response);
+        reply(handler.getChannel(), response);
     }
 
     @TrackEventHandler(event = LoadFailedEvent.class)
     public static void handle(@Nonnull LoadFailedEvent event) {
         String response = String.format("Error playing track: %s", event.getException().getMessage());
-        sendMessage(event.getHandler().getChannel(), response);
+        reply(event.getHandler().getChannel(), response);
     }
 
     @TrackEventHandler(event = PlaylistQueueEvent.class)
@@ -320,7 +342,7 @@ public class Music extends AbstractCommand {
         AudioTrack firstTrack = tracks.get(0);
         IChannel channel = firstTrack.getUserData(TrackUserData.class).CHANNEL;
         String response = String.format("Added %d tracks to the queue.", tracks.size());
-        sendMessage(channel, response);
+        reply(channel, response);
     }
 
 }

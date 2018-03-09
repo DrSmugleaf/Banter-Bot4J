@@ -5,6 +5,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.IVoiceChannel;
+import sx.blah.discord.util.MissingPermissionsException;
 
 import javax.annotation.Nonnull;
 
@@ -13,6 +14,14 @@ import javax.annotation.Nonnull;
  */
 enum Tags {
 
+    DELETE_COMMAND_MESSAGE {
+        @Override
+        public void execute(@Nonnull MessageReceivedEvent event) {
+            try {
+                event.getMessage().delete();
+            } catch (MissingPermissionsException ignored) {}
+        }
+    },
     GUILD_ONLY {
         @Override
         public boolean valid(@Nonnull MessageReceivedEvent event) {
@@ -80,9 +89,15 @@ enum Tags {
         }
     };
 
-    public abstract boolean valid(@Nonnull MessageReceivedEvent event);
+    public boolean valid(@Nonnull MessageReceivedEvent event) {
+        return true;
+    }
 
     @Nonnull
-    public abstract String message();
+    public String message() {
+        return "You can't use that command.";
+    }
+
+    public void execute(@Nonnull MessageReceivedEvent event) {}
 
 }
