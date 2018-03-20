@@ -14,6 +14,7 @@ import java.util.*;
  */
 public abstract class Model<T extends Model<T>> {
 
+    @Nonnull
     public List<T> get(T model) {
         List<T> models = new ArrayList<>();
 
@@ -67,6 +68,28 @@ public abstract class Model<T extends Model<T>> {
     }
 
     @Nonnull
+    private Set<Map.Entry<Field, Object>> getColumns(T model) {
+        Set<Map.Entry<Field, Object>> fields = getFields(model).entrySet();
+        fields.removeIf(entry -> entry.getValue() == null);
+        return fields;
+    }
+
+    @Nonnull
+    private String getColumnName(Field field) {
+        String columnName;
+        Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
+        Class<?> fieldClass = field.getClass();
+        Table tableAnnotation = fieldClass.getDeclaredAnnotation(Table.class);
+        if (tableAnnotation == null) {
+            columnName = columnAnnotation.name();
+        } else {
+            columnName = tableAnnotation.name() + "." + columnAnnotation.name();
+        }
+
+        return columnName;
+    }
+
+    @Nonnull
     private Map<Field, Object> getFields(T model) {
         Map<Field, Object> fields = new HashMap<>();
 
@@ -88,28 +111,6 @@ public abstract class Model<T extends Model<T>> {
         }
 
         return fields;
-    }
-    
-    @Nonnull
-    private Set<Map.Entry<Field, Object>> getColumns(T model) {
-        Set<Map.Entry<Field, Object>> fields = getFields(model).entrySet();
-        fields.removeIf(entry -> entry.getValue() == null);
-        return fields;
-    }
-
-    @Nonnull
-    private String getColumnName(Field field) {
-        String columnName;
-        Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
-        Class<?> fieldClass = field.getClass();
-        Table tableAnnotation = fieldClass.getDeclaredAnnotation(Table.class);
-        if (tableAnnotation == null) {
-            columnName = columnAnnotation.name();
-        } else {
-            columnName = tableAnnotation.name() + "." + columnAnnotation.name();
-        }
-
-        return columnName;
     }
 
     @Nonnull
