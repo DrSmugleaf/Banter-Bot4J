@@ -14,15 +14,24 @@ import java.util.*;
  */
 public abstract class Model<T extends Model<T>> {
 
+    private final Class<T> clazz;
+
+    protected Model(Class<T> clazz) {
+        this.clazz = clazz;
+    }
+
     @Nonnull
-    public List<T> get(T model) {
+    public List<T> get(T model) throws SQLException {
         List<T> models = new ArrayList<>();
 
         PreparedStatement statement;
         StringBuilder query = new StringBuilder();
-        query.append("SELECT * FROM ? WHERE ");
+        query.append("SELECT * FROM ?");
 
         Set<Map.Entry<Field, Object>> columns = getColumns(model);
+        if (!columns.isEmpty()) {
+            query.append(" WHERE ");
+        }
         Iterator<Map.Entry<Field, Object>> it = columns.iterator();
         while (it.hasNext()) {
             Map.Entry<Field, Object> entry = it.next();
@@ -50,20 +59,19 @@ public abstract class Model<T extends Model<T>> {
             }
 
             ResultSet result = statement.executeQuery();
-            i = 1;
             while (result.next()) {
-                T row = newInstance(model);
+                T row = clazz.newInstance();
                 for (Map.Entry<Field, Object> entry : getFields(model).entrySet()) {
                     Field field = entry.getKey();
                     Column columnAnnotation = field.getAnnotation(Column.class);
                     field.set(row, result.getObject(columnAnnotation.name()));
                 }
                 models.add(row);
-                i++;
             }
-        } catch (SQLException | IllegalAccessException | InstantiationException e) {
+        } catch (IllegalAccessException | InstantiationException e) {
             BanterBot4J.LOGGER.error("Error retrieving " + model.getClass().getName(), e);
         }
+
         return models;
     }
 
@@ -116,12 +124,6 @@ public abstract class Model<T extends Model<T>> {
     @Nonnull
     private String getTableName(T model) {
         return model.getClass().getAnnotation(Table.class).name();
-    }
-
-    @SuppressWarnings("unchecked")
-    @Nonnull
-    private T newInstance(T model) throws IllegalAccessException, InstantiationException {
-        return (T) model.getClass().newInstance();
     }
 
 }
