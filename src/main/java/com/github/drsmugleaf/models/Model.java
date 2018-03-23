@@ -14,12 +14,6 @@ import java.util.*;
  */
 public abstract class Model<T extends Model<T>> {
 
-    private final Class<T> clazz;
-
-    protected Model(Class<T> clazz) {
-        this.clazz = clazz;
-    }
-
     @Nonnull
     public List<T> get(T model) throws SQLException {
         List<T> models = new ArrayList<>();
@@ -60,7 +54,7 @@ public abstract class Model<T extends Model<T>> {
 
             ResultSet result = statement.executeQuery();
             while (result.next()) {
-                T row = clazz.newInstance();
+                T row = newInstance(model);
                 for (Map.Entry<Field, Object> entry : getFields(model).entrySet()) {
                     Field field = entry.getKey();
                     Column columnAnnotation = field.getAnnotation(Column.class);
@@ -124,6 +118,12 @@ public abstract class Model<T extends Model<T>> {
     @Nonnull
     private String getTableName(T model) {
         return model.getClass().getAnnotation(Table.class).name();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Nonnull
+    private T newInstance(T model) throws IllegalAccessException, InstantiationException {
+        return (T) model.getClass().newInstance();
     }
 
 }
