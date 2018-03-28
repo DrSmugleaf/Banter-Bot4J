@@ -20,7 +20,9 @@ public abstract class Model<T extends Model<T>> {
 
         PreparedStatement statement;
         StringBuilder query = new StringBuilder();
-        query.append("SELECT * FROM ?");
+        query
+                .append("SELECT * FROM ")
+                .append(escape(getTableName(model)));
 
         Set<Map.Entry<Field, Object>> columns = getColumns(model);
         if (!columns.isEmpty()) {
@@ -42,9 +44,6 @@ public abstract class Model<T extends Model<T>> {
 
         try {
             statement = Database.conn.prepareStatement(query.toString());
-            statement.setString(1, getTableName(model));
-            String fixedQuery = statement.toString().replaceFirst("'(.+)'", "$1");
-            statement = Database.conn.prepareStatement(fixedQuery);
 
             int i = 1;
             for (Map.Entry<Field, Object> column : columns) {
@@ -124,6 +123,13 @@ public abstract class Model<T extends Model<T>> {
     @Nonnull
     private T newInstance(T model) throws IllegalAccessException, InstantiationException {
         return (T) model.getClass().newInstance();
+    }
+
+    @Nonnull
+    private String escape(@Nonnull String s) throws SQLException {
+        PreparedStatement statement = Database.conn.prepareStatement("?");
+        statement.setString(1, s);
+        return statement.toString().replaceFirst("'(.+)'", "$1");
     }
 
 }
