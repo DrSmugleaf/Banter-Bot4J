@@ -43,16 +43,16 @@ public abstract class Model<T extends Model<T>> {
             }
         }
 
+        statement = Database.conn.prepareStatement(query.toString());
+
+        int i = 1;
+        for (Map.Entry<Field, Object> column : columns) {
+            statement.setObject(i, column.getValue());
+            i++;
+        }
+
+        ResultSet result = statement.executeQuery();
         try {
-            statement = Database.conn.prepareStatement(query.toString());
-
-            int i = 1;
-            for (Map.Entry<Field, Object> column : columns) {
-                statement.setObject(i, column.getValue());
-                i++;
-            }
-
-            ResultSet result = statement.executeQuery();
             while (result.next()) {
                 T row = newInstance(model);
                 for (Map.Entry<Field, Object> entry : getFields(model).entrySet()) {
