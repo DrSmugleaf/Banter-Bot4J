@@ -14,4 +14,6 @@ public @interface Column {
 
     String name();
 
+    @interface Id {}
+
 }
