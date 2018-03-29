@@ -14,6 +14,8 @@ public @interface Column {
 
     String name();
 
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
     @interface Id {}
 
 }
