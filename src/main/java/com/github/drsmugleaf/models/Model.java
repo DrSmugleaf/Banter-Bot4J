@@ -15,7 +15,7 @@ import java.util.*;
 public abstract class Model<T extends Model<T>> {
 
     @Nonnull
-    public List<T> get(T model) throws SQLException {
+    public List<T> get(@Nonnull T model) throws SQLException {
         List<T> models = new ArrayList<>();
 
         PreparedStatement statement;
@@ -28,16 +28,17 @@ public abstract class Model<T extends Model<T>> {
         if (!columns.isEmpty()) {
             query.append(" WHERE ");
         }
-        Iterator<Map.Entry<Field, Object>> it = columns.iterator();
-        while (it.hasNext()) {
-            Map.Entry<Field, Object> entry = it.next();
+
+        Iterator<Map.Entry<Field, Object>> iterator = columns.iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Field, Object> entry = iterator.next();
             String columnName = getColumnName(entry.getKey());
 
             query
                     .append(columnName)
                     .append(" = ?");
 
-            if (it.hasNext()) {
+            if (iterator.hasNext()) {
                 query.append(" AND ");
             }
         }
@@ -68,15 +69,84 @@ public abstract class Model<T extends Model<T>> {
         return models;
     }
 
+    public void save(@Nonnull T model) throws SQLException {
+        StringBuilder query = new StringBuilder();
+        StringBuilder queryInsert = new StringBuilder();
+        StringBuilder queryValues = new StringBuilder();
+        StringBuilder queryConflict = new StringBuilder();
+        StringBuilder querySet = new StringBuilder();
+
+        queryInsert
+                .append("INSERT INTO ")
+                .append(escape(getTableName(model)))
+                .append(" (");
+        queryValues.append("VALUES(");
+        queryConflict.append("ON CONFLICT (");
+        querySet.append("DO UPDATE SET ");
+
+        Set<Map.Entry<Field, Object>> columns = getColumns(model);
+        Iterator<Map.Entry<Field, Object>> iterator = columns.iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Field, Object> entry = iterator.next();
+            Field field = entry.getKey();
+            String columnName = getColumnName(field);
+
+            queryInsert.append(columnName);
+            queryValues.append("?");
+            if (isID(field)) {
+                queryConflict.append(columnName);
+            }
+            querySet
+                    .append(columnName)
+                    .append(" = ?");
+
+            if (iterator.hasNext()) {
+                queryInsert.append(", ");
+                queryValues.append(", ");
+                if (isID(field)) {
+                    queryConflict.append(", ");
+                }
+                querySet.append(", ");
+            } else {
+                queryInsert.append(") ");
+                queryValues.append(") ");
+                queryConflict.append(") ");
+                querySet.append(" ");
+            }
+        }
+
+        query
+                .append(queryInsert)
+                .append(queryValues)
+                .append(queryConflict)
+                .append(querySet);
+
+        PreparedStatement statement = Database.conn.prepareStatement(query.toString());
+        iterator = columns.iterator();
+        int i = 1;
+        int size = columns.size();
+        while (iterator.hasNext()) {
+            Map.Entry<Field, Object> entry = iterator.next();
+            Object value = entry.getValue();
+            statement.setObject(i, value);
+            statement.setObject(i + size, value);
+            i++;
+        }
+
+        System.out.println(statement);
+
+        statement.executeUpdate();
+    }
+
     @Nonnull
-    private Set<Map.Entry<Field, Object>> getColumns(T model) {
+    private Set<Map.Entry<Field, Object>> getColumns(@Nonnull T model) {
         Set<Map.Entry<Field, Object>> fields = getFields(model).entrySet();
         fields.removeIf(entry -> entry.getValue() == null);
         return fields;
     }
 
     @Nonnull
-    private String getColumnName(Field field) {
+    private String getColumnName(@Nonnull Field field) {
         String columnName;
         Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
         Class<?> fieldClass = field.getClass();
@@ -91,7 +161,7 @@ public abstract class Model<T extends Model<T>> {
     }
 
     @Nonnull
-    private Map<Field, Object> getFields(T model) {
+    private Map<Field, Object> getFields(@Nonnull T model) {
         Map<Field, Object> fields = new HashMap<>();
 
         for (Field field : model.getClass().getDeclaredFields()) {
@@ -115,13 +185,13 @@ public abstract class Model<T extends Model<T>> {
     }
 
     @Nonnull
-    private String getTableName(T model) {
+    private String getTableName(@Nonnull T model) {
         return model.getClass().getAnnotation(Table.class).name();
     }
 
-    @SuppressWarnings("unchecked")
     @Nonnull
-    private T newInstance(T model) throws IllegalAccessException, InstantiationException {
+    @SuppressWarnings("unchecked")
+    private T newInstance(@Nonnull T model) throws IllegalAccessException, InstantiationException {
         return (T) model.getClass().newInstance();
     }
 
@@ -130,6 +200,10 @@ public abstract class Model<T extends Model<T>> {
         PreparedStatement statement = Database.conn.prepareStatement("?");
         statement.setString(1, s);
         return statement.toString().replaceFirst("'(.+)'", "$1");
+    }
+
+    private boolean isID(@Nonnull Field field) {
+        return field.isAnnotationPresent(Column.Id.class);
     }
 
 }
