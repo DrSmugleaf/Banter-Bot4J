@@ -37,7 +37,7 @@ public abstract class Model<T extends Model<T>> {
 
         query.append(")");
 
-        PreparedStatement statement = Database.conn.prepareStatement(query.toString());
+        PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString());
         statement.executeUpdate();
     }
 
@@ -70,7 +70,7 @@ public abstract class Model<T extends Model<T>> {
             }
         }
 
-        statement = Database.conn.prepareStatement(query.toString());
+        statement = Database.CONNECTION.prepareStatement(query.toString());
 
         int i = 1;
         for (Map.Entry<Field, Object> column : columns) {
@@ -148,7 +148,7 @@ public abstract class Model<T extends Model<T>> {
                 .append(queryConflict)
                 .append(querySet);
 
-        PreparedStatement statement = Database.conn.prepareStatement(query.toString());
+        PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString());
         iterator = columns.iterator();
         int i = 1;
         int size = columns.size();
@@ -222,7 +222,7 @@ public abstract class Model<T extends Model<T>> {
 
     @Nonnull
     private String escape(@Nonnull String s) throws SQLException {
-        PreparedStatement statement = Database.conn.prepareStatement("?");
+        PreparedStatement statement = Database.CONNECTION.prepareStatement("?");
         statement.setString(1, s);
         return statement.toString().replaceFirst("'(.+)'", "$1");
     }
