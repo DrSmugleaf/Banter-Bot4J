@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.models.api;
+package com.github.drsmugleaf.database.api;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.env.Env;

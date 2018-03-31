@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.models.api;
+package com.github.drsmugleaf.database.api;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,15 +9,9 @@ import java.lang.annotation.Target;
  * Created by DrSmugleaf on 13/03/2018.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface Column {
+@Target(ElementType.TYPE)
+public @interface Table {
 
     String name();
-
-    String columnDefinition() default "";
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    @interface Id {}
 
 }

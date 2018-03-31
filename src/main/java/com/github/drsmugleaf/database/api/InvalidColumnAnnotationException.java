@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.models.api;
+package com.github.drsmugleaf.database.api;
 
 /**
  * Created by DrSmugleaf on 31/03/2018.

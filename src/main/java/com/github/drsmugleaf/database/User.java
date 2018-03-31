@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.models;
+package com.github.drsmugleaf.database;
 
 import com.github.drsmugleaf.BanterBot4J;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -9,27 +9,27 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Created by DrSmugleaf on 16/05/2017.
+ * Created by DrSmugleaf on 14/05/2017.
  */
-public class Guild {
+public class User {
 
     private static Connection connection;
     private long id;
 
-    public Guild(long id) {
+    public User(long id) {
         this.id = id;
     }
 
     public static void createTable(Connection connection) {
         PreparedStatement statement;
         try {
-            statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS guilds (" +
+            statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS users (" +
                     "id BIGINT PRIMARY KEY" +
                     ")");
             statement.executeUpdate();
-            Guild.connection = connection;
+            User.connection = connection;
         } catch(SQLException e) {
-            BanterBot4J.LOGGER.error("Unable to create guilds database table", e);
+            BanterBot4J.LOGGER.error("Unable to create users database table", e);
             System.exit(1);
         }
     }
@@ -38,35 +38,35 @@ public class Guild {
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement(
-                    "INSERT INTO guilds (id) " +
+                    "INSERT INTO users (id) " +
                     "VALUES(?) " +
                     "ON CONFLICT DO NOTHING"
             );
             statement.setLong(1, this.id);
             statement.executeUpdate();
         } catch(SQLException e) {
-            BanterBot4J.LOGGER.error("Error creating guild with id " + this.id, e);
+            BanterBot4J.LOGGER.error("Error creating user with id " + this.id, e);
         }
     }
 
     public void save() {
         PreparedStatement statement;
         try {
-            statement = connection.prepareStatement("INSERT INTO guilds (id) VALUES (?) ON CONFLICT DO NOTHING");
+            statement = connection.prepareStatement("INSERT INTO users (id) VALUES (?) ON CONFLICT DO NOTHING");
             statement.setLong(1, this.id);
             statement.executeUpdate();
-        } catch (SQLException e) {
-            BanterBot4J.LOGGER.error("Error saving guild with id " + this.id, e);
+        } catch(SQLException e) {
+            BanterBot4J.LOGGER.error("Error saving user with id" + this.id, e);
         }
     }
 
     @EventSubscriber
     public static void handle(ReadyEvent event) {
         Runnable runnable = () -> {
-            event.getClient().getGuilds().forEach(guild -> {
-                Long guildID = guild.getLongID();
-                Guild guildModel = new Guild(guildID);
-                guildModel.createIfNotExists();
+            event.getClient().getUsers().forEach(user -> {
+                Long userID = user.getLongID();
+                User userModel = new User(userID);
+                userModel.createIfNotExists();
             });
         };
 

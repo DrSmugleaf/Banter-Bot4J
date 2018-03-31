@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.models.BridgedChannel;
+import com.github.drsmugleaf.database.BridgedChannel;
 import com.github.drsmugleaf.translator.API;
 import com.github.drsmugleaf.translator.Languages;
 import sx.blah.discord.api.events.EventSubscriber;
