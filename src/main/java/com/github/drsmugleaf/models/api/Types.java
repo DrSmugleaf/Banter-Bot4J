@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.models;
+package com.github.drsmugleaf.models.api;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;

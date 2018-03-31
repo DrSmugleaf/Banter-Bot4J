@@ -5,6 +5,7 @@ import com.github.drsmugleaf.commands.Translator;
 import com.github.drsmugleaf.env.Env;
 import com.github.drsmugleaf.env.Keys;
 import com.github.drsmugleaf.models.*;
+import com.github.drsmugleaf.models.api.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.ClientBuilder;

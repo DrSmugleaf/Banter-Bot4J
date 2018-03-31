@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.models;
+package com.github.drsmugleaf.models.api;
 
 import java.sql.Connection;
 
@@ -8,5 +8,7 @@ import java.sql.Connection;
 public class Database {
 
     public static final Connection CONNECTION = DatabaseConnection.initialize();
+
+
 
 }
