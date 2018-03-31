@@ -4,15 +4,42 @@ import com.github.drsmugleaf.BanterBot4J;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 /**
  * Created by DrSmugleaf on 16/03/2018.
  */
 public abstract class Model<T extends Model<T>> {
+
+    public void createTable(@Nonnull T model) throws SQLException, InvalidColumnAnnotationException {
+        StringBuilder query = new StringBuilder();
+        query
+                .append("CREATE TABLE IF NOT EXISTS ")
+                .append(escape(getTableName(model)))
+                .append(" (");
+
+        Set<Map.Entry<Field, Object>> columns = getColumns(model);
+        for (Map.Entry<Field, Object> column : columns) {
+            Field field = column.getKey();
+            String name = field.getAnnotation(Column.class).name();
+            String type = getDataType(field);
+
+            query
+                    .append(name)
+                    .append(" ")
+                    .append(type);
+
+            if (field.isAnnotationPresent(Column.Id.class)) {
+                query.append(" PRIMARY KEY");
+            }
+        }
+
+        query.append(")");
+
+        PreparedStatement statement = Database.conn.prepareStatement(query.toString());
+        statement.executeUpdate();
+    }
 
     @Nonnull
     public List<T> get(@Nonnull T model) throws SQLException {
@@ -133,8 +160,6 @@ public abstract class Model<T extends Model<T>> {
             i++;
         }
 
-        System.out.println(statement);
-
         statement.executeUpdate();
     }
 
@@ -204,6 +229,27 @@ public abstract class Model<T extends Model<T>> {
 
     private boolean isID(@Nonnull Field field) {
         return field.isAnnotationPresent(Column.Id.class);
+    }
+
+    @Nonnull
+    private String getDataType(@Nonnull Field field) throws InvalidColumnAnnotationException {
+        Column columnAnnotation = field.getAnnotation(Column.class);
+        if (columnAnnotation == null) {
+            throw new NullPointerException("No column annotation found for field " + field);
+        }
+
+        String columnDefinition = field.getAnnotation(Column.class).columnDefinition();
+        if (columnDefinition.isEmpty()) {
+            Class<?> fieldType = field.getType();
+            Types type = Types.getType(fieldType);
+            if (type == null) {
+                throw new InvalidColumnAnnotationException("No type exists for class " + fieldType.getName());
+            }
+
+            return type.NAME;
+        } else {
+            return columnDefinition;
+        }
     }
 
 }
