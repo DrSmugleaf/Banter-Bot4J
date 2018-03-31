@@ -2,9 +2,9 @@ package com.github.drsmugleaf;
 
 import com.github.drsmugleaf.commands.Handler;
 import com.github.drsmugleaf.commands.Translator;
+import com.github.drsmugleaf.database.models.*;
 import com.github.drsmugleaf.env.Env;
 import com.github.drsmugleaf.env.Keys;
-import com.github.drsmugleaf.database.*;
 import com.github.drsmugleaf.database.api.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

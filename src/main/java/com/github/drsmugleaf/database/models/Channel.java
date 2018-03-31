@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.database;
+package com.github.drsmugleaf.database.models;
 
 import com.github.drsmugleaf.BanterBot4J;
 import sx.blah.discord.api.events.EventSubscriber;

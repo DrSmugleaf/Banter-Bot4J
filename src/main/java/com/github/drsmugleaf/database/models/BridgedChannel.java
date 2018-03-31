@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.database;
+package com.github.drsmugleaf.database.models;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.translator.Languages;

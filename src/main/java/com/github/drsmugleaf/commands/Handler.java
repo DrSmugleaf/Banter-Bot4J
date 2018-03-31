@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.commands;
 
-import com.github.drsmugleaf.database.Member;
+import com.github.drsmugleaf.database.models.Member;
 import com.github.drsmugleaf.util.Annotations;
 import com.github.drsmugleaf.BanterBot4J;
 import sx.blah.discord.api.events.EventSubscriber;
