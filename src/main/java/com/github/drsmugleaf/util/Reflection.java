@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 21/05/2017.
  */
-public class Annotations {
+public class Reflection {
 
     private static Iterable<Class> getClasses(String packageName) throws ClassNotFoundException, IOException, URISyntaxException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -65,7 +65,7 @@ public class Annotations {
     public static List<Method> findMethodsWithAnnotations(Class<? extends Annotation> annotation) {
         Iterable<Class> classes = null;
         try {
-            classes = Annotations.getClasses("com.github.drsmugleaf.commands");
+            classes = Reflection.getClasses("com.github.drsmugleaf.commands");
         } catch(ClassNotFoundException | IOException | URISyntaxException e) {
             BanterBot4J.LOGGER.error("Error getting classes in commands package", e);
         }

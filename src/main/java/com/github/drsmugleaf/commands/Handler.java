@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.database.models.Member;
-import com.github.drsmugleaf.util.Annotations;
+import com.github.drsmugleaf.util.Reflection;
 import com.github.drsmugleaf.BanterBot4J;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -21,7 +21,7 @@ public class Handler {
     private static final Map<String, ICommand> COMMANDS = new HashMap<>();
 
     static {
-        List<Method> commands = Annotations.findMethodsWithAnnotations(Command.class);
+        List<Method> commands = Reflection.findMethodsWithAnnotations(Command.class);
         for (Method method : commands) {
             Command annotation = method.getAnnotation(Command.class);
 
