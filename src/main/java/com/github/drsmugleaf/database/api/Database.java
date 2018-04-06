@@ -1,7 +1,5 @@
 package com.github.drsmugleaf.database.api;
 
-import sun.reflect.Reflection;
-
 import java.sql.Connection;
 
 /**
@@ -10,9 +8,5 @@ import java.sql.Connection;
 public class Database {
 
     public static final Connection CONNECTION = DatabaseConnection.initialize();
-
-    private void createTables() {
-        Reflection
-    }
 
 }

@@ -241,7 +241,7 @@ public abstract class Model<T extends Model<T>> {
         String columnDefinition = field.getAnnotation(Column.class).columnDefinition();
         if (columnDefinition.isEmpty()) {
             Class<?> fieldType = field.getType();
-            Types type = Types.getType(fieldType);
+            PostgresTypes type = PostgresTypes.getType(fieldType);
             if (type == null) {
                 throw new InvalidColumnAnnotationException("No type exists for class " + fieldType.getName());
             }

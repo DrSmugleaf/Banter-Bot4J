@@ -11,7 +11,7 @@ import java.sql.*;
 /**
  * Created by DrSmugleaf on 30/03/2018.
  */
-public enum Types {
+public enum PostgresTypes {
 
     BIGINT("int8", Long.class),
 
@@ -54,14 +54,14 @@ public enum Types {
     @Nonnull
     public final Class<?> CLASS;
 
-    Types(@Nonnull String name, @Nonnull Class<?> clazz) {
+    PostgresTypes(@Nonnull String name, @Nonnull Class<?> clazz) {
         NAME = name;
         CLASS = clazz;
         Holder.MAP.put(clazz, this);
     }
 
     @Nullable
-    public static Types getType(@Nonnull Class<?> clazz) {
+    public static PostgresTypes getType(@Nonnull Class<?> clazz) {
         if (!Holder.MAP.containsKey(clazz)) {
             return null;
         }
@@ -70,7 +70,7 @@ public enum Types {
     }
 
     private static class Holder {
-        static final Multimap<Class<?>, Types> MAP = ArrayListMultimap.create();
+        static final Multimap<Class<?>, PostgresTypes> MAP = ArrayListMultimap.create();
     }
 
 }
