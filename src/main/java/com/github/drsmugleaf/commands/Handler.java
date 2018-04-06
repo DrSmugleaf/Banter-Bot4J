@@ -21,7 +21,8 @@ public class Handler {
     private static final Map<String, ICommand> COMMANDS = new HashMap<>();
 
     static {
-        List<Method> commands = Reflection.findMethodsWithAnnotations(Command.class);
+        Reflection reflection = new Reflection("com.github.drsmugleaf.commands");
+        List<Method> commands = reflection.findMethodsWithAnnotations(Command.class);
         for (Method method : commands) {
             Command annotation = method.getAnnotation(Command.class);
 

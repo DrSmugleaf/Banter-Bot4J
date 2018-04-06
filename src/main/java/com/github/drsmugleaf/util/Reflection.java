@@ -19,9 +19,16 @@ import java.util.List;
  */
 public class Reflection {
 
-    private static Iterable<Class> getClasses(String packageName) throws ClassNotFoundException, IOException, URISyntaxException {
+    @Nonnull
+    private final String PACKAGE_NAME;
+
+    public Reflection(@Nonnull String packageName) {
+        PACKAGE_NAME = packageName;
+    }
+
+    private Iterable<Class> getClasses() throws ClassNotFoundException, IOException, URISyntaxException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        String path = packageName.replace('.', '/');
+        String path = PACKAGE_NAME.replace('.', '/');
         Enumeration<URL> resources = classLoader.getResources(path);
         List<File> dirs = new ArrayList<>();
 
@@ -33,13 +40,13 @@ public class Reflection {
 
         List<Class> classes = new ArrayList<>();
         for (File directory : dirs) {
-            classes.addAll(findClasses(directory, packageName));
+            classes.addAll(findClasses(directory, PACKAGE_NAME));
         }
 
         return classes;
     }
 
-    private static List<Class> findClasses(File directory, String packageName) throws ClassNotFoundException {
+    private List<Class> findClasses(File directory, String packageName) throws ClassNotFoundException {
         List<Class> classes = new ArrayList<>();
         if (!directory.exists()) {
             return classes;
@@ -62,16 +69,18 @@ public class Reflection {
     }
 
     @Nonnull
-    public static List<Method> findMethodsWithAnnotations(Class<? extends Annotation> annotation) {
+    public List<Method> findMethodsWithAnnotations(Class<? extends Annotation> annotation) {
         Iterable<Class> classes = null;
         try {
-            classes = Reflection.getClasses("com.github.drsmugleaf.commands");
+            classes = getClasses();
         } catch(ClassNotFoundException | IOException | URISyntaxException e) {
-            BanterBot4J.LOGGER.error("Error getting classes in commands package", e);
+            BanterBot4J.LOGGER.error("Error finding methods with annotation " + annotation.getName(), e);
         }
 
         List<Method> methodList = new ArrayList<>();
-        if(classes == null) return methodList;
+        if(classes == null) {
+            return methodList;
+        }
         classes.forEach((Class cls) -> {
             for (Method method : cls.getMethods()) {
                 if (method.isAnnotationPresent(annotation)) {
