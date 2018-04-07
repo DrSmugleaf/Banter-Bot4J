@@ -1,17 +1,13 @@
 package com.github.drsmugleaf.database.api;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.math.BigDecimal;
 import java.sql.*;
 
 /**
  * Created by DrSmugleaf on 30/03/2018.
  */
-public enum PostgresTypes {
+public enum PostgresTypes implements Types {
 
     BIGINT("int8", Long.class),
 
@@ -49,28 +45,26 @@ public enum PostgresTypes {
     TINYINT("int2", Byte.class);
 
     @Nonnull
-    public final String NAME;
+    private final String NAME;
 
     @Nonnull
-    public final Class<?> CLASS;
+    private final Class<?> CLASS;
 
     PostgresTypes(@Nonnull String name, @Nonnull Class<?> clazz) {
         NAME = name;
         CLASS = clazz;
-        Holder.MAP.put(clazz, this);
     }
 
-    @Nullable
-    public static PostgresTypes getType(@Nonnull Class<?> clazz) {
-        if (!Holder.MAP.containsKey(clazz)) {
-            return null;
-        }
-
-        return Holder.MAP.get(clazz).iterator().next();
+    @Nonnull
+    @Override
+    public String getName() {
+        return NAME;
     }
 
-    private static class Holder {
-        static final Multimap<Class<?>, PostgresTypes> MAP = ArrayListMultimap.create();
+    @Nonnull
+    @Override
+    public Class<?> getJavaType() {
+        return CLASS;
     }
 
 }
