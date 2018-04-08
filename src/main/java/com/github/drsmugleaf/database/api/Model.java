@@ -51,9 +51,9 @@ public abstract class Model<T extends Model> {
         StringBuilder query = new StringBuilder();
         query
                 .append("SELECT * FROM ")
-                .append(escape(getTableName(model)));
+                .append(escape(getTableName(model.getClass())));
 
-        Set<Map.Entry<Field, Object>> columns = getColumns(model);
+        Set<Map.Entry<Field, Object>> columns = getColumns(model.getClass());
         if (!columns.isEmpty()) {
             query.append(" WHERE ");
         }
@@ -84,7 +84,7 @@ public abstract class Model<T extends Model> {
         try {
             while (result.next()) {
                 T row = newInstance(model);
-                for (Map.Entry<Field, Object> entry : getFields(model).entrySet()) {
+                for (Map.Entry<Field, Object> entry : getFields(model.getClass()).entrySet()) {
                     Field field = entry.getKey();
                     Column columnAnnotation = field.getAnnotation(Column.class);
                     field.set(row, result.getObject(columnAnnotation.name()));
@@ -107,13 +107,13 @@ public abstract class Model<T extends Model> {
 
         queryInsert
                 .append("INSERT INTO ")
-                .append(escape(getTableName(model)))
+                .append(escape(getTableName(model.getClass())))
                 .append(" (");
         queryValues.append("VALUES(");
         queryConflict.append("ON CONFLICT (");
         querySet.append("DO UPDATE SET ");
 
-        Set<Map.Entry<Field, Object>> columns = getColumns(model);
+        Set<Map.Entry<Field, Object>> columns = getColumns(model.getClass());
         Iterator<Map.Entry<Field, Object>> iterator = columns.iterator();
         while (iterator.hasNext()) {
             Map.Entry<Field, Object> entry = iterator.next();
@@ -165,6 +165,7 @@ public abstract class Model<T extends Model> {
         statement.executeUpdate();
     }
 
+    @Nonnull
     private static <E extends Model> Set<Map.Entry<Field, Object>> getColumns(@Nonnull Class<E> model) {
         Set<Map.Entry<Field, Object>> fields = getFields(model).entrySet();
         fields.removeIf(entry -> entry.getValue() == null);
@@ -172,14 +173,7 @@ public abstract class Model<T extends Model> {
     }
 
     @Nonnull
-    private Set<Map.Entry<Field, Object>> getColumns(@Nonnull T model) {
-        Set<Map.Entry<Field, Object>> fields = getFields(model).entrySet();
-        fields.removeIf(entry -> entry.getValue() == null);
-        return fields;
-    }
-
-    @Nonnull
-    private String getColumnName(@Nonnull Field field) {
+    private static String getColumnName(@Nonnull Field field) {
         String columnName;
         Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
         Class<?> fieldClass = field.getClass();
@@ -217,44 +211,9 @@ public abstract class Model<T extends Model> {
         return fields;
     }
 
-
-    @Nonnull
-    private Map<Field, Object> getFields(@Nonnull T model) {
-        Map<Field, Object> fields = new HashMap<>();
-
-        for (Field field : model.getClass().getDeclaredFields()) {
-            if (!field.isAnnotationPresent(Column.class)) {
-                continue;
-            }
-
-            field.setAccessible(true);
-
-            Object value;
-            try {
-                value = field.get(model);
-            } catch (IllegalAccessException e) {
-                BanterBot4J.LOGGER.error("Error getting value from field", e);
-                continue;
-            }
-            fields.put(field, value);
-        }
-
-        return fields;
-    }
-
     @Nonnull
     private static <E extends Model> String getTableName(@Nonnull Class<E> model) {
         Table tableAnnotation = model.getDeclaredAnnotation(Table.class);
-        if (tableAnnotation == null) {
-            throw new IllegalArgumentException("Model " + model.getClass().getName() + " doesn't have a " + Table.class.getName() + " annotation");
-        }
-
-        return tableAnnotation.name();
-    }
-
-    @Nonnull
-    private <E extends Model> String getTableName(@Nonnull E model) {
-        Table tableAnnotation = model.getClass().getDeclaredAnnotation(Table.class);
         if (tableAnnotation == null) {
             throw new IllegalArgumentException("Model " + model.getClass().getName() + " doesn't have a " + Table.class.getName() + " annotation");
         }
@@ -275,7 +234,7 @@ public abstract class Model<T extends Model> {
         return statement.toString().replaceFirst("'(.+)'", "$1");
     }
 
-    private boolean isID(@Nonnull Field field) {
+    private static boolean isID(@Nonnull Field field) {
         return field.isAnnotationPresent(Column.Id.class);
     }
 
