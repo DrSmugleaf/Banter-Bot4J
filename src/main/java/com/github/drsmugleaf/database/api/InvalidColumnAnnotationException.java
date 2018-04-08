@@ -5,19 +5,19 @@ package com.github.drsmugleaf.database.api;
  */
 public class InvalidColumnAnnotationException extends Exception {
 
-    public InvalidColumnAnnotationException() {
+    protected InvalidColumnAnnotationException() {
         super();
     }
 
-    public InvalidColumnAnnotationException(String message) {
+    protected InvalidColumnAnnotationException(String message) {
         super(message);
     }
 
-    public InvalidColumnAnnotationException(String message, Throwable cause) {
+    protected InvalidColumnAnnotationException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public InvalidColumnAnnotationException(Throwable cause) {
+    protected InvalidColumnAnnotationException(Throwable cause) {
         super(cause);
     }
 

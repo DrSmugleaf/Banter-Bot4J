@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 /**
  * Created by DrSmugleaf on 31/03/2018.
  */
-public class DatabaseConnection {
+class DatabaseConnection {
 
     @Nonnull
     private static final String DRIVER = "org.postgresql.Driver";
