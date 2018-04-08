@@ -12,9 +12,9 @@ import java.util.*;
 /**
  * Created by DrSmugleaf on 16/03/2018.
  */
-public abstract class Model<T extends Model> {
+public abstract class Model {
 
-    static <E extends Model> void createTable(@Nonnull Class<E> model) throws SQLException, InvalidColumnAnnotationException {
+    static <T extends Model> void createTable(@Nonnull Class<T> model) throws SQLException, InvalidColumnAnnotationException {
         StringBuilder query = new StringBuilder();
         query
                 .append("CREATE TABLE IF NOT EXISTS ")
@@ -44,7 +44,7 @@ public abstract class Model<T extends Model> {
     }
 
     @Nonnull
-    public List<T> get(@Nonnull T model) throws SQLException {
+    public <T extends Model> List<T> get(@Nonnull T model) throws SQLException {
         List<T> models = new ArrayList<>();
 
         PreparedStatement statement;
@@ -98,7 +98,7 @@ public abstract class Model<T extends Model> {
         return models;
     }
 
-    public void save(@Nonnull T model) throws SQLException {
+    public <T extends Model> void save(@Nonnull T model) throws SQLException {
         StringBuilder query = new StringBuilder();
         StringBuilder queryInsert = new StringBuilder();
         StringBuilder queryValues = new StringBuilder();
@@ -166,7 +166,7 @@ public abstract class Model<T extends Model> {
     }
 
     @Nonnull
-    private static <E extends Model> Set<Map.Entry<Field, Object>> getColumns(@Nonnull Class<E> model) {
+    private static <T extends Model> Set<Map.Entry<Field, Object>> getColumns(@Nonnull Class<T> model) {
         Set<Map.Entry<Field, Object>> fields = getFields(model).entrySet();
         fields.removeIf(entry -> entry.getValue() == null);
         return fields;
@@ -188,7 +188,7 @@ public abstract class Model<T extends Model> {
     }
 
     @Nonnull
-    private static <E extends Model> Map<Field, Object> getFields(@Nonnull Class<E> model) {
+    private static <T extends Model> Map<Field, Object> getFields(@Nonnull Class<T> model) {
         Map<Field, Object> fields = new HashMap<>();
 
         for (Field field : model.getClass().getDeclaredFields()) {
@@ -212,7 +212,7 @@ public abstract class Model<T extends Model> {
     }
 
     @Nonnull
-    private static <E extends Model> String getTableName(@Nonnull Class<E> model) {
+    private static <T extends Model> String getTableName(@Nonnull Class<T> model) {
         Table tableAnnotation = model.getDeclaredAnnotation(Table.class);
         if (tableAnnotation == null) {
             throw new IllegalArgumentException("Model " + model.getClass().getName() + " doesn't have a " + Table.class.getName() + " annotation");
@@ -223,7 +223,7 @@ public abstract class Model<T extends Model> {
 
     @Nonnull
     @SuppressWarnings("unchecked")
-    private T newInstance(@Nonnull T model) throws IllegalAccessException, InstantiationException {
+    private <T extends Model> T newInstance(@Nonnull T model) throws IllegalAccessException, InstantiationException {
         return (T) model.getClass().newInstance();
     }
 
