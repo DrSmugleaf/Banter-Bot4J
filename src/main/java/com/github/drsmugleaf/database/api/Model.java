@@ -14,7 +14,7 @@ import java.util.*;
  */
 public abstract class Model<T extends Model> {
 
-    protected static <E extends Model> void createTable(@Nonnull Class<E> model) throws SQLException, InvalidColumnAnnotationException {
+    static <E extends Model> void createTable(@Nonnull Class<E> model) throws SQLException, InvalidColumnAnnotationException {
         StringBuilder query = new StringBuilder();
         query
                 .append("CREATE TABLE IF NOT EXISTS ")
