@@ -22,7 +22,7 @@ public class Handler {
 
     static {
         Reflection reflection = new Reflection("com.github.drsmugleaf.commands");
-        List<Method> commands = reflection.findMethodsWithAnnotations(Command.class);
+        List<Method> commands = reflection.findMethodsWithAnnotation(Command.class);
         for (Method method : commands) {
             Command annotation = method.getAnnotation(Command.class);
 
