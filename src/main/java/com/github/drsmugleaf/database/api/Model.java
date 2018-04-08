@@ -4,15 +4,17 @@ import com.github.drsmugleaf.BanterBot4J;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
  * Created by DrSmugleaf on 16/03/2018.
  */
-public abstract class Model<T extends Model<T>> {
+public abstract class Model<T extends Model> {
 
-    public void createTable(@Nonnull T model) throws SQLException, InvalidColumnAnnotationException {
+    protected static <E extends Model> void createTable(@Nonnull Class<E> model) throws SQLException, InvalidColumnAnnotationException {
         StringBuilder query = new StringBuilder();
         query
                 .append("CREATE TABLE IF NOT EXISTS ")
@@ -163,6 +165,12 @@ public abstract class Model<T extends Model<T>> {
         statement.executeUpdate();
     }
 
+    private static <E extends Model> Set<Map.Entry<Field, Object>> getColumns(@Nonnull Class<E> model) {
+        Set<Map.Entry<Field, Object>> fields = getFields(model).entrySet();
+        fields.removeIf(entry -> entry.getValue() == null);
+        return fields;
+    }
+
     @Nonnull
     private Set<Map.Entry<Field, Object>> getColumns(@Nonnull T model) {
         Set<Map.Entry<Field, Object>> fields = getFields(model).entrySet();
@@ -184,6 +192,31 @@ public abstract class Model<T extends Model<T>> {
 
         return columnName;
     }
+
+    @Nonnull
+    private static <E extends Model> Map<Field, Object> getFields(@Nonnull Class<E> model) {
+        Map<Field, Object> fields = new HashMap<>();
+
+        for (Field field : model.getClass().getDeclaredFields()) {
+            if (!field.isAnnotationPresent(Column.class)) {
+                continue;
+            }
+
+            field.setAccessible(true);
+
+            Object value;
+            try {
+                value = field.get(model);
+            } catch (IllegalAccessException e) {
+                BanterBot4J.LOGGER.error("Error getting value from field", e);
+                continue;
+            }
+            fields.put(field, value);
+        }
+
+        return fields;
+    }
+
 
     @Nonnull
     private Map<Field, Object> getFields(@Nonnull T model) {
@@ -210,8 +243,23 @@ public abstract class Model<T extends Model<T>> {
     }
 
     @Nonnull
-    private String getTableName(@Nonnull T model) {
-        return model.getClass().getAnnotation(Table.class).name();
+    private static <E extends Model> String getTableName(@Nonnull Class<E> model) {
+        Table tableAnnotation = model.getDeclaredAnnotation(Table.class);
+        if (tableAnnotation == null) {
+            throw new IllegalArgumentException("Model " + model.getClass().getName() + " doesn't have a " + Table.class.getName() + " annotation");
+        }
+
+        return tableAnnotation.name();
+    }
+
+    @Nonnull
+    private <E extends Model> String getTableName(@Nonnull E model) {
+        Table tableAnnotation = model.getClass().getDeclaredAnnotation(Table.class);
+        if (tableAnnotation == null) {
+            throw new IllegalArgumentException("Model " + model.getClass().getName() + " doesn't have a " + Table.class.getName() + " annotation");
+        }
+
+        return tableAnnotation.name();
     }
 
     @Nonnull
@@ -221,7 +269,7 @@ public abstract class Model<T extends Model<T>> {
     }
 
     @Nonnull
-    private String escape(@Nonnull String s) throws SQLException {
+    private static String escape(@Nonnull String s) throws SQLException {
         PreparedStatement statement = Database.CONNECTION.prepareStatement("?");
         statement.setString(1, s);
         return statement.toString().replaceFirst("'(.+)'", "$1");
@@ -232,7 +280,7 @@ public abstract class Model<T extends Model<T>> {
     }
 
     @Nonnull
-    private String getDataType(@Nonnull Field field) throws InvalidColumnAnnotationException {
+    private static String getDataType(@Nonnull Field field) throws InvalidColumnAnnotationException {
         Column columnAnnotation = field.getAnnotation(Column.class);
         if (columnAnnotation == null) {
             throw new NullPointerException("No column annotation found for field " + field);
