@@ -5,6 +5,6 @@ package com.github.drsmugleaf.database.api;
  */
 public @interface Relation {
 
-    Relations relation();
+    RelationTypes type();
 
 }
