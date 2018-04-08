@@ -26,7 +26,7 @@ public class Reflection {
         PACKAGE_NAME = packageName;
     }
 
-    private List<Class> getClasses() throws ClassNotFoundException, IOException, URISyntaxException {
+    private List<Class<?>> getClasses() throws ClassNotFoundException, IOException, URISyntaxException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         String path = PACKAGE_NAME.replace('.', '/');
         Enumeration<URL> resources = classLoader.getResources(path);
@@ -38,7 +38,7 @@ public class Reflection {
             dirs.add(new File(uri.getPath()));
         }
 
-        List<Class> classes = new ArrayList<>();
+        List<Class<?>> classes = new ArrayList<>();
         for (File directory : dirs) {
             classes.addAll(findClasses(directory, PACKAGE_NAME));
         }
@@ -46,8 +46,8 @@ public class Reflection {
         return classes;
     }
 
-    private List<Class> findClasses(File directory, String packageName) throws ClassNotFoundException {
-        List<Class> classes = new ArrayList<>();
+    private List<Class<?>> findClasses(File directory, String packageName) throws ClassNotFoundException {
+        List<Class<?>> classes = new ArrayList<>();
         if (!directory.exists()) {
             return classes;
         }
@@ -70,7 +70,7 @@ public class Reflection {
 
     @Nonnull
     public List<Method> findMethodsWithAnnotation(Class<? extends Annotation> annotation) {
-        Iterable<Class> classes = null;
+        Iterable<Class<?>> classes = null;
         try {
             classes = getClasses();
         } catch(ClassNotFoundException | IOException | URISyntaxException e) {
@@ -93,8 +93,8 @@ public class Reflection {
     }
 
     @Nonnull
-    public List<Class> findClassesWithAnnotation(Class<? extends Annotation> annotation) {
-        List<Class> classes = new ArrayList<>();
+    public List<Class<?>> findClassesWithAnnotation(Class<? extends Annotation> annotation) {
+        List<Class<?>> classes = new ArrayList<>();
 
         try {
             classes.addAll(getClasses());
