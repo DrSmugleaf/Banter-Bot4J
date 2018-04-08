@@ -14,7 +14,7 @@ import java.util.*;
  */
 public abstract class Model {
 
-    static <T extends Model> void createTable(@Nonnull Class<T> model) throws SQLException, InvalidColumnAnnotationException {
+    static <T extends Model> void createTable(@Nonnull Class<T> model) throws SQLException, InvalidColumnException {
         StringBuilder query = new StringBuilder();
         query
                 .append("CREATE TABLE IF NOT EXISTS ")
@@ -288,7 +288,7 @@ public abstract class Model {
     }
 
     @Nonnull
-    private static String getDataType(@Nonnull Field field) throws InvalidColumnAnnotationException {
+    private static String getDataType(@Nonnull Field field) throws InvalidColumnException {
         Column columnAnnotation = field.getAnnotation(Column.class);
         if (columnAnnotation == null) {
             throw new NullPointerException("No column annotation found for field " + field);
@@ -299,7 +299,7 @@ public abstract class Model {
             Class<?> fieldType = field.getType();
             Types type = Types.getType(PostgresTypes.class, fieldType);
             if (type == null) {
-                throw new InvalidColumnAnnotationException("No type exists for class " + fieldType.getName());
+                throw new InvalidColumnException("No type exists for class " + fieldType.getName());
             }
 
             return type.getName();

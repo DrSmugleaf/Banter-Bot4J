@@ -22,7 +22,7 @@ public class Database {
 
             try {
                 Model.createTable(model);
-            } catch (SQLException | InvalidColumnAnnotationException e) {
+            } catch (SQLException | InvalidColumnException e) {
                 e.printStackTrace();
             }
         }
