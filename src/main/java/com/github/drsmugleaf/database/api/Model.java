@@ -21,18 +21,17 @@ public abstract class Model {
                 .append(escape(getTableName(model)))
                 .append(" (");
 
-        Set<Map.Entry<Field, Object>> columns = getColumns(model);
-        for (Map.Entry<Field, Object> column : columns) {
-            Field field = column.getKey();
-            String name = field.getAnnotation(Column.class).name();
-            String type = getDataType(field);
+        List<Field> columns = getColumns(model);
+        for (Field column : columns) {
+            String name = column.getAnnotation(Column.class).name();
+            String type = getDataType(column);
 
             query
                     .append(name)
                     .append(" ")
                     .append(type);
 
-            if (field.isAnnotationPresent(Column.Id.class)) {
+            if (column.isAnnotationPresent(Column.Id.class)) {
                 query.append(" PRIMARY KEY");
             }
         }
@@ -44,7 +43,77 @@ public abstract class Model {
     }
 
     @Nonnull
-    public <T extends Model> List<T> get(@Nonnull T model) throws SQLException {
+    private static <T extends Model> String getTableName(@Nonnull Class<T> model) {
+        Table tableAnnotation = model.getDeclaredAnnotation(Table.class);
+        if (tableAnnotation == null) {
+            throw new IllegalArgumentException("Model " + model.getName() + " doesn't have a " + Table.class.getName() + " annotation");
+        }
+
+        return tableAnnotation.name();
+    }
+
+    @Nonnull
+    private static <T extends Model> List<Field> getColumns(@Nonnull Class<T> model) {
+        List<Field> fields = new ArrayList<>();
+
+        for (Field field : model.getClass().getDeclaredFields()) {
+            if (field.isAnnotationPresent(Column.class)) {
+                fields.add(field);
+            }
+        }
+
+        return fields;
+    }
+
+    @Nonnull
+    private static String getColumnName(@Nonnull Field field) {
+        String columnName;
+        Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
+        Class<?> fieldClass = field.getClass();
+        Table tableAnnotation = fieldClass.getDeclaredAnnotation(Table.class);
+        if (tableAnnotation == null) {
+            columnName = columnAnnotation.name();
+        } else {
+            columnName = tableAnnotation.name() + "." + columnAnnotation.name();
+        }
+
+        return columnName;
+    }
+
+    @Nonnull
+    private static String escape(@Nonnull String s) throws SQLException {
+        PreparedStatement statement = Database.CONNECTION.prepareStatement("?");
+        statement.setString(1, s);
+        return statement.toString().replaceFirst("'(.+)'", "$1");
+    }
+
+    private static boolean isID(@Nonnull Field field) {
+        return field.isAnnotationPresent(Column.Id.class);
+    }
+
+    @Nonnull
+    private static String getDataType(@Nonnull Field field) throws InvalidColumnException {
+        Column columnAnnotation = field.getAnnotation(Column.class);
+        if (columnAnnotation == null) {
+            throw new NullPointerException("No column annotation found for field " + field);
+        }
+
+        String columnDefinition = field.getAnnotation(Column.class).columnDefinition();
+        if (columnDefinition.isEmpty()) {
+            Class<?> fieldType = field.getType();
+            Types type = Types.getType(PostgresTypes.class, fieldType);
+            if (type == null) {
+                throw new InvalidColumnException("No type exists for class " + fieldType.getName());
+            }
+
+            return type.getName();
+        } else {
+            return columnDefinition;
+        }
+    }
+
+    @Nonnull
+    public <T extends Model> List<T> get(T model) throws SQLException {
         List<T> models = new ArrayList<>();
 
         PreparedStatement statement;
@@ -53,12 +122,12 @@ public abstract class Model {
                 .append("SELECT * FROM ")
                 .append(escape(getTableName(model.getClass())));
 
-        Set<Map.Entry<Field, Object>> columns = getColumns(model.getClass());
-        if (!columns.isEmpty()) {
+        Set<Map.Entry<Field, Object>> fields = getFields(model).entrySet();
+        if (!fields.isEmpty()) {
             query.append(" WHERE ");
         }
 
-        Iterator<Map.Entry<Field, Object>> iterator = columns.iterator();
+        Iterator<Map.Entry<Field, Object>> iterator = fields.iterator();
         while (iterator.hasNext()) {
             Map.Entry<Field, Object> entry = iterator.next();
             String columnName = getColumnName(entry.getKey());
@@ -75,16 +144,17 @@ public abstract class Model {
         statement = Database.CONNECTION.prepareStatement(query.toString());
 
         int i = 1;
-        for (Map.Entry<Field, Object> column : columns) {
+        for (Map.Entry<Field, Object> column : fields) {
             statement.setObject(i, column.getValue());
             i++;
         }
 
+        System.out.println(statement);
         ResultSet result = statement.executeQuery();
         try {
             while (result.next()) {
                 T row = newInstance(model);
-                for (Map.Entry<Field, Object> entry : getFields(model.getClass()).entrySet()) {
+                for (Map.Entry<Field, Object> entry : fields) {
                     Field field = entry.getKey();
                     Column columnAnnotation = field.getAnnotation(Column.class);
                     field.set(row, result.getObject(columnAnnotation.name()));
@@ -111,8 +181,8 @@ public abstract class Model {
         queryValues.append("VALUES(");
         queryConflict.append("ON CONFLICT DO NOTHING");
 
-        Set<Map.Entry<Field, Object>> columns = getColumns(model.getClass());
-        Iterator<Map.Entry<Field, Object>> iterator = columns.iterator();
+        Set<Map.Entry<Field, Object>> fields = getFields(model).entrySet();
+        Iterator<Map.Entry<Field, Object>> iterator = fields.iterator();
         while (iterator.hasNext()) {
             Map.Entry<Field, Object> entry = iterator.next();
             Field field = entry.getKey();
@@ -136,7 +206,7 @@ public abstract class Model {
                 .append(queryConflict);
 
         PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString());
-        iterator = columns.iterator();
+        iterator = fields.iterator();
         int i = 1;
         while (iterator.hasNext()) {
             Map.Entry<Field, Object> entry = iterator.next();
@@ -162,11 +232,10 @@ public abstract class Model {
         queryConflict.append("ON CONFLICT (");
         querySet.append("DO UPDATE SET ");
 
-        Set<Map.Entry<Field, Object>> columns = getColumns(model.getClass());
-        Iterator<Map.Entry<Field, Object>> iterator = columns.iterator();
+        Set<Map.Entry<Field, Object>> fields = getFields(model).entrySet();
+        Iterator<Map.Entry<Field, Object>> iterator = fields.iterator();
         while (iterator.hasNext()) {
-            Map.Entry<Field, Object> entry = iterator.next();
-            Field field = entry.getKey();
+            Field field = iterator.next().getKey();
             String columnName = getColumnName(field);
 
             queryInsert.append(columnName);
@@ -200,9 +269,9 @@ public abstract class Model {
                 .append(querySet);
 
         PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString());
-        iterator = columns.iterator();
+        iterator = fields.iterator();
         int i = 1;
-        int size = columns.size();
+        int size = fields.size();
         while (iterator.hasNext()) {
             Map.Entry<Field, Object> entry = iterator.next();
             Object value = entry.getValue();
@@ -215,36 +284,10 @@ public abstract class Model {
     }
 
     @Nonnull
-    private static <T extends Model> Set<Map.Entry<Field, Object>> getColumns(@Nonnull Class<T> model) {
-        Set<Map.Entry<Field, Object>> fields = getFields(model).entrySet();
-        fields.removeIf(entry -> entry.getValue() == null);
-        return fields;
-    }
-
-    @Nonnull
-    private static String getColumnName(@Nonnull Field field) {
-        String columnName;
-        Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
-        Class<?> fieldClass = field.getClass();
-        Table tableAnnotation = fieldClass.getDeclaredAnnotation(Table.class);
-        if (tableAnnotation == null) {
-            columnName = columnAnnotation.name();
-        } else {
-            columnName = tableAnnotation.name() + "." + columnAnnotation.name();
-        }
-
-        return columnName;
-    }
-
-    @Nonnull
-    private static <T extends Model> Map<Field, Object> getFields(@Nonnull Class<T> model) {
+    private <T extends Model> Map<Field, Object> getFields(@Nonnull T model) {
         Map<Field, Object> fields = new HashMap<>();
 
-        for (Field field : model.getClass().getDeclaredFields()) {
-            if (!field.isAnnotationPresent(Column.class)) {
-                continue;
-            }
-
+        for (Field field : getColumns(model.getClass())) {
             field.setAccessible(true);
 
             Object value;
@@ -254,6 +297,7 @@ public abstract class Model {
                 BanterBot4J.LOGGER.error("Error getting value from field", e);
                 continue;
             }
+
             fields.put(field, value);
         }
 
@@ -261,51 +305,9 @@ public abstract class Model {
     }
 
     @Nonnull
-    private static <T extends Model> String getTableName(@Nonnull Class<T> model) {
-        Table tableAnnotation = model.getDeclaredAnnotation(Table.class);
-        if (tableAnnotation == null) {
-            throw new IllegalArgumentException("Model " + model.getClass().getName() + " doesn't have a " + Table.class.getName() + " annotation");
-        }
-
-        return tableAnnotation.name();
-    }
-
-    @Nonnull
     @SuppressWarnings("unchecked")
     private <T extends Model> T newInstance(@Nonnull T model) throws IllegalAccessException, InstantiationException {
         return (T) model.getClass().newInstance();
-    }
-
-    @Nonnull
-    private static String escape(@Nonnull String s) throws SQLException {
-        PreparedStatement statement = Database.CONNECTION.prepareStatement("?");
-        statement.setString(1, s);
-        return statement.toString().replaceFirst("'(.+)'", "$1");
-    }
-
-    private static boolean isID(@Nonnull Field field) {
-        return field.isAnnotationPresent(Column.Id.class);
-    }
-
-    @Nonnull
-    private static String getDataType(@Nonnull Field field) throws InvalidColumnException {
-        Column columnAnnotation = field.getAnnotation(Column.class);
-        if (columnAnnotation == null) {
-            throw new NullPointerException("No column annotation found for field " + field);
-        }
-
-        String columnDefinition = field.getAnnotation(Column.class).columnDefinition();
-        if (columnDefinition.isEmpty()) {
-            Class<?> fieldType = field.getType();
-            Types type = Types.getType(PostgresTypes.class, fieldType);
-            if (type == null) {
-                throw new InvalidColumnException("No type exists for class " + fieldType.getName());
-            }
-
-            return type.getName();
-        } else {
-            return columnDefinition;
-        }
     }
 
 }
