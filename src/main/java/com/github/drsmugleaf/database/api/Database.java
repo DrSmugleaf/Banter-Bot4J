@@ -18,8 +18,6 @@ public class Database {
         List<Class<? extends Model>> models = reflection.findSubTypesOf(Model.class);
 
         for (Class<? extends Model> model : models) {
-            Table tableAnnotation = model.getDeclaredAnnotation(Table.class);
-
             try {
                 Model.createTable(model);
             } catch (SQLException | InvalidColumnException e) {
