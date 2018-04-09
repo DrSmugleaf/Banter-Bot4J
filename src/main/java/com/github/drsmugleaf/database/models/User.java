@@ -1,63 +1,28 @@
 package com.github.drsmugleaf.database.models;
 
-import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.database.api.Column;
+import com.github.drsmugleaf.database.api.Model;
+import com.github.drsmugleaf.database.api.Table;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 /**
  * Created by DrSmugleaf on 14/05/2017.
  */
-public class User {
+@Table(name = "users")
+public class User extends Model<User> {
 
-    private static Connection connection;
-    private long id;
+    @Column(name = "id")
+    @Column.Id
+    private Long id;
 
     public User(long id) {
         this.id = id;
     }
 
-    public static void createTable(Connection connection) {
-        PreparedStatement statement;
-        try {
-            statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS users (" +
-                    "id BIGINT PRIMARY KEY" +
-                    ")");
-            statement.executeUpdate();
-            User.connection = connection;
-        } catch(SQLException e) {
-            BanterBot4J.LOGGER.error("Unable to create users database table", e);
-            System.exit(1);
-        }
-    }
-
-    public void createIfNotExists() {
-        PreparedStatement statement;
-        try {
-            statement = connection.prepareStatement(
-                    "INSERT INTO users (id) " +
-                    "VALUES(?) " +
-                    "ON CONFLICT DO NOTHING"
-            );
-            statement.setLong(1, this.id);
-            statement.executeUpdate();
-        } catch(SQLException e) {
-            BanterBot4J.LOGGER.error("Error creating user with id " + this.id, e);
-        }
-    }
-
-    public void save() {
-        PreparedStatement statement;
-        try {
-            statement = connection.prepareStatement("INSERT INTO users (id) VALUES (?) ON CONFLICT DO NOTHING");
-            statement.setLong(1, this.id);
-            statement.executeUpdate();
-        } catch(SQLException e) {
-            BanterBot4J.LOGGER.error("Error saving user with id" + this.id, e);
-        }
+    @Override
+    protected User getInstance() {
+        return this;
     }
 
     @EventSubscriber
