@@ -81,10 +81,16 @@ public abstract class Model<T extends Model<T>> {
     }
 
     @Nonnull
-    private static String escape(@Nonnull String s) throws SQLException {
-        PreparedStatement statement = Database.CONNECTION.prepareStatement("?");
-        statement.setString(1, s);
-        return statement.toString().replaceFirst("'(.+)'", "$1");
+    private static String escape(@Nonnull String s) throws ModelException {
+        PreparedStatement statement = null;
+
+        try {
+            statement = Database.CONNECTION.prepareStatement("?");
+            statement.setString(1, s);
+            return statement.toString().replaceFirst("'(.+)'", "$1");
+        } catch (SQLException e) {
+            throw new ModelException(e);
+        }
     }
 
     private static boolean isID(@Nonnull Field field) {
@@ -115,7 +121,7 @@ public abstract class Model<T extends Model<T>> {
     protected abstract T getInstance();
 
     @Nonnull
-    public final List<T> get() throws SQLException {
+    public final List<T> get() throws ModelException {
         T model = getInstance();
         List<T> models = new ArrayList<>();
 
@@ -144,16 +150,16 @@ public abstract class Model<T extends Model<T>> {
             }
         }
 
-        statement = Database.CONNECTION.prepareStatement(query.toString());
-
-        int i = 1;
-        for (Map.Entry<Field, Object> column : fields) {
-            statement.setObject(i, column.getValue());
-            i++;
-        }
-
-        ResultSet result = statement.executeQuery();
         try {
+            statement = Database.CONNECTION.prepareStatement(query.toString());
+
+            int i = 1;
+            for (Map.Entry<Field, Object> column : fields) {
+                statement.setObject(i, column.getValue());
+                i++;
+            }
+
+            ResultSet result = statement.executeQuery();
             while (result.next()) {
                 T row = newInstance(model);
                 for (Map.Entry<Field, Object> entry : fields) {
@@ -163,14 +169,14 @@ public abstract class Model<T extends Model<T>> {
                 }
                 models.add(row);
             }
-        } catch (IllegalAccessException | InstantiationException e) {
-            BanterBot4J.LOGGER.error("Error retrieving " + model.getClass().getName(), e);
+        } catch (SQLException | IllegalAccessException | InstantiationException e) {
+            throw new ModelException(e);
         }
 
         return models;
     }
 
-    public final void createIfNotExists() throws SQLException {
+    public final void createIfNotExists() throws ModelException {
         T model = getInstance();
         StringBuilder query = new StringBuilder();
         StringBuilder queryInsert = new StringBuilder();
@@ -208,19 +214,23 @@ public abstract class Model<T extends Model<T>> {
                 .append(queryValues)
                 .append(queryConflict);
 
-        PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString());
-        iterator = fields.iterator();
-        int i = 1;
-        while (iterator.hasNext()) {
-            Map.Entry<Field, Object> entry = iterator.next();
-            Object value = entry.getValue();
-            statement.setObject(i, value);
-        }
+        try {
+            PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString());
+            iterator = fields.iterator();
+            int i = 1;
+            while (iterator.hasNext()) {
+                Map.Entry<Field, Object> entry = iterator.next();
+                Object value = entry.getValue();
+                statement.setObject(i, value);
+            }
 
-        statement.executeUpdate();
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new ModelException(e);
+        }
     }
 
-    public final void save() throws SQLException {
+    public final void save() throws ModelException {
         T model = getInstance();
         StringBuilder query = new StringBuilder();
         StringBuilder queryInsert = new StringBuilder();
@@ -272,19 +282,23 @@ public abstract class Model<T extends Model<T>> {
                 .append(queryConflict)
                 .append(querySet);
 
-        PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString());
-        iterator = fields.iterator();
-        int i = 1;
-        int size = fields.size();
-        while (iterator.hasNext()) {
-            Map.Entry<Field, Object> entry = iterator.next();
-            Object value = entry.getValue();
-            statement.setObject(i, value);
-            statement.setObject(i + size, value);
-            i++;
-        }
+        try {
+            PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString());
+            iterator = fields.iterator();
+            int i = 1;
+            int size = fields.size();
+            while (iterator.hasNext()) {
+                Map.Entry<Field, Object> entry = iterator.next();
+                Object value = entry.getValue();
+                statement.setObject(i, value);
+                statement.setObject(i + size, value);
+                i++;
+            }
 
-        statement.executeUpdate();
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new ModelException(e);
+        }
     }
 
     @Nonnull
