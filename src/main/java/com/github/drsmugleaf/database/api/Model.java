@@ -113,7 +113,7 @@ public abstract class Model<T extends Model<T>> {
     }
 
     @Nonnull
-    public List<T> get(T model) throws SQLException {
+    public final List<T> get(T model) throws SQLException {
         List<T> models = new ArrayList<>();
 
         PreparedStatement statement;
@@ -167,7 +167,7 @@ public abstract class Model<T extends Model<T>> {
         return models;
     }
 
-    public void createIfNotExists(@Nonnull T model) throws SQLException {
+    public final void createIfNotExists(@Nonnull T model) throws SQLException {
         StringBuilder query = new StringBuilder();
         StringBuilder queryInsert = new StringBuilder();
         StringBuilder queryValues = new StringBuilder();
@@ -216,7 +216,7 @@ public abstract class Model<T extends Model<T>> {
         statement.executeUpdate();
     }
 
-    public void save(@Nonnull T model) throws SQLException {
+    public final void save(@Nonnull T model) throws SQLException {
         StringBuilder query = new StringBuilder();
         StringBuilder queryInsert = new StringBuilder();
         StringBuilder queryValues = new StringBuilder();
