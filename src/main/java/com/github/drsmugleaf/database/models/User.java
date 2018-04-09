@@ -20,11 +20,6 @@ public class User extends Model<User> {
         this.id = id;
     }
 
-    @Override
-    protected User getInstance() {
-        return this;
-    }
-
     @EventSubscriber
     public static void handle(ReadyEvent event) {
         Runnable runnable = () -> {
@@ -37,6 +32,11 @@ public class User extends Model<User> {
 
         Thread thread = new Thread(runnable);
         thread.start();
+    }
+
+    @Override
+    protected User getInstance() {
+        return this;
     }
 
 }

@@ -52,7 +52,6 @@ public class BanterBot4J {
         CLIENT.getDispatcher().registerListeners(Guild.class, User.class, Member.class, Channel.class, GuildChannel.class, BridgedChannel.class, Translator.class);
         new Database();
 
-        Guild.createTable(Database.CONNECTION);
         Member.createTable(Database.CONNECTION);
         Channel.createTable(Database.CONNECTION);
         GuildChannel.createTable(Database.CONNECTION);
