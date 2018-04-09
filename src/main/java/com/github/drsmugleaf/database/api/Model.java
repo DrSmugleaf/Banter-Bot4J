@@ -82,10 +82,8 @@ public abstract class Model<T extends Model<T>> {
 
     @Nonnull
     private static String escape(@Nonnull String s) throws ModelException {
-        PreparedStatement statement = null;
-
         try {
-            statement = Database.CONNECTION.prepareStatement("?");
+            PreparedStatement statement = Database.CONNECTION.prepareStatement("?");
             statement.setString(1, s);
             return statement.toString().replaceFirst("'(.+)'", "$1");
         } catch (SQLException e) {
@@ -115,6 +113,14 @@ public abstract class Model<T extends Model<T>> {
             return type.getName();
         } else {
             return columnDefinition;
+        }
+    }
+
+    static <T extends Model> void validate(Class<T> model) {
+        for (Field field : getColumns(model)) {
+            if (field.getType().isPrimitive()) {
+                throw new ModelException("Field " + field + " in model " + model.toString() + " is primitive");
+            }
         }
     }
 

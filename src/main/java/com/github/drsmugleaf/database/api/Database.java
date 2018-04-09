@@ -18,6 +18,8 @@ public class Database {
         List<Class<? extends Model>> models = reflection.findSubTypesOf(Model.class);
 
         for (Class<? extends Model> model : models) {
+            Model.validate(model);
+
             try {
                 Model.createTable(model);
             } catch (SQLException | InvalidColumnException e) {
