@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * Created by DrSmugleaf on 16/03/2018.
  */
-public abstract class Model {
+public abstract class Model<T extends Model<T>> {
 
     static <T extends Model> void createTable(@Nonnull Class<T> model) throws SQLException, InvalidColumnException {
         StringBuilder query = new StringBuilder();
@@ -113,7 +113,7 @@ public abstract class Model {
     }
 
     @Nonnull
-    public <T extends Model> List<T> get(T model) throws SQLException {
+    public List<T> get(T model) throws SQLException {
         List<T> models = new ArrayList<>();
 
         PreparedStatement statement;
@@ -167,7 +167,7 @@ public abstract class Model {
         return models;
     }
 
-    public <T extends Model> void createIfNotExists(@Nonnull T model) throws SQLException {
+    public void createIfNotExists(@Nonnull T model) throws SQLException {
         StringBuilder query = new StringBuilder();
         StringBuilder queryInsert = new StringBuilder();
         StringBuilder queryValues = new StringBuilder();
@@ -216,7 +216,7 @@ public abstract class Model {
         statement.executeUpdate();
     }
 
-    public <T extends Model> void save(@Nonnull T model) throws SQLException {
+    public void save(@Nonnull T model) throws SQLException {
         StringBuilder query = new StringBuilder();
         StringBuilder queryInsert = new StringBuilder();
         StringBuilder queryValues = new StringBuilder();
@@ -283,7 +283,7 @@ public abstract class Model {
     }
 
     @Nonnull
-    private <T extends Model> Map<Field, Object> getFields(@Nonnull T model) {
+    private Map<Field, Object> getFields(@Nonnull T model) {
         Map<Field, Object> fields = new HashMap<>();
 
         for (Field column : getColumns(model.getClass())) {
@@ -305,7 +305,7 @@ public abstract class Model {
 
     @Nonnull
     @SuppressWarnings("unchecked")
-    private <T extends Model> T newInstance(@Nonnull T model) throws IllegalAccessException, InstantiationException {
+    private T newInstance(@Nonnull T model) throws IllegalAccessException, InstantiationException {
         return (T) model.getClass().newInstance();
     }
 
