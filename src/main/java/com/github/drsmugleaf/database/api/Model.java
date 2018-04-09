@@ -56,7 +56,7 @@ public abstract class Model {
     private static <T extends Model> List<Field> getColumns(@Nonnull Class<T> model) {
         List<Field> fields = new ArrayList<>();
 
-        for (Field field : model.getClass().getDeclaredFields()) {
+        for (Field field : model.getDeclaredFields()) {
             if (field.isAnnotationPresent(Column.class)) {
                 fields.add(field);
             }
@@ -149,7 +149,6 @@ public abstract class Model {
             i++;
         }
 
-        System.out.println(statement);
         ResultSet result = statement.executeQuery();
         try {
             while (result.next()) {
@@ -287,18 +286,18 @@ public abstract class Model {
     private <T extends Model> Map<Field, Object> getFields(@Nonnull T model) {
         Map<Field, Object> fields = new HashMap<>();
 
-        for (Field field : getColumns(model.getClass())) {
-            field.setAccessible(true);
+        for (Field column : getColumns(model.getClass())) {
+            column.setAccessible(true);
 
             Object value;
             try {
-                value = field.get(model);
+                value = column.get(model);
             } catch (IllegalAccessException e) {
                 BanterBot4J.LOGGER.error("Error getting value from field", e);
                 continue;
             }
 
-            fields.put(field, value);
+            fields.put(column, value);
         }
 
         return fields;
