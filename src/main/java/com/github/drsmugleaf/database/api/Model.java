@@ -124,20 +124,17 @@ public abstract class Model<T extends Model<T>> {
         }
     }
 
-    protected abstract T getInstance();
-
     @Nonnull
     public final List<T> get() throws ModelException {
-        T model = getInstance();
         List<T> models = new ArrayList<>();
 
         PreparedStatement statement;
         StringBuilder query = new StringBuilder();
         query
                 .append("SELECT * FROM ")
-                .append(escape(getTableName(model.getClass())));
+                .append(escape(getTableName(this.getClass())));
 
-        Set<Map.Entry<Field, Object>> fields = getFields(model).entrySet();
+        Set<Map.Entry<Field, Object>> fields = getFields(this).entrySet();
         if (!fields.isEmpty()) {
             query.append(" WHERE ");
         }
@@ -167,7 +164,7 @@ public abstract class Model<T extends Model<T>> {
 
             ResultSet result = statement.executeQuery();
             while (result.next()) {
-                T row = newInstance(model);
+                T row = newInstance(this);
                 for (Map.Entry<Field, Object> entry : fields) {
                     Field field = entry.getKey();
                     Column columnAnnotation = field.getAnnotation(Column.class);
@@ -183,7 +180,6 @@ public abstract class Model<T extends Model<T>> {
     }
 
     public final void createIfNotExists() throws ModelException {
-        T model = getInstance();
         StringBuilder query = new StringBuilder();
         StringBuilder queryInsert = new StringBuilder();
         StringBuilder queryValues = new StringBuilder();
@@ -191,12 +187,12 @@ public abstract class Model<T extends Model<T>> {
 
         queryInsert
                 .append("INSERT INTO ")
-                .append(escape(getTableName(model.getClass())))
+                .append(escape(getTableName(this.getClass())))
                 .append(" (");
         queryValues.append("VALUES(");
         queryConflict.append("ON CONFLICT DO NOTHING");
 
-        Set<Map.Entry<Field, Object>> fields = getFields(model).entrySet();
+        Set<Map.Entry<Field, Object>> fields = getFields(this).entrySet();
         Iterator<Map.Entry<Field, Object>> iterator = fields.iterator();
         while (iterator.hasNext()) {
             Map.Entry<Field, Object> entry = iterator.next();
@@ -237,7 +233,6 @@ public abstract class Model<T extends Model<T>> {
     }
 
     public final void save() throws ModelException {
-        T model = getInstance();
         StringBuilder query = new StringBuilder();
         StringBuilder queryInsert = new StringBuilder();
         StringBuilder queryValues = new StringBuilder();
@@ -246,13 +241,13 @@ public abstract class Model<T extends Model<T>> {
 
         queryInsert
                 .append("INSERT INTO ")
-                .append(escape(getTableName(model.getClass())))
+                .append(escape(getTableName(this.getClass())))
                 .append(" (");
         queryValues.append("VALUES(");
         queryConflict.append("ON CONFLICT (");
         querySet.append("DO UPDATE SET ");
 
-        Set<Map.Entry<Field, Object>> fields = getFields(model).entrySet();
+        Set<Map.Entry<Field, Object>> fields = getFields(this).entrySet();
         Iterator<Map.Entry<Field, Object>> iterator = fields.iterator();
         while (iterator.hasNext()) {
             Field field = iterator.next().getKey();
@@ -308,7 +303,7 @@ public abstract class Model<T extends Model<T>> {
     }
 
     @Nonnull
-    private Map<Field, Object> getFields(@Nonnull T model) {
+    private Map<Field, Object> getFields(@Nonnull Model<T> model) {
         Map<Field, Object> fields = new HashMap<>();
 
         for (Field column : getColumns(model.getClass())) {
@@ -330,7 +325,7 @@ public abstract class Model<T extends Model<T>> {
 
     @Nonnull
     @SuppressWarnings("unchecked")
-    private T newInstance(@Nonnull T model) throws IllegalAccessException, InstantiationException {
+    private T newInstance(@Nonnull Model<T> model) throws IllegalAccessException, InstantiationException {
         return (T) model.getClass().newInstance();
     }
 

@@ -34,9 +34,4 @@ public class Guild extends Model<Guild> {
         thread.start();
     }
 
-    @Override
-    protected Guild getInstance() {
-        return this;
-    }
-
 }

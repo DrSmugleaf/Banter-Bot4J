@@ -34,9 +34,4 @@ public class User extends Model<User> {
         thread.start();
     }
 
-    @Override
-    protected User getInstance() {
-        return this;
-    }
-
 }
