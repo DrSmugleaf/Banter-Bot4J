@@ -20,6 +20,8 @@ public class User extends Model<User> {
         this.id = id;
     }
 
+    public User() {}
+
     @EventSubscriber
     public static void handle(ReadyEvent event) {
         Runnable runnable = () -> {

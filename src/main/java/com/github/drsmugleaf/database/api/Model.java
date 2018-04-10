@@ -116,7 +116,7 @@ public abstract class Model<T extends Model<T>> {
         }
     }
 
-    static <T extends Model> void validate(Class<T> model) {
+    static <T extends Model> void validate(@Nonnull Class<T> model) {
         for (Field field : getColumns(model)) {
             if (field.getType().isPrimitive()) {
                 throw new ModelException("Field " + field + " in model " + model.toString() + " is primitive");

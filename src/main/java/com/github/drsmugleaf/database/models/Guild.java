@@ -20,6 +20,8 @@ public class Guild extends Model<Guild> {
         this.id = id;
     }
 
+    public Guild() {}
+
     @EventSubscriber
     public static void handle(ReadyEvent event) {
         Runnable runnable = () -> {
