@@ -20,7 +20,7 @@ public class Guild extends Model<Guild> {
         this.id = id;
     }
 
-    public Guild() {}
+    private Guild() {}
 
     @EventSubscriber
     public static void handle(ReadyEvent event) {

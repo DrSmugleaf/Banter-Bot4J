@@ -3,11 +3,14 @@ package com.github.drsmugleaf.database.api;
 import com.github.drsmugleaf.BanterBot4J;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Created by DrSmugleaf on 16/03/2018.
@@ -122,6 +125,10 @@ public abstract class Model<T extends Model<T>> {
                 throw new ModelException("Field " + field + " in model " + model.toString() + " is primitive");
             }
         }
+
+        if (Stream.of(model.getDeclaredConstructors()).noneMatch(c -> c.getParameterCount() == 0)) {
+            throw new ModelException("Model " + model.toString() + " doesn't have a constructor with no arguments");
+        }
     }
 
     @Nonnull
@@ -172,7 +179,7 @@ public abstract class Model<T extends Model<T>> {
                 }
                 models.add(row);
             }
-        } catch (SQLException | IllegalAccessException | InstantiationException e) {
+        } catch (SQLException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
             throw new ModelException(e);
         }
 
@@ -325,8 +332,10 @@ public abstract class Model<T extends Model<T>> {
 
     @Nonnull
     @SuppressWarnings("unchecked")
-    private T newInstance(@Nonnull Model<T> model) throws IllegalAccessException, InstantiationException {
-        return (T) model.getClass().newInstance();
+    private T newInstance(@Nonnull Model<T> model) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+        Constructor<? extends Model> constructor = model.getClass().getDeclaredConstructor();
+        constructor.setAccessible(true);
+        return (T) constructor.newInstance();
     }
 
 }

@@ -20,7 +20,7 @@ public class User extends Model<User> {
         this.id = id;
     }
 
-    public User() {}
+    private User() {}
 
     @EventSubscriber
     public static void handle(ReadyEvent event) {
