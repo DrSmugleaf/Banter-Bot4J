@@ -14,4 +14,6 @@ public @interface Relation {
 
     RelationTypes type();
 
+    String columnName();
+
 }
