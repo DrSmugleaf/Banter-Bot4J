@@ -175,6 +175,11 @@ public abstract class Model<T extends Model<T>> {
         if (columnDefinition.isEmpty()) {
             Class<?> fieldType = field.getType();
             Types type = Types.getType(PostgresTypes.class, fieldType);
+
+            if (field.getType().isEnum()) {
+                type = Types.getType(PostgresTypes.class, String.class);
+            }
+
             if (type == null) {
                 throw new InvalidColumnException("No type exists for class " + fieldType.getName());
             }

@@ -14,7 +14,7 @@ public class User extends Model<User> {
 
     @Column(name = "id")
     @Column.Id
-    private Long id;
+    public Long id;
 
     public User(Long id) {
         this.id = id;

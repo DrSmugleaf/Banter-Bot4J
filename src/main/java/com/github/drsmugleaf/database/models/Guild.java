@@ -14,7 +14,7 @@ public class Guild extends Model<Guild> {
 
     @Column(name = "id")
     @Column.Id
-    private Long id;
+    public Long id;
 
     public Guild(Long id) {
         this.id = id;
