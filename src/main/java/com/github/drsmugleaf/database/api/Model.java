@@ -419,6 +419,50 @@ public abstract class Model<T extends Model<T>> {
         }
     }
 
+    public final void delete() throws ModelException {
+        StringBuilder query = new StringBuilder();
+
+        query
+                .append("DELETE FROM ")
+                .append(escape(getTableName(this.getClass())));
+
+        Set<Map.Entry<Field, Object>> fields = getFields(this).entrySet();
+        fields.removeIf(entry -> entry.getValue() == null);
+        if (!fields.isEmpty()) {
+            query.append(" WHERE ");
+
+            Iterator<Map.Entry<Field, Object>> iterator = fields.iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<Field, Object> entry = iterator.next();
+                String columnName = getColumnName(entry.getKey());
+
+                query
+                        .append(" (")
+                        .append(columnName)
+                        .append(" = ?")
+                        .append(") ");
+
+                if (iterator.hasNext()) {
+                    query.append(" OR ");
+                }
+            }
+        }
+
+        try {
+            PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString());
+
+            int i = 1;
+            for (Map.Entry<Field, Object> entry : fields) {
+                statement.setObject(i, resolveValue(entry));
+                i++;
+            }
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new ModelException(e);
+        }
+    }
+
     @Nonnull
     private Map<Field, Object> getFields(@Nonnull Model<T> model) {
         Map<Field, Object> fields = new HashMap<>();

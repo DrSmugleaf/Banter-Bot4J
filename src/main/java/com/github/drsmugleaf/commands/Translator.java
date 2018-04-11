@@ -96,7 +96,10 @@ public class Translator extends AbstractCommand {
         }
 
         IChannel channel = channels.get(0);
-//        BridgedChannel.delete(channel.getLongID());
+        BridgedChannel bridgedChannel1 = new BridgedChannel(channel.getLongID(), null);
+        BridgedChannel bridgedChannel2 = new BridgedChannel(null, channel.getLongID());
+        bridgedChannel1.delete();
+        bridgedChannel2.delete();
 
         sendMessage(event.getChannel(), "Unbridged all channels bridged with " + channel.getName());
     }
