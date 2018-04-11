@@ -23,7 +23,7 @@ public class Admin extends AbstractCommand {
         IRole highestAuthorRole = getHighestRole(event.getAuthor(), event.getGuild());
 
         mentions.forEach(mention -> {
-            Member member = Member.get(mention.getLongID(), guildID);
+            Member member = new Member(mention.getLongID(), guildID).get().get(0);
             String nickname = mention.getDisplayName(event.getGuild());
 
             if(member == null) {

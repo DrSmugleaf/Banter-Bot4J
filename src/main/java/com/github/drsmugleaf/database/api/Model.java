@@ -3,6 +3,7 @@ package com.github.drsmugleaf.database.api;
 import com.github.drsmugleaf.BanterBot4J;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -19,14 +20,20 @@ public abstract class Model<T extends Model<T>> {
 
     static <T extends Model> void createTable(@Nonnull Class<T> model) throws SQLException, InvalidColumnException {
         StringBuilder query = new StringBuilder();
+        StringBuilder queryConstraintKey = new StringBuilder();
+        StringBuilder queryConstraintValue = new StringBuilder();
+
         query
                 .append("CREATE TABLE IF NOT EXISTS ")
                 .append(escape(getTableName(model)))
                 .append(" (");
 
         List<Field> columns = getColumns(model);
-        for (Field column : columns) {
-            String name = column.getAnnotation(Column.class).name();
+        Iterator<Field> iterator = columns.iterator();
+        while (iterator.hasNext()) {
+            Field column = iterator.next();
+            Column columnAnnotation = column.getDeclaredAnnotation(Column.class);
+            String name = columnAnnotation.name();
             String type = getDataType(column);
 
             query
@@ -34,12 +41,55 @@ public abstract class Model<T extends Model<T>> {
                     .append(" ")
                     .append(type);
 
-            if (column.isAnnotationPresent(Column.Id.class)) {
-                query.append(" PRIMARY KEY");
+            if (column.isAnnotationPresent(Relation.class)) {
+                if (queryConstraintValue.length() != 0) {
+                    queryConstraintValue.append(", ");
+                }
+                Relation relationAnnotation = column.getDeclaredAnnotation(Relation.class);
+                Class<?> referencedClass = column.getType();
+                Table referencedTable = referencedClass.getDeclaredAnnotation(Table.class);
+
+                query
+                        .append(" REFERENCES ")
+                        .append(referencedTable.name())
+                        .append(" (")
+                        .append(relationAnnotation.columnName())
+                        .append(") ON UPDATE CASCADE ON DELETE CASCADE, ");
+
+                queryConstraintKey
+                        .append(referencedTable.name())
+                        .append("_");
+
+                queryConstraintValue.append(columnAnnotation.name());
+            } else {
+                if (column.isAnnotationPresent(Column.Id.class)) {
+                    query.append(" PRIMARY KEY ");
+                }
+
+                String defaultValue = columnAnnotation.defaultValue();
+                if (!defaultValue.isEmpty()) {
+                    query
+                            .append(" DEFAULT ")
+                            .append(defaultValue);
+                }
+
+                if (iterator.hasNext() || queryConstraintKey.length() != 0) {
+                    query.append(", ");
+                }
             }
         }
 
-        query.append(")");
+        if (queryConstraintKey.length() != 0) {
+            queryConstraintKey.append("pkey PRIMARY KEY ");
+            queryConstraintValue.append(")");
+            queryConstraintKey.insert(0, "CONSTRAINT ");
+            queryConstraintValue.insert(0, "(");
+        }
+
+        query
+                .append(queryConstraintKey)
+                .append(queryConstraintValue)
+                .append(")");
 
         PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString());
         statement.executeUpdate();
@@ -106,6 +156,22 @@ public abstract class Model<T extends Model<T>> {
         }
 
         String columnDefinition = field.getAnnotation(Column.class).columnDefinition();
+        if (field.isAnnotationPresent(Relation.class)) {
+            Relation relation = field.getDeclaredAnnotation(Relation.class);
+            Field relatedField;
+
+            try {
+                relatedField = field.getType().getDeclaredField(relation.columnName());
+            } catch (NoSuchFieldException e) {
+                throw new ModelException(e);
+            }
+
+            columnDefinition = relatedField.getDeclaredAnnotation(Column.class).columnDefinition();
+            if (columnDefinition.isEmpty()) {
+                field = relatedField;
+            }
+        }
+
         if (columnDefinition.isEmpty()) {
             Class<?> fieldType = field.getType();
             Types type = Types.getType(PostgresTypes.class, fieldType);
@@ -116,6 +182,31 @@ public abstract class Model<T extends Model<T>> {
             return type.getName();
         } else {
             return columnDefinition;
+        }
+    }
+
+    @Nullable
+    private static Object resolveValue(@Nonnull Map.Entry<Field, Object> entry) {
+        Field field = entry.getKey();
+        Object object = entry.getValue();
+        if (!field.isAnnotationPresent(Relation.class)) {
+            return object;
+        }
+
+        Relation relation = field.getDeclaredAnnotation(Relation.class);
+        Field objectField = null;
+        for (Field classField : object.getClass().getDeclaredFields()) {
+            if (Objects.equals(classField.getName(), relation.columnName())) {
+                objectField = classField;
+                break;
+            }
+        }
+
+        try {
+            objectField.setAccessible(true);
+            return objectField.get(object);
+        } catch (IllegalAccessException e) {
+            throw new ModelException(e);
         }
     }
 
@@ -141,12 +232,13 @@ public abstract class Model<T extends Model<T>> {
                 .append("SELECT * FROM ")
                 .append(escape(getTableName(this.getClass())));
 
-        Set<Map.Entry<Field, Object>> fields = getFields(this).entrySet();
-        if (!fields.isEmpty()) {
+        Set<Map.Entry<Field, Object>> fieldEntries = getFields(this).entrySet();
+        fieldEntries.removeIf(entry -> entry.getValue() == null);
+        if (!fieldEntries.isEmpty()) {
             query.append(" WHERE ");
         }
 
-        Iterator<Map.Entry<Field, Object>> iterator = fields.iterator();
+        Iterator<Map.Entry<Field, Object>> iterator = fieldEntries.iterator();
         while (iterator.hasNext()) {
             Map.Entry<Field, Object> entry = iterator.next();
             String columnName = getColumnName(entry.getKey());
@@ -164,22 +256,35 @@ public abstract class Model<T extends Model<T>> {
             statement = Database.CONNECTION.prepareStatement(query.toString());
 
             int i = 1;
-            for (Map.Entry<Field, Object> column : fields) {
-                statement.setObject(i, column.getValue());
+            for (Map.Entry<Field, Object> column : fieldEntries) {
+                statement.setObject(i, resolveValue(column));
                 i++;
             }
 
             ResultSet result = statement.executeQuery();
             while (result.next()) {
                 T row = newInstance(this);
-                for (Map.Entry<Field, Object> entry : fields) {
+                for (Map.Entry<Field, Object> entry : getFields(this).entrySet()) {
                     Field field = entry.getKey();
+                    Object object = entry.getValue();
                     Column columnAnnotation = field.getAnnotation(Column.class);
-                    field.set(row, result.getObject(columnAnnotation.name()));
+
+                    if (field.isAnnotationPresent(Relation.class)) {
+                        Relation relationAnnotation = field.getDeclaredAnnotation(Relation.class);
+                        Model<?> model = newInstance((Model<?>) object);
+                        Field objectField = object.getClass().getDeclaredField(relationAnnotation.columnName());
+                        objectField.setAccessible(true);
+                        objectField.set(model, result.getObject(columnAnnotation.name()));
+                        object = model.get().get(0);
+                    } else {
+                        object = result.getObject(columnAnnotation.name());
+                    }
+
+                    field.set(row, object);
                 }
                 models.add(row);
             }
-        } catch (SQLException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
+        } catch (SQLException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException | NoSuchFieldException e) {
             throw new ModelException(e);
         }
 
@@ -229,8 +334,8 @@ public abstract class Model<T extends Model<T>> {
             int i = 1;
             while (iterator.hasNext()) {
                 Map.Entry<Field, Object> entry = iterator.next();
-                Object value = entry.getValue();
-                statement.setObject(i, value);
+                statement.setObject(i, resolveValue(entry));
+                i++;
             }
 
             statement.executeUpdate();
@@ -297,7 +402,7 @@ public abstract class Model<T extends Model<T>> {
             int size = fields.size();
             while (iterator.hasNext()) {
                 Map.Entry<Field, Object> entry = iterator.next();
-                Object value = entry.getValue();
+                Object value = resolveValue(entry);
                 statement.setObject(i, value);
                 statement.setObject(i + size, value);
                 i++;
@@ -324,12 +429,6 @@ public abstract class Model<T extends Model<T>> {
                 continue;
             }
 
-            Column columnAnnotation = column.getDeclaredAnnotation(Column.class);
-            String defaultValue = columnAnnotation.defaultValue();
-            if (value == null && !defaultValue.isEmpty()) {
-                value = defaultValue;
-            }
-
             fields.put(column, value);
         }
 
@@ -338,7 +437,7 @@ public abstract class Model<T extends Model<T>> {
 
     @Nonnull
     @SuppressWarnings("unchecked")
-    private T newInstance(@Nonnull Model<T> model) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+    private static <T extends Model<T>> T newInstance(@Nonnull Model<T> model) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         Constructor<? extends Model> constructor = model.getClass().getDeclaredConstructor();
         constructor.setAccessible(true);
         return (T) constructor.newInstance();
