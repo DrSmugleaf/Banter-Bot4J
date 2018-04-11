@@ -14,6 +14,8 @@ public @interface Column {
 
     String name();
 
+    String defaultValue() default "";
+
     String columnDefinition() default "";
 
     @Retention(RetentionPolicy.RUNTIME)

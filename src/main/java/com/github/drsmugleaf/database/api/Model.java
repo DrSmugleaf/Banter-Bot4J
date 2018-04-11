@@ -324,6 +324,12 @@ public abstract class Model<T extends Model<T>> {
                 continue;
             }
 
+            Column columnAnnotation = column.getDeclaredAnnotation(Column.class);
+            String defaultValue = columnAnnotation.defaultValue();
+            if (value == null && !defaultValue.isEmpty()) {
+                value = defaultValue;
+            }
+
             fields.put(column, value);
         }
 
