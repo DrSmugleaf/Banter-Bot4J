@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 12/04/2018.
  */
-public class SQLBuilder {
+public class QueryBuilder {
 
     @Nonnull
     private final Class<? extends Model> MODEL;
@@ -16,7 +16,7 @@ public class SQLBuilder {
     @Nonnull
     private final List<Field> FIELDS = new ArrayList<>();
 
-    SQLBuilder(@Nonnull Class<? extends Model> model) {
+    QueryBuilder(@Nonnull Class<? extends Model> model) {
         MODEL = model;
 
         for (Field field : MODEL.getDeclaredFields()) {
