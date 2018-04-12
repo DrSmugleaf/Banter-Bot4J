@@ -194,6 +194,11 @@ public abstract class Model<T extends Model<T>> {
     private static Object resolveValue(@Nonnull Map.Entry<Field, Object> entry) {
         Field field = entry.getKey();
         Object object = entry.getValue();
+
+        if (field.getType().isEnum()) {
+            return object.toString();
+        }
+
         if (!field.isAnnotationPresent(Relation.class)) {
             return object;
         }
@@ -274,10 +279,16 @@ public abstract class Model<T extends Model<T>> {
                     Object object = entry.getValue();
                     Column columnAnnotation = field.getAnnotation(Column.class);
 
-                    if (field.isAnnotationPresent(Relation.class)) {
+                    if (field.getType().isEnum()) {
+                        for (Object o : field.getType().getEnumConstants()) {
+                            if (Objects.equals(o.toString(), result.getString(columnAnnotation.name()))) {
+                                object = o;
+                            }
+                        }
+                    } else if (field.isAnnotationPresent(Relation.class)) {
                         Relation relationAnnotation = field.getDeclaredAnnotation(Relation.class);
-                        Model<?> model = newInstance((Model<?>) object);
-                        Field objectField = object.getClass().getDeclaredField(relationAnnotation.columnName());
+                        Model<?> model = newInstance(field);
+                        Field objectField = field.getType().getDeclaredField(relationAnnotation.columnName());
                         objectField.setAccessible(true);
                         objectField.set(model, result.getObject(columnAnnotation.name()));
                         object = model.get().get(0);
@@ -486,10 +497,22 @@ public abstract class Model<T extends Model<T>> {
 
     @Nonnull
     @SuppressWarnings("unchecked")
-    private static <T extends Model<T>> T newInstance(@Nonnull Model<T> model) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
-        Constructor<? extends Model> constructor = model.getClass().getDeclaredConstructor();
+    private static <T extends Model<T>> T newInstance(@Nonnull Class<T> model) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+        Constructor<? extends Model> constructor = model.getDeclaredConstructor();
         constructor.setAccessible(true);
         return (T) constructor.newInstance();
+    }
+
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    private static <T extends Model<T>> T newInstance(@Nonnull Model<T> model) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+        return newInstance((Class<T>) model.getClass());
+    }
+
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    private static <T extends Model<T>> T newInstance(@Nonnull Field field) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+        return newInstance((Class<T>) field.getType());
     }
 
 }
