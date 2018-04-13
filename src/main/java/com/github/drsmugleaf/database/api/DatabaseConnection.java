@@ -30,7 +30,7 @@ class DatabaseConnection {
             System.exit(1);
         }
 
-        Database.LOGGER.error("Established database connection");
+        Database.LOGGER.info("Established database connection");
         return connection;
     }
 
