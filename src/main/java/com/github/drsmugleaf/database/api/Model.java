@@ -441,7 +441,7 @@ public abstract class Model<T extends Model<T>> {
             try {
                 value = column.get(model);
             } catch (IllegalAccessException e) {
-                BanterBot4J.LOGGER.error("Error getting value from field", e);
+                Database.LOGGER.error("Error getting value from field", e);
                 continue;
             }
 

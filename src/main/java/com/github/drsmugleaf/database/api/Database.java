@@ -1,7 +1,10 @@
 package com.github.drsmugleaf.database.api;
 
 import com.github.drsmugleaf.util.Reflection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -11,6 +14,10 @@ import java.util.List;
  */
 public class Database {
 
+    @Nonnull
+    public static final Logger LOGGER = initLogger();
+
+    @Nonnull
     public static final Connection CONNECTION = DatabaseConnection.initialize();
 
     static {
@@ -26,6 +33,11 @@ public class Database {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Nonnull
+    private static Logger initLogger() {
+        return LoggerFactory.getLogger(Database.class);
     }
 
 }

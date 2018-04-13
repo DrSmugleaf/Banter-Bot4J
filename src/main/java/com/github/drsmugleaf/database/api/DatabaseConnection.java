@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.database.api;
 
-import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.env.Env;
 import com.github.drsmugleaf.env.Keys;
 
@@ -27,11 +26,11 @@ class DatabaseConnection {
         Connection connection = getConnection();
 
         if (connection == null) {
-            BanterBot4J.LOGGER.error("Failed to establish database connection");
+            Database.LOGGER.error("Failed to establish database connection");
             System.exit(1);
         }
 
-        BanterBot4J.LOGGER.error("Established database connection");
+        Database.LOGGER.error("Established database connection");
         return connection;
     }
 
@@ -40,13 +39,13 @@ class DatabaseConnection {
         try {
             Class.forName(DRIVER);
         } catch (ClassNotFoundException e) {
-            BanterBot4J.LOGGER.error("Missing PostgreSQL JDBC Driver", e);
+            Database.LOGGER.error("Missing PostgreSQL JDBC Driver", e);
             System.exit(1);
         }
 
         String uri = Env.get(Keys.DATABASE_URL);
         if (uri == null) {
-            BanterBot4J.LOGGER.error("Database URL environment variable is null");
+            Database.LOGGER.error("Database URL environment variable is null");
             System.exit(1);
         }
 
@@ -59,7 +58,7 @@ class DatabaseConnection {
         try {
             connection = DriverManager.getConnection(url, username, password);
         } catch (SQLException e) {
-            BanterBot4J.LOGGER.error("Failed to establish a database connection");
+            Database.LOGGER.error("Failed to establish a database connection");
             System.exit(1);
         }
 
