@@ -34,7 +34,8 @@ public abstract class Model<T extends Model<T>> {
             Field column = iterator.next();
             Column columnAnnotation = column.getDeclaredAnnotation(Column.class);
             String name = columnAnnotation.name();
-            String type = getDataType(column);
+            TypeResolver typeResolver = new TypeResolver(column);
+            String type = typeResolver.getDataType();
 
             query
                     .append(name)
@@ -141,52 +142,6 @@ public abstract class Model<T extends Model<T>> {
             return statement.toString().replaceFirst("'(.+)'", "$1");
         } catch (SQLException e) {
             throw new ModelException(e);
-        }
-    }
-
-    private static boolean isID(@Nonnull Field field) {
-        return field.isAnnotationPresent(Column.Id.class);
-    }
-
-    @Nonnull
-    private static String getDataType(@Nonnull Field field) throws InvalidColumnException {
-        Column columnAnnotation = field.getAnnotation(Column.class);
-        if (columnAnnotation == null) {
-            throw new NullPointerException("No column annotation found for field " + field);
-        }
-
-        String columnDefinition = field.getAnnotation(Column.class).columnDefinition();
-        if (field.isAnnotationPresent(Relation.class)) {
-            Relation relation = field.getDeclaredAnnotation(Relation.class);
-            Field relatedField;
-
-            try {
-                relatedField = field.getType().getDeclaredField(relation.columnName());
-            } catch (NoSuchFieldException e) {
-                throw new ModelException(e);
-            }
-
-            columnDefinition = relatedField.getDeclaredAnnotation(Column.class).columnDefinition();
-            if (columnDefinition.isEmpty()) {
-                field = relatedField;
-            }
-        }
-
-        if (columnDefinition.isEmpty()) {
-            Class<?> fieldType = field.getType();
-            Types type = Types.getType(PostgresTypes.class, fieldType);
-
-            if (field.getType().isEnum()) {
-                type = Types.getType(PostgresTypes.class, String.class);
-            }
-
-            if (type == null) {
-                throw new InvalidColumnException("No type exists for class " + fieldType.getName());
-            }
-
-            return type.getName();
-        } else {
-            return columnDefinition;
         }
     }
 
@@ -383,7 +338,8 @@ public abstract class Model<T extends Model<T>> {
 
             queryInsert.append(columnName);
             queryValues.append("?");
-            if (isID(field)) {
+            TypeResolver typeResolver = new TypeResolver(field);
+            if (typeResolver.isID()) {
                 queryConflict.append(columnName);
             }
             querySet
@@ -393,7 +349,7 @@ public abstract class Model<T extends Model<T>> {
             if (iterator.hasNext()) {
                 queryInsert.append(", ");
                 queryValues.append(", ");
-                if (isID(field)) {
+                if (typeResolver.isID()) {
                     queryConflict.append(", ");
                 }
                 querySet.append(", ");
