@@ -1,7 +1,5 @@
 package com.github.drsmugleaf.database.api;
 
-import com.github.drsmugleaf.BanterBot4J;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
@@ -19,80 +17,8 @@ import java.util.stream.Stream;
 public abstract class Model<T extends Model<T>> {
 
     static <T extends Model> void createTable(@Nonnull Class<T> model) throws SQLException, InvalidColumnException {
-        StringBuilder query = new StringBuilder();
-        StringBuilder queryConstraintKey = new StringBuilder();
-        StringBuilder queryConstraintValue = new StringBuilder();
-
-        query
-                .append("CREATE TABLE IF NOT EXISTS ")
-                .append(escape(getTableName(model)))
-                .append(" (");
-
-        List<Field> columns = getColumns(model);
-        Iterator<Field> iterator = columns.iterator();
-        while (iterator.hasNext()) {
-            Field column = iterator.next();
-            Column columnAnnotation = column.getDeclaredAnnotation(Column.class);
-            String name = columnAnnotation.name();
-            TypeResolver typeResolver = new TypeResolver(column);
-            String type = typeResolver.getDataType();
-
-            query
-                    .append(name)
-                    .append(" ")
-                    .append(type);
-
-            if (column.isAnnotationPresent(Relation.class)) {
-                if (queryConstraintValue.length() != 0) {
-                    queryConstraintValue.append(", ");
-                }
-                Relation relationAnnotation = column.getDeclaredAnnotation(Relation.class);
-                Class<?> referencedClass = column.getType();
-                Table referencedTable = referencedClass.getDeclaredAnnotation(Table.class);
-
-                query
-                        .append(" REFERENCES ")
-                        .append(referencedTable.name())
-                        .append(" (")
-                        .append(relationAnnotation.columnName())
-                        .append(") ON UPDATE CASCADE ON DELETE CASCADE, ");
-
-                queryConstraintKey
-                        .append(referencedTable.name())
-                        .append("_");
-
-                queryConstraintValue.append(columnAnnotation.name());
-            } else {
-                if (column.isAnnotationPresent(Column.Id.class)) {
-                    query.append(" PRIMARY KEY ");
-                }
-
-                String defaultValue = columnAnnotation.defaultValue();
-                if (!defaultValue.isEmpty()) {
-                    query
-                            .append(" DEFAULT ")
-                            .append(defaultValue);
-                }
-
-                if (iterator.hasNext() || queryConstraintKey.length() != 0) {
-                    query.append(", ");
-                }
-            }
-        }
-
-        if (queryConstraintKey.length() != 0) {
-            queryConstraintKey.append("pkey PRIMARY KEY ");
-            queryConstraintValue.append(")");
-            queryConstraintKey.insert(0, "CONSTRAINT ");
-            queryConstraintValue.insert(0, "(");
-        }
-
-        query
-                .append(queryConstraintKey)
-                .append(queryConstraintValue)
-                .append(")");
-
-        PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString());
+        QueryBuilder<T> queryBuilder = new QueryBuilder<>(model);
+        PreparedStatement statement = Database.CONNECTION.prepareStatement(queryBuilder.createTable());
         statement.executeUpdate();
     }
 

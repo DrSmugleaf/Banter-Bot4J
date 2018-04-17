@@ -1,7 +1,6 @@
 package com.github.drsmugleaf.database.api;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
@@ -18,7 +17,7 @@ class TypeResolver {
     }
 
     @Nonnull
-    private static Field getRelatedField(@Nonnull Field field) throws InvalidColumnException {
+    private static Field getDeepRelatedField(@Nonnull Field field) throws InvalidColumnException {
         Relation relation = field.getDeclaredAnnotation(Relation.class);
         String relatedColumnName = relation.columnName();
 
@@ -33,37 +32,37 @@ class TypeResolver {
         }
 
         if (relatedField.isAnnotationPresent(Relation.class)) {
-            return getRelatedField(relatedField);
+            return getDeepRelatedField(relatedField);
         }
 
         return relatedField;
     }
 
-    @Nullable
+    @Nonnull
     private <T extends Annotation> T getAnnotation(Class<T> annotation) {
-        if (FIELD.isAnnotationPresent(annotation)) {
-            return FIELD.getDeclaredAnnotation(annotation);
+        if (!FIELD.isAnnotationPresent(annotation)) {
+            throw new NullPointerException();
         }
 
-        return null;
+        return FIELD.getDeclaredAnnotation(annotation);
     }
 
-    public boolean isID() {
-        return getAnnotation(Column.Id.class) != null;
+    boolean isID() {
+        return FIELD.getDeclaredAnnotation(Column.Id.class) != null;
     }
 
-    @Nullable
-    public String getDataType() throws InvalidColumnException {
-        Column columnAnnotation = getAnnotation(Column.class);
+    @Nonnull
+    String getDataType() throws InvalidColumnException {
+        Column columnAnnotation = FIELD.getDeclaredAnnotation(Column.class);
         if (columnAnnotation == null) {
             throw new IllegalStateException("Field " + FIELD + " doesn't have a " + Column.class.getName() + " annotation");
         }
 
         Field field;
         String columnDefinition;
-        Relation relation = getAnnotation(Relation.class);
+        Relation relation = FIELD.getDeclaredAnnotation(Relation.class);
         if (relation != null) {
-            field = getRelatedField(FIELD);
+            field = getDeepRelatedField(FIELD);
             Column relatedColumnAnnotation = field.getDeclaredAnnotation(Column.class);
             columnDefinition = relatedColumnAnnotation.columnDefinition();
         } else {
@@ -89,6 +88,41 @@ class TypeResolver {
         } else {
             return columnDefinition;
         }
+    }
+
+    @Nonnull
+    Table getTable() {
+        Class<?> type = FIELD.getDeclaringClass();
+        if (!type.isAnnotationPresent(Table.class)) {
+            throw new NullPointerException();
+        }
+
+        return type.getAnnotation(Table.class);
+    }
+
+    @Nonnull
+    Column getColumn() {
+        return getAnnotation(Column.class);
+    }
+
+    @Nonnull
+    Relation getRelation() {
+        return getAnnotation(Relation.class);
+    }
+
+    @Nonnull
+    TypeResolver getRelatedField() {
+        Relation relation = FIELD.getDeclaredAnnotation(Relation.class);
+        String relatedColumnName = relation.columnName();
+
+        Field field;
+        try {
+            field = FIELD.getType().getDeclaredField(relatedColumnName);
+        } catch (NoSuchFieldException e) {
+            throw new IllegalStateException("Field " + FIELD + " doesn't have a related field with name " + relatedColumnName);
+        }
+
+        return new TypeResolver(field);
     }
 
 }
