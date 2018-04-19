@@ -54,7 +54,7 @@ class QueryBuilder<T extends Model> {
     }
 
     @Nonnull
-    private <E extends Model<E>> Map<TypeResolver, Object> getColumns(Model<E> model) {
+    <E extends Model<E>> Map<TypeResolver, Object> getColumns(Model<E> model) {
         Map<TypeResolver, Object> fields = new HashMap<>();
 
         for (TypeResolver column : COLUMNS) {
@@ -161,7 +161,7 @@ class QueryBuilder<T extends Model> {
                 .append(escapedTableName());
 
         Set<Map.Entry<TypeResolver, Object>> entries = getColumns(model).entrySet();
-        entries.removeIf(entry -> entry.getKey().resolveValue(entry.getValue()) == null);
+        entries.removeIf(entry -> entry.getKey().toSQL(entry.getValue()) == null);
         if (!entries.isEmpty()) {
             query.append(" WHERE ");
 
@@ -192,11 +192,14 @@ class QueryBuilder<T extends Model> {
         for (Map.Entry<TypeResolver, Object> entry : entries) {
             TypeResolver field = entry.getKey();
             Object value = entry.getValue();
+
             try {
-                statement.setObject(i, field.resolveValue(value));
+                statement.setObject(i, field.toSQL(value));
             } catch (SQLException e) {
                 throw new ModelException("Error setting value in statement", e);
             }
+
+            i++;
         }
 
         return statement.toString();

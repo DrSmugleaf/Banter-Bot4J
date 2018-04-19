@@ -4,6 +4,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by DrSmugleaf on 12/04/2018.
@@ -136,7 +140,7 @@ class TypeResolver {
     }
 
     @Nullable
-    Object resolveValue(@Nullable Object object) {
+    Object toSQL(@Nullable Object object) {
         if (object == null) {
             return null;
         }
@@ -162,6 +166,67 @@ class TypeResolver {
             return objectField.get(object);
         } catch (IllegalAccessException e) {
             throw new ModelException("Error accessing value of field " + objectField.getName() + " in object " + object.getClass().getSimpleName(), e);
+        }
+    }
+
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    private <T extends Enum<T>> Enum<T> toEnum(@Nonnull Class<?> type, @Nonnull Object object) {
+        return Enum.valueOf((Class<T>) type, object.toString());
+    }
+
+    @Nonnull
+    private Collection<?> toCollection(@Nonnull Class<?> type) {
+        try {
+            return (Collection<?>) type.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new ModelException("Error creating collection from class " + type.getSimpleName());
+        }
+    }
+
+    @Nonnull
+    private Map<?, ?> toMap(@Nonnull Class<?> type) {
+        try {
+            return (Map<?, ?>) type.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new ModelException("Error creating map from class " + type.getSimpleName());
+        }
+    }
+
+    @Nonnull
+    <T> Object toValue(@Nonnull T result) {
+        Class<?> type = FIELD.getType();
+
+        if (type.isEnum()) {
+            return toEnum(type, result);
+        } else if (FIELD.isAnnotationPresent(Relation.class)) {
+            Model<?> model;
+            try {
+                model = Model.newInstance(type);
+            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                throw new ModelException("Error creating new model " + type.getSimpleName(), e);
+            }
+
+            Field relatedField = getRelatedField().FIELD;
+            relatedField.setAccessible(true);
+            try {
+                relatedField.set(model, result);
+            } catch (IllegalAccessException e) {
+                throw new ModelException("Error setting value for field " + relatedField.getName() + " in class " + model.getClass().getSimpleName(), e);
+            }
+
+            List<?> results = model.get();
+            if (results.size() > 1) {
+                if (Collection.class.isAssignableFrom(type) || List.class.isAssignableFrom(type)) {
+                    return results;
+                } else {
+                    throw new ModelException("Retrieved more than 1 result without field being a collection type");
+                }
+            } else {
+                return results.get(0);
+            }
+        } else {
+            return result;
         }
     }
 

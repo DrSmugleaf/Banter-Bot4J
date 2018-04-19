@@ -121,36 +121,21 @@ public abstract class Model<T extends Model<T>> {
 
         try {
             PreparedStatement statement = Database.CONNECTION.prepareStatement(queryBuilder.get(this));
-            ResultSet result = statement.executeQuery();
-            while (result.next()) {
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
                 T row = newInstance(this);
-                for (Map.Entry<Field, Object> entry : getFields(this).entrySet()) {
-                    Field field = entry.getKey();
-                    Object object = entry.getValue();
-                    Column columnAnnotation = field.getAnnotation(Column.class);
+                for (Map.Entry<TypeResolver, Object> entry : queryBuilder.getColumns(this).entrySet()) {
+                    TypeResolver resolver = entry.getKey();
+                    Column columnAnnotation = resolver.getColumn();
+                    Object result = resultSet.getObject(columnAnnotation.name());
+                    Object value = resolver.toValue(result);
 
-                    if (field.getType().isEnum()) {
-                        for (Object o : field.getType().getEnumConstants()) {
-                            if (Objects.equals(o.toString(), result.getString(columnAnnotation.name()))) {
-                                object = o;
-                            }
-                        }
-                    } else if (field.isAnnotationPresent(Relation.class)) {
-                        Relation relationAnnotation = field.getDeclaredAnnotation(Relation.class);
-                        Model<?> model = newInstance(field);
-                        Field objectField = field.getType().getDeclaredField(relationAnnotation.columnName());
-                        objectField.setAccessible(true);
-                        objectField.set(model, result.getObject(columnAnnotation.name()));
-                        object = model.get().get(0);
-                    } else {
-                        object = result.getObject(columnAnnotation.name());
-                    }
-
-                    field.set(row, object);
+                    resolver.FIELD.set(row, value);
                 }
                 models.add(row);
             }
-        } catch (SQLException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException | NoSuchFieldException e) {
+        } catch (SQLException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
             throw new ModelException(e);
         }
 
@@ -348,22 +333,16 @@ public abstract class Model<T extends Model<T>> {
 
     @Nonnull
     @SuppressWarnings("unchecked")
-    private static <T extends Model<T>> T newInstance(@Nonnull Class<T> model) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
-        Constructor<? extends Model> constructor = model.getDeclaredConstructor();
+    static <T extends Model<T>> T newInstance(@Nonnull Class<?> model) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+        Constructor<T> constructor = (Constructor<T>) model.getDeclaredConstructor();
         constructor.setAccessible(true);
-        return (T) constructor.newInstance();
+        return constructor.newInstance();
     }
 
     @Nonnull
     @SuppressWarnings("unchecked")
-    private static <T extends Model<T>> T newInstance(@Nonnull Model<T> model) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
-        return newInstance((Class<T>) model.getClass());
-    }
-
-    @Nonnull
-    @SuppressWarnings("unchecked")
-    private static <T extends Model<T>> T newInstance(@Nonnull Field field) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
-        return newInstance((Class<T>) field.getType());
+    static <T extends Model<T>> T newInstance(@Nonnull Model<T> model) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+        return newInstance(model.getClass());
     }
 
 }
