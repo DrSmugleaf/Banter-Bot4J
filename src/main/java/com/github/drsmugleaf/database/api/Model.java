@@ -117,20 +117,10 @@ public abstract class Model<T extends Model<T>> {
     @SuppressWarnings("unchecked")
     public final List<T> get() throws ModelException {
         List<T> models = new ArrayList<>();
-
-        PreparedStatement statement;
         QueryBuilder<T> queryBuilder = new QueryBuilder<>((T) this);
+
         try {
-            statement = Database.CONNECTION.prepareStatement(queryBuilder.get(this));
-
-            Set<Map.Entry<Field, Object>> entries = getFields(this).entrySet();
-            entries.removeIf(entry -> resolveValue(entry) == null);
-            int i = 1;
-            for (Map.Entry<Field, Object> column : entries) {
-                statement.setObject(i, resolveValue(column));
-                i++;
-            }
-
+            PreparedStatement statement = Database.CONNECTION.prepareStatement(queryBuilder.get(this));
             ResultSet result = statement.executeQuery();
             while (result.next()) {
                 T row = newInstance(this);

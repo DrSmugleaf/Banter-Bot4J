@@ -181,7 +181,25 @@ class QueryBuilder<T extends Model> {
             }
         }
 
-        return query.toString();
+        PreparedStatement statement;
+        try {
+            statement = Database.CONNECTION.prepareStatement(query.toString());
+        } catch (SQLException e) {
+            throw new ModelException("Error creating SQL query", e);
+        }
+
+        int i = 1;
+        for (Map.Entry<TypeResolver, Object> entry : entries) {
+            TypeResolver field = entry.getKey();
+            Object value = entry.getValue();
+            try {
+                statement.setObject(i, field.resolveValue(value));
+            } catch (SQLException e) {
+                throw new ModelException("Error setting value in statement", e);
+            }
+        }
+
+        return statement.toString();
     }
 
 }

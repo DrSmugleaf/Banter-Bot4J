@@ -22,7 +22,7 @@ class DatabaseConnection {
     private static final String DRIVER = "org.postgresql.Driver";
 
     @Nonnull
-    protected static Connection initialize() {
+    static Connection initialize() {
         Connection connection = getConnection();
 
         if (connection == null) {
