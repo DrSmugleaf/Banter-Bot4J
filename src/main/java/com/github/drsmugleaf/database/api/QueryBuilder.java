@@ -4,9 +4,7 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 12/04/2018.
@@ -14,22 +12,31 @@ import java.util.List;
 class QueryBuilder<T extends Model> {
 
     @Nonnull
-    private final Class<T> MODEL;
+    private final Class<? extends Model> MODEL;
 
     @Nonnull
-    private final List<Field> COLUMNS = new ArrayList<>();
+    private final List<TypeResolver> COLUMNS = new ArrayList<>();
 
     QueryBuilder(@Nonnull Class<T> model) {
         MODEL = model;
         for (Field field : MODEL.getDeclaredFields()) {
             if (field.isAnnotationPresent(Column.class)) {
-                COLUMNS.add(field);
+                COLUMNS.add(new TypeResolver(field));
+            }
+        }
+    }
+
+    QueryBuilder(@Nonnull T model) {
+        MODEL = model.getClass();
+        for (Field field : MODEL.getDeclaredFields()) {
+            if (field.isAnnotationPresent(Column.class)) {
+                COLUMNS.add(new TypeResolver(field));
             }
         }
     }
 
     @Nonnull
-    private String escapeTableName() {
+    private String escapedTableName() {
         Table tableAnnotation = MODEL.getDeclaredAnnotation(Table.class);
         String tableName = tableAnnotation.name();
 
@@ -47,6 +54,27 @@ class QueryBuilder<T extends Model> {
     }
 
     @Nonnull
+    private <E extends Model<E>> Map<TypeResolver, Object> getColumns(Model<E> model) {
+        Map<TypeResolver, Object> fields = new HashMap<>();
+
+        for (TypeResolver column : COLUMNS) {
+            column.FIELD.setAccessible(true);
+
+            Object value;
+            try {
+                value = column.FIELD.get(model);
+            } catch (IllegalAccessException e) {
+                Database.LOGGER.error("Error getting value from field", e);
+                continue;
+            }
+
+            fields.put(column, value);
+        }
+
+        return fields;
+    }
+
+    @Nonnull
     String createTable() throws InvalidColumnException, SQLException {
         StringBuilder query = new StringBuilder();
         StringBuilder queryReferences = new StringBuilder();
@@ -54,29 +82,28 @@ class QueryBuilder<T extends Model> {
 
         query
                 .append("CREATE TABLE IF NOT EXISTS ")
-                .append(escapeTableName())
+                .append(escapedTableName())
                 .append(" (");
 
-        Iterator<Field> iterator = COLUMNS.iterator();
+        Iterator<TypeResolver> iterator = COLUMNS.iterator();
         while (iterator.hasNext()) {
-            Field column = iterator.next();
-            TypeResolver columnResolver = new TypeResolver(column);
-            Column columnAnnotation = columnResolver.getColumn();
+            TypeResolver column = iterator.next();
+            Column columnAnnotation = column.getColumn();
             String name = columnAnnotation.name();
-            String type = columnResolver.getDataType();
+            String type = column.getDataType();
 
             query
                     .append(name)
                     .append(" ")
                     .append(type);
 
-            if (column.isAnnotationPresent(Relation.class)) {
+            if (column.FIELD.isAnnotationPresent(Relation.class)) {
                 if (queryReferences.length() != 0) {
                     queryReferences.append(", ");
                 }
 
-                TypeResolver relationResolver = columnResolver.getRelatedField();
-                Relation relationAnnotation = columnResolver.getRelation();
+                TypeResolver relationResolver = column.getRelatedField();
+                Relation relationAnnotation = column.getRelation();
                 String relatedTableName = relationResolver.getTable().name();
                 query
                         .append(" REFERENCES ")
@@ -91,7 +118,7 @@ class QueryBuilder<T extends Model> {
 
                 queryReferences.append(name);
             } else {
-                if (columnResolver.isID()) {
+                if (column.isID()) {
                     query.append(" PRIMARY KEY ");
                 }
 
@@ -122,6 +149,37 @@ class QueryBuilder<T extends Model> {
                 .append(queryConstraint)
                 .append(queryReferences)
                 .append(")");
+
+        return query.toString();
+    }
+
+    @Nonnull
+    <E extends Model<E>> String get(Model<E> model) {
+        StringBuilder query = new StringBuilder();
+        query
+                .append(" SELECT * FROM ")
+                .append(escapedTableName());
+
+        Set<Map.Entry<TypeResolver, Object>> entries = getColumns(model).entrySet();
+        entries.removeIf(entry -> entry.getKey().resolveValue(entry.getValue()) == null);
+        if (!entries.isEmpty()) {
+            query.append(" WHERE ");
+
+            Iterator<Map.Entry<TypeResolver, Object>> iterator = entries.iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<TypeResolver, Object> entry = iterator.next();
+                TypeResolver field = entry.getKey();
+                String columnName = field.getColumnName();
+
+                query
+                        .append(columnName)
+                        .append(" = ? ");
+
+                if (iterator.hasNext()) {
+                    query.append(" AND ");
+                }
+            }
+        }
 
         return query.toString();
     }

@@ -114,40 +114,19 @@ public abstract class Model<T extends Model<T>> {
     }
 
     @Nonnull
+    @SuppressWarnings("unchecked")
     public final List<T> get() throws ModelException {
         List<T> models = new ArrayList<>();
 
         PreparedStatement statement;
-        StringBuilder query = new StringBuilder();
-        query
-                .append("SELECT * FROM ")
-                .append(escape(getTableName(this.getClass())));
-
-        Set<Map.Entry<Field, Object>> fieldEntries = getFields(this).entrySet();
-        fieldEntries.removeIf(entry -> entry.getValue() == null);
-        if (!fieldEntries.isEmpty()) {
-            query.append(" WHERE ");
-        }
-
-        Iterator<Map.Entry<Field, Object>> iterator = fieldEntries.iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<Field, Object> entry = iterator.next();
-            String columnName = getColumnName(entry.getKey());
-
-            query
-                    .append(columnName)
-                    .append(" = ?");
-
-            if (iterator.hasNext()) {
-                query.append(" AND ");
-            }
-        }
-
+        QueryBuilder<T> queryBuilder = new QueryBuilder<>((T) this);
         try {
-            statement = Database.CONNECTION.prepareStatement(query.toString());
+            statement = Database.CONNECTION.prepareStatement(queryBuilder.get(this));
 
+            Set<Map.Entry<Field, Object>> entries = getFields(this).entrySet();
+            entries.removeIf(entry -> resolveValue(entry) == null);
             int i = 1;
-            for (Map.Entry<Field, Object> column : fieldEntries) {
+            for (Map.Entry<Field, Object> column : entries) {
                 statement.setObject(i, resolveValue(column));
                 i++;
             }

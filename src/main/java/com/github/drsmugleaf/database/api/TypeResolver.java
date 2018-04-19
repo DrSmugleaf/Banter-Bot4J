@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.database.api;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
@@ -10,7 +11,7 @@ import java.lang.reflect.Field;
 class TypeResolver {
 
     @Nonnull
-    private final Field FIELD;
+    public final Field FIELD;
 
     TypeResolver(@Nonnull Field type) {
         FIELD = type;
@@ -41,7 +42,7 @@ class TypeResolver {
     @Nonnull
     private <T extends Annotation> T getAnnotation(Class<T> annotation) {
         if (!FIELD.isAnnotationPresent(annotation)) {
-            throw new NullPointerException();
+            throw new NullPointerException("Field " + FIELD + " doesn't have a " + annotation.getName() + " annotation");
         }
 
         return FIELD.getDeclaredAnnotation(annotation);
@@ -53,10 +54,7 @@ class TypeResolver {
 
     @Nonnull
     String getDataType() throws InvalidColumnException {
-        Column columnAnnotation = FIELD.getDeclaredAnnotation(Column.class);
-        if (columnAnnotation == null) {
-            throw new IllegalStateException("Field " + FIELD + " doesn't have a " + Column.class.getName() + " annotation");
-        }
+        Column columnAnnotation = getColumn();
 
         Field field;
         String columnDefinition;
@@ -97,7 +95,7 @@ class TypeResolver {
             throw new NullPointerException();
         }
 
-        return type.getAnnotation(Table.class);
+        return type.getDeclaredAnnotation(Table.class);
     }
 
     @Nonnull
@@ -112,7 +110,7 @@ class TypeResolver {
 
     @Nonnull
     TypeResolver getRelatedField() {
-        Relation relation = FIELD.getDeclaredAnnotation(Relation.class);
+        Relation relation = getRelation();
         String relatedColumnName = relation.columnName();
 
         Field field;
@@ -123,6 +121,48 @@ class TypeResolver {
         }
 
         return new TypeResolver(field);
+    }
+
+    @Nonnull
+    String getColumnName() {
+        Column columnAnnotation = getColumn();
+        Table tableAnnotation = FIELD.getDeclaredAnnotation(Table.class);
+
+        if (tableAnnotation == null) {
+            return columnAnnotation.name();
+        } else {
+            return tableAnnotation.name() + "." + columnAnnotation.name();
+        }
+    }
+
+    @Nullable
+    Object resolveValue(@Nullable Object object) {
+        if (object == null) {
+            return null;
+        }
+
+        if (FIELD.getType().isEnum()) {
+            return object.toString();
+        }
+
+        if (!FIELD.isAnnotationPresent(Relation.class)) {
+            return object;
+        }
+
+        Relation relation = getRelation();
+        Field objectField;
+        try {
+            objectField = object.getClass().getDeclaredField(relation.columnName());
+        } catch (NoSuchFieldException e) {
+            throw new ModelException("No field found in " + object.getClass().getSimpleName() + " with name " + relation.columnName(), e);
+        }
+
+        objectField.setAccessible(true);
+        try {
+            return objectField.get(object);
+        } catch (IllegalAccessException e) {
+            throw new ModelException("Error accessing value of field " + objectField.getName() + " in object " + object.getClass().getSimpleName(), e);
+        }
     }
 
 }
