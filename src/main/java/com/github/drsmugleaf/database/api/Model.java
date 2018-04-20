@@ -140,7 +140,6 @@ public abstract class Model<T extends Model<T>> {
     }
 
     @Nonnull
-    @SuppressWarnings("unchecked")
     static <T extends Model<T>> T newInstance(@Nonnull Model<T> model) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         return newInstance(model.getClass());
     }
