@@ -355,4 +355,57 @@ class QueryBuilder<T extends Model> {
         return statement.toString();
     }
 
+    @Nonnull
+    <E extends Model<E>> String delete(Model<E> model) {
+        StringBuilder query = new StringBuilder();
+
+        query
+                .append(" DELETE FROM ")
+                .append(escapedTableName());
+
+        Set<Map.Entry<TypeResolver, Object>> columns = getColumns(model).entrySet();
+        columns.removeIf(entry -> entry.getValue() == null);
+        if (!columns.isEmpty()) {
+            query.append(" WHERE ");
+
+            Iterator<Map.Entry<TypeResolver, Object>> iterator = columns.iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<TypeResolver, Object> entry = iterator.next();
+                String columnName = entry.getKey().getExternalColumnName();
+
+                query
+                        .append(" ( ")
+                        .append(columnName)
+                        .append(" = ? ")
+                        .append(" ) ");
+
+                if (iterator.hasNext()) {
+                    query.append(" OR ");
+                }
+            }
+        }
+
+        PreparedStatement statement;
+        try {
+            statement = Database.CONNECTION.prepareStatement(query.toString());
+        } catch (SQLException e) {
+            throw new ModelException("Error creating SQL query", e);
+        }
+
+        int i = 1;
+        for (Map.Entry<TypeResolver, Object> entry : columns) {
+            TypeResolver column = entry.getKey();
+            Object value = entry.getValue();
+            value = column.toSQL(value);
+
+            try {
+                statement.setObject(i, value);
+            } catch (SQLException e) {
+                throw new ModelException("Error setting value in statement", e);
+            }
+        }
+
+        return statement.toString();
+    }
+
 }

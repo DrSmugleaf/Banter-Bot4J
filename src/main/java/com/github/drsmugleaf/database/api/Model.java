@@ -166,7 +166,7 @@ public abstract class Model<T extends Model<T>> {
         PreparedStatement statement;
 
         try {
-            statement = Database.CONNECTION.prepareStatement(query.toString());
+            statement = Database.CONNECTION.prepareStatement(query);
         } catch (SQLException e) {
             throw new ModelException("Error creating SQL query", e);
         }
@@ -179,46 +179,20 @@ public abstract class Model<T extends Model<T>> {
     }
 
     public final void delete() throws ModelException {
-        StringBuilder query = new StringBuilder();
+        QueryBuilder queryBuilder = new QueryBuilder<>(this);
+        String query = queryBuilder.delete(this);
+        PreparedStatement statement;
 
-        query
-                .append("DELETE FROM ")
-                .append(escape(getTableName(this.getClass())));
-
-        Set<Map.Entry<Field, Object>> fields = getFields(this).entrySet();
-        fields.removeIf(entry -> entry.getValue() == null);
-        if (!fields.isEmpty()) {
-            query.append(" WHERE ");
-
-            Iterator<Map.Entry<Field, Object>> iterator = fields.iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<Field, Object> entry = iterator.next();
-                String columnName = getColumnName(entry.getKey());
-
-                query
-                        .append(" (")
-                        .append(columnName)
-                        .append(" = ?")
-                        .append(") ");
-
-                if (iterator.hasNext()) {
-                    query.append(" OR ");
-                }
-            }
+        try {
+            statement = Database.CONNECTION.prepareStatement(query);
+        } catch (SQLException e) {
+            throw new ModelException("Error creating SQL query", e);
         }
 
         try {
-            PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString());
-
-            int i = 1;
-            for (Map.Entry<Field, Object> entry : fields) {
-                statement.setObject(i, resolveValue(entry));
-                i++;
-            }
-
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new ModelException(e);
+            throw new ModelException("Error executing SQL statement", e);
         }
     }
 
