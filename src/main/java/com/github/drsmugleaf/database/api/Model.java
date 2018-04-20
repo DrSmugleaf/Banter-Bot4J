@@ -143,55 +143,20 @@ public abstract class Model<T extends Model<T>> {
     }
 
     public final void createIfNotExists() throws ModelException {
-        StringBuilder query = new StringBuilder();
-        StringBuilder queryInsert = new StringBuilder();
-        StringBuilder queryValues = new StringBuilder();
-        StringBuilder queryConflict = new StringBuilder();
-
-        queryInsert
-                .append("INSERT INTO ")
-                .append(escape(getTableName(this.getClass())))
-                .append(" (");
-        queryValues.append("VALUES(");
-        queryConflict.append("ON CONFLICT DO NOTHING");
-
-        Set<Map.Entry<Field, Object>> fields = getFields(this).entrySet();
-        Iterator<Map.Entry<Field, Object>> iterator = fields.iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<Field, Object> entry = iterator.next();
-            Field field = entry.getKey();
-            String columnName = getColumnName(field);
-
-            queryInsert.append(columnName);
-            queryValues.append("?");
-
-            if (iterator.hasNext()) {
-                queryInsert.append(", ");
-                queryValues.append(", ");
-            } else {
-                queryInsert.append(") ");
-                queryValues.append(") ");
-            }
-        }
-
-        query
-                .append(queryInsert)
-                .append(queryValues)
-                .append(queryConflict);
+        QueryBuilder queryBuilder = new QueryBuilder<>(this);
+        String query = queryBuilder.createIfNotExists(this);
+        PreparedStatement statement;
 
         try {
-            PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString());
-            iterator = fields.iterator();
-            int i = 1;
-            while (iterator.hasNext()) {
-                Map.Entry<Field, Object> entry = iterator.next();
-                statement.setObject(i, resolveValue(entry));
-                i++;
-            }
+            statement = Database.CONNECTION.prepareStatement(query);
+        } catch (SQLException e) {
+            throw new ModelException("Error creating SQL query", e);
+        }
 
+        try {
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new ModelException(e);
+            throw new ModelException("Error executing");
         }
     }
 

@@ -54,8 +54,8 @@ class QueryBuilder<T extends Model> {
     }
 
     @Nonnull
-    <E extends Model<E>> Map<TypeResolver, Object> getColumns(Model<E> model) {
-        Map<TypeResolver, Object> fields = new HashMap<>();
+    <E extends Model<E>> Map<TypeResolver, Object> getColumns(@Nonnull Model<E> model) {
+        Map<TypeResolver, Object> columns = new HashMap<>();
 
         for (TypeResolver column : COLUMNS) {
             column.FIELD.setAccessible(true);
@@ -68,10 +68,74 @@ class QueryBuilder<T extends Model> {
                 continue;
             }
 
-            fields.put(column, value);
+            columns.put(column, value);
         }
 
-        return fields;
+        return columns;
+    }
+
+    @Nonnull
+    <E extends Model<E>> String createIfNotExists(@Nonnull E model) {
+        StringBuilder query = new StringBuilder();
+        StringBuilder queryInsert = new StringBuilder();
+        StringBuilder queryValues = new StringBuilder();
+        StringBuilder queryConflict = new StringBuilder();
+
+        queryInsert
+                .append("INSERT INTO ")
+                .append(escapedTableName())
+                .append(" (");
+        queryValues.append(" VALUES(");
+        queryConflict.append(" ON CONFLICT DO NOTHING ");
+
+        Set<Map.Entry<TypeResolver, Object>> columns = getColumns(model).entrySet();
+        Iterator<Map.Entry<TypeResolver, Object>> iterator = columns.iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<TypeResolver, Object> entry = iterator.next();
+            TypeResolver column = entry.getKey();
+            String columnName = column.getColumnName();
+
+            queryInsert.append(columnName);
+            queryValues.append("?");
+
+            if (iterator.hasNext()) {
+                queryInsert.append(", ");
+                queryValues.append(", ");
+            } else {
+                queryInsert.append(") ");
+                queryValues.append(") ");
+            }
+        }
+
+        query
+                .append(queryInsert)
+                .append(queryValues)
+                .append(queryConflict);
+
+        PreparedStatement statement;
+        try {
+            statement = Database.CONNECTION.prepareStatement(query.toString());
+        } catch (SQLException e) {
+            throw new ModelException("Error creating SQL query", e);
+        }
+
+        iterator = columns.iterator();
+        int i = 1;
+        while (iterator.hasNext()) {
+            Map.Entry<TypeResolver, Object> entry = iterator.next();
+            TypeResolver field = entry.getKey();
+            Object value = entry.getValue();
+
+            try {
+                statement.setObject(i, field.toSQL(value));
+            } catch (SQLException e) {
+                throw new ModelException("Error setting value in statement", e);
+            }
+
+            i++;
+        }
+
+        return statement.toString();
     }
 
     @Nonnull
@@ -154,7 +218,7 @@ class QueryBuilder<T extends Model> {
     }
 
     @Nonnull
-    <E extends Model<E>> String get(Model<E> model) {
+    <E extends Model<E>> String get(@Nonnull Model<E> model) {
         StringBuilder query = new StringBuilder();
         query
                 .append(" SELECT * FROM ")
