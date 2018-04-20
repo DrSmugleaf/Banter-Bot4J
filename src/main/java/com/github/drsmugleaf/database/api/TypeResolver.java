@@ -128,7 +128,7 @@ class TypeResolver {
     }
 
     @Nonnull
-    String getColumnName() {
+    String getExternalColumnName() {
         Column columnAnnotation = getColumn();
         Table tableAnnotation = FIELD.getDeclaredAnnotation(Table.class);
 

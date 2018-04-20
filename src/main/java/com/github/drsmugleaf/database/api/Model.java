@@ -156,78 +156,25 @@ public abstract class Model<T extends Model<T>> {
         try {
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new ModelException("Error executing");
+            throw new ModelException("Error executing SQL statement", e);
         }
     }
 
     public final void save() throws ModelException {
-        StringBuilder query = new StringBuilder();
-        StringBuilder queryInsert = new StringBuilder();
-        StringBuilder queryValues = new StringBuilder();
-        StringBuilder queryConflict = new StringBuilder();
-        StringBuilder querySet = new StringBuilder();
-
-        queryInsert
-                .append("INSERT INTO ")
-                .append(escape(getTableName(this.getClass())))
-                .append(" (");
-        queryValues.append("VALUES(");
-        queryConflict.append("ON CONFLICT (");
-        querySet.append("DO UPDATE SET ");
-
-        Set<Map.Entry<Field, Object>> fields = getFields(this).entrySet();
-        Iterator<Map.Entry<Field, Object>> iterator = fields.iterator();
-        while (iterator.hasNext()) {
-            Field field = iterator.next().getKey();
-            String columnName = getColumnName(field);
-
-            queryInsert.append(columnName);
-            queryValues.append("?");
-            TypeResolver typeResolver = new TypeResolver(field);
-            if (typeResolver.isID()) {
-                queryConflict.append(columnName);
-            }
-            querySet
-                    .append(columnName)
-                    .append(" = ?");
-
-            if (iterator.hasNext()) {
-                queryInsert.append(", ");
-                queryValues.append(", ");
-                if (typeResolver.isID()) {
-                    queryConflict.append(", ");
-                }
-                querySet.append(", ");
-            } else {
-                queryInsert.append(") ");
-                queryValues.append(") ");
-                queryConflict.append(") ");
-                querySet.append(" ");
-            }
-        }
-
-        query
-                .append(queryInsert)
-                .append(queryValues)
-                .append(queryConflict)
-                .append(querySet);
+        QueryBuilder queryBuilder = new QueryBuilder<>(this);
+        String query = queryBuilder.save(this);
+        PreparedStatement statement;
 
         try {
-            PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString());
-            iterator = fields.iterator();
-            int i = 1;
-            int size = fields.size();
-            while (iterator.hasNext()) {
-                Map.Entry<Field, Object> entry = iterator.next();
-                Object value = resolveValue(entry);
-                statement.setObject(i, value);
-                statement.setObject(i + size, value);
-                i++;
-            }
+            statement = Database.CONNECTION.prepareStatement(query.toString());
+        } catch (SQLException e) {
+            throw new ModelException("Error creating SQL query", e);
+        }
 
+        try {
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new ModelException(e);
+            throw new ModelException("Error executing SQL statement", e);
         }
     }
 

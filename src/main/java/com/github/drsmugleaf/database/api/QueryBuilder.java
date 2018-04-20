@@ -93,7 +93,7 @@ class QueryBuilder<T extends Model> {
         while (iterator.hasNext()) {
             Map.Entry<TypeResolver, Object> entry = iterator.next();
             TypeResolver column = entry.getKey();
-            String columnName = column.getColumnName();
+            String columnName = column.getExternalColumnName();
 
             queryInsert.append(columnName);
             queryValues.append("?");
@@ -224,16 +224,16 @@ class QueryBuilder<T extends Model> {
                 .append(" SELECT * FROM ")
                 .append(escapedTableName());
 
-        Set<Map.Entry<TypeResolver, Object>> entries = getColumns(model).entrySet();
-        entries.removeIf(entry -> entry.getKey().toSQL(entry.getValue()) == null);
-        if (!entries.isEmpty()) {
+        Set<Map.Entry<TypeResolver, Object>> columns = getColumns(model).entrySet();
+        columns.removeIf(entry -> entry.getKey().toSQL(entry.getValue()) == null);
+        if (!columns.isEmpty()) {
             query.append(" WHERE ");
 
-            Iterator<Map.Entry<TypeResolver, Object>> iterator = entries.iterator();
+            Iterator<Map.Entry<TypeResolver, Object>> iterator = columns.iterator();
             while (iterator.hasNext()) {
                 Map.Entry<TypeResolver, Object> entry = iterator.next();
                 TypeResolver field = entry.getKey();
-                String columnName = field.getColumnName();
+                String columnName = field.getExternalColumnName();
 
                 query
                         .append(columnName)
@@ -253,12 +253,98 @@ class QueryBuilder<T extends Model> {
         }
 
         int i = 1;
-        for (Map.Entry<TypeResolver, Object> entry : entries) {
+        for (Map.Entry<TypeResolver, Object> entry : columns) {
             TypeResolver field = entry.getKey();
             Object value = entry.getValue();
 
             try {
                 statement.setObject(i, field.toSQL(value));
+            } catch (SQLException e) {
+                throw new ModelException("Error setting value in statement", e);
+            }
+
+            i++;
+        }
+
+        return statement.toString();
+    }
+
+    @Nonnull
+    <E extends Model<E>> String save(@Nonnull Model<E> model) {
+        StringBuilder query = new StringBuilder();
+        StringBuilder queryInsert = new StringBuilder();
+        StringBuilder queryValues = new StringBuilder();
+        StringBuilder queryConflict = new StringBuilder();
+        StringBuilder querySet = new StringBuilder();
+
+        queryInsert
+                .append(" INSERT INTO ")
+                .append(escapedTableName())
+                .append(" ( ");
+        queryValues.append(" VALUES( ");
+        queryConflict.append(" ON CONFLICT ( ");
+        querySet.append(" DO UPDATE SET ");
+
+        Set<Map.Entry<TypeResolver, Object>> columns = getColumns(model).entrySet();
+        Iterator<Map.Entry<TypeResolver, Object>> iterator = columns.iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<TypeResolver, Object> entry = iterator.next();
+            TypeResolver column = entry.getKey();
+            String columnName = column.getExternalColumnName();
+
+            queryInsert.append(columnName);
+            queryValues.append("?");
+
+            if (column.isID()) {
+                queryConflict.append(columnName);
+            }
+
+            querySet
+                    .append(columnName)
+                    .append(" = ?");
+
+            if (iterator.hasNext()) {
+                queryInsert.append(", ");
+                queryValues.append(", ");
+
+                if (column.isID()) {
+                    queryConflict.append(", ");
+                }
+
+                querySet.append(", ");
+            } else {
+                queryInsert.append(") ");
+                queryValues.append(") ");
+                queryConflict.append(") ");
+                querySet.append(" ");
+            }
+        }
+
+        query
+                .append(queryInsert)
+                .append(queryValues)
+                .append(queryConflict)
+                .append(querySet);
+
+        PreparedStatement statement;
+        try {
+            statement = Database.CONNECTION.prepareStatement(query.toString());
+        } catch (SQLException e) {
+            throw new ModelException("Error creating SQL query", e);
+        }
+
+        iterator = columns.iterator();
+        int i = 1;
+        int size = columns.size();
+        while (iterator.hasNext()) {
+            Map.Entry<TypeResolver, Object> entry = iterator.next();
+            TypeResolver column = entry.getKey();
+            Object value = entry.getValue();
+            value = column.toSQL(value);
+
+            try {
+                statement.setObject(i, value);
+                statement.setObject(i + size, value);
             } catch (SQLException e) {
                 throw new ModelException("Error setting value in statement", e);
             }
