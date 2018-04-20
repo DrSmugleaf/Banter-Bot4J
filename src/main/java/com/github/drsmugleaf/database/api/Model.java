@@ -1,14 +1,15 @@
 package com.github.drsmugleaf.database.api;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 /**
@@ -23,16 +24,6 @@ public abstract class Model<T extends Model<T>> {
     }
 
     @Nonnull
-    private static <T extends Model> String getTableName(@Nonnull Class<T> model) {
-        Table tableAnnotation = model.getDeclaredAnnotation(Table.class);
-        if (tableAnnotation == null) {
-            throw new IllegalArgumentException("Model " + model.getName() + " doesn't have a " + Table.class.getName() + " annotation");
-        }
-
-        return tableAnnotation.name();
-    }
-
-    @Nonnull
     private static <T extends Model> List<Field> getColumns(@Nonnull Class<T> model) {
         List<Field> fields = new ArrayList<>();
 
@@ -43,62 +34,6 @@ public abstract class Model<T extends Model<T>> {
         }
 
         return fields;
-    }
-
-    @Nonnull
-    private static String getColumnName(@Nonnull Field field) {
-        String columnName;
-        Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
-        Class<?> fieldClass = field.getClass();
-        Table tableAnnotation = fieldClass.getDeclaredAnnotation(Table.class);
-        if (tableAnnotation == null) {
-            columnName = columnAnnotation.name();
-        } else {
-            columnName = tableAnnotation.name() + "." + columnAnnotation.name();
-        }
-
-        return columnName;
-    }
-
-    @Nonnull
-    private static String escape(@Nonnull String s) throws ModelException {
-        try {
-            PreparedStatement statement = Database.CONNECTION.prepareStatement("?");
-            statement.setString(1, s);
-            return statement.toString().replaceFirst("'(.+)'", "$1");
-        } catch (SQLException e) {
-            throw new ModelException(e);
-        }
-    }
-
-    @Nullable
-    private static Object resolveValue(@Nonnull Map.Entry<Field, Object> entry) {
-        Field field = entry.getKey();
-        Object object = entry.getValue();
-
-        if (field.getType().isEnum()) {
-            return object.toString();
-        }
-
-        if (!field.isAnnotationPresent(Relation.class)) {
-            return object;
-        }
-
-        Relation relation = field.getDeclaredAnnotation(Relation.class);
-        Field objectField = null;
-        for (Field classField : object.getClass().getDeclaredFields()) {
-            if (Objects.equals(classField.getName(), relation.columnName())) {
-                objectField = classField;
-                break;
-            }
-        }
-
-        try {
-            objectField.setAccessible(true);
-            return objectField.get(object);
-        } catch (IllegalAccessException e) {
-            throw new ModelException(e);
-        }
     }
 
     static <T extends Model> void validate(@Nonnull Class<T> model) {
@@ -194,27 +129,6 @@ public abstract class Model<T extends Model<T>> {
         } catch (SQLException e) {
             throw new ModelException("Error executing SQL statement", e);
         }
-    }
-
-    @Nonnull
-    private Map<Field, Object> getFields(@Nonnull Model<T> model) {
-        Map<Field, Object> fields = new HashMap<>();
-
-        for (Field column : getColumns(model.getClass())) {
-            column.setAccessible(true);
-
-            Object value;
-            try {
-                value = column.get(model);
-            } catch (IllegalAccessException e) {
-                Database.LOGGER.error("Error getting value from field", e);
-                continue;
-            }
-
-            fields.put(column, value);
-        }
-
-        return fields;
     }
 
     @Nonnull
