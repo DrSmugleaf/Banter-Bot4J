@@ -9,10 +9,10 @@ import java.util.*;
 /**
  * Created by DrSmugleaf on 12/04/2018.
  */
-class QueryBuilder<T extends Model> {
+class QueryBuilder<T extends Model<T>> {
 
     @Nonnull
-    private final Class<? extends Model> MODEL;
+    private final Class<T> MODEL;
 
     @Nonnull
     private final List<TypeResolver> COLUMNS = new ArrayList<>();
@@ -26,8 +26,9 @@ class QueryBuilder<T extends Model> {
         }
     }
 
-    QueryBuilder(@Nonnull T model) {
-        MODEL = model.getClass();
+    @SuppressWarnings("unchecked")
+    QueryBuilder(@Nonnull Model<T> model) {
+        MODEL = (Class<T>) model.getClass();
         for (Field field : MODEL.getDeclaredFields()) {
             if (field.isAnnotationPresent(Column.class)) {
                 COLUMNS.add(new TypeResolver(field));
@@ -54,7 +55,7 @@ class QueryBuilder<T extends Model> {
     }
 
     @Nonnull
-    <E extends Model<E>> Map<TypeResolver, Object> getColumns(@Nonnull Model<E> model) {
+    Map<TypeResolver, Object> getColumns(@Nonnull Model<T> model) {
         Map<TypeResolver, Object> columns = new HashMap<>();
 
         for (TypeResolver column : COLUMNS) {
@@ -75,7 +76,7 @@ class QueryBuilder<T extends Model> {
     }
 
     @Nonnull
-    <E extends Model<E>> String createIfNotExists(@Nonnull E model) {
+    String createIfNotExists(@Nonnull Model<T> model) {
         StringBuilder query = new StringBuilder();
         StringBuilder queryInsert = new StringBuilder();
         StringBuilder queryValues = new StringBuilder();
@@ -218,7 +219,7 @@ class QueryBuilder<T extends Model> {
     }
 
     @Nonnull
-    <E extends Model<E>> String get(@Nonnull Model<E> model) {
+    String get(@Nonnull Model<T> model) {
         StringBuilder query = new StringBuilder();
         query
                 .append(" SELECT * FROM ")
@@ -270,7 +271,7 @@ class QueryBuilder<T extends Model> {
     }
 
     @Nonnull
-    <E extends Model<E>> String save(@Nonnull Model<E> model) {
+    String save(@Nonnull Model<T> model) {
         StringBuilder query = new StringBuilder();
         StringBuilder queryInsert = new StringBuilder();
         StringBuilder queryValues = new StringBuilder();
@@ -356,7 +357,7 @@ class QueryBuilder<T extends Model> {
     }
 
     @Nonnull
-    <E extends Model<E>> String delete(Model<E> model) {
+    String delete(@Nonnull Model<T> model) {
         StringBuilder query = new StringBuilder();
 
         query

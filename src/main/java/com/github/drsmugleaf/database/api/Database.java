@@ -12,13 +12,14 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 13/05/2017.
  */
+@SuppressWarnings("unchecked")
 public class Database {
 
     @Nonnull
-    public static final Logger LOGGER = initLogger();
+    static final Logger LOGGER = initLogger();
 
     @Nonnull
-    public static final Connection CONNECTION = DatabaseConnection.initialize();
+    static final Connection CONNECTION = DatabaseConnection.initialize();
 
     static {
         Reflection reflection = new Reflection("com.github.drsmugleaf.database.models");

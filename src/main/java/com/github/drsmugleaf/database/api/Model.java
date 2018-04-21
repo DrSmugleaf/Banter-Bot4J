@@ -17,7 +17,7 @@ import java.util.stream.Stream;
  */
 public abstract class Model<T extends Model<T>> {
 
-    static <T extends Model> void createTable(@Nonnull Class<T> model) throws SQLException, InvalidColumnException {
+    static <T extends Model<T>> void createTable(@Nonnull Class<T> model) throws SQLException, InvalidColumnException {
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(model);
         PreparedStatement statement = Database.CONNECTION.prepareStatement(queryBuilder.createTable());
         statement.executeUpdate();
@@ -52,7 +52,7 @@ public abstract class Model<T extends Model<T>> {
     @SuppressWarnings("unchecked")
     public final List<T> get() throws ModelException {
         List<T> models = new ArrayList<>();
-        QueryBuilder<T> queryBuilder = new QueryBuilder<>((T) this);
+        QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
 
         try {
             PreparedStatement statement = Database.CONNECTION.prepareStatement(queryBuilder.get(this));
@@ -78,7 +78,7 @@ public abstract class Model<T extends Model<T>> {
     }
 
     public final void createIfNotExists() throws ModelException {
-        QueryBuilder queryBuilder = new QueryBuilder<>(this);
+        QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
         String query = queryBuilder.createIfNotExists(this);
         PreparedStatement statement;
 
@@ -96,7 +96,7 @@ public abstract class Model<T extends Model<T>> {
     }
 
     public final void save() throws ModelException {
-        QueryBuilder queryBuilder = new QueryBuilder<>(this);
+        QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
         String query = queryBuilder.save(this);
         PreparedStatement statement;
 
@@ -114,7 +114,7 @@ public abstract class Model<T extends Model<T>> {
     }
 
     public final void delete() throws ModelException {
-        QueryBuilder queryBuilder = new QueryBuilder<>(this);
+        QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
         String query = queryBuilder.delete(this);
         PreparedStatement statement;
 
