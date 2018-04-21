@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -17,10 +18,15 @@ import java.util.stream.Stream;
  */
 public abstract class Model<T extends Model<T>> {
 
-    static <T extends Model<T>> void createTable(@Nonnull Class<T> model) throws SQLException, InvalidColumnException {
+    static <T extends Model<T>> void createTable(@Nonnull Class<T> model) throws InvalidColumnException {
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(model);
-        PreparedStatement statement = Database.CONNECTION.prepareStatement(queryBuilder.createTable());
-        statement.executeUpdate();
+        String query = queryBuilder.createTable();
+
+        try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query)) {
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new ModelException("Error executing SQL statement", e);
+        }
     }
 
     @Nonnull
@@ -53,25 +59,29 @@ public abstract class Model<T extends Model<T>> {
     public final List<T> get() throws ModelException {
         List<T> models = new ArrayList<>();
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
+        String query = queryBuilder.get(this);
 
-        try {
-            PreparedStatement statement = Database.CONNECTION.prepareStatement(queryBuilder.get(this));
-            ResultSet resultSet = statement.executeQuery();
-
+        try (
+                PreparedStatement statement = Database.CONNECTION.prepareStatement(query);
+                ResultSet resultSet = statement.executeQuery()
+        ) {
             while (resultSet.next()) {
                 T row = newInstance(this);
-                for (Map.Entry<TypeResolver, Object> entry : queryBuilder.getColumns(this).entrySet()) {
-                    TypeResolver resolver = entry.getKey();
+                Set<Map.Entry<TypeResolver, Object>> columns = queryBuilder.getColumns(this).entrySet();
+
+                for (Map.Entry<TypeResolver, Object> column : columns) {
+                    TypeResolver resolver = column.getKey();
                     Column columnAnnotation = resolver.getColumn();
                     Object result = resultSet.getObject(columnAnnotation.name());
                     Object value = resolver.toValue(result);
 
                     resolver.FIELD.set(row, value);
                 }
+
                 models.add(row);
             }
         } catch (SQLException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
-            throw new ModelException(e);
+            throw new ModelException("Error parsing results from statement execution", e);
         }
 
         return models;
@@ -80,15 +90,8 @@ public abstract class Model<T extends Model<T>> {
     public final void createIfNotExists() throws ModelException {
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
         String query = queryBuilder.createIfNotExists(this);
-        PreparedStatement statement;
 
-        try {
-            statement = Database.CONNECTION.prepareStatement(query);
-        } catch (SQLException e) {
-            throw new ModelException("Error creating SQL query", e);
-        }
-
-        try {
+        try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query)) {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new ModelException("Error executing SQL statement", e);
@@ -98,15 +101,8 @@ public abstract class Model<T extends Model<T>> {
     public final void save() throws ModelException {
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
         String query = queryBuilder.save(this);
-        PreparedStatement statement;
 
-        try {
-            statement = Database.CONNECTION.prepareStatement(query);
-        } catch (SQLException e) {
-            throw new ModelException("Error creating SQL query", e);
-        }
-
-        try {
+        try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query)) {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new ModelException("Error executing SQL statement", e);
@@ -116,15 +112,8 @@ public abstract class Model<T extends Model<T>> {
     public final void delete() throws ModelException {
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
         String query = queryBuilder.delete(this);
-        PreparedStatement statement;
 
-        try {
-            statement = Database.CONNECTION.prepareStatement(query);
-        } catch (SQLException e) {
-            throw new ModelException("Error creating SQL query", e);
-        }
-
-        try {
+        try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query)) {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new ModelException("Error executing SQL statement", e);

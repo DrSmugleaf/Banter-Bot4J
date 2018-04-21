@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -30,8 +29,8 @@ public class Database {
 
             try {
                 Model.createTable(model);
-            } catch (SQLException | InvalidColumnException e) {
-                e.printStackTrace();
+            } catch (InvalidColumnException e) {
+                LOGGER.error("Error creating table for model " + model.getSimpleName(), e);
             }
         }
     }
