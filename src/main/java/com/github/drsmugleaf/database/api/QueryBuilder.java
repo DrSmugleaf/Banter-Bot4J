@@ -41,14 +41,12 @@ class QueryBuilder<T extends Model<T>> {
         Table tableAnnotation = MODEL.getDeclaredAnnotation(Table.class);
         String tableName = tableAnnotation.name();
 
-        try {
-            PreparedStatement statement = Database.CONNECTION.prepareStatement("?");
+        try (PreparedStatement statement = Database.CONNECTION.prepareStatement("?")) {
             statement.setString(1, tableName);
             tableName = statement.toString();
             tableName = tableName.replaceFirst("'(.+)'", "$1");
-            statement.close();
         } catch (SQLException e) {
-            throw new ModelException("Error escaping table name", e);
+            throw new StatementCreationException("Error escaping table name", e);
         }
 
         return tableName;
