@@ -74,12 +74,12 @@ class TypeResolver {
 
         if (columnDefinition.isEmpty()) {
             Class<?> fieldType = field.getType();
-            Types type;
+            SQLTypes type;
 
             if (fieldType.isEnum()) {
-                type = Types.getType(PostgresTypes.class, String.class);
+                type = SQLTypes.getType(PostgresTypes.class, String.class);
             } else {
-                type = Types.getType(PostgresTypes.class, fieldType);
+                type = SQLTypes.getType(PostgresTypes.class, fieldType);
             }
 
             if (type == null) {

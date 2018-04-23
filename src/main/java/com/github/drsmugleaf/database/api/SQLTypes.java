@@ -6,10 +6,10 @@ import javax.annotation.Nullable;
 /**
  * Created by DrSmugleaf on 06/04/2018.
  */
-public interface Types {
+public interface SQLTypes {
 
     @Nullable
-    static <T extends Enum<T> & Types> T getType(Class<T> types, @Nonnull Class<?> javaType) {
+    static <T extends Enum<T> & SQLTypes> T getType(Class<T> types, @Nonnull Class<?> javaType) {
         for (T type : types.getEnumConstants()) {
             if (type.getJavaType() == javaType) {
                 return type;

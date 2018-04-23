@@ -7,7 +7,7 @@ import java.sql.*;
 /**
  * Created by DrSmugleaf on 30/03/2018.
  */
-public enum PostgresTypes implements Types {
+public enum PostgresTypes implements SQLTypes {
 
     BIGINT("int8", Long.class),
 
