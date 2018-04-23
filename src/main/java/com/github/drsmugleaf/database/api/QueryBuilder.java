@@ -117,7 +117,7 @@ class QueryBuilder<T extends Model<T>> {
         try {
             statement = Database.CONNECTION.prepareStatement(query.toString());
         } catch (SQLException e) {
-            throw new ModelException("Error creating SQL query", e);
+            throw new StatementCreationException(e);
         }
 
         iterator = columns.iterator();
@@ -130,7 +130,7 @@ class QueryBuilder<T extends Model<T>> {
             try {
                 statement.setObject(i, field.toSQL(value));
             } catch (SQLException e) {
-                throw new ModelException("Error setting value in statement", e);
+                throw new StatementValueException(e);
             }
 
             i++;
@@ -250,7 +250,7 @@ class QueryBuilder<T extends Model<T>> {
         try {
             statement = Database.CONNECTION.prepareStatement(query.toString());
         } catch (SQLException e) {
-            throw new ModelException("Error creating SQL query", e);
+            throw new StatementCreationException(e);
         }
 
         int i = 1;
@@ -261,7 +261,7 @@ class QueryBuilder<T extends Model<T>> {
             try {
                 statement.setObject(i, field.toSQL(value));
             } catch (SQLException e) {
-                throw new ModelException("Error setting value in statement", e);
+                throw new StatementValueException(e);
             }
 
             i++;
@@ -331,7 +331,7 @@ class QueryBuilder<T extends Model<T>> {
         try {
             statement = Database.CONNECTION.prepareStatement(query.toString());
         } catch (SQLException e) {
-            throw new ModelException("Error creating SQL query", e);
+            throw new StatementCreationException(e);
         }
 
         iterator = columns.iterator();
@@ -347,7 +347,7 @@ class QueryBuilder<T extends Model<T>> {
                 statement.setObject(i, value);
                 statement.setObject(i + size, value);
             } catch (SQLException e) {
-                throw new ModelException("Error setting value in statement", e);
+                throw new StatementValueException(e);
             }
 
             i++;
@@ -390,7 +390,7 @@ class QueryBuilder<T extends Model<T>> {
         try {
             statement = Database.CONNECTION.prepareStatement(query.toString());
         } catch (SQLException e) {
-            throw new ModelException("Error creating SQL query", e);
+            throw new StatementCreationException(e);
         }
 
         int i = 1;
@@ -402,7 +402,7 @@ class QueryBuilder<T extends Model<T>> {
             try {
                 statement.setObject(i, value);
             } catch (SQLException e) {
-                throw new ModelException("Error setting value in statement", e);
+                throw new StatementValueException(e);
             }
         }
 

@@ -25,7 +25,7 @@ public abstract class Model<T extends Model<T>> {
         try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query)) {
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new ModelException("Error executing SQL statement", e);
+            throw new StatementExecutionException(e);
         }
     }
 
@@ -56,7 +56,7 @@ public abstract class Model<T extends Model<T>> {
 
     @Nonnull
     @SuppressWarnings("unchecked")
-    public final List<T> get() throws ModelException {
+    public final List<T> get() {
         List<T> models = new ArrayList<>();
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
         String query = queryBuilder.get(this);
@@ -81,42 +81,42 @@ public abstract class Model<T extends Model<T>> {
                 models.add(row);
             }
         } catch (SQLException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
-            throw new ModelException("Error parsing results from statement execution", e);
+            throw new StatementExecutionException(e);
         }
 
         return models;
     }
 
-    public final void createIfNotExists() throws ModelException {
+    public final void createIfNotExists() {
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
         String query = queryBuilder.createIfNotExists(this);
 
         try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query)) {
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new ModelException("Error executing SQL statement", e);
+            throw new StatementExecutionException(e);
         }
     }
 
-    public final void save() throws ModelException {
+    public final void save() {
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
         String query = queryBuilder.save(this);
 
         try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query)) {
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new ModelException("Error executing SQL statement", e);
+            throw new StatementExecutionException(e);
         }
     }
 
-    public final void delete() throws ModelException {
+    public final void delete() {
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
         String query = queryBuilder.delete(this);
 
         try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query)) {
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new ModelException("Error executing SQL statement", e);
+            throw new StatementExecutionException(e);
         }
     }
 
