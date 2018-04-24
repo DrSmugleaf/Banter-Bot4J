@@ -111,30 +111,27 @@ class QueryBuilder<T extends Model<T>> {
                 .append(queryValues)
                 .append(queryConflict);
 
-        PreparedStatement statement;
-        try {
-            statement = Database.CONNECTION.prepareStatement(query.toString());
+        try(PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString())) {
+            iterator = columns.iterator();
+            int i = 1;
+            while (iterator.hasNext()) {
+                Map.Entry<TypeResolver, Object> entry = iterator.next();
+                TypeResolver field = entry.getKey();
+                Object value = entry.getValue();
+
+                try {
+                    statement.setObject(i, field.toSQL(value));
+                } catch (SQLException e) {
+                    throw new StatementValueException(e);
+                }
+
+                i++;
+            }
+
+            return statement.toString();
         } catch (SQLException e) {
             throw new StatementCreationException(e);
         }
-
-        iterator = columns.iterator();
-        int i = 1;
-        while (iterator.hasNext()) {
-            Map.Entry<TypeResolver, Object> entry = iterator.next();
-            TypeResolver field = entry.getKey();
-            Object value = entry.getValue();
-
-            try {
-                statement.setObject(i, field.toSQL(value));
-            } catch (SQLException e) {
-                throw new StatementValueException(e);
-            }
-
-            i++;
-        }
-
-        return statement.toString();
     }
 
     @Nonnull
@@ -244,28 +241,25 @@ class QueryBuilder<T extends Model<T>> {
             }
         }
 
-        PreparedStatement statement;
-        try {
-            statement = Database.CONNECTION.prepareStatement(query.toString());
+        try(PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString())) {
+            int i = 1;
+            for (Map.Entry<TypeResolver, Object> entry : columns) {
+                TypeResolver field = entry.getKey();
+                Object value = entry.getValue();
+
+                try {
+                    statement.setObject(i, field.toSQL(value));
+                } catch (SQLException e) {
+                    throw new StatementValueException(e);
+                }
+
+                i++;
+            }
+
+            return statement.toString();
         } catch (SQLException e) {
             throw new StatementCreationException(e);
         }
-
-        int i = 1;
-        for (Map.Entry<TypeResolver, Object> entry : columns) {
-            TypeResolver field = entry.getKey();
-            Object value = entry.getValue();
-
-            try {
-                statement.setObject(i, field.toSQL(value));
-            } catch (SQLException e) {
-                throw new StatementValueException(e);
-            }
-
-            i++;
-        }
-
-        return statement.toString();
     }
 
     @Nonnull
@@ -325,33 +319,30 @@ class QueryBuilder<T extends Model<T>> {
                 .append(queryConflict)
                 .append(querySet);
 
-        PreparedStatement statement;
-        try {
-            statement = Database.CONNECTION.prepareStatement(query.toString());
+        try(PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString())) {
+            iterator = columns.iterator();
+            int i = 1;
+            int size = columns.size();
+            while (iterator.hasNext()) {
+                Map.Entry<TypeResolver, Object> entry = iterator.next();
+                TypeResolver column = entry.getKey();
+                Object value = entry.getValue();
+                value = column.toSQL(value);
+
+                try {
+                    statement.setObject(i, value);
+                    statement.setObject(i + size, value);
+                } catch (SQLException e) {
+                    throw new StatementValueException(e);
+                }
+
+                i++;
+            }
+
+            return statement.toString();
         } catch (SQLException e) {
             throw new StatementCreationException(e);
         }
-
-        iterator = columns.iterator();
-        int i = 1;
-        int size = columns.size();
-        while (iterator.hasNext()) {
-            Map.Entry<TypeResolver, Object> entry = iterator.next();
-            TypeResolver column = entry.getKey();
-            Object value = entry.getValue();
-            value = column.toSQL(value);
-
-            try {
-                statement.setObject(i, value);
-                statement.setObject(i + size, value);
-            } catch (SQLException e) {
-                throw new StatementValueException(e);
-            }
-
-            i++;
-        }
-
-        return statement.toString();
     }
 
     @Nonnull
@@ -384,27 +375,24 @@ class QueryBuilder<T extends Model<T>> {
             }
         }
 
-        PreparedStatement statement;
-        try {
-            statement = Database.CONNECTION.prepareStatement(query.toString());
+        try(PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString())) {
+            int i = 1;
+            for (Map.Entry<TypeResolver, Object> entry : columns) {
+                TypeResolver column = entry.getKey();
+                Object value = entry.getValue();
+                value = column.toSQL(value);
+
+                try {
+                    statement.setObject(i, value);
+                } catch (SQLException e) {
+                    throw new StatementValueException(e);
+                }
+            }
+
+            return statement.toString();
         } catch (SQLException e) {
             throw new StatementCreationException(e);
         }
-
-        int i = 1;
-        for (Map.Entry<TypeResolver, Object> entry : columns) {
-            TypeResolver column = entry.getKey();
-            Object value = entry.getValue();
-            value = column.toSQL(value);
-
-            try {
-                statement.setObject(i, value);
-            } catch (SQLException e) {
-                throw new StatementValueException(e);
-            }
-        }
-
-        return statement.toString();
     }
 
 }
