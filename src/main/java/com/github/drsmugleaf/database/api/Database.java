@@ -25,7 +25,7 @@ public class Database {
         List<Class<? extends Model>> models = reflection.findSubTypesOf(Model.class);
 
         for (Class<? extends Model> model : models) {
-            Model.validate(model);
+            ModelValidator.validateAll(model);
 
             try {
                 Model.createTable(model);

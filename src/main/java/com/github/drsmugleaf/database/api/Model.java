@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Stream;
 
 /**
  * Created by DrSmugleaf on 16/03/2018.
@@ -29,33 +28,20 @@ public abstract class Model<T extends Model<T>> {
         }
     }
 
-    @Nonnull
-    private static <T extends Model> List<Field> getColumns(@Nonnull Class<T> model) {
-        List<Field> fields = new ArrayList<>();
+    public static <T extends Model<T>> List<TypeResolver> getColumns(Class<T> model) {
+        List<TypeResolver> fields = new ArrayList<>();
 
-        for (Field field : model.getDeclaredFields()) {
+        for (Field field : model.getClass().getDeclaredFields()) {
             if (field.isAnnotationPresent(Column.class)) {
-                fields.add(field);
+                TypeResolver typeResolver = new TypeResolver(field);
+                fields.add(typeResolver);
             }
         }
 
         return fields;
     }
 
-    static <T extends Model> void validate(@Nonnull Class<T> model) {
-        for (Field field : getColumns(model)) {
-            if (field.getType().isPrimitive()) {
-                throw new ModelException("Field " + field + " in model " + model.toString() + " is primitive");
-            }
-        }
-
-        if (Stream.of(model.getDeclaredConstructors()).noneMatch(c -> c.getParameterCount() == 0)) {
-            throw new ModelException("Model " + model.toString() + " doesn't have a constructor with no arguments");
-        }
-    }
-
     @Nonnull
-    @SuppressWarnings("unchecked")
     public final List<T> get() {
         List<T> models = new ArrayList<>();
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
