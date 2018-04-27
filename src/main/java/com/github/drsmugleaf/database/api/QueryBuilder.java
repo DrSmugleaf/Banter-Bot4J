@@ -53,27 +53,6 @@ class QueryBuilder<T extends Model<T>> {
     }
 
     @Nonnull
-    Map<TypeResolver, Object> getColumns(@Nonnull Model<T> model) {
-        Map<TypeResolver, Object> columns = new HashMap<>();
-
-        for (TypeResolver column : COLUMNS) {
-            column.FIELD.setAccessible(true);
-
-            Object value;
-            try {
-                value = column.FIELD.get(model);
-            } catch (IllegalAccessException e) {
-                Database.LOGGER.error("Error getting value from field", e);
-                continue;
-            }
-
-            columns.put(column, value);
-        }
-
-        return columns;
-    }
-
-    @Nonnull
     String createIfNotExists(@Nonnull Model<T> model) {
         StringBuilder query = new StringBuilder();
         StringBuilder queryInsert = new StringBuilder();
@@ -87,7 +66,7 @@ class QueryBuilder<T extends Model<T>> {
         queryValues.append(" VALUES(");
         queryConflict.append(" ON CONFLICT DO NOTHING ");
 
-        Set<Map.Entry<TypeResolver, Object>> columns = getColumns(model).entrySet();
+        Set<Map.Entry<TypeResolver, Object>> columns = model.getColumns().entrySet();
         Iterator<Map.Entry<TypeResolver, Object>> iterator = columns.iterator();
         while (iterator.hasNext()) {
             Map.Entry<TypeResolver, Object> entry = iterator.next();
@@ -220,7 +199,7 @@ class QueryBuilder<T extends Model<T>> {
                 .append(" SELECT * FROM ")
                 .append(escapedTableName());
 
-        Set<Map.Entry<TypeResolver, Object>> columns = getColumns(model).entrySet();
+        Set<Map.Entry<TypeResolver, Object>> columns = model.getColumns().entrySet();
         columns.removeIf(entry -> entry.getKey().toSQL(entry.getValue()) == null);
         if (!columns.isEmpty()) {
             query.append(" WHERE ");
@@ -278,7 +257,7 @@ class QueryBuilder<T extends Model<T>> {
         queryConflict.append(" ON CONFLICT ( ");
         querySet.append(" DO UPDATE SET ");
 
-        Set<Map.Entry<TypeResolver, Object>> columns = getColumns(model).entrySet();
+        Set<Map.Entry<TypeResolver, Object>> columns = model.getColumns().entrySet();
         Iterator<Map.Entry<TypeResolver, Object>> iterator = columns.iterator();
         while (iterator.hasNext()) {
             Map.Entry<TypeResolver, Object> entry = iterator.next();
@@ -353,7 +332,7 @@ class QueryBuilder<T extends Model<T>> {
                 .append(" DELETE FROM ")
                 .append(escapedTableName());
 
-        Set<Map.Entry<TypeResolver, Object>> columns = getColumns(model).entrySet();
+        Set<Map.Entry<TypeResolver, Object>> columns = model.getColumns().entrySet();
         columns.removeIf(entry -> entry.getValue() == null);
         if (!columns.isEmpty()) {
             query.append(" WHERE ");

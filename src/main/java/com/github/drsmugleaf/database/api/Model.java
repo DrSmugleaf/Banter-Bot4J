@@ -7,10 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 16/03/2018.
@@ -31,14 +28,36 @@ public abstract class Model<T extends Model<T>> {
     public static <T extends Model<T>> List<TypeResolver> getColumns(Class<T> model) {
         List<TypeResolver> fields = new ArrayList<>();
 
-        for (Field field : model.getClass().getDeclaredFields()) {
+        for (Field field : model.getDeclaredFields()) {
             if (field.isAnnotationPresent(Column.class)) {
-                TypeResolver typeResolver = new TypeResolver(field);
-                fields.add(typeResolver);
+                TypeResolver resolver = new TypeResolver(field);
+                fields.add(resolver);
             }
         }
 
         return fields;
+    }
+
+    @SuppressWarnings("unchecked")
+    public final Map<TypeResolver, Object> getColumns() {
+        Map<TypeResolver, Object> columns = new HashMap<>();
+        List<TypeResolver> resolvers = Model.getColumns(getClass());
+
+        for (TypeResolver resolver : resolvers) {
+            resolver.FIELD.setAccessible(true);
+
+            Object value;
+            try {
+                value = resolver.FIELD.get(this);
+            } catch (IllegalAccessException e) {
+                Database.LOGGER.error("Error getting value from field", e);
+                continue;
+            }
+
+            columns.put(resolver, value);
+        }
+
+        return columns;
     }
 
     @Nonnull
@@ -53,7 +72,7 @@ public abstract class Model<T extends Model<T>> {
         ) {
             while (resultSet.next()) {
                 T row = newInstance(this);
-                Set<Map.Entry<TypeResolver, Object>> columns = queryBuilder.getColumns(this).entrySet();
+                Set<Map.Entry<TypeResolver, Object>> columns = getColumns().entrySet();
 
                 for (Map.Entry<TypeResolver, Object> column : columns) {
                     TypeResolver resolver = column.getKey();
