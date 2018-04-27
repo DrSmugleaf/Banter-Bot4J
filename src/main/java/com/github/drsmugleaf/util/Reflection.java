@@ -26,7 +26,7 @@ public class Reflection {
         PACKAGE_NAME = packageName;
     }
 
-    private List<Class<?>> getClasses() throws ClassNotFoundException, IOException, URISyntaxException {
+    public List<Class<?>> getClasses() throws ClassNotFoundException, IOException, URISyntaxException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         String path = PACKAGE_NAME.replace('.', '/');
         Enumeration<URL> resources = classLoader.getResources(path);
@@ -103,26 +103,6 @@ public class Reflection {
         }
 
         classes.removeIf(cls -> !cls.isAnnotationPresent(annotation));
-
-        return classes;
-    }
-
-    @Nonnull
-    @SuppressWarnings("unchecked")
-    public <T> List<Class<? extends T>> findSubTypesOf(Class<T> type) {
-        List<Class<? extends T>> classes = new ArrayList<>();
-
-        try {
-            for (Class clazz : getClasses()) {
-                if (!type.isAssignableFrom(clazz)) {
-                    continue;
-                }
-
-                classes.add((Class<? extends T>) clazz);
-            }
-        } catch (IOException | URISyntaxException | ClassNotFoundException e) {
-            BanterBot4J.LOGGER.error("Error finding subtypes of " + type.getName(), e);
-        }
 
         return classes;
     }

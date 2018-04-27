@@ -5,7 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,11 +23,35 @@ public class Database {
     @Nonnull
     static final Connection CONNECTION = DatabaseConnection.initialize();
 
-    static {
-        Reflection reflection = new Reflection("com.github.drsmugleaf.database.models");
-        List<Class<? extends Model>> models = reflection.findSubTypesOf(Model.class);
+    @Nonnull
+    private static Logger initLogger() {
+        return LoggerFactory.getLogger(Database.class);
+    }
 
-        for (Class<? extends Model> model : models) {
+    @Nonnull
+    private static <T extends Model<T>> List<Class<T>> getModels(@Nonnull String packageName) {
+        List<Class<T>> models = new ArrayList<>();
+        Reflection reflection = new Reflection(packageName);
+
+        try {
+            for (Class<?> model : reflection.getClasses()) {
+                if (!Model.class.isAssignableFrom(model)) {
+                    continue;
+                }
+
+                models.add((Class<T>) model);
+            }
+        } catch (ClassNotFoundException | IOException | URISyntaxException e) {
+            LOGGER.error("Error getting classes from package " + packageName);
+        }
+
+        return models;
+    }
+
+    public static <T extends Model<T>> void init(@Nonnull String packageName) {
+        List<Class<T>> models = getModels(packageName);
+
+        for (Class<T> model : models) {
             ModelValidator.validateAll(model);
 
             try {
@@ -33,11 +60,6 @@ public class Database {
                 LOGGER.error("Error creating table for model " + model.getSimpleName(), e);
             }
         }
-    }
-
-    @Nonnull
-    private static Logger initLogger() {
-        return LoggerFactory.getLogger(Database.class);
     }
 
 }
