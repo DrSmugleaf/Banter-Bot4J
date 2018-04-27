@@ -15,7 +15,7 @@ public enum ModelValidator {
             List<TypeResolver> columns = Model.getColumns(model);
 
             for (TypeResolver typeResolver : columns) {
-                if (!typeResolver.FIELD.getType().isPrimitive()) {
+                if (typeResolver.FIELD.getType().isPrimitive()) {
                     throw new ValidationException("Field " + typeResolver.FIELD + " in model " + model + " is primitive");
                 }
             }
