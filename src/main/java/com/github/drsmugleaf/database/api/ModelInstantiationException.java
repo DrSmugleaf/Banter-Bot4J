@@ -5,19 +5,19 @@ package com.github.drsmugleaf.database.api;
  */
 public class ModelInstantiationException extends RuntimeException {
 
-    public ModelInstantiationException() {
+    ModelInstantiationException() {
         super();
     }
 
-    public ModelInstantiationException(String message) {
+    ModelInstantiationException(String message) {
         super(message);
     }
 
-    public ModelInstantiationException(String message, Throwable cause) {
+    ModelInstantiationException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public ModelInstantiationException(Throwable cause) {
+    ModelInstantiationException(Throwable cause) {
         super(cause);
     }
 

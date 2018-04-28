@@ -1,5 +1,9 @@
 package com.github.drsmugleaf.database.api;
 
+import com.github.drsmugleaf.database.api.annotations.Column;
+import com.github.drsmugleaf.database.api.annotations.Relation;
+import com.github.drsmugleaf.database.api.annotations.Table;
+
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;

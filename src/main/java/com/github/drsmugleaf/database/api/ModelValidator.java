@@ -1,5 +1,9 @@
 package com.github.drsmugleaf.database.api;
 
+import com.github.drsmugleaf.database.api.annotations.Relation;
+import com.github.drsmugleaf.database.api.types.PostgresTypes;
+import com.github.drsmugleaf.database.api.types.SQLTypes;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -8,7 +12,7 @@ import java.util.stream.Stream;
 /**
  * Created by DrSmugleaf on 24/04/2018.
  */
-public enum ModelValidator {
+enum ModelValidator {
 
     PRIMITIVE_ONLY {
         @Override

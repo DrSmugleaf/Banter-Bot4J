@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.database.api;
+package com.github.drsmugleaf.database.api.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

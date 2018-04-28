@@ -1,6 +1,10 @@
 package com.github.drsmugleaf.database.models;
 
 import com.github.drsmugleaf.database.api.*;
+import com.github.drsmugleaf.database.api.annotations.Column;
+import com.github.drsmugleaf.database.api.annotations.Relation;
+import com.github.drsmugleaf.database.api.annotations.RelationTypes;
+import com.github.drsmugleaf.database.api.annotations.Table;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.IChannel;

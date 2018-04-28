@@ -1,5 +1,11 @@
 package com.github.drsmugleaf.database.api;
 
+import com.github.drsmugleaf.database.api.annotations.Column;
+import com.github.drsmugleaf.database.api.annotations.Relation;
+import com.github.drsmugleaf.database.api.annotations.Table;
+import com.github.drsmugleaf.database.api.types.PostgresTypes;
+import com.github.drsmugleaf.database.api.types.SQLTypes;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
@@ -14,7 +20,7 @@ import java.util.Map;
 class TypeResolver {
 
     @Nonnull
-    public final Field FIELD;
+    final Field FIELD;
 
     TypeResolver(@Nonnull Field type) {
         FIELD = type;

@@ -5,19 +5,19 @@ package com.github.drsmugleaf.database.api;
  */
 public class ModelException extends RuntimeException {
 
-    public ModelException() {
+    ModelException() {
         super();
     }
 
-    public ModelException(String message) {
+    ModelException(String message) {
         super(message);
     }
 
-    public ModelException(String message, Throwable cause) {
+    ModelException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public ModelException(Throwable cause) {
+    ModelException(Throwable cause) {
         super(cause);
     }
 

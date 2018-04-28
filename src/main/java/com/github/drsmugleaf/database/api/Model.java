@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.database.api;
 
+import com.github.drsmugleaf.database.api.annotations.Column;
+
 import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -25,7 +27,7 @@ public abstract class Model<T extends Model<T>> {
         }
     }
 
-    public static <T extends Model<T>> List<TypeResolver> getColumns(Class<T> model) {
+    static <T extends Model<T>> List<TypeResolver> getColumns(Class<T> model) {
         List<TypeResolver> fields = new ArrayList<>();
 
         for (Field field : model.getDeclaredFields()) {
@@ -39,7 +41,7 @@ public abstract class Model<T extends Model<T>> {
     }
 
     @SuppressWarnings("unchecked")
-    public final Map<TypeResolver, Object> getColumns() {
+    final Map<TypeResolver, Object> getColumns() {
         Map<TypeResolver, Object> columns = new HashMap<>();
         List<TypeResolver> resolvers = Model.getColumns(getClass());
 

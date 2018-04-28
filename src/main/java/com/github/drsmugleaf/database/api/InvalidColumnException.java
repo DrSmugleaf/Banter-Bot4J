@@ -3,21 +3,21 @@ package com.github.drsmugleaf.database.api;
 /**
  * Created by DrSmugleaf on 31/03/2018.
  */
-class InvalidColumnException extends RuntimeException {
+public class InvalidColumnException extends RuntimeException {
 
-    protected InvalidColumnException() {
+    InvalidColumnException() {
         super();
     }
 
-    protected InvalidColumnException(String message) {
+    InvalidColumnException(String message) {
         super(message);
     }
 
-    protected InvalidColumnException(String message, Throwable cause) {
+    InvalidColumnException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    protected InvalidColumnException(Throwable cause) {
+    InvalidColumnException(Throwable cause) {
         super(cause);
     }
 

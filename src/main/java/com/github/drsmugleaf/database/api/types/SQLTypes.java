@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.database.api;
+package com.github.drsmugleaf.database.api.types;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
