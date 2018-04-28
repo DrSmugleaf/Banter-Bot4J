@@ -50,6 +50,30 @@ public enum ModelValidator {
                 }
             }
         }
+    },
+    TYPE_EXISTS {
+        @Override
+        <T extends Model<T>> void validate(Class<T> model) {
+            for (TypeResolver resolver : Model.getColumns(model)) {
+                Field field = resolver.FIELD;
+                if (field.isAnnotationPresent(Relation.class)) {
+                    continue;
+                }
+
+                Class<?> fieldType = field.getType();
+                SQLTypes sqlType;
+
+                if (fieldType.isEnum()) {
+                    sqlType = SQLTypes.getType(PostgresTypes.class, String.class);
+                } else {
+                    sqlType = SQLTypes.getType(PostgresTypes.class, fieldType);
+                }
+
+                if (sqlType == null) {
+                    throw new ValidationException("No equivalent SQL type exists for field " + field);
+                }
+            }
+        }
     };
 
     abstract <T extends Model<T>> void validate(Class<T> model);

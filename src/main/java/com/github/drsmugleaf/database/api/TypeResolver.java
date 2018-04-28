@@ -74,19 +74,19 @@ class TypeResolver {
 
         if (columnDefinition.isEmpty()) {
             Class<?> fieldType = field.getType();
-            SQLTypes type;
+            SQLTypes sqlType;
 
             if (fieldType.isEnum()) {
-                type = SQLTypes.getType(PostgresTypes.class, String.class);
+                sqlType = SQLTypes.getType(PostgresTypes.class, String.class);
             } else {
-                type = SQLTypes.getType(PostgresTypes.class, fieldType);
+                sqlType = SQLTypes.getType(PostgresTypes.class, fieldType);
             }
 
-            if (type == null) {
+            if (sqlType == null) {
                 throw new InvalidColumnException("No equivalent SQL type exists for field " + field.getName());
             }
 
-            return type.getName();
+            return sqlType.getName();
         } else {
             return columnDefinition;
         }
