@@ -14,7 +14,6 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 13/05/2017.
  */
-@SuppressWarnings("unchecked")
 public class Database {
 
     @Nonnull
@@ -29,6 +28,7 @@ public class Database {
     }
 
     @Nonnull
+    @SuppressWarnings("unchecked")
     private static <T extends Model<T>> List<Class<T>> getModels(@Nonnull String packageName) {
         List<Class<T>> models = new ArrayList<>();
         Reflection reflection = new Reflection(packageName);
