@@ -114,7 +114,7 @@ class QueryBuilder<T extends Model<T>> {
     }
 
     @Nonnull
-    String createTable() throws InvalidColumnException {
+    String createTable() {
         StringBuilder query = new StringBuilder();
         StringBuilder queryReferences = new StringBuilder();
         StringBuilder queryConstraint = new StringBuilder();

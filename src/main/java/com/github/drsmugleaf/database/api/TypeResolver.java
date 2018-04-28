@@ -22,7 +22,7 @@ class TypeResolver {
     }
 
     @Nonnull
-    private static Field getDeepRelatedField(@Nonnull Field field) throws InvalidColumnException {
+    private static Field getDeepRelatedField(@Nonnull Field field) {
         Relation relation = field.getDeclaredAnnotation(Relation.class);
         String relatedColumnName = relation.columnName();
 
@@ -57,7 +57,7 @@ class TypeResolver {
     }
 
     @Nonnull
-    String getDataType() throws InvalidColumnException {
+    String getDataType() {
         Column columnAnnotation = getColumn();
 
         Field field;

@@ -14,7 +14,7 @@ import java.util.*;
  */
 public abstract class Model<T extends Model<T>> {
 
-    static <T extends Model<T>> void createTable(@Nonnull Class<T> model) throws InvalidColumnException {
+    static <T extends Model<T>> void createTable(@Nonnull Class<T> model) {
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(model);
         String query = queryBuilder.createTable();
 

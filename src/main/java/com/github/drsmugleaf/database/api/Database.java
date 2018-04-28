@@ -53,12 +53,7 @@ public class Database {
 
         for (Class<T> model : models) {
             ModelValidator.validateAll(model);
-
-            try {
-                Model.createTable(model);
-            } catch (InvalidColumnException e) {
-                LOGGER.error("Error creating table for model " + model.getSimpleName(), e);
-            }
+            Model.createTable(model);
         }
     }
 
