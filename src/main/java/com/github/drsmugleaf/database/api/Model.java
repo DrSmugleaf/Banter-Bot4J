@@ -85,7 +85,7 @@ public abstract class Model<T extends Model<T>> {
 
                 models.add(row);
             }
-        } catch (SQLException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
+        } catch (SQLException | IllegalAccessException e) {
             throw new StatementExecutionException(e);
         }
 
@@ -127,14 +127,18 @@ public abstract class Model<T extends Model<T>> {
 
     @Nonnull
     @SuppressWarnings("unchecked")
-    static <T extends Model<T>> T newInstance(@Nonnull Class<?> model) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
-        Constructor<T> constructor = (Constructor<T>) model.getDeclaredConstructor();
-        constructor.setAccessible(true);
-        return constructor.newInstance();
+    static <T extends Model<T>> T newInstance(@Nonnull Class<?> model) {
+        try {
+            Constructor<T> constructor = (Constructor<T>) model.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            return constructor.newInstance();
+        } catch (NoSuchMethodException | InstantiationException | InvocationTargetException | IllegalAccessException e) {
+            throw new ModelInstantiationException("Error creating new model of class " + model, e);
+        }
     }
 
     @Nonnull
-    static <T extends Model<T>> T newInstance(@Nonnull Model<T> model) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+    static <T extends Model<T>> T newInstance(@Nonnull Model<T> model) {
         return newInstance(model.getClass());
     }
 

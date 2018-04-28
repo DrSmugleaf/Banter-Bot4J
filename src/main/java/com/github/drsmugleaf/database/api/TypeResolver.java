@@ -4,7 +4,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -201,11 +200,7 @@ class TypeResolver {
             return toEnum(type, result);
         } else if (FIELD.isAnnotationPresent(Relation.class)) {
             Model<?> model;
-            try {
-                model = Model.newInstance(type);
-            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                throw new ModelException("Error creating new model " + type.getSimpleName(), e);
-            }
+            model = Model.newInstance(type);
 
             Field relatedField = getRelatedField().FIELD;
             relatedField.setAccessible(true);
