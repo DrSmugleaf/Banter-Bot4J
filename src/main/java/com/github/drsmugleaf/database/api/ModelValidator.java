@@ -35,6 +35,10 @@ public enum ModelValidator {
         @Override
         <T extends Model<T>> void validate(Class<T> model) {
             for (TypeResolver resolver : Model.getColumns(model)) {
+                if (!resolver.FIELD.isAnnotationPresent(Relation.class)) {
+                    continue;
+                }
+
                 Relation relation = resolver.getRelation();
                 String relatedColumnName = relation.columnName();
 
