@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.database.api;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -27,6 +28,22 @@ public enum ModelValidator {
             Stream<Constructor<?>> declaredConstructors = Stream.of(model.getDeclaredConstructors());
             if (declaredConstructors.noneMatch(c -> c.getParameterCount() == 0)) {
                 throw new ValidationException("Model " + model + " doesn't have a constructor with no arguments");
+            }
+        }
+    },
+    RELATED_FIELD_EXISTS {
+        @Override
+        <T extends Model<T>> void validate(Class<T> model) {
+            for (TypeResolver resolver : Model.getColumns(model)) {
+                Relation relation = resolver.getRelation();
+                String relatedColumnName = relation.columnName();
+
+                Field field = resolver.FIELD;
+                try {
+                    field.getType().getDeclaredField(relatedColumnName);
+                } catch (NoSuchFieldException e) {
+                    throw new ValidationException("No related field found with name " + relatedColumnName + " for field " + field);
+                }
             }
         }
     };

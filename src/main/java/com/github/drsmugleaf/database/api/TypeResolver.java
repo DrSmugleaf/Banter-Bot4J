@@ -121,7 +121,7 @@ class TypeResolver {
         try {
             field = FIELD.getType().getDeclaredField(relatedColumnName);
         } catch (NoSuchFieldException e) {
-            throw new IllegalStateException("Field " + FIELD + " doesn't have a related field with name " + relatedColumnName);
+            throw new IllegalStateException("No related field found with name " + relatedColumnName + " for field " + FIELD);
         }
 
         return new TypeResolver(field);
