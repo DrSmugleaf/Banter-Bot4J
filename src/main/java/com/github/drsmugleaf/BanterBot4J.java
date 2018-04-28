@@ -52,9 +52,9 @@ public class BanterBot4J {
     }
 
     public static void main(String[] args) {
+        Database.init("com.github.drsmugleaf.database.models");
         CLIENT.getDispatcher().registerListener(new Handler());
         CLIENT.getDispatcher().registerListeners(Guild.class, User.class, Member.class, Channel.class, GuildChannel.class, BridgedChannel.class, Translator.class);
-        new Database();
 
         CLIENT.login();
     }
