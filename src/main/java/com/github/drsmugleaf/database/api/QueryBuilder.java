@@ -133,12 +133,8 @@ class QueryBuilder<T extends Model<T>> {
             TypeResolver column = iterator.next();
             Column columnAnnotation = column.getColumn();
             String name = columnAnnotation.name();
-            String type = column.getDataType();
 
-            query
-                    .append(name)
-                    .append(" ")
-                    .append(type);
+            query.append(column.getColumnDefinition());
 
             if (column.FIELD.isAnnotationPresent(Relation.class)) {
                 if (queryReferences.length() != 0) {
@@ -146,35 +142,17 @@ class QueryBuilder<T extends Model<T>> {
                 }
 
                 TypeResolver relationResolver = column.getRelatedField();
-                Relation relationAnnotation = column.getRelation();
                 String relatedTableName = relationResolver.getTable().name();
-                query
-                        .append(" REFERENCES ")
-                        .append(relatedTableName)
-                        .append(" (")
-                        .append(relationAnnotation.columnName())
-                        .append(") ON UPDATE CASCADE ON DELETE CASCADE, ");
 
                 queryConstraint
                         .append(relatedTableName)
                         .append("_");
 
                 queryReferences.append(name);
-            } else {
-                if (column.isID()) {
-                    query.append(" PRIMARY KEY ");
-                }
+            }
 
-                String defaultValue = columnAnnotation.defaultValue();
-                if (!defaultValue.isEmpty()) {
-                    query
-                            .append(" DEFAULT ")
-                            .append(defaultValue);
-                }
-
-                if (iterator.hasNext() || queryConstraint.length() != 0) {
-                    query.append(", ");
-                }
+            if (iterator.hasNext() || queryConstraint.length() != 0) {
+                query.append(", ");
             }
         }
 

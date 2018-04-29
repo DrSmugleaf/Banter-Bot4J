@@ -64,15 +64,7 @@ enum ModelValidator {
                     continue;
                 }
 
-                Class<?> fieldType = field.getType();
-                SQLTypes sqlType;
-
-                if (fieldType.isEnum()) {
-                    sqlType = SQLTypes.getType(PostgresTypes.class, String.class);
-                } else {
-                    sqlType = SQLTypes.getType(PostgresTypes.class, fieldType);
-                }
-
+                String sqlType = SQLTypes.getType(PostgresTypes.class, field);
                 if (sqlType == null) {
                     throw new ValidationException("No equivalent SQL type exists for field " + field);
                 }

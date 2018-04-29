@@ -78,20 +78,12 @@ class TypeResolver {
         }
 
         if (columnDefinition.isEmpty()) {
-            Class<?> fieldType = field.getType();
-            SQLTypes sqlType;
-
-            if (fieldType.isEnum()) {
-                sqlType = SQLTypes.getType(PostgresTypes.class, String.class);
-            } else {
-                sqlType = SQLTypes.getType(PostgresTypes.class, fieldType);
-            }
-
+            String sqlType = SQLTypes.getType(PostgresTypes.class, field);
             if (sqlType == null) {
-                throw new InvalidColumnException("No equivalent SQL type exists for field " + field.getName());
+                throw new InvalidColumnException("No equivalent SQL type exists for field " + field);
             }
 
-            return sqlType.getName();
+            return sqlType;
         } else {
             return columnDefinition;
         }
@@ -229,6 +221,49 @@ class TypeResolver {
         } else {
             return result;
         }
+    }
+
+    @Nonnull
+    String getColumnDefinition() {
+        StringBuilder definition = new StringBuilder();
+        Column column = getColumn();
+        String dataType = getDataType();
+
+        dataType = dataType
+                .replaceAll("\\$l", String.valueOf(column.length()))
+                .replaceAll("\\$p", String.valueOf(column.precision()))
+                .replaceAll("\\$s", String.valueOf(column.scale()));
+
+        definition
+                .append(column.name())
+                .append(" ")
+                .append(dataType);
+
+        if (FIELD.isAnnotationPresent(Relation.class)) {
+            TypeResolver relationResolver = getRelatedField();
+            Relation relation = getRelation();
+            String relatedTableName = relationResolver.getTable().name();
+
+            definition
+                    .append(" REFERENCES ")
+                    .append(relatedTableName)
+                    .append(" (")
+                    .append(relation.columnName())
+                    .append(") ON UPDATE CASCADE ON DELETE CASCADE ");
+        }
+
+        if (isID()) {
+            definition.append(" PRIMARY KEY ");
+        }
+
+        String defaultValue = column.defaultValue();
+        if (!defaultValue.isEmpty()) {
+            definition
+                    .append(" DEFAULT ")
+                    .append(defaultValue);
+        }
+
+        return definition.toString();
     }
 
 }

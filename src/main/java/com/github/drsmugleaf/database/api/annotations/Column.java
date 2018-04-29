@@ -18,6 +18,12 @@ public @interface Column {
 
     String columnDefinition() default "";
 
+    int length() default 255;
+
+    int precision() default 0;
+
+    int scale() default 0;
+
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     @interface Id {}
