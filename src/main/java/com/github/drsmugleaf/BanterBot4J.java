@@ -1,19 +1,20 @@
 package com.github.drsmugleaf;
 
-import com.github.drsmugleaf.commands.Handler;
-import com.github.drsmugleaf.commands.Translator;
 import com.github.drsmugleaf.database.api.Database;
-import com.github.drsmugleaf.database.models.*;
 import com.github.drsmugleaf.env.Env;
 import com.github.drsmugleaf.env.Keys;
+import com.github.drsmugleaf.util.Reflection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
+import sx.blah.discord.api.events.EventSubscriber;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by DrSmugleaf on 19/05/2017.
@@ -51,10 +52,15 @@ public class BanterBot4J {
         return LoggerFactory.getLogger(BanterBot4J.class);
     }
 
+    private static void registerListeners() {
+        Reflection reflection = new Reflection("com.github.drsmugleaf");
+        List<Method> methods = reflection.findMethodsWithAnnotation(EventSubscriber.class);
+        methods.forEach(method -> CLIENT.getDispatcher().registerListener(method.getDeclaringClass()));
+    }
+
     public static void main(String[] args) {
         Database.init("com.github.drsmugleaf.database.models");
-        CLIENT.getDispatcher().registerListener(new Handler());
-        CLIENT.getDispatcher().registerListeners(Guild.class, User.class, Member.class, Channel.class, GuildChannel.class, BridgedChannel.class, Translator.class);
+        registerListeners();
 
         CLIENT.login();
     }

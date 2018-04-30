@@ -81,8 +81,9 @@ public class Reflection {
         if(classes == null) {
             return methodList;
         }
+
         classes.forEach(cls -> {
-            for (Method method : cls.getMethods()) {
+            for (Method method : cls.getDeclaredMethods()) {
                 if (method.isAnnotationPresent(annotation)) {
                     methodList.add(method);
                 }
