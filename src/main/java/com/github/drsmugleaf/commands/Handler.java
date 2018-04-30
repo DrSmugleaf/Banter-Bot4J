@@ -65,7 +65,7 @@ public class Handler {
     }
 
     @EventSubscriber
-    public void handle(@Nonnull MessageReceivedEvent event) {
+    public static void handle(@Nonnull MessageReceivedEvent event) {
         String[] argsArray = event.getMessage().getContent().split(" ");
 
         if (argsArray.length == 0) {
