@@ -123,7 +123,7 @@ public class Translator extends AbstractCommand {
             IChannel bridged = event.getClient().getChannelByID(bridgedChannel.bridged.id);
             Languages bridgedLanguage = bridgedChannel.bridgedLanguage;
             String translation = API.translate(channelLanguage.getCode(), bridgedLanguage.getCode(), event.getMessage().getFormattedContent());
-            bridged.sendMessage("**" + authorName + "**: " + translation);
+            sendMessage(bridged, "**" + authorName + "**: " + translation);
         }
     }
 
