@@ -348,6 +348,8 @@ class QueryBuilder<T extends Model<T>> {
                 } catch (SQLException e) {
                     throw new StatementValueException(e);
                 }
+
+                i++;
             }
 
             return statement.toString();
