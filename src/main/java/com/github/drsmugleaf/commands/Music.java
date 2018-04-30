@@ -28,13 +28,22 @@ import java.util.concurrent.TimeUnit;
  */
 public class Music extends AbstractCommand {
 
+    @Nonnull
     private static final AudioPlayerManager PLAYER_MANAGER = new DefaultAudioPlayerManager();
+
+    @Nonnull
     private static final Map<IGuild, GuildMusicManager> MUSIC_MANAGERS = new HashMap<>();
+
+    @Nonnull
     private static final Map<IGuild, List<IUser>> SKIP_VOTES = new HashMap<>();
+
+    @Nonnull
     private static final Cache<SimpleEntry<IGuild, IUser>, List<AudioTrack>> UNDO_STOP_CACHE = CacheBuilder.newBuilder()
             .expireAfterWrite(1, TimeUnit.MINUTES)
             .build();
-    private static IMessage lastMessage = null;
+
+    @Nonnull
+    private static Map<IGuild, IMessage> lastMessage = new HashMap<>();
 
     static {
         AudioSourceManagers.registerRemoteSources(PLAYER_MANAGER);
@@ -43,26 +52,28 @@ public class Music extends AbstractCommand {
     
     private static void reply(@Nonnull IChannel channel, @Nonnull String message) {
         IMessage iMessage = sendMessage(channel, message);
+        IGuild guild = channel.getGuild();
 
-        if (lastMessage != null) {
+        if (lastMessage.containsKey(guild)) {
             try {
-                lastMessage.delete();
+                lastMessage.get(guild).delete();
             } catch (MissingPermissionsException ignored) {}
         }
 
-        lastMessage = iMessage;
+        lastMessage.put(guild, iMessage);
     }
 
     private static void reply(@Nonnull IChannel channel, @Nonnull EmbedObject embed) {
         IMessage iMessage = sendMessage(channel, embed);
+        IGuild guild = channel.getGuild();
 
-        if (lastMessage != null) {
+        if (lastMessage.containsKey(guild)) {
             try {
-                lastMessage.delete();
+                lastMessage.get(guild).delete();
             } catch (MissingPermissionsException ignored) {}
         }
 
-        lastMessage = iMessage;
+        lastMessage.put(guild, iMessage);
     }
 
     public static synchronized GuildMusicManager getGuildMusicManager(IGuild guild) {
