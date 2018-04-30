@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class Admin extends AbstractCommand {
 
-    @Command(permissions = {Permissions.KICK, Permissions.BAN})
+    @CommandInfo(permissions = {Permissions.KICK, Permissions.BAN})
     public static void blacklist(MessageReceivedEvent event, List<String> args) {
         IUser author = event.getAuthor();
 

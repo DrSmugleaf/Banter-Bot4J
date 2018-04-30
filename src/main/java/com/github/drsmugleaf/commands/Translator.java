@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class Translator extends AbstractCommand {
 
-    @Command(permissions = {Permissions.MANAGE_CHANNELS}, tags = {Tags.GUILD_ONLY})
+    @CommandInfo(permissions = {Permissions.MANAGE_CHANNELS}, tags = {Tags.GUILD_ONLY})
     public static void bridge(@Nonnull MessageReceivedEvent event, List<String> args) {
         if (args.isEmpty()) {
             sendMessage(event.getChannel(), "You didn't provide any channels or languages.\n" +
@@ -82,7 +82,7 @@ public class Translator extends AbstractCommand {
         );
     }
 
-    @Command(permissions = {Permissions.MANAGE_CHANNELS}, tags = {Tags.GUILD_ONLY})
+    @CommandInfo(permissions = {Permissions.MANAGE_CHANNELS}, tags = {Tags.GUILD_ONLY})
     public static void unbridge(@Nonnull MessageReceivedEvent event, List<String> args) {
         if (args.isEmpty()) {
             sendMessage(event.getChannel(), "You didn't provide a channel name.");

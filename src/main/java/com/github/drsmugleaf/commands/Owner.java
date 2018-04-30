@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class Owner extends AbstractCommand {
 
-    @Command(tags = {Tags.OWNER_ONLY})
+    @CommandInfo(tags = {Tags.OWNER_ONLY})
     public static void avatar(MessageReceivedEvent event, List<String> args) {
         if (args.isEmpty()) {
             sendMessage(event.getChannel(), "You didn't provide a link to change the bot's image to.");
@@ -50,14 +50,14 @@ public class Owner extends AbstractCommand {
         }
     }
 
-    @Command(tags = {Tags.OWNER_ONLY})
+    @CommandInfo(tags = {Tags.OWNER_ONLY})
     public static void name(MessageReceivedEvent event, List<String> args) {
         String name = String.join(" ", args);
         event.getClient().changeUsername(String.join(" ", args));
         sendMessage(event.getChannel(), "Changed the bot's name to " + name);
     }
 
-    @Command(tags = {Tags.OWNER_ONLY})
+    @CommandInfo(tags = {Tags.OWNER_ONLY})
     public static void playing(MessageReceivedEvent event, List<String> args) {
         if(args.isEmpty()) {
             event.getClient().changePlayingText(null);

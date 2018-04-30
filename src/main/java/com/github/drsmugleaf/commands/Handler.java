@@ -18,15 +18,15 @@ import java.util.*;
 public class Handler {
 
     @Nonnull
-    private static final Map<String, ICommand> COMMANDS = new HashMap<>();
+    private static final Map<String, CommandRunnable> COMMANDS = new HashMap<>();
 
     static {
         Reflection reflection = new Reflection("com.github.drsmugleaf.commands");
-        List<Method> commands = reflection.findMethodsWithAnnotation(Command.class);
+        List<Method> commands = reflection.findMethodsWithAnnotation(CommandInfo.class);
         for (Method method : commands) {
-            Command annotation = method.getAnnotation(Command.class);
+            CommandInfo annotation = method.getAnnotation(CommandInfo.class);
 
-            ICommand command = (event, args) -> {
+            CommandRunnable command = (event, args) -> {
                 if (event.getGuild() != null) {
                     List<Permissions> annotationPermissions = Arrays.asList(annotation.permissions());
                     EnumSet<Permissions> authorPermissions = event.getAuthor().getPermissionsForGuild(event.getGuild());
