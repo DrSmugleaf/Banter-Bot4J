@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.commands;
 
-import com.github.drsmugleaf.models.Member;
-import com.github.drsmugleaf.util.Annotations;
+import com.github.drsmugleaf.database.models.Member;
+import com.github.drsmugleaf.util.Reflection;
 import com.github.drsmugleaf.BanterBot4J;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -21,7 +21,8 @@ public class Handler {
     private static final Map<String, ICommand> COMMANDS = new HashMap<>();
 
     static {
-        List<Method> commands = Annotations.findMethodsWithAnnotations(Command.class);
+        Reflection reflection = new Reflection("com.github.drsmugleaf.commands");
+        List<Method> commands = reflection.findMethodsWithAnnotation(Command.class);
         for (Method method : commands) {
             Command annotation = method.getAnnotation(Command.class);
 
@@ -78,7 +79,7 @@ public class Handler {
         if (event.getGuild() != null) {
             long userID = event.getAuthor().getLongID();
             long guildID = event.getGuild().getLongID();
-            Member member = Member.get(userID, guildID);
+            Member member = new Member(userID, guildID).get().get(0);
             if (member != null && member.isBlacklisted) {
                 return;
             }

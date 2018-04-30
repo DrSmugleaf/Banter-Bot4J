@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.models.BridgedChannel;
+import com.github.drsmugleaf.database.models.BridgedChannel;
 import com.github.drsmugleaf.translator.API;
 import com.github.drsmugleaf.translator.Languages;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -96,7 +96,10 @@ public class Translator extends AbstractCommand {
         }
 
         IChannel channel = channels.get(0);
-        BridgedChannel.delete(channel.getLongID());
+        BridgedChannel bridgedChannel1 = new BridgedChannel(channel.getLongID(), null);
+        BridgedChannel bridgedChannel2 = new BridgedChannel(null, channel.getLongID());
+        bridgedChannel1.delete();
+        bridgedChannel2.delete();
 
         sendMessage(event.getChannel(), "Unbridged all channels bridged with " + channel.getName());
     }
@@ -109,7 +112,7 @@ public class Translator extends AbstractCommand {
         }
 
         IChannel channel = event.getChannel();
-        List<BridgedChannel> bridgedChannelList = BridgedChannel.get(channel.getLongID());
+        List<BridgedChannel> bridgedChannelList = new BridgedChannel(channel.getLongID()).get();
         if (bridgedChannelList.isEmpty()) {
             return;
         }
@@ -117,7 +120,7 @@ public class Translator extends AbstractCommand {
         String authorName = author.getDisplayName(event.getGuild());
         for (BridgedChannel bridgedChannel : bridgedChannelList) {
             Languages channelLanguage = bridgedChannel.channelLanguage;
-            IChannel bridged = event.getClient().getChannelByID(bridgedChannel.bridgedID);
+            IChannel bridged = event.getClient().getChannelByID(bridgedChannel.bridged.id);
             Languages bridgedLanguage = bridgedChannel.bridgedLanguage;
             String translation = API.translate(channelLanguage.getCode(), bridgedLanguage.getCode(), event.getMessage().getFormattedContent());
             bridged.sendMessage("**" + authorName + "**: " + translation);

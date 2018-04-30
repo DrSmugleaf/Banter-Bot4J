@@ -24,7 +24,6 @@ public class Env {
 
         try(InputStream input = new FileInputStream(".env")) {
             env.load(input);
-            input.close();
         } catch (IOException e) {
             BanterBot4J.LOGGER.warn("Error reading .env file", e);
         }

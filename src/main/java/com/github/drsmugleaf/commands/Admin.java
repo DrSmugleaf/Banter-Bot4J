@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.commands;
 
-import com.github.drsmugleaf.models.Member;
+import com.github.drsmugleaf.database.models.Member;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
@@ -23,7 +23,7 @@ public class Admin extends AbstractCommand {
         IRole highestAuthorRole = getHighestRole(event.getAuthor(), event.getGuild());
 
         mentions.forEach(mention -> {
-            Member member = Member.get(mention.getLongID(), guildID);
+            Member member = new Member(mention.getLongID(), guildID).get().get(0);
             String nickname = mention.getDisplayName(event.getGuild());
 
             if(member == null) {
