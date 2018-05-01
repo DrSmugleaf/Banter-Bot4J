@@ -22,8 +22,8 @@ public enum Cards {
     QUEEN("Queen", 10),
     KING("King", 10);
 
-    public final String NAME;
-    public final int VALUE;
+    final String NAME;
+    final int VALUE;
 
     Cards(@Nonnull String name, int value) {
         NAME = name;

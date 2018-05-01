@@ -12,8 +12,8 @@ public enum Suits {
     HEARTS("Hearts", '♥'),
     SPADES("Spades", '♠');
 
-    public final String NAME;
-    public final char SYMBOL;
+    final String NAME;
+    final char SYMBOL;
 
     Suits(@Nonnull String name, @Nonnull char symbol) {
         NAME = name;
