@@ -13,13 +13,34 @@ public class Player {
     final Hand HAND = new Hand();
 
     @Nonnull
-    Actions action = Actions.NONE;
+    private Actions action = Actions.NONE;
 
     @Nonnull
-    Status status = Status.WAITING;
+    private Status status = Status.WAITING;
 
     Player(long id) {
         ID = id;
+    }
+
+    public Actions getAction() {
+        return action;
+    }
+
+    public boolean setAction(@Nonnull Actions action) {
+        if (action.isValidFor(this)) {
+            this.action = action;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    void setStatus(@Nonnull Status status) {
+        this.status = status;
     }
 
 }

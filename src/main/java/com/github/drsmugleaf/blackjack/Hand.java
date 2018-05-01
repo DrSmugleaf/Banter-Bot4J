@@ -37,6 +37,14 @@ public class Hand implements Comparable<Hand> {
         return score;
     }
 
+    Card get(int i) {
+        return CARDS.get(i);
+    }
+
+    int size() {
+        return CARDS.size();
+    }
+
     int add(@Nonnull Card... cards) {
         Collections.addAll(CARDS, cards);
         return getScore();
@@ -46,7 +54,5 @@ public class Hand implements Comparable<Hand> {
         CARDS.addAll(cards);
         return getScore();
     }
-
-
 
 }
