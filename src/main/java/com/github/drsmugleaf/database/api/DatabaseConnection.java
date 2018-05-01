@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.database.api;
 
-import com.github.drsmugleaf.env.Env;
 import com.github.drsmugleaf.env.Keys;
 
 import javax.annotation.Nonnull;
@@ -43,13 +42,7 @@ class DatabaseConnection {
             System.exit(1);
         }
 
-        String uri = Env.get(Keys.DATABASE_URL);
-        if (uri == null) {
-            Database.LOGGER.error("Database URL environment variable is null");
-            System.exit(1);
-        }
-
-        Map<String, String> credentials = getCredentials(uri);
+        Map<String, String> credentials = getCredentials(Keys.DATABASE_URL.VALUE);
         String url = credentials.get("url");
         String username = credentials.get("username");
         String password = credentials.get("password");

@@ -1,8 +1,7 @@
 package com.github.drsmugleaf.youtube;
 
-import com.github.drsmugleaf.env.Env;
-import com.github.drsmugleaf.env.Keys;
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.env.Keys;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
@@ -34,8 +33,7 @@ public class API {
             throw new SearchErrorException(e);
         }
 
-        String apiKey = Env.get(Keys.GOOGLE_KEY);
-        request.setKey(apiKey);
+        request.setKey(Keys.GOOGLE_KEY.VALUE);
         request.setQ(query);
         request.setType("video");
         request.setMaxResults(1L);

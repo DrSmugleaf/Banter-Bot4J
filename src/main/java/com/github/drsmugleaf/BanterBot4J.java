@@ -1,7 +1,6 @@
 package com.github.drsmugleaf;
 
 import com.github.drsmugleaf.database.api.Database;
-import com.github.drsmugleaf.env.Env;
 import com.github.drsmugleaf.env.Keys;
 import com.github.drsmugleaf.util.Reflection;
 import org.slf4j.Logger;
@@ -28,7 +27,7 @@ public class BanterBot4J {
     private static final IDiscordClient CLIENT = buildClient();
 
     @Nonnull
-    public static final String BOT_PREFIX = getBotPrefix();
+    public static final String BOT_PREFIX = Keys.BOT_PREFIX.VALUE;
 
     @Nonnull
     private static final Long[] OWNERS = {109067752286715904L};
@@ -36,15 +35,8 @@ public class BanterBot4J {
     @Nonnull
     private static IDiscordClient buildClient() {
         ClientBuilder clientBuilder = new ClientBuilder();
-        String token = Env.get(Keys.DISCORD_TOKEN);
-        clientBuilder.withToken(token).withRecommendedShardCount();
+        clientBuilder.withToken(Keys.DISCORD_TOKEN.VALUE).withRecommendedShardCount();
         return clientBuilder.build();
-    }
-
-    @Nonnull
-    private static String getBotPrefix() {
-        String envPrefix = Env.get(Keys.BOT_PREFIX);
-        return envPrefix == null ? "!" : envPrefix;
     }
 
     @Nonnull
