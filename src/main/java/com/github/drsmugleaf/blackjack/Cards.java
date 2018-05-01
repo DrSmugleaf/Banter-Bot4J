@@ -8,7 +8,6 @@ import javax.annotation.Nonnull;
 public enum Cards {
 
     ACE("Ace", 11),
-    ONE("One", 1),
     TWO("Two", 2),
     THREE("Three", 3),
     FOUR("Four", 4),
