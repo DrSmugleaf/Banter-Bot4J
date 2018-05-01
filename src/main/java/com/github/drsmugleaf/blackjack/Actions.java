@@ -6,6 +6,7 @@ package com.github.drsmugleaf.blackjack;
 public enum Actions {
 
     HIT,
+    NONE,
     STAND,
     DOUBLE_DOWN,
     SPLIT,
