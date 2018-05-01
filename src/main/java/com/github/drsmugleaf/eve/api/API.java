@@ -17,10 +17,13 @@ import java.util.Scanner;
  */
 class API {
 
+    @Nonnull
     private static final String URL = "https://esi.tech.ccp.is/latest/";
 
+    @Nonnull
     public static final Logger LOGGER = LoggerFactory.getLogger(API.class);
 
+    @Nonnull
     static String getResponse(@Nonnull String endpoint, @Nonnull Map<String, String> properties) {
         URL url;
         try {
@@ -51,7 +54,8 @@ class API {
         return response.toString();
     }
 
-    public static String getResponse(String endpoint) {
+    @Nonnull
+    static String getResponse(@Nonnull String endpoint) {
         return getResponse(endpoint, new HashMap<>());
     }
 
