@@ -18,4 +18,8 @@ public class Card {
         SUIT = suit;
     }
 
+    int getValue() {
+        return CARD.getValue();
+    }
+
 }
