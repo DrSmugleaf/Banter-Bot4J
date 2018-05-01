@@ -1,11 +1,13 @@
-package com.github.drsmugleaf.blackjack;
+package com.github.drsmugleaf.blackjack.decks.french;
+
+import com.github.drsmugleaf.blackjack.decks.Cards;
 
 import javax.annotation.Nonnull;
 
 /**
  * Created by DrSmugleaf on 01/05/2018.
  */
-public enum Cards {
+public enum FrenchCards implements Cards {
 
     ACE("Ace", 11),
     TWO("Two", 2),
@@ -24,9 +26,20 @@ public enum Cards {
     final String NAME;
     final int VALUE;
 
-    Cards(@Nonnull String name, int value) {
+    FrenchCards(@Nonnull String name, int value) {
         NAME = name;
         VALUE = value;
+    }
+
+    @Nonnull
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
+    @Override
+    public int getValue() {
+        return VALUE;
     }
 
 }

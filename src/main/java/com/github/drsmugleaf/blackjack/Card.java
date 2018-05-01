@@ -1,5 +1,8 @@
 package com.github.drsmugleaf.blackjack;
 
+import com.github.drsmugleaf.blackjack.decks.Cards;
+import com.github.drsmugleaf.blackjack.decks.Suits;
+
 import javax.annotation.Nonnull;
 
 /**

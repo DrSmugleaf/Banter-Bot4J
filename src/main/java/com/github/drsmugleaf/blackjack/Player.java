@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.blackjack;
 
+import com.github.drsmugleaf.blackjack.decks.Cards;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,9 +14,8 @@ public class Player {
 
     final List<Cards> HAND = new ArrayList<>();
 
-    Player(long id, List<Cards> hand) {
+    Player(long id) {
         ID = id;
-        HAND.addAll(hand);
     }
 
 }
