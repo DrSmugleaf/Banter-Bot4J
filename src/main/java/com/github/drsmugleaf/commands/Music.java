@@ -28,13 +28,22 @@ import java.util.concurrent.TimeUnit;
  */
 public class Music extends AbstractCommand {
 
+    @Nonnull
     private static final AudioPlayerManager PLAYER_MANAGER = new DefaultAudioPlayerManager();
+
+    @Nonnull
     private static final Map<IGuild, GuildMusicManager> MUSIC_MANAGERS = new HashMap<>();
+
+    @Nonnull
     private static final Map<IGuild, List<IUser>> SKIP_VOTES = new HashMap<>();
+
+    @Nonnull
     private static final Cache<SimpleEntry<IGuild, IUser>, List<AudioTrack>> UNDO_STOP_CACHE = CacheBuilder.newBuilder()
             .expireAfterWrite(1, TimeUnit.MINUTES)
             .build();
-    private static IMessage lastMessage = null;
+
+    @Nonnull
+    private static Map<IGuild, IMessage> lastMessage = new HashMap<>();
 
     static {
         AudioSourceManagers.registerRemoteSources(PLAYER_MANAGER);
@@ -43,26 +52,28 @@ public class Music extends AbstractCommand {
     
     private static void reply(@Nonnull IChannel channel, @Nonnull String message) {
         IMessage iMessage = sendMessage(channel, message);
+        IGuild guild = channel.getGuild();
 
-        if (lastMessage != null) {
+        if (lastMessage.containsKey(guild)) {
             try {
-                lastMessage.delete();
+                lastMessage.get(guild).delete();
             } catch (MissingPermissionsException ignored) {}
         }
 
-        lastMessage = iMessage;
+        lastMessage.put(guild, iMessage);
     }
 
     private static void reply(@Nonnull IChannel channel, @Nonnull EmbedObject embed) {
         IMessage iMessage = sendMessage(channel, embed);
+        IGuild guild = channel.getGuild();
 
-        if (lastMessage != null) {
+        if (lastMessage.containsKey(guild)) {
             try {
-                lastMessage.delete();
+                lastMessage.get(guild).delete();
             } catch (MissingPermissionsException ignored) {}
         }
 
-        lastMessage = iMessage;
+        lastMessage.put(guild, iMessage);
     }
 
     public static synchronized GuildMusicManager getGuildMusicManager(IGuild guild) {
@@ -81,7 +92,7 @@ public class Music extends AbstractCommand {
         return PLAYER_MANAGER;
     }
 
-    @Command(tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.DELETE_COMMAND_MESSAGE})
+    @CommandInfo(tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.DELETE_COMMAND_MESSAGE})
     public static void play(MessageReceivedEvent event, List<String> args) {
         IChannel channel = event.getChannel();
 
@@ -91,7 +102,7 @@ public class Music extends AbstractCommand {
         PLAYER_MANAGER.loadItem(searchString, new AudioResultHandler(channel, author, searchString));
     }
 
-    @Command(tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL, Tags.DELETE_COMMAND_MESSAGE})
+    @CommandInfo(tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL, Tags.DELETE_COMMAND_MESSAGE})
     public static void skip(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
@@ -137,7 +148,7 @@ public class Music extends AbstractCommand {
         }
     }
 
-    @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL, Tags.DELETE_COMMAND_MESSAGE})
+    @CommandInfo(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL, Tags.DELETE_COMMAND_MESSAGE})
     public static void pause(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
@@ -157,7 +168,7 @@ public class Music extends AbstractCommand {
         reply(channel, "Paused the current track.");
     }
 
-    @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL, Tags.DELETE_COMMAND_MESSAGE})
+    @CommandInfo(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL, Tags.DELETE_COMMAND_MESSAGE})
     public static void resume(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
@@ -177,7 +188,7 @@ public class Music extends AbstractCommand {
         reply(channel, "Resumed the current track.");
     }
 
-    @Command(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
+    @CommandInfo(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
     public static void stop(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
@@ -203,7 +214,7 @@ public class Music extends AbstractCommand {
         );
     }
 
-    @Command(tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
+    @CommandInfo(tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
     public static void undostop(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
@@ -225,7 +236,7 @@ public class Music extends AbstractCommand {
         reply(channel, "Restored all stopped tracks.");
     }
 
-    @Command(tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
+    @CommandInfo(tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
     public static void queue(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();

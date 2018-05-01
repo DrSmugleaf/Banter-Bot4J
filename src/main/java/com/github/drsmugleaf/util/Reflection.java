@@ -17,11 +17,18 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 21/05/2017.
  */
-public class Annotations {
+public class Reflection {
 
-    private static Iterable<Class> getClasses(String packageName) throws ClassNotFoundException, IOException, URISyntaxException {
+    @Nonnull
+    private final String PACKAGE_NAME;
+
+    public Reflection(@Nonnull String packageName) {
+        PACKAGE_NAME = packageName;
+    }
+
+    public List<Class<?>> getClasses() throws ClassNotFoundException, IOException, URISyntaxException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        String path = packageName.replace('.', '/');
+        String path = PACKAGE_NAME.replace('.', '/');
         Enumeration<URL> resources = classLoader.getResources(path);
         List<File> dirs = new ArrayList<>();
 
@@ -31,16 +38,16 @@ public class Annotations {
             dirs.add(new File(uri.getPath()));
         }
 
-        List<Class> classes = new ArrayList<>();
+        List<Class<?>> classes = new ArrayList<>();
         for (File directory : dirs) {
-            classes.addAll(findClasses(directory, packageName));
+            classes.addAll(findClasses(directory, PACKAGE_NAME));
         }
 
         return classes;
     }
 
-    private static List<Class> findClasses(File directory, String packageName) throws ClassNotFoundException {
-        List<Class> classes = new ArrayList<>();
+    private List<Class<?>> findClasses(File directory, String packageName) throws ClassNotFoundException {
+        List<Class<?>> classes = new ArrayList<>();
         if (!directory.exists()) {
             return classes;
         }
@@ -62,18 +69,21 @@ public class Annotations {
     }
 
     @Nonnull
-    public static List<Method> findMethodsWithAnnotations(Class<? extends Annotation> annotation) {
-        Iterable<Class> classes = null;
+    public List<Method> findMethodsWithAnnotation(Class<? extends Annotation> annotation) {
+        Iterable<Class<?>> classes = null;
         try {
-            classes = Annotations.getClasses("com.github.drsmugleaf.commands");
+            classes = getClasses();
         } catch(ClassNotFoundException | IOException | URISyntaxException e) {
-            BanterBot4J.LOGGER.error("Error getting classes in commands package", e);
+            BanterBot4J.LOGGER.error("Error finding methods with annotation " + annotation.getName(), e);
         }
 
         List<Method> methodList = new ArrayList<>();
-        if(classes == null) return methodList;
-        classes.forEach((Class cls) -> {
-            for (Method method : cls.getMethods()) {
+        if(classes == null) {
+            return methodList;
+        }
+
+        classes.forEach(cls -> {
+            for (Method method : cls.getDeclaredMethods()) {
                 if (method.isAnnotationPresent(annotation)) {
                     methodList.add(method);
                 }
@@ -81,6 +91,21 @@ public class Annotations {
         });
 
         return methodList;
+    }
+
+    @Nonnull
+    public List<Class<?>> findClassesWithAnnotation(Class<? extends Annotation> annotation) {
+        List<Class<?>> classes = new ArrayList<>();
+
+        try {
+            classes.addAll(getClasses());
+        } catch (IOException | URISyntaxException | ClassNotFoundException e) {
+            BanterBot4J.LOGGER.error("Error finding classes with annotation" + annotation.getName(), e);
+        }
+
+        classes.removeIf(cls -> !cls.isAnnotationPresent(annotation));
+
+        return classes;
     }
 
 }

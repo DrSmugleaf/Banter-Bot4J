@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.commands;
 
-import com.github.drsmugleaf.models.Member;
-import com.github.drsmugleaf.util.Annotations;
+import com.github.drsmugleaf.database.models.Member;
+import com.github.drsmugleaf.util.Reflection;
 import com.github.drsmugleaf.BanterBot4J;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -18,14 +18,15 @@ import java.util.*;
 public class Handler {
 
     @Nonnull
-    private static final Map<String, ICommand> COMMANDS = new HashMap<>();
+    private static final Map<String, CommandRunnable> COMMANDS = new HashMap<>();
 
     static {
-        List<Method> commands = Annotations.findMethodsWithAnnotations(Command.class);
+        Reflection reflection = new Reflection("com.github.drsmugleaf.commands");
+        List<Method> commands = reflection.findMethodsWithAnnotation(CommandInfo.class);
         for (Method method : commands) {
-            Command annotation = method.getAnnotation(Command.class);
+            CommandInfo annotation = method.getAnnotation(CommandInfo.class);
 
-            ICommand command = (event, args) -> {
+            CommandRunnable command = (event, args) -> {
                 if (event.getGuild() != null) {
                     List<Permissions> annotationPermissions = Arrays.asList(annotation.permissions());
                     EnumSet<Permissions> authorPermissions = event.getAuthor().getPermissionsForGuild(event.getGuild());
@@ -64,7 +65,7 @@ public class Handler {
     }
 
     @EventSubscriber
-    public void handle(@Nonnull MessageReceivedEvent event) {
+    public static void handle(@Nonnull MessageReceivedEvent event) {
         String[] argsArray = event.getMessage().getContent().split(" ");
 
         if (argsArray.length == 0) {
@@ -78,7 +79,7 @@ public class Handler {
         if (event.getGuild() != null) {
             long userID = event.getAuthor().getLongID();
             long guildID = event.getGuild().getLongID();
-            Member member = Member.get(userID, guildID);
+            Member member = new Member(userID, guildID).get().get(0);
             if (member != null && member.isBlacklisted) {
                 return;
             }

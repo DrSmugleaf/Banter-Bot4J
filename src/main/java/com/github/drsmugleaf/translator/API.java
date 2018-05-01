@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.translator;
 
-import com.github.drsmugleaf.env.Env;
 import com.github.drsmugleaf.env.Keys;
 import org.json.XML;
 
@@ -19,21 +18,16 @@ public class API {
 
     private static final String PATH = "https://api.microsofttranslator.com/V2/Http.svc/Translate";
     private static final String KEY_PROPERTY = "Ocp-Apim-Subscription-Key";
-    private static final String KEY = Env.get(Keys.AZURE_TRANSLATOR_KEY);
 
     @Nullable
     public static String translate(String from, String to, String text) {
-        if (KEY == null) {
-            throw new IllegalStateException("Azure Translator Key not found.");
-        }
-
         try {
             text = URLEncoder.encode(text, "UTF8");
             URL url = new URL(PATH + "?from=" + from + "&to=" + to + "&text=" + text);
 
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
-            connection.setRequestProperty(KEY_PROPERTY, KEY);
+            connection.setRequestProperty(KEY_PROPERTY, Keys.AZURE_TRANSLATOR_KEY.VALUE);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder builder = new StringBuilder();

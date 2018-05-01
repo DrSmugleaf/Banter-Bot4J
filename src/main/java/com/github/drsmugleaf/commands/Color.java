@@ -35,7 +35,7 @@ public class Color extends AbstractCommand {
         return color;
     }
 
-    @Command(tags = {Tags.GUILD_ONLY})
+    @CommandInfo(tags = {Tags.GUILD_ONLY})
     public static void color(MessageReceivedEvent event, List<String> args) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();

@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 18/01/2018.
  */
-interface ICommand {
+interface CommandRunnable {
 
     void run(@Nonnull MessageReceivedEvent event, @Nonnull List<String> args);
 
