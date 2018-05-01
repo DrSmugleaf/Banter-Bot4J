@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.eve.api;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +26,7 @@ class API {
     public static final Logger LOGGER = LoggerFactory.getLogger(API.class);
 
     @Nonnull
-    static String getResponse(@Nonnull String endpoint, @Nonnull Map<String, String> properties) {
+    static JsonElement getResponse(@Nonnull String endpoint, @Nonnull Map<String, String> properties) {
         URL url;
         try {
             url = new URL(URL + endpoint);
@@ -51,11 +53,11 @@ class API {
             throw new APIException("Error getting response from connection to API endpoint" + endpoint, e);
         }
 
-        return response.toString();
+        return new JsonParser().parse(response.toString());
     }
 
     @Nonnull
-    static String getResponse(@Nonnull String endpoint) {
+    static JsonElement getResponse(@Nonnull String endpoint) {
         return getResponse(endpoint, new HashMap<>());
     }
 

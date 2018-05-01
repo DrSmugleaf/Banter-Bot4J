@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.eve.api;
 
+import com.google.gson.JsonElement;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -8,57 +10,57 @@ import javax.annotation.Nonnull;
 public class Market {
 
     @Nonnull
-    public static String getCharacterOpenOrders(long characterID) {
+    public static JsonElement getCharacterOpenOrders(long characterID) {
         return API.getResponse("characters/" + characterID + "/orders/");
     }
 
     @Nonnull
-    public static String getCharacterOrderHistory(long characterID) {
+    public static JsonElement getCharacterOrderHistory(long characterID) {
         return API.getResponse("characters/" + characterID + "/orders/history/");
     }
 
     @Nonnull
-    public static String getCorporationOpenOrders(long corporationID) {
+    public static JsonElement getCorporationOpenOrders(long corporationID) {
         return API.getResponse("corporations/" + corporationID + "/orders/");
     }
 
     @Nonnull
-    public static String getCorporationOrderHistory(long corporationID) {
+    public static JsonElement getCorporationOrderHistory(long corporationID) {
         return API.getResponse("corporations/" + corporationID + "/orders/history/");
     }
 
     @Nonnull
-    public static String getRegionMarketHistory(long regionID) {
+    public static JsonElement getRegionMarketHistory(long regionID) {
         return API.getResponse("markets/" + regionID + "/history/");
     }
 
     @Nonnull
-    public static String getRegionMarketOrders(long regionID) {
+    public static JsonElement getRegionMarketOrders(long regionID) {
         return API.getResponse("markets/" + regionID + "/orders/");
     }
 
     @Nonnull
-    public static String getRegionMarketTypes(long regionID) {
+    public static JsonElement getRegionMarketTypes(long regionID) {
         return API.getResponse("markets/" + regionID + "/types/");
     }
 
     @Nonnull
-    public static String getMarketGroups() {
+    public static JsonElement getMarketGroups() {
         return API.getResponse("markets/groups/");
     }
 
     @Nonnull
-    public static String getMarketGroupInformation(long marketGroupID) {
+    public static JsonElement getMarketGroupInformation(long marketGroupID) {
         return API.getResponse("markets/groups/" + marketGroupID + "/");
     }
 
     @Nonnull
-    public static String getMarketPrices() {
+    public static JsonElement getMarketPrices() {
         return API.getResponse("markets/prices/");
     }
 
     @Nonnull
-    public static String getStructureMarketOrders(long structureID) {
+    public static JsonElement getStructureMarketOrders(long structureID) {
         return API.getResponse("markets/structures/" + structureID + "/");
     }
 

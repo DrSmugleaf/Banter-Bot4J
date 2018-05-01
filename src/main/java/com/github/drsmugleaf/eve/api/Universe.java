@@ -1,5 +1,8 @@
 package com.github.drsmugleaf.eve.api;
 
+import com.google.gson.JsonElement;
+import org.json.JSONObject;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -8,7 +11,7 @@ import javax.annotation.Nonnull;
 public class Universe {
 
     @Nonnull
-    public static String getRegions() {
+    public static JsonElement getRegions() {
         return API.getResponse("universe/regions/");
     }
 
