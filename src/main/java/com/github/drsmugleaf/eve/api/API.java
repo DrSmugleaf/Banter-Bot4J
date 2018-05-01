@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 /**
  * Created by DrSmugleaf on 01/05/2018.
@@ -37,14 +38,17 @@ class API {
 
         properties.forEach(connection::setRequestProperty);
 
-        String response;
+        StringBuilder response = new StringBuilder();
         try {
-            response = connection.getResponseMessage();
+            Scanner scanner = new Scanner(connection.getInputStream());
+            while (scanner.hasNextLine()) {
+                response.append(scanner.nextLine());
+            }
         } catch (IOException e) {
-            throw new APIException("Error getting response message from connection to API endpoint" + endpoint, e);
+            throw new APIException("Error getting response from connection to API endpoint" + endpoint, e);
         }
 
-        return response;
+        return response.toString();
     }
 
     public static String getResponse(String endpoint) {
