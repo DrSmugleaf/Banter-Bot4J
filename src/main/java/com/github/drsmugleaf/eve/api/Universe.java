@@ -15,4 +15,9 @@ public class Universe {
         return API.getResponse("universe/regions/");
     }
 
+    @Nonnull
+    public static JsonElement getRegionInformation(long regionID) {
+        return API.getResponse("universe/regions/" + regionID + "/");
+    }
+
 }
