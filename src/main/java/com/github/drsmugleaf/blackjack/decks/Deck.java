@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by DrSmugleaf on 01/05/2018.
  */
-public class Deck<T extends Enum<T> & Cards, E extends Enum & Suits> {
+public class Deck<T extends Enum & Cards, E extends Enum & Suits> {
 
     @Nonnull
     private final Class<T> CARDS;
