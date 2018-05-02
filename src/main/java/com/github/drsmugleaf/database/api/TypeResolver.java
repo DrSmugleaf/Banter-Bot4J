@@ -252,10 +252,6 @@ class TypeResolver {
                     .append(") ON UPDATE CASCADE ON DELETE CASCADE ");
         }
 
-        if (isID()) {
-            definition.append(" PRIMARY KEY ");
-        }
-
         String defaultValue = column.defaultValue();
         if (!defaultValue.isEmpty()) {
             definition

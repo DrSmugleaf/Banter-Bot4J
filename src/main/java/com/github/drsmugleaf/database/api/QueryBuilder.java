@@ -1,7 +1,6 @@
 package com.github.drsmugleaf.database.api;
 
 import com.github.drsmugleaf.database.api.annotations.Column;
-import com.github.drsmugleaf.database.api.annotations.Relation;
 import com.github.drsmugleaf.database.api.annotations.Table;
 
 import javax.annotation.Nonnull;
@@ -120,8 +119,8 @@ class QueryBuilder<T extends Model<T>> {
     @Nonnull
     String createTable() {
         StringBuilder query = new StringBuilder();
-        StringBuilder queryReferences = new StringBuilder();
         StringBuilder queryConstraint = new StringBuilder();
+        StringBuilder queryPrimaryKey = new StringBuilder();
 
         query
                 .append("CREATE TABLE IF NOT EXISTS ")
@@ -136,39 +135,37 @@ class QueryBuilder<T extends Model<T>> {
 
             query.append(column.getColumnDefinition());
 
-            if (column.FIELD.isAnnotationPresent(Relation.class)) {
-                if (queryReferences.length() != 0) {
-                    queryReferences.append(", ");
+            if (column.isID()) {
+                if (queryPrimaryKey.length() > 0) {
+                    queryPrimaryKey.append(", ");
                 }
 
-                TypeResolver relationResolver = column.getRelatedField();
-                String relatedTableName = relationResolver.getTable().name();
-
                 queryConstraint
-                        .append(relatedTableName)
+                        .append(name)
                         .append("_");
 
-                queryReferences.append(name);
+                queryPrimaryKey.append(name);
             }
 
-            if (iterator.hasNext() || queryConstraint.length() != 0) {
+
+            if (iterator.hasNext() || queryConstraint.length() > 0) {
                 query.append(", ");
             }
         }
 
-        if (queryConstraint.length() != 0) {
+        if (queryConstraint.length() > 0) {
             queryConstraint
                     .insert(0, "CONSTRAINT ")
-                    .append("pkey PRIMARY KEY ");
+                    .append("pkey ");
 
-            queryReferences
-                    .insert(0, "(")
+            queryPrimaryKey
+                    .insert(0, " PRIMARY KEY (")
                     .append(")");
         }
 
         query
                 .append(queryConstraint)
-                .append(queryReferences)
+                .append(queryPrimaryKey)
                 .append(")");
 
         return query.toString();
