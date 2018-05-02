@@ -10,9 +10,10 @@ import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by DrSmugleaf on 01/05/2018.
@@ -26,7 +27,30 @@ class API {
     public static final Logger LOGGER = LoggerFactory.getLogger(API.class);
 
     @Nonnull
+    private static final Cache<String, JsonElement> CACHE = new Cache<>();
+
+    @Nonnull
+    private static final SimpleDateFormat EXPIRES_FORMAT = new SimpleDateFormat("E, d MMM y H:m:s z", Locale.US);
+
+    @Nonnull
+    private static String getCacheKey(@Nonnull String endpoint, @Nonnull Map<String, String> properties) {
+        String mapString = properties
+                .entrySet()
+                .stream()
+                .map(Object::toString)
+                .collect(Collectors.joining("&"));
+
+        return endpoint + mapString;
+    }
+
+    @Nonnull
     static JsonElement getResponse(@Nonnull String endpoint, @Nonnull Map<String, String> properties) {
+        String cacheKey = getCacheKey(endpoint, properties);
+        JsonElement cachedJson = CACHE.get(cacheKey);
+        if (cachedJson != null) {
+            return cachedJson;
+        }
+
         URL url;
         try {
             url = new URL(URL + endpoint);
@@ -53,7 +77,17 @@ class API {
             throw new APIException("Error getting response from connection to API endpoint" + endpoint, e);
         }
 
-        return new JsonParser().parse(response.toString());
+        String expires = connection.getHeaderField("Expires");
+        Date date;
+        try {
+            date = EXPIRES_FORMAT.parse(expires);
+        } catch (ParseException e) {
+            throw new APIException("Error parsing date from expires header: " + expires, e);
+        }
+
+        JsonElement parsedElement = new JsonParser().parse(response.toString());
+        CACHE.set(cacheKey, parsedElement, date);
+        return parsedElement;
     }
 
     @Nonnull
