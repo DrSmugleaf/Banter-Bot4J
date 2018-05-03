@@ -233,7 +233,6 @@ class QueryBuilder<T extends Model<T>> {
                 .append(escapedTableName())
                 .append(" ( ");
         queryValues.append(" VALUES( ");
-        queryConflict.append(" ON CONFLICT ( ");
         querySet.append(" DO UPDATE SET ");
 
         Set<Map.Entry<TypeResolver, Object>> columns = model.getColumns().entrySet();
@@ -247,6 +246,10 @@ class QueryBuilder<T extends Model<T>> {
             queryValues.append("?");
 
             if (column.isID()) {
+                if (queryConflict.length() > 0) {
+                    queryConflict.append(", ");
+                }
+
                 queryConflict.append(columnName);
             }
 
@@ -257,11 +260,6 @@ class QueryBuilder<T extends Model<T>> {
             if (iterator.hasNext()) {
                 queryInsert.append(", ");
                 queryValues.append(", ");
-
-                if (column.isID()) {
-                    queryConflict.append(", ");
-                }
-
                 querySet.append(", ");
             } else {
                 queryInsert.append(") ");
@@ -270,6 +268,8 @@ class QueryBuilder<T extends Model<T>> {
                 querySet.append(" ");
             }
         }
+
+        queryConflict.insert(0, " ON CONFLICT ( ");
 
         query
                 .append(queryInsert)

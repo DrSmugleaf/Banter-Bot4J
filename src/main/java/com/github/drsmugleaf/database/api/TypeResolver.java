@@ -190,7 +190,7 @@ class TypeResolver {
         }
     }
 
-    @Nonnull
+    @Nullable
     <T> Object toValue(@Nonnull T result) {
         Class<?> type = FIELD.getType();
 
