@@ -57,9 +57,9 @@ public class Handler {
 
             String commandName = annotation.name();
             if (!commandName.isEmpty()) {
-                COMMANDS.put(commandName, command);
+                COMMANDS.put(commandName.toLowerCase(), command);
             } else {
-                COMMANDS.put(method.getName(), command);
+                COMMANDS.put(method.getName().toLowerCase(), command);
             }
         }
     }
@@ -85,7 +85,7 @@ public class Handler {
             }
         }
 
-        String commandString = argsArray[0].substring(BanterBot4J.BOT_PREFIX.length());
+        String commandString = argsArray[0].substring(BanterBot4J.BOT_PREFIX.length()).toLowerCase();
         List<String> argsList = new ArrayList<>(Arrays.asList(argsArray));
         argsList.remove(0);
 
