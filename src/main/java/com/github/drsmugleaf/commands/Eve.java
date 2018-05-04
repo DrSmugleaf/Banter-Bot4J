@@ -81,6 +81,7 @@ public class Eve extends AbstractCommand {
             @Override
             public void run() {
                 sendMessage(event.getChannel(), "Structure alert: " + structure + " in " + system);
+                eveTimerModel.delete();
             }
         };
         TIMER.schedule(task, date - System.currentTimeMillis());
@@ -101,11 +102,13 @@ public class Eve extends AbstractCommand {
                 if (timerDate.isBefore(now)) {
                     String response = "Skipped alert: %s in %s for date %s";
                     sendMessage(channel, String.format(response, timer.structure, timer.system, timer.date));
+                    timer.delete();
                 } else {
                     TimerTask task = new TimerTask() {
                         @Override
                         public void run() {
                             sendMessage(channel, "Structure alert: " + structure + " in " + system);
+                            timer.delete();
                         }
                     };
                     TIMER.schedule(task, timerDate.toInstant().toEpochMilli() - System.currentTimeMillis());
