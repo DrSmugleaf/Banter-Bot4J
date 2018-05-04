@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,7 +45,7 @@ class API {
     }
 
     @Nonnull
-    static JsonElement getResponse(@Nonnull String endpoint, @Nonnull Map<String, String> properties) {
+    static JsonElement getResponse(@Nonnull String endpoint, @Nonnull Map<String, String> properties, @Nonnull String method) {
         String cacheKey = getCacheKey(endpoint, properties);
         JsonElement cachedJson = CACHE.get(cacheKey);
         if (cachedJson != null) {
@@ -62,7 +63,13 @@ class API {
         try {
             connection = (HttpsURLConnection) url.openConnection();
         } catch (IOException e) {
-            throw new APIException("Error opening connection to API endpoint" + endpoint, e);
+            throw new APIException("Error opening connection to API endpoint " + endpoint, e);
+        }
+
+        try {
+            connection.setRequestMethod(method);
+        } catch (ProtocolException e) {
+            throw new APIException("Error setting request method to " + method, e);
         }
 
         properties.forEach(connection::setRequestProperty);
@@ -74,7 +81,7 @@ class API {
                 response.append(scanner.nextLine());
             }
         } catch (IOException e) {
-            throw new APIException("Error getting response from connection to API endpoint" + endpoint, e);
+            throw new APIException("Error getting response from connection to API endpoint " + endpoint, e);
         }
 
         String expires = connection.getHeaderField("Expires");
@@ -91,8 +98,13 @@ class API {
     }
 
     @Nonnull
+    static JsonElement getResponse(@Nonnull String endpoint, String method) {
+        return getResponse(endpoint, new HashMap<>(), method);
+    }
+
+    @Nonnull
     static JsonElement getResponse(@Nonnull String endpoint) {
-        return getResponse(endpoint, new HashMap<>());
+        return getResponse(endpoint, "GET");
     }
 
 }
