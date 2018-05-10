@@ -41,6 +41,18 @@ public abstract class AbstractCommand {
     }
 
     @Nullable
+    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull String message, @Nonnull EmbedObject embed) {
+        return RequestBuffer.request(() -> {
+            try {
+                return channel.sendMessage(message, embed);
+            } catch (DiscordException e) {
+                BanterBot4J.LOGGER.error("Embed could not be sent", e);
+                throw e;
+            }
+        }).get();
+    }
+
+    @Nullable
     public static IRole getHighestRole(List<IRole> roles) {
         if (roles.isEmpty()) {
             return null;

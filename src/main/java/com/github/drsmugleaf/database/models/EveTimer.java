@@ -27,11 +27,16 @@ public class EveTimer extends Model<EveTimer> {
     @Column(name = "date")
     public Long date;
 
-    public EveTimer(Channel channel, String structure, String system, Long date) {
+    @Column(name = "submitter")
+    @Relation(type = RelationTypes.ManyToOne, columnName = "id")
+    public User submitter;
+
+    public EveTimer(Channel channel, String structure, String system, Long date, Long submitter) {
         this.channel = channel;
         this.structure = structure;
         this.system = system;
         this.date = date;
+        this.submitter = new User(submitter);
     }
 
     private EveTimer() {}
