@@ -31,8 +31,8 @@ public class EveTimer extends Model<EveTimer> {
     @Relation(type = RelationTypes.ManyToOne, columnName = "id")
     public User submitter;
 
-    public EveTimer(Channel channel, String structure, String system, Long date, Long submitter) {
-        this.channel = channel;
+    public EveTimer(Long channel, String structure, String system, Long date, Long submitter) {
+        this.channel = new Channel(channel);
         this.structure = structure;
         this.system = system;
         this.date = date;
