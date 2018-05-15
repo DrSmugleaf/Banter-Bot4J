@@ -2,6 +2,8 @@ package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.BanterBot4J;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.ActivityType;
+import sx.blah.discord.handle.obj.StatusType;
 import sx.blah.discord.util.Image;
 
 import javax.imageio.ImageIO;
@@ -60,13 +62,13 @@ public class Owner extends AbstractCommand {
     @CommandInfo(tags = {Tags.OWNER_ONLY})
     public static void playing(MessageReceivedEvent event, List<String> args) {
         if(args.isEmpty()) {
-            event.getClient().changePlayingText(null);
+            event.getClient().changePresence(StatusType.ONLINE, null, "");
             sendMessage(event.getChannel(), "Reset the bot's playing status");
             return;
         }
 
         String game = String.join(" ", args);
-        event.getClient().changePlayingText(game);
+        event.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, game);
         sendMessage(event.getChannel(), "Changed the bot's playing status to " + game);
     }
 }
