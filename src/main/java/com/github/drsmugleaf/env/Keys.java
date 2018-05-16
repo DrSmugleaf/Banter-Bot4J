@@ -12,7 +12,9 @@ public enum Keys {
     BOT_PREFIX("!"),
     DATABASE_URL,
     DISCORD_TOKEN,
-    GOOGLE_KEY;
+    GOOGLE_KEY,
+    TRIPWIRE_TEST_USERNAME(""),
+    TRIPWIRE_TEST_PASSWORD("");
 
     @Nonnull
     public final String VALUE;
