@@ -32,7 +32,7 @@ public class API {
     @Nonnull
     private static final SessionManager SESSION_MANAGER = new SessionManager();
 
-    public static Connection.Response getSignatures(@Nonnull String username, @Nonnull String password) {
+    public static Connection.Response refresh(@Nonnull String username, @Nonnull String password) {
         Map<String, String> cookies = SESSION_MANAGER.getCookies(username, password);
 
         try {
