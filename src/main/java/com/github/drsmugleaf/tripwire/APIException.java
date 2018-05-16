@@ -5,23 +5,23 @@ package com.github.drsmugleaf.tripwire;
  */
 public abstract class APIException extends RuntimeException {
 
-    public APIException() {
+    APIException() {
         super();
     }
 
-    public APIException(String message) {
+    APIException(String message) {
         super(message);
     }
 
-    public APIException(String message, Throwable cause) {
+    APIException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public APIException(Throwable cause) {
+    APIException(Throwable cause) {
         super(cause);
     }
 
-    protected APIException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    APIException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 
