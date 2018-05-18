@@ -41,7 +41,7 @@ class SessionManager {
 
             Document html = connectResponse.parse();
             String name = html.getElementById("user").text();
-            String version = html.getElementById("version").text();
+            String version = html.select("meta[name=version]").attr("content");
             return new Session(id, name, cookies, version);
         } catch (IOException e) {
             throw new LoginException("Error logging into " + API.LOGIN_URL + " with username " + username);
