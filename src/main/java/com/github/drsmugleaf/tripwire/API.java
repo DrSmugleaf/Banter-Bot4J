@@ -24,6 +24,9 @@ public class API {
     static final String LOGIN_URL = URL + "login.php";
 
     @Nonnull
+    static final String CONNECT_URL = URL + "?system=";
+
+    @Nonnull
     static final String REFRESH_URL = URL + "refresh.php";
 
     @Nonnull
@@ -32,15 +35,18 @@ public class API {
     @Nonnull
     private static final SessionManager SESSION_MANAGER = new SessionManager();
 
-    public static Connection.Response refresh(@Nonnull String username, @Nonnull String password) {
-        Map<String, String> cookies = SESSION_MANAGER.getCookies(username, password);
+    public static Connection.Response refresh(long id, @Nonnull String username, @Nonnull String password) {
+        Session session = SESSION_MANAGER.getSession(id, username, password);
 
         try {
             return Jsoup.connect(REFRESH_URL)
-                    .cookies(cookies)
+                    .cookies(session.COOKIES)
                     .method(Connection.Method.POST)
-                    .data("mode", "init")
+                    .data("mode", "refresh")
                     .data("systemID", "30000142")
+                    .data("systemName", "Jita")
+                    .data("instance", session.INSTANCE)
+                    .data("version", session.VERSION)
                     .referrer(REFRESH_URL)
                     .userAgent(USER_AGENT)
                     .ignoreContentType(true)

@@ -2,6 +2,7 @@ package com.github.drsmugleaf.tripwire;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -14,35 +15,47 @@ import java.util.Map;
 class SessionManager {
 
     @Nonnull
-    private final Map<String, Map<String, String>> COOKIES = new HashMap<>();
+    private final Map<String, Session> COOKIES = new HashMap<>();
 
     SessionManager() {}
 
     @Nonnull
-    private static Map<String, String> login(@Nonnull String username, @Nonnull String password) {
+    private static Session login(long id, @Nonnull String username, @Nonnull String password) {
         try {
-            return Jsoup.connect(API.LOGIN_URL)
+            Connection.Response loginResponse = Jsoup.connect(API.LOGIN_URL)
                     .method(Connection.Method.POST)
                     .data("username", username)
                     .data("password", password)
                     .data("mode", "login")
                     .referrer(API.LOGIN_URL)
                     .userAgent(API.USER_AGENT)
-                    .execute()
-                    .cookies();
+                    .execute();
+
+            Map<String, String> cookies = loginResponse.cookies();
+            Connection.Response connectResponse = Jsoup.connect(API.CONNECT_URL)
+                    .cookies(cookies)
+                    .method(Connection.Method.POST)
+                    .referrer(API.CONNECT_URL)
+                    .userAgent(API.USER_AGENT)
+                    .execute();
+
+            Document html = connectResponse.parse();
+            String name = html.getElementById("user").text();
+            String version = html.getElementById("version").text();
+            return new Session(id, name, cookies, version);
         } catch (IOException e) {
             throw new LoginException("Error logging into " + API.LOGIN_URL + " with username " + username);
         }
     }
 
     @Nonnull
-    Map<String, String> getCookies(@Nonnull String username, @Nonnull String password) {
+    Session getSession(long id, @Nonnull String username, @Nonnull String password) {
         if (COOKIES.containsKey(username)) {
             return COOKIES.get(username);
         } else {
-            Map<String, String> cookies = login(username, password);
-            COOKIES.put(username, cookies);
-            return cookies;
+            Session session = login(id, username, password);
+            COOKIES.put(username, session);
+            return session;
         }
     }
 
