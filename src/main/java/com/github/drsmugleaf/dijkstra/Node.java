@@ -9,21 +9,21 @@ import java.util.Map;
 /**
  * Created by DrSmugleaf on 19/05/2018.
  */
-public abstract class Node {
+public abstract class Node<T extends Node<T>> {
 
     @Nonnull
     public final String NAME;
 
     @Nonnull
-    final List<Node> SHORTEST_PATH = new LinkedList<>();
+    final List<T> SHORTEST_PATH = new LinkedList<>();
 
     @Nonnull
     Integer distance = Integer.MAX_VALUE;
 
     @Nonnull
-    final Map<Node, Integer> ADJACENT_NODES = new HashMap<>();
+    final Map<T, Integer> ADJACENT_NODES = new HashMap<>();
 
-    public void addDestination(@Nonnull Node destination, @Nonnull Integer distance) {
+    public void addDestination(@Nonnull T destination, @Nonnull Integer distance) {
         ADJACENT_NODES.put(destination, distance);
     }
 

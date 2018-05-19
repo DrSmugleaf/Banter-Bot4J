@@ -10,21 +10,21 @@ import java.util.Set;
 /**
  * Created by DrSmugleaf on 19/05/2018.
  */
-public abstract class Graph {
+public abstract class Graph<T extends Node<T>> {
 
     @Nonnull
-    private final Set<Node> NODES = new HashSet<>();
+    private final Set<T> NODES = new HashSet<>();
 
-    public void addNode(@Nonnull Node nodeA) {
+    public void addNode(@Nonnull T nodeA) {
         NODES.add(nodeA);
     }
 
     @Nullable
-    private static Node getLowestDistanceNode(@Nonnull Set<Node> unsettledNodes) {
-        Node lowestDistanceNode = null;
+    private static <T extends Node> T getLowestDistanceNode(@Nonnull Set<T> unsettledNodes) {
+        T lowestDistanceNode = null;
         int lowestDistance = Integer.MAX_VALUE;
 
-        for (Node node : unsettledNodes) {
+        for (T node : unsettledNodes) {
             if (node.distance < lowestDistance) {
                 lowestDistance = node.distance;
                 lowestDistanceNode = node;
@@ -34,10 +34,10 @@ public abstract class Graph {
         return lowestDistanceNode;
     }
 
-    private static void calculateMinimumDistance(@Nonnull Node evaluationNode, @Nonnull Integer edgeWeigh, @Nonnull Node sourceNode) {
+    private static <T extends Node<T>> void calculateMinimumDistance(@Nonnull T evaluationNode, @Nonnull Integer edgeWeigh, @Nonnull T sourceNode) {
         if (sourceNode.distance + edgeWeigh < evaluationNode.distance) {
             evaluationNode.distance = sourceNode.distance + edgeWeigh;
-            LinkedList<Node> shortestPath = new LinkedList<>(sourceNode.SHORTEST_PATH);
+            LinkedList<T> shortestPath = new LinkedList<>(sourceNode.SHORTEST_PATH);
             shortestPath.add(sourceNode);
             evaluationNode.SHORTEST_PATH.clear();
             evaluationNode.SHORTEST_PATH.addAll(shortestPath);
@@ -45,22 +45,22 @@ public abstract class Graph {
     }
 
     @Nonnull
-    public static Graph calculateShortestPathFromSource(@Nonnull Graph graph, @Nonnull Node source) {
+    public static <T extends Node<T>> Graph<T> calculateShortestPathFromSource(@Nonnull Graph<T> graph, @Nonnull T source) {
         source.distance = 0;
-        Set<Node> settledNodes = new HashSet<>();
-        Set<Node> unsettledNodes = new HashSet<>();
+        Set<T> settledNodes = new HashSet<>();
+        Set<T> unsettledNodes = new HashSet<>();
         unsettledNodes.add(source);
 
         while (unsettledNodes.size() != 0) {
-            Node currentNode = getLowestDistanceNode(unsettledNodes);
+            T currentNode = getLowestDistanceNode(unsettledNodes);
             unsettledNodes.remove(currentNode);
 
             if (currentNode == null) {
                 continue;
             }
 
-            for (Map.Entry<Node, Integer> adjacentNodeEntry : currentNode.ADJACENT_NODES.entrySet()) {
-                Node adjacentNode = adjacentNodeEntry.getKey();
+            for (Map.Entry<T, Integer> adjacentNodeEntry : currentNode.ADJACENT_NODES.entrySet()) {
+                T adjacentNode = adjacentNodeEntry.getKey();
                 Integer edgeWeigh = adjacentNodeEntry.getValue();
 
                 if (!settledNodes.contains(adjacentNode)) {
