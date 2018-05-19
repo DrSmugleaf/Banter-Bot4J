@@ -14,35 +14,35 @@ import java.util.Map;
 /**
  * Created by DrSmugleaf on 19/05/2018.
  */
-public class Wormhole {
+class Wormhole {
 
     @SerializedName("id")
-    public final int ID;
+    final int ID;
 
     @SerializedName("initialID")
-    public final int INITIAL_ID;
+    final int INITIAL_ID;
 
     @SerializedName("secondaryID")
-    public final int SECONDARY_ID;
+    final int SECONDARY_ID;
 
     @Nullable
     @SerializedName("type")
-    public final String TYPE;
+    final String TYPE;
 
     @Nullable
     @SerializedName("parent")
-    public final String PARENT;
+    final String PARENT;
 
     @Nonnull
     @SerializedName("life")
-    public final String LIFE;
+    final String LIFE;
 
     @Nonnull
     @SerializedName("mass")
-    public final String MASS;
+    final String MASS;
 
     @SerializedName("maskID")
-    public final double MASK_ID;
+    final double MASK_ID;
 
     Wormhole(
             int id,

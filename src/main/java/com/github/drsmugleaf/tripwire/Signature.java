@@ -15,62 +15,62 @@ import java.util.Map;
 /**
  * Created by DrSmugleaf on 19/05/2018.
  */
-public class Signature {
+class Signature {
 
     @SerializedName("id")
-    public final int ID;
+    final int ID;
 
     @Nullable
     @SerializedName("signatureID")
-    public final String SIGNATURE_ID;
+    final String SIGNATURE_ID;
 
     @Nullable
     @SerializedName("systemID")
-    public final Integer SYSTEM_ID;
+    final Integer SYSTEM_ID;
 
     @Nullable
     @SerializedName("type")
-    public final String TYPE;
+    final String TYPE;
 
     @Nullable
     @SerializedName("name")
-    public final String NAME;
+    final String NAME;
 
     @Nullable
     @SerializedName("bookmark")
-    public final String BOOKMARK;
+    final String BOOKMARK;
 
     @Nonnull
     @SerializedName("lifeTime")
-    public final Date LIFE_TIME;
+    final Date LIFE_TIME;
 
     @Nonnull
     @SerializedName("lifeLeft")
-    public final Date LIFE_LEFT;
+    final Date LIFE_LEFT;
 
     @SerializedName("lifeLength")
-    public final int LIFE_LENGTH;
+    final int LIFE_LENGTH;
 
     @SerializedName("createdByID")
-    public final int CREATED_BY_ID;
+    final int CREATED_BY_ID;
 
     @Nonnull
     @SerializedName("createdByName")
-    public final String CREATED_BY_NAME;
+    final String CREATED_BY_NAME;
 
     @SerializedName("modifiedByID")
-    public final int MODIFIED_BY_ID;
+    final int MODIFIED_BY_ID;
 
     @Nonnull
     @SerializedName("modifiedByName")
-    public final String MODIFIED_BY_NAME;
+    final String MODIFIED_BY_NAME;
 
     @Nonnull
     @SerializedName("modifiedTime")
-    public final Date MODIFIED_TIME;
+    final Date MODIFIED_TIME;
 
     @SerializedName("maskID")
-    public final double MASK_ID;
+    final double MASK_ID;
 
     public Signature(
             int id,
