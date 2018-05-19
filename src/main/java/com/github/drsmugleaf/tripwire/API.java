@@ -39,8 +39,9 @@ public class API {
     private static final SessionManager SESSION_MANAGER = new SessionManager();
 
     @Nonnull
-    private static final Gson gson = new GsonBuilder().setDateFormat("YYYY-MM-DD HH:mm:ss").create();
+    static final Gson gson = new GsonBuilder().setDateFormat("YYYY-MM-DD HH:mm:ss").create();
 
+    @Nonnull
     public static Connection.Response refresh(long id, @Nonnull String username, @Nonnull String password) {
         Session session = SESSION_MANAGER.getSession(id, username, password);
 
@@ -62,30 +63,16 @@ public class API {
         }
     }
 
+    @Nonnull
     public static List<Signature> getSignatures(long id, @Nonnull String username, @Nonnull String password) {
         String json = refresh(id, username, password).body();
-        JsonObject signatures = new JsonParser().parse(json).getAsJsonObject().getAsJsonObject("signatures");
-        List<Signature> signatureList = new ArrayList<>();
-
-        for (Map.Entry<String, JsonElement> signatureEntry : signatures.entrySet()) {
-            Signature signature = gson.fromJson(signatureEntry.getValue(), Signature.class);
-            signatureList.add(signature);
-        }
-
-        return signatureList;
+        return Signature.fromJson(json);
     }
 
+    @Nonnull
     public static List<Wormhole> getWormholes(long id, @Nonnull String username, @Nonnull String password) {
         String json = refresh(id, username, password).body();
-        JsonObject wormholes = new JsonParser().parse(json).getAsJsonObject().getAsJsonObject("wormholes");
-        List<Wormhole> wormholeList = new ArrayList<>();
-
-        for (Map.Entry<String, JsonElement> wormholeEntry : wormholes.entrySet()) {
-            Wormhole wormhole = gson.fromJson(wormholeEntry.getValue(), Wormhole.class);
-            wormholeList.add(wormhole);
-        }
-
-        return wormholeList;
+        return Wormhole.fromJson(json);
     }
 
 }

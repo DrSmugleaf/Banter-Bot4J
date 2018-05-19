@@ -1,10 +1,16 @@
 package com.github.drsmugleaf.tripwire;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by DrSmugleaf on 19/05/2018.
@@ -98,6 +104,24 @@ public class Signature {
         MODIFIED_BY_NAME = modifiedByName;
         MODIFIED_TIME = modifiedTime;
         MASK_ID = maskID;
+    }
+
+    @Nonnull
+    static Signature fromJson(@Nonnull JsonElement json) {
+        return API.gson.fromJson(json, Signature.class);
+    }
+
+    @Nonnull
+    static List<Signature> fromJson(@Nonnull String json) {
+        JsonObject signatures = new JsonParser().parse(json).getAsJsonObject().getAsJsonObject("signatures");
+        List<Signature> signatureList = new ArrayList<>();
+
+        for (Map.Entry<String, JsonElement> signatureEntry : signatures.entrySet()) {
+            Signature signature = fromJson(signatureEntry.getValue());
+            signatureList.add(signature);
+        }
+
+        return signatureList;
     }
 
 }
