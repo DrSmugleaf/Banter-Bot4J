@@ -75,4 +75,17 @@ public class API {
         return signatureList;
     }
 
+    public static List<Wormhole> getWormholes(long id, @Nonnull String username, @Nonnull String password) {
+        String json = refresh(id, username, password).body();
+        JsonObject wormholes = new JsonParser().parse(json).getAsJsonObject().getAsJsonObject("wormholes");
+        List<Wormhole> wormholeList = new ArrayList<>();
+
+        for (Map.Entry<String, JsonElement> wormholeEntry : wormholes.entrySet()) {
+            Wormhole wormhole = gson.fromJson(wormholeEntry.getValue(), Wormhole.class);
+            wormholeList.add(wormhole);
+        }
+
+        return wormholeList;
+    }
+
 }
