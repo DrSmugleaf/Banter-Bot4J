@@ -3,6 +3,7 @@ package com.github.drsmugleaf.tripwire;
 import com.google.gson.annotations.SerializedName;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by DrSmugleaf on 19/05/2018.
@@ -18,15 +19,19 @@ public class Wormhole {
     @SerializedName("secondaryID")
     public final int SECONDARY_ID;
 
+    @Nullable
     @SerializedName("type")
     public final String TYPE;
 
+    @Nullable
     @SerializedName("parent")
     public final String PARENT;
 
+    @Nonnull
     @SerializedName("life")
     public final String LIFE;
 
+    @Nonnull
     @SerializedName("mass")
     public final String MASS;
 
@@ -37,8 +42,8 @@ public class Wormhole {
             int id,
             int initialID,
             int secondaryID,
-            @Nonnull String type,
-            @Nonnull String parent,
+            @Nullable String type,
+            @Nullable String parent,
             @Nonnull String life,
             @Nonnull String mass,
             double maskID
