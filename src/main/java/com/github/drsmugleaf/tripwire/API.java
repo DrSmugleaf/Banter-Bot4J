@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.tripwire;
 
+import com.google.gson.*;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
@@ -7,6 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,6 +38,9 @@ public class API {
     @Nonnull
     private static final SessionManager SESSION_MANAGER = new SessionManager();
 
+    @Nonnull
+    private static final Gson gson = new GsonBuilder().setDateFormat("YYYY-MM-DD HH:mm:ss").create();
+
     public static Connection.Response refresh(long id, @Nonnull String username, @Nonnull String password) {
         Session session = SESSION_MANAGER.getSession(id, username, password);
 
@@ -54,6 +60,19 @@ public class API {
         } catch (IOException e) {
             throw new LoginException("Error getting signatures in " + REFRESH_URL + " with username " + username);
         }
+    }
+
+    public static List<Signature> getSignatures(long id, @Nonnull String username, @Nonnull String password) {
+        String json = refresh(id, username, password).body();
+        JsonObject signatures = new JsonParser().parse(json).getAsJsonObject().getAsJsonObject("signatures");
+        List<Signature> signatureList = new ArrayList<>();
+
+        for (Map.Entry<String, JsonElement> signatureEntry : signatures.entrySet()) {
+            Signature signature = gson.fromJson(signatureEntry.getValue(), Signature.class);
+            signatureList.add(signature);
+        }
+
+        return signatureList;
     }
 
 }
