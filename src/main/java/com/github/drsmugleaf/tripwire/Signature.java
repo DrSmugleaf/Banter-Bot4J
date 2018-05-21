@@ -7,10 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 19/05/2018.
@@ -112,13 +109,17 @@ class Signature {
     }
 
     @Nonnull
-    static List<Signature> fromJson(@Nonnull String json) {
+    static Map<Integer, Signature> fromJson(@Nonnull String json) {
         JsonObject signatures = new JsonParser().parse(json).getAsJsonObject().getAsJsonObject("signatures");
-        List<Signature> signatureList = new ArrayList<>();
+        Map<Integer, Signature> signatureList = new HashMap<>();
 
         for (Map.Entry<String, JsonElement> signatureEntry : signatures.entrySet()) {
             Signature signature = fromJson(signatureEntry.getValue());
-            signatureList.add(signature);
+            if (signature.SYSTEM_ID == null) {
+                continue;
+            }
+
+            signatureList.put(signature.ID, signature);
         }
 
         return signatureList;

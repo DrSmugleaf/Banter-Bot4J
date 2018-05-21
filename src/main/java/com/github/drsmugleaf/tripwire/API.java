@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.tripwire;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
@@ -8,9 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by DrSmugleaf on 15/05/2018.
@@ -42,7 +40,7 @@ public class API {
     static final Gson gson = new GsonBuilder().setDateFormat("YYYY-MM-DD HH:mm:ss").create();
 
     @Nonnull
-    public static Connection.Response refresh(long id, @Nonnull String username, @Nonnull String password) {
+    static Connection.Response refresh(long id, @Nonnull String username, @Nonnull String password) {
         Session session = SESSION_MANAGER.getSession(id, username, password);
 
         try {
@@ -61,18 +59,6 @@ public class API {
         } catch (IOException e) {
             throw new LoginException("Error getting signatures in " + REFRESH_URL + " with username " + username);
         }
-    }
-
-    @Nonnull
-    public static List<Signature> getSignatures(long id, @Nonnull String username, @Nonnull String password) {
-        String json = refresh(id, username, password).body();
-        return Signature.fromJson(json);
-    }
-
-    @Nonnull
-    public static List<Wormhole> getWormholes(long id, @Nonnull String username, @Nonnull String password) {
-        String json = refresh(id, username, password).body();
-        return Wormhole.fromJson(json);
     }
 
 }

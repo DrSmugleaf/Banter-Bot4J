@@ -2,10 +2,7 @@ package com.github.drsmugleaf.dijkstra;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 19/05/2018.
@@ -13,14 +10,22 @@ import java.util.Set;
 public abstract class Graph<T extends Node<T>> {
 
     @Nonnull
-    private final Set<T> NODES = new HashSet<>();
+    public final Set<T> NODES = new HashSet<>();
+
+    protected Graph(@Nonnull Collection<T> nodes) {
+        NODES.addAll(nodes);
+    }
 
     public void addNode(@Nonnull T nodeA) {
         NODES.add(nodeA);
     }
 
+    public void addNode(@Nonnull Collection<T> nodes) {
+        NODES.addAll(nodes);
+    }
+
     @Nullable
-    private static <T extends Node> T getLowestDistanceNode(@Nonnull Set<T> unsettledNodes) {
+    private T getLowestDistanceNode(@Nonnull Set<T> unsettledNodes) {
         T lowestDistanceNode = null;
         int lowestDistance = Integer.MAX_VALUE;
 
@@ -34,7 +39,7 @@ public abstract class Graph<T extends Node<T>> {
         return lowestDistanceNode;
     }
 
-    private static <T extends Node<T>> void calculateMinimumDistance(@Nonnull T evaluationNode, @Nonnull Integer edgeWeigh, @Nonnull T sourceNode) {
+    private void calculateMinimumDistance(@Nonnull T evaluationNode, @Nonnull Integer edgeWeigh, @Nonnull T sourceNode) {
         if (sourceNode.distance + edgeWeigh < evaluationNode.distance) {
             evaluationNode.distance = sourceNode.distance + edgeWeigh;
             LinkedList<T> shortestPath = new LinkedList<>(sourceNode.SHORTEST_PATH);
@@ -45,7 +50,7 @@ public abstract class Graph<T extends Node<T>> {
     }
 
     @Nonnull
-    public static <T extends Node<T>> Graph<T> calculateShortestPathFromSource(@Nonnull Graph<T> graph, @Nonnull T source) {
+    public Graph<T> calculateShortestPathFromSource(@Nonnull T source) {
         source.distance = 0;
         Set<T> settledNodes = new HashSet<>();
         Set<T> unsettledNodes = new HashSet<>();
@@ -72,7 +77,7 @@ public abstract class Graph<T extends Node<T>> {
             settledNodes.add(currentNode);
         }
 
-        return graph;
+        return this;
     }
 
 }

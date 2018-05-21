@@ -15,7 +15,7 @@ public abstract class Node<T extends Node<T>> {
     public final String NAME;
 
     @Nonnull
-    final List<T> SHORTEST_PATH = new LinkedList<>();
+    public final List<T> SHORTEST_PATH = new LinkedList<>();
 
     @Nonnull
     Integer distance = Integer.MAX_VALUE;
@@ -27,7 +27,7 @@ public abstract class Node<T extends Node<T>> {
         ADJACENT_NODES.put(destination, distance);
     }
 
-    public Node(@Nonnull String name) {
+    protected Node(@Nonnull String name) {
         NAME = name;
     }
 
