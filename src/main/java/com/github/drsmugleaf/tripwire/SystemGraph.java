@@ -35,7 +35,7 @@ public class SystemGraph extends Graph<StarSystem> {
     }
 
     @Nullable
-    public static List<StarSystem> getRoute(long id, @Nonnull String username, @Nonnull String password, @Nonnull String from, @Nonnull String to) {
+    public static Route getRoute(long id, @Nonnull String username, @Nonnull String password, @Nonnull String from, @Nonnull String to) {
         String response = API.refresh(id, username, password).body();
         Map<Integer, Signature> signatures = Signature.fromJson(response);
         List<Wormhole> wormholes = Wormhole.fromJson(response);
@@ -44,10 +44,11 @@ public class SystemGraph extends Graph<StarSystem> {
         wormholes.removeIf(wormhole -> !signatures.containsKey(wormhole.INITIAL_ID) || !signatures.containsKey(wormhole.SECONDARY_ID));
         SystemGraph graph = fromSignaturesAndWormholes(signatures, wormholes);
 
+        StarSystem origin = null;
         StarSystem destination = null;
         for (StarSystem node : graph.NODES) {
             if (node.NAME.equalsIgnoreCase(from)) {
-                graph.calculateShortestPathFromSource(node);
+                origin = node;
             }
 
             if (node.NAME.equalsIgnoreCase(to)) {
@@ -55,11 +56,12 @@ public class SystemGraph extends Graph<StarSystem> {
             }
         }
 
-        if (destination == null) {
+        if (origin == null || destination == null) {
             return null;
         }
 
-        return destination.SHORTEST_PATH;
+        graph.calculateShortestPathFromSource(origin);
+        return new Route(graph, origin, destination);
     }
 
 }
