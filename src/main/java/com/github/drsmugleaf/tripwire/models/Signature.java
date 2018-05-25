@@ -1,5 +1,6 @@
-package com.github.drsmugleaf.tripwire;
+package com.github.drsmugleaf.tripwire.models;
 
+import com.github.drsmugleaf.tripwire.API;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -12,62 +13,62 @@ import java.util.*;
 /**
  * Created by DrSmugleaf on 19/05/2018.
  */
-class Signature {
+public class Signature {
 
     @SerializedName("id")
-    final int ID;
+    public final int ID;
 
     @Nullable
     @SerializedName("signatureID")
-    final String SIGNATURE_ID;
+    public final String SIGNATURE_ID;
 
     @Nullable
     @SerializedName("systemID")
-    final Integer SYSTEM_ID;
+    public final Integer SYSTEM_ID;
 
     @Nullable
     @SerializedName("type")
-    final String TYPE;
+    public final String TYPE;
 
     @Nullable
     @SerializedName("name")
-    final String NAME;
+    public final String NAME;
 
     @Nullable
     @SerializedName("bookmark")
-    final String BOOKMARK;
+    public final String BOOKMARK;
 
     @Nonnull
     @SerializedName("lifeTime")
-    final Date LIFE_TIME;
+    public final Date LIFE_TIME;
 
     @Nonnull
     @SerializedName("lifeLeft")
-    final Date LIFE_LEFT;
+    public final Date LIFE_LEFT;
 
     @SerializedName("lifeLength")
-    final int LIFE_LENGTH;
+    public final int LIFE_LENGTH;
 
     @SerializedName("createdByID")
-    final int CREATED_BY_ID;
+    public final int CREATED_BY_ID;
 
     @Nonnull
     @SerializedName("createdByName")
-    final String CREATED_BY_NAME;
+    public final String CREATED_BY_NAME;
 
     @SerializedName("modifiedByID")
-    final int MODIFIED_BY_ID;
+    public final int MODIFIED_BY_ID;
 
     @Nonnull
     @SerializedName("modifiedByName")
-    final String MODIFIED_BY_NAME;
+    public final String MODIFIED_BY_NAME;
 
     @Nonnull
     @SerializedName("modifiedTime")
-    final Date MODIFIED_TIME;
+    public final Date MODIFIED_TIME;
 
     @SerializedName("maskID")
-    final double MASK_ID;
+    public final double MASK_ID;
 
     public Signature(
             int id,
@@ -104,12 +105,12 @@ class Signature {
     }
 
     @Nonnull
-    static Signature fromJson(@Nonnull JsonElement json) {
+    public static Signature fromJson(@Nonnull JsonElement json) {
         return API.gson.fromJson(json, Signature.class);
     }
 
     @Nonnull
-    static Map<Integer, Signature> fromJson(@Nonnull String json) {
+    public static Map<Integer, Signature> fromJson(@Nonnull String json) {
         JsonObject signatures = new JsonParser().parse(json).getAsJsonObject().getAsJsonObject("signatures");
         Map<Integer, Signature> signatureList = new HashMap<>();
 

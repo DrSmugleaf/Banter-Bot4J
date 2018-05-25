@@ -1,5 +1,6 @@
-package com.github.drsmugleaf.tripwire;
+package com.github.drsmugleaf.tripwire.models;
 
+import com.github.drsmugleaf.tripwire.API;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -14,35 +15,35 @@ import java.util.Map;
 /**
  * Created by DrSmugleaf on 19/05/2018.
  */
-class Wormhole {
+public class Wormhole {
 
     @SerializedName("id")
-    final int ID;
+    public final int ID;
 
     @SerializedName("initialID")
-    final int INITIAL_ID;
+    public final int INITIAL_ID;
 
     @SerializedName("secondaryID")
-    final int SECONDARY_ID;
+    public final int SECONDARY_ID;
 
     @Nullable
     @SerializedName("type")
-    final String TYPE;
+    public final String TYPE;
 
     @Nullable
     @SerializedName("parent")
-    final String PARENT;
+    public final String PARENT;
 
     @Nonnull
     @SerializedName("life")
-    final String LIFE;
+    public final String LIFE;
 
     @Nonnull
     @SerializedName("mass")
-    final String MASS;
+    public final String MASS;
 
     @SerializedName("maskID")
-    final double MASK_ID;
+    public final double MASK_ID;
 
     Wormhole(
             int id,
@@ -65,12 +66,12 @@ class Wormhole {
     }
 
     @Nonnull
-    static Wormhole fromJson(@Nonnull JsonElement json) {
+    public static Wormhole fromJson(@Nonnull JsonElement json) {
         return API.gson.fromJson(json, Wormhole.class);
     }
 
     @Nonnull
-    static List<Wormhole> fromJson(@Nonnull String json) {
+    public static List<Wormhole> fromJson(@Nonnull String json) {
         JsonObject wormholes = new JsonParser().parse(json).getAsJsonObject().getAsJsonObject("wormholes");
         List<Wormhole> wormholeList = new ArrayList<>();
 

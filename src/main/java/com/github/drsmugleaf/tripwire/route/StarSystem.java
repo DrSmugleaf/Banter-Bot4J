@@ -1,10 +1,11 @@
-package com.github.drsmugleaf.tripwire;
+package com.github.drsmugleaf.tripwire.route;
 
 import com.github.drsmugleaf.dijkstra.Node;
 import com.github.drsmugleaf.eve.Systems;
 import com.github.drsmugleaf.eve.esi.ApiException;
 import com.github.drsmugleaf.eve.esi.api.UniverseApi;
 import com.github.drsmugleaf.eve.esi.model.PostUniverseNames200Ok;
+import com.github.drsmugleaf.tripwire.models.Signature;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

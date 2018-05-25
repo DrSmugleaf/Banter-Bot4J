@@ -1,5 +1,6 @@
-package com.github.drsmugleaf.tripwire;
+package com.github.drsmugleaf.tripwire.session;
 
+import com.github.drsmugleaf.tripwire.API;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,12 +13,12 @@ import java.util.Map;
 /**
  * Created by DrSmugleaf on 16/05/2018.
  */
-class SessionManager {
+public class SessionManager {
 
     @Nonnull
-    private final Map<String, Session> COOKIES = new HashMap<>();
+    private final Map<String, Session> SESSIONS = new HashMap<>();
 
-    SessionManager() {}
+    public SessionManager() {}
 
     @Nonnull
     private static Session login(long id, @Nonnull String username, @Nonnull String password) {
@@ -49,12 +50,12 @@ class SessionManager {
     }
 
     @Nonnull
-    Session getSession(long id, @Nonnull String username, @Nonnull String password) {
-        if (COOKIES.containsKey(username)) {
-            return COOKIES.get(username);
+    public Session getSession(long id, @Nonnull String username, @Nonnull String password) {
+        if (SESSIONS.containsKey(username)) {
+            return SESSIONS.get(username);
         } else {
             Session session = login(id, username, password);
-            COOKIES.put(username, session);
+            SESSIONS.put(username, session);
             return session;
         }
     }

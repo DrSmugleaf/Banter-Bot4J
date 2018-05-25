@@ -1,6 +1,9 @@
-package com.github.drsmugleaf.tripwire;
+package com.github.drsmugleaf.tripwire.route;
 
 import com.github.drsmugleaf.dijkstra.Graph;
+import com.github.drsmugleaf.tripwire.API;
+import com.github.drsmugleaf.tripwire.models.Signature;
+import com.github.drsmugleaf.tripwire.models.Wormhole;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -60,7 +63,6 @@ public class SystemGraph extends Graph<StarSystem> {
             return null;
         }
 
-        graph.calculateShortestPathFromSource(origin);
         return new Route(graph, origin, destination);
     }
 

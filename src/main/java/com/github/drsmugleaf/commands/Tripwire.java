@@ -2,9 +2,9 @@ package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.eve.Systems;
-import com.github.drsmugleaf.tripwire.Route;
-import com.github.drsmugleaf.tripwire.StarSystem;
-import com.github.drsmugleaf.tripwire.SystemGraph;
+import com.github.drsmugleaf.tripwire.route.Route;
+import com.github.drsmugleaf.tripwire.route.StarSystem;
+import com.github.drsmugleaf.tripwire.route.SystemGraph;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 

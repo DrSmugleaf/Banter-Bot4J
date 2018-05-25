@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.tripwire;
+package com.github.drsmugleaf.tripwire.session;
 
 import javax.annotation.Nonnull;
 import java.text.DecimalFormat;
@@ -13,19 +13,19 @@ import java.util.Map;
 public class Session {
 
     @Nonnull
-    final long ID;
+    public final long ID;
 
     @Nonnull
-    final String NAME;
+    public final String NAME;
 
     @Nonnull
-    final Map<String, String> COOKIES = new HashMap<>();
+    public final Map<String, String> COOKIES = new HashMap<>();
 
     @Nonnull
-    final String VERSION;
+    public final String VERSION;
 
     @Nonnull
-    final String INSTANCE = getInstance();
+    public final String INSTANCE = getInstance();
 
     Session(long id, @Nonnull String name, @Nonnull Map<String, String> cookies, @Nonnull String version) {
         ID = id;
