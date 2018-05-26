@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.database.models.EveDowntimeUser;
 import com.github.drsmugleaf.database.models.EveTimer;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -28,8 +29,10 @@ public class Eve extends AbstractCommand {
     @Nonnull
     private static final ZoneOffset EVE_TIMEZONE = ZoneOffset.UTC;
 
-    private static final Timer TIMER = new Timer("Eve Structure Alert Timer", true);
+    @Nonnull
+    private static final Timer STRUCTURE_TIMER = new Timer("Eve Online Structure Alert Timer", true);
 
+    @Nonnull
     private static final Map<EveTimer, TimerTask> TASKS = new HashMap<>();
 
     @Nonnull
@@ -107,7 +110,7 @@ public class Eve extends AbstractCommand {
         };
 
         TASKS.put(timer, task);
-        TIMER.schedule(task, timer.date - System.currentTimeMillis());
+        STRUCTURE_TIMER.schedule(task, timer.date - System.currentTimeMillis());
     }
 
     private static boolean deleteTask(@Nonnull EveTimer timer) {
@@ -203,6 +206,20 @@ public class Eve extends AbstractCommand {
         eveTimerModel.save();
 
         createTimer(event.getClient(), eveTimerModel);
+    }
+
+    @CommandInfo
+    public static void eveDowntime(MessageReceivedEvent event, List<String> args) {
+        long authorID = event.getAuthor().getLongID();
+        EveDowntimeUser user = new EveDowntimeUser(event.getAuthor().getLongID());
+        IChannel channel = event.getChannel();
+        if (user.get().isEmpty()) {
+            user.createIfNotExists();
+            sendMessage(channel, "I will notify you when the eve online tranquility server comes back up from maintenance each day.");
+        } else {
+            user.delete();
+            sendMessage(channel, "I will no longer notify you when the server comes back online.");
+        }
     }
 
     @EventSubscriber

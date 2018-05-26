@@ -24,7 +24,7 @@ public class BanterBot4J {
     public static final Logger LOGGER = initLogger();
 
     @Nonnull
-    private static final IDiscordClient CLIENT = buildClient();
+    public static final IDiscordClient CLIENT = buildClient();
 
     @Nonnull
     public static final String BOT_PREFIX = Keys.BOT_PREFIX.VALUE;
