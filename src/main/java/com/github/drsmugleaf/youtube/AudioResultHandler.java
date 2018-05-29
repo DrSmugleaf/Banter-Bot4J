@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.youtube;
 
-import com.github.drsmugleaf.commands.AbstractCommand;
+import com.github.drsmugleaf.commands.api.AbstractCommand;
 import com.github.drsmugleaf.commands.Music;
 import com.google.api.services.youtube.model.SearchResult;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;

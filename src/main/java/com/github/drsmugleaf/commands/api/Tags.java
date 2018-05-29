@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.commands;
+package com.github.drsmugleaf.commands.api;
 
 import com.github.drsmugleaf.BanterBot4J;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by DrSmugleaf on 16/01/2018.
  */
-enum Tags {
+public enum Tags {
 
     DELETE_COMMAND_MESSAGE {
         @Override

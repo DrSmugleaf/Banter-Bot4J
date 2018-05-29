@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.commands;
+package com.github.drsmugleaf.commands.api;
 
 import sx.blah.discord.handle.obj.Permissions;
 
@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-@interface CommandInfo {
+public @interface CommandInfo {
 
     String name() default "";
 

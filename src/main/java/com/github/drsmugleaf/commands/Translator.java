@@ -1,6 +1,9 @@
 package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.commands.api.AbstractCommand;
+import com.github.drsmugleaf.commands.api.CommandInfo;
+import com.github.drsmugleaf.commands.api.Tags;
 import com.github.drsmugleaf.database.models.BridgedChannel;
 import com.github.drsmugleaf.translator.API;
 import com.github.drsmugleaf.translator.Languages;

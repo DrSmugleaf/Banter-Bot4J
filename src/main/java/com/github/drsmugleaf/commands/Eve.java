@@ -1,6 +1,8 @@
 package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.commands.api.AbstractCommand;
+import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.database.models.EveTimer;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventSubscriber;

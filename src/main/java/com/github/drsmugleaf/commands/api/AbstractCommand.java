@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.commands;
+package com.github.drsmugleaf.commands.api;
 
 import com.github.drsmugleaf.BanterBot4J;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;

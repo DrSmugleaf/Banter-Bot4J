@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.commands;
+package com.github.drsmugleaf.commands.api;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 18/01/2018.
  */
-interface CommandRunnable {
+public interface CommandRunnable {
 
     void run(@Nonnull MessageReceivedEvent event, @Nonnull List<String> args);
 
