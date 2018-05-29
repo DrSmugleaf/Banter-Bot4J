@@ -211,7 +211,7 @@ public class Eve extends AbstractCommand {
     @CommandInfo
     public static void eveDowntime(MessageReceivedEvent event, List<String> args) {
         long authorID = event.getAuthor().getLongID();
-        EveDowntimeUser user = new EveDowntimeUser(event.getAuthor().getLongID());
+        EveDowntimeUser user = new EveDowntimeUser(authorID);
         IChannel channel = event.getChannel();
         if (user.get().isEmpty()) {
             user.createIfNotExists();
