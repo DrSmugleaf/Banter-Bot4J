@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.*;
-import sx.blah.discord.util.DiscordException;
+import sx.blah.discord.util.RateLimitException;
 import sx.blah.discord.util.RequestBuffer;
 
 import javax.annotation.Nonnull;
@@ -54,7 +54,7 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
         return RequestBuffer.request(() -> {
             try {
                 return channel.sendMessage(content);
-            } catch (DiscordException e) {
+            } catch (RateLimitException e) {
                 LOGGER.error("Message could not be sent", e);
                 throw e;
             }
@@ -66,7 +66,7 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
         return RequestBuffer.request(() -> {
             try {
                 return channel.sendMessage(embed);
-            } catch (DiscordException e) {
+            } catch (RateLimitException e) {
                 LOGGER.error("Embed could not be sent", e);
                 throw e;
             }
@@ -78,7 +78,7 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
         return RequestBuffer.request(() -> {
             try {
                 return channel.sendMessage(content, embed);
-            } catch (DiscordException e) {
+            } catch (RateLimitException e) {
                 LOGGER.error("Embed could not be sent", e);
                 throw e;
             }
@@ -101,7 +101,7 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
         return RequestBuffer.request(() -> {
             try {
                 return getMessage().reply(content);
-            } catch (DiscordException e) {
+            } catch (RateLimitException e) {
                 LOGGER.error("Message could not be sent", e);
                 throw e;
             }
@@ -113,7 +113,7 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
         return RequestBuffer.request(() -> {
             try {
                 return getMessage().reply(null, embed);
-            } catch (DiscordException e) {
+            } catch (RateLimitException e) {
                 LOGGER.error("Embed could not be sent", e);
                 throw e;
             }
@@ -125,7 +125,7 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
         return RequestBuffer.request(() -> {
             try {
                 return getMessage().reply(content, embed);
-            } catch (DiscordException e) {
+            } catch (RateLimitException e) {
                 LOGGER.error("Message with embed could not be sent", e);
                 throw e;
             }
