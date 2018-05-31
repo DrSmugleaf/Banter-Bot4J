@@ -1,10 +1,9 @@
 package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.AbstractCommand;
 import com.github.drsmugleaf.commands.api.CommandInfo;
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.Tags;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RoleBuilder;
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * Created by DrSmugleaf on 23/01/2018.
  */
-public class Color extends AbstractCommand {
+public class Color {
 
     @Nullable
     private static java.awt.Color resolve(String string) {
@@ -39,15 +38,15 @@ public class Color extends AbstractCommand {
     }
 
     @CommandInfo(tags = {Tags.GUILD_ONLY})
-    public static void color(MessageReceivedEvent event, List<String> args) {
+    public static void color(CommandReceivedEvent event) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
         IUser author = event.getAuthor();
 
         List<IRole> roles = guild.getRolesByName("color-" + author.getStringID());
-        if (args.isEmpty()) {
+        if (event.ARGS.isEmpty()) {
             if (roles.isEmpty()) {
-                sendMessage(channel, "You don't have a name color. Use " + BanterBot4J.BOT_PREFIX + "color name OR hexadecimal code to assign one.");
+                event.reply("You don't have a name color. Use " + BanterBot4J.BOT_PREFIX + "color name OR hexadecimal code to assign one.");
                 return;
             }
 
@@ -57,13 +56,13 @@ public class Color extends AbstractCommand {
                 author.removeRole(role);
             } catch (MissingPermissionsException e) {
                 if (e.getMissingPermissions() == null) {
-                    sendMessage(channel, "I can't remove your name color.\n" +
-                                         "My highest role with the permission to modify roles has a lower position in the role list than your color role.");
+                    event.reply("I can't remove your name color.\n" +
+                                "My highest role with the permission to modify roles has a lower position in the role list than your color role.");
                     return;
                 }
                 String missingPermissions = e.getMissingPermissions().stream().map(Permissions::name).collect(Collectors.joining(", "));
-                sendMessage(channel, "I don't have permission to change your name color.\n" +
-                                     "Missing permissions: " + missingPermissions);
+                event.reply("I don't have permission to change your name color.\n" +
+                            "Missing permissions: " + missingPermissions);
                 return;
             }
             usersByRole.remove(author);
@@ -71,14 +70,14 @@ public class Color extends AbstractCommand {
                 role.delete();
             }
             String hexCode = String.format("#%06x", role.getColor().getRGB() & 0x00FFFFFF).toUpperCase();
-            sendMessage(channel, "Removed your name color. It was " + hexCode);
+            event.reply("Removed your name color. It was " + hexCode);
             return;
         }
 
-        String requestedColor = args.get(0);
+        String requestedColor = event.ARGS.get(0);
         java.awt.Color color = resolve(requestedColor);
         if (color == null) {
-            sendMessage(channel, "Invalid color. Make sure it is a hexadecimal string (0000FF) or a simple color like red.");
+            event.reply("Invalid color. Make sure it is a hexadecimal string (0000FF) or a simple color like red.");
             return;
         }
 
@@ -91,12 +90,12 @@ public class Color extends AbstractCommand {
                 author.addRole(newRole);
             } catch (MissingPermissionsException e) {
                 String missingPermissions = e.getMissingPermissions().stream().map(Permissions::name).collect(Collectors.joining(", "));
-                sendMessage(channel, "I don't have permission to change your name color.\n" +
-                                     "Missing permissions: " + missingPermissions);
+                event.reply("I don't have permission to change your name color.\n" +
+                            "Missing permissions: " + missingPermissions);
                 return;
             }
 
-            sendMessage(channel, "Changed your name color to " + requestedColor);
+            event.reply("Changed your name color to " + requestedColor);
             return;
         } else {
             IRole role = roles.get(0);
@@ -106,17 +105,17 @@ public class Color extends AbstractCommand {
                 role.changeColor(color);
             } catch (MissingPermissionsException e) {
                 if (e.getMissingPermissions() == null) {
-                    sendMessage(channel, "I can't modify your name color.\n" +
-                                         "My highest role with the permission to modify roles has a lower position in the role list than your color role.");
+                    event.reply("I can't modify your name color.\n" +
+                                "My highest role with the permission to modify roles has a lower position in the role list than your color role.");
                     return;
                 }
                 String missingPermissions = e.getMissingPermissions().stream().map(Permissions::name).collect(Collectors.joining(", "));
-                sendMessage(channel, "I don't have permission to change your name color.\n" +
-                                     "Missing permissions: " + missingPermissions);
+                event.reply("I don't have permission to change your name color.\n" +
+                            "Missing permissions: " + missingPermissions);
                 return;
             }
 
-            sendMessage(channel, "Changed your name color to " + requestedColor + ". Your old name color's hex code was " + oldHexCode);
+            event.reply("Changed your name color to " + requestedColor + ". Your old name color's hex code was " + oldHexCode);
             return;
         }
     }

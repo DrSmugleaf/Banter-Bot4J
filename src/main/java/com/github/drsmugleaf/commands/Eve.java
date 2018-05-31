@@ -1,13 +1,12 @@
 package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.AbstractCommand;
 import com.github.drsmugleaf.commands.api.CommandInfo;
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.database.models.EveTimer;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
@@ -19,13 +18,14 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Created by DrSmugleaf on 01/05/2018.
  */
-public class Eve extends AbstractCommand {
+public class Eve {
 
     @Nonnull
     private static final ZoneOffset EVE_TIMEZONE = ZoneOffset.UTC;
@@ -33,20 +33,6 @@ public class Eve extends AbstractCommand {
     private static final Timer TIMER = new Timer("Eve Structure Alert Timer", true);
 
     private static final Map<EveTimer, TimerTask> TASKS = new HashMap<>();
-
-    @Nonnull
-    private static List<String> getQuotedArguments(List<String> args) {
-        List<String> groupedArguments = new ArrayList<>();
-        String joinedArgs = String.join(" ", args);
-        Pattern pattern = Pattern.compile("\"([^\"]*)\"");
-        Matcher matcher = pattern.matcher(joinedArgs);
-
-        while (matcher.find()) {
-            groupedArguments.add(matcher.group(1));
-        }
-
-        return groupedArguments;
-    }
 
     @Nullable
     private static Long parseDatePortion(@Nonnull String input, @Nonnull Pattern regex) {
@@ -91,7 +77,7 @@ public class Eve extends AbstractCommand {
                 .withFooterText(date.toString())
                 .withColor(skipped ? Color.RED : Color.GREEN);
 
-        sendMessage(channel, "@everyone Structure timer", builder.build());
+        CommandReceivedEvent.sendMessage(channel, "@everyone Structure timer", builder.build());
 
         deleteTask(timer);
     }
@@ -132,29 +118,29 @@ public class Eve extends AbstractCommand {
         return false;
     }
 
-    private static void deleteTimer(MessageReceivedEvent event, List<String> args) {
+    private static void deleteTimer(CommandReceivedEvent event) {
         IChannel channel = event.getChannel();
-        String structure = args.get(0);
-        String system = args.get(1);
+        String structure = event.ARGS.get(0);
+        String system = event.ARGS.get(1);
         EveTimer timer = new EveTimer(channel.getLongID(), structure, system, null, null);
 
         List<EveTimer> timers = timer.get();
         if (timers.isEmpty()) {
             String response = "No timer exists assigned to channel %s with structure %s and system %s";
             response = String.format(response, channel, structure, system);
-            sendMessage(channel, response);
+            event.reply(response);
         } else {
             timer = timers.get(0);
             if (!deleteTask(timer)) {
                 String response = "Couldn't delete timer assigned to channel %s with structure %s and system %s";
                 response = String.format(response, channel, structure, system);
-                sendMessage(channel, response);
+                event.reply(response);
                 return;
             }
 
             String response = "Deleted timer assigned to channel %s with structure %s and system %s";
             response = String.format(response, channel, structure, system);
-            sendMessage(channel, response);
+            event.reply(response);
         }
     }
 
@@ -174,32 +160,29 @@ public class Eve extends AbstractCommand {
     }
 
     @CommandInfo
-    public static void eveTimer(MessageReceivedEvent event, List<String> args) {
-        List<String> quotedArguments = getQuotedArguments(args);
-        if (quotedArguments.isEmpty() || quotedArguments.size() != 3) {
-            if (args.size() == 3) {
-                String firstArg = args.get(0);
-                if (firstArg.equalsIgnoreCase("delete") || firstArg.equalsIgnoreCase("\"delete\"")) {
-                    deleteTimer(event, quotedArguments);
-                    return;
-                }
-            }
+    public static void eveTimer(CommandReceivedEvent event) {
+        if (event.ARGS.isEmpty()) {
+            event.reply(wrongFormatResponse());
+            return;
+        }
 
-            sendMessage(event.getChannel(), wrongFormatResponse());
+        String firstArg = event.ARGS.first();
+        if (firstArg.equalsIgnoreCase("delete")) {
+            deleteTimer(event);
             return;
         }
 
         IChannel channel = event.getChannel();
-        String structure = quotedArguments.get(0);
-        String system = quotedArguments.get(1);
+        String structure = event.ARGS.get(0);
+        String system = event.ARGS.get(1);
         if (exists(structure, system)) {
             String response = "Timer for structure %s in system %s already exists";
             response = String.format(response, structure, system);
-            sendMessage(event.getChannel(), response);
+            event.reply(response);
             return;
         }
 
-        Long date = parseDate(quotedArguments.get(2));
+        Long date = parseDate(event.ARGS.get(2));
         Long submitter = event.getAuthor().getLongID();
         EveTimer eveTimerModel = new EveTimer(channel.getLongID(), structure, system, date, submitter);
         eveTimerModel.save();

@@ -1,10 +1,9 @@
 package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.AbstractCommand;
 import com.github.drsmugleaf.commands.api.CommandInfo;
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.Tags;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.ActivityType;
 import sx.blah.discord.handle.obj.StatusType;
 import sx.blah.discord.util.Image;
@@ -16,22 +15,21 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by DrSmugleaf on 20/05/2017.
  */
-public class Owner extends AbstractCommand {
+public class Owner {
 
     @CommandInfo(tags = {Tags.OWNER_ONLY})
-    public static void avatar(MessageReceivedEvent event, List<String> args) {
-        if (args.isEmpty()) {
-            sendMessage(event.getChannel(), "You didn't provide a link to change the bot's image to.");
+    public static void avatar(CommandReceivedEvent event) {
+        if (event.ARGS.isEmpty()) {
+            event.reply("You didn't provide a link to change the bot's image to.");
             return;
         }
 
         try {
-            URL url = new URL(args.get(0));
+            URL url = new URL(event.ARGS.get(0));
             URLConnection connection = url.openConnection();
             String contentType = connection.getContentType();
 
@@ -48,30 +46,30 @@ public class Owner extends AbstractCommand {
                 }
             }
 
-            event.getClient().changeAvatar(Image.forUrl(suffix, args.get(0)));
+            event.getClient().changeAvatar(Image.forUrl(suffix, event.ARGS.get(0)));
         } catch(IOException e) {
             BanterBot4J.LOGGER.error("Malformed URL or error opening connection", e);
-            sendMessage(event.getChannel(), "Invalid image URL");
+            event.reply("Invalid image URL");
         }
     }
 
     @CommandInfo(tags = {Tags.OWNER_ONLY})
-    public static void name(MessageReceivedEvent event, List<String> args) {
-        String name = String.join(" ", args);
-        event.getClient().changeUsername(String.join(" ", args));
-        sendMessage(event.getChannel(), "Changed the bot's name to " + name);
+    public static void name(CommandReceivedEvent event) {
+        String name = String.join(" ", event.ARGS);
+        event.getClient().changeUsername(String.join(" ", event.ARGS));
+        event.reply("Changed the bot's name to " + name);
     }
 
     @CommandInfo(tags = {Tags.OWNER_ONLY})
-    public static void playing(MessageReceivedEvent event, List<String> args) {
-        if(args.isEmpty()) {
+    public static void playing(CommandReceivedEvent event) {
+        if(event.ARGS.isEmpty()) {
             event.getClient().changePresence(StatusType.ONLINE, null, "");
-            sendMessage(event.getChannel(), "Reset the bot's playing status");
+            event.reply("Reset the bot's playing status");
             return;
         }
 
-        String game = String.join(" ", args);
+        String game = String.join(" ", event.ARGS);
         event.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, game);
-        sendMessage(event.getChannel(), "Changed the bot's playing status to " + game);
+        event.reply("Changed the bot's playing status to " + game);
     }
 }

@@ -1,9 +1,8 @@
 package com.github.drsmugleaf.commands;
 
-import com.github.drsmugleaf.commands.api.AbstractCommand;
 import com.github.drsmugleaf.commands.api.CommandInfo;
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.database.models.Member;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
@@ -13,47 +12,47 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 14/05/2017.
  */
-public class Admin extends AbstractCommand {
+public class Admin {
 
     @CommandInfo(permissions = {Permissions.KICK, Permissions.BAN})
-    public static void blacklist(MessageReceivedEvent event, List<String> args) {
+    public static void blacklist(CommandReceivedEvent event) {
         IUser author = event.getAuthor();
 
         Long guildID = event.getGuild().getLongID();
         List<IUser> mentions = event.getMessage().getMentions();
 
-        IRole highestAuthorRole = getHighestRole(event.getAuthor(), event.getGuild());
+        IRole highestAuthorRole = event.getHighestAuthorRole();
 
         mentions.forEach(mention -> {
             Member member = new Member(mention.getLongID(), guildID).get().get(0);
             String nickname = mention.getDisplayName(event.getGuild());
 
             if(member == null) {
-                sendMessage(event.getChannel(), "User " + nickname + " doesn't exist");
+                event.reply("User " + nickname + " doesn't exist");
                 return;
             }
 
             if(author.getLongID() == mention.getLongID()) {
-                sendMessage(event.getChannel(), "You can't blacklist yourself!");
+                event.reply("You can't blacklist yourself!");
                 return;
             }
 
             if(mention.getLongID() == event.getGuild().getOwner().getLongID()) {
-                sendMessage(event.getChannel(), "You can't blacklist the server owner!");
+                event.reply("You can't blacklist the server owner!");
                 return;
             }
 
-            IRole highestMentionRole = getHighestRole(mention, event.getGuild());
+            IRole highestMentionRole = CommandReceivedEvent.getHighestRole(mention, event.getGuild());
 
             if(highestAuthorRole != null && highestMentionRole != null && highestAuthorRole.getPosition() < highestMentionRole.getPosition()) {
-                sendMessage(event.getChannel(), "You can't blacklist " + nickname + ".\n" +
-                        "Your highest role has a lower position in the role manager than their highest role.");
+                event.reply("You can't blacklist " + nickname + ".\n" +
+                            "Your highest role has a lower position in the role manager than their highest role.");
                 return;
             }
 
             member.isBlacklisted = !member.isBlacklisted;
             member.save();
-            sendMessage(event.getChannel(), (member.isBlacklisted ? "Whitelisted user " : "Blacklisted user ") + nickname);
+            event.reply((member.isBlacklisted ? "Whitelisted user " : "Blacklisted user ") + nickname);
         });
     }
 

@@ -26,20 +26,20 @@ public class Handler {
         for (Method method : commands) {
             CommandInfo annotation = method.getAnnotation(CommandInfo.class);
 
-            CommandRunnable command = (event, args) -> {
+            CommandRunnable command = (event) -> {
                 if (event.getGuild() != null) {
                     List<Permissions> annotationPermissions = Arrays.asList(annotation.permissions());
                     EnumSet<Permissions> authorPermissions = event.getAuthor().getPermissionsForGuild(event.getGuild());
 
                     if (!annotationPermissions.isEmpty() && Collections.disjoint(authorPermissions, Arrays.asList(annotation.permissions()))) {
-                        AbstractCommand.sendMessage(event.getChannel(), "You don't have permission to use that command.");
+                        CommandReceivedEvent.sendMessage(event.getChannel(), "You don't have permission to use that command.");
                         return;
                     }
                 }
 
                 for (Tags tags : annotation.tags()) {
                     if (!tags.valid(event)) {
-                        AbstractCommand.sendMessage(event.getChannel(), tags.message());
+                        CommandReceivedEvent.sendMessage(event.getChannel(), tags.message());
                         return;
                     }
 
@@ -47,7 +47,7 @@ public class Handler {
                 }
 
                 try {
-                    method.invoke(method.getClass(), event, args);
+                    method.invoke(method.getClass(), event);
                 } catch (InvocationTargetException e) {
                     BanterBot4J.LOGGER.error("Error running command", e.getCause());
                 } catch (IllegalAccessException e) {
@@ -86,11 +86,11 @@ public class Handler {
         }
 
         String commandString = argsArray[0].substring(BanterBot4J.BOT_PREFIX.length()).toLowerCase();
-        List<String> argsList = new ArrayList<>(Arrays.asList(argsArray));
-        argsList.remove(0);
+
+        CommandReceivedEvent commandEvent = new CommandReceivedEvent(event);
 
         if (COMMANDS.containsKey(commandString)) {
-            COMMANDS.get(commandString).run(event, argsList);
+            COMMANDS.get(commandString).run(commandEvent);
         }
     }
 
