@@ -5,7 +5,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by DrSmugleaf on 18/01/2018.
  */
-public interface CommandRunnable {
+interface CommandRunnable {
 
     void run(@Nonnull CommandReceivedEvent event);
 

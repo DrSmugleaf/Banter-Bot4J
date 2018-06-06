@@ -79,8 +79,10 @@ public class Handler {
         if (event.getGuild() != null) {
             long userID = event.getAuthor().getLongID();
             long guildID = event.getGuild().getLongID();
-            Member member = new Member(userID, guildID).get().get(0);
-            if (member != null && member.isBlacklisted) {
+            Member member = new Member(userID, guildID);
+            member.createIfNotExists();
+            member = member.get().get(0);
+            if (member.isBlacklisted) {
                 return;
             }
         }
