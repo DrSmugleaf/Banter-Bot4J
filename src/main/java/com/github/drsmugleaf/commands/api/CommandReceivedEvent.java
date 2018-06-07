@@ -2,6 +2,7 @@ package com.github.drsmugleaf.commands.api;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.*;
@@ -22,15 +23,25 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
     static final Logger LOGGER = LoggerFactory.getLogger(CommandReceivedEvent.class);
 
     @Nonnull
+    protected IDiscordClient client;
+
+    @Nonnull
     public final Arguments ARGS;
 
     protected CommandReceivedEvent(@Nonnull IMessage message) {
         super(message);
+        client = message.getClient();
         ARGS = new Arguments(message.getContent());
     }
 
     protected CommandReceivedEvent(@Nonnull MessageReceivedEvent event) {
         this(event.getMessage());
+    }
+
+    @Nonnull
+    @Override
+    public IDiscordClient getClient() {
+        return client;
     }
 
     @Nullable
