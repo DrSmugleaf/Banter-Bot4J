@@ -46,10 +46,13 @@ public class EveDowntimeUser extends Model<EveDowntimeUser> {
     private static boolean isOffline() {
         try {
             STATUS_API.getStatus("tranquility", null, null, null);
-            return false;
         } catch (ApiException e) {
-            return true;
+            if (e.getCode() == 500) {
+                return true;
+            }
         }
+
+        return false;
     }
 
     private static void alertAll() {
