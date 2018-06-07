@@ -137,7 +137,7 @@ public class Music {
         }
 
         int votes = SKIP_VOTES.get(guild).size();
-        double requiredVotes = humanUsers / 2;
+        double requiredVotes = humanUsers / 2.0;
 
         TrackUserData trackUserData = currentTrack.getUserData(TrackUserData.class);
         if (votes >= requiredVotes || author == trackUserData.SUBMITTER) {
