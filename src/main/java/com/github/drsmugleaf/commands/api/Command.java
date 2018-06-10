@@ -28,7 +28,7 @@ public abstract class Command {
                 }
             }
 
-            for (Tags tags : annotation.tags()) {
+            for (Tag tags : annotation.tags()) {
                 if (!tags.isValid(event)) {
                     event.reply(tags.message());
                     return;

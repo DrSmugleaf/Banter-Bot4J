@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by DrSmugleaf on 16/01/2018.
  */
-public enum Tags {
+public enum Tags implements Tag {
 
     DELETE_COMMAND_MESSAGE {
         @Override
