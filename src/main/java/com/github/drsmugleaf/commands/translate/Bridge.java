@@ -1,29 +1,27 @@
-package com.github.drsmugleaf.commands;
+package com.github.drsmugleaf.commands.translate;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.Tags;
 import com.github.drsmugleaf.database.models.BridgedChannel;
-import com.github.drsmugleaf.translator.API;
 import com.github.drsmugleaf.translator.Languages;
-import sx.blah.discord.api.events.EventSubscriber;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
- * Created by DrSmugleaf on 18/01/2018.
+ * Created by DrSmugleaf on 10/06/2018
  */
-public class Translator {
+@CommandInfo(permissions = {Permissions.MANAGE_CHANNELS}, tags = {Tags.GUILD_ONLY})
+public class Bridge extends Command {
 
-    @CommandInfo(permissions = {Permissions.MANAGE_CHANNELS}, tags = {Tags.GUILD_ONLY})
-    public static void bridge(@Nonnull CommandReceivedEvent event) {
+    @Override
+    protected void run(@Nonnull CommandReceivedEvent event) {
         if (event.ARGS.isEmpty()) {
             event.reply("You didn't provide any channels or languages.\n" +
                         "Usage: " + BanterBot4J.BOT_PREFIX + "bridge channel1 language1 channel2 language2");
@@ -83,51 +81,6 @@ public class Translator {
                 " and " + secondChannel.getName() +
                 " with language " + secondLanguage.getName()
         );
-    }
-
-    @CommandInfo(permissions = {Permissions.MANAGE_CHANNELS}, tags = {Tags.GUILD_ONLY})
-    public static void unbridge(@Nonnull CommandReceivedEvent event) {
-        if (event.ARGS.isEmpty()) {
-            event.reply("You didn't provide a channel name.");
-            return;
-        }
-
-        List<IChannel> channels = event.getGuild().getChannelsByName(event.ARGS.get(0));
-        if (channels.isEmpty()) {
-            event.reply("No channels found with name " + event.ARGS.get(0));
-            return;
-        }
-
-        IChannel channel = channels.get(0);
-        BridgedChannel bridgedChannel1 = new BridgedChannel(channel.getLongID(), null);
-        BridgedChannel bridgedChannel2 = new BridgedChannel(null, channel.getLongID());
-        bridgedChannel1.delete();
-        bridgedChannel2.delete();
-
-        event.reply("Unbridged all channels bridged with " + channel.getName());
-    }
-
-    @EventSubscriber
-    public static void handle(@Nonnull MessageReceivedEvent event) {
-        IUser author = event.getAuthor();
-        if (author.isBot()) {
-            return;
-        }
-
-        IChannel channel = event.getChannel();
-        List<BridgedChannel> bridgedChannelList = new BridgedChannel(channel.getLongID()).get();
-        if (bridgedChannelList.isEmpty()) {
-            return;
-        }
-
-        String authorName = author.getDisplayName(event.getGuild());
-        for (BridgedChannel bridgedChannel : bridgedChannelList) {
-            Languages channelLanguage = bridgedChannel.channelLanguage;
-            IChannel bridged = event.getClient().getChannelByID(bridgedChannel.bridged.id);
-            Languages bridgedLanguage = bridgedChannel.bridgedLanguage;
-            String translation = API.translate(channelLanguage.getCode(), bridgedLanguage.getCode(), event.getMessage().getFormattedContent());
-            CommandReceivedEvent.sendMessage(bridged, "**" + authorName + "**: " + translation);
-        }
     }
 
 }

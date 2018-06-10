@@ -26,6 +26,7 @@ public class Reflection {
         PACKAGE_NAME = packageName;
     }
 
+    @Nonnull
     public List<Class<?>> getClasses() throws ClassNotFoundException, IOException, URISyntaxException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         String path = PACKAGE_NAME.replace('.', '/');
@@ -46,7 +47,8 @@ public class Reflection {
         return classes;
     }
 
-    private List<Class<?>> findClasses(File directory, String packageName) throws ClassNotFoundException {
+    @Nonnull
+    private List<Class<?>> findClasses(@Nonnull File directory, @Nonnull String packageName) throws ClassNotFoundException {
         List<Class<?>> classes = new ArrayList<>();
         if (!directory.exists()) {
             return classes;
@@ -69,7 +71,7 @@ public class Reflection {
     }
 
     @Nonnull
-    public List<Method> findMethodsWithAnnotation(Class<? extends Annotation> annotation) {
+    public List<Method> findMethodsWithAnnotation(@Nonnull Class<? extends Annotation> annotation) {
         Iterable<Class<?>> classes = null;
         try {
             classes = getClasses();
@@ -94,7 +96,7 @@ public class Reflection {
     }
 
     @Nonnull
-    public List<Class<?>> findClassesWithAnnotation(Class<? extends Annotation> annotation) {
+    public List<Class<?>> findClassesWithAnnotation(@Nonnull Class<? extends Annotation> annotation) {
         List<Class<?>> classes = new ArrayList<>();
 
         try {
@@ -104,6 +106,24 @@ public class Reflection {
         }
 
         classes.removeIf(cls -> !cls.isAnnotationPresent(annotation));
+
+        return classes;
+    }
+
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    public <T> List<Class<T>> findSubtypesOf(@Nonnull Class<T> supertype) {
+        List<Class<T>> classes = new ArrayList<>();
+
+        try {
+            for (Class<?> clazz : getClasses()) {
+                if (supertype.isAssignableFrom(clazz)) {
+                    classes.add((Class<T>) clazz);
+                }
+            }
+        } catch (ClassNotFoundException | IOException | URISyntaxException e) {
+            BanterBot4J.LOGGER.error("Error finding subtypes of class" + supertype.getName(), e);
+        }
 
         return classes;
     }

@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands;
 
+import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.database.models.Member;
@@ -7,15 +8,17 @@ import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
  * Created by DrSmugleaf on 14/05/2017.
  */
-public class Admin {
+@CommandInfo(permissions = {Permissions.KICK, Permissions.BAN})
+public class Blacklist extends Command {
 
-    @CommandInfo(permissions = {Permissions.KICK, Permissions.BAN})
-    public static void blacklist(CommandReceivedEvent event) {
+    @Override
+    protected void run(@Nonnull CommandReceivedEvent event) {
         IUser author = event.getAuthor();
 
         Long guildID = event.getGuild().getLongID();

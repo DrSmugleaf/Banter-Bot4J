@@ -24,7 +24,7 @@ public enum Tags {
     },
     GUILD_ONLY {
         @Override
-        public boolean valid(@Nonnull MessageReceivedEvent event) {
+        public boolean isValid(@Nonnull MessageReceivedEvent event) {
             return event.getGuild() != null;
         }
 
@@ -36,7 +36,7 @@ public enum Tags {
     },
     OWNER_ONLY {
         @Override
-        public boolean valid(@Nonnull MessageReceivedEvent event) {
+        public boolean isValid(@Nonnull MessageReceivedEvent event) {
             return BanterBot4J.isOwner(event.getAuthor().getLongID());
         }
 
@@ -48,8 +48,8 @@ public enum Tags {
     },
     SAME_VOICE_CHANNEL {
         @Override
-        public boolean valid(@Nonnull MessageReceivedEvent event) {
-            if (!GUILD_ONLY.valid(event)) {
+        public boolean isValid(@Nonnull MessageReceivedEvent event) {
+            if (!GUILD_ONLY.isValid(event)) {
                 return false;
             }
 
@@ -70,8 +70,8 @@ public enum Tags {
     },
     VOICE_ONLY {
         @Override
-        public boolean valid(@Nonnull MessageReceivedEvent event) {
-            if (!GUILD_ONLY.valid(event)) {
+        public boolean isValid(@Nonnull MessageReceivedEvent event) {
+            if (!GUILD_ONLY.isValid(event)) {
                 return false;
             }
 
@@ -89,7 +89,7 @@ public enum Tags {
         }
     };
 
-    public boolean valid(@Nonnull MessageReceivedEvent event) {
+    public boolean isValid(@Nonnull MessageReceivedEvent event) {
         return true;
     }
 

@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.Tags;
@@ -8,6 +9,7 @@ import sx.blah.discord.handle.obj.*;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RoleBuilder;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,7 +17,8 @@ import java.util.stream.Collectors;
 /**
  * Created by DrSmugleaf on 23/01/2018.
  */
-public class Color {
+@CommandInfo(tags = {Tags.GUILD_ONLY})
+public class Color extends Command {
 
     @Nullable
     private static java.awt.Color resolve(String string) {
@@ -37,10 +40,9 @@ public class Color {
         return color;
     }
 
-    @CommandInfo(tags = {Tags.GUILD_ONLY})
-    public static void color(CommandReceivedEvent event) {
+    @Override
+    protected void run(@Nonnull CommandReceivedEvent event) {
         IGuild guild = event.getGuild();
-        IChannel channel = event.getChannel();
         IUser author = event.getAuthor();
 
         List<IRole> roles = guild.getRolesByName("color-" + author.getStringID());

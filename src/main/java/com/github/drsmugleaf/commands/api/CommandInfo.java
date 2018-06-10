@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * Created by DrSmugleaf on 20/05/2017.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@Target(ElementType.TYPE)
 public @interface CommandInfo {
 
     String name() default "";

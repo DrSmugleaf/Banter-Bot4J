@@ -1,13 +1,13 @@
-package com.github.drsmugleaf.commands;
+package com.github.drsmugleaf.commands.owner;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.Tags;
-import sx.blah.discord.handle.obj.ActivityType;
-import sx.blah.discord.handle.obj.StatusType;
 import sx.blah.discord.util.Image;
 
+import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.spi.ImageReaderSpi;
@@ -17,12 +17,13 @@ import java.net.URLConnection;
 import java.util.Iterator;
 
 /**
- * Created by DrSmugleaf on 20/05/2017.
+ * Created by DrSmugleaf on 10/06/2018
  */
-public class Owner {
+@CommandInfo(tags = {Tags.OWNER_ONLY})
+public class Avatar extends Command {
 
-    @CommandInfo(tags = {Tags.OWNER_ONLY})
-    public static void avatar(CommandReceivedEvent event) {
+    @Override
+    protected void run(@Nonnull CommandReceivedEvent event) {
         if (event.ARGS.isEmpty()) {
             event.reply("You didn't provide a link to change the bot's image to.");
             return;
@@ -53,23 +54,4 @@ public class Owner {
         }
     }
 
-    @CommandInfo(tags = {Tags.OWNER_ONLY})
-    public static void name(CommandReceivedEvent event) {
-        String name = String.join(" ", event.ARGS);
-        event.getClient().changeUsername(String.join(" ", event.ARGS));
-        event.reply("Changed the bot's name to " + name);
-    }
-
-    @CommandInfo(tags = {Tags.OWNER_ONLY})
-    public static void playing(CommandReceivedEvent event) {
-        if(event.ARGS.isEmpty()) {
-            event.getClient().changePresence(StatusType.ONLINE, null, "");
-            event.reply("Reset the bot's playing status");
-            return;
-        }
-
-        String game = String.join(" ", event.ARGS);
-        event.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, game);
-        event.reply("Changed the bot's playing status to " + game);
-    }
 }
