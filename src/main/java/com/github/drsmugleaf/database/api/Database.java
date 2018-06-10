@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.database.api;
 
-import com.github.drsmugleaf.util.Reflection;
+import com.github.drsmugleaf.reflection.Reflection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

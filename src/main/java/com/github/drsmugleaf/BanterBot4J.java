@@ -2,7 +2,7 @@ package com.github.drsmugleaf;
 
 import com.github.drsmugleaf.database.api.Database;
 import com.github.drsmugleaf.env.Keys;
-import com.github.drsmugleaf.util.Reflection;
+import com.github.drsmugleaf.reflection.Reflection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.ClientBuilder;

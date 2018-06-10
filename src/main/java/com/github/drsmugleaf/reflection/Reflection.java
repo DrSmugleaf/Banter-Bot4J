@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.util;
+package com.github.drsmugleaf.reflection;
 
 import com.github.drsmugleaf.BanterBot4J;
 

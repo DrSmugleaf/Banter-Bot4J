@@ -2,7 +2,7 @@ package com.github.drsmugleaf.commands.api;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.database.models.Member;
-import com.github.drsmugleaf.util.Reflection;
+import com.github.drsmugleaf.reflection.Reflection;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
