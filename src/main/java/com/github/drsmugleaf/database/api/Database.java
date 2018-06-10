@@ -5,8 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,17 +30,12 @@ public class Database {
     private static <T extends Model<T>> List<Class<T>> getModels(@Nonnull String packageName) {
         List<Class<T>> models = new ArrayList<>();
         Reflection reflection = new Reflection(packageName);
-
-        try {
-            for (Class<?> model : reflection.getClasses()) {
-                if (!Model.class.isAssignableFrom(model)) {
-                    continue;
-                }
-
-                models.add((Class<T>) model);
+        for (Class<?> model : reflection.getClasses()) {
+            if (!Model.class.isAssignableFrom(model)) {
+                continue;
             }
-        } catch (ClassNotFoundException | IOException | URISyntaxException e) {
-            LOGGER.error("Error getting classes from package " + packageName);
+
+            models.add((Class<T>) model);
         }
 
         return models;

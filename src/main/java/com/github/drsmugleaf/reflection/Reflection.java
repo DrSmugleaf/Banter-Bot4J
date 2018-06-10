@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.reflection;
 
-import com.github.drsmugleaf.BanterBot4J;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -20,6 +21,9 @@ import java.util.List;
 public class Reflection {
 
     @Nonnull
+    private static final Logger LOGGER = LoggerFactory.getLogger(Reflection.class);
+
+    @Nonnull
     private final String PACKAGE_NAME;
 
     public Reflection(@Nonnull String packageName) {
@@ -27,15 +31,26 @@ public class Reflection {
     }
 
     @Nonnull
-    public List<Class<?>> getClasses() throws ClassNotFoundException, IOException, URISyntaxException {
+    public List<Class<?>> getClasses() {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         String path = PACKAGE_NAME.replace('.', '/');
-        Enumeration<URL> resources = classLoader.getResources(path);
-        List<File> dirs = new ArrayList<>();
+        Enumeration<URL> resources;
+        try {
+            resources = classLoader.getResources(path);
+        } catch (IOException e) {
+            throw new ReflectionException("Error getting resources in class loader from path " + path, e);
+        }
 
+        List<File> dirs = new ArrayList<>();
         while (resources.hasMoreElements()) {
             URL resource = resources.nextElement();
-            URI uri = new URI(resource.toString());
+            URI uri;
+            try {
+                uri = new URI(resource.toString());
+            } catch (URISyntaxException e) {
+                throw new ReflectionException("Error creating URI object for resource " + resource, e);
+            }
+
             dirs.add(new File(uri.getPath()));
         }
 
@@ -48,7 +63,7 @@ public class Reflection {
     }
 
     @Nonnull
-    private List<Class<?>> findClasses(@Nonnull File directory, @Nonnull String packageName) throws ClassNotFoundException {
+    private List<Class<?>> findClasses(@Nonnull File directory, @Nonnull String packageName) {
         List<Class<?>> classes = new ArrayList<>();
         if (!directory.exists()) {
             return classes;
@@ -62,9 +77,18 @@ public class Reflection {
         for (File file : files) {
             if (file.isDirectory()) {
                 classes.addAll(findClasses(file, packageName + "." + file.getName()));
-            }
-            else if (file.getName().endsWith(".class")) {
-                classes.add(Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6)));
+            } else if (file.getName().endsWith(".class")) {
+                Class<?> clazz;
+                String className = null;
+                try {
+                    String fileName = file.getName();
+                    className = fileName.substring(0, fileName.length() - 6);
+                    clazz = Class.forName(packageName + '.' + className);
+                } catch (ClassNotFoundException e) {
+                    throw new ReflectionException("Class " + className + " in package " + packageName + " not found", e);
+                }
+
+                classes.add(clazz);
             }
         }
         return classes;
@@ -72,17 +96,8 @@ public class Reflection {
 
     @Nonnull
     public List<Method> findMethodsWithAnnotation(@Nonnull Class<? extends Annotation> annotation) {
-        Iterable<Class<?>> classes = null;
-        try {
-            classes = getClasses();
-        } catch(ClassNotFoundException | IOException | URISyntaxException e) {
-            BanterBot4J.LOGGER.error("Error finding methods with annotation " + annotation.getName(), e);
-        }
-
+        Iterable<Class<?>> classes = getClasses();
         List<Method> methodList = new ArrayList<>();
-        if(classes == null) {
-            return methodList;
-        }
 
         classes.forEach(cls -> {
             for (Method method : cls.getDeclaredMethods()) {
@@ -97,16 +112,8 @@ public class Reflection {
 
     @Nonnull
     public List<Class<?>> findClassesWithAnnotation(@Nonnull Class<? extends Annotation> annotation) {
-        List<Class<?>> classes = new ArrayList<>();
-
-        try {
-            classes.addAll(getClasses());
-        } catch (IOException | URISyntaxException | ClassNotFoundException e) {
-            BanterBot4J.LOGGER.error("Error finding classes with annotation" + annotation.getName(), e);
-        }
-
+        List<Class<?>> classes = getClasses();
         classes.removeIf(cls -> !cls.isAnnotationPresent(annotation));
-
         return classes;
     }
 
@@ -114,15 +121,10 @@ public class Reflection {
     @SuppressWarnings("unchecked")
     public <T> List<Class<T>> findSubtypesOf(@Nonnull Class<T> supertype) {
         List<Class<T>> classes = new ArrayList<>();
-
-        try {
-            for (Class<?> clazz : getClasses()) {
-                if (supertype.isAssignableFrom(clazz)) {
-                    classes.add((Class<T>) clazz);
-                }
+        for (Class<?> clazz : getClasses()) {
+            if (supertype.isAssignableFrom(clazz)) {
+                classes.add((Class<T>) clazz);
             }
-        } catch (ClassNotFoundException | IOException | URISyntaxException e) {
-            BanterBot4J.LOGGER.error("Error finding subtypes of class" + supertype.getName(), e);
         }
 
         return classes;
