@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.owner;
 
+import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
@@ -13,9 +14,22 @@ import javax.annotation.Nonnull;
 @CommandInfo(tags = {Tags.OWNER_ONLY})
 public class Name extends Command {
 
+    @Nonnull
+    private static String wrongFormatResponse() {
+        return "**Formats:**\n" +
+               BanterBot4J.BOT_PREFIX + "name username\n" +
+               "**Examples:**\n" +
+               BanterBot4J.BOT_PREFIX + "name Banter Bot4J";
+    }
+
     @Override
     protected void run(@Nonnull CommandReceivedEvent event) {
         String name = String.join(" ", event.ARGS);
+        if (name.isEmpty()) {
+            event.reply(wrongFormatResponse());
+            return;
+        }
+
         event.getClient().changeUsername(String.join(" ", event.ARGS));
         event.reply("Changed the bot's name to " + name);
     }
