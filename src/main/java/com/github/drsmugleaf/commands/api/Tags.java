@@ -1,7 +1,6 @@
 package com.github.drsmugleaf.commands.api;
 
 import com.github.drsmugleaf.BanterBot4J;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.IVoiceChannel;
@@ -16,7 +15,7 @@ public enum Tags implements Tag {
 
     DELETE_COMMAND_MESSAGE {
         @Override
-        public void execute(@Nonnull MessageReceivedEvent event) {
+        public void execute(@Nonnull CommandReceivedEvent event) {
             try {
                 event.getMessage().delete();
             } catch (MissingPermissionsException ignored) {}
@@ -24,7 +23,7 @@ public enum Tags implements Tag {
     },
     GUILD_ONLY {
         @Override
-        public boolean isValid(@Nonnull MessageReceivedEvent event) {
+        public boolean isValid(@Nonnull CommandReceivedEvent event) {
             return event.getGuild() != null;
         }
 
@@ -36,7 +35,7 @@ public enum Tags implements Tag {
     },
     OWNER_ONLY {
         @Override
-        public boolean isValid(@Nonnull MessageReceivedEvent event) {
+        public boolean isValid(@Nonnull CommandReceivedEvent event) {
             return BanterBot4J.isOwner(event.getAuthor().getLongID());
         }
 
@@ -48,7 +47,7 @@ public enum Tags implements Tag {
     },
     SAME_VOICE_CHANNEL {
         @Override
-        public boolean isValid(@Nonnull MessageReceivedEvent event) {
+        public boolean isValid(@Nonnull CommandReceivedEvent event) {
             if (!GUILD_ONLY.isValid(event)) {
                 return false;
             }
@@ -70,7 +69,7 @@ public enum Tags implements Tag {
     },
     VOICE_ONLY {
         @Override
-        public boolean isValid(@Nonnull MessageReceivedEvent event) {
+        public boolean isValid(@Nonnull CommandReceivedEvent event) {
             if (!GUILD_ONLY.isValid(event)) {
                 return false;
             }
@@ -89,7 +88,7 @@ public enum Tags implements Tag {
         }
     };
 
-    public boolean isValid(@Nonnull MessageReceivedEvent event) {
+    public boolean isValid(@Nonnull CommandReceivedEvent event) {
         return true;
     }
 
@@ -98,6 +97,6 @@ public enum Tags implements Tag {
         return "You can't use that command.";
     }
 
-    public void execute(@Nonnull MessageReceivedEvent event) {}
+    public void execute(@Nonnull CommandReceivedEvent event) {}
 
 }

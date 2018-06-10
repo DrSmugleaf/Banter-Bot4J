@@ -1,7 +1,5 @@
 package com.github.drsmugleaf.commands.api;
 
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-
 import javax.annotation.Nonnull;
 
 /**
@@ -9,10 +7,10 @@ import javax.annotation.Nonnull;
  */
 public interface Tag {
 
-    boolean isValid(@Nonnull MessageReceivedEvent event);
+    boolean isValid(@Nonnull CommandReceivedEvent event);
 
     String message();
 
-    void execute(@Nonnull MessageReceivedEvent event);
+    void execute(@Nonnull CommandReceivedEvent event);
 
 }
