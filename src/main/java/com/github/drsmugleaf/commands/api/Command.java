@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.commands.api;
 
-import com.github.drsmugleaf.BanterBot4J;
 import sx.blah.discord.handle.obj.Permissions;
 
 import javax.annotation.Nonnull;
@@ -42,7 +41,7 @@ public abstract class Command {
         try {
             command = commandClass.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
-            BanterBot4J.LOGGER.error("Error running command " + commandClass.getName(), e);
+            Handler.LOGGER.error("Error running command " + commandClass.getName(), e);
             return;
         }
 

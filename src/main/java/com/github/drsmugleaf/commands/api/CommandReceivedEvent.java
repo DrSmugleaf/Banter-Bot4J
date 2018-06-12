@@ -1,7 +1,5 @@
 package com.github.drsmugleaf.commands.api;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -18,9 +16,6 @@ import java.util.List;
  * Created by DrSmugleaf on 29/05/2018.
  */
 public class CommandReceivedEvent extends MessageReceivedEvent {
-
-    @Nonnull
-    static final Logger LOGGER = LoggerFactory.getLogger(CommandReceivedEvent.class);
 
     @Nonnull
     protected IDiscordClient client;
@@ -66,7 +61,7 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
             try {
                 return channel.sendMessage(content);
             } catch (RateLimitException e) {
-                LOGGER.error("Message could not be sent", e);
+                Handler.LOGGER.error("Message could not be sent", e);
                 throw e;
             }
         }).get();
@@ -78,7 +73,7 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
             try {
                 return channel.sendMessage(embed);
             } catch (RateLimitException e) {
-                LOGGER.error("Embed could not be sent", e);
+                Handler.LOGGER.error("Embed could not be sent", e);
                 throw e;
             }
         }).get();
@@ -90,7 +85,7 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
             try {
                 return channel.sendMessage(content, embed);
             } catch (RateLimitException e) {
-                LOGGER.error("Embed could not be sent", e);
+                Handler.LOGGER.error("Embed could not be sent", e);
                 throw e;
             }
         }).get();
@@ -113,7 +108,7 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
             try {
                 return getMessage().reply(content);
             } catch (RateLimitException e) {
-                LOGGER.error("Message could not be sent", e);
+                Handler.LOGGER.error("Message could not be sent", e);
                 throw e;
             }
         }).get();
@@ -125,7 +120,7 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
             try {
                 return getMessage().reply(null, embed);
             } catch (RateLimitException e) {
-                LOGGER.error("Embed could not be sent", e);
+                Handler.LOGGER.error("Embed could not be sent", e);
                 throw e;
             }
         }).get();
@@ -137,7 +132,7 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
             try {
                 return getMessage().reply(content, embed);
             } catch (RateLimitException e) {
-                LOGGER.error("Message with embed could not be sent", e);
+                Handler.LOGGER.error("Message with embed could not be sent", e);
                 throw e;
             }
         }).get();

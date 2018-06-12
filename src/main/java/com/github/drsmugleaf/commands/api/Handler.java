@@ -3,6 +3,8 @@ package com.github.drsmugleaf.commands.api;
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.database.models.Member;
 import com.github.drsmugleaf.reflection.Reflection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
@@ -14,6 +16,9 @@ import java.util.Map;
  * Created by DrSmugleaf on 10/01/2018.
  */
 public class Handler {
+
+    @Nonnull
+    static final Logger LOGGER = LoggerFactory.getLogger(Handler.class);
 
     @Nonnull
     private static final Map<String, Class<Command>> COMMANDS = getCommands();
