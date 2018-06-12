@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.commands.music;
 
-import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
@@ -28,7 +27,7 @@ public class Pause extends Command {
         }
 
         if (musicManager.getScheduler().isPaused()) {
-            event.reply("The current track is already paused. Use " + BanterBot4J.BOT_PREFIX + "resume to resume it.");
+            event.reply("The current track is already paused. Use " + BOT_PREFIX + "resume to resume it.");
             return;
         }
 

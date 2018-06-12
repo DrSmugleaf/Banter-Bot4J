@@ -1,5 +1,6 @@
 package com.github.drsmugleaf;
 
+import com.github.drsmugleaf.commands.api.Handler;
 import com.github.drsmugleaf.database.api.Database;
 import com.github.drsmugleaf.env.Keys;
 import com.github.drsmugleaf.reflection.Reflection;
@@ -10,9 +11,7 @@ import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventSubscriber;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,9 +24,6 @@ public class BanterBot4J {
 
     @Nonnull
     private static final IDiscordClient CLIENT = buildClient();
-
-    @Nonnull
-    public static final String BOT_PREFIX = Keys.BOT_PREFIX.VALUE;
 
     @Nonnull
     private static final Long[] OWNERS = {109067752286715904L};
@@ -53,12 +49,11 @@ public class BanterBot4J {
     public static void main(String[] args) {
         Database.init("com.github.drsmugleaf.database.models");
         registerListeners();
+        Handler.setOwners(OWNERS);
+        Handler.setBotPrefix(Keys.BOT_PREFIX.VALUE);
+        Handler.loadCommands("com.github.drsmugleaf.commands");
 
         CLIENT.login();
-    }
-
-    public static boolean isOwner(@Nullable Long userID) {
-        return Arrays.stream(BanterBot4J.OWNERS).anyMatch(id -> id.equals(userID));
     }
 
 }

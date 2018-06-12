@@ -61,7 +61,7 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
             try {
                 return channel.sendMessage(content);
             } catch (RateLimitException e) {
-                Handler.LOGGER.error("Message could not be sent", e);
+                Command.LOGGER.error("Message could not be sent", e);
                 throw e;
             }
         }).get();
@@ -73,7 +73,7 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
             try {
                 return channel.sendMessage(embed);
             } catch (RateLimitException e) {
-                Handler.LOGGER.error("Embed could not be sent", e);
+                Command.LOGGER.error("Embed could not be sent", e);
                 throw e;
             }
         }).get();
@@ -85,7 +85,7 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
             try {
                 return channel.sendMessage(content, embed);
             } catch (RateLimitException e) {
-                Handler.LOGGER.error("Embed could not be sent", e);
+                Command.LOGGER.error("Embed could not be sent", e);
                 throw e;
             }
         }).get();
@@ -108,7 +108,7 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
             try {
                 return getMessage().reply(content);
             } catch (RateLimitException e) {
-                Handler.LOGGER.error("Message could not be sent", e);
+                Command.LOGGER.error("Message could not be sent", e);
                 throw e;
             }
         }).get();
@@ -120,7 +120,7 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
             try {
                 return getMessage().reply(null, embed);
             } catch (RateLimitException e) {
-                Handler.LOGGER.error("Embed could not be sent", e);
+                Command.LOGGER.error("Embed could not be sent", e);
                 throw e;
             }
         }).get();
@@ -132,7 +132,7 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
             try {
                 return getMessage().reply(content, embed);
             } catch (RateLimitException e) {
-                Handler.LOGGER.error("Message with embed could not be sent", e);
+                Command.LOGGER.error("Message with embed could not be sent", e);
                 throw e;
             }
         }).get();

@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.commands.owner;
 
-import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
@@ -49,7 +48,7 @@ public class Avatar extends Command {
 
             event.getClient().changeAvatar(Image.forUrl(suffix, event.ARGS.get(0)));
         } catch(IOException e) {
-            BanterBot4J.LOGGER.error("Malformed URL or error opening connection", e);
+            LOGGER.error("Malformed URL or error opening connection", e);
             event.reply("Invalid image URL");
         }
     }

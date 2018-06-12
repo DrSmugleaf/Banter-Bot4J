@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.commands;
 
-import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.database.models.EveTimerModel;
@@ -46,11 +45,11 @@ public class EveTimer extends Command {
     @Nonnull
     private static String wrongFormatResponse() {
         return "**Formats:**\n" +
-               BanterBot4J.BOT_PREFIX + "evetimer \"structure\" \"system\" \"date\" (6d2h45m)\n" +
-               BanterBot4J.BOT_PREFIX + "evetimer delete \"structure\" \"system\"\n\n" +
+               BOT_PREFIX + "evetimer \"structure\" \"system\" \"date\" (6d2h45m)\n" +
+               BOT_PREFIX + "evetimer delete \"structure\" \"system\"\n\n" +
                "**Examples:**\n" +
-               BanterBot4J.BOT_PREFIX + "evetimer \"Fortizar\" \"7RM\" \"4d15h30m\"\n" +
-               BanterBot4J.BOT_PREFIX + "evetimer delete \"Fortizar\" \"7RM\"";
+               BOT_PREFIX + "evetimer \"Fortizar\" \"7RM\" \"4d15h30m\"\n" +
+               BOT_PREFIX + "evetimer delete \"Fortizar\" \"7RM\"";
     }
 
     private static boolean exists(@Nonnull String structure, @Nonnull String system) {

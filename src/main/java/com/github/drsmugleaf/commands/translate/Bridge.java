@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.commands.translate;
 
-import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
@@ -24,13 +23,13 @@ public class Bridge extends Command {
     protected void run(@Nonnull CommandReceivedEvent event) {
         if (event.ARGS.isEmpty()) {
             event.reply("You didn't provide any channels or languages.\n" +
-                        "Usage: " + BanterBot4J.BOT_PREFIX + "bridge channel1 language1 channel2 language2");
+                        "Usage: " + BOT_PREFIX + "bridge channel1 language1 channel2 language2");
             return;
         }
 
         if (event.ARGS.size() < 4) {
             event.reply("You didn't provide enough arguments.\n" +
-                        "Usage: " + BanterBot4J.BOT_PREFIX + "bridge channel1 language1 channel2 language2");
+                        "Usage: " + BOT_PREFIX + "bridge channel1 language1 channel2 language2");
             return;
         }
 

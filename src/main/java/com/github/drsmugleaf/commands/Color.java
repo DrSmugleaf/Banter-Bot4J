@@ -1,11 +1,13 @@
 package com.github.drsmugleaf.commands;
 
-import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.Tags;
-import sx.blah.discord.handle.obj.*;
+import sx.blah.discord.handle.obj.IGuild;
+import sx.blah.discord.handle.obj.IRole;
+import sx.blah.discord.handle.obj.IUser;
+import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RoleBuilder;
 
@@ -32,7 +34,7 @@ public class Color extends Command {
                 try {
                     color = (java.awt.Color) java.awt.Color.class.getField(string.trim().toUpperCase().replace(" ", "_")).get(null);
                 } catch (IllegalAccessException | NoSuchFieldException e) {
-                    BanterBot4J.LOGGER.warn("Error resolving color " + string, e);
+                    LOGGER.warn("Error resolving color " + string, e);
                 }
             }
         }
@@ -48,7 +50,7 @@ public class Color extends Command {
         List<IRole> roles = guild.getRolesByName("color-" + author.getStringID());
         if (event.ARGS.isEmpty()) {
             if (roles.isEmpty()) {
-                event.reply("You don't have a name color. Use " + BanterBot4J.BOT_PREFIX + "color name OR hexadecimal code to assign one.");
+                event.reply("You don't have a name color. Use " + BOT_PREFIX + "color name OR hexadecimal code to assign one.");
                 return;
             }
 

@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.commands.api;
 
-import com.github.drsmugleaf.BanterBot4J;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.IVoiceChannel;
@@ -36,7 +35,7 @@ public enum Tags implements Tag {
     OWNER_ONLY {
         @Override
         public boolean isValid(@Nonnull CommandReceivedEvent event) {
-            return BanterBot4J.isOwner(event.getAuthor().getLongID());
+            return Command.isOwner(event.getAuthor());
         }
 
         @Nonnull

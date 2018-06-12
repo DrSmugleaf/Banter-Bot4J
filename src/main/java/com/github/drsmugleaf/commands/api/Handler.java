@@ -1,14 +1,12 @@
 package com.github.drsmugleaf.commands.api;
 
-import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.database.models.Member;
 import com.github.drsmugleaf.reflection.Reflection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,15 +15,14 @@ import java.util.Map;
  */
 public class Handler {
 
-    @Nonnull
-    static final Logger LOGGER = LoggerFactory.getLogger(Handler.class);
+
 
     @Nonnull
-    private static final Map<String, Class<Command>> COMMANDS = getCommands();
+    private static final Map<String, Class<Command>> COMMANDS = new HashMap<>();
 
-    private static Map<String, Class<Command>> getCommands() {
+    public static void loadCommands(@Nonnull String packageName) {
         Map<String, Class<Command>> commands = new HashMap<>();
-        Reflection reflection = new Reflection("com.github.drsmugleaf.commands");
+        Reflection reflection = new Reflection(packageName);
 
         for (Class<Command> command : reflection.findSubtypesOf(Command.class)) {
             CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
@@ -36,7 +33,16 @@ public class Handler {
             }
         }
 
-        return commands;
+        COMMANDS.putAll(commands);
+    }
+
+    public static void setBotPrefix(@Nonnull String prefix) {
+        Command.BOT_PREFIX = prefix;
+    }
+
+    public static void setOwners(@Nonnull Long[] owners) {
+        Command.OWNERS.clear();
+        Collections.addAll(Command.OWNERS, owners);
     }
 
     @EventSubscriber
@@ -46,7 +52,7 @@ public class Handler {
             return;
         }
 
-        if (!argsArray[0].startsWith(BanterBot4J.BOT_PREFIX)) {
+        if (!argsArray[0].startsWith(Command.BOT_PREFIX)) {
             return;
         }
 
@@ -61,7 +67,7 @@ public class Handler {
             }
         }
 
-        String commandString = argsArray[0].substring(BanterBot4J.BOT_PREFIX.length()).toLowerCase();
+        String commandString = argsArray[0].substring(Command.BOT_PREFIX.length()).toLowerCase();
         CommandReceivedEvent commandEvent = new CommandReceivedEvent(event);
         if (COMMANDS.containsKey(commandString)) {
             Class<Command> commandClass = COMMANDS.get(commandString);

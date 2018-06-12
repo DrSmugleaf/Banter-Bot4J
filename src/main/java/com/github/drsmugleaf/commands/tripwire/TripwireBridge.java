@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.commands.tripwire;
 
-import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.eve.Systems;
@@ -20,16 +19,16 @@ public class TripwireBridge extends Command {
     @Nonnull
     private static String wrongFormatResponse() {
         return "**Formats:**\n" +
-               BanterBot4J.BOT_PREFIX + "tripwireBridge system1 system2\n" +
+               BOT_PREFIX + "tripwireBridge system1 system2\n" +
                "**Examples:**\n" +
-               BanterBot4J.BOT_PREFIX + "tripwireRoute O-VWPB Jita";
+               BOT_PREFIX + "tripwireRoute O-VWPB Jita";
     }
 
     @Override
     protected void run(@Nonnull CommandReceivedEvent event) {
         IUser author = event.getAuthor();
         if (!TripwireRoute.ROUTES.containsKey(author)) {
-            event.reply("Create a route first with " + BanterBot4J.BOT_PREFIX + "tripwireRoute.");
+            event.reply("Create a route first with " + BOT_PREFIX + "tripwireRoute.");
             return;
         }
 

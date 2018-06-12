@@ -1,17 +1,26 @@
 package com.github.drsmugleaf.commands.api;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 09/06/2018
  */
 public abstract class Command {
+
+    @Nonnull
+    protected static final Logger LOGGER = LoggerFactory.getLogger(Handler.class);
+
+    @Nonnull
+    protected static String BOT_PREFIX = "!";
+
+    @Nonnull
+    protected static final List<Long> OWNERS = new ArrayList<>();
 
     protected static <T extends Command> void run(@Nonnull Class<T> commandClass, @Nonnull CommandReceivedEvent event) {
         CommandInfo annotation = commandClass.getDeclaredAnnotation(CommandInfo.class);
@@ -41,11 +50,15 @@ public abstract class Command {
         try {
             command = commandClass.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
-            Handler.LOGGER.error("Error running command " + commandClass.getName(), e);
+            LOGGER.error("Error running command " + commandClass.getName(), e);
             return;
         }
 
         command.run(event);
+    }
+
+    protected static boolean isOwner(@Nonnull IUser user) {
+        return OWNERS.contains(user.getLongID());
     }
 
     protected abstract void run(@Nonnull CommandReceivedEvent event);

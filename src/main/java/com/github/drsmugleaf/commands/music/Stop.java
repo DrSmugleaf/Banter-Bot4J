@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.commands.music;
 
-import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
@@ -39,7 +38,7 @@ public class Stop extends Command {
         scheduler.stop();
         event.reply(
                 "Stopped and removed all tracks from the queue.\n" +
-                "You have one minute to restore them back to the queue using " + BanterBot4J.BOT_PREFIX + "undostop."
+                "You have one minute to restore them back to the queue using " + BOT_PREFIX + "undostop."
         );
     }
 
