@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
 public class Playing extends Command {
 
     @Override
-    protected void run(@Nonnull CommandReceivedEvent event) {
+    public void run(@Nonnull CommandReceivedEvent event) {
         if(event.ARGS.isEmpty()) {
             event.getClient().changePresence(StatusType.ONLINE, null, "");
             event.reply("Reset the bot's playing status");

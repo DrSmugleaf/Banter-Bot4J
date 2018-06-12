@@ -58,7 +58,7 @@ public class EveTimer extends Command {
     }
 
     @Override
-    protected void run(@Nonnull CommandReceivedEvent event) {
+    public void run(@Nonnull CommandReceivedEvent event) {
         if (event.ARGS.isEmpty()) {
             event.reply(wrongFormatResponse());
             return;

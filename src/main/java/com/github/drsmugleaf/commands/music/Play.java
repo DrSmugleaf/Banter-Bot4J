@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 public class Play extends Command {
 
     @Override
-    protected void run(@Nonnull CommandReceivedEvent event) {
+    public void run(@Nonnull CommandReceivedEvent event) {
         IChannel channel = event.getChannel();
 
         IUser author = event.getAuthor();

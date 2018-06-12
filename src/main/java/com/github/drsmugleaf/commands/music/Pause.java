@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 public class Pause extends Command {
 
     @Override
-    protected void run(@Nonnull CommandReceivedEvent event) {
+    public void run(@Nonnull CommandReceivedEvent event) {
         IGuild guild = event.getGuild();
 
         GuildMusicManager musicManager = Music.getGuildMusicManager(guild);

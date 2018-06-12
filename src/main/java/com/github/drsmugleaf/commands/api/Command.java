@@ -11,7 +11,7 @@ import java.util.*;
 /**
  * Created by DrSmugleaf on 09/06/2018
  */
-public abstract class Command {
+public abstract class Command implements ICommand {
 
     @Nonnull
     protected static final Logger LOGGER = LoggerFactory.getLogger(Handler.class);
@@ -20,9 +20,9 @@ public abstract class Command {
     protected static String BOT_PREFIX = "!";
 
     @Nonnull
-    protected static final List<Long> OWNERS = new ArrayList<>();
+    static final List<Long> OWNERS = new ArrayList<>();
 
-    protected static <T extends Command> void run(@Nonnull Class<T> commandClass, @Nonnull CommandReceivedEvent event) {
+    protected static <T extends ICommand> void run(@Nonnull Class<T> commandClass, @Nonnull CommandReceivedEvent event) {
         CommandInfo annotation = commandClass.getDeclaredAnnotation(CommandInfo.class);
 
         if (annotation != null) {
@@ -46,7 +46,7 @@ public abstract class Command {
             }
         }
 
-        Command command;
+        ICommand command;
         try {
             command = commandClass.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
@@ -60,7 +60,5 @@ public abstract class Command {
     protected static boolean isOwner(@Nonnull IUser user) {
         return OWNERS.contains(user.getLongID());
     }
-
-    protected abstract void run(@Nonnull CommandReceivedEvent event);
 
 }

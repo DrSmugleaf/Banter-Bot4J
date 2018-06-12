@@ -21,7 +21,7 @@ import java.util.List;
 public class Undostop extends Command {
 
     @Override
-    protected void run(@Nonnull CommandReceivedEvent event) {
+    public void run(@Nonnull CommandReceivedEvent event) {
         IGuild guild = event.getGuild();
         IChannel channel = event.getChannel();
 

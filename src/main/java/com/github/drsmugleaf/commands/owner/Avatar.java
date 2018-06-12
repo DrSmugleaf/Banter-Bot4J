@@ -22,7 +22,7 @@ import java.util.Iterator;
 public class Avatar extends Command {
 
     @Override
-    protected void run(@Nonnull CommandReceivedEvent event) {
+    public void run(@Nonnull CommandReceivedEvent event) {
         if (event.ARGS.isEmpty()) {
             event.reply("You didn't provide a link to change the bot's image to.");
             return;

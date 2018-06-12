@@ -18,7 +18,7 @@ import java.util.List;
 public class Unbridge extends Command {
 
     @Override
-    protected void run(@Nonnull CommandReceivedEvent event) {
+    public void run(@Nonnull CommandReceivedEvent event) {
         if (event.ARGS.isEmpty()) {
             event.reply("You didn't provide a channel name.");
             return;

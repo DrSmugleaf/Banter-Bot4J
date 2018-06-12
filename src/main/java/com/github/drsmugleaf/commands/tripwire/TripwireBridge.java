@@ -25,7 +25,7 @@ public class TripwireBridge extends Command {
     }
 
     @Override
-    protected void run(@Nonnull CommandReceivedEvent event) {
+    public void run(@Nonnull CommandReceivedEvent event) {
         IUser author = event.getAuthor();
         if (!TripwireRoute.ROUTES.containsKey(author)) {
             event.reply("Create a route first with " + BOT_PREFIX + "tripwireRoute.");

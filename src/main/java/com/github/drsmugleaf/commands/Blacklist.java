@@ -18,7 +18,7 @@ import java.util.List;
 public class Blacklist extends Command {
 
     @Override
-    protected void run(@Nonnull CommandReceivedEvent event) {
+    public void run(@Nonnull CommandReceivedEvent event) {
         IUser author = event.getAuthor();
 
         Long guildID = event.getGuild().getLongID();

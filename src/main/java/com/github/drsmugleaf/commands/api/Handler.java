@@ -18,13 +18,13 @@ public class Handler {
 
 
     @Nonnull
-    private static final Map<String, Class<Command>> COMMANDS = new HashMap<>();
+    private static final Map<String, Class<ICommand>> COMMANDS = new HashMap<>();
 
     public static void loadCommands(@Nonnull String packageName) {
-        Map<String, Class<Command>> commands = new HashMap<>();
+        Map<String, Class<ICommand>> commands = new HashMap<>();
         Reflection reflection = new Reflection(packageName);
 
-        for (Class<Command> command : reflection.findSubtypesOf(Command.class)) {
+        for (Class<ICommand> command : reflection.findSubtypesOf(ICommand.class)) {
             CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
             if (annotation != null && !annotation.name().isEmpty()) {
                 commands.put(annotation.name().toLowerCase(), command);
@@ -70,7 +70,7 @@ public class Handler {
         String commandString = argsArray[0].substring(Command.BOT_PREFIX.length()).toLowerCase();
         CommandReceivedEvent commandEvent = new CommandReceivedEvent(event);
         if (COMMANDS.containsKey(commandString)) {
-            Class<Command> commandClass = COMMANDS.get(commandString);
+            Class<ICommand> commandClass = COMMANDS.get(commandString);
             Command.run(commandClass, commandEvent);
         }
     }

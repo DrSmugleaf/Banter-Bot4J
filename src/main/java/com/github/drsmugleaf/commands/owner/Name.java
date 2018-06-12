@@ -22,7 +22,7 @@ public class Name extends Command {
     }
 
     @Override
-    protected void run(@Nonnull CommandReceivedEvent event) {
+    public void run(@Nonnull CommandReceivedEvent event) {
         String name = String.join(" ", event.ARGS);
         if (name.isEmpty()) {
             event.reply(wrongFormatResponse());

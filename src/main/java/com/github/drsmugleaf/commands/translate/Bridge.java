@@ -20,7 +20,7 @@ import java.util.List;
 public class Bridge extends Command {
 
     @Override
-    protected void run(@Nonnull CommandReceivedEvent event) {
+    public void run(@Nonnull CommandReceivedEvent event) {
         if (event.ARGS.isEmpty()) {
             event.reply("You didn't provide any channels or languages.\n" +
                         "Usage: " + BOT_PREFIX + "bridge channel1 language1 channel2 language2");

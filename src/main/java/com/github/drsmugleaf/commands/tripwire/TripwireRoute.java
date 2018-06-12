@@ -27,7 +27,7 @@ public class TripwireRoute extends Command {
     }
 
     @Override
-    protected void run(@Nonnull CommandReceivedEvent event) {
+    public void run(@Nonnull CommandReceivedEvent event) {
         if (event.ARGS.size() != 4) {
             event.reply(wrongFormatResponse());
             return;

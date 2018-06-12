@@ -27,7 +27,7 @@ public class Skip extends Command {
     private static final Map<IGuild, List<IUser>> SKIP_VOTES = new HashMap<>();
 
     @Override
-    protected void run(@Nonnull CommandReceivedEvent event) {
+    public void run(@Nonnull CommandReceivedEvent event) {
         IGuild guild = event.getGuild();
 
         GuildMusicManager musicManager = Music.getGuildMusicManager(guild);
