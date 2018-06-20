@@ -15,8 +15,6 @@ import java.util.Map;
  */
 public class Handler {
 
-
-
     @Nonnull
     private static final Map<String, Class<ICommand>> COMMANDS = new HashMap<>();
 

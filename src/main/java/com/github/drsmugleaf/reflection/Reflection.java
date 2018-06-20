@@ -12,8 +12,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by DrSmugleaf on 21/05/2017.
@@ -115,6 +117,14 @@ public class Reflection {
         List<Class<?>> classes = getClasses();
         classes.removeIf(cls -> !cls.isAnnotationPresent(annotation));
         return classes;
+    }
+
+    @Nonnull
+    public List<Class<?>> findClassesWithMethodAnnotation(@Nonnull Class<? extends Annotation> annotation) {
+        List<Class<?>> classes = getClasses();
+        return classes.stream().filter(clazz -> {
+            return Arrays.stream(clazz.getDeclaredMethods()).anyMatch(method -> method.isAnnotationPresent(annotation));
+        }).collect(Collectors.toList());
     }
 
     @Nonnull

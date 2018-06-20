@@ -31,7 +31,8 @@ public class Music {
     public static final Map<IGuild, GuildMusicManager> MUSIC_MANAGERS = new HashMap<>();
 
     @Nonnull
-    static final Cache<AbstractMap.SimpleEntry<IGuild, IUser>, List<AudioTrack>> UNDO_STOP_CACHE = CacheBuilder.newBuilder()
+    static final Cache<AbstractMap.SimpleEntry<IGuild, IUser>, List<AudioTrack>> UNDO_STOP_CACHE = CacheBuilder
+            .newBuilder()
             .expireAfterWrite(1, TimeUnit.MINUTES)
             .build();
 
