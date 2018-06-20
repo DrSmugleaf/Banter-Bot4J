@@ -79,6 +79,12 @@ public class TranslatedMessage {
         }
     }
 
+    void delete() {
+        for (Map.Entry<BridgedChannel, IMessage> entry : MESSAGES_SENT.entrySet()) {
+            entry.getValue().delete();
+        }
+    }
+
     @Nonnull
     String formatTranslation(@Nonnull String translation) {
         IGuild guild = MESSAGE.getGuild();

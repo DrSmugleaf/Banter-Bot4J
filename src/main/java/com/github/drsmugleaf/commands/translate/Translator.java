@@ -65,6 +65,7 @@ public class Translator {
             return;
         }
 
+        translatedMessage.delete();
         MESSAGES.invalidate(event.getMessageID());
     }
 
