@@ -14,6 +14,7 @@ import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.IPrivateChannel;
 
 import javax.annotation.Nonnull;
+import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -47,7 +48,7 @@ public class EveDowntimeUser extends Model<EveDowntimeUser> {
         try {
             STATUS_API.getStatus("tranquility", null, null, null);
         } catch (ApiException e) {
-            if (e.getCode() == 500) {
+            if (SocketTimeoutException.class.isInstance(e.getCause())) {
                 return true;
             }
         }
