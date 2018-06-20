@@ -40,7 +40,7 @@ public class TranslatedMessage {
                 continue;
             }
 
-            translation = formatTranslation(translation);
+            translation = formatMessage(translation);
             translations.put(bridgedChannel, translation);
         }
 
@@ -74,7 +74,7 @@ public class TranslatedMessage {
                 continue;
             }
 
-            translation = formatTranslation(translation);
+            translation = formatMessage(translation);
             message.edit(translation);
         }
     }
@@ -86,10 +86,18 @@ public class TranslatedMessage {
     }
 
     @Nonnull
-    String formatTranslation(@Nonnull String translation) {
+    String formatMessage(@Nonnull String translation) {
         IGuild guild = MESSAGE.getGuild();
         String authorName = MESSAGE.getAuthor().getDisplayName(guild);
-        return "**" + authorName + "**: " + translation;
+
+        StringBuilder message = new StringBuilder("**" + authorName + "**: " + translation);
+        for (IMessage.Attachment attachment : MESSAGE.getAttachments()) {
+            message
+                    .append("\n")
+                    .append(attachment.getUrl());
+        }
+
+        return message.toString();
     }
 
 }
