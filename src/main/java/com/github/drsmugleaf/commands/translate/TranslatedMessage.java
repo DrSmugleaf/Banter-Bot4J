@@ -97,7 +97,10 @@ public class TranslatedMessage {
                     .append(attachment.getUrl());
         }
 
-        return message.toString();
+        translation = message.toString();
+        translation = translation.replace("@everyone", "@ everyone");
+
+        return translation;
     }
 
 }
