@@ -50,7 +50,8 @@ public class BanterBot4J {
         registerListeners();
         Handler.setOwners(OWNERS);
         Handler.setBotPrefix(Keys.BOT_PREFIX.VALUE);
-        Handler.loadCommands("com.github.drsmugleaf.commands");
+        Handler handler = new Handler("com.github.drsmugleaf.commands");
+        CLIENT.getDispatcher().registerListener(handler);
 
         CLIENT.login();
     }

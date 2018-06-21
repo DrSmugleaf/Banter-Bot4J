@@ -6,9 +6,7 @@ import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 10/01/2018.
@@ -16,22 +14,12 @@ import java.util.Map;
 public class Handler {
 
     @Nonnull
-    private static final Map<String, Class<ICommand>> COMMANDS = new HashMap<>();
+    private final Registry COMMAND_REGISTRY;
 
-    public static void loadCommands(@Nonnull String packageName) {
-        Map<String, Class<ICommand>> commands = new HashMap<>();
-        Reflection reflection = new Reflection(packageName);
-
-        for (Class<ICommand> command : reflection.findSubtypesOf(ICommand.class)) {
-            CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
-            if (annotation != null && !annotation.name().isEmpty()) {
-                commands.put(annotation.name().toLowerCase(), command);
-            } else {
-                commands.put(command.getSimpleName().toLowerCase(), command);
-            }
-        }
-
-        COMMANDS.putAll(commands);
+    public Handler(@Nonnull String commandsPackageName) {
+        Reflection reflection = new Reflection(commandsPackageName);
+        List<Class<ICommand>> commands = reflection.findSubtypesOf(ICommand.class);
+        COMMAND_REGISTRY = new Registry(commands);
     }
 
     public static void setBotPrefix(@Nonnull String prefix) {
@@ -44,13 +32,13 @@ public class Handler {
     }
 
     @EventSubscriber
-    public static void handle(@Nonnull MessageReceivedEvent event) {
-        String[] argsArray = event.getMessage().getContent().split(" ");
-        if (argsArray.length == 0) {
+    public void handle(@Nonnull MessageReceivedEvent event) {
+        String message = event.getMessage().getContent();
+        if (message.isEmpty()) {
             return;
         }
 
-        if (!argsArray[0].startsWith(Command.BOT_PREFIX)) {
+        if (!message.startsWith(Command.BOT_PREFIX)) {
             return;
         }
 
@@ -65,11 +53,10 @@ public class Handler {
             }
         }
 
-        String commandString = argsArray[0].substring(Command.BOT_PREFIX.length()).toLowerCase();
-        CommandReceivedEvent commandEvent = new CommandReceivedEvent(event);
-        if (COMMANDS.containsKey(commandString)) {
-            Class<ICommand> commandClass = COMMANDS.get(commandString);
-            Command.run(commandClass, commandEvent);
+        Class<ICommand> command = COMMAND_REGISTRY.resolveCommand(event);
+        if (command != null) {
+            CommandReceivedEvent commandEvent = new CommandReceivedEvent(event);
+            Command.run(command, commandEvent);
         }
     }
 
