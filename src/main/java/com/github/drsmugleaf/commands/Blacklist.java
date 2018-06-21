@@ -17,8 +17,21 @@ import java.util.List;
 @CommandInfo(permissions = {Permissions.KICK, Permissions.BAN})
 public class Blacklist extends Command {
 
+    @Nonnull
+    private static String wrongFormatResponse() {
+        return "**Formats:**\n" +
+               BOT_PREFIX + "blacklist @User1 @User2 @User3\n" +
+               "**Examples:**\n" +
+               BOT_PREFIX + "blacklist @DrSmugleaf @Banter Bot4J";
+    }
+
     @Override
     public void run(@Nonnull CommandReceivedEvent event) {
+        if (event.ARGS.isEmpty()) {
+            event.reply(wrongFormatResponse());
+            return;
+        }
+
         IUser author = event.getAuthor();
 
         Long guildID = event.getGuild().getLongID();
