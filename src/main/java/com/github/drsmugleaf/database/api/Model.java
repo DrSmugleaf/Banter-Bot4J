@@ -27,7 +27,8 @@ public abstract class Model<T extends Model<T>> {
         }
     }
 
-    static <T extends Model<T>> List<TypeResolver> getColumns(Class<T> model) {
+    @Nonnull
+    static <T extends Model<T>> List<TypeResolver> getColumns(@Nonnull Class<T> model) {
         List<TypeResolver> fields = new ArrayList<>();
 
         for (Field field : model.getDeclaredFields()) {
@@ -40,6 +41,7 @@ public abstract class Model<T extends Model<T>> {
         return fields;
     }
 
+    @Nonnull
     @SuppressWarnings("unchecked")
     final Map<TypeResolver, Object> getColumns() {
         Map<TypeResolver, Object> columns = new HashMap<>();

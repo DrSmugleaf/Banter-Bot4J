@@ -1,8 +1,9 @@
 package com.github.drsmugleaf;
 
+import com.github.drsmugleaf.commands.api.Handler;
 import com.github.drsmugleaf.database.api.Database;
 import com.github.drsmugleaf.env.Keys;
-import com.github.drsmugleaf.util.Reflection;
+import com.github.drsmugleaf.reflection.Reflection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.ClientBuilder;
@@ -10,9 +11,6 @@ import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventSubscriber;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,9 +23,6 @@ public class BanterBot4J {
 
     @Nonnull
     public static final IDiscordClient CLIENT = buildClient();
-
-    @Nonnull
-    public static final String BOT_PREFIX = Keys.BOT_PREFIX.VALUE;
 
     @Nonnull
     private static final Long[] OWNERS = {109067752286715904L};
@@ -46,19 +41,18 @@ public class BanterBot4J {
 
     private static void registerListeners() {
         Reflection reflection = new Reflection("com.github.drsmugleaf");
-        List<Method> methods = reflection.findMethodsWithAnnotation(EventSubscriber.class);
-        methods.forEach(method -> CLIENT.getDispatcher().registerListener(method.getDeclaringClass()));
+        List<Class<?>> listenerClasses = reflection.findClassesWithMethodAnnotation(EventSubscriber.class);
+        listenerClasses.forEach(clazz -> CLIENT.getDispatcher().registerListener(clazz));
     }
 
     public static void main(String[] args) {
         Database.init("com.github.drsmugleaf.database.models");
         registerListeners();
+        Handler.setOwners(OWNERS);
+        Handler.setBotPrefix(Keys.BOT_PREFIX.VALUE);
+        Handler.loadCommands("com.github.drsmugleaf.commands");
 
         CLIENT.login();
-    }
-
-    public static boolean isOwner(@Nullable Long userID) {
-        return Arrays.stream(BanterBot4J.OWNERS).anyMatch(id -> id.equals(userID));
     }
 
 }
