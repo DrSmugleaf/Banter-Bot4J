@@ -14,6 +14,7 @@ public class Quote extends Model<Quote> {
 
     @Column(name = "id")
     @Column.Id
+    @Column.AutoIncrement
     public Long id;
 
     @Column(name = "content")
@@ -27,8 +28,7 @@ public class Quote extends Model<Quote> {
     @Relation(type = RelationTypes.ManyToOne, columnName = "id")
     public Guild guild;
 
-    public Quote(Long id, String content, Long submitter, Long guild) {
-        this.id = id;
+    public Quote(String content, Long submitter, Long guild) {
         this.content = content;
         this.submitter = new User(submitter);
         this.guild = new Guild(guild);

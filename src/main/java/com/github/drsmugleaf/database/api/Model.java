@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.database.api;
 
 import com.github.drsmugleaf.database.api.annotations.Column;
+import com.github.drsmugleaf.database.api.annotations.Relation;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
@@ -16,9 +17,17 @@ import java.util.*;
  */
 public abstract class Model<T extends Model<T>> {
 
+    @SuppressWarnings("unchecked")
     static <T extends Model<T>> void createTable(@Nonnull Class<T> model) {
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(model);
         String query = queryBuilder.createTable();
+
+        for (TypeResolver column : getColumns(model)) {
+            if (column.FIELD.isAnnotationPresent(Relation.class)) {
+                Class<?> relatedModelClass = column.FIELD.getType();
+                createTable((Class<T>) relatedModelClass);
+            }
+        }
 
         try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query)) {
             statement.executeUpdate();
@@ -80,7 +89,7 @@ public abstract class Model<T extends Model<T>> {
 
                 for (Map.Entry<TypeResolver, Object> column : columns) {
                     TypeResolver resolver = column.getKey();
-                    Column columnAnnotation = resolver.getColumn();
+                    Column columnAnnotation = resolver.getColumnAnnotation();
                     Object result = resultSet.getObject(columnAnnotation.name());
                     Object value = resolver.toValue(result);
 
@@ -96,14 +105,37 @@ public abstract class Model<T extends Model<T>> {
         return models;
     }
 
-    public final void createIfNotExists() {
+    @SuppressWarnings("unchecked")
+    public final <E extends Model<E>> void createIfNotExists() {
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
         String query = queryBuilder.createIfNotExists(this);
 
+        for (Map.Entry<TypeResolver, Object> entry : getColumns().entrySet()) {
+            TypeResolver column = entry.getKey();
+            Field field = column.FIELD;
+            if (field.isAnnotationPresent(Relation.class)) {
+                Model<E> model = null;
+                try {
+                    field.setAccessible(true);
+                    Class<E> modelClass = (Class<E>) field.get(this).getClass().getSuperclass();
+                    model = (Model<E>) field.get(this);
+                    modelClass
+                            .getDeclaredMethod("createIfNotExists")
+                            .invoke(model);
+                } catch (IllegalAccessException e) {
+                    throw new InvalidColumnException("Can't access field value for field " + field, e);
+                } catch (InvocationTargetException e) {
+                    throw new InvalidColumnException("Error executing createIfNotExists method for model " + model, e);
+                } catch (NoSuchMethodException e) {
+                    throw new InvalidColumnException("Column's model class " + model + " doesn't have a createIfNotExists method", e);
+                }
+            }
+        }
+
         try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query)) {
             statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new StatementExecutionException(e);
+        } catch (SQLException sqlException) {
+            throw new StatementExecutionException(sqlException);
         }
     }
 

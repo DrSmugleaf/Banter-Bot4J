@@ -94,7 +94,7 @@ class QueryBuilder<T extends Model<T>> {
                 .append(queryValues)
                 .append(queryConflict);
 
-        try(PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString())) {
+        try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString())) {
             iterator = columns.iterator();
             int i = 1;
             while (iterator.hasNext()) {
@@ -131,7 +131,7 @@ class QueryBuilder<T extends Model<T>> {
         Iterator<TypeResolver> iterator = COLUMNS.iterator();
         while (iterator.hasNext()) {
             TypeResolver column = iterator.next();
-            Column columnAnnotation = column.getColumn();
+            Column columnAnnotation = column.getColumnAnnotation();
             String name = columnAnnotation.name();
 
             query.append(column.getColumnDefinition());
@@ -156,6 +156,8 @@ class QueryBuilder<T extends Model<T>> {
 
         if (queryConstraint.length() > 0) {
             queryConstraint
+                    .insert(0, "_")
+                    .insert(0, escapedTableName())
                     .insert(0, "CONSTRAINT ")
                     .append("pkey ");
 
@@ -200,7 +202,7 @@ class QueryBuilder<T extends Model<T>> {
             }
         }
 
-        try(PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString())) {
+        try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString())) {
             int i = 1;
             for (Map.Entry<TypeResolver, Object> entry : columns) {
                 TypeResolver field = entry.getKey();
@@ -278,7 +280,7 @@ class QueryBuilder<T extends Model<T>> {
                 .append(queryConflict)
                 .append(querySet);
 
-        try(PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString())) {
+        try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString())) {
             iterator = columns.iterator();
             int i = 1;
             int size = columns.size();
@@ -334,7 +336,7 @@ class QueryBuilder<T extends Model<T>> {
             }
         }
 
-        try(PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString())) {
+        try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString())) {
             int i = 1;
             for (Map.Entry<TypeResolver, Object> entry : columns) {
                 TypeResolver column = entry.getKey();

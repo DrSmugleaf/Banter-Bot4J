@@ -28,4 +28,8 @@ public @interface Column {
     @Target(ElementType.FIELD)
     @interface Id {}
 
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    @interface AutoIncrement {}
+
 }

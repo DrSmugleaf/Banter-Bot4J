@@ -17,7 +17,7 @@ class Env {
     static final Properties PROPERTIES = new Properties();
 
     static {
-        try(InputStream input = new FileInputStream(".env")) {
+        try (InputStream input = new FileInputStream(".env")) {
             PROPERTIES.load(input);
         } catch (IOException e) {
             BanterBot4J.LOGGER.warn("Error reading .env file", e);
