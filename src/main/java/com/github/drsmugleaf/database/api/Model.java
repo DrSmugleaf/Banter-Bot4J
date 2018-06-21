@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -74,6 +75,31 @@ public abstract class Model<T extends Model<T>> {
     }
 
     @Nonnull
+    @SuppressWarnings("unchecked")
+    private final void createRequirements() {
+        for (TypeResolver column : getColumns().keySet()) {
+            Field field = column.FIELD;
+
+            if (field.isAnnotationPresent(Relation.class)) {
+                Model<T> model = null;
+                try {
+                    field.setAccessible(true);
+                    model = (Model<T>) field.get(this);
+                    Class<T> modelClass = (Class<T>) model.getClass().getSuperclass();
+                    Method createIfNotExists = modelClass.getDeclaredMethod("createIfNotExists");
+                    createIfNotExists.invoke(model);
+                } catch (IllegalAccessException e) {
+                    throw new InvalidColumnException("Can't access field value for field " + field, e);
+                } catch (NoSuchMethodException e) {
+                    throw new InvalidColumnException("Column's model class " + model + " doesn't have a createIfNotExists method", e);
+                } catch (InvocationTargetException e) {
+                    throw new InvalidColumnException("Error executing createIfNotExists method for model " + model, e);
+                }
+            }
+        }
+    }
+
+    @Nonnull
     public final List<T> get() {
         List<T> models = new ArrayList<>();
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
@@ -106,31 +132,11 @@ public abstract class Model<T extends Model<T>> {
     }
 
     @SuppressWarnings("unchecked")
-    public final <E extends Model<E>> void createIfNotExists() {
+    public final void createIfNotExists() {
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
         String query = queryBuilder.createIfNotExists(this);
 
-        for (Map.Entry<TypeResolver, Object> entry : getColumns().entrySet()) {
-            TypeResolver column = entry.getKey();
-            Field field = column.FIELD;
-            if (field.isAnnotationPresent(Relation.class)) {
-                Model<E> model = null;
-                try {
-                    field.setAccessible(true);
-                    Class<E> modelClass = (Class<E>) field.get(this).getClass().getSuperclass();
-                    model = (Model<E>) field.get(this);
-                    modelClass
-                            .getDeclaredMethod("createIfNotExists")
-                            .invoke(model);
-                } catch (IllegalAccessException e) {
-                    throw new InvalidColumnException("Can't access field value for field " + field, e);
-                } catch (InvocationTargetException e) {
-                    throw new InvalidColumnException("Error executing createIfNotExists method for model " + model, e);
-                } catch (NoSuchMethodException e) {
-                    throw new InvalidColumnException("Column's model class " + model + " doesn't have a createIfNotExists method", e);
-                }
-            }
-        }
+        createRequirements();
 
         try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query)) {
             statement.executeUpdate();
@@ -142,6 +148,8 @@ public abstract class Model<T extends Model<T>> {
     public final void save() {
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
         String query = queryBuilder.save(this);
+
+        createRequirements();
 
         try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query)) {
             statement.executeUpdate();
