@@ -191,7 +191,11 @@ class TypeResolver {
     }
 
     @Nullable
-    <T> Object toValue(@Nonnull T result) {
+    <T> Object toValue(@Nullable T result) {
+        if (result == null) {
+            return null;
+        }
+
         Class<?> type = FIELD.getType();
 
         if (type.isEnum()) {

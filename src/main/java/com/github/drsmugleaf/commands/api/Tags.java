@@ -1,7 +1,5 @@
-package com.github.drsmugleaf.commands;
+package com.github.drsmugleaf.commands.api;
 
-import com.github.drsmugleaf.BanterBot4J;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.IVoiceChannel;
@@ -12,11 +10,11 @@ import javax.annotation.Nonnull;
 /**
  * Created by DrSmugleaf on 16/01/2018.
  */
-enum Tags {
+public enum Tags implements Tag {
 
     DELETE_COMMAND_MESSAGE {
         @Override
-        public void execute(@Nonnull MessageReceivedEvent event) {
+        public void execute(@Nonnull CommandReceivedEvent event) {
             try {
                 event.getMessage().delete();
             } catch (MissingPermissionsException ignored) {}
@@ -24,7 +22,7 @@ enum Tags {
     },
     GUILD_ONLY {
         @Override
-        public boolean valid(@Nonnull MessageReceivedEvent event) {
+        public boolean isValid(@Nonnull CommandReceivedEvent event) {
             return event.getGuild() != null;
         }
 
@@ -36,8 +34,8 @@ enum Tags {
     },
     OWNER_ONLY {
         @Override
-        public boolean valid(@Nonnull MessageReceivedEvent event) {
-            return BanterBot4J.isOwner(event.getAuthor().getLongID());
+        public boolean isValid(@Nonnull CommandReceivedEvent event) {
+            return Command.isOwner(event.getAuthor());
         }
 
         @Nonnull
@@ -48,8 +46,8 @@ enum Tags {
     },
     SAME_VOICE_CHANNEL {
         @Override
-        public boolean valid(@Nonnull MessageReceivedEvent event) {
-            if (!GUILD_ONLY.valid(event)) {
+        public boolean isValid(@Nonnull CommandReceivedEvent event) {
+            if (!GUILD_ONLY.isValid(event)) {
                 return false;
             }
 
@@ -70,8 +68,8 @@ enum Tags {
     },
     VOICE_ONLY {
         @Override
-        public boolean valid(@Nonnull MessageReceivedEvent event) {
-            if (!GUILD_ONLY.valid(event)) {
+        public boolean isValid(@Nonnull CommandReceivedEvent event) {
+            if (!GUILD_ONLY.isValid(event)) {
                 return false;
             }
 
@@ -89,7 +87,7 @@ enum Tags {
         }
     };
 
-    public boolean valid(@Nonnull MessageReceivedEvent event) {
+    public boolean isValid(@Nonnull CommandReceivedEvent event) {
         return true;
     }
 
@@ -98,6 +96,6 @@ enum Tags {
         return "You can't use that command.";
     }
 
-    public void execute(@Nonnull MessageReceivedEvent event) {}
+    public void execute(@Nonnull CommandReceivedEvent event) {}
 
 }

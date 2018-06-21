@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.commands;
+package com.github.drsmugleaf.commands.api;
 
 import sx.blah.discord.handle.obj.Permissions;
 
@@ -11,8 +11,8 @@ import java.lang.annotation.Target;
  * Created by DrSmugleaf on 20/05/2017.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-@interface CommandInfo {
+@Target(ElementType.TYPE)
+public @interface CommandInfo {
 
     String name() default "";
 

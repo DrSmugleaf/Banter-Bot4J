@@ -11,7 +11,7 @@ import java.util.Properties;
 /**
  * Created by DrSmugleaf on 10/01/2018.
  */
-public class Env {
+class Env {
 
     @Nonnull
     static final Properties PROPERTIES = new Properties();

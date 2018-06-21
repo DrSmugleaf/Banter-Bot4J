@@ -20,10 +20,10 @@ public class API {
     private static final String KEY_PROPERTY = "Ocp-Apim-Subscription-Key";
 
     @Nullable
-    public static String translate(String from, String to, String text) {
+    public static String translate(Languages from, Languages to, String text) {
         try {
             text = URLEncoder.encode(text, "UTF8");
-            URL url = new URL(PATH + "?from=" + from + "&to=" + to + "&text=" + text);
+            URL url = new URL(PATH + "?from=" + from.getCode()+ "&to=" + to.getCode() + "&text=" + text);
 
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
             connection.setRequestMethod("GET");

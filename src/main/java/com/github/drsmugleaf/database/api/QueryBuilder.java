@@ -70,6 +70,7 @@ class QueryBuilder<T extends Model<T>> {
         queryConflict.append(" ON CONFLICT DO NOTHING ");
 
         Set<Map.Entry<TypeResolver, Object>> columns = model.getColumns().entrySet();
+        columns.removeIf(entry -> entry.getValue() == null);
         Iterator<Map.Entry<TypeResolver, Object>> iterator = columns.iterator();
         while (iterator.hasNext()) {
             Map.Entry<TypeResolver, Object> entry = iterator.next();

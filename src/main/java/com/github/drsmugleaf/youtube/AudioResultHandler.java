@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.youtube;
 
-import com.github.drsmugleaf.commands.AbstractCommand;
-import com.github.drsmugleaf.commands.Music;
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
+import com.github.drsmugleaf.commands.music.Music;
 import com.google.api.services.youtube.model.SearchResult;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
@@ -61,17 +61,17 @@ public class AudioResultHandler implements AudioLoadResultHandler {
         try {
             search = API.search(SEARCH_STRING);
         } catch (SearchErrorException e) {
-            AbstractCommand.sendMessage(CHANNEL, "Error searching for `" + SEARCH_STRING + "`.");
+            CommandReceivedEvent.sendMessage(CHANNEL, "Error searching for `" + SEARCH_STRING + "`.");
             return;
         }
 
         if (search == null) {
-            AbstractCommand.sendMessage(CHANNEL, "No results found for `" + SEARCH_STRING + "`.");
+            CommandReceivedEvent.sendMessage(CHANNEL, "No results found for `" + SEARCH_STRING + "`.");
             return;
         }
 
         String videoID = search.getId().getVideoId();
-        Music.getAudioPlayerManager().loadItem(videoID, new AudioSearchResultHandler(CHANNEL, SUBMITTER, SEARCH_STRING));
+        Music.PLAYER_MANAGER.loadItem(videoID, new AudioSearchResultHandler(CHANNEL, SUBMITTER, SEARCH_STRING));
     }
 
     @Override
