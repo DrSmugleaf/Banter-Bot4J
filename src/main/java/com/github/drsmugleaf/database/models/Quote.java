@@ -20,18 +20,22 @@ public class Quote extends Model<Quote> {
     @Column(name = "content")
     public String content;
 
-    @Column(name = "user_id")
+    @Column(name = "submitter")
     @Relation(type = RelationTypes.ManyToOne, columnName = "id")
     public User submitter;
 
-    @Column(name = "guild_id")
+    @Column(name = "guild")
     @Relation(type = RelationTypes.ManyToOne, columnName = "id")
     public Guild guild;
+
+    @Column(name = "submitted")
+    public Long date;
 
     public Quote(String content, Long submitter, Long guild) {
         this.content = content;
         this.submitter = new User(submitter);
         this.guild = new Guild(guild);
+        date = System.currentTimeMillis();
     }
 
     private Quote() {}
