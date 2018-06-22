@@ -54,4 +54,9 @@ public class Arguments extends ArrayList<String> {
         return get(size() - 1);
     }
 
+    @Override
+    public String toString() {
+        return String.join(" ", this);
+    }
+
 }
