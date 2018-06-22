@@ -1,10 +1,12 @@
 package com.github.drsmugleaf.database.models;
 
-import com.github.drsmugleaf.database.api.annotations.Column;
+import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.database.api.Model;
+import com.github.drsmugleaf.database.api.annotations.Column;
 import com.github.drsmugleaf.database.api.annotations.Table;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
+import sx.blah.discord.handle.obj.IGuild;
 
 /**
  * Created by DrSmugleaf on 16/05/2017.
@@ -21,6 +23,10 @@ public class Guild extends Model<Guild> {
     }
 
     private Guild() {}
+
+    public IGuild guild() {
+        return BanterBot4J.CLIENT.getGuildByID(id);
+    }
 
     @EventSubscriber
     public static void handle(ReadyEvent event) {

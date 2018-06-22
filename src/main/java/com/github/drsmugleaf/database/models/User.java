@@ -1,10 +1,12 @@
 package com.github.drsmugleaf.database.models;
 
-import com.github.drsmugleaf.database.api.annotations.Column;
+import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.database.api.Model;
+import com.github.drsmugleaf.database.api.annotations.Column;
 import com.github.drsmugleaf.database.api.annotations.Table;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
+import sx.blah.discord.handle.obj.IUser;
 
 /**
  * Created by DrSmugleaf on 14/05/2017.
@@ -21,6 +23,10 @@ public class User extends Model<User> {
     }
 
     private User() {}
+
+    public IUser user() {
+        return BanterBot4J.CLIENT.getUserByID(id);
+    }
 
     @EventSubscriber
     public static void handle(ReadyEvent event) {

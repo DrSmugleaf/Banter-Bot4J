@@ -31,6 +31,10 @@ public class Quote extends Model<Quote> {
     @Column(name = "submitted")
     public Long date;
 
+    public Quote(Long id) {
+        this.id = id;
+    }
+
     public Quote(String content, Long submitter, Long guild) {
         this.content = content;
         this.submitter = new User(submitter);
