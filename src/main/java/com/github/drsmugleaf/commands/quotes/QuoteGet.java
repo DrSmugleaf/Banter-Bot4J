@@ -9,6 +9,8 @@ import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 
 import javax.annotation.Nonnull;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,6 +18,8 @@ import java.util.List;
  */
 @CommandInfo(name = "quote", aliases = {"quote get", "quoteget"})
 public class QuoteGet extends Command {
+
+    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
 
     protected QuoteGet(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
         super(event, args);
@@ -43,9 +47,11 @@ public class QuoteGet extends Command {
         IUser quoteAuthor = quote.submitter.user();
         IGuild quoteGuild = quote.guild.guild();
         String authorName = quoteAuthor.getDisplayName(quoteGuild);
+        Date date = new Date(quote.date);
+        String formattedDate = DATE_FORMAT.format(date);
         CommandReceivedEvent.sendMessage(
                 event.getChannel(),
-                "**Submitted by " + authorName + ":**\n" + quote.content
+                "**Submitted by " + authorName + " on " + formattedDate + "**\n" + quote.content
         );
     }
 
