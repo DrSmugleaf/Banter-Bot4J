@@ -6,6 +6,8 @@ import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -22,7 +24,18 @@ public abstract class Command implements ICommand {
     @Nonnull
     static final List<Long> OWNERS = new ArrayList<>();
 
-    protected static <T extends ICommand> void run(@Nonnull Class<T> commandClass, @Nonnull CommandReceivedEvent event) {
+    @Nonnull
+    public final CommandReceivedEvent EVENT;
+
+    @Nonnull
+    public final Arguments ARGS;
+
+    public Command(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+        EVENT = event;
+        ARGS = args;
+    }
+
+    protected static <T extends ICommand> void run(@Nonnull Class<T> commandClass, @Nonnull CommandReceivedEvent event, @Nonnull String args) {
         CommandInfo annotation = commandClass.getDeclaredAnnotation(CommandInfo.class);
 
         if (annotation != null) {
@@ -48,9 +61,18 @@ public abstract class Command implements ICommand {
 
         ICommand command;
         try {
-            command = commandClass.newInstance();
+            Constructor<T> constructor = commandClass.getDeclaredConstructor(CommandReceivedEvent.class, Arguments.class);
+            constructor.setAccessible(true);
+            Arguments arguments = new Arguments(args);
+            command = constructor.newInstance(event, arguments);
         } catch (InstantiationException | IllegalAccessException e) {
             LOGGER.error("Error running command " + commandClass.getName(), e);
+            return;
+        } catch (NoSuchMethodException e) {
+            LOGGER.error("No constructor found for command " + commandClass, e);
+            return;
+        } catch (InvocationTargetException e) {
+            LOGGER.error("Error creating command instance", e);
             return;
         }
 

@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.tripwire;
 
+import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.tripwire.route.Route;
@@ -18,6 +19,10 @@ public class TripwireRoute extends Command {
     @Nonnull
     static final Map<IUser, Route> ROUTES = new HashMap<>();
 
+    protected TripwireRoute(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+        super(event, args);
+    }
+
     @Nonnull
     private static String wrongFormatResponse() {
         return "**Formats:**\n" +
@@ -28,16 +33,16 @@ public class TripwireRoute extends Command {
 
     @Override
     public void run(@Nonnull CommandReceivedEvent event) {
-        if (event.ARGS.size() != 4) {
+        if (ARGS.size() != 4) {
             event.reply(wrongFormatResponse());
             return;
         }
 
         Long id = event.getAuthor().getLongID();
-        String username = event.ARGS.get(0);
-        String password = event.ARGS.get(1);
-        String from = event.ARGS.get(2);
-        String to = event.ARGS.get(3);
+        String username = ARGS.get(0);
+        String password = ARGS.get(1);
+        String from = ARGS.get(2);
+        String to = ARGS.get(3);
         Route route = SystemGraph.getRoute(id, username, password, from, to);
 
         if (route == null) {

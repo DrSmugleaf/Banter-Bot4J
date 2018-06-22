@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.eve;
 
+import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.database.models.EveTimerModel;
@@ -15,6 +16,10 @@ import java.util.regex.Pattern;
  * Created by DrSmugleaf on 09/06/2018
  */
 public class EveTimer extends Command {
+
+    protected EveTimer(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+        super(event, args);
+    }
 
     @Nonnull
     private static Long parseDate(@Nonnull String date) {
@@ -59,20 +64,20 @@ public class EveTimer extends Command {
 
     @Override
     public void run(@Nonnull CommandReceivedEvent event) {
-        if (event.ARGS.isEmpty()) {
+        if (ARGS.isEmpty()) {
             event.reply(wrongFormatResponse());
             return;
         }
 
-        String firstArg = event.ARGS.first();
+        String firstArg = ARGS.first();
         if (firstArg.equalsIgnoreCase("delete")) {
-            EveTimerModel.deleteTimer(event);
+            EveTimerModel.deleteTimer(this);
             return;
         }
 
         IChannel channel = event.getChannel();
-        String structure = event.ARGS.get(0);
-        String system = event.ARGS.get(1);
+        String structure = ARGS.get(0);
+        String system = ARGS.get(1);
         if (exists(structure, system)) {
             String response = "Timer for structure %s in system %s already exists";
             response = String.format(response, structure, system);
@@ -80,7 +85,7 @@ public class EveTimer extends Command {
             return;
         }
 
-        Long date = parseDate(event.ARGS.get(2));
+        Long date = parseDate(ARGS.get(2));
         Long submitter = event.getAuthor().getLongID();
         EveTimerModel eveTimerModel = new EveTimerModel(channel.getLongID(), structure, system, date, submitter);
         eveTimerModel.save();

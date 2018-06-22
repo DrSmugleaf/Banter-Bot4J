@@ -1,9 +1,6 @@
 package com.github.drsmugleaf.commands.owner;
 
-import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
-import com.github.drsmugleaf.commands.api.Tags;
+import com.github.drsmugleaf.commands.api.*;
 import sx.blah.discord.util.Image;
 
 import javax.annotation.Nonnull;
@@ -21,15 +18,19 @@ import java.util.Iterator;
 @CommandInfo(tags = {Tags.OWNER_ONLY})
 public class Avatar extends Command {
 
+    protected Avatar(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+        super(event, args);
+    }
+
     @Override
     public void run(@Nonnull CommandReceivedEvent event) {
-        if (event.ARGS.isEmpty()) {
+        if (ARGS.isEmpty()) {
             event.reply("You didn't provide a link to change the bot's image to.");
             return;
         }
 
         try {
-            URL url = new URL(event.ARGS.get(0));
+            URL url = new URL(ARGS.get(0));
             URLConnection connection = url.openConnection();
             String contentType = connection.getContentType();
 
@@ -46,7 +47,7 @@ public class Avatar extends Command {
                 }
             }
 
-            event.getClient().changeAvatar(Image.forUrl(suffix, event.ARGS.get(0)));
+            event.getClient().changeAvatar(Image.forUrl(suffix, ARGS.get(0)));
         } catch(IOException e) {
             LOGGER.error("Malformed URL or error opening connection", e);
             event.reply("Invalid image URL");

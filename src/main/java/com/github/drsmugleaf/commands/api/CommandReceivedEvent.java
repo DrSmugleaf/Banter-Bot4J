@@ -20,13 +20,9 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
     @Nonnull
     protected IDiscordClient client;
 
-    @Nonnull
-    public final Arguments ARGS;
-
     protected CommandReceivedEvent(@Nonnull IMessage message) {
         super(message);
         client = message.getClient();
-        ARGS = new Arguments(message.getContent());
     }
 
     protected CommandReceivedEvent(@Nonnull MessageReceivedEvent event) {

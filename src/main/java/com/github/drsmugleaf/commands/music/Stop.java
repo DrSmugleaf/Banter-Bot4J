@@ -1,9 +1,6 @@
 package com.github.drsmugleaf.commands.music;
 
-import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
-import com.github.drsmugleaf.commands.api.Tags;
+import com.github.drsmugleaf.commands.api.*;
 import com.github.drsmugleaf.youtube.GuildMusicManager;
 import com.github.drsmugleaf.youtube.TrackScheduler;
 import sx.blah.discord.handle.obj.IGuild;
@@ -18,6 +15,10 @@ import java.util.AbstractMap;
  */
 @CommandInfo(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
 public class Stop extends Command {
+
+    protected Stop(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+        super(event, args);
+    }
 
     @Override
     public void run(@Nonnull CommandReceivedEvent event) {

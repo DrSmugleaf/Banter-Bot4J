@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.tripwire;
 
+import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.eve.Systems;
@@ -15,6 +16,10 @@ import java.util.List;
  * Created by DrSmugleaf on 10/06/2018
  */
 public class TripwireBridge extends Command {
+
+    protected TripwireBridge(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+        super(event, args);
+    }
 
     @Nonnull
     private static String wrongFormatResponse() {
@@ -32,13 +37,13 @@ public class TripwireBridge extends Command {
             return;
         }
 
-        if (event.ARGS.size() != 2) {
+        if (ARGS.size() != 2) {
             event.reply(wrongFormatResponse());
             return;
         }
 
         List<String> invalidSystems = new ArrayList<>();
-        for (String system : event.ARGS) {
+        for (String system : ARGS) {
             if (!Systems.NAMES.containsValue(system)) {
                 invalidSystems.add(system);
             }
@@ -54,22 +59,22 @@ public class TripwireBridge extends Command {
         StarSystem firstSystem = null;
         StarSystem secondSystem = null;
         for (StarSystem node : route.GRAPH.NODES) {
-            if (node.NAME.equalsIgnoreCase(event.ARGS.get(0))) {
+            if (node.NAME.equalsIgnoreCase(ARGS.get(0))) {
                 firstSystem = node;
             }
 
-            if (node.NAME.equalsIgnoreCase(event.ARGS.get(1))) {
+            if (node.NAME.equalsIgnoreCase(ARGS.get(1))) {
                 secondSystem = node;
             }
         }
 
         if (firstSystem == null) {
-            event.reply(event.ARGS.get(0) + " isn't in the route.");
+            event.reply(ARGS.get(0) + " isn't in the route.");
             return;
         }
 
         if (secondSystem == null) {
-            event.reply(event.ARGS.get(1) + " isn't in the route.");
+            event.reply(ARGS.get(1) + " isn't in the route.");
             return;
         }
 

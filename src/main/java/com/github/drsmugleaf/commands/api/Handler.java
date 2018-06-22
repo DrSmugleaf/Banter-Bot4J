@@ -53,11 +53,7 @@ public class Handler {
             }
         }
 
-        Class<ICommand> command = COMMAND_REGISTRY.resolveCommand(event);
-        if (command != null) {
-            CommandReceivedEvent commandEvent = new CommandReceivedEvent(event);
-            Command.run(command, commandEvent);
-        }
+        COMMAND_REGISTRY.resolveCommand(event);
     }
 
 }

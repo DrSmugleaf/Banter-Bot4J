@@ -1,9 +1,6 @@
 package com.github.drsmugleaf.commands.music;
 
-import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
-import com.github.drsmugleaf.commands.api.Tags;
+import com.github.drsmugleaf.commands.api.*;
 import com.github.drsmugleaf.youtube.GuildMusicManager;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.Permissions;
@@ -15,6 +12,10 @@ import javax.annotation.Nonnull;
  */
 @CommandInfo(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL, Tags.DELETE_COMMAND_MESSAGE})
 public class Pause extends Command {
+
+    protected Pause(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+        super(event, args);
+    }
 
     @Override
     public void run(@Nonnull CommandReceivedEvent event) {

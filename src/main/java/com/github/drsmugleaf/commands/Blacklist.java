@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands;
 
+import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
@@ -17,6 +18,10 @@ import java.util.List;
 @CommandInfo(permissions = {Permissions.KICK, Permissions.BAN})
 public class Blacklist extends Command {
 
+    protected Blacklist(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+        super(event, args);
+    }
+
     @Nonnull
     private static String wrongFormatResponse() {
         return "**Formats:**\n" +
@@ -27,7 +32,7 @@ public class Blacklist extends Command {
 
     @Override
     public void run(@Nonnull CommandReceivedEvent event) {
-        if (event.ARGS.isEmpty()) {
+        if (ARGS.isEmpty()) {
             event.reply(wrongFormatResponse());
             return;
         }

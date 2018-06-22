@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.database.models;
 
+import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.database.api.Model;
 import com.github.drsmugleaf.database.api.annotations.Column;
@@ -123,29 +124,29 @@ public class EveTimerModel extends Model<EveTimerModel> {
         TIMER.schedule(task, timer.date - System.currentTimeMillis());
     }
 
-    public static void deleteTimer(@Nonnull CommandReceivedEvent event) {
-        IChannel channel = event.getChannel();
-        String structure = event.ARGS.get(0);
-        String system = event.ARGS.get(1);
+    public static void deleteTimer(@Nonnull Command command) {
+        IChannel channel = command.EVENT.getChannel();
+        String structure = command.ARGS.get(0);
+        String system = command.ARGS.get(1);
         EveTimerModel timer = new EveTimerModel(channel.getLongID(), structure, system, null, null);
 
         List<EveTimerModel> timers = timer.get();
         if (timers.isEmpty()) {
             String response = "No timer exists assigned to channel %s with structure %s and system %s";
             response = String.format(response, channel, structure, system);
-            event.reply(response);
+            command.EVENT.reply(response);
         } else {
             timer = timers.get(0);
             if (!deleteTask(timer)) {
                 String response = "Couldn't delete timer assigned to channel %s with structure %s and system %s";
                 response = String.format(response, channel, structure, system);
-                event.reply(response);
+                command.EVENT.reply(response);
                 return;
             }
 
             String response = "Deleted timer assigned to channel %s with structure %s and system %s";
             response = String.format(response, channel, structure, system);
-            event.reply(response);
+            command.EVENT.reply(response);
         }
     }
 

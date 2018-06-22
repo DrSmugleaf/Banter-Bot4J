@@ -1,9 +1,6 @@
 package com.github.drsmugleaf.commands.owner;
 
-import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
-import com.github.drsmugleaf.commands.api.Tags;
+import com.github.drsmugleaf.commands.api.*;
 
 import javax.annotation.Nonnull;
 
@@ -12,6 +9,10 @@ import javax.annotation.Nonnull;
  */
 @CommandInfo(tags = {Tags.OWNER_ONLY})
 public class Name extends Command {
+
+    protected Name(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+        super(event, args);
+    }
 
     @Nonnull
     private static String wrongFormatResponse() {
@@ -23,13 +24,13 @@ public class Name extends Command {
 
     @Override
     public void run(@Nonnull CommandReceivedEvent event) {
-        String name = String.join(" ", event.ARGS);
+        String name = String.join(" ", ARGS);
         if (name.isEmpty()) {
             event.reply(wrongFormatResponse());
             return;
         }
 
-        event.getClient().changeUsername(String.join(" ", event.ARGS));
+        event.getClient().changeUsername(String.join(" ", ARGS));
         event.reply("Changed the bot's name to " + name);
     }
 

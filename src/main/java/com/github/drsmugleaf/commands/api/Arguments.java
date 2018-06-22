@@ -27,8 +27,6 @@ public class Arguments extends ArrayList<String> {
             args.add(arg);
         }
 
-        args.remove(0);
-
         return args;
     }
 

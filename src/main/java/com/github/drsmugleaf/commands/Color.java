@@ -1,9 +1,6 @@
 package com.github.drsmugleaf.commands;
 
-import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
-import com.github.drsmugleaf.commands.api.Tags;
+import com.github.drsmugleaf.commands.api.*;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
@@ -21,6 +18,10 @@ import java.util.stream.Collectors;
  */
 @CommandInfo(tags = {Tags.GUILD_ONLY})
 public class Color extends Command {
+
+    protected Color(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+        super(event, args);
+    }
 
     @Nullable
     private static java.awt.Color resolve(String string) {
@@ -48,7 +49,7 @@ public class Color extends Command {
         IUser author = event.getAuthor();
 
         List<IRole> roles = guild.getRolesByName("color-" + author.getStringID());
-        if (event.ARGS.isEmpty()) {
+        if (ARGS.isEmpty()) {
             if (roles.isEmpty()) {
                 event.reply("You don't have a name color. Use " + BOT_PREFIX + "color name OR hexadecimal code to assign one.");
                 return;
@@ -78,7 +79,7 @@ public class Color extends Command {
             return;
         }
 
-        String requestedColor = event.ARGS.get(0);
+        String requestedColor = ARGS.get(0);
         java.awt.Color color = resolve(requestedColor);
         if (color == null) {
             event.reply("Invalid color. Make sure it is a hexadecimal string (0000FF) or a simple color like red.");
