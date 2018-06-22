@@ -30,7 +30,7 @@ public abstract class Command implements ICommand {
     @Nonnull
     public final Arguments ARGS;
 
-    public Command(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected Command(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
         EVENT = event;
         ARGS = args;
     }
