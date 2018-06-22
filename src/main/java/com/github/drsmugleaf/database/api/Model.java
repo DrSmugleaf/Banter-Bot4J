@@ -105,6 +105,7 @@ public abstract class Model<T extends Model<T>> {
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
         String query = queryBuilder.get(this);
 
+        Field field = null;
         try (
                 PreparedStatement statement = Database.CONNECTION.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery()
@@ -113,19 +114,23 @@ public abstract class Model<T extends Model<T>> {
                 T row = newInstance(this);
                 Set<Map.Entry<TypeResolver, Object>> columns = getColumns().entrySet();
 
-                for (Map.Entry<TypeResolver, Object> column : columns) {
-                    TypeResolver resolver = column.getKey();
-                    Column columnAnnotation = resolver.getColumnAnnotation();
-                    Object result = resultSet.getObject(columnAnnotation.name());
-                    Object value = resolver.toValue(result);
+                for (Map.Entry<TypeResolver, Object> entry : columns) {
+                    TypeResolver column = entry.getKey();
+                    Column columnInfo = column.getColumnAnnotation();
+                    Object result = resultSet.getObject(columnInfo.name());
+                    Object value = column.toValue(result);
 
-                    resolver.FIELD.set(row, value);
+                    field = column.FIELD;
+                    field.setAccessible(true);
+                    field.set(row, value);
                 }
 
                 models.add(row);
             }
-        } catch (SQLException | IllegalAccessException e) {
-            throw new StatementExecutionException(e);
+        } catch (SQLException e) {
+            throw new StatementExecutionException("Error executing get statement", e);
+        } catch (IllegalAccessException e) {
+            throw new StatementExecutionException("Error accessing field " + field, e);
         }
 
         return models;
@@ -138,10 +143,27 @@ public abstract class Model<T extends Model<T>> {
 
         createRequirements();
 
-        try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query)) {
-            statement.executeUpdate();
+        Field field = null;
+        try (
+                PreparedStatement statement = Database.CONNECTION.prepareStatement(query);
+                ResultSet resultSet = statement.executeQuery()
+        ) {
+            if (resultSet.next()) {
+                for (Map.Entry<TypeResolver, Object> entry : getColumns().entrySet()) {
+                    TypeResolver column = entry.getKey();
+                    Column columnInfo = column.getColumnAnnotation();
+                    Object result = resultSet.getObject(columnInfo.name());
+                    Object value = column.toValue(result);
+
+                    field = column.FIELD;
+                    field.setAccessible(true);
+                    field.set(this, value);
+                }
+            }
         } catch (SQLException sqlException) {
-            throw new StatementExecutionException(sqlException);
+            throw new StatementExecutionException("Error executing createIfNotExists statement", sqlException);
+        } catch (IllegalAccessException e) {
+            throw new StatementExecutionException("Error accessing field " + field, e);
         }
     }
 
@@ -151,21 +173,37 @@ public abstract class Model<T extends Model<T>> {
 
         createRequirements();
 
-        try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query)) {
-            statement.executeUpdate();
+        Field field = null;
+        try (
+                PreparedStatement statement = Database.CONNECTION.prepareStatement(query);
+                ResultSet resultSet = statement.executeQuery()
+        ) {
+            if (resultSet.next()) {
+                for (Map.Entry<TypeResolver, Object> entry : getColumns().entrySet()) {
+                    TypeResolver column = entry.getKey();
+                    Column columnInfo = column.getColumnAnnotation();
+                    Object result = resultSet.getObject(columnInfo.name());
+                    Object value = column.toValue(result);
+
+                    field = column.FIELD;
+                    field.setAccessible(true);
+                    field.set(this, value);
+                }
+            }
         } catch (SQLException e) {
-            throw new StatementExecutionException(e);
+            throw new StatementExecutionException("Error executing save statement", e);
+        } catch (IllegalAccessException e) {
+            throw new StatementExecutionException("Error accessing field " + field, e);
         }
     }
 
     public final void delete() {
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
         String query = queryBuilder.delete(this);
-
         try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query)) {
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new StatementExecutionException(e);
+            throw new StatementExecutionException("Error executing delete statement", e);
         }
     }
 

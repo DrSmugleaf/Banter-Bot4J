@@ -92,7 +92,8 @@ class QueryBuilder<T extends Model<T>> {
         query
                 .append(queryInsert)
                 .append(queryValues)
-                .append(queryConflict);
+                .append(queryConflict)
+                .append(" RETURNING * ");
 
         try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString())) {
             iterator = columns.iterator();
@@ -278,7 +279,8 @@ class QueryBuilder<T extends Model<T>> {
                 .append(queryInsert)
                 .append(queryValues)
                 .append(queryConflict)
-                .append(querySet);
+                .append(querySet)
+                .append(" RETURNING * ");
 
         try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString())) {
             iterator = columns.iterator();
