@@ -54,7 +54,7 @@ class Registry {
                 if (message.equalsIgnoreCase(alias)) {
                     return new AbstractMap.SimpleEntry<>(command, alias);
                 } else if (message.contains(alias)) {
-                    matches.add(new AbstractMap.SimpleEntry<>(command, commandName));
+                    matches.add(new AbstractMap.SimpleEntry<>(command, alias));
                 }
             }
         }
