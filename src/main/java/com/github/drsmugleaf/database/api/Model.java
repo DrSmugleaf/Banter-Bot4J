@@ -200,6 +200,7 @@ public abstract class Model<T extends Model<T>> {
     public final void delete() {
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
         String query = queryBuilder.delete(this);
+
         try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query)) {
             statement.executeUpdate();
         } catch (SQLException e) {

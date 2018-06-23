@@ -28,7 +28,7 @@ public class QuoteAdd extends Command {
 
         quote.createIfNotExists();
 
-        event.reply("Created quote #" + quote.id + ". Write `" + BOT_PREFIX + "quote " + quote.id + "` to see it.");
+        event.reply("Created quote #" + quote.id + ". Type quote `" + BOT_PREFIX + "quote " + quote.id + "` to see it.");
     }
 
 }

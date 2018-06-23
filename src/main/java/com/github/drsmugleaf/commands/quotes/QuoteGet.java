@@ -39,7 +39,7 @@ public class QuoteGet extends Command {
         List<Quote> quotes = quote.get();
 
         if (quotes.isEmpty()) {
-            event.reply("No quotes found with id " + id);
+            event.reply("No quote was found with id " + id);
             return;
         }
 
