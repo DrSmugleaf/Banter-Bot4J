@@ -31,18 +31,18 @@ public class QuoteDelete extends Command {
             return;
         }
 
-        Quote quoteToDelete = new Quote(id);
+        Quote quote = new Quote(id);
 
-        List<Quote> quotes = quoteToDelete.get();
+        List<Quote> quotes = quote.get();
         if (quotes.isEmpty()) {
             event.reply("No quote was found with id " + id);
             return;
         }
 
-        Quote fullQuote = quotes.get(0);
+        quote = quotes.get(0);
         IUser messageAuthor = event.getAuthor();
-        IUser quoteAuthor = fullQuote.submitter.user();
-        IGuild quoteGuild = fullQuote.guild.guild();
+        IUser quoteAuthor = quote.submitter.user();
+        IGuild quoteGuild = quote.guild.guild();
         if (messageAuthor != quoteAuthor && !isOwner(messageAuthor)) {
             String quoteAuthorName = quoteAuthor.getDisplayName(quoteGuild);
             String quoteAuthorDiscriminator = quoteAuthor.getDiscriminator();
@@ -51,7 +51,8 @@ public class QuoteDelete extends Command {
             return;
         }
 
-        quoteToDelete.delete();
+        quote.content = "";
+        quote.save();
 
         event.reply("Deleted quote #" + id);
     }

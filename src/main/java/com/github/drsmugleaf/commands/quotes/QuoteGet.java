@@ -46,12 +46,19 @@ public class QuoteGet extends Command {
         quote = quotes.get(0);
         IUser quoteAuthor = quote.submitter.user();
         IGuild quoteGuild = quote.guild.guild();
-        String authorName = quoteAuthor.getDisplayName(quoteGuild);
+        String quoteAuthorName = quoteAuthor.getDisplayName(quoteGuild);
+        String quoteAuthorDiscriminator = quoteAuthor.getDiscriminator();
+        quoteAuthorName += "#" + quoteAuthorDiscriminator;
+        if (quote.content.isEmpty()) {
+            event.reply("Quote #" + quote.id + " was deleted by " + quoteAuthorName + " or the bot owner");
+            return;
+        }
+
         Date date = new Date(quote.date);
         String formattedDate = DATE_FORMAT.format(date);
         CommandReceivedEvent.sendMessage(
                 event.getChannel(),
-                "**Submitted by " + authorName + " on " + formattedDate + "**\n" + quote.content
+                "**Quote #" + quote.id + ", submitted by " + quoteAuthorName + " on " + formattedDate + "**\n" + quote.content
         );
     }
 
