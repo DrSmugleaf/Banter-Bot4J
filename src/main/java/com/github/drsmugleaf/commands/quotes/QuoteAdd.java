@@ -20,6 +20,11 @@ public class QuoteAdd extends Command {
 
     @Override
     public void run(@Nonnull CommandReceivedEvent event) {
+        if (ARGS.isEmpty()) {
+            event.reply("You didn't write anything to add as a quote. Example: `" + BOT_PREFIX + "quote add test`");
+            return;
+        }
+
         String content = ARGS.toString();
         Long authorID = event.getAuthor().getLongID();
         Long guildID = event.getGuild().getLongID();
