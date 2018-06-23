@@ -68,9 +68,9 @@ class Registry {
             return;
         }
 
-        String commandName = Command.BOT_PREFIX + command.getValue() + " ";
+        String commandName = Command.BOT_PREFIX + command.getValue();
         String arguments = event.getMessage().getFormattedContent();
-        arguments = arguments.replaceFirst(commandName, "");
+        arguments = arguments.replaceFirst(commandName, "").trim();
         CommandReceivedEvent commandEvent = new CommandReceivedEvent(event);
         Command.run(command.getKey(), commandEvent, arguments);
     }
