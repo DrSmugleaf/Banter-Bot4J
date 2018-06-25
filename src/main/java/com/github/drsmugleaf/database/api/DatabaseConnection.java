@@ -1,11 +1,12 @@
 package com.github.drsmugleaf.database.api;
 
 import com.github.drsmugleaf.env.Keys;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,24 +22,24 @@ class DatabaseConnection {
     private static final String DRIVER = "org.postgresql.Driver";
 
     @Nonnull
-    static Connection initialize() {
-        Connection connection = getConnection();
+    static HikariDataSource initialize() {
+        HikariDataSource connection = getDataSource();
 
         if (connection == null) {
-            Database.LOGGER.error("Failed to establish database connection");
+            Database.LOGGER.error("Failed to establish a database connection");
             System.exit(1);
         }
 
-        Database.LOGGER.info("Established database connection");
+        Database.LOGGER.info("Established a database connection");
         return connection;
     }
 
     @Nullable
-    private static Connection getConnection() {
+    private static HikariDataSource getDataSource() {
         try {
             Class.forName(DRIVER);
         } catch (ClassNotFoundException e) {
-            Database.LOGGER.error("Missing PostgreSQL JDBC Driver", e);
+            Database.LOGGER.error("PostgreSQL JDBC Driver not found", e);
             System.exit(1);
         }
 
@@ -47,15 +48,19 @@ class DatabaseConnection {
         String username = credentials.get("username");
         String password = credentials.get("password");
 
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(url, username, password);
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl(url);
+        config.setUsername(username);
+        config.setPassword(password);
+
+        HikariDataSource dataSource = new HikariDataSource(config);
+        try (Connection ignored = dataSource.getConnection()) {
+            return dataSource;
         } catch (SQLException e) {
             Database.LOGGER.error("Failed to establish a database connection");
             System.exit(1);
+            return null;
         }
-
-        return connection;
     }
 
     @Nonnull
