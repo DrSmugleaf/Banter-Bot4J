@@ -73,7 +73,6 @@ public abstract class Model<T extends Model<T>> {
         return columns;
     }
 
-    @Nonnull
     @SuppressWarnings("unchecked")
     private final void createRequirements() {
         for (TypeResolver column : getColumns().keySet()) {

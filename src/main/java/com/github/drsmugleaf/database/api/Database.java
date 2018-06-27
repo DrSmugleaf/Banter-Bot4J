@@ -52,6 +52,7 @@ public class Database {
         }
     }
 
+    @Nonnull
     public static Connection getConnection() {
         try {
             return DATA_SOURCE.getConnection();
