@@ -1,11 +1,11 @@
 package com.github.drsmugleaf.database.api;
 
 import com.github.drsmugleaf.database.api.annotations.Column;
-import com.github.drsmugleaf.database.api.annotations.Relation;
 import com.github.drsmugleaf.database.api.annotations.Table;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
@@ -41,36 +41,23 @@ class QueryBuilder<T extends Model<T>> {
     }
 
     @Nonnull
-    private String escapedTableName() {
-        Table tableAnnotation = MODEL.getDeclaredAnnotation(Table.class);
-        String tableName = tableAnnotation.name();
-
-        try (PreparedStatement statement = Database.CONNECTION.prepareStatement("?")) {
-            statement.setString(1, tableName);
-            tableName = statement.toString();
-            tableName = tableName.replaceFirst("'(.+)'", "$1");
-        } catch (SQLException e) {
-            throw new StatementCreationException("Error escaping table name", e);
-        }
-
-        return tableName;
-    }
-
-    @Nonnull
-    String createIfNotExists(@Nonnull Model<T> model) {
+    Query createIfNotExists(@Nonnull Model<T> model) {
         StringBuilder query = new StringBuilder();
         StringBuilder queryInsert = new StringBuilder();
         StringBuilder queryValues = new StringBuilder();
         StringBuilder queryConflict = new StringBuilder();
 
+        Table tableAnnotation = MODEL.getDeclaredAnnotation(Table.class);
+        String tableName = tableAnnotation.name();
         queryInsert
                 .append("INSERT INTO ")
-                .append(escapedTableName())
+                .append(tableName)
                 .append(" (");
         queryValues.append(" VALUES(");
         queryConflict.append(" ON CONFLICT DO NOTHING ");
 
         Set<Map.Entry<TypeResolver, Object>> columns = model.getColumns().entrySet();
+        columns.removeIf(entry -> entry.getValue() == null);
         Iterator<Map.Entry<TypeResolver, Object>> iterator = columns.iterator();
         while (iterator.hasNext()) {
             Map.Entry<TypeResolver, Object> entry = iterator.next();
@@ -92,9 +79,12 @@ class QueryBuilder<T extends Model<T>> {
         query
                 .append(queryInsert)
                 .append(queryValues)
-                .append(queryConflict);
+                .append(queryConflict)
+                .append(" RETURNING * ");
 
-        try(PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString())) {
+        try {
+            Connection connection = Database.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query.toString());
             iterator = columns.iterator();
             int i = 1;
             while (iterator.hasNext()) {
@@ -111,75 +101,86 @@ class QueryBuilder<T extends Model<T>> {
                 i++;
             }
 
-            return statement.toString();
+            return new Query(statement);
         } catch (SQLException e) {
             throw new StatementCreationException(e);
         }
     }
 
     @Nonnull
-    String createTable() {
+    Query createTable() {
         StringBuilder query = new StringBuilder();
-        StringBuilder queryReferences = new StringBuilder();
         StringBuilder queryConstraint = new StringBuilder();
+        StringBuilder queryPrimaryKey = new StringBuilder();
 
+        Table tableAnnotation = MODEL.getDeclaredAnnotation(Table.class);
+        String tableName = tableAnnotation.name();
         query
                 .append("CREATE TABLE IF NOT EXISTS ")
-                .append(escapedTableName())
+                .append(tableName)
                 .append(" (");
 
         Iterator<TypeResolver> iterator = COLUMNS.iterator();
         while (iterator.hasNext()) {
             TypeResolver column = iterator.next();
-            Column columnAnnotation = column.getColumn();
+            Column columnAnnotation = column.getColumnAnnotation();
             String name = columnAnnotation.name();
 
             query.append(column.getColumnDefinition());
 
-            if (column.FIELD.isAnnotationPresent(Relation.class)) {
-                if (queryReferences.length() != 0) {
-                    queryReferences.append(", ");
+            if (column.isID()) {
+                if (queryPrimaryKey.length() > 0) {
+                    queryPrimaryKey.append(", ");
                 }
 
-                TypeResolver relationResolver = column.getRelatedField();
-                String relatedTableName = relationResolver.getTable().name();
-
                 queryConstraint
-                        .append(relatedTableName)
+                        .append(name)
                         .append("_");
 
-                queryReferences.append(name);
+                queryPrimaryKey.append(name);
             }
 
-            if (iterator.hasNext() || queryConstraint.length() != 0) {
+
+            if (iterator.hasNext() || queryConstraint.length() > 0) {
                 query.append(", ");
             }
         }
 
-        if (queryConstraint.length() != 0) {
+        if (queryConstraint.length() > 0) {
             queryConstraint
+                    .insert(0, "_")
+                    .insert(0, tableName)
                     .insert(0, "CONSTRAINT ")
-                    .append("pkey PRIMARY KEY ");
+                    .append("pkey ");
 
-            queryReferences
-                    .insert(0, "(")
+            queryPrimaryKey
+                    .insert(0, " PRIMARY KEY (")
                     .append(")");
         }
 
         query
                 .append(queryConstraint)
-                .append(queryReferences)
+                .append(queryPrimaryKey)
                 .append(")");
 
-        return query.toString();
+        try {
+            Connection connection = Database.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query.toString());
+
+            return new Query(statement);
+        } catch (SQLException e) {
+            throw new StatementCreationException(e);
+        }
     }
 
     @Nonnull
-    String get(@Nonnull Model<T> model) {
+    Query get(@Nonnull Model<T> model) {
         StringBuilder query = new StringBuilder();
+        Table tableAnnotation = MODEL.getDeclaredAnnotation(Table.class);
+        String tableName = tableAnnotation.name();
         query
                 .append(" SELECT * FROM ")
-                .append(escapedTableName());
+                .append(tableName);
 
         Set<Map.Entry<TypeResolver, Object>> columns = model.getColumns().entrySet();
         columns.removeIf(entry -> entry.getKey().toSQL(entry.getValue()) == null);
@@ -202,7 +203,9 @@ class QueryBuilder<T extends Model<T>> {
             }
         }
 
-        try(PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString())) {
+        try {
+            Connection connection = Database.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query.toString());
             int i = 1;
             for (Map.Entry<TypeResolver, Object> entry : columns) {
                 TypeResolver field = entry.getKey();
@@ -217,26 +220,27 @@ class QueryBuilder<T extends Model<T>> {
                 i++;
             }
 
-            return statement.toString();
+            return new Query(statement);
         } catch (SQLException e) {
             throw new StatementCreationException(e);
         }
     }
 
     @Nonnull
-    String save(@Nonnull Model<T> model) {
+    Query save(@Nonnull Model<T> model) {
         StringBuilder query = new StringBuilder();
         StringBuilder queryInsert = new StringBuilder();
         StringBuilder queryValues = new StringBuilder();
         StringBuilder queryConflict = new StringBuilder();
         StringBuilder querySet = new StringBuilder();
 
+        Table tableAnnotation = MODEL.getDeclaredAnnotation(Table.class);
+        String tableName = tableAnnotation.name();
         queryInsert
                 .append(" INSERT INTO ")
-                .append(escapedTableName())
+                .append(tableName)
                 .append(" ( ");
         queryValues.append(" VALUES( ");
-        queryConflict.append(" ON CONFLICT ( ");
         querySet.append(" DO UPDATE SET ");
 
         Set<Map.Entry<TypeResolver, Object>> columns = model.getColumns().entrySet();
@@ -250,6 +254,10 @@ class QueryBuilder<T extends Model<T>> {
             queryValues.append("?");
 
             if (column.isID()) {
+                if (queryConflict.length() > 0) {
+                    queryConflict.append(", ");
+                }
+
                 queryConflict.append(columnName);
             }
 
@@ -260,11 +268,6 @@ class QueryBuilder<T extends Model<T>> {
             if (iterator.hasNext()) {
                 queryInsert.append(", ");
                 queryValues.append(", ");
-
-                if (column.isID()) {
-                    queryConflict.append(", ");
-                }
-
                 querySet.append(", ");
             } else {
                 queryInsert.append(") ");
@@ -274,13 +277,18 @@ class QueryBuilder<T extends Model<T>> {
             }
         }
 
+        queryConflict.insert(0, " ON CONFLICT ( ");
+
         query
                 .append(queryInsert)
                 .append(queryValues)
                 .append(queryConflict)
-                .append(querySet);
+                .append(querySet)
+                .append(" RETURNING * ");
 
-        try(PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString())) {
+        try {
+            Connection connection = Database.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query.toString());
             iterator = columns.iterator();
             int i = 1;
             int size = columns.size();
@@ -300,19 +308,20 @@ class QueryBuilder<T extends Model<T>> {
                 i++;
             }
 
-            return statement.toString();
+            return new Query(statement);
         } catch (SQLException e) {
             throw new StatementCreationException(e);
         }
     }
 
     @Nonnull
-    String delete(@Nonnull Model<T> model) {
+    Query delete(@Nonnull Model<T> model) {
         StringBuilder query = new StringBuilder();
-
+        Table tableAnnotation = MODEL.getDeclaredAnnotation(Table.class);
+        String tableName = tableAnnotation.name();
         query
                 .append(" DELETE FROM ")
-                .append(escapedTableName());
+                .append(tableName);
 
         Set<Map.Entry<TypeResolver, Object>> columns = model.getColumns().entrySet();
         columns.removeIf(entry -> entry.getValue() == null);
@@ -336,7 +345,9 @@ class QueryBuilder<T extends Model<T>> {
             }
         }
 
-        try(PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString())) {
+        try {
+            Connection connection = Database.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query.toString());
             int i = 1;
             for (Map.Entry<TypeResolver, Object> entry : columns) {
                 TypeResolver column = entry.getKey();
@@ -352,7 +363,7 @@ class QueryBuilder<T extends Model<T>> {
                 i++;
             }
 
-            return statement.toString();
+            return new Query(statement);
         } catch (SQLException e) {
             throw new StatementCreationException(e);
         }

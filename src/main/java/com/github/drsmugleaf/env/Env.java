@@ -11,13 +11,13 @@ import java.util.Properties;
 /**
  * Created by DrSmugleaf on 10/01/2018.
  */
-public class Env {
+class Env {
 
     @Nonnull
     static final Properties PROPERTIES = new Properties();
 
     static {
-        try(InputStream input = new FileInputStream(".env")) {
+        try (InputStream input = new FileInputStream(".env")) {
             PROPERTIES.load(input);
         } catch (IOException e) {
             BanterBot4J.LOGGER.warn("Error reading .env file", e);

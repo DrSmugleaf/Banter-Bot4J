@@ -43,7 +43,7 @@ enum ModelValidator {
                     continue;
                 }
 
-                Relation relation = resolver.getRelation();
+                Relation relation = resolver.getRelationAnnotation();
                 String relatedColumnName = relation.columnName();
 
                 Field field = resolver.FIELD;
@@ -64,9 +64,22 @@ enum ModelValidator {
                     continue;
                 }
 
-                String sqlType = SQLTypes.getType(PostgresTypes.class, field);
+                String sqlType = SQLTypes.getType(PostgresTypes.class, resolver);
                 if (sqlType == null) {
                     throw new ValidationException("No equivalent SQL type exists for field " + field);
+                }
+            }
+        }
+    },
+    CORRECT_AUTO_INCREMENTS {
+        @Override
+        <T extends Model<T>> void validate(Class<T> model) {
+            for (TypeResolver resolver : Model.getColumns(model)) {
+                if (resolver.isAutoIncremented()) {
+                    Class<?> columnType = resolver.FIELD.getType();
+                    if (columnType != Integer.class && columnType != Long.class) {
+                        throw new ValidationException("Auto increment column" + resolver.FIELD + " is neither an Integer nor a Long");
+                    }
                 }
             }
         }

@@ -1,13 +1,13 @@
 package com.github.drsmugleaf.database.api;
 
-import com.github.drsmugleaf.util.Reflection;
+import com.github.drsmugleaf.reflection.Reflection;
+import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class Database {
     static final Logger LOGGER = initLogger();
 
     @Nonnull
-    static final Connection CONNECTION = DatabaseConnection.initialize();
+    private static final HikariDataSource DATA_SOURCE = DatabaseConnection.initialize();
 
     @Nonnull
     private static Logger initLogger() {
@@ -32,17 +32,12 @@ public class Database {
     private static <T extends Model<T>> List<Class<T>> getModels(@Nonnull String packageName) {
         List<Class<T>> models = new ArrayList<>();
         Reflection reflection = new Reflection(packageName);
-
-        try {
-            for (Class<?> model : reflection.getClasses()) {
-                if (!Model.class.isAssignableFrom(model)) {
-                    continue;
-                }
-
-                models.add((Class<T>) model);
+        for (Class<?> model : reflection.getClasses()) {
+            if (!Model.class.isAssignableFrom(model)) {
+                continue;
             }
-        } catch (ClassNotFoundException | IOException | URISyntaxException e) {
-            LOGGER.error("Error getting classes from package " + packageName);
+
+            models.add((Class<T>) model);
         }
 
         return models;
@@ -54,6 +49,15 @@ public class Database {
         for (Class<T> model : models) {
             ModelValidator.validateAll(model);
             Model.createTable(model);
+        }
+    }
+
+    @Nonnull
+    public static Connection getConnection() {
+        try {
+            return DATA_SOURCE.getConnection();
+        } catch (SQLException e) {
+            throw new ConnectionException("Error getting connection from data source", e);
         }
     }
 

@@ -5,19 +5,19 @@ package com.github.drsmugleaf.database.api;
  */
 public class InvalidColumnException extends RuntimeException {
 
-    InvalidColumnException() {
+    public InvalidColumnException() {
         super();
     }
 
-    InvalidColumnException(String message) {
+    public InvalidColumnException(String message) {
         super(message);
     }
 
-    InvalidColumnException(String message, Throwable cause) {
+    public InvalidColumnException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    InvalidColumnException(Throwable cause) {
+    public InvalidColumnException(Throwable cause) {
         super(cause);
     }
 

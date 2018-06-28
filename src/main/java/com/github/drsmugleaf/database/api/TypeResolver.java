@@ -17,17 +17,17 @@ import java.util.Map;
 /**
  * Created by DrSmugleaf on 12/04/2018.
  */
-class TypeResolver {
+public class TypeResolver {
 
     @Nonnull
-    final Field FIELD;
+    public final Field FIELD;
 
     TypeResolver(@Nonnull Field type) {
         FIELD = type;
     }
 
     @Nonnull
-    private static Field getDeepRelatedField(@Nonnull Field field) {
+    private static TypeResolver getDeepRelatedField(@Nonnull Field field) {
         Relation relation = field.getDeclaredAnnotation(Relation.class);
         String relatedColumnName = relation.columnName();
 
@@ -45,7 +45,7 @@ class TypeResolver {
             return getDeepRelatedField(relatedField);
         }
 
-        return relatedField;
+        return new TypeResolver(relatedField);
     }
 
     @Nonnull
@@ -57,30 +57,31 @@ class TypeResolver {
         return FIELD.getDeclaredAnnotation(annotation);
     }
 
-    boolean isID() {
+    public boolean isID() {
         return FIELD.getDeclaredAnnotation(Column.Id.class) != null;
+    }
+
+    public boolean isAutoIncremented() {
+        return FIELD.getDeclaredAnnotation(Column.AutoIncrement.class) != null;
     }
 
     @Nonnull
     String getDataType() {
-        Column columnAnnotation = getColumn();
+        Column columnAnnotation = getColumnAnnotation();
 
-        Field field;
-        String columnDefinition;
+        TypeResolver column = this;
+        String columnDefinition = columnAnnotation.columnDefinition();
         Relation relation = FIELD.getDeclaredAnnotation(Relation.class);
         if (relation != null) {
-            field = getDeepRelatedField(FIELD);
-            Column relatedColumnAnnotation = field.getDeclaredAnnotation(Column.class);
+            column = getDeepRelatedField(FIELD);
+            Column relatedColumnAnnotation = column.getColumnAnnotation();
             columnDefinition = relatedColumnAnnotation.columnDefinition();
-        } else {
-            field = FIELD;
-            columnDefinition = columnAnnotation.columnDefinition();
         }
 
         if (columnDefinition.isEmpty()) {
-            String sqlType = SQLTypes.getType(PostgresTypes.class, field);
+            String sqlType = SQLTypes.getType(PostgresTypes.class, column);
             if (sqlType == null) {
-                throw new InvalidColumnException("No equivalent SQL type exists for field " + field);
+                throw new InvalidColumnException("No equivalent SQL type exists for column " + column);
             }
 
             return sqlType;
@@ -90,7 +91,7 @@ class TypeResolver {
     }
 
     @Nonnull
-    Table getTable() {
+    Table getTableAnnotation() {
         Class<?> type = FIELD.getDeclaringClass();
         if (!type.isAnnotationPresent(Table.class)) {
             throw new NullPointerException();
@@ -100,18 +101,18 @@ class TypeResolver {
     }
 
     @Nonnull
-    Column getColumn() {
+    Column getColumnAnnotation() {
         return getAnnotation(Column.class);
     }
 
     @Nonnull
-    Relation getRelation() {
+    Relation getRelationAnnotation() {
         return getAnnotation(Relation.class);
     }
 
     @Nonnull
     TypeResolver getRelatedField() {
-        Relation relation = getRelation();
+        Relation relation = getRelationAnnotation();
         String relatedColumnName = relation.columnName();
 
         Field field;
@@ -126,7 +127,7 @@ class TypeResolver {
 
     @Nonnull
     String getExternalColumnName() {
-        Column columnAnnotation = getColumn();
+        Column columnAnnotation = getColumnAnnotation();
         Table tableAnnotation = FIELD.getDeclaredAnnotation(Table.class);
 
         if (tableAnnotation == null) {
@@ -150,7 +151,7 @@ class TypeResolver {
             return object;
         }
 
-        Relation relation = getRelation();
+        Relation relation = getRelationAnnotation();
         Field objectField;
         try {
             objectField = object.getClass().getDeclaredField(relation.columnName());
@@ -190,8 +191,12 @@ class TypeResolver {
         }
     }
 
-    @Nonnull
-    <T> Object toValue(@Nonnull T result) {
+    @Nullable
+    <T> Object toValue(@Nullable T result) {
+        if (result == null) {
+            return null;
+        }
+
         Class<?> type = FIELD.getType();
 
         if (type.isEnum()) {
@@ -226,7 +231,7 @@ class TypeResolver {
     @Nonnull
     String getColumnDefinition() {
         StringBuilder definition = new StringBuilder();
-        Column column = getColumn();
+        Column column = getColumnAnnotation();
         String dataType = getDataType();
 
         dataType = dataType
@@ -241,8 +246,8 @@ class TypeResolver {
 
         if (FIELD.isAnnotationPresent(Relation.class)) {
             TypeResolver relationResolver = getRelatedField();
-            Relation relation = getRelation();
-            String relatedTableName = relationResolver.getTable().name();
+            Relation relation = getRelationAnnotation();
+            String relatedTableName = relationResolver.getTableAnnotation().name();
 
             definition
                     .append(" REFERENCES ")
@@ -250,10 +255,6 @@ class TypeResolver {
                     .append(" (")
                     .append(relation.columnName())
                     .append(") ON UPDATE CASCADE ON DELETE CASCADE ");
-        }
-
-        if (isID()) {
-            definition.append(" PRIMARY KEY ");
         }
 
         String defaultValue = column.defaultValue();
