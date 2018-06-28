@@ -28,8 +28,9 @@ public class QuoteAdd extends Command {
         String content = ARGS.toString();
         Long authorID = event.getAuthor().getLongID();
         Long guildID = event.getGuild().getLongID();
+        Long date = event.getMessage().getCreationDate().toEpochMilli();
 
-        Quote quote = new Quote(content, authorID, guildID);
+        Quote quote = new Quote(content, authorID, guildID, date);
 
         quote.createIfNotExists();
 

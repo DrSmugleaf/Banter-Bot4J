@@ -35,11 +35,11 @@ public class Quote extends Model<Quote> {
         this.id = id;
     }
 
-    public Quote(String content, Long submitter, Long guild) {
+    public Quote(String content, Long submitter, Long guild, Long date) {
         this.content = content;
         this.submitter = new User(submitter);
         this.guild = new Guild(guild);
-        date = System.currentTimeMillis();
+        this.date = date;
     }
 
     private Quote() {}
