@@ -12,17 +12,16 @@ import java.util.List;
 public class Game {
 
     @Nonnull
-    private final List<Player> PLAYERS = new ArrayList<>();
-
-    @Nonnull
     private final Deck DECK;
 
-    Game(@Nonnull List<Long> players) {
+    @Nonnull
+    private final List<Player> PLAYERS = new ArrayList<>();
+
+    Game(@Nonnull Deck deck, @Nonnull List<Long> players) {
+        DECK = deck;
         for (Long id : players) {
             PLAYERS.add(new Player(id));
         }
-
-        DECK = new Deck();
     }
 
 }
