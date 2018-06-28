@@ -23,7 +23,9 @@ public enum FrenchCards implements Cards {
     QUEEN("Queen", 10),
     KING("King", 10);
 
+    @Nonnull
     final String NAME;
+
     final int VALUE;
 
     FrenchCards(@Nonnull String name, int value) {

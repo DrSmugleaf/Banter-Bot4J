@@ -10,7 +10,10 @@ import javax.annotation.Nonnull;
  */
 public class Card {
 
+    @Nonnull
     final Cards CARD;
+
+    @Nonnull
     final Suits SUIT;
 
     Card(@Nonnull Cards card, @Nonnull Suits suit) {

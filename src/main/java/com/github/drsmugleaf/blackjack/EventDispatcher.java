@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
  */
 public class EventDispatcher {
 
+    @Nonnull
     private static final Set<Method> LISTENERS = new HashSet<>();
 
     public static void registerListeners(@Nonnull Class<?> clazz) {

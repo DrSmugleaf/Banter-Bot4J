@@ -22,6 +22,7 @@ public class Player {
         ID = id;
     }
 
+    @Nonnull
     public Actions getAction() {
         return action;
     }
@@ -35,6 +36,7 @@ public class Player {
         }
     }
 
+    @Nonnull
     public Status getStatus() {
         return status;
     }

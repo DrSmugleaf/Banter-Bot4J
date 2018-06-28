@@ -11,6 +11,7 @@ import java.util.List;
  */
 public class Hand implements Comparable<Hand> {
 
+    @Nonnull
     private final List<Card> CARDS = new ArrayList<>();
 
     Hand(@Nonnull Card... cards) {
@@ -37,6 +38,7 @@ public class Hand implements Comparable<Hand> {
         return score;
     }
 
+    @Nonnull
     Card get(int i) {
         return CARDS.get(i);
     }

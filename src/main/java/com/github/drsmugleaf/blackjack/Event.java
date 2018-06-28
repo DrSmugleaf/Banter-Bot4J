@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
  */
 public abstract class Event {
 
+    @Nonnull
     public final Game GAME;
 
     Event(@Nonnull Game game) {

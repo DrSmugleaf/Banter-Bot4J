@@ -14,7 +14,9 @@ public enum FrenchSuits implements Suits {
     HEARTS("Hearts", '♥'),
     SPADES("Spades", '♠');
 
+    @Nonnull
     final String NAME;
+
     final char SYMBOL;
 
     FrenchSuits(@Nonnull String name, char symbol) {

@@ -32,6 +32,7 @@ public class GameBuilder {
 
     public GameBuilder() {}
 
+    @Nonnull
     public Game build() {
         return new Game(deck, PLAYERS);
     }
