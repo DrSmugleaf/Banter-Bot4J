@@ -50,7 +50,7 @@ public class QuoteGet extends Command {
         String quoteAuthorDiscriminator = quoteAuthor.getDiscriminator();
         quoteAuthorName += "#" + quoteAuthorDiscriminator;
         if (quote.content.isEmpty()) {
-            event.reply("Quote #" + quote.id + " was deleted by " + quoteAuthorName + " or the bot owner");
+            event.reply("Quote #" + quote.id + " was deleted by " + quoteAuthorName + " or one of the bot owners.");
             return;
         }
 

@@ -8,7 +8,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -20,9 +19,6 @@ public abstract class Model<T extends Model<T>> {
 
     @SuppressWarnings("unchecked")
     static <T extends Model<T>> void createTable(@Nonnull Class<T> model) {
-        QueryBuilder<T> queryBuilder = new QueryBuilder<>(model);
-        String query = queryBuilder.createTable();
-
         for (TypeResolver column : getColumns(model)) {
             if (column.FIELD.isAnnotationPresent(Relation.class)) {
                 Class<?> relatedModelClass = column.FIELD.getType();
@@ -30,8 +26,11 @@ public abstract class Model<T extends Model<T>> {
             }
         }
 
-        try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query)) {
-            statement.executeUpdate();
+        QueryBuilder<T> queryBuilder = new QueryBuilder<>(model);
+        try (
+                Query query = queryBuilder.createTable()
+        ) {
+            query.STATEMENT.executeUpdate();
         } catch (SQLException e) {
             throw new StatementExecutionException(e);
         }
@@ -74,7 +73,6 @@ public abstract class Model<T extends Model<T>> {
         return columns;
     }
 
-    @Nonnull
     @SuppressWarnings("unchecked")
     private final void createRequirements() {
         for (TypeResolver column : getColumns().keySet()) {
@@ -103,12 +101,11 @@ public abstract class Model<T extends Model<T>> {
     public final List<T> get() {
         List<T> models = new ArrayList<>();
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
-        String query = queryBuilder.get(this);
 
         Field field = null;
         try (
-                PreparedStatement statement = Database.CONNECTION.prepareStatement(query);
-                ResultSet resultSet = statement.executeQuery()
+                Query query = queryBuilder.get(this);
+                ResultSet resultSet = query.STATEMENT.executeQuery()
         ) {
             while (resultSet.next()) {
                 T row = newInstance(this);
@@ -139,14 +136,13 @@ public abstract class Model<T extends Model<T>> {
     @SuppressWarnings("unchecked")
     public final void createIfNotExists() {
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
-        String query = queryBuilder.createIfNotExists(this);
 
         createRequirements();
 
         Field field = null;
         try (
-                PreparedStatement statement = Database.CONNECTION.prepareStatement(query);
-                ResultSet resultSet = statement.executeQuery()
+                Query query = queryBuilder.createIfNotExists(this);
+                ResultSet resultSet = query.STATEMENT.executeQuery()
         ) {
             if (resultSet.next()) {
                 for (Map.Entry<TypeResolver, Object> entry : getColumns().entrySet()) {
@@ -169,14 +165,13 @@ public abstract class Model<T extends Model<T>> {
 
     public final void save() {
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
-        String query = queryBuilder.save(this);
 
         createRequirements();
 
         Field field = null;
         try (
-                PreparedStatement statement = Database.CONNECTION.prepareStatement(query);
-                ResultSet resultSet = statement.executeQuery()
+                Query query = queryBuilder.save(this);
+                ResultSet resultSet = query.STATEMENT.executeQuery()
         ) {
             if (resultSet.next()) {
                 for (Map.Entry<TypeResolver, Object> entry : getColumns().entrySet()) {
@@ -199,10 +194,9 @@ public abstract class Model<T extends Model<T>> {
 
     public final void delete() {
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
-        String query = queryBuilder.delete(this);
 
-        try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query)) {
-            statement.executeUpdate();
+        try (Query query = queryBuilder.delete(this)) {
+            query.STATEMENT.executeUpdate();
         } catch (SQLException e) {
             throw new StatementExecutionException("Error executing delete statement", e);
         }

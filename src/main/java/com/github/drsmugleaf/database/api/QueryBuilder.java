@@ -5,6 +5,7 @@ import com.github.drsmugleaf.database.api.annotations.Table;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
@@ -40,31 +41,17 @@ class QueryBuilder<T extends Model<T>> {
     }
 
     @Nonnull
-    private String escapedTableName() {
-        Table tableAnnotation = MODEL.getDeclaredAnnotation(Table.class);
-        String tableName = tableAnnotation.name();
-
-        try (PreparedStatement statement = Database.CONNECTION.prepareStatement("?")) {
-            statement.setString(1, tableName);
-            tableName = statement.toString();
-            tableName = tableName.replaceFirst("'(.+)'", "$1");
-        } catch (SQLException e) {
-            throw new StatementCreationException("Error escaping table name", e);
-        }
-
-        return tableName;
-    }
-
-    @Nonnull
-    String createIfNotExists(@Nonnull Model<T> model) {
+    Query createIfNotExists(@Nonnull Model<T> model) {
         StringBuilder query = new StringBuilder();
         StringBuilder queryInsert = new StringBuilder();
         StringBuilder queryValues = new StringBuilder();
         StringBuilder queryConflict = new StringBuilder();
 
+        Table tableAnnotation = MODEL.getDeclaredAnnotation(Table.class);
+        String tableName = tableAnnotation.name();
         queryInsert
                 .append("INSERT INTO ")
-                .append(escapedTableName())
+                .append(tableName)
                 .append(" (");
         queryValues.append(" VALUES(");
         queryConflict.append(" ON CONFLICT DO NOTHING ");
@@ -95,7 +82,9 @@ class QueryBuilder<T extends Model<T>> {
                 .append(queryConflict)
                 .append(" RETURNING * ");
 
-        try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString())) {
+        try {
+            Connection connection = Database.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query.toString());
             iterator = columns.iterator();
             int i = 1;
             while (iterator.hasNext()) {
@@ -112,21 +101,23 @@ class QueryBuilder<T extends Model<T>> {
                 i++;
             }
 
-            return statement.toString();
+            return new Query(statement);
         } catch (SQLException e) {
             throw new StatementCreationException(e);
         }
     }
 
     @Nonnull
-    String createTable() {
+    Query createTable() {
         StringBuilder query = new StringBuilder();
         StringBuilder queryConstraint = new StringBuilder();
         StringBuilder queryPrimaryKey = new StringBuilder();
 
+        Table tableAnnotation = MODEL.getDeclaredAnnotation(Table.class);
+        String tableName = tableAnnotation.name();
         query
                 .append("CREATE TABLE IF NOT EXISTS ")
-                .append(escapedTableName())
+                .append(tableName)
                 .append(" (");
 
         Iterator<TypeResolver> iterator = COLUMNS.iterator();
@@ -158,7 +149,7 @@ class QueryBuilder<T extends Model<T>> {
         if (queryConstraint.length() > 0) {
             queryConstraint
                     .insert(0, "_")
-                    .insert(0, escapedTableName())
+                    .insert(0, tableName)
                     .insert(0, "CONSTRAINT ")
                     .append("pkey ");
 
@@ -172,15 +163,24 @@ class QueryBuilder<T extends Model<T>> {
                 .append(queryPrimaryKey)
                 .append(")");
 
-        return query.toString();
+        try {
+            Connection connection = Database.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query.toString());
+
+            return new Query(statement);
+        } catch (SQLException e) {
+            throw new StatementCreationException(e);
+        }
     }
 
     @Nonnull
-    String get(@Nonnull Model<T> model) {
+    Query get(@Nonnull Model<T> model) {
         StringBuilder query = new StringBuilder();
+        Table tableAnnotation = MODEL.getDeclaredAnnotation(Table.class);
+        String tableName = tableAnnotation.name();
         query
                 .append(" SELECT * FROM ")
-                .append(escapedTableName());
+                .append(tableName);
 
         Set<Map.Entry<TypeResolver, Object>> columns = model.getColumns().entrySet();
         columns.removeIf(entry -> entry.getKey().toSQL(entry.getValue()) == null);
@@ -203,7 +203,9 @@ class QueryBuilder<T extends Model<T>> {
             }
         }
 
-        try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString())) {
+        try {
+            Connection connection = Database.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query.toString());
             int i = 1;
             for (Map.Entry<TypeResolver, Object> entry : columns) {
                 TypeResolver field = entry.getKey();
@@ -218,23 +220,25 @@ class QueryBuilder<T extends Model<T>> {
                 i++;
             }
 
-            return statement.toString();
+            return new Query(statement);
         } catch (SQLException e) {
             throw new StatementCreationException(e);
         }
     }
 
     @Nonnull
-    String save(@Nonnull Model<T> model) {
+    Query save(@Nonnull Model<T> model) {
         StringBuilder query = new StringBuilder();
         StringBuilder queryInsert = new StringBuilder();
         StringBuilder queryValues = new StringBuilder();
         StringBuilder queryConflict = new StringBuilder();
         StringBuilder querySet = new StringBuilder();
 
+        Table tableAnnotation = MODEL.getDeclaredAnnotation(Table.class);
+        String tableName = tableAnnotation.name();
         queryInsert
                 .append(" INSERT INTO ")
-                .append(escapedTableName())
+                .append(tableName)
                 .append(" ( ");
         queryValues.append(" VALUES( ");
         querySet.append(" DO UPDATE SET ");
@@ -282,7 +286,9 @@ class QueryBuilder<T extends Model<T>> {
                 .append(querySet)
                 .append(" RETURNING * ");
 
-        try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString())) {
+        try {
+            Connection connection = Database.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query.toString());
             iterator = columns.iterator();
             int i = 1;
             int size = columns.size();
@@ -302,19 +308,20 @@ class QueryBuilder<T extends Model<T>> {
                 i++;
             }
 
-            return statement.toString();
+            return new Query(statement);
         } catch (SQLException e) {
             throw new StatementCreationException(e);
         }
     }
 
     @Nonnull
-    String delete(@Nonnull Model<T> model) {
+    Query delete(@Nonnull Model<T> model) {
         StringBuilder query = new StringBuilder();
-
+        Table tableAnnotation = MODEL.getDeclaredAnnotation(Table.class);
+        String tableName = tableAnnotation.name();
         query
                 .append(" DELETE FROM ")
-                .append(escapedTableName());
+                .append(tableName);
 
         Set<Map.Entry<TypeResolver, Object>> columns = model.getColumns().entrySet();
         columns.removeIf(entry -> entry.getValue() == null);
@@ -338,7 +345,9 @@ class QueryBuilder<T extends Model<T>> {
             }
         }
 
-        try (PreparedStatement statement = Database.CONNECTION.prepareStatement(query.toString())) {
+        try {
+            Connection connection = Database.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query.toString());
             int i = 1;
             for (Map.Entry<TypeResolver, Object> entry : columns) {
                 TypeResolver column = entry.getKey();
@@ -354,7 +363,7 @@ class QueryBuilder<T extends Model<T>> {
                 i++;
             }
 
-            return statement.toString();
+            return new Query(statement);
         } catch (SQLException e) {
             throw new StatementCreationException(e);
         }
