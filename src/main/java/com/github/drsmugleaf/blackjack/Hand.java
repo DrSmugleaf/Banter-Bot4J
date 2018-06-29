@@ -17,6 +17,17 @@ public class Hand implements Comparable<Hand> {
     Hand() {}
 
     @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+
+        for (Card card : CARDS) {
+            builder.append(card);
+        }
+
+        return builder.toString();
+    }
+
+    @Override
     public int compareTo(@Nonnull Hand o) {
         return getScore().compareTo(o.getScore());
     }

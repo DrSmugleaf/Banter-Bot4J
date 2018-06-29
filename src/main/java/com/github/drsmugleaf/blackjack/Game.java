@@ -31,8 +31,18 @@ public class Game {
     }
 
     @Nonnull
+    public Dealer getDealer() {
+        return DEALER;
+    }
+
+    @Nonnull
     public Player getPlayer(@Nonnull Long id) {
         return PLAYERS.get(id);
+    }
+
+    @Nonnull
+    public Map<Long, Player> getPlayers() {
+        return new LinkedHashMap<>(PLAYERS);
     }
 
     public boolean hasPlayer(@Nonnull Long id) {

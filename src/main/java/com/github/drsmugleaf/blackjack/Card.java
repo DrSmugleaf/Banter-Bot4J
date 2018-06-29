@@ -21,6 +21,11 @@ public class Card {
         SUIT = suit;
     }
 
+    @Override
+    public String toString() {
+        return SUIT.getSymbol() + CARD.getName();
+    }
+
     int getValue() {
         return CARD.getValue();
     }

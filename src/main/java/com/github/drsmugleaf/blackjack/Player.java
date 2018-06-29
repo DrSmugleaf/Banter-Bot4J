@@ -24,6 +24,11 @@ public class Player {
         ID = id;
     }
 
+    @Override
+    public String toString() {
+        return HAND.toString();
+    }
+
     @Nonnull
     public Actions getAction() {
         return action;
