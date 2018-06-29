@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,18 @@ public class EventDispatcher {
                 .collect(Collectors.toSet());
 
         LISTENERS.addAll(methods);
+    }
+
+    public static void registerListeners(@Nonnull Class<?>... classes) {
+        for (Class<?> clazz : classes) {
+            registerListeners(clazz);
+        }
+    }
+
+    public static void registerListeners(@Nonnull List<Class<?>> classes) {
+        for (Class<?> clazz : classes) {
+            registerListeners(clazz);
+        }
     }
 
     static void dispatch(@Nonnull Event event) {

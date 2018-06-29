@@ -1,5 +1,7 @@
 package com.github.drsmugleaf;
 
+import com.github.drsmugleaf.blackjack.BlackjackEventHandler;
+import com.github.drsmugleaf.blackjack.EventDispatcher;
 import com.github.drsmugleaf.commands.api.Handler;
 import com.github.drsmugleaf.database.api.Database;
 import com.github.drsmugleaf.env.Keys;
@@ -43,6 +45,9 @@ public class BanterBot4J {
         Reflection reflection = new Reflection("com.github.drsmugleaf");
         List<Class<?>> listenerClasses = reflection.findClassesWithMethodAnnotation(EventSubscriber.class);
         listenerClasses.forEach(clazz -> CLIENT.getDispatcher().registerListener(clazz));
+
+        List<Class<?>> blackjackListeners = reflection.findClassesWithMethodAnnotation(BlackjackEventHandler.class);
+        EventDispatcher.registerListeners(blackjackListeners);
     }
 
     public static void main(String[] args) {
