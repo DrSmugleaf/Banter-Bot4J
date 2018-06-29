@@ -3,8 +3,7 @@ package com.github.drsmugleaf.blackjack;
 import com.github.drsmugleaf.blackjack.decks.Deck;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 28/06/2018
@@ -12,25 +11,53 @@ import java.util.List;
 public class GameBuilder {
 
     @Nonnull
-    public Deck deck = new Deck();
+    private Deck deck = new Deck();
 
     @Nonnull
-    public final List<Long> PLAYERS = new ArrayList<>();
+    private final Set<Long> PLAYERS = new LinkedHashSet<>();
 
-    public GameBuilder(@Nonnull Deck deck, @Nonnull List<Long> players) {
+    public GameBuilder(@Nonnull Deck deck, @Nonnull Long... players) {
         this.deck = deck;
-        PLAYERS.addAll(players);
+        Collections.addAll(PLAYERS, players);
     }
 
     public GameBuilder(@Nonnull Deck deck) {
         this.deck = deck;
     }
 
-    public GameBuilder(@Nonnull List<Long> players) {
-        PLAYERS.addAll(players);
+    public GameBuilder(@Nonnull Long... players) {
+        Collections.addAll(PLAYERS, players);
     }
 
     public GameBuilder() {}
+
+    @Nonnull
+    public static Game buildDefault() {
+        return new Game(new Deck(), new LinkedHashSet<>());
+    }
+
+    public GameBuilder setDeck(@Nonnull Deck deck) {
+        this.deck = deck;
+        return this;
+    }
+
+    public GameBuilder addPlayer(@Nonnull Long... id) {
+        Collections.addAll(PLAYERS, id);
+        return this;
+    }
+
+    public Set<Long> getPlayers() {
+        return new HashSet<>(PLAYERS);
+    }
+
+    public boolean hasPlayer(@Nonnull Long id) {
+        return PLAYERS.contains(id);
+    }
+
+    public GameBuilder removePlayer(@Nonnull Long... id) {
+        PLAYERS.removeAll(Arrays.asList(id));
+        return this;
+    }
 
     @Nonnull
     public Game build() {
