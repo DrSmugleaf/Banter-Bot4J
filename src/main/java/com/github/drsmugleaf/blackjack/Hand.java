@@ -14,13 +14,7 @@ public class Hand implements Comparable<Hand> {
     @Nonnull
     private final List<Card> CARDS = new ArrayList<>();
 
-    Hand(@Nonnull Card... cards) {
-        Collections.addAll(CARDS, cards);
-    }
-
-    Hand(@Nonnull Collection<Card> cards) {
-        CARDS.addAll(cards);
-    }
+    Hand() {}
 
     @Override
     public int compareTo(@Nonnull Hand o) {
@@ -55,6 +49,10 @@ public class Hand implements Comparable<Hand> {
     int add(@Nonnull Collection<Card> cards) {
         CARDS.addAll(cards);
         return getScore();
+    }
+
+    void reset() {
+        CARDS.clear();
     }
 
 }

@@ -59,4 +59,10 @@ public class Player {
         this.status = status;
     }
 
+    void reset() {
+        action = Actions.NONE;
+        status = Status.PLAYING;
+        HAND.reset();
+    }
+
 }

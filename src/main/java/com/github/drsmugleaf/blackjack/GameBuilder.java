@@ -1,7 +1,5 @@
 package com.github.drsmugleaf.blackjack;
 
-import com.github.drsmugleaf.blackjack.decks.Deck;
-
 import javax.annotation.Nonnull;
 import java.util.*;
 
