@@ -24,10 +24,17 @@ public class Game {
         for (Long id : players) {
             PLAYERS.put(id, new Player(id));
         }
+
+        if (!PLAYERS.isEmpty()) {
+            start();
+        }
     }
 
     public void addPlayer(@Nonnull Long id) {
         PLAYERS.put(id, new Player(id));
+        if (PLAYERS.size() == 1) {
+            start();
+        }
     }
 
     @Nonnull
