@@ -44,7 +44,9 @@ public class Events {
         StringBuilder response = new StringBuilder();
         Game game = event.GAME;
 
-        response.append(game.getDealer());
+        response
+                .append(game.getDealer())
+                .append("\n");
 
         IChannel channel = Blackjack.GAMES.inverse().get(game);
         game.getPlayers().forEach((id, player) -> {
@@ -55,7 +57,8 @@ public class Events {
             response
                     .append(username)
                     .append("'s hand: ")
-                    .append(player);
+                    .append(player)
+                    .append("\n");
         });
 
         channel.sendMessage(response.toString());
