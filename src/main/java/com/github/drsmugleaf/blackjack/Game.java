@@ -90,7 +90,22 @@ public class Game {
         }
     }
 
-    private void processTurn() {}
+    private void processTurn() {
+        for (Player player : PLAYERS.values()) {
+            if (player.getStatus() != Status.PLAYING) {
+                continue;
+            }
+
+            player.getAction().execute(this, player);
+
+            Hand hand = player.HAND;
+            if (hand.getScore() > 21) {
+                player.setStatus(Status.LOST);
+                Event event = new LoseEvent(this, player);
+                EventDispatcher.dispatch(event);
+            }
+        }
+    }
 
     public void setAction(@Nonnull Player of, @Nonnull String to) {
         of.setAction(to);
