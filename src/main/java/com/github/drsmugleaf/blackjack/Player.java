@@ -34,6 +34,7 @@ public class Player {
         return action;
     }
 
+    @Nonnull
     public Set<Actions> getAvailableActions() {
         EnumSet<Actions> actions = EnumSet.noneOf(Actions.class);
         for (Actions action : Actions.values()) {
@@ -45,7 +46,7 @@ public class Player {
         return actions;
     }
 
-    public boolean setAction(@Nonnull String actionName) {
+    boolean setAction(@Nonnull String actionName) {
         Actions action = Actions.getAction(actionName);
         if (action != null && status == Status.PLAYING && action.isValidFor(this)) {
             this.action = action;
@@ -68,6 +69,10 @@ public class Player {
         action = Actions.NONE;
         status = Status.PLAYING;
         HAND.reset();
+    }
+
+    public boolean isReady() {
+        return action != Actions.NONE || status != Status.PLAYING;
     }
 
 }

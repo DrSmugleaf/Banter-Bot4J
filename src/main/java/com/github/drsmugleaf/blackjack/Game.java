@@ -14,7 +14,7 @@ public class Game {
     private final Dealer DEALER = new Dealer();
 
     @Nonnull
-    private final Deck DECK;
+    final Deck DECK;
 
     @Nonnull
     private final Map<Long, Player> PLAYERS = new LinkedHashMap<>();
@@ -60,7 +60,7 @@ public class Game {
         PLAYERS.remove(id);
     }
 
-    public void start() {
+    void start() {
         reset();
         DECK.deal(DEALER, 1);
 
@@ -83,10 +83,21 @@ public class Game {
         }
     }
 
-    public void reset() {
+    void reset() {
         DEALER.reset();
         for (Player player : PLAYERS.values()) {
             player.reset();
+        }
+    }
+
+    private void processTurn() {}
+
+    public void setAction(@Nonnull Player of, @Nonnull String to) {
+        of.setAction(to);
+
+        boolean everyoneHasAction = PLAYERS.values().stream().allMatch(Player::isReady);
+        if (everyoneHasAction) {
+            processTurn();
         }
     }
 

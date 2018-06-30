@@ -36,7 +36,7 @@ public class Events {
             return;
         }
 
-        player.setAction(message);
+        game.setAction(player, message);
     }
 
     @BlackjackEventHandler(event = StartEvent.class)
