@@ -26,8 +26,8 @@ public class Card {
         return SUIT.getSymbol() + CARD.getName();
     }
 
-    int getValue() {
-        return CARD.getValue();
+    int getValue(@Nonnull Hand hand) {
+        return CARD.getValue(hand);
     }
 
 }

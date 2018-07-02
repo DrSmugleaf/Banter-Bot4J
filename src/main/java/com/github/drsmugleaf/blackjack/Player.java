@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.blackjack;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -9,10 +10,10 @@ import java.util.Set;
  */
 public class Player {
 
-    final long ID;
+    public final long ID;
 
     @Nonnull
-    final Hand HAND = new Hand();
+    public final Hand HAND = new Hand();
 
     @Nonnull
     private Actions action = Actions.NONE;
@@ -46,14 +47,18 @@ public class Player {
         return actions;
     }
 
-    boolean setAction(@Nonnull String actionName) {
-        Actions action = Actions.getAction(actionName);
+    boolean setAction(@Nullable Actions action) {
         if (action != null && status == Status.PLAYING && action.isValidFor(this)) {
             this.action = action;
             return true;
         } else {
             return false;
         }
+    }
+
+    boolean setAction(@Nonnull String actionName) {
+        Actions action = Actions.getAction(actionName);
+        return setAction(action);
     }
 
     @Nonnull

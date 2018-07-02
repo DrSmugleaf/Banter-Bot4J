@@ -5,9 +5,9 @@ import javax.annotation.Nonnull;
 /**
  * Created by DrSmugleaf on 30/06/2018
  */
-public class SurrenderEvent extends PlayerEvent {
+public class TieEvent extends PlayerEvent {
 
-    SurrenderEvent(@Nonnull Game game, @Nonnull Player player) {
+    public TieEvent(@Nonnull Game game, @Nonnull Player player) {
         super(game, player);
     }
 

@@ -34,7 +34,7 @@ public enum Actions {
     NONE {
         @Override
         public boolean isValidFor(@Nonnull Player player) {
-            return player.getStatus() != Status.PLAYING;
+            return player.getStatus() == Status.PLAYING && player.getAction() == STAND;
         }
 
         @Override
@@ -46,7 +46,7 @@ public enum Actions {
         @Override
         public boolean isValidFor(@Nonnull Player player) {
             Hand hand = player.HAND;
-            return hand.size() == 2 && hand.get(0).getValue() == hand.get(1).getValue();
+            return player.getStatus() == Status.PLAYING && hand.size() == 2 && hand.get(0).getValue(hand) == hand.get(1).getValue(hand);
         }
 
         @Override

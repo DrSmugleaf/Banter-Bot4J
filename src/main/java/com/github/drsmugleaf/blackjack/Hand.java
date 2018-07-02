@@ -33,11 +33,11 @@ public class Hand implements Comparable<Hand> {
     }
 
     @Nonnull
-    Integer getScore() {
-        int score = 0;
+    public Integer getScore() {
+        Integer score = 0;
 
         for (Card card : CARDS) {
-            score += card.getValue();
+            score += card.getValue(this);
         }
 
         return score;

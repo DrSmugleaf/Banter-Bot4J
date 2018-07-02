@@ -14,7 +14,7 @@ public class Dealer {
 
     @Override
     public String toString() {
-        return "Dealer's hand:" + HAND;
+        return "Dealer's hand: " + HAND;
     }
 
     void reset() {

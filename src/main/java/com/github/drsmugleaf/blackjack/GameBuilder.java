@@ -34,16 +34,19 @@ public class GameBuilder {
         return new Game(new Deck(), new LinkedHashSet<>());
     }
 
+    @Nonnull
     public GameBuilder setDeck(@Nonnull Deck deck) {
         this.deck = deck;
         return this;
     }
 
+    @Nonnull
     public GameBuilder addPlayer(@Nonnull Long... id) {
         Collections.addAll(PLAYERS, id);
         return this;
     }
 
+    @Nonnull
     public Set<Long> getPlayers() {
         return new HashSet<>(PLAYERS);
     }
@@ -52,6 +55,7 @@ public class GameBuilder {
         return PLAYERS.contains(id);
     }
 
+    @Nonnull
     public GameBuilder removePlayer(@Nonnull Long... id) {
         PLAYERS.removeAll(Arrays.asList(id));
         return this;

@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.blackjack.decks.french;
 
+import com.github.drsmugleaf.blackjack.Hand;
 import com.github.drsmugleaf.blackjack.decks.Cards;
 
 import javax.annotation.Nonnull;
@@ -9,7 +10,16 @@ import javax.annotation.Nonnull;
  */
 public enum FrenchCards implements Cards {
 
-    ACE("Ace", 11),
+    ACE("Ace", 11) {
+        @Override
+        public int getValue(@Nonnull Hand hand) {
+            if (hand.getScore() < 11) {
+                return 11;
+            } else {
+                return 1;
+            }
+        }
+    },
     TWO("Two", 2),
     THREE("Three", 3),
     FOUR("Four", 4),
@@ -40,7 +50,7 @@ public enum FrenchCards implements Cards {
     }
 
     @Override
-    public int getValue() {
+    public int getValue(@Nonnull Hand hand) {
         return VALUE;
     }
 

@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.blackjack.decks;
 
+import com.github.drsmugleaf.blackjack.Hand;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -10,6 +12,6 @@ public interface Cards {
     @Nonnull
     String getName();
 
-    int getValue();
+    int getValue(@Nonnull Hand hand);
 
 }

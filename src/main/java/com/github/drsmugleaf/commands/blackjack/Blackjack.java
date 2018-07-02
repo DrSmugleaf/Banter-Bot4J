@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @CommandInfo(aliases = {"juan"})
 public class Blackjack extends Command {
 
-    private final String BLACKJACK_CHANNEL_NAME = "bb-blackjack";
+    private final String BLACKJACK_CHANNEL_NAME = "bb-blackjack2";
 
     static final BiMap<IChannel, Game> GAMES = HashBiMap.create();
 
@@ -57,7 +57,13 @@ public class Blackjack extends Command {
         Game game = GAMES.get(blackjackChannel);
         Long authorID = event.getAuthor().getLongID();
         if (game.hasPlayer(authorID)) {
-            event.reply("Removed you from the Blackjack game.");
+            game.removePlayer(authorID);
+
+            if (blackjackChannel != event.getChannel()) {
+                event.reply("Removed you from the Blackjack game.");
+            }
+
+            return;
         }
 
         game.addPlayer(authorID);
