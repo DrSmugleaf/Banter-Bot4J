@@ -24,11 +24,15 @@ public class Events {
         IUser user = BanterBot4J.CLIENT.fetchUser(player.ID);
         IGuild guild = channel.getGuild();
         String username = user.getDisplayName(guild);
+        Integer score = player.HAND.getScore();
 
         response
                 .append(username)
                 .append(" hand: ")
                 .append(player)
+                .append(". Total: ")
+                .append(score)
+                .append(".")
                 .append("\n");
 
         return response.toString();
@@ -106,12 +110,6 @@ public class Events {
         Player player = event.PLAYER;
         String playerHand = parseHand(game, player);
         response.append(playerHand);
-
-        Integer score = event.PLAYER.HAND.getScore();
-        response
-                .append("Total: ")
-                .append(score)
-                .append(".");
 
         CommandReceivedEvent.sendMessage(channel, response.toString());
     }
