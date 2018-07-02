@@ -62,7 +62,7 @@ public class Deck<T extends Enum & Cards, E extends Enum & Suits> {
     }
 
     void deal(@Nonnull Player player, int amount) {
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < amount; i++) {
             deal(player.HAND);
         }
     }
