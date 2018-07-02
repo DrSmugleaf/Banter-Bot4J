@@ -35,12 +35,8 @@ public class Events {
     }
 
     @Nonnull
-    private static String parseHands(@Nonnull Game game) {
+    private static String parsePlayerHands(@Nonnull Game game) {
         StringBuilder response = new StringBuilder();
-
-        response
-                .append(game.getDealer())
-                .append("\n");
 
         for (Player player : game.getPlayers().values()) {
             String playerHand = parseHand(game, player);
@@ -87,7 +83,7 @@ public class Events {
     @BlackjackEventHandler(event = EndRoundEvent.class)
     public static void handle(@Nonnull EndRoundEvent event) {
         Game game = event.GAME;
-        String response = parseHands(game);
+        String response = parsePlayerHands(game);
         IChannel channel = Blackjack.GAMES.inverse().get(game);
 
         CommandReceivedEvent.sendMessage(channel, response);
@@ -123,10 +119,10 @@ public class Events {
     @BlackjackEventHandler(event = StartEvent.class)
     public static void handle(@Nonnull StartEvent event) {
         Game game = event.GAME;
-        String response = parseHands(game);
+        String response = parsePlayerHands(game);
         IChannel channel = Blackjack.GAMES.inverse().get(game);
 
-        CommandReceivedEvent.sendMessage(channel, response);
+        CommandReceivedEvent.sendMessage(channel, game.getDealer() + "\n" + response);
     }
 
     @BlackjackEventHandler(event = SurrenderEvent.class)
@@ -141,7 +137,11 @@ public class Events {
 
     @BlackjackEventHandler(event = TurnStartEvent.class)
     public static void handle(@Nonnull TurnStartEvent event) {
+        Game game = event.GAME;
+        String response = parsePlayerHands(game);
+        IChannel channel = Blackjack.GAMES.inverse().get(game);
 
+        CommandReceivedEvent.sendMessage(channel, response);
     }
 
     @BlackjackEventHandler(event = WinEvent.class)
