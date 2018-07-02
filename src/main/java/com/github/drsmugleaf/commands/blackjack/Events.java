@@ -125,12 +125,44 @@ public class Events {
 
     @BlackjackEventHandler(event = SurrenderEvent.class)
     public static void handle(@Nonnull SurrenderEvent event) {
+        IUser user = BanterBot4J.CLIENT.fetchUser(event.PLAYER.ID);
+        Game game = event.GAME;
+        IChannel channel = Blackjack.GAMES.inverse().get(game);
+        IGuild guild = channel.getGuild();
+        String username = user.getDisplayName(guild);
 
+        StringBuilder response = new StringBuilder();
+        response
+                .append(username)
+                .append(" surrenders!")
+                .append("\n");
+
+        Player player = event.PLAYER;
+        String playerHand = parseHand(game, player);
+        response.append(playerHand);
+
+        CommandReceivedEvent.sendMessage(channel, response.toString());
     }
 
     @BlackjackEventHandler(event = TieEvent.class)
     public static void handle(@Nonnull TieEvent event) {
+        IUser user = BanterBot4J.CLIENT.fetchUser(event.PLAYER.ID);
+        Game game = event.GAME;
+        IChannel channel = Blackjack.GAMES.inverse().get(game);
+        IGuild guild = channel.getGuild();
+        String username = user.getDisplayName(guild);
 
+        StringBuilder response = new StringBuilder();
+        response
+                .append(username)
+                .append(" ties.")
+                .append("\n");
+
+        Player player = event.PLAYER;
+        String playerHand = parseHand(game, player);
+        response.append(playerHand);
+
+        CommandReceivedEvent.sendMessage(channel, response.toString());
     }
 
     @BlackjackEventHandler(event = TurnStartEvent.class)
@@ -144,7 +176,23 @@ public class Events {
 
     @BlackjackEventHandler(event = WinEvent.class)
     public static void handle(@Nonnull WinEvent event) {
+        IUser user = BanterBot4J.CLIENT.fetchUser(event.PLAYER.ID);
+        Game game = event.GAME;
+        IChannel channel = Blackjack.GAMES.inverse().get(game);
+        IGuild guild = channel.getGuild();
+        String username = user.getDisplayName(guild);
 
+        StringBuilder response = new StringBuilder();
+        response
+                .append(username)
+                .append(" wins!")
+                .append("\n");
+
+        Player player = event.PLAYER;
+        String playerHand = parseHand(game, player);
+        response.append(playerHand);
+
+        CommandReceivedEvent.sendMessage(channel, response.toString());
     }
 
 }
