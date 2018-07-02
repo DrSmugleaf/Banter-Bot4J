@@ -35,9 +35,20 @@ public class Hand implements Comparable<Hand> {
     @Nonnull
     public Integer getScore() {
         Integer score = 0;
+        int aces = 0;
 
         for (Card card : CARDS) {
-            score += card.getValue(this);
+            int value = card.getValue(this);
+            score += value;
+
+            if (value == 1) {
+                aces++;
+            }
+        }
+
+        while (score > 21 && aces > 0) {
+            score -= 10;
+            aces--;
         }
 
         return score;
@@ -48,7 +59,12 @@ public class Hand implements Comparable<Hand> {
         return CARDS.get(i);
     }
 
-    int size() {
+    @Nonnull
+    public List<Card> getCards() {
+        return new ArrayList<>(CARDS);
+    }
+
+    public int size() {
         return CARDS.size();
     }
 

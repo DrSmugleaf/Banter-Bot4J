@@ -68,7 +68,7 @@ public class Blackjack extends Command {
 
         game.addPlayer(authorID);
 
-        String response = "Added you to a Blackjack game in " + blackjackChannel.getName();
+        String response = "Added you to a game of Blackjack in " + blackjackChannel.getName();
         event.reply(response);
     }
 

@@ -10,16 +10,7 @@ import javax.annotation.Nonnull;
  */
 public enum FrenchCards implements Cards {
 
-    ACE("Ace", 11) {
-        @Override
-        public int getValue(@Nonnull Hand hand) {
-            if (hand.getScore() < 11) {
-                return 11;
-            } else {
-                return 1;
-            }
-        }
-    },
+    ACE("Ace", 1),
     TWO("Two", 2),
     THREE("Three", 3),
     FOUR("Four", 4),
@@ -34,9 +25,9 @@ public enum FrenchCards implements Cards {
     KING("King", 10);
 
     @Nonnull
-    final String NAME;
+    private final String NAME;
 
-    final int VALUE;
+    private final int VALUE;
 
     FrenchCards(@Nonnull String name, int value) {
         NAME = name;
