@@ -134,7 +134,7 @@ public class Events {
         StringBuilder response = new StringBuilder();
         response
                 .append(username)
-                .append(" surrenders!")
+                .append(" surrenders.")
                 .append("\n");
 
         Player player = event.PLAYER;
