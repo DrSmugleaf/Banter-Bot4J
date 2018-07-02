@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
  */
 public enum FrenchCards implements Cards {
 
-    ACE("Ace", 1),
+    ACE("Ace", 11),
     TWO("Two", 2),
     THREE("Three", 3),
     FOUR("Four", 4),

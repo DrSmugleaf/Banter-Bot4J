@@ -41,7 +41,7 @@ public class Hand implements Comparable<Hand> {
             int value = card.getValue(this);
             score += value;
 
-            if (value == 1) {
+            if (value == 11) {
                 aces++;
             }
         }
