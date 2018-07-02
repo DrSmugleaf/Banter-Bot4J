@@ -169,6 +169,8 @@ public class Game {
                 event = new TieEvent(this, player);
                 EventDispatcher.dispatch(event);
             }
+
+            start();
         } else {
             nextTurn();
         }
