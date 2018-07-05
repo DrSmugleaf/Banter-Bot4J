@@ -85,6 +85,14 @@ public class Events {
         } catch (MissingPermissionsException ignored) {}
     }
 
+    @BlackjackEventHandler(event = EndRoundEvent.class)
+    public static void handle(@Nonnull EndRoundEvent event) {
+        Game game = event.GAME;
+        IChannel channel = Blackjack.GAMES.inverse().get(game);
+
+        CommandReceivedEvent.sendMessage(channel, game.getDealer().toString());
+    }
+
     @BlackjackEventHandler(event = LoseEvent.class)
     public static void handle(@Nonnull LoseEvent event) {
         IUser user = BanterBot4J.CLIENT.fetchUser(event.PLAYER.ID);
