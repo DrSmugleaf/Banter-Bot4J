@@ -71,18 +71,21 @@ public class Game {
         DECK.deal(DEALER, 1);
 
         for (Player player : PLAYERS.values()) {
-            DECK.deal(player, 2);
-            if (player.HAND.getScore() == 21) {
-                player.setStatus(Status.BLACKJACK);
+            Hand hand = player.getHands().get(0);
+            DECK.deal(hand, 2);
+            if (hand.getScore() == 21) {
+                hand.setStatus(Status.BLACKJACK);
             } else {
-                player.setStatus(Status.PLAYING);
+                hand.setStatus(Status.PLAYING);
             }
         }
 
         Event event = new StartEvent(this);
         EventDispatcher.dispatch(event);
 
-        boolean everyoneBlackjacks = PLAYERS.values().stream().allMatch(player -> player.getStatus() == Status.BLACKJACK);
+        boolean everyoneBlackjacks = PLAYERS.values().stream().allMatch(player ->
+            player.getHands().stream().allMatch(hand -> hand.getStatus() == Status.BLACKJACK)
+        );
         if (everyoneBlackjacks) {
             start();
             return;
@@ -99,7 +102,9 @@ public class Game {
     void nextTurn() {
         Collection<Player> players = PLAYERS.values();
         for (Player player : players) {
-            player.setAction(Actions.NONE);
+            for (Hand hand : player.getHands()) {
+                hand.setAction(Actions.NONE);
+            }
         }
 
         Event event = new TurnStartEvent(this);
@@ -110,29 +115,34 @@ public class Game {
         Event event;
         Collection<Player> players = PLAYERS.values();
         for (Player player : players) {
-            if (player.getStatus() != Status.PLAYING) {
-                continue;
-            }
+            for (Hand hand : player.getHands()) {
+                if (hand.getStatus() != Status.PLAYING) {
+                    continue;
+                }
 
-            player.getAction().execute(this, player);
+                hand.getAction().execute(this, player, hand);
 
-            Hand hand = player.HAND;
-            if (hand.getScore() > 21) {
-                player.setStatus(Status.LOST);
-                event = new LoseEvent(this, player);
-                EventDispatcher.dispatch(event);
+                if (hand.getScore() > 21) {
+                    hand.setStatus(Status.LOST);
+                    event = new LoseEvent(this, player, hand);
+                    EventDispatcher.dispatch(event);
+                }
             }
         }
 
-        if (players.stream().allMatch(player -> player.getStatus() != Status.PLAYING)) {
+        if (players.stream().allMatch(player ->
+            player.getHands().stream().allMatch(hand -> hand.getStatus() != Status.PLAYING)
+        )) {
             start();
             return;
         }
 
         if (players.stream().allMatch(player ->
-                player.getStatus() != Status.PLAYING ||
-                player.getAction() == Actions.STAND ||
-                player.HAND.getScore() == 21
+            player.getHands().stream().allMatch(hand ->
+                hand.getStatus() != Status.PLAYING ||
+                hand.getAction() == Actions.STAND ||
+                hand.getScore() == 21
+            )
         )) {
             while (DEALER.HAND.getScore() < 17) {
                 DECK.deal(DEALER, 1);
@@ -142,32 +152,34 @@ public class Game {
             EventDispatcher.dispatch(event);
 
             for (Player player : players) {
-                if (player.getStatus() != Status.PLAYING) {
-                    continue;
-                }
+                for (Hand hand : player.getHands()) {
+                    if (hand.getStatus() != Status.PLAYING) {
+                        continue;
+                    }
 
-                Integer dealerScore = DEALER.HAND.getScore();
-                if (dealerScore > 21) {
-                    event = new WinEvent(this, player);
+                    Integer dealerScore = DEALER.HAND.getScore();
+                    if (dealerScore > 21) {
+                        event = new WinEvent(this, player, hand);
+                        EventDispatcher.dispatch(event);
+                        continue;
+                    }
+
+                    Integer playerScore = hand.getScore();
+                    if (dealerScore > playerScore) {
+                        event = new LoseEvent(this, player, hand);
+                        EventDispatcher.dispatch(event);
+                        continue;
+                    }
+
+                    if (dealerScore < playerScore) {
+                        event = new WinEvent(this, player, hand);
+                        EventDispatcher.dispatch(event);
+                        continue;
+                    }
+
+                    event = new TieEvent(this, player, hand);
                     EventDispatcher.dispatch(event);
-                    continue;
                 }
-
-                Integer playerScore = player.HAND.getScore();
-                if (dealerScore > playerScore) {
-                    event = new LoseEvent(this, player);
-                    EventDispatcher.dispatch(event);
-                    continue;
-                }
-
-                if (dealerScore < playerScore) {
-                    event = new WinEvent(this, player);
-                    EventDispatcher.dispatch(event);
-                    continue;
-                }
-
-                event = new TieEvent(this, player);
-                EventDispatcher.dispatch(event);
             }
 
             start();
@@ -177,7 +189,12 @@ public class Game {
     }
 
     public void setAction(@Nonnull Player of, @Nonnull String to) {
-        of.setAction(to);
+        for (Hand hand : of.getHands()) {
+            if (hand.getAction() == Actions.NONE) {
+                hand.setAction(to);
+                break;
+            }
+        }
 
         boolean everyoneHasAction = PLAYERS.values().stream().allMatch(Player::isReady);
         if (everyoneHasAction) {

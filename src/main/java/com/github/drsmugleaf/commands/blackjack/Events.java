@@ -18,18 +18,17 @@ import javax.annotation.Nonnull;
 public class Events {
 
     @Nonnull
-    private static String parseHand(@Nonnull Game game, @Nonnull Player player) {
+    private static String parseHand(@Nonnull Game game, @Nonnull Player player, @Nonnull Hand hand) {
         StringBuilder response = new StringBuilder();
         IChannel channel = Blackjack.GAMES.inverse().get(game);
         IUser user = BanterBot4J.CLIENT.fetchUser(player.ID);
         IGuild guild = channel.getGuild();
         String username = user.getDisplayName(guild);
-        Integer score = player.HAND.getScore();
-
+        Integer score = hand.getScore();
         response
                 .append(username)
                 .append(" hand: ")
-                .append(player)
+                .append(hand)
                 .append(". Total: ")
                 .append(score)
                 .append(".")
@@ -43,8 +42,10 @@ public class Events {
         StringBuilder response = new StringBuilder();
 
         for (Player player : game.getPlayers().values()) {
-            String playerHand = parseHand(game, player);
-            response.append(playerHand);
+            for (Hand hand : player.getHands()) {
+                String playerHand = parseHand(game, player, hand);
+                response.append(playerHand);
+            }
         }
 
         return response.toString();
@@ -61,7 +62,7 @@ public class Events {
 
         String message = event.getMessage().getContent();
         Player player = game.getPlayer(authorID);
-        if (player.getStatus() == Status.WAITING) {
+        if (player.getHands().get(0).getStatus() == Status.WAITING) {
             String authorName = event.getAuthor().getDisplayName(event.getGuild());
             CommandReceivedEvent.sendMessage(
                     event.getChannel(),
@@ -84,15 +85,6 @@ public class Events {
         } catch (MissingPermissionsException ignored) {}
     }
 
-    @BlackjackEventHandler(event = EndRoundEvent.class)
-    public static void handle(@Nonnull EndRoundEvent event) {
-        Game game = event.GAME;
-        String response = parsePlayerHands(game);
-        IChannel channel = Blackjack.GAMES.inverse().get(game);
-
-        CommandReceivedEvent.sendMessage(channel, response);
-    }
-
     @BlackjackEventHandler(event = LoseEvent.class)
     public static void handle(@Nonnull LoseEvent event) {
         IUser user = BanterBot4J.CLIENT.fetchUser(event.PLAYER.ID);
@@ -108,7 +100,8 @@ public class Events {
                 .append("\n");
 
         Player player = event.PLAYER;
-        String playerHand = parseHand(game, player);
+        Hand hand = event.HAND;
+        String playerHand = parseHand(game, player, hand);
         response.append(playerHand);
 
         CommandReceivedEvent.sendMessage(channel, response.toString());
@@ -138,7 +131,8 @@ public class Events {
                 .append("\n");
 
         Player player = event.PLAYER;
-        String playerHand = parseHand(game, player);
+        Hand hand = event.HAND;
+        String playerHand = parseHand(game, player, hand);
         response.append(playerHand);
 
         CommandReceivedEvent.sendMessage(channel, response.toString());
@@ -159,7 +153,8 @@ public class Events {
                 .append("\n");
 
         Player player = event.PLAYER;
-        String playerHand = parseHand(game, player);
+        Hand hand = event.HAND;
+        String playerHand = parseHand(game, player, hand);
         response.append(playerHand);
 
         CommandReceivedEvent.sendMessage(channel, response.toString());
@@ -189,7 +184,8 @@ public class Events {
                 .append("\n");
 
         Player player = event.PLAYER;
-        String playerHand = parseHand(game, player);
+        Hand hand = event.HAND;
+        String playerHand = parseHand(game, player, hand);
         response.append(playerHand);
 
         CommandReceivedEvent.sendMessage(channel, response.toString());

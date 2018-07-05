@@ -5,10 +5,10 @@ import javax.annotation.Nonnull;
 /**
  * Created by DrSmugleaf on 30/06/2018
  */
-public class WinEvent extends PlayerEvent {
+public class WinEvent extends HandEvent {
 
-    WinEvent(@Nonnull Game game, @Nonnull Player player) {
-        super(game, player);
+    WinEvent(@Nonnull Game game, @Nonnull Player player, @Nonnull Hand hand) {
+        super(game, player, hand);
     }
 
 }

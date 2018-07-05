@@ -1,10 +1,8 @@
 package com.github.drsmugleaf.blackjack;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import javax.annotation.Nullable;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 01/05/2018.
@@ -13,6 +11,12 @@ public class Hand implements Comparable<Hand> {
 
     @Nonnull
     private final List<Card> CARDS = new ArrayList<>();
+
+    @Nonnull
+    private Actions action = Actions.NONE;
+
+    @Nonnull
+    private Status status = Status.WAITING;
 
     Hand() {}
 
@@ -30,6 +34,16 @@ public class Hand implements Comparable<Hand> {
     @Override
     public int compareTo(@Nonnull Hand o) {
         return getScore().compareTo(o.getScore());
+    }
+
+    int add(@Nonnull Card... cards) {
+        Collections.addAll(CARDS, cards);
+        return getScore();
+    }
+
+    int add(@Nonnull Collection<Card> cards) {
+        CARDS.addAll(cards);
+        return getScore();
     }
 
     @Nonnull
@@ -60,26 +74,61 @@ public class Hand implements Comparable<Hand> {
     }
 
     @Nonnull
+    public Actions getAction() {
+        return action;
+    }
+
+    @Nonnull
+    public Set<Actions> getAvailableActions() {
+        EnumSet<Actions> actions = EnumSet.noneOf(Actions.class);
+        for (Actions action : Actions.values()) {
+            if (action.isValidFor(this)) {
+                actions.add(action);
+            }
+        }
+
+        return actions;
+    }
+
+    @Nonnull
     public List<Card> getCards() {
         return new ArrayList<>(CARDS);
+    }
+
+    @Nonnull
+    public Status getStatus() {
+        return status;
+    }
+
+    @Nonnull
+    Card remove(int i) {
+        return CARDS.remove(i);
+    }
+
+    void reset() {
+        CARDS.clear();
+    }
+
+    boolean setAction(@Nonnull String actionName) {
+        Actions action = Actions.getAction(actionName);
+        return setAction(action);
     }
 
     public int size() {
         return CARDS.size();
     }
 
-    int add(@Nonnull Card... cards) {
-        Collections.addAll(CARDS, cards);
-        return getScore();
+    boolean setAction(@Nullable Actions action) {
+        if (action != null && status == Status.PLAYING && action.isValidFor(this)) {
+            this.action = action;
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    int add(@Nonnull Collection<Card> cards) {
-        CARDS.addAll(cards);
-        return getScore();
-    }
-
-    void reset() {
-        CARDS.clear();
+    void setStatus(@Nonnull Status status) {
+        this.status = status;
     }
 
 }

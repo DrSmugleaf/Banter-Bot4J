@@ -61,9 +61,9 @@ public class Deck<T extends Enum & Cards, E extends Enum & Suits> {
         hand.add(removeRandomCard());
     }
 
-    void deal(@Nonnull Player player, int amount) {
+    void deal(@Nonnull Hand hand, int amount) {
         for (int i = 0; i < amount; i++) {
-            deal(player.HAND);
+            deal(hand);
         }
     }
 

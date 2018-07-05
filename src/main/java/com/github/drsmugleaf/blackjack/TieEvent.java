@@ -5,10 +5,10 @@ import javax.annotation.Nonnull;
 /**
  * Created by DrSmugleaf on 30/06/2018
  */
-public class TieEvent extends PlayerEvent {
+public class TieEvent extends HandEvent {
 
-    public TieEvent(@Nonnull Game game, @Nonnull Player player) {
-        super(game, player);
+    TieEvent(@Nonnull Game game, @Nonnull Player player, @Nonnull Hand hand) {
+        super(game, player, hand);
     }
 
 }
