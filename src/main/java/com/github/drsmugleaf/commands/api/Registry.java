@@ -59,6 +59,10 @@ class Registry {
             }
         }
 
+        if (matches.isEmpty()) {
+            return null;
+        }
+
         return matches.get(0);
     }
 
