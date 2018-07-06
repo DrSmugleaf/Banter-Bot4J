@@ -70,7 +70,8 @@ public class Game {
         reset();
         DECK.deal(DEALER, 1);
 
-        for (Player player : PLAYERS.values()) {
+        Collection<Player> players = PLAYERS.values();
+        for (Player player : players) {
             Hand hand = player.getHands().get(0);
             DECK.deal(hand, 2);
             if (hand.getScore() == 21) {
@@ -83,10 +84,15 @@ public class Game {
         Event event = new StartEvent(this);
         EventDispatcher.dispatch(event);
 
-        boolean everyoneBlackjacks = PLAYERS.values().stream().allMatch(player ->
+        boolean everyoneBlackjacks = players.stream().allMatch(player ->
             player.getHands().stream().allMatch(hand -> hand.getStatus() == Status.BLACKJACK)
         );
         if (everyoneBlackjacks) {
+            for (Player player : players) {
+                Hand hand = player.getHands().get(0);
+                event = new WinEvent(this, player, hand);
+                EventDispatcher.dispatch(event);
+            }
             start();
             return;
         }
