@@ -55,7 +55,7 @@ public class Translator {
     @EventSubscriber
     public static void handle(@Nonnull MessageDeleteEvent event) {
         IUser author = event.getAuthor();
-        if (author.isBot()) {
+        if (author != null && author.isBot()) {
             return;
         }
 
