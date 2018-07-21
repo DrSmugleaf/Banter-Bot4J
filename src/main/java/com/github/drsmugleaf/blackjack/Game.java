@@ -74,25 +74,26 @@ public class Game {
         for (Player player : players) {
             Hand hand = player.getHands().get(0);
             DECK.deal(hand, 2);
-            if (hand.getScore() == 21) {
-                hand.setStatus(Status.BLACKJACK);
-            } else {
-                hand.setStatus(Status.PLAYING);
-            }
         }
 
         Event event = new StartEvent(this);
         EventDispatcher.dispatch(event);
 
+        for (Player player : players) {
+            Hand hand = player.getHands().get(0);
+            if (hand.getScore() == 21) {
+                hand.setStatus(Status.BLACKJACK);
+                event = new WinEvent(this, player, hand);
+                EventDispatcher.dispatch(event);
+            } else {
+                hand.setStatus(Status.PLAYING);
+            }
+        }
+
         boolean everyoneBlackjacks = players.stream().allMatch(player ->
             player.getHands().stream().allMatch(hand -> hand.getStatus() == Status.BLACKJACK)
         );
         if (everyoneBlackjacks) {
-            for (Player player : players) {
-                Hand hand = player.getHands().get(0);
-                event = new WinEvent(this, player, hand);
-                EventDispatcher.dispatch(event);
-            }
             start();
             return;
         }
