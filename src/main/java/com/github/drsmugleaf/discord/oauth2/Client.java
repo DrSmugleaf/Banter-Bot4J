@@ -31,6 +31,9 @@ public class Client {
     private static String clientSecret = null;
 
     @Nonnull
+    private static final String TOKEN_URL = "https://discordapp.com/api/oauth2/token";
+
+    @Nonnull
     private static final String GRANT_TYPE = "authorization_code";
 
     @Nonnull
@@ -58,7 +61,7 @@ public class Client {
                 .build()
                 .createScoped(scopeList);
         HttpRequestFactory requestFactory = new ApacheHttpTransport().createRequestFactory(credential);
-        GenericUrl url = new GenericUrl("https://discordapp.com/api/oauth2/token");
+        GenericUrl url = new GenericUrl(TOKEN_URL);
         url
                 .set("client_id", clientID)
                 .set("client_secret", clientSecret)
