@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.commands.translate;
+package com.github.drsmugleaf.commands.bridge;
 
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.database.models.BridgedChannel;

@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.commands.translate;
+package com.github.drsmugleaf.commands.bridge;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;

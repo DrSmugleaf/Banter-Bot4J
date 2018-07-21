@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.commands.translate;
+package com.github.drsmugleaf.commands.bridge;
 
 import com.github.drsmugleaf.commands.api.*;
 import com.github.drsmugleaf.database.models.BridgedChannel;
@@ -14,9 +14,9 @@ import java.util.List;
  * Created by DrSmugleaf on 10/06/2018
  */
 @CommandInfo(permissions = {Permissions.MANAGE_CHANNELS}, tags = {Tags.GUILD_ONLY})
-public class Bridge extends Command {
+public class BridgeTranslate extends Command {
 
-    protected Bridge(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected BridgeTranslate(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
         super(event, args);
     }
 
@@ -24,13 +24,13 @@ public class Bridge extends Command {
     public void run(@Nonnull CommandReceivedEvent event) {
         if (ARGS.isEmpty()) {
             event.reply("You didn't provide any channels or languages.\n" +
-                        "Usage: " + BOT_PREFIX + "bridge channel1 language1 channel2 language2");
+                        "Usage: " + BOT_PREFIX + "bridgetranslate channel1 language1 channel2 language2");
             return;
         }
 
         if (ARGS.size() < 4) {
             event.reply("You didn't provide enough arguments.\n" +
-                        "Usage: " + BOT_PREFIX + "bridge channel1 language1 channel2 language2");
+                        "Usage: " + BOT_PREFIX + "bridgeTranslate channel1 language1 channel2 language2");
             return;
         }
 
