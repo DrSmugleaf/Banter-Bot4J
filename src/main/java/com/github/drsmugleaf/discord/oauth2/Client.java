@@ -12,14 +12,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,12 +24,6 @@ import java.util.stream.Stream;
  * Created by DrSmugleaf on 21/07/2018
  */
 public class Client {
-
-    @Nullable
-    private static String clientID = null;
-
-    @Nullable
-    private static String clientSecret = null;
 
     @Nonnull
     private static final String API_VERSION = "v6";
@@ -52,16 +41,17 @@ public class Client {
     private static final String REDIRECT_URI = "https://www.discord.com";
 
     @Nonnull
-    private final Credential CREDENTIALS;
+    final Credential CREDENTIALS;
 
     public Client(@Nonnull String code, @Nonnull Scope... scopes) {
         CREDENTIALS = getCredentials(code);
     }
 
-    public static Credential getCredentials(@Nonnull String code, @Nonnull Scope... scopes) {
-        if (clientID == null) {
+    @Nonnull
+    static Credential getCredentials(@Nonnull String code, @Nonnull Scope... scopes) {
+        if (API.clientID == null) {
             throw new IllegalStateException("Client id has not been set");
-        } else if (clientSecret == null) {
+        } else if (API.clientSecret == null) {
             throw new IllegalStateException("Client secret has not been set");
         }
 
@@ -69,14 +59,14 @@ public class Client {
         GoogleCredential credential = new GoogleCredential.Builder()
                 .setJsonFactory(new JacksonFactory())
                 .setTransport(new ApacheHttpTransport())
-                .setClientSecrets(clientID, clientSecret)
+                .setClientSecrets(API.clientID, API.clientSecret)
                 .build()
                 .createScoped(scopeList);
         HttpRequestFactory requestFactory = new ApacheHttpTransport().createRequestFactory(credential);
         GenericUrl url = new GenericUrl(TOKEN_URL);
         url
-                .set("client_id", clientID)
-                .set("client_secret", clientSecret)
+                .set("client_id", API.clientID)
+                .set("client_secret", API.clientSecret)
                 .set("grant_type", GRANT_TYPE)
                 .set("code", code)
                 .set("redirect_uri", REDIRECT_URI);
@@ -113,52 +103,16 @@ public class Client {
         return credential;
     }
 
-    public static void setClientID(@Nonnull String id) {
-        clientID = id;
-    }
-
-    public static void setClientSecret(@Nonnull String secret) {
-        clientSecret = secret;
-    }
-
-    public String getToken() {
+    @Nonnull
+    String getToken() {
         return CREDENTIALS.getAccessToken();
     }
 
+    @Nonnull
     public List<Guild> getGuilds() {
-        String url = API_URL + "users/@me/guilds";
-        HttpsURLConnection connection;
-        try {
-            connection = (HttpsURLConnection) new URL(url).openConnection();
-        } catch (IOException e) {
-            throw new APIException("Error getting current user's guilds", e);
-        }
+        String endpoint = "users/@me/guilds";
 
-        try {
-            connection.setRequestMethod("GET");
-        } catch (ProtocolException e) {
-            throw new IllegalStateException("Invalid protocol", e);
-        }
-
-        connection.setRequestProperty("User-Agent", "DiscordBot (https://github.com/DrSmugleaf/Banter-Bot4J, 1.0)");
-        connection.setRequestProperty("client_id", clientID);
-        connection.setRequestProperty("Authorization", "Bearer " + CREDENTIALS.getAccessToken());
-
-        JSONArray response;
-        try {
-            InputStream stream = connection.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-            String line;
-            StringBuilder content = new StringBuilder();
-
-            while ((line = reader.readLine()) != null) {
-                content.append(line);
-            }
-
-            response = new JSONArray(content.toString());
-        } catch (IOException e) {
-            throw new APIException("Error getting user's current guilds", e);
-        }
+        JSONArray response = API.request(this, endpoint, "GET");
 
         List<Guild> guilds = new ArrayList<>();
         for (int i = 0; i < response.length(); i++) {
