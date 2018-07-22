@@ -8,13 +8,19 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.apache.ApacheHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.testing.http.MockHttpContent;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,7 +37,13 @@ public class Client {
     private static String clientSecret = null;
 
     @Nonnull
-    private static final String TOKEN_URL = "https://discordapp.com/api/oauth2/token";
+    private static final String API_VERSION = "v6";
+
+    @Nonnull
+    private static final String API_URL = "https://discordapp.com/api/" + API_VERSION + "/";
+
+    @Nonnull
+    private static final String TOKEN_URL = API_URL + "oauth2/token";
 
     @Nonnull
     private static final String GRANT_TYPE = "authorization_code";
@@ -107,6 +119,66 @@ public class Client {
 
     public static void setClientSecret(@Nonnull String secret) {
         clientSecret = secret;
+    }
+
+    public String getToken() {
+        return CREDENTIALS.getAccessToken();
+    }
+
+    public List<Guild> getGuilds() {
+        String url = API_URL + "users/@me/guilds";
+        HttpsURLConnection connection;
+        try {
+            connection = (HttpsURLConnection) new URL(url).openConnection();
+        } catch (IOException e) {
+            throw new APIException("Error getting current user's guilds", e);
+        }
+
+        try {
+            connection.setRequestMethod("GET");
+        } catch (ProtocolException e) {
+            throw new IllegalStateException("Invalid protocol", e);
+        }
+
+        connection.setRequestProperty("User-Agent", "DiscordBot (https://github.com/DrSmugleaf/Banter-Bot4J, 1.0)");
+        connection.setRequestProperty("client_id", clientID);
+        connection.setRequestProperty("Authorization", "Bearer " + CREDENTIALS.getAccessToken());
+
+        JSONArray response;
+        try {
+            InputStream stream = connection.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+            String line;
+            StringBuilder content = new StringBuilder();
+
+            while ((line = reader.readLine()) != null) {
+                content.append(line);
+            }
+
+            response = new JSONArray(content.toString());
+        } catch (IOException e) {
+            throw new APIException("Error getting user's current guilds", e);
+        }
+
+        List<Guild> guilds = new ArrayList<>();
+        for (int i = 0; i < response.length(); i++) {
+            JSONObject guildJson = response.getJSONObject(i);
+
+            boolean isOwner = guildJson.getBoolean("owner");
+            long permissions = guildJson.getLong("permissions");
+            String icon = null;
+            if (!guildJson.isNull("icon")) {
+                icon = guildJson.getString("icon");
+            }
+            String name = guildJson.getString("name");
+            long id = guildJson.getLong("id");
+
+            Guild guild = new Guild(isOwner, permissions, icon, name, id);
+
+            guilds.add(guild);
+        }
+
+        return guilds;
     }
 
 }
