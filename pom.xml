@@ -144,12 +144,6 @@
             <scope>compile</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.oauth-client</groupId>
-            <artifactId>google-oauth-client</artifactId>
-            <version>1.23.0</version>
-        </dependency>
-
         <!-- swagger dependencies -->
         <dependency>
             <groupId>io.swagger</groupId>
