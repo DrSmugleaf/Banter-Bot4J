@@ -106,6 +106,7 @@ public enum Languages {
     }
 
     private static class Holder {
+        @Nonnull
         static final Map<String, Languages> MAP = new HashMap<>();
     }
 
