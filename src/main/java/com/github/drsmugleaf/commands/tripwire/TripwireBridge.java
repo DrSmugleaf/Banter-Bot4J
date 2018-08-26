@@ -24,16 +24,16 @@ public class TripwireBridge extends Command {
     @Nonnull
     private static String wrongFormatResponse() {
         return "**Formats:**\n" +
-               BOT_PREFIX + "tripwireBridge system1 system2\n" +
+               botPrefix + "tripwireBridge system1 system2\n" +
                "**Examples:**\n" +
-               BOT_PREFIX + "tripwireRoute O-VWPB Jita";
+               botPrefix + "tripwireRoute O-VWPB Jita";
     }
 
     @Override
     public void run(@Nonnull CommandReceivedEvent event) {
         IUser author = event.getAuthor();
         if (!TripwireRoute.ROUTES.containsKey(author)) {
-            event.reply("Create a route first with " + BOT_PREFIX + "tripwireRoute.");
+            event.reply("Create a route first with " + botPrefix + "tripwireRoute.");
             return;
         }
 

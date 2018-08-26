@@ -25,9 +25,9 @@ public class Blacklist extends Command {
     @Nonnull
     private static String wrongFormatResponse() {
         return "**Formats:**\n" +
-               BOT_PREFIX + "blacklist @User1 @User2 @User3\n" +
+               botPrefix + "blacklist @User1 @User2 @User3\n" +
                "**Examples:**\n" +
-               BOT_PREFIX + "blacklist @DrSmugleaf @Banter Bot4J";
+               botPrefix + "blacklist @DrSmugleaf @Banter Bot4J";
     }
 
     @Override

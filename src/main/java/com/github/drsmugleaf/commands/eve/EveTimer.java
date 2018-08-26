@@ -50,11 +50,11 @@ public class EveTimer extends Command {
     @Nonnull
     private static String wrongFormatResponse() {
         return "**Formats:**\n" +
-               BOT_PREFIX + "evetimer \"structure\" \"system\" \"date\" (6d2h45m)\n" +
-               BOT_PREFIX + "evetimer delete \"structure\" \"system\"\n\n" +
+               botPrefix + "evetimer \"structure\" \"system\" \"date\" (6d2h45m)\n" +
+               botPrefix + "evetimer delete \"structure\" \"system\"\n\n" +
                "**Examples:**\n" +
-               BOT_PREFIX + "evetimer \"Fortizar\" \"7RM\" \"4d15h30m\"\n" +
-               BOT_PREFIX + "evetimer delete \"Fortizar\" \"7RM\"";
+               botPrefix + "evetimer \"Fortizar\" \"7RM\" \"4d15h30m\"\n" +
+               botPrefix + "evetimer delete \"Fortizar\" \"7RM\"";
     }
 
     private static boolean exists(@Nonnull String structure, @Nonnull String system) {

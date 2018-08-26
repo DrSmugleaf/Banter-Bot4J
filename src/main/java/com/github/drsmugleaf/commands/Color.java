@@ -51,7 +51,7 @@ public class Color extends Command {
         List<IRole> roles = guild.getRolesByName("color-" + author.getStringID());
         if (ARGS.isEmpty()) {
             if (roles.isEmpty()) {
-                event.reply("You don't have a name color. Use " + BOT_PREFIX + "color name OR hexadecimal code to assign one.");
+                event.reply("You don't have a name color. Use " + botPrefix + "color name OR hexadecimal code to assign one.");
                 return;
             }
 

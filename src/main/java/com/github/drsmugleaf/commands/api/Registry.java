@@ -23,7 +23,7 @@ class Registry {
 
     @Nullable
     private AbstractMap.SimpleEntry<Class<ICommand>, String> findCommand(@Nonnull MessageReceivedEvent event) {
-        String message = event.getMessage().getContent().substring(Command.BOT_PREFIX.length()).toLowerCase();
+        String message = event.getMessage().getContent().substring(Command.botPrefix.length()).toLowerCase();
         List<AbstractMap.SimpleEntry<Class<ICommand>, String>> matches = new ArrayList<>();
 
         for (Class<ICommand> command : COMMANDS) {
@@ -72,7 +72,7 @@ class Registry {
             return;
         }
 
-        String commandName = Command.BOT_PREFIX + command.getValue();
+        String commandName = Command.botPrefix + command.getValue();
         String arguments = event.getMessage().getFormattedContent();
         arguments = arguments.replaceFirst(commandName, "").trim();
         CommandReceivedEvent commandEvent = new CommandReceivedEvent(event);

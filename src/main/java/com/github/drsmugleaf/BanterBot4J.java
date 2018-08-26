@@ -1,5 +1,6 @@
 package com.github.drsmugleaf;
 
+import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.Handler;
 import com.github.drsmugleaf.database.api.Database;
 import com.github.drsmugleaf.env.Keys;
@@ -49,7 +50,7 @@ public class BanterBot4J {
         Database.init("com.github.drsmugleaf.database.models");
         registerListeners();
         Handler.setOwners(OWNERS);
-        Handler.setBotPrefix(Keys.BOT_PREFIX.VALUE);
+        Command.setBotPrefix(Keys.BOT_PREFIX.VALUE);
         Handler handler = new Handler("com.github.drsmugleaf.commands");
         CLIENT.getDispatcher().registerListener(handler);
 

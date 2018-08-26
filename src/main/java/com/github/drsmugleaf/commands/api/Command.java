@@ -19,7 +19,7 @@ public abstract class Command implements ICommand {
     protected static final Logger LOGGER = LoggerFactory.getLogger(Handler.class);
 
     @Nonnull
-    public static final String BOT_PREFIX = "!";
+    public static String botPrefix = "!";
 
     @Nonnull
     static final List<Long> OWNERS = new ArrayList<>();
@@ -33,6 +33,10 @@ public abstract class Command implements ICommand {
     protected Command(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
         EVENT = event;
         ARGS = args;
+    }
+
+    public static void setBotPrefix(@Nonnull String prefix) {
+        Command.botPrefix = prefix;
     }
 
     protected static <T extends ICommand> void run(@Nonnull Class<T> commandClass, @Nonnull CommandReceivedEvent event, @Nonnull String args) {

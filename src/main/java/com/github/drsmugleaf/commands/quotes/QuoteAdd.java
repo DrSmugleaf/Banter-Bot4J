@@ -21,7 +21,7 @@ public class QuoteAdd extends Command {
     @Override
     public void run(@Nonnull CommandReceivedEvent event) {
         if (ARGS.isEmpty()) {
-            event.reply("You didn't write anything to add as a quote. Example: `" + BOT_PREFIX + "quote add test`");
+            event.reply("You didn't write anything to add as a quote. Example: `" + botPrefix + "quote add test`");
             return;
         }
 
@@ -34,7 +34,7 @@ public class QuoteAdd extends Command {
 
         quote.createIfNotExists();
 
-        event.reply("Created quote #" + quote.id + ". Type quote `" + BOT_PREFIX + "quote " + quote.id + "` to see it.");
+        event.reply("Created quote #" + quote.id + ". Type quote `" + botPrefix + "quote " + quote.id + "` to see it.");
     }
 
 }

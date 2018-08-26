@@ -39,7 +39,7 @@ public class Stop extends Command {
         scheduler.stop();
         event.reply(
                 "Stopped and removed all tracks from the queue.\n" +
-                "You have one minute to restore them back to the queue using " + BOT_PREFIX + "undostop."
+                "You have one minute to restore them back to the queue using " + botPrefix + "undostop."
         );
     }
 

@@ -24,13 +24,13 @@ public class BridgeTranslate extends Command {
     public void run(@Nonnull CommandReceivedEvent event) {
         if (ARGS.isEmpty()) {
             event.reply("You didn't provide any channels or languages.\n" +
-                        "Usage: " + BOT_PREFIX + "bridgetranslate channel1 language1 channel2 language2");
+                        "Usage: " + botPrefix + "bridgetranslate channel1 language1 channel2 language2");
             return;
         }
 
         if (ARGS.size() < 4) {
             event.reply("You didn't provide enough arguments.\n" +
-                        "Usage: " + BOT_PREFIX + "bridgeTranslate channel1 language1 channel2 language2");
+                        "Usage: " + botPrefix + "bridgeTranslate channel1 language1 channel2 language2");
             return;
         }
 

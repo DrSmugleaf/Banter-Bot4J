@@ -22,10 +22,6 @@ public class Handler {
         COMMAND_REGISTRY = new Registry(commands);
     }
 
-    public static void setBotPrefix(@Nonnull String prefix) {
-        Command.BOT_PREFIX = prefix;
-    }
-
     public static void setOwners(@Nonnull Long[] owners) {
         Command.OWNERS.clear();
         Collections.addAll(Command.OWNERS, owners);
@@ -38,7 +34,7 @@ public class Handler {
             return;
         }
 
-        if (!message.startsWith(Command.BOT_PREFIX)) {
+        if (!message.startsWith(Command.botPrefix)) {
             return;
         }
 

@@ -17,9 +17,9 @@ public class Name extends Command {
     @Nonnull
     private static String wrongFormatResponse() {
         return "**Formats:**\n" +
-               BOT_PREFIX + "name username\n" +
+               botPrefix + "name username\n" +
                "**Examples:**\n" +
-               BOT_PREFIX + "name Banter Bot4J";
+               botPrefix + "name Banter Bot4J";
     }
 
     @Override

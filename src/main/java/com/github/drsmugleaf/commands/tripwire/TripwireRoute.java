@@ -26,9 +26,9 @@ public class TripwireRoute extends Command {
     @Nonnull
     private static String wrongFormatResponse() {
         return "**Formats:**\n" +
-               BOT_PREFIX + "tripwireRoute \"username\" \"password\" \"system1\" \"system2\"\n" +
+               botPrefix + "tripwireRoute \"username\" \"password\" \"system1\" \"system2\"\n" +
                "**Examples:**\n" +
-               BOT_PREFIX + "tripwireRoute \"DrSmugleaf Aulmais\" \"pAsSwOrD\" \"O-VWPB\" \"Jita\"";
+               botPrefix + "tripwireRoute \"DrSmugleaf Aulmais\" \"pAsSwOrD\" \"O-VWPB\" \"Jita\"";
     }
 
     @Override

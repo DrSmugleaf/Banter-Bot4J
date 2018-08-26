@@ -27,7 +27,7 @@ public class QuoteDelete extends Command {
         try {
             id = Long.parseLong(ARGS.toString());
         } catch (NumberFormatException e) {
-            event.reply("Invalid command format. Example: `" + BOT_PREFIX + "quote 1`");
+            event.reply("Invalid command format. Example: `" + botPrefix + "quote 1`");
             return;
         }
 

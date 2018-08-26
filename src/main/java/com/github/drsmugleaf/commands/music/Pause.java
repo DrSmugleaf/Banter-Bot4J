@@ -28,7 +28,7 @@ public class Pause extends Command {
         }
 
         if (musicManager.getScheduler().isPaused()) {
-            event.reply("The current track is already paused. Use " + BOT_PREFIX + "resume to resume it.");
+            event.reply("The current track is already paused. Use " + botPrefix + "resume to resume it.");
             return;
         }
 
