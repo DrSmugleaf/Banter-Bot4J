@@ -7,8 +7,8 @@ import com.github.drsmugleaf.database.api.annotations.Column;
 import com.github.drsmugleaf.database.api.annotations.Relation;
 import com.github.drsmugleaf.database.api.annotations.RelationTypes;
 import com.github.drsmugleaf.database.api.annotations.Table;
-import com.github.drsmugleaf.eve.esi.ApiException;
-import com.github.drsmugleaf.eve.esi.api.StatusApi;
+import net.troja.eve.esi.ApiException;
+import net.troja.eve.esi.api.StatusApi;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.IPrivateChannel;
@@ -46,7 +46,7 @@ public class EveDowntimeUser extends Model<EveDowntimeUser> {
 
     private static boolean isOffline() {
         try {
-            STATUS_API.getStatus("tranquility", null, null, null);
+            STATUS_API.getStatus("tranquility", null);
         } catch (ApiException e) {
             if (SocketTimeoutException.class.isInstance(e.getCause())) {
                 return true;

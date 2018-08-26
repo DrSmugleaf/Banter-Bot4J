@@ -2,10 +2,10 @@ package com.github.drsmugleaf.tripwire.route;
 
 import com.github.drsmugleaf.dijkstra.Node;
 import com.github.drsmugleaf.eve.Systems;
-import com.github.drsmugleaf.eve.esi.ApiException;
-import com.github.drsmugleaf.eve.esi.api.UniverseApi;
-import com.github.drsmugleaf.eve.esi.model.PostUniverseNames200Ok;
 import com.github.drsmugleaf.tripwire.models.Signature;
+import net.troja.eve.esi.ApiException;
+import net.troja.eve.esi.api.UniverseApi;
+import net.troja.eve.esi.model.UniverseNamesResponse;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,8 +34,8 @@ public class StarSystem extends Node<StarSystem> {
         IDs.removeIf(id -> !StarSystem.isValid(id));
 
         try {
-            List<PostUniverseNames200Ok> response = new UniverseApi().postUniverseNames(new ArrayList<>(IDs), null, null, null);
-            for (PostUniverseNames200Ok systemInfo : response) {
+            List<UniverseNamesResponse> response = new UniverseApi().postUniverseNames(new ArrayList<>(IDs), null);
+            for (UniverseNamesResponse systemInfo : response) {
                 StarSystem system = new StarSystem(systemInfo.getId(), systemInfo.getName());
                 starSystems.put(system.ID, system);
             }
