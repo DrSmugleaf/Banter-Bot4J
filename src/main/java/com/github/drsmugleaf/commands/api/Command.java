@@ -19,7 +19,7 @@ public abstract class Command implements ICommand {
     protected static final Logger LOGGER = LoggerFactory.getLogger(Handler.class);
 
     @Nonnull
-    protected static String BOT_PREFIX = "!";
+    public static final String BOT_PREFIX = "!";
 
     @Nonnull
     static final List<Long> OWNERS = new ArrayList<>();
