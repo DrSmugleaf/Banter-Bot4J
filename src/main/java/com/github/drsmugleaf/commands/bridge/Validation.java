@@ -27,7 +27,7 @@ public class Validation {
         StringBuilder response = new StringBuilder();
 
         for (Validation validation : validations) {
-            if (!validation.IS_VALID) {
+            if (validation.RESPONSE != null) {
                 response.append(validation.RESPONSE).append("\n");
             }
         }
