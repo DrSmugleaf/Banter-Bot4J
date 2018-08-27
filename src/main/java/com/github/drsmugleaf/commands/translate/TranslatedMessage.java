@@ -98,7 +98,9 @@ public class TranslatedMessage {
         }
 
         translation = message.toString();
-        translation = translation.replace("@everyone", "@ everyone");
+        translation = translation
+                .replace("@everyone", "@ everyone")
+                .replace("@here", "@ here");
 
         return translation;
     }
