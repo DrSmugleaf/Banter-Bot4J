@@ -56,18 +56,18 @@ class Registry {
             }
         }
 
-        if (matches.isEmpty()) {
-            return null;
-        }
-
         return getBestMatch(message, matches);
     }
 
-    @Nonnull
+    @Nullable
     private AbstractMap.SimpleEntry<Class<ICommand>, String> getBestMatch(
             @Nonnull String message,
             @Nonnull List<AbstractMap.SimpleEntry<Class<ICommand>, String>> matches
     ) {
+        if (matches.isEmpty()) {
+            return null;
+        }
+
         List<String> argsList = Arguments.parseArgs(message);
         while (argsList.size() > 0) {
             String args = String.join(" ", argsList);
