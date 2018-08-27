@@ -19,7 +19,7 @@ import java.util.List;
 @CommandInfo(name = "quote", aliases = {"quote get", "quoteget"})
 public class QuoteGet extends Command {
 
-    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss zzz");
 
     protected QuoteGet(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
         super(event, args);
