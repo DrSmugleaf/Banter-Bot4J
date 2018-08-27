@@ -19,7 +19,7 @@ public class Arguments extends ArrayList<String> {
     }
 
     @Nonnull
-    private static List<String> parseArgs(@Nonnull String text) {
+    public static List<String> parseArgs(@Nonnull String text) {
         List<String> args = new ArrayList<>();
         Matcher matcher = SPLIT_ON_SPACES_EXCEPT_WITHIN_QUOTES.matcher(text);
         while (matcher.find()) {

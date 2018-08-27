@@ -4,10 +4,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 21/06/2018
@@ -61,6 +58,27 @@ class Registry {
 
         if (matches.isEmpty()) {
             return null;
+        }
+
+        return getBestMatch(message, matches);
+    }
+
+    @Nonnull
+    private AbstractMap.SimpleEntry<Class<ICommand>, String> getBestMatch(
+            @Nonnull String message,
+            @Nonnull List<AbstractMap.SimpleEntry<Class<ICommand>, String>> matches
+    ) {
+        List<String> argsList = Arguments.parseArgs(message);
+        while (argsList.size() > 0) {
+            String args = String.join(" ", argsList);
+
+            for (AbstractMap.SimpleEntry<Class<ICommand>, String> match : matches) {
+                if (match.getValue().equals(args)) {
+                    return match;
+                }
+            }
+
+            argsList.remove(argsList.size() - 1);
         }
 
         return matches.get(0);
