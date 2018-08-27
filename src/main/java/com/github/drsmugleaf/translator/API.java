@@ -21,6 +21,10 @@ public class API {
 
     @Nullable
     public static String translate(Languages from, Languages to, String text) {
+        if (from == to) {
+            return text;
+        }
+
         try {
             text = URLEncoder.encode(text, "UTF8");
             URL url = new URL(PATH + "?from=" + from.getCode()+ "&to=" + to.getCode() + "&text=" + text);
