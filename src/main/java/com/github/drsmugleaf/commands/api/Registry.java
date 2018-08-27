@@ -81,6 +81,8 @@ class Registry {
             argsList.remove(argsList.size() - 1);
         }
 
+        Command.LOGGER.warn("More than 1 command match found for message " + message + ". Matches: " + matches);
+
         return matches.get(0);
     }
 
