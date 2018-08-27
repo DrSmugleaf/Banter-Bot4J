@@ -14,7 +14,6 @@ import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.IPrivateChannel;
 
 import javax.annotation.Nonnull;
-import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -47,13 +46,12 @@ public class EveDowntimeUser extends Model<EveDowntimeUser> {
     private static boolean isOffline() {
         try {
             STATUS_API.getStatus("tranquility", null, null, null);
+            return false;
         } catch (ApiException e) {
-            if (SocketTimeoutException.class.isInstance(e.getCause())) {
+            if (e.getCode() == 503) {
                 return true;
             }
         }
-
-        return false;
     }
 
     private static void alertAll() {
