@@ -17,6 +17,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,6 +37,9 @@ public class BanterBot4J {
 
     @Nullable
     private static IChannel DISCORD_WARNING_CHANNEL = null;
+
+    @Nonnull
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss zzz");
 
     @Nonnull
     private static IDiscordClient buildClient() {
@@ -72,15 +77,23 @@ public class BanterBot4J {
 
         StringBuilder warning = new StringBuilder();
 
-        warning.append(message);
+        String date = DATE_FORMAT.format(new Date());
+        warning
+                .append("**Warning on ")
+                .append(date)
+                .append("**\n")
+                .append("**Message:** ")
+                .append(message);
         if (t != null) {
             StringWriter stringWriter = new StringWriter();
             PrintWriter printWriter = new PrintWriter(stringWriter);
             t.printStackTrace(printWriter);
             String stackTrace = stringWriter.toString();
 
-            warning.append("\n");
-            warning.append(stackTrace);
+            warning
+                    .append("\n")
+                    .append("**Error:** ")
+                    .append(stackTrace);
         }
 
         CommandReceivedEvent.sendMessage(DISCORD_WARNING_CHANNEL, warning.toString());
