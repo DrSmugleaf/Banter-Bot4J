@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 21/06/2018
  */
-@CommandInfo(name = "quote delete", aliases = {"quotedelete", "quotedel", "quote remove", "quoteremove", "quoterem"})
+@CommandInfo(name = "quote delete", aliases = {"quotedelete", "quote del", "quotedel", "quote remove", "quoteremove", "quote rem", "quoterem"})
 public class QuoteDelete extends Command {
 
     protected QuoteDelete(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
