@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.database.models;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
+import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.database.api.Model;
 import com.github.drsmugleaf.database.api.annotations.Column;
 import com.github.drsmugleaf.database.api.annotations.Relation;
@@ -59,7 +59,7 @@ public class EveDowntimeUser extends Model<EveDowntimeUser> {
         List<EveDowntimeUser> users = new EveDowntimeUser().get();
         for (EveDowntimeUser user : users) {
             IPrivateChannel channel = BanterBot4J.CLIENT.getUserByID(user.user.id).getOrCreatePMChannel();
-            CommandReceivedEvent.sendMessage(channel, "Eve Online server is back online.");
+            Command.sendMessage(channel, "Eve Online server is back online.");
         }
     }
 

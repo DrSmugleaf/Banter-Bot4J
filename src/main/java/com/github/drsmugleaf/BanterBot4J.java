@@ -1,6 +1,6 @@
 package com.github.drsmugleaf;
 
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
+import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.Handler;
 import com.github.drsmugleaf.database.api.Database;
 import com.github.drsmugleaf.env.Keys;
@@ -96,7 +96,7 @@ public class BanterBot4J {
                     .append(stackTrace);
         }
 
-        CommandReceivedEvent.sendMessage(DISCORD_WARNING_CHANNEL, warning.toString());
+        Command.sendMessage(DISCORD_WARNING_CHANNEL, warning.toString());
     }
 
     public static void warn(@Nonnull String message, @Nullable Throwable t) {

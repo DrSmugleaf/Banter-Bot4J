@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.commands.music;
 
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
+import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.youtube.*;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -45,7 +45,7 @@ public class Music {
     }
 
     private static void sendMessage(@Nonnull IChannel channel, @Nonnull String message) {
-        IMessage iMessage = CommandReceivedEvent.sendMessage(channel, message);
+        IMessage iMessage = Command.sendMessage(channel, message);
         IGuild guild = channel.getGuild();
 
         if (lastMessage.containsKey(guild)) {
@@ -58,7 +58,7 @@ public class Music {
     }
 
     private static void sendMessage(@Nonnull IChannel channel, @Nonnull EmbedObject embed) {
-        IMessage iMessage = CommandReceivedEvent.sendMessage(channel, embed);
+        IMessage iMessage = Command.sendMessage(channel, embed);
         IGuild guild = channel.getGuild();
 
         if (lastMessage.containsKey(guild)) {

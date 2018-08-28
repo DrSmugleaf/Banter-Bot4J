@@ -51,42 +51,6 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
         return getHighestRole(roles);
     }
 
-    @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull String content) {
-        return RequestBuffer.request(() -> {
-            try {
-                return channel.sendMessage(content);
-            } catch (RateLimitException e) {
-                Command.LOGGER.error("Message could not be sent", e);
-                throw e;
-            }
-        }).get();
-    }
-
-    @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull EmbedObject embed) {
-        return RequestBuffer.request(() -> {
-            try {
-                return channel.sendMessage(embed);
-            } catch (RateLimitException e) {
-                Command.LOGGER.error("Embed could not be sent", e);
-                throw e;
-            }
-        }).get();
-    }
-
-    @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull String content, @Nonnull EmbedObject embed) {
-        return RequestBuffer.request(() -> {
-            try {
-                return channel.sendMessage(content, embed);
-            } catch (RateLimitException e) {
-                Command.LOGGER.error("Embed could not be sent", e);
-                throw e;
-            }
-        }).get();
-    }
-
     @Nullable
     public IRole getHighestAuthorRole() {
         IGuild guild = getGuild();

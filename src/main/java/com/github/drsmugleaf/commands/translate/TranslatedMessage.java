@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.commands.translate;
 
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
+import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.database.models.BridgedChannel;
 import com.github.drsmugleaf.translator.API;
 import com.github.drsmugleaf.translator.Languages;
@@ -48,7 +48,7 @@ public class TranslatedMessage {
     }
 
     private void sendTranslation(@Nonnull BridgedChannel bridgedChannel, @Nonnull String translation) {
-        IMessage message = CommandReceivedEvent.sendMessage(bridgedChannel.bridged(), translation);
+        IMessage message = Command.sendMessage(bridgedChannel.bridged(), translation);
         MESSAGES_SENT.put(bridgedChannel, message);
     }
 

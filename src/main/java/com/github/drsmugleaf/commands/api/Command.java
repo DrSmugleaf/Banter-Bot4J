@@ -2,8 +2,13 @@ package com.github.drsmugleaf.commands.api;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sx.blah.discord.api.internal.json.objects.EmbedObject;
+import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
+import sx.blah.discord.util.RateLimitException;
+import sx.blah.discord.util.RequestBuffer;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
@@ -81,6 +86,42 @@ public abstract class Command implements ICommand {
 
     protected static boolean isOwner(@Nonnull IUser user) {
         return OWNERS.contains(user.getLongID());
+    }
+
+    @Nonnull
+    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull String content) {
+        return RequestBuffer.request(() -> {
+            try {
+                return channel.sendMessage(content);
+            } catch (RateLimitException e) {
+                LOGGER.error("Message could not be sent", e);
+                throw e;
+            }
+        }).get();
+    }
+
+    @Nonnull
+    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull EmbedObject embed) {
+        return RequestBuffer.request(() -> {
+            try {
+                return channel.sendMessage(embed);
+            } catch (RateLimitException e) {
+                LOGGER.error("Embed could not be sent", e);
+                throw e;
+            }
+        }).get();
+    }
+
+    @Nonnull
+    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull String content, @Nonnull EmbedObject embed) {
+        return RequestBuffer.request(() -> {
+            try {
+                return channel.sendMessage(content, embed);
+            } catch (RateLimitException e) {
+                LOGGER.error("Embed could not be sent", e);
+                throw e;
+            }
+        }).get();
     }
 
 }

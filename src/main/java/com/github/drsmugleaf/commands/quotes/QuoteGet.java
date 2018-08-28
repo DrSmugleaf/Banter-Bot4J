@@ -56,7 +56,7 @@ public class QuoteGet extends Command {
 
         Date date = new Date(quote.date);
         String formattedDate = DATE_FORMAT.format(date);
-        CommandReceivedEvent.sendMessage(
+        Command.sendMessage(
                 event.getChannel(),
                 "**Quote #" + quote.id + ", submitted by " + quoteAuthorName + " on " + formattedDate + "**\n" + quote.content
         );

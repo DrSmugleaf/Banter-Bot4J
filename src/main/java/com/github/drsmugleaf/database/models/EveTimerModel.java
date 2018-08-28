@@ -1,7 +1,6 @@
 package com.github.drsmugleaf.database.models;
 
 import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.database.api.Model;
 import com.github.drsmugleaf.database.api.annotations.Column;
 import com.github.drsmugleaf.database.api.annotations.Relation;
@@ -103,7 +102,7 @@ public class EveTimerModel extends Model<EveTimerModel> {
                 .withFooterText(date.toString())
                 .withColor(skipped ? Color.RED : Color.GREEN);
 
-        CommandReceivedEvent.sendMessage(channel, "@everyone Structure timer", builder.build());
+        Command.sendMessage(channel, "@everyone Structure timer", builder.build());
 
         deleteTask(timer);
     }
