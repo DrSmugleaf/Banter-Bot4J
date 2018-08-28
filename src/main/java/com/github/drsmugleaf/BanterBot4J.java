@@ -118,6 +118,10 @@ public class BanterBot4J {
     @EventSubscriber
     public static void handle(ReadyEvent event) {
         String channelIDString = Keys.DISCORD_WARNING_CHANNEL.VALUE;
+        if (channelIDString.isEmpty()) {
+            LOGGER.warn("No discord warning channel id has been set as an environment property");
+            return;
+        }
 
         Long channelID;
         try {
