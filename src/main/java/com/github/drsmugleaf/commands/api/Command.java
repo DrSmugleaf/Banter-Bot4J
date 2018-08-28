@@ -124,4 +124,19 @@ public abstract class Command implements ICommand {
         }).get();
     }
 
+    @Nonnull
+    public IMessage sendMessage(@Nonnull String content) {
+        return sendMessage(EVENT.getChannel(), content);
+    }
+
+    @Nonnull
+    public IMessage sendMessage(@Nonnull EmbedObject embed) {
+        return sendMessage(EVENT.getChannel(), embed);
+    }
+
+    @Nonnull
+    public IMessage sendMessage(@Nonnull String content, @Nonnull EmbedObject embed) {
+        return sendMessage(EVENT.getChannel(), content, embed);
+    }
+
 }
