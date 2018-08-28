@@ -59,7 +59,7 @@ public class EveDowntimeUser extends Model<EveDowntimeUser> {
         List<EveDowntimeUser> users = new EveDowntimeUser().get();
         for (EveDowntimeUser user : users) {
             IPrivateChannel channel = BanterBot4J.CLIENT.getUserByID(user.user.id).getOrCreatePMChannel();
-            CommandReceivedEvent.sendMessage(channel, "Eve Online server is online again.");
+            CommandReceivedEvent.sendMessage(channel, "Eve Online server is back online.");
         }
     }
 
