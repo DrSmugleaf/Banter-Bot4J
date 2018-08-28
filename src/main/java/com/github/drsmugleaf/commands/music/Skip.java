@@ -67,7 +67,7 @@ public class Skip extends Command {
             musicManager.getScheduler().skip();
             event.reply("Skipped the current track.");
         } else {
-            String response = String.format("Votes: %d/%.0f", votes, requiredVotes);
+            String response = String.format("Votes to skip: %d/%.0f", votes, requiredVotes);
             event.reply(response);
         }
     }
