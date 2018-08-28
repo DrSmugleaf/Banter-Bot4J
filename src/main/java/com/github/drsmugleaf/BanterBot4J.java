@@ -1,5 +1,6 @@
 package com.github.drsmugleaf;
 
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.Handler;
 import com.github.drsmugleaf.database.api.Database;
 import com.github.drsmugleaf.env.Keys;
@@ -9,8 +10,13 @@ import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventSubscriber;
+import sx.blah.discord.handle.impl.events.ReadyEvent;
+import sx.blah.discord.handle.obj.IChannel;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 
 /**
@@ -26,6 +32,9 @@ public class BanterBot4J {
 
     @Nonnull
     private static final Long[] OWNERS = {109067752286715904L};
+
+    @Nullable
+    private static IChannel DISCORD_WARNING_CHANNEL = null;
 
     @Nonnull
     private static IDiscordClient buildClient() {
@@ -54,6 +63,62 @@ public class BanterBot4J {
         CLIENT.getDispatcher().registerListener(handler);
 
         CLIENT.login();
+    }
+
+    private static void warnChannel(@Nonnull String message, @Nullable Throwable t) {
+        if (DISCORD_WARNING_CHANNEL == null) {
+            throw new IllegalStateException("No Discord warning channel has been set");
+        }
+
+        StringBuilder warning = new StringBuilder();
+
+        warning.append(message);
+        if (t != null) {
+            StringWriter stringWriter = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(stringWriter);
+            t.printStackTrace(printWriter);
+            String stackTrace = stringWriter.toString();
+
+            warning.append("\n");
+            warning.append(stackTrace);
+        }
+
+        CommandReceivedEvent.sendMessage(DISCORD_WARNING_CHANNEL, warning.toString());
+    }
+
+    public static void warn(@Nonnull String message, @Nullable Throwable t) {
+        if (t != null) {
+            LOGGER.warn(message, t);
+        } else {
+            LOGGER.warn(message);
+        }
+
+        if (DISCORD_WARNING_CHANNEL != null) {
+            warnChannel(message, t);
+        }
+    }
+
+    public static void warn(@Nonnull String message) {
+        warn(message, null);
+    }
+
+    @EventSubscriber
+    public static void handle(ReadyEvent event) {
+        String channelIDString = Keys.DISCORD_WARNING_CHANNEL.VALUE;
+
+        Long channelID;
+        try {
+            channelID = Long.parseLong(channelIDString);
+        } catch (NumberFormatException e) {
+            throw new IllegalStateException(channelIDString + " isn't a correct discord channel id");
+        }
+
+        IChannel channel = CLIENT.getChannelByID(channelID);
+        if (channel == null) {
+            throw new IllegalStateException("No discord channel exists with id " + channelID);
+        }
+
+        DISCORD_WARNING_CHANNEL = channel;
     }
 
 }

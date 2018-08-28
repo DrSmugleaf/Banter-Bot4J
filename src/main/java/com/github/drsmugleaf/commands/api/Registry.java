@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.api;
 
+import com.github.drsmugleaf.BanterBot4J;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import javax.annotation.Nonnull;
@@ -81,7 +82,7 @@ class Registry {
             argsList.remove(argsList.size() - 1);
         }
 
-        Command.LOGGER.warn("More than 1 command match found for message " + message + ". Matches: " + matches);
+        BanterBot4J.warn("More than 1 command match found for message " + message + ". Matches: " + matches);
 
         return matches.get(0);
     }
