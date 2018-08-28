@@ -18,10 +18,10 @@ public class Play extends Command {
     }
 
     @Override
-    public void run(@Nonnull CommandReceivedEvent event) {
-        IChannel channel = event.getChannel();
+    public void run() {
+        IChannel channel = EVENT.getChannel();
 
-        IUser author = event.getAuthor();
+        IUser author = EVENT.getAuthor();
         String searchString = String.join(" ", ARGS);
 
         Music.PLAYER_MANAGER.loadItem(searchString, new AudioResultHandler(channel, author, searchString));

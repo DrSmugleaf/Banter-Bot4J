@@ -18,22 +18,22 @@ public class Pause extends Command {
     }
 
     @Override
-    public void run(@Nonnull CommandReceivedEvent event) {
-        IGuild guild = event.getGuild();
+    public void run() {
+        IGuild guild = EVENT.getGuild();
 
         GuildMusicManager musicManager = Music.getGuildMusicManager(guild);
         if (!musicManager.getScheduler().isPlaying()) {
-            event.reply("There isn't a track currently playing.");
+            EVENT.reply("There isn't a track currently playing.");
             return;
         }
 
         if (musicManager.getScheduler().isPaused()) {
-            event.reply("The current track is already paused. Use " + BOT_PREFIX + "resume to resume it.");
+            EVENT.reply("The current track is already paused. Use " + BOT_PREFIX + "resume to resume it.");
             return;
         }
 
         musicManager.getScheduler().pause();
-        event.reply("Paused the current track.");
+        EVENT.reply("Paused the current track.");
     }
 
 }

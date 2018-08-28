@@ -22,14 +22,14 @@ public class Queue extends Command {
     }
 
     @Override
-    public void run(@Nonnull CommandReceivedEvent event) {
-        IGuild guild = event.getGuild();
-        IUser author = event.getAuthor();
+    public void run() {
+        IGuild guild = EVENT.getGuild();
+        IUser author = EVENT.getAuthor();
 
         TrackScheduler scheduler = Music.getGuildMusicManager(guild).getScheduler();
         AudioTrack currentTrack = scheduler.getCurrentTrack();
         if (currentTrack == null) {
-            event.reply("There are no tracks currently playing or in the queue.");
+            EVENT.reply("There are no tracks currently playing or in the queue.");
             return;
         }
 
@@ -83,7 +83,7 @@ public class Queue extends Command {
             builder.appendField("Queue duration", queueDurationString, false);
         }
 
-        event.reply(builder.build());
+        EVENT.reply(builder.build());
     }
 
 }

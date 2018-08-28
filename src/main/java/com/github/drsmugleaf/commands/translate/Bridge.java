@@ -21,23 +21,23 @@ public class Bridge extends Command {
     }
 
     @Override
-    public void run(@Nonnull CommandReceivedEvent event) {
+    public void run() {
         if (ARGS.isEmpty()) {
-            event.reply("You didn't provide any channels or languages.\n" +
+            EVENT.reply("You didn't provide any channels or languages.\n" +
                         "Usage: " + BOT_PREFIX + "bridge channel1 language1 channel2 language2");
             return;
         }
 
         if (ARGS.size() < 4) {
-            event.reply("You didn't provide enough arguments.\n" +
+            EVENT.reply("You didn't provide enough arguments.\n" +
                         "Usage: " + BOT_PREFIX + "bridge channel1 language1 channel2 language2");
             return;
         }
 
-        IGuild guild = event.getGuild();
+        IGuild guild = EVENT.getGuild();
         List<IChannel> firstChannelList = guild.getChannelsByName(ARGS.get(0));
         if (firstChannelList.isEmpty()) {
-            event.reply("Couldn't find any channels with name " + ARGS.get(0));
+            EVENT.reply("Couldn't find any channels with name " + ARGS.get(0));
             return;
         }
 
@@ -45,13 +45,13 @@ public class Bridge extends Command {
 
         Languages firstLanguage = Languages.getLanguage(ARGS.get(1));
         if (firstLanguage == null) {
-            event.reply("Couldn't find any languages with name " + ARGS.get(1));
+            EVENT.reply("Couldn't find any languages with name " + ARGS.get(1));
             return;
         }
 
         List<IChannel> secondChannelList = guild.getChannelsByName(ARGS.get(2));
         if (secondChannelList.isEmpty()) {
-            event.reply("Couldn't find any channels with name " + ARGS.get(2));
+            EVENT.reply("Couldn't find any channels with name " + ARGS.get(2));
             return;
         }
 
@@ -59,7 +59,7 @@ public class Bridge extends Command {
 
         Languages secondLanguage = Languages.getLanguage(ARGS.get(3));
         if (secondLanguage == null) {
-            event.reply("Couldn't find any languages with name " + ARGS.get(3));
+            EVENT.reply("Couldn't find any languages with name " + ARGS.get(3));
             return;
         }
 
@@ -75,7 +75,7 @@ public class Bridge extends Command {
         firstBridgedChannel.save();
         secondBridgedChannel.save();
 
-        event.reply(
+        EVENT.reply(
                 "Bridged together channels " + firstChannel.getName() +
                 " with language " + firstLanguage.getName() +
                 " and " + secondChannel.getName() +

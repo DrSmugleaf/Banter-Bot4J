@@ -26,12 +26,12 @@ public class QuoteGet extends Command {
     }
 
     @Override
-    public void run(@Nonnull CommandReceivedEvent event) {
+    public void run() {
         long id;
         try {
             id = Long.parseLong(ARGS.toString());
         } catch (NumberFormatException e) {
-            event.reply("Invalid command format. Example: `" + BOT_PREFIX + "quote 1`");
+            EVENT.reply("Invalid command format. Example: `" + BOT_PREFIX + "quote 1`");
             return;
         }
 
@@ -39,7 +39,7 @@ public class QuoteGet extends Command {
         List<Quote> quotes = quote.get();
 
         if (quotes.isEmpty()) {
-            event.reply("No quote was found with id " + id);
+            EVENT.reply("No quote was found with id " + id);
             return;
         }
 
@@ -50,14 +50,14 @@ public class QuoteGet extends Command {
         String quoteAuthorDiscriminator = quoteAuthor.getDiscriminator();
         quoteAuthorName += "#" + quoteAuthorDiscriminator;
         if (quote.content.isEmpty()) {
-            event.reply("Quote #" + quote.id + " was deleted by " + quoteAuthorName + " or one of the bot owners.");
+            EVENT.reply("Quote #" + quote.id + " was deleted by " + quoteAuthorName + " or one of the bot owners.");
             return;
         }
 
         Date date = new Date(quote.date);
         String formattedDate = DATE_FORMAT.format(date);
         Command.sendMessage(
-                event.getChannel(),
+                EVENT.getChannel(),
                 "**Quote #" + quote.id + ", submitted by " + quoteAuthorName + " on " + formattedDate + "**\n" + quote.content
         );
     }

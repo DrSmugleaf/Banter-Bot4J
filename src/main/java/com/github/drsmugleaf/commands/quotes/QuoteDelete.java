@@ -22,12 +22,12 @@ public class QuoteDelete extends Command {
     }
 
     @Override
-    public void run(@Nonnull CommandReceivedEvent event) {
+    public void run() {
         long id;
         try {
             id = Long.parseLong(ARGS.toString());
         } catch (NumberFormatException e) {
-            event.reply("Invalid command format. Example: `" + BOT_PREFIX + "quote 1`");
+            EVENT.reply("Invalid command format. Example: `" + BOT_PREFIX + "quote 1`");
             return;
         }
 
@@ -35,26 +35,26 @@ public class QuoteDelete extends Command {
 
         List<Quote> quotes = quote.get();
         if (quotes.isEmpty()) {
-            event.reply("No quote was found with id " + id);
+            EVENT.reply("No quote was found with id " + id);
             return;
         }
 
         quote = quotes.get(0);
-        IUser messageAuthor = event.getAuthor();
+        IUser messageAuthor = EVENT.getAuthor();
         IUser quoteAuthor = quote.submitter.user();
         IGuild quoteGuild = quote.guild.guild();
         if (messageAuthor != quoteAuthor && !isOwner(messageAuthor)) {
             String quoteAuthorName = quoteAuthor.getDisplayName(quoteGuild);
             String quoteAuthorDiscriminator = quoteAuthor.getDiscriminator();
             quoteAuthorName += "#" + quoteAuthorDiscriminator;
-            event.reply("You don't have permission to delete that quote because you didn't create it. The submitter was " + quoteAuthorName);
+            EVENT.reply("You don't have permission to delete that quote because you didn't create it. The submitter was " + quoteAuthorName);
             return;
         }
 
         quote.content = "";
         quote.save();
 
-        event.reply("Deleted quote #" + id);
+        EVENT.reply("Deleted quote #" + id);
     }
 
 }

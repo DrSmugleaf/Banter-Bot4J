@@ -22,15 +22,15 @@ public class Undostop extends Command {
     }
 
     @Override
-    public void run(@Nonnull CommandReceivedEvent event) {
-        IGuild guild = event.getGuild();
-        IChannel channel = event.getChannel();
+    public void run() {
+        IGuild guild = EVENT.getGuild();
+        IChannel channel = EVENT.getChannel();
 
-        IUser author = event.getAuthor();
+        IUser author = EVENT.getAuthor();
         AbstractMap.SimpleEntry<IGuild, IUser> pair = new AbstractMap.SimpleEntry<>(guild, author);
         List<AudioTrack> tracks = Music.UNDO_STOP_CACHE.getIfPresent(pair);
         if (tracks == null) {
-            event.reply("You haven't stopped any tracks in the last minute.");
+            EVENT.reply("You haven't stopped any tracks in the last minute.");
             return;
         }
 
@@ -40,7 +40,7 @@ public class Undostop extends Command {
         tracks.addAll(scheduler.cloneTracks());
         scheduler.stop();
         scheduler.queue(tracks);
-        event.reply("Restored all stopped tracks.");
+        EVENT.reply("Restored all stopped tracks.");
     }
 
 }

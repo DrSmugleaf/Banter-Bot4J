@@ -17,15 +17,15 @@ public class EveDowntime extends Command {
     }
 
     @Override
-    public void run(@Nonnull CommandReceivedEvent event) {
-        long authorID = event.getAuthor().getLongID();
+    public void run() {
+        long authorID = EVENT.getAuthor().getLongID();
         EveDowntimeUser user = new EveDowntimeUser(authorID);
         if (user.get().isEmpty()) {
             user.createIfNotExists();
-            event.reply("I will notify you when the eve online tranquility server comes back up from maintenance each day.");
+            EVENT.reply("I will notify you when the eve online tranquility server comes back up from maintenance each day.");
         } else {
             user.delete();
-            event.reply("I will no longer notify you when the server comes back online.");
+            EVENT.reply("I will no longer notify you when the server comes back online.");
         }
     }
 

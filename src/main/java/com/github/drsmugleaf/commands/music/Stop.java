@@ -21,13 +21,13 @@ public class Stop extends Command {
     }
 
     @Override
-    public void run(@Nonnull CommandReceivedEvent event) {
-        IGuild guild = event.getGuild();
-        IUser author = event.getAuthor();
+    public void run() {
+        IGuild guild = EVENT.getGuild();
+        IUser author = EVENT.getAuthor();
 
         GuildMusicManager musicManager = Music.getGuildMusicManager(guild);
         if (musicManager.getScheduler().getCurrentTrack() == null) {
-            event.reply("There aren't any tracks currently playing or in the queue.");
+            EVENT.reply("There aren't any tracks currently playing or in the queue.");
             return;
         }
 
@@ -37,7 +37,7 @@ public class Stop extends Command {
         Music.UNDO_STOP_CACHE.put(pair, scheduler.cloneTracks());
 
         scheduler.stop();
-        event.reply(
+        EVENT.reply(
                 "Stopped and removed all tracks from the queue.\n" +
                 "You have one minute to restore them back to the queue using " + BOT_PREFIX + "undostop."
         );

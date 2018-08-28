@@ -30,15 +30,15 @@ public class TripwireBridge extends Command {
     }
 
     @Override
-    public void run(@Nonnull CommandReceivedEvent event) {
-        IUser author = event.getAuthor();
+    public void run() {
+        IUser author = EVENT.getAuthor();
         if (!TripwireRoute.ROUTES.containsKey(author)) {
-            event.reply("Create a route first with " + BOT_PREFIX + "tripwireRoute.");
+            EVENT.reply("Create a route first with " + BOT_PREFIX + "tripwireRoute.");
             return;
         }
 
         if (ARGS.size() != 2) {
-            event.reply(wrongFormatResponse());
+            EVENT.reply(wrongFormatResponse());
             return;
         }
 
@@ -51,7 +51,7 @@ public class TripwireBridge extends Command {
 
         if (!invalidSystems.isEmpty()) {
             String response = "Invalid system names: " + String.join(", ", invalidSystems + ".");
-            event.reply(response);
+            EVENT.reply(response);
             return;
         }
 
@@ -69,19 +69,19 @@ public class TripwireBridge extends Command {
         }
 
         if (firstSystem == null) {
-            event.reply(ARGS.get(0) + " isn't in the route.");
+            EVENT.reply(ARGS.get(0) + " isn't in the route.");
             return;
         }
 
         if (secondSystem == null) {
-            event.reply(ARGS.get(1) + " isn't in the route.");
+            EVENT.reply(ARGS.get(1) + " isn't in the route.");
             return;
         }
 
         firstSystem.addDestination(secondSystem, 0);
         route.recalculate();
 
-        event.reply(route.info());
+        EVENT.reply(route.info());
     }
 
 }

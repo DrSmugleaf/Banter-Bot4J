@@ -63,9 +63,9 @@ public class EveTimer extends Command {
     }
 
     @Override
-    public void run(@Nonnull CommandReceivedEvent event) {
+    public void run() {
         if (ARGS.isEmpty()) {
-            event.reply(wrongFormatResponse());
+            EVENT.reply(wrongFormatResponse());
             return;
         }
 
@@ -75,22 +75,22 @@ public class EveTimer extends Command {
             return;
         }
 
-        IChannel channel = event.getChannel();
+        IChannel channel = EVENT.getChannel();
         String structure = ARGS.get(0);
         String system = ARGS.get(1);
         if (exists(structure, system)) {
             String response = "Timer for structure %s in system %s already exists";
             response = String.format(response, structure, system);
-            event.reply(response);
+            EVENT.reply(response);
             return;
         }
 
         Long date = parseDate(ARGS.get(2));
-        Long submitter = event.getAuthor().getLongID();
+        Long submitter = EVENT.getAuthor().getLongID();
         EveTimerModel eveTimerModel = new EveTimerModel(channel.getLongID(), structure, system, date, submitter);
         eveTimerModel.save();
 
-        EveTimerModel.createTimer(event.getClient(), eveTimerModel);
+        EveTimerModel.createTimer(EVENT.getClient(), eveTimerModel);
     }
 
 }

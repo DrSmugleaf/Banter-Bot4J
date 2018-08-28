@@ -81,7 +81,7 @@ public abstract class Command implements ICommand {
             return;
         }
 
-        command.run(event);
+        command.run();
     }
 
     protected static boolean isOwner(@Nonnull IUser user) {

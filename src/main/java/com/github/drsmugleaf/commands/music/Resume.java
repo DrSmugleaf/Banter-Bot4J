@@ -19,23 +19,23 @@ public class Resume extends Command {
     }
 
     @Override
-    public void run(@Nonnull CommandReceivedEvent event) {
-        IGuild guild = event.getGuild();
-        IChannel channel = event.getChannel();
+    public void run() {
+        IGuild guild = EVENT.getGuild();
+        IChannel channel = EVENT.getChannel();
 
         GuildMusicManager musicManager = Music.getGuildMusicManager(guild);
         if (!musicManager.getScheduler().isPlaying()) {
-            event.reply("There isn't a track currently playing.");
+            EVENT.reply("There isn't a track currently playing.");
             return;
         }
 
         if (!musicManager.getScheduler().isPaused()) {
-            event.reply("There isn't a track currently paused.");
+            EVENT.reply("There isn't a track currently paused.");
             return;
         }
 
         musicManager.getScheduler().resume();
-        event.reply("Resumed the current track.");
+        EVENT.reply("Resumed the current track.");
     }
 
 }

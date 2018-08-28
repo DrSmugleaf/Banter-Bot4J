@@ -32,13 +32,13 @@ public class TripwireRoute extends Command {
     }
 
     @Override
-    public void run(@Nonnull CommandReceivedEvent event) {
+    public void run() {
         if (ARGS.size() != 4) {
-            event.reply(wrongFormatResponse());
+            EVENT.reply(wrongFormatResponse());
             return;
         }
 
-        Long id = event.getAuthor().getLongID();
+        Long id = EVENT.getAuthor().getLongID();
         String username = ARGS.get(0);
         String password = ARGS.get(1);
         String from = ARGS.get(2);
@@ -46,12 +46,12 @@ public class TripwireRoute extends Command {
         Route route = SystemGraph.getRoute(id, username, password, from, to);
 
         if (route == null) {
-            event.reply("No route found from system " + from  + " to system " + to + ".");
+            EVENT.reply("No route found from system " + from  + " to system " + to + ".");
             return;
         }
 
-        ROUTES.put(event.getAuthor(), route);
-        event.reply(route.info());
+        ROUTES.put(EVENT.getAuthor(), route);
+        EVENT.reply(route.info());
     }
 
 }
