@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
  * Created by DrSmugleaf on 09/06/2018
  */
 @CommandInfo(tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.DELETE_COMMAND_MESSAGE})
-public class Play extends Command {
+public class Play extends MusicCommand {
 
     protected Play(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
         super(event, args);

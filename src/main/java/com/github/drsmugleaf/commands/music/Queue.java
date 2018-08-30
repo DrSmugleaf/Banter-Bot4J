@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
  * Created by DrSmugleaf on 09/06/2018
  */
 @CommandInfo(tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
-public class Queue extends Command {
+public class Queue extends MusicCommand {
 
     protected Queue(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
         super(event, args);

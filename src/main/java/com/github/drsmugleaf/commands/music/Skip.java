@@ -18,7 +18,7 @@ import java.util.Map;
  * Created by DrSmugleaf on 09/06/2018
  */
 @CommandInfo(tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL, Tags.DELETE_COMMAND_MESSAGE})
-public class Skip extends Command {
+public class Skip extends MusicCommand {
 
     @Nonnull
     private static final Map<IGuild, List<IUser>> SKIP_VOTES = new HashMap<>();

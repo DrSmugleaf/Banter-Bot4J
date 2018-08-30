@@ -14,7 +14,7 @@ import java.util.AbstractMap;
  * Created by DrSmugleaf on 09/06/2018
  */
 @CommandInfo(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
-public class Stop extends Command {
+public class Stop extends MusicCommand {
 
     protected Stop(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
         super(event, args);

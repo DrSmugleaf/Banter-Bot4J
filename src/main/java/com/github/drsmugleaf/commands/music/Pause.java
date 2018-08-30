@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
  * Created by DrSmugleaf on 09/06/2018
  */
 @CommandInfo(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL, Tags.DELETE_COMMAND_MESSAGE})
-public class Pause extends Command {
+public class Pause extends MusicCommand {
 
     protected Pause(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
         super(event, args);

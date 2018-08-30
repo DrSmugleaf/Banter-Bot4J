@@ -15,7 +15,7 @@ import java.util.List;
  * Created by DrSmugleaf on 09/06/2018
  */
 @CommandInfo(tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
-public class Undostop extends Command {
+public class Undostop extends MusicCommand {
 
     protected Undostop(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
         super(event, args);
