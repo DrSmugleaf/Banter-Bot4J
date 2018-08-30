@@ -11,6 +11,7 @@ import sx.blah.discord.util.RateLimitException;
 import sx.blah.discord.util.RequestBuffer;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -89,10 +90,15 @@ public abstract class Command implements ICommand {
     }
 
     @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull String content) {
+    public static IMessage sendMessage(@Nonnull IChannel channel, @Nullable String content, @Nullable EmbedObject embed) {
+        if (content == null) {
+            content = "";
+        }
+
+        String finalContent = content;
         return RequestBuffer.request(() -> {
             try {
-                return channel.sendMessage(content);
+                return channel.sendMessage(finalContent, embed);
             } catch (RateLimitException e) {
                 LOGGER.error("Message could not be sent", e);
                 throw e;
@@ -101,27 +107,13 @@ public abstract class Command implements ICommand {
     }
 
     @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull EmbedObject embed) {
-        return RequestBuffer.request(() -> {
-            try {
-                return channel.sendMessage(embed);
-            } catch (RateLimitException e) {
-                LOGGER.error("Embed could not be sent", e);
-                throw e;
-            }
-        }).get();
+    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull String content) {
+        return sendMessage(channel, content, null);
     }
 
     @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull String content, @Nonnull EmbedObject embed) {
-        return RequestBuffer.request(() -> {
-            try {
-                return channel.sendMessage(content, embed);
-            } catch (RateLimitException e) {
-                LOGGER.error("Embed could not be sent", e);
-                throw e;
-            }
-        }).get();
+    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull EmbedObject embed) {
+        return sendMessage(channel, null, embed);
     }
 
     @Nonnull

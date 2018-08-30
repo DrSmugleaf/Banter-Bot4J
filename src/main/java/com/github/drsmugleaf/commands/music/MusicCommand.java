@@ -10,6 +10,7 @@ import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.util.MissingPermissionsException;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,24 +40,20 @@ public abstract class MusicCommand extends Command {
     }
 
     @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull String content) {
-        IMessage message = Command.sendMessage(channel, content);
+    public static IMessage sendMessage(@Nonnull IChannel channel, @Nullable String content, @Nullable EmbedObject embed) {
+        IMessage message = Command.sendMessage(channel, content, embed);
         deleteLastMessage(message);
         return message;
+    }
+
+    @Nonnull
+    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull String content) {
+        return sendMessage(channel, content, null);
     }
 
     @Nonnull
     public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull EmbedObject embed) {
-        IMessage message = Command.sendMessage(channel, embed);
-        deleteLastMessage(message);
-        return message;
-    }
-
-    @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull String content, @Nonnull EmbedObject embed) {
-        IMessage message = Command.sendMessage(channel, content, embed);
-        deleteLastMessage(message);
-        return message;
+        return sendMessage(channel, null, embed);
     }
 
     @Nonnull
