@@ -78,7 +78,7 @@ public abstract class Command implements ICommand {
             LOGGER.error("No constructor found for command " + commandClass, e);
             return;
         } catch (InvocationTargetException e) {
-            LOGGER.error("Error creating command instance", e);
+            LOGGER.error("Error creating command instance for command " + commandClass, e);
             return;
         }
 
