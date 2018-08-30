@@ -63,10 +63,15 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
     }
 
     @Nullable
-    public IMessage reply(@Nonnull String content) {
+    public IMessage reply(@Nullable String content, @Nullable EmbedObject embed) {
+        if (content == null) {
+            content = "";
+        }
+
+        String finalContent = content;
         return RequestBuffer.request(() -> {
             try {
-                return getMessage().reply(content);
+                return getMessage().reply(finalContent, embed);
             } catch (RateLimitException e) {
                 Command.LOGGER.error("Message could not be sent", e);
                 throw e;
@@ -75,27 +80,13 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
     }
 
     @Nullable
-    public IMessage reply(@Nonnull EmbedObject embed) {
-        return RequestBuffer.request(() -> {
-            try {
-                return getMessage().reply(null, embed);
-            } catch (RateLimitException e) {
-                Command.LOGGER.error("Embed could not be sent", e);
-                throw e;
-            }
-        }).get();
+    public IMessage reply(@Nonnull String content) {
+        return reply(content, null);
     }
 
     @Nullable
-    public IMessage reply(@Nonnull String content, EmbedObject embed) {
-        return RequestBuffer.request(() -> {
-            try {
-                return getMessage().reply(content, embed);
-            } catch (RateLimitException e) {
-                Command.LOGGER.error("Message with embed could not be sent", e);
-                throw e;
-            }
-        }).get();
+    public IMessage reply(@Nonnull EmbedObject embed) {
+        return reply(null, embed);
     }
 
 }
