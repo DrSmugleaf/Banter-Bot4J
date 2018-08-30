@@ -17,6 +17,70 @@ class Registry {
 
     Registry(@Nonnull List<Class<ICommand>> commands) {
         COMMANDS = Collections.unmodifiableList(commands);
+
+        List<AbstractMap.SimpleEntry<Class<ICommand>, String>> duplicates = findDuplicates();
+        if (!duplicates.isEmpty()) {
+            String duplicatesString = formatDuplicates(duplicates);
+            throw new DuplicateCommandException(duplicatesString);
+        }
+    }
+
+    @Nonnull
+    private static String getCommandName(@Nonnull Class<ICommand> command) {
+        CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
+        String commandName;
+
+        if (annotation == null || annotation.name().isEmpty()) {
+            commandName = command.getSimpleName();
+        } else {
+            commandName = annotation.name();
+        }
+
+        return commandName.toLowerCase();
+    }
+
+    @Nonnull
+    private List<AbstractMap.SimpleEntry<Class<ICommand>, String>> findDuplicates() {
+        Set<String> uniqueAliases = new HashSet<>();
+        List<AbstractMap.SimpleEntry<Class<ICommand>, String>> duplicateAliases = new ArrayList<>();
+
+        for (Class<ICommand> command : COMMANDS) {
+            String commandName = getCommandName(command);
+            if (!uniqueAliases.add(commandName)) {
+                duplicateAliases.add(new AbstractMap.SimpleEntry<>(command, commandName));
+            }
+
+            CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
+            if (annotation != null) {
+                for (String alias : annotation.aliases()) {
+                    alias = alias.toLowerCase();
+
+                    if (!uniqueAliases.add(alias)) {
+                        duplicateAliases.add(new AbstractMap.SimpleEntry<>(command, alias));
+                    }
+                }
+            }
+        }
+
+        return duplicateAliases;
+    }
+
+    @Nonnull
+    private String formatDuplicates(@Nonnull List<AbstractMap.SimpleEntry<Class<ICommand>, String>> duplicates) {
+        if (duplicates.isEmpty()) {
+            return "";
+        }
+
+        StringBuilder builder = new StringBuilder("Duplicate command names found:");
+        for (Map.Entry<Class<ICommand>, String> entry : duplicates) {
+            builder
+                    .append("\n")
+                    .append(entry.getKey())
+                    .append(": ")
+                    .append(entry.getValue());
+        }
+
+        return builder.toString();
     }
 
     @Nullable
