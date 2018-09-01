@@ -87,7 +87,7 @@ class Registry {
                 List<String> aliases = Command.getAliases(command);
                 for (String alias : aliases) {
                     if (alias.equalsIgnoreCase(args)) {
-                        return new CommandSearchResult(command, commandName);
+                        return new CommandSearchResult(command, alias);
                     }
                 }
             }
