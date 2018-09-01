@@ -81,15 +81,23 @@ class Registry {
             for (Class<Command> command : COMMANDS) {
                 String commandName = Command.getName(command);
                 if (commandName.equalsIgnoreCase(args)) {
-                    return new CommandSearchResult(command, commandName);
+                    matches.add(new CommandSearchResult(command, commandName));
                 }
 
                 List<String> aliases = Command.getAliases(command);
                 for (String alias : aliases) {
                     if (alias.equalsIgnoreCase(args)) {
-                        return new CommandSearchResult(command, alias);
+                        matches.add(new CommandSearchResult(command, alias));
                     }
                 }
+            }
+
+            if (!matches.isEmpty()) {
+                if (matches.size() > 1) {
+                    BanterBot4J.warn("More than 1 match found for " + message + ". Matches: " + matches);
+                }
+
+                return matches.get(0);
             }
 
             argsList.remove(argsList.size() - 1);
