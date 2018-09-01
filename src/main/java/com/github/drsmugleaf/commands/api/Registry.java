@@ -89,34 +89,23 @@ class Registry {
         List<AbstractMap.SimpleEntry<Class<ICommand>, String>> matches = new ArrayList<>();
 
         for (Class<ICommand> command : COMMANDS) {
+            String commandName = getCommandName(command);
+            if (message.equalsIgnoreCase(commandName)) {
+                return new AbstractMap.SimpleEntry<>(command, commandName);
+            } else if (message.contains(commandName)) {
+                matches.add(new AbstractMap.SimpleEntry<>(command, commandName));
+            }
+
             CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
-            if (annotation == null || annotation.name().isEmpty()) {
-                String commandName = command.getSimpleName().toLowerCase();
-                if (message.equalsIgnoreCase(commandName)) {
-                    return new AbstractMap.SimpleEntry<>(command, commandName);
-                } else if (message.contains(commandName)) {
-                    matches.add(new AbstractMap.SimpleEntry<>(command, commandName));
-                }
+            if (annotation != null) {
+                for (String alias : annotation.aliases()) {
+                    alias = alias.toLowerCase();
 
-                continue;
-            }
-
-            String commandName = annotation.name().toLowerCase();
-            if (!commandName.isEmpty()) {
-                if (message.equalsIgnoreCase(commandName)) {
-                    return new AbstractMap.SimpleEntry<>(command, commandName);
-                } else if (message.contains(commandName)) {
-                    matches.add(new AbstractMap.SimpleEntry<>(command, commandName));
-                }
-            }
-
-            for (String alias : annotation.aliases()) {
-                alias = alias.toLowerCase();
-
-                if (message.equalsIgnoreCase(alias)) {
-                    return new AbstractMap.SimpleEntry<>(command, alias);
-                } else if (message.contains(alias)) {
-                    matches.add(new AbstractMap.SimpleEntry<>(command, alias));
+                    if (message.equalsIgnoreCase(alias)) {
+                        return new AbstractMap.SimpleEntry<>(command, alias);
+                    } else if (message.contains(alias)) {
+                        matches.add(new AbstractMap.SimpleEntry<>(command, alias));
+                    }
                 }
             }
         }
