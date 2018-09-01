@@ -6,8 +6,6 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by DrSmugleaf on 21/06/2018
@@ -76,62 +74,26 @@ class Registry {
         String message = event.getMessage().getContent().substring(BanterBot4J.BOT_PREFIX.length()).toLowerCase();
         List<CommandSearchResult> matches = new ArrayList<>();
 
-        for (Class<Command> command : COMMANDS) {
-            String commandName = Command.getName(command);
-            if (message.equalsIgnoreCase(commandName)) {
-                return new CommandSearchResult(command, commandName);
-            } else if (message.contains(commandName)) {
-                Pattern pattern = Pattern.compile("\\b" + commandName + "\\b");
-                Matcher matcher = pattern.matcher(message);
+        List<String> argsList = Arguments.parseArgs(message);
+        while (argsList.size() > 0) {
+            String args = String.join(" ", argsList);
 
-                if (matcher.find()) {
-                    matches.add(new CommandSearchResult(command, commandName));
+            for (Class<Command> command : COMMANDS) {
+                String commandName = Command.getName(command);
+                if (commandName.equalsIgnoreCase(args)) {
+                    return new CommandSearchResult(command, commandName);
                 }
 
-            }
-
-            List<String> aliases = Command.getAliases(command);
-            for (String alias : aliases) {
-                alias = alias.toLowerCase();
-
-                if (message.equalsIgnoreCase(alias)) {
-                    return new CommandSearchResult(command, alias);
-                } else if (message.contains(alias)) {
-                    Pattern pattern = Pattern.compile("\\b" + alias + "\\b");
-                    Matcher matcher = pattern.matcher(message);
-
-                    if (matcher.find()) {
-                        matches.add(new CommandSearchResult(command, alias));
+                List<String> aliases = Command.getAliases(command);
+                for (String alias : aliases) {
+                    if (alias.equalsIgnoreCase(args)) {
+                        return new CommandSearchResult(command, commandName);
                     }
                 }
             }
         }
 
-        return getBestMatch(message, matches);
-    }
-
-    @Nullable
-    private CommandSearchResult getBestMatch(@Nonnull String message, @Nonnull List<CommandSearchResult> matches) {
-        if (matches.isEmpty()) {
-            return null;
-        }
-
-        List<String> argsList = Arguments.parseArgs(message);
-        while (argsList.size() > 0) {
-            String args = String.join(" ", argsList);
-
-            for (CommandSearchResult match : matches) {
-                if (match.MATCHED_NAME.equals(args)) {
-                    return match;
-                }
-            }
-
-            argsList.remove(argsList.size() - 1);
-        }
-
-        BanterBot4J.warn("No exact match found for " + message + ". Partial matches: " + matches);
-
-        return matches.get(0);
+        return null;
     }
 
     void resolveCommand(@Nonnull MessageReceivedEvent event) {
