@@ -21,7 +21,7 @@ class Registry {
         List<CommandSearchResult> duplicates = findDuplicates();
         if (!duplicates.isEmpty()) {
             String duplicatesString = formatDuplicates(duplicates);
-            throw new DuplicateCommandException(duplicatesString);
+            throw new DuplicateCommandNameException(duplicatesString);
         }
     }
 
