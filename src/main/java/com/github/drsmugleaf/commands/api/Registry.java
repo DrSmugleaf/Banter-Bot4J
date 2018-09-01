@@ -18,7 +18,7 @@ class Registry {
     Registry(@Nonnull List<Class<Command>> commands) {
         COMMANDS = Collections.unmodifiableList(commands);
 
-        List<AbstractMap.SimpleEntry<Class<Command>, String>> duplicates = findDuplicates();
+        List<CommandSearchResult> duplicates = findDuplicates();
         if (!duplicates.isEmpty()) {
             String duplicatesString = formatDuplicates(duplicates);
             throw new DuplicateCommandException(duplicatesString);
@@ -26,14 +26,14 @@ class Registry {
     }
 
     @Nonnull
-    private List<AbstractMap.SimpleEntry<Class<Command>, String>> findDuplicates() {
+    private List<CommandSearchResult> findDuplicates() {
         Set<String> uniqueAliases = new HashSet<>();
-        List<AbstractMap.SimpleEntry<Class<Command>, String>> duplicateAliases = new ArrayList<>();
+        List<CommandSearchResult> duplicateAliases = new ArrayList<>();
 
         for (Class<Command> command : COMMANDS) {
             String commandName = Command.getName(command);
             if (!uniqueAliases.add(commandName)) {
-                duplicateAliases.add(new AbstractMap.SimpleEntry<>(command, commandName));
+                duplicateAliases.add(new CommandSearchResult(command, commandName));
             }
 
             CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
@@ -42,7 +42,7 @@ class Registry {
                     alias = alias.toLowerCase();
 
                     if (!uniqueAliases.add(alias)) {
-                        duplicateAliases.add(new AbstractMap.SimpleEntry<>(command, alias));
+                        duplicateAliases.add(new CommandSearchResult(command, alias));
                     }
                 }
             }
@@ -52,47 +52,44 @@ class Registry {
     }
 
     @Nonnull
-    private String formatDuplicates(@Nonnull List<AbstractMap.SimpleEntry<Class<Command>, String>> duplicates) {
+    private String formatDuplicates(@Nonnull List<CommandSearchResult> duplicates) {
         if (duplicates.isEmpty()) {
             return "";
         }
 
         StringBuilder builder = new StringBuilder("Duplicate command names found:");
-        for (Map.Entry<Class<Command>, String> entry : duplicates) {
+        for (CommandSearchResult duplicate : duplicates) {
             builder
                     .append("\n")
-                    .append(entry.getKey())
+                    .append(duplicate.COMMAND)
                     .append(": ")
-                    .append(entry.getValue());
+                    .append(duplicate.MATCHED_NAME);
         }
 
         return builder.toString();
     }
 
     @Nullable
-    private AbstractMap.SimpleEntry<Class<Command>, String> findCommand(@Nonnull MessageReceivedEvent event) {
+    private CommandSearchResult findCommand(@Nonnull MessageReceivedEvent event) {
         String message = event.getMessage().getContent().substring(Command.BOT_PREFIX.length()).toLowerCase();
-        List<AbstractMap.SimpleEntry<Class<Command>, String>> matches = new ArrayList<>();
+        List<CommandSearchResult> matches = new ArrayList<>();
 
         for (Class<Command> command : COMMANDS) {
             String commandName = Command.getName(command);
             if (message.equalsIgnoreCase(commandName)) {
-                return new AbstractMap.SimpleEntry<>(command, commandName);
+                return new CommandSearchResult(command, commandName);
             } else if (message.contains(commandName)) {
-                matches.add(new AbstractMap.SimpleEntry<>(command, commandName));
+                matches.add(new CommandSearchResult(command, commandName));
             }
 
             List<String> aliases = Command.getAliases(command);
-            CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
-            if (annotation != null) {
-                for (String alias : annotation.aliases()) {
-                    alias = alias.toLowerCase();
+            for (String alias : aliases) {
+                alias = alias.toLowerCase();
 
-                    if (message.equalsIgnoreCase(alias)) {
-                        return new AbstractMap.SimpleEntry<>(command, alias);
-                    } else if (message.contains(alias)) {
-                        matches.add(new AbstractMap.SimpleEntry<>(command, alias));
-                    }
+                if (message.equalsIgnoreCase(alias)) {
+                    return new CommandSearchResult(command, alias);
+                } else if (message.contains(alias)) {
+                    matches.add(new CommandSearchResult(command, alias));
                 }
             }
         }
@@ -101,10 +98,7 @@ class Registry {
     }
 
     @Nullable
-    private AbstractMap.SimpleEntry<Class<Command>, String> getBestMatch(
-            @Nonnull String message,
-            @Nonnull List<AbstractMap.SimpleEntry<Class<Command>, String>> matches
-    ) {
+    private CommandSearchResult getBestMatch(@Nonnull String message, @Nonnull List<CommandSearchResult> matches) {
         if (matches.isEmpty()) {
             return null;
         }
@@ -113,8 +107,8 @@ class Registry {
         while (argsList.size() > 0) {
             String args = String.join(" ", argsList);
 
-            for (AbstractMap.SimpleEntry<Class<Command>, String> match : matches) {
-                if (match.getValue().equals(args)) {
+            for (CommandSearchResult match : matches) {
+                if (match.MATCHED_NAME.equals(args)) {
                     return match;
                 }
             }
@@ -128,16 +122,16 @@ class Registry {
     }
 
     void resolveCommand(@Nonnull MessageReceivedEvent event) {
-        AbstractMap.SimpleEntry<Class<Command>, String> command = findCommand(event);
+        CommandSearchResult command = findCommand(event);
         if (command == null) {
             return;
         }
 
-        String commandName = Command.BOT_PREFIX + command.getValue();
+        String commandName = Command.BOT_PREFIX + command.MATCHED_NAME;
         String arguments = event.getMessage().getFormattedContent();
         arguments = arguments.replaceFirst("(?i)" + commandName, "").trim();
         CommandReceivedEvent commandEvent = new CommandReceivedEvent(event);
-        Command.run(command.getKey(), commandEvent, arguments);
+        Command.run(command.COMMAND, commandEvent, arguments);
     }
 
 }
