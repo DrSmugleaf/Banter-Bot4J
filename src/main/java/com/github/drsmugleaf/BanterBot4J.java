@@ -18,6 +18,8 @@ import javax.annotation.Nullable;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -33,7 +35,10 @@ public class BanterBot4J {
     public static final IDiscordClient CLIENT = buildClient();
 
     @Nonnull
-    private static final Long[] OWNERS = {109067752286715904L};
+    public static final String BOT_PREFIX = Keys.BOT_PREFIX.VALUE;
+
+    @Nonnull
+    public static final List<Long> OWNERS = Collections.unmodifiableList(Arrays.asList(109067752286715904L));
 
     @Nullable
     private static IChannel DISCORD_WARNING_CHANNEL = null;
@@ -62,8 +67,6 @@ public class BanterBot4J {
     public static void main(String[] args) {
         Database.init("com.github.drsmugleaf.database.models");
         registerListeners();
-        Handler.setOwners(OWNERS);
-        Handler.setBotPrefix(Keys.BOT_PREFIX.VALUE);
         Handler handler = new Handler("com.github.drsmugleaf.commands");
         CLIENT.getDispatcher().registerListener(handler);
 

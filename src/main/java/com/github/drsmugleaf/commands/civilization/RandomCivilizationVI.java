@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.civilization;
 
+import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.civilization.vi.Leaders;
 import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
@@ -26,8 +27,8 @@ public class RandomCivilizationVI extends Command {
     public void run() {
         if (ARGS.size() < 1) {
             EVENT.reply("Missing an amount of leaders to return.\n" +
-                        "Format: " + BOT_PREFIX + "randomciviliation6 amount\n" +
-                        "Example: " + BOT_PREFIX + "randomcivilization6 3");
+                        "Format: " + BanterBot4J.BOT_PREFIX + "randomciviliation6 amount\n" +
+                        "Example: " + BanterBot4J.BOT_PREFIX + "randomcivilization6 3");
             return;
         }
 

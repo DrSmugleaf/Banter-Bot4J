@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.api;
 
+import com.github.drsmugleaf.BanterBot4J;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
@@ -23,12 +24,6 @@ public abstract class Command implements ICommand {
 
     @Nonnull
     protected static final Logger LOGGER = LoggerFactory.getLogger(Handler.class);
-
-    @Nonnull
-    protected static String BOT_PREFIX = "!";
-
-    @Nonnull
-    static final List<Long> OWNERS = new ArrayList<>();
 
     @Nonnull
     public final CommandReceivedEvent EVENT;
@@ -86,7 +81,7 @@ public abstract class Command implements ICommand {
     }
 
     protected static boolean isOwner(@Nonnull IUser user) {
-        return OWNERS.contains(user.getLongID());
+        return BanterBot4J.OWNERS.contains(user.getLongID());
     }
 
     @Nonnull

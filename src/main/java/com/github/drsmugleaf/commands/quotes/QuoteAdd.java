@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.quotes;
 
+import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
@@ -21,7 +22,7 @@ public class QuoteAdd extends Command {
     @Override
     public void run() {
         if (ARGS.isEmpty()) {
-            EVENT.reply("You didn't write anything to add as a quote. Example: `" + BOT_PREFIX + "quote add test`");
+            EVENT.reply("You didn't write anything to add as a quote. Example: `" + BanterBot4J.BOT_PREFIX + "quote add test`");
             return;
         }
 
@@ -34,7 +35,7 @@ public class QuoteAdd extends Command {
 
         quote.createIfNotExists();
 
-        EVENT.reply("Created quote #" + quote.id + ". Type quote `" + BOT_PREFIX + "quote " + quote.id + "` to see it.");
+        EVENT.reply("Created quote #" + quote.id + ". Type quote `" + BanterBot4J.BOT_PREFIX + "quote " + quote.id + "` to see it.");
     }
 
 }

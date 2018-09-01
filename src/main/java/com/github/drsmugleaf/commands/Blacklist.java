@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands;
 
+import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
@@ -25,9 +26,9 @@ public class Blacklist extends Command {
     @Nonnull
     private static String wrongFormatResponse() {
         return "**Formats:**\n" +
-               BOT_PREFIX + "blacklist @User1 @User2 @User3\n" +
+               BanterBot4J.BOT_PREFIX + "blacklist @User1 @User2 @User3\n" +
                "**Examples:**\n" +
-               BOT_PREFIX + "blacklist @DrSmugleaf @Banter Bot4J";
+               BanterBot4J.BOT_PREFIX + "blacklist @DrSmugleaf @Banter Bot4J";
     }
 
     @Override

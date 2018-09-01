@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.owner;
 
+import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.*;
 
 import javax.annotation.Nonnull;
@@ -17,9 +18,9 @@ public class Name extends Command {
     @Nonnull
     private static String wrongFormatResponse() {
         return "**Formats:**\n" +
-               BOT_PREFIX + "name username\n" +
+               BanterBot4J.BOT_PREFIX + "name username\n" +
                "**Examples:**\n" +
-               BOT_PREFIX + "name Banter Bot4J";
+               BanterBot4J.BOT_PREFIX + "name Banter Bot4J";
     }
 
     @Override

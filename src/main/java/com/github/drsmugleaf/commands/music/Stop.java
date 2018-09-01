@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.music;
 
+import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.*;
 import com.github.drsmugleaf.youtube.GuildMusicManager;
 import com.github.drsmugleaf.youtube.TrackScheduler;
@@ -39,7 +40,7 @@ public class Stop extends MusicCommand {
         scheduler.stop();
         EVENT.reply(
                 "Stopped and removed all tracks from the queue.\n" +
-                "You have one minute to restore them back to the queue using " + BOT_PREFIX + "undostop."
+                "You have one minute to restore them back to the queue using " + BanterBot4J.BOT_PREFIX + "undostop."
         );
     }
 

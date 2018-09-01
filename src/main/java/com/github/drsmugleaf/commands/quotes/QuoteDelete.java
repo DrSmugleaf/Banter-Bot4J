@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.quotes;
 
+import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
@@ -27,7 +28,7 @@ public class QuoteDelete extends Command {
         try {
             id = Long.parseLong(ARGS.toString());
         } catch (NumberFormatException e) {
-            EVENT.reply("Invalid command format. Example: `" + BOT_PREFIX + "quote 1`");
+            EVENT.reply("Invalid command format. Example: `" + BanterBot4J.BOT_PREFIX + "quote 1`");
             return;
         }
 

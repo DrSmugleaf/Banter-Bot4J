@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.api;
 
+import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.database.models.Member;
 import com.github.drsmugleaf.reflection.Reflection;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -22,15 +23,6 @@ public class Handler {
         COMMAND_REGISTRY = new Registry(commands);
     }
 
-    public static void setBotPrefix(@Nonnull String prefix) {
-        Command.BOT_PREFIX = prefix;
-    }
-
-    public static void setOwners(@Nonnull Long[] owners) {
-        Command.OWNERS.clear();
-        Collections.addAll(Command.OWNERS, owners);
-    }
-
     @EventSubscriber
     public void handle(@Nonnull MessageReceivedEvent event) {
         String message = event.getMessage().getContent();
@@ -38,7 +30,7 @@ public class Handler {
             return;
         }
 
-        if (!message.startsWith(Command.BOT_PREFIX)) {
+        if (!message.startsWith(BanterBot4J.BOT_PREFIX)) {
             return;
         }
 

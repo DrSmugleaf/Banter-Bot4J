@@ -71,7 +71,7 @@ class Registry {
 
     @Nullable
     private CommandSearchResult findCommand(@Nonnull MessageReceivedEvent event) {
-        String message = event.getMessage().getContent().substring(Command.BOT_PREFIX.length()).toLowerCase();
+        String message = event.getMessage().getContent().substring(BanterBot4J.BOT_PREFIX.length()).toLowerCase();
         List<CommandSearchResult> matches = new ArrayList<>();
 
         for (Class<Command> command : COMMANDS) {
@@ -127,7 +127,7 @@ class Registry {
             return;
         }
 
-        String commandName = Command.BOT_PREFIX + command.MATCHED_NAME;
+        String commandName = BanterBot4J.BOT_PREFIX + command.MATCHED_NAME;
         String arguments = event.getMessage().getFormattedContent();
         arguments = arguments.replaceFirst("(?i)" + commandName, "").trim();
         CommandReceivedEvent commandEvent = new CommandReceivedEvent(event);

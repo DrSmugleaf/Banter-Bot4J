@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands;
 
+import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.*;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IRole;
@@ -51,7 +52,7 @@ public class Color extends Command {
         List<IRole> roles = guild.getRolesByName("color-" + author.getStringID());
         if (ARGS.isEmpty()) {
             if (roles.isEmpty()) {
-                EVENT.reply("You don't have a name color. Use " + BOT_PREFIX + "color name OR hexadecimal code to assign one.");
+                EVENT.reply("You don't have a name color. Use " + BanterBot4J.BOT_PREFIX + "color name OR hexadecimal code to assign one.");
                 return;
             }
 
