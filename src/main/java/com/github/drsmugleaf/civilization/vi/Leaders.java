@@ -56,10 +56,15 @@ public enum Leaders {
     }
 
     @Nonnull
-    public List<Leaders> random(int amount) {
+    public static List<Leaders> random(int amount) {
         List<Leaders> leaders = new ArrayList<>(Arrays.asList(values()));
         Collections.shuffle(leaders);
-        return leaders.subList(0, amount - 1);
+        return leaders.subList(0, amount);
+    }
+
+    @Nonnull
+    public String getName() {
+        return NAME;
     }
 
 }
