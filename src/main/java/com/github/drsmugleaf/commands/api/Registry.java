@@ -116,7 +116,7 @@ class Registry {
             argsList.remove(argsList.size() - 1);
         }
 
-        BanterBot4J.warn("More than 1 command match found for message " + message + ". Matches: " + matches);
+        BanterBot4J.warn("No exact match found for " + message + ". Partial matches: " + matches);
 
         return matches.get(0);
     }
