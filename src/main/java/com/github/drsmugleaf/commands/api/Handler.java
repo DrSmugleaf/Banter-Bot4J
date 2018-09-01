@@ -18,7 +18,7 @@ public class Handler {
 
     public Handler(@Nonnull String commandsPackageName) {
         Reflection reflection = new Reflection(commandsPackageName);
-        List<Class<ICommand>> commands = reflection.findSubtypesOf(ICommand.class);
+        List<Class<Command>> commands = reflection.findSubtypesOf(Command.class);
         COMMAND_REGISTRY = new Registry(commands);
     }
 

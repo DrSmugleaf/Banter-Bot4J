@@ -90,6 +90,33 @@ public abstract class Command implements ICommand {
     }
 
     @Nonnull
+    public static String getName(@Nonnull Class<? extends Command> command) {
+        String commandName;
+        CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
+
+        if (annotation == null || annotation.name().isEmpty()) {
+            commandName = command.getSimpleName();
+        } else {
+            commandName = annotation.name();
+        }
+
+        return commandName.toLowerCase();
+    }
+
+    @Nonnull
+    public static List<String> getAliases(@Nonnull Class<? extends Command> command) {
+        CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
+
+        if (annotation == null || annotation.aliases().length == 0) {
+            return new ArrayList<>();
+        }
+
+        List<String> commandAliases = new ArrayList<>();
+        Collections.addAll(commandAliases, annotation.aliases());
+        return commandAliases;
+    }
+
+    @Nonnull
     public static IMessage sendMessage(@Nonnull IChannel channel, @Nullable String content, @Nullable EmbedObject embed) {
         if (content == null) {
             content = "";

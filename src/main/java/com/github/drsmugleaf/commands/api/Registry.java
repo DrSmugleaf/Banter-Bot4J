@@ -13,12 +13,12 @@ import java.util.*;
 class Registry {
 
     @Nonnull
-    private final List<Class<ICommand>> COMMANDS;
+    private final List<Class<Command>> COMMANDS;
 
-    Registry(@Nonnull List<Class<ICommand>> commands) {
+    Registry(@Nonnull List<Class<Command>> commands) {
         COMMANDS = Collections.unmodifiableList(commands);
 
-        List<AbstractMap.SimpleEntry<Class<ICommand>, String>> duplicates = findDuplicates();
+        List<AbstractMap.SimpleEntry<Class<Command>, String>> duplicates = findDuplicates();
         if (!duplicates.isEmpty()) {
             String duplicatesString = formatDuplicates(duplicates);
             throw new DuplicateCommandException(duplicatesString);
@@ -26,26 +26,12 @@ class Registry {
     }
 
     @Nonnull
-    private static String getCommandName(@Nonnull Class<ICommand> command) {
-        CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
-        String commandName;
-
-        if (annotation == null || annotation.name().isEmpty()) {
-            commandName = command.getSimpleName();
-        } else {
-            commandName = annotation.name();
-        }
-
-        return commandName.toLowerCase();
-    }
-
-    @Nonnull
-    private List<AbstractMap.SimpleEntry<Class<ICommand>, String>> findDuplicates() {
+    private List<AbstractMap.SimpleEntry<Class<Command>, String>> findDuplicates() {
         Set<String> uniqueAliases = new HashSet<>();
-        List<AbstractMap.SimpleEntry<Class<ICommand>, String>> duplicateAliases = new ArrayList<>();
+        List<AbstractMap.SimpleEntry<Class<Command>, String>> duplicateAliases = new ArrayList<>();
 
-        for (Class<ICommand> command : COMMANDS) {
-            String commandName = getCommandName(command);
+        for (Class<Command> command : COMMANDS) {
+            String commandName = Command.getName(command);
             if (!uniqueAliases.add(commandName)) {
                 duplicateAliases.add(new AbstractMap.SimpleEntry<>(command, commandName));
             }
@@ -66,13 +52,13 @@ class Registry {
     }
 
     @Nonnull
-    private String formatDuplicates(@Nonnull List<AbstractMap.SimpleEntry<Class<ICommand>, String>> duplicates) {
+    private String formatDuplicates(@Nonnull List<AbstractMap.SimpleEntry<Class<Command>, String>> duplicates) {
         if (duplicates.isEmpty()) {
             return "";
         }
 
         StringBuilder builder = new StringBuilder("Duplicate command names found:");
-        for (Map.Entry<Class<ICommand>, String> entry : duplicates) {
+        for (Map.Entry<Class<Command>, String> entry : duplicates) {
             builder
                     .append("\n")
                     .append(entry.getKey())
@@ -84,18 +70,19 @@ class Registry {
     }
 
     @Nullable
-    private AbstractMap.SimpleEntry<Class<ICommand>, String> findCommand(@Nonnull MessageReceivedEvent event) {
+    private AbstractMap.SimpleEntry<Class<Command>, String> findCommand(@Nonnull MessageReceivedEvent event) {
         String message = event.getMessage().getContent().substring(Command.BOT_PREFIX.length()).toLowerCase();
-        List<AbstractMap.SimpleEntry<Class<ICommand>, String>> matches = new ArrayList<>();
+        List<AbstractMap.SimpleEntry<Class<Command>, String>> matches = new ArrayList<>();
 
-        for (Class<ICommand> command : COMMANDS) {
-            String commandName = getCommandName(command);
+        for (Class<Command> command : COMMANDS) {
+            String commandName = Command.getName(command);
             if (message.equalsIgnoreCase(commandName)) {
                 return new AbstractMap.SimpleEntry<>(command, commandName);
             } else if (message.contains(commandName)) {
                 matches.add(new AbstractMap.SimpleEntry<>(command, commandName));
             }
 
+            List<String> aliases = Command.getAliases(command);
             CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
             if (annotation != null) {
                 for (String alias : annotation.aliases()) {
@@ -114,9 +101,9 @@ class Registry {
     }
 
     @Nullable
-    private AbstractMap.SimpleEntry<Class<ICommand>, String> getBestMatch(
+    private AbstractMap.SimpleEntry<Class<Command>, String> getBestMatch(
             @Nonnull String message,
-            @Nonnull List<AbstractMap.SimpleEntry<Class<ICommand>, String>> matches
+            @Nonnull List<AbstractMap.SimpleEntry<Class<Command>, String>> matches
     ) {
         if (matches.isEmpty()) {
             return null;
@@ -126,7 +113,7 @@ class Registry {
         while (argsList.size() > 0) {
             String args = String.join(" ", argsList);
 
-            for (AbstractMap.SimpleEntry<Class<ICommand>, String> match : matches) {
+            for (AbstractMap.SimpleEntry<Class<Command>, String> match : matches) {
                 if (match.getValue().equals(args)) {
                     return match;
                 }
@@ -141,7 +128,7 @@ class Registry {
     }
 
     void resolveCommand(@Nonnull MessageReceivedEvent event) {
-        AbstractMap.SimpleEntry<Class<ICommand>, String> command = findCommand(event);
+        AbstractMap.SimpleEntry<Class<Command>, String> command = findCommand(event);
         if (command == null) {
             return;
         }
