@@ -24,7 +24,7 @@ public class RandomCivilizationVI extends Command {
 
     @Override
     public void run() {
-        if (ARGS.size() < 2) {
+        if (ARGS.size() < 1) {
             EVENT.reply("Missing an amount of leaders to return.\n" +
                         "Format: " + BOT_PREFIX + "randomciviliation6 amount\n" +
                         "Example: " + BOT_PREFIX + "randomcivilization6 3");
@@ -33,9 +33,9 @@ public class RandomCivilizationVI extends Command {
 
         int amount;
         try {
-            amount = Integer.parseInt(ARGS.get(1));
+            amount = Integer.parseInt(ARGS.get(0));
         } catch (NumberFormatException e) {
-            EVENT.reply("Invalid number of leaders requested: " + ARGS.get(1));
+            EVENT.reply("Invalid number of leaders requested: " + ARGS.get(0));
             return;
         }
 

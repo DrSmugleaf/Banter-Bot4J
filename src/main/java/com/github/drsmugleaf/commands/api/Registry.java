@@ -148,7 +148,7 @@ class Registry {
 
         String commandName = Command.BOT_PREFIX + command.getValue();
         String arguments = event.getMessage().getFormattedContent();
-        arguments = arguments.replaceFirst(commandName, "").trim();
+        arguments = arguments.replaceFirst("(?i)" + commandName, "").trim();
         CommandReceivedEvent commandEvent = new CommandReceivedEvent(event);
         Command.run(command.getKey(), commandEvent, arguments);
     }
