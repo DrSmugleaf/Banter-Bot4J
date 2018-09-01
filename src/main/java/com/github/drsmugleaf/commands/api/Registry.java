@@ -91,6 +91,8 @@ class Registry {
                     }
                 }
             }
+
+            argsList.remove(argsList.size() - 1);
         }
 
         return null;
