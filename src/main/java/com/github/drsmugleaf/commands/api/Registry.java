@@ -115,7 +115,7 @@ class Registry {
         String matchedCommandName = command.MATCHED_NAME;
         String arguments = event.getMessage().getFormattedContent();
         int index = arguments.toLowerCase().indexOf(matchedCommandName.toLowerCase());
-        arguments = arguments.substring(index + matchedCommandName.length() + 1);
+        arguments = arguments.substring(index + matchedCommandName.length()).trim();
         CommandReceivedEvent commandEvent = new CommandReceivedEvent(event);
         Command.run(command.COMMAND, commandEvent, arguments);
     }
