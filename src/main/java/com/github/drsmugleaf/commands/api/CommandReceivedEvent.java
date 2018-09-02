@@ -65,7 +65,7 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
         return getHighestRole(roles);
     }
 
-    @Nullable
+    @Nonnull
     public IMessage reply(@Nullable String content, @Nullable EmbedObject embed) {
         if (content == null) {
             content = "";
@@ -82,12 +82,12 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
         }).get();
     }
 
-    @Nullable
+    @Nonnull
     public IMessage reply(@Nonnull String content) {
         return reply(content, null);
     }
 
-    @Nullable
+    @Nonnull
     public IMessage reply(@Nonnull EmbedObject embed) {
         return reply(null, embed);
     }
