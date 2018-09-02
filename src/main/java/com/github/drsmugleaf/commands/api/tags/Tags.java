@@ -1,5 +1,7 @@
-package com.github.drsmugleaf.commands.api;
+package com.github.drsmugleaf.commands.api.tags;
 
+import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.IVoiceChannel;
@@ -17,7 +19,8 @@ public enum Tags implements Tag {
         public void execute(@Nonnull CommandReceivedEvent event) {
             try {
                 event.getMessage().delete();
-            } catch (MissingPermissionsException ignored) {}
+            } catch (MissingPermissionsException ignored) {
+            }
         }
     },
     GUILD_ONLY {
@@ -96,6 +99,7 @@ public enum Tags implements Tag {
         return "You can't use that command.";
     }
 
-    public void execute(@Nonnull CommandReceivedEvent event) {}
+    public void execute(@Nonnull CommandReceivedEvent event) {
+    }
 
 }

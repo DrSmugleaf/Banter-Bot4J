@@ -2,6 +2,7 @@ package com.github.drsmugleaf.commands.api;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
+import com.github.drsmugleaf.commands.api.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
@@ -15,7 +16,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by DrSmugleaf on 09/06/2018
@@ -66,7 +69,7 @@ public abstract class Command implements ICommand {
         command.run();
     }
 
-    protected static boolean isOwner(@Nonnull IUser user) {
+    public static boolean isOwner(@Nonnull IUser user) {
         return BanterBot4J.OWNERS.contains(user.getLongID());
     }
 

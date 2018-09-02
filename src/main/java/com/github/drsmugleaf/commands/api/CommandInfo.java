@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.api;
 
+import com.github.drsmugleaf.commands.api.tags.Tags;
 import sx.blah.discord.handle.obj.Permissions;
 
 import javax.annotation.Nonnull;

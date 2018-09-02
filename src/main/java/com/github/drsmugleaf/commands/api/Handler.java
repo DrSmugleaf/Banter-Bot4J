@@ -3,6 +3,7 @@ package com.github.drsmugleaf.commands.api;
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
 import com.github.drsmugleaf.commands.api.registry.Registry;
+import com.github.drsmugleaf.commands.api.tags.Tag;
 import com.github.drsmugleaf.database.models.Member;
 import com.github.drsmugleaf.reflection.Reflection;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -10,7 +11,10 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.obj.Permissions;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.List;
 
 /**
  * Created by DrSmugleaf on 10/01/2018.

@@ -1,4 +1,6 @@
-package com.github.drsmugleaf.commands.api;
+package com.github.drsmugleaf.commands.api.tags;
+
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 
 import javax.annotation.Nonnull;
 
