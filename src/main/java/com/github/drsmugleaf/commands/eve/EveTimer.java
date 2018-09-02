@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.eve;
 
+import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
@@ -50,11 +51,11 @@ public class EveTimer extends Command {
     @Nonnull
     private static String wrongFormatResponse() {
         return "**Formats:**\n" +
-               BOT_PREFIX + "evetimer \"structure\" \"system\" \"date\" (6d2h45m)\n" +
-               BOT_PREFIX + "evetimer delete \"structure\" \"system\"\n\n" +
+               BanterBot4J.BOT_PREFIX + "evetimer \"structure\" \"system\" \"date\" (6d2h45m)\n" +
+               BanterBot4J.BOT_PREFIX + "evetimer delete \"structure\" \"system\"\n\n" +
                "**Examples:**\n" +
-               BOT_PREFIX + "evetimer \"Fortizar\" \"7RM\" \"4d15h30m\"\n" +
-               BOT_PREFIX + "evetimer delete \"Fortizar\" \"7RM\"";
+               BanterBot4J.BOT_PREFIX + "evetimer \"Fortizar\" \"7RM\" \"4d15h30m\"\n" +
+               BanterBot4J.BOT_PREFIX + "evetimer delete \"Fortizar\" \"7RM\"";
     }
 
     private static boolean exists(@Nonnull String structure, @Nonnull String system) {
@@ -63,9 +64,9 @@ public class EveTimer extends Command {
     }
 
     @Override
-    public void run(@Nonnull CommandReceivedEvent event) {
+    public void run() {
         if (ARGS.isEmpty()) {
-            event.reply(wrongFormatResponse());
+            EVENT.reply(wrongFormatResponse());
             return;
         }
 
@@ -75,22 +76,22 @@ public class EveTimer extends Command {
             return;
         }
 
-        IChannel channel = event.getChannel();
+        IChannel channel = EVENT.getChannel();
         String structure = ARGS.get(0);
         String system = ARGS.get(1);
         if (exists(structure, system)) {
             String response = "Timer for structure %s in system %s already exists";
             response = String.format(response, structure, system);
-            event.reply(response);
+            EVENT.reply(response);
             return;
         }
 
         Long date = parseDate(ARGS.get(2));
-        Long submitter = event.getAuthor().getLongID();
+        Long submitter = EVENT.getAuthor().getLongID();
         EveTimerModel eveTimerModel = new EveTimerModel(channel.getLongID(), structure, system, date, submitter);
         eveTimerModel.save();
 
-        EveTimerModel.createTimer(event.getClient(), eveTimerModel);
+        EveTimerModel.createTimer(EVENT.getClient(), eveTimerModel);
     }
 
 }

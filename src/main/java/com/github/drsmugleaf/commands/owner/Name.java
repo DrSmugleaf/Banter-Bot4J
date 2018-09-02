@@ -1,6 +1,11 @@
 package com.github.drsmugleaf.commands.owner;
 
-import com.github.drsmugleaf.commands.api.*;
+import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.commands.api.Arguments;
+import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.CommandInfo;
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
+import com.github.drsmugleaf.commands.api.tags.Tags;
 
 import javax.annotation.Nonnull;
 
@@ -17,21 +22,21 @@ public class Name extends Command {
     @Nonnull
     private static String wrongFormatResponse() {
         return "**Formats:**\n" +
-               BOT_PREFIX + "name username\n" +
+               BanterBot4J.BOT_PREFIX + "name username\n" +
                "**Examples:**\n" +
-               BOT_PREFIX + "name Banter Bot4J";
+               BanterBot4J.BOT_PREFIX + "name Banter Bot4J";
     }
 
     @Override
-    public void run(@Nonnull CommandReceivedEvent event) {
+    public void run() {
         String name = String.join(" ", ARGS);
         if (name.isEmpty()) {
-            event.reply(wrongFormatResponse());
+            EVENT.reply(wrongFormatResponse());
             return;
         }
 
-        event.getClient().changeUsername(String.join(" ", ARGS));
-        event.reply("Changed the bot's name to " + name);
+        EVENT.getClient().changeUsername(String.join(" ", ARGS));
+        EVENT.reply("Changed the bot's name to " + name);
     }
 
 }

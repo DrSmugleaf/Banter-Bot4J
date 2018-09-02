@@ -1,6 +1,10 @@
 package com.github.drsmugleaf.commands.music;
 
-import com.github.drsmugleaf.commands.api.*;
+import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.commands.api.Arguments;
+import com.github.drsmugleaf.commands.api.CommandInfo;
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
+import com.github.drsmugleaf.commands.api.tags.Tags;
 import com.github.drsmugleaf.youtube.GuildMusicManager;
 import com.github.drsmugleaf.youtube.TrackScheduler;
 import sx.blah.discord.handle.obj.IGuild;
@@ -14,20 +18,20 @@ import java.util.AbstractMap;
  * Created by DrSmugleaf on 09/06/2018
  */
 @CommandInfo(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
-public class Stop extends Command {
+public class Stop extends MusicCommand {
 
     protected Stop(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
         super(event, args);
     }
 
     @Override
-    public void run(@Nonnull CommandReceivedEvent event) {
-        IGuild guild = event.getGuild();
-        IUser author = event.getAuthor();
+    public void run() {
+        IGuild guild = EVENT.getGuild();
+        IUser author = EVENT.getAuthor();
 
         GuildMusicManager musicManager = Music.getGuildMusicManager(guild);
         if (musicManager.getScheduler().getCurrentTrack() == null) {
-            event.reply("There aren't any tracks currently playing or in the queue.");
+            EVENT.reply("There aren't any tracks currently playing or in the queue.");
             return;
         }
 
@@ -37,9 +41,9 @@ public class Stop extends Command {
         Music.UNDO_STOP_CACHE.put(pair, scheduler.cloneTracks());
 
         scheduler.stop();
-        event.reply(
+        EVENT.reply(
                 "Stopped and removed all tracks from the queue.\n" +
-                "You have one minute to restore them back to the queue using " + BOT_PREFIX + "undostop."
+                "You have one minute to restore them back to the queue using " + BanterBot4J.BOT_PREFIX + "undostop."
         );
     }
 

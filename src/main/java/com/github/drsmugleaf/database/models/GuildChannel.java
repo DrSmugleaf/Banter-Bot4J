@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.database.models;
 
-import com.github.drsmugleaf.database.api.*;
+import com.github.drsmugleaf.database.api.Model;
 import com.github.drsmugleaf.database.api.annotations.Column;
 import com.github.drsmugleaf.database.api.annotations.Relation;
 import com.github.drsmugleaf.database.api.annotations.RelationTypes;

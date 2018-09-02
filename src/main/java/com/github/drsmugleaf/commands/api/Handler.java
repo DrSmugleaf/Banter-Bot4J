@@ -1,12 +1,20 @@
 package com.github.drsmugleaf.commands.api;
 
+import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
+import com.github.drsmugleaf.commands.api.registry.Registry;
+import com.github.drsmugleaf.commands.api.tags.Tag;
 import com.github.drsmugleaf.database.models.Member;
 import com.github.drsmugleaf.reflection.Reflection;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.Permissions;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.List;
 
 /**
  * Created by DrSmugleaf on 10/01/2018.
@@ -18,17 +26,8 @@ public class Handler {
 
     public Handler(@Nonnull String commandsPackageName) {
         Reflection reflection = new Reflection(commandsPackageName);
-        List<Class<ICommand>> commands = reflection.findSubtypesOf(ICommand.class);
+        List<Class<Command>> commands = reflection.findSubtypesOf(Command.class);
         COMMAND_REGISTRY = new Registry(commands);
-    }
-
-    public static void setBotPrefix(@Nonnull String prefix) {
-        Command.BOT_PREFIX = prefix;
-    }
-
-    public static void setOwners(@Nonnull Long[] owners) {
-        Command.OWNERS.clear();
-        Collections.addAll(Command.OWNERS, owners);
     }
 
     @EventSubscriber
@@ -38,7 +37,7 @@ public class Handler {
             return;
         }
 
-        if (!message.startsWith(Command.BOT_PREFIX)) {
+        if (!message.startsWith(BanterBot4J.BOT_PREFIX)) {
             return;
         }
 
@@ -53,7 +52,35 @@ public class Handler {
             }
         }
 
-        COMMAND_REGISTRY.resolveCommand(event);
+        CommandSearchResult command = COMMAND_REGISTRY.findCommand(event);
+        if (command == null) {
+            return;
+        }
+
+        CommandReceivedEvent commandEvent = new CommandReceivedEvent(event);
+        CommandInfo annotation = command.COMMAND.getDeclaredAnnotation(CommandInfo.class);
+        if (annotation != null) {
+            if (commandEvent.getGuild() != null) {
+                if (commandEvent.getGuild() != null) {
+                    List<Permissions> annotationPermissions = Arrays.asList(annotation.permissions());
+                    EnumSet<Permissions> authorPermissions = commandEvent.getAuthor().getPermissionsForGuild(commandEvent.getGuild());
+
+                    if (!annotationPermissions.isEmpty() && Collections.disjoint(authorPermissions, Arrays.asList(annotation.permissions()))) {
+                        commandEvent.reply("You don't have permission to use that command.");
+                        return;
+                    }
+                }
+
+                for (Tag tags : annotation.tags()) {
+                    if (!tags.isValid(commandEvent)) {
+                        commandEvent.reply(tags.message());
+                        return;
+                    }
+                }
+            }
+        }
+
+        Command.run(command, commandEvent);
     }
 
 }

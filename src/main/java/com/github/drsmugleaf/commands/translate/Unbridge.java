@@ -1,6 +1,10 @@
 package com.github.drsmugleaf.commands.translate;
 
-import com.github.drsmugleaf.commands.api.*;
+import com.github.drsmugleaf.commands.api.Arguments;
+import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.CommandInfo;
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
+import com.github.drsmugleaf.commands.api.tags.Tags;
 import com.github.drsmugleaf.database.models.BridgedChannel;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.Permissions;
@@ -19,15 +23,15 @@ public class Unbridge extends Command {
     }
 
     @Override
-    public void run(@Nonnull CommandReceivedEvent event) {
+    public void run() {
         if (ARGS.isEmpty()) {
-            event.reply("You didn't provide a channel name.");
+            EVENT.reply("You didn't provide a channel name.");
             return;
         }
 
-        List<IChannel> channels = event.getGuild().getChannelsByName(ARGS.get(0));
+        List<IChannel> channels = EVENT.getGuild().getChannelsByName(ARGS.get(0));
         if (channels.isEmpty()) {
-            event.reply("No channels found with name " + ARGS.get(0));
+            EVENT.reply("No channels found with name " + ARGS.get(0));
             return;
         }
 
@@ -37,7 +41,7 @@ public class Unbridge extends Command {
         bridgedChannel1.delete();
         bridgedChannel2.delete();
 
-        event.reply("Unbridged all channels bridged with " + channel.getName());
+        EVENT.reply("Unbridged all channels bridged with " + channel.getName());
     }
 
 }

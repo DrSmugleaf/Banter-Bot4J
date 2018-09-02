@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.database.models;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
+import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.database.api.Model;
 import com.github.drsmugleaf.database.api.annotations.Column;
 import com.github.drsmugleaf.database.api.annotations.Relation;
@@ -14,7 +14,6 @@ import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.IPrivateChannel;
 
 import javax.annotation.Nonnull;
-import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -48,7 +47,7 @@ public class EveDowntimeUser extends Model<EveDowntimeUser> {
         try {
             STATUS_API.getStatus("tranquility", null);
         } catch (ApiException e) {
-            if (SocketTimeoutException.class.isInstance(e.getCause())) {
+            if (e.getCode() == 503) {
                 return true;
             }
         }
@@ -60,7 +59,7 @@ public class EveDowntimeUser extends Model<EveDowntimeUser> {
         List<EveDowntimeUser> users = new EveDowntimeUser().get();
         for (EveDowntimeUser user : users) {
             IPrivateChannel channel = BanterBot4J.CLIENT.getUserByID(user.user.id).getOrCreatePMChannel();
-            CommandReceivedEvent.sendMessage(channel, "Eve Online server is online again.");
+            Command.sendMessage(channel, "Eve Online server is back online.");
         }
     }
 

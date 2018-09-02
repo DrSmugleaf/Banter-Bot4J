@@ -1,6 +1,10 @@
 package com.github.drsmugleaf.commands.owner;
 
-import com.github.drsmugleaf.commands.api.*;
+import com.github.drsmugleaf.commands.api.Arguments;
+import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.CommandInfo;
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
+import com.github.drsmugleaf.commands.api.tags.Tags;
 import sx.blah.discord.handle.obj.ActivityType;
 import sx.blah.discord.handle.obj.StatusType;
 
@@ -17,16 +21,16 @@ public class Playing extends Command {
     }
 
     @Override
-    public void run(@Nonnull CommandReceivedEvent event) {
+    public void run() {
         if(ARGS.isEmpty()) {
-            event.getClient().changePresence(StatusType.ONLINE, null, "");
-            event.reply("Reset the bot's playing status");
+            EVENT.getClient().changePresence(StatusType.ONLINE, null, "");
+            EVENT.reply("Reset the bot's playing status");
             return;
         }
 
         String game = String.join(" ", ARGS);
-        event.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, game);
-        event.reply("Changed the bot's playing status to " + game);
+        EVENT.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, game);
+        EVENT.reply("Changed the bot's playing status to " + game);
     }
 
 }

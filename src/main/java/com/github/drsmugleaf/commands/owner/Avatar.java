@@ -1,6 +1,10 @@
 package com.github.drsmugleaf.commands.owner;
 
-import com.github.drsmugleaf.commands.api.*;
+import com.github.drsmugleaf.commands.api.Arguments;
+import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.CommandInfo;
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
+import com.github.drsmugleaf.commands.api.tags.Tags;
 import sx.blah.discord.util.Image;
 
 import javax.annotation.Nonnull;
@@ -23,9 +27,9 @@ public class Avatar extends Command {
     }
 
     @Override
-    public void run(@Nonnull CommandReceivedEvent event) {
+    public void run() {
         if (ARGS.isEmpty()) {
-            event.reply("You didn't provide a link to change the bot's image to.");
+            EVENT.reply("You didn't provide a link to change the bot's image to.");
             return;
         }
 
@@ -47,10 +51,10 @@ public class Avatar extends Command {
                 }
             }
 
-            event.getClient().changeAvatar(Image.forUrl(suffix, ARGS.get(0)));
+            EVENT.getClient().changeAvatar(Image.forUrl(suffix, ARGS.get(0)));
         } catch(IOException e) {
             LOGGER.error("Malformed URL or error opening connection", e);
-            event.reply("Invalid image URL");
+            EVENT.reply("Invalid image URL");
         }
     }
 

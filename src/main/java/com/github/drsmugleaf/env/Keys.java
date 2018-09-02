@@ -12,6 +12,7 @@ public enum Keys {
     BOT_PREFIX("!"),
     DATABASE_URL,
     DISCORD_TOKEN,
+    DISCORD_WARNING_CHANNEL(""),
     GOOGLE_KEY,
     TRIPWIRE_TEST_USERNAME(""),
     TRIPWIRE_TEST_PASSWORD("");
@@ -23,14 +24,14 @@ public enum Keys {
         String fileEnvProperty = Env.PROPERTIES.getProperty(name());
         String systemEnvProperty = System.getenv(name());
 
-        if (fileEnvProperty != null) {
+        if (fileEnvProperty != null && !fileEnvProperty.isEmpty()) {
             VALUE = fileEnvProperty;
-        } else if (systemEnvProperty != null) {
+        } else if (systemEnvProperty != null && !systemEnvProperty.isEmpty()) {
             VALUE = systemEnvProperty;
         } else if (defaultValue != null) {
             VALUE = defaultValue;
         } else {
-            throw new InitializationException("Property for environment variable " + this + " is null");
+            throw new InitializationException("No value has been set for environment variable " + this);
         }
     }
 

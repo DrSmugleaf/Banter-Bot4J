@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.quotes;
 
+import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
@@ -19,19 +20,19 @@ import java.util.List;
 @CommandInfo(name = "quote", aliases = {"quote get", "quoteget"})
 public class QuoteGet extends Command {
 
-    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss zzz");
 
     protected QuoteGet(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
         super(event, args);
     }
 
     @Override
-    public void run(@Nonnull CommandReceivedEvent event) {
+    public void run() {
         long id;
         try {
             id = Long.parseLong(ARGS.toString());
         } catch (NumberFormatException e) {
-            event.reply("Invalid command format. Example: `" + BOT_PREFIX + "quote 1`");
+            EVENT.reply("Invalid command format. Example: `" + BanterBot4J.BOT_PREFIX + "quote 1`");
             return;
         }
 
@@ -39,7 +40,7 @@ public class QuoteGet extends Command {
         List<Quote> quotes = quote.get();
 
         if (quotes.isEmpty()) {
-            event.reply("No quote was found with id " + id);
+            EVENT.reply("No quote was found with id " + id);
             return;
         }
 
@@ -50,14 +51,14 @@ public class QuoteGet extends Command {
         String quoteAuthorDiscriminator = quoteAuthor.getDiscriminator();
         quoteAuthorName += "#" + quoteAuthorDiscriminator;
         if (quote.content.isEmpty()) {
-            event.reply("Quote #" + quote.id + " was deleted by " + quoteAuthorName + " or one of the bot owners.");
+            EVENT.reply("Quote #" + quote.id + " was deleted by " + quoteAuthorName + " or one of the bot owners.");
             return;
         }
 
         Date date = new Date(quote.date);
         String formattedDate = DATE_FORMAT.format(date);
-        CommandReceivedEvent.sendMessage(
-                event.getChannel(),
+        sendMessage(
+                EVENT.getChannel(),
                 "**Quote #" + quote.id + ", submitted by " + quoteAuthorName + " on " + formattedDate + "**\n" + quote.content
         );
     }

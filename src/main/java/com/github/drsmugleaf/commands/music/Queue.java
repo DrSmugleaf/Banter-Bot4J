@@ -1,6 +1,9 @@
 package com.github.drsmugleaf.commands.music;
 
-import com.github.drsmugleaf.commands.api.*;
+import com.github.drsmugleaf.commands.api.Arguments;
+import com.github.drsmugleaf.commands.api.CommandInfo;
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
+import com.github.drsmugleaf.commands.api.tags.Tags;
 import com.github.drsmugleaf.youtube.TrackScheduler;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import sx.blah.discord.handle.obj.IGuild;
@@ -15,21 +18,21 @@ import java.util.concurrent.TimeUnit;
  * Created by DrSmugleaf on 09/06/2018
  */
 @CommandInfo(tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
-public class Queue extends Command {
+public class Queue extends MusicCommand {
 
     protected Queue(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
         super(event, args);
     }
 
     @Override
-    public void run(@Nonnull CommandReceivedEvent event) {
-        IGuild guild = event.getGuild();
-        IUser author = event.getAuthor();
+    public void run() {
+        IGuild guild = EVENT.getGuild();
+        IUser author = EVENT.getAuthor();
 
         TrackScheduler scheduler = Music.getGuildMusicManager(guild).getScheduler();
         AudioTrack currentTrack = scheduler.getCurrentTrack();
         if (currentTrack == null) {
-            event.reply("There are no tracks currently playing or in the queue.");
+            EVENT.reply("There are no tracks currently playing or in the queue.");
             return;
         }
 
@@ -83,7 +86,7 @@ public class Queue extends Command {
             builder.appendField("Queue duration", queueDurationString, false);
         }
 
-        event.reply(builder.build());
+        EVENT.reply(builder.build());
     }
 
 }

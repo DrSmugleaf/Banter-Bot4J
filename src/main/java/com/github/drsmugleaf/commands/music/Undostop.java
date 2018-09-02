@@ -1,6 +1,9 @@
 package com.github.drsmugleaf.commands.music;
 
-import com.github.drsmugleaf.commands.api.*;
+import com.github.drsmugleaf.commands.api.Arguments;
+import com.github.drsmugleaf.commands.api.CommandInfo;
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
+import com.github.drsmugleaf.commands.api.tags.Tags;
 import com.github.drsmugleaf.youtube.TrackScheduler;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import sx.blah.discord.handle.obj.IChannel;
@@ -15,22 +18,22 @@ import java.util.List;
  * Created by DrSmugleaf on 09/06/2018
  */
 @CommandInfo(tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
-public class Undostop extends Command {
+public class Undostop extends MusicCommand {
 
     protected Undostop(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
         super(event, args);
     }
 
     @Override
-    public void run(@Nonnull CommandReceivedEvent event) {
-        IGuild guild = event.getGuild();
-        IChannel channel = event.getChannel();
+    public void run() {
+        IGuild guild = EVENT.getGuild();
+        IChannel channel = EVENT.getChannel();
 
-        IUser author = event.getAuthor();
+        IUser author = EVENT.getAuthor();
         AbstractMap.SimpleEntry<IGuild, IUser> pair = new AbstractMap.SimpleEntry<>(guild, author);
         List<AudioTrack> tracks = Music.UNDO_STOP_CACHE.getIfPresent(pair);
         if (tracks == null) {
-            event.reply("You haven't stopped any tracks in the last minute.");
+            EVENT.reply("You haven't stopped any tracks in the last minute.");
             return;
         }
 
@@ -40,7 +43,7 @@ public class Undostop extends Command {
         tracks.addAll(scheduler.cloneTracks());
         scheduler.stop();
         scheduler.queue(tracks);
-        event.reply("Restored all stopped tracks.");
+        EVENT.reply("Restored all stopped tracks.");
     }
 
 }

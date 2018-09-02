@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.commands.music;
 
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.youtube.*;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -8,9 +7,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.obj.*;
-import sx.blah.discord.util.MissingPermissionsException;
 
 import javax.annotation.Nonnull;
 import java.util.AbstractMap;
@@ -44,32 +41,6 @@ public class Music {
         EventDispatcher.registerListener(new Music());
     }
 
-    private static void sendMessage(@Nonnull IChannel channel, @Nonnull String message) {
-        IMessage iMessage = CommandReceivedEvent.sendMessage(channel, message);
-        IGuild guild = channel.getGuild();
-
-        if (lastMessage.containsKey(guild)) {
-            try {
-                lastMessage.get(guild).delete();
-            } catch (MissingPermissionsException ignored) {}
-        }
-
-        lastMessage.put(guild, iMessage);
-    }
-
-    private static void sendMessage(@Nonnull IChannel channel, @Nonnull EmbedObject embed) {
-        IMessage iMessage = CommandReceivedEvent.sendMessage(channel, embed);
-        IGuild guild = channel.getGuild();
-
-        if (lastMessage.containsKey(guild)) {
-            try {
-                lastMessage.get(guild).delete();
-            } catch (MissingPermissionsException ignored) {}
-        }
-
-        lastMessage.put(guild, iMessage);
-    }
-
     public static synchronized GuildMusicManager getGuildMusicManager(IGuild guild) {
         GuildMusicManager musicManager = MUSIC_MANAGERS.computeIfAbsent(
                 guild, k -> new GuildMusicManager(PLAYER_MANAGER)
@@ -97,7 +68,7 @@ public class Music {
         }
 
         String response = String.format("Now playing `%s`.", track.getInfo().title);
-        sendMessage(trackUserData.CHANNEL, response);
+        MusicCommand.sendMessage(trackUserData.CHANNEL, response);
     }
 
     @TrackEventHandler(event = TrackQueueEvent.class)
@@ -109,20 +80,20 @@ public class Music {
 
         TrackUserData trackUserData = track.getUserData(TrackUserData.class);
         String response = String.format("Added `%s` to the queue.", track.getInfo().title);
-        sendMessage(trackUserData.CHANNEL, response);
+        MusicCommand.sendMessage(trackUserData.CHANNEL, response);
     }
 
     @TrackEventHandler(event = NoMatchesEvent.class)
     public static void handle(@Nonnull NoMatchesEvent event) {
         AudioResultHandler handler = event.getHandler();
         String response = String.format("No results found for %s.", handler.getSearchString());
-        sendMessage(handler.getChannel(), response);
+        MusicCommand.sendMessage(handler.getChannel(), response);
     }
 
     @TrackEventHandler(event = LoadFailedEvent.class)
     public static void handle(@Nonnull LoadFailedEvent event) {
         String response = String.format("Error playing track: %s", event.getException().getMessage());
-        sendMessage(event.getHandler().getChannel(), response);
+        MusicCommand.sendMessage(event.getHandler().getChannel(), response);
     }
 
     @TrackEventHandler(event = PlaylistQueueEvent.class)
@@ -131,7 +102,7 @@ public class Music {
         AudioTrack firstTrack = tracks.get(0);
         IChannel channel = firstTrack.getUserData(TrackUserData.class).CHANNEL;
         String response = String.format("Added %d tracks to the queue.", tracks.size());
-        sendMessage(channel, response);
+        MusicCommand.sendMessage(channel, response);
     }
 
 }
