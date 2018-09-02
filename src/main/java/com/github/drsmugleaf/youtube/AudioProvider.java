@@ -22,7 +22,7 @@ public class AudioProvider implements IAudioProvider {
         AudioFrame frame = AUDIO_PLAYER.provide();
 
         if (frame != null) {
-            lastFrame = frame.data;
+            lastFrame = frame.getData();
             return true;
         }
 
@@ -32,7 +32,7 @@ public class AudioProvider implements IAudioProvider {
     @Override
     public byte[] provide() {
         if (lastFrame == null) {
-            lastFrame = AUDIO_PLAYER.provide().data;
+            lastFrame = AUDIO_PLAYER.provide().getData();
         }
 
         byte[] data = lastFrame.clone();
