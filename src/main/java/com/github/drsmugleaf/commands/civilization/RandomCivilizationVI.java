@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * Created by DrSmugleaf on 31/08/2018
  */
-@CommandInfo(aliases = "RandomCivilization6")
+@CommandInfo(aliases = "randomcivilization6")
 public class RandomCivilizationVI extends Command {
 
     private final int CIV_AMOUNT = Leaders.values().length;
