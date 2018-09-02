@@ -35,7 +35,7 @@ public class QuoteAdd extends Command {
 
         quote.createIfNotExists();
 
-        EVENT.reply("Created quote #" + quote.id + ". Type quote `" + BanterBot4J.BOT_PREFIX + "quote " + quote.id + "` to see it.");
+        EVENT.reply("Created quote #" + quote.id + ". Type `" + BanterBot4J.BOT_PREFIX + "quote " + quote.id + "` to see it.");
     }
 
 }
