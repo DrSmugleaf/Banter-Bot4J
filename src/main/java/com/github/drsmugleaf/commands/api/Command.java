@@ -1,13 +1,13 @@
 package com.github.drsmugleaf.commands.api;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.RateLimitException;
 import sx.blah.discord.util.RequestBuffer;
 
@@ -36,44 +36,30 @@ public abstract class Command implements ICommand {
         ARGS = args;
     }
 
-    protected static <T extends ICommand> void run(@Nonnull Class<T> commandClass, @Nonnull CommandReceivedEvent event, @Nonnull String args) {
+    protected static void run(@Nonnull CommandSearchResult commandSearch, @Nonnull CommandReceivedEvent event) {
+        Class<? extends Command> commandClass = commandSearch.COMMAND;
         CommandInfo annotation = commandClass.getDeclaredAnnotation(CommandInfo.class);
 
         if (annotation != null) {
-            if (event.getGuild() != null) {
-                List<Permissions> annotationPermissions = Arrays.asList(annotation.permissions());
-                EnumSet<Permissions> authorPermissions = event.getAuthor().getPermissionsForGuild(event.getGuild());
-
-                if (!annotationPermissions.isEmpty() && Collections.disjoint(authorPermissions, Arrays.asList(annotation.permissions()))) {
-                    event.reply("You don't have permission to use that command.");
-                    return;
-                }
-            }
-
             for (Tag tags : annotation.tags()) {
-                if (!tags.isValid(event)) {
-                    event.reply(tags.message());
-                    return;
-                }
-
                 tags.execute(event);
             }
         }
 
         ICommand command;
         try {
-            Constructor<T> constructor = commandClass.getDeclaredConstructor(CommandReceivedEvent.class, Arguments.class);
+            Constructor<? extends Command> constructor = commandClass.getDeclaredConstructor(CommandReceivedEvent.class, Arguments.class);
             constructor.setAccessible(true);
-            Arguments arguments = new Arguments(args);
+            Arguments arguments = new Arguments(commandSearch, event);
             command = constructor.newInstance(event, arguments);
         } catch (InstantiationException | IllegalAccessException e) {
             LOGGER.error("Error running command " + commandClass.getName(), e);
             return;
         } catch (NoSuchMethodException e) {
-            LOGGER.error("No constructor found for command " + commandClass, e);
+            LOGGER.error("No constructor found for command " + commandClass.getName(), e);
             return;
         } catch (InvocationTargetException e) {
-            LOGGER.error("Error creating command instance for command " + commandClass, e);
+            LOGGER.error("Error creating command instance for command " + commandClass.getName(), e);
             return;
         }
 

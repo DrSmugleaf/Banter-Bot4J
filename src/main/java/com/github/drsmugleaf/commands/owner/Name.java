@@ -2,6 +2,7 @@ package com.github.drsmugleaf.commands.owner;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.*;
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 
 import javax.annotation.Nonnull;
 

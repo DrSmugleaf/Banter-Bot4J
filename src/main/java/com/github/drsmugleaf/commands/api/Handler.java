@@ -1,10 +1,13 @@
 package com.github.drsmugleaf.commands.api;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
+import com.github.drsmugleaf.commands.api.registry.Registry;
 import com.github.drsmugleaf.database.models.Member;
 import com.github.drsmugleaf.reflection.Reflection;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.Permissions;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -45,7 +48,35 @@ public class Handler {
             }
         }
 
-        COMMAND_REGISTRY.resolveCommand(event);
+        CommandSearchResult command = COMMAND_REGISTRY.findCommand(event);
+        if (command == null) {
+            return;
+        }
+
+        CommandReceivedEvent commandEvent = new CommandReceivedEvent(event);
+        CommandInfo annotation = command.COMMAND.getDeclaredAnnotation(CommandInfo.class);
+        if (annotation != null) {
+            if (commandEvent.getGuild() != null) {
+                if (commandEvent.getGuild() != null) {
+                    List<Permissions> annotationPermissions = Arrays.asList(annotation.permissions());
+                    EnumSet<Permissions> authorPermissions = commandEvent.getAuthor().getPermissionsForGuild(commandEvent.getGuild());
+
+                    if (!annotationPermissions.isEmpty() && Collections.disjoint(authorPermissions, Arrays.asList(annotation.permissions()))) {
+                        commandEvent.reply("You don't have permission to use that command.");
+                        return;
+                    }
+                }
+
+                for (Tag tags : annotation.tags()) {
+                    if (!tags.isValid(commandEvent)) {
+                        commandEvent.reply(tags.message());
+                        return;
+                    }
+                }
+            }
+        }
+
+        Command.run(command, commandEvent);
     }
 
 }

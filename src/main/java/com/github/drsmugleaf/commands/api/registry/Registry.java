@@ -1,6 +1,7 @@
-package com.github.drsmugleaf.commands.api;
+package com.github.drsmugleaf.commands.api.registry;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.commands.api.*;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import javax.annotation.Nonnull;
@@ -10,12 +11,12 @@ import java.util.*;
 /**
  * Created by DrSmugleaf on 21/06/2018
  */
-class Registry {
+public class Registry {
 
     @Nonnull
     private final List<Class<Command>> COMMANDS;
 
-    Registry(@Nonnull List<Class<Command>> commands) {
+    public Registry(@Nonnull List<Class<Command>> commands) {
         COMMANDS = Collections.unmodifiableList(commands);
 
         List<CommandSearchResult> duplicates = findDuplicates();
@@ -70,7 +71,7 @@ class Registry {
     }
 
     @Nullable
-    private CommandSearchResult findCommand(@Nonnull MessageReceivedEvent event) {
+    public CommandSearchResult findCommand(@Nonnull MessageReceivedEvent event) {
         String message = event.getMessage().getContent().substring(BanterBot4J.BOT_PREFIX.length()).toLowerCase();
         List<CommandSearchResult> matches = new ArrayList<>();
 
@@ -104,20 +105,6 @@ class Registry {
         }
 
         return null;
-    }
-
-    void resolveCommand(@Nonnull MessageReceivedEvent event) {
-        CommandSearchResult command = findCommand(event);
-        if (command == null) {
-            return;
-        }
-
-        String matchedCommandName = command.MATCHED_NAME;
-        String arguments = event.getMessage().getFormattedContent();
-        int index = arguments.toLowerCase().indexOf(matchedCommandName.toLowerCase());
-        arguments = arguments.substring(index + matchedCommandName.length()).trim();
-        CommandReceivedEvent commandEvent = new CommandReceivedEvent(event);
-        Command.run(command.COMMAND, commandEvent, arguments);
     }
 
 }

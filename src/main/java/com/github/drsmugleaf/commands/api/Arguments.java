@@ -1,5 +1,8 @@
 package com.github.drsmugleaf.commands.api;
 
+import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,20 +17,8 @@ public class Arguments extends ArrayList<String> {
     @Nonnull
     private static final Pattern SPLIT_ON_SPACES_EXCEPT_WITHIN_QUOTES = Pattern.compile("\"([^\"]*)\"|'([^']*)'|[^\\s]+");
 
-    Arguments(@Nonnull String text) {
-        super(parseArgs(text));
-    }
-
-    @Nonnull
-    public static List<String> parseArgs(@Nonnull String text) {
-        List<String> args = new ArrayList<>();
-        Matcher matcher = SPLIT_ON_SPACES_EXCEPT_WITHIN_QUOTES.matcher(text);
-        while (matcher.find()) {
-            String arg = getArg(matcher);
-            args.add(arg);
-        }
-
-        return args;
+    Arguments(@Nonnull CommandSearchResult command, @Nonnull CommandReceivedEvent event) {
+        super(getArgs(command, event));
     }
 
     @Nonnull
@@ -40,6 +31,34 @@ public class Arguments extends ArrayList<String> {
         }
 
         return matcher.group();
+    }
+
+    @Nonnull
+    private static String extractArgs(@Nonnull CommandSearchResult command, @Nonnull MessageReceivedEvent event) {
+        String matchedCommandName = command.MATCHED_NAME;
+        String argumentsString = event.getMessage().getFormattedContent();
+        int index = argumentsString.toLowerCase().indexOf(matchedCommandName.toLowerCase());
+        argumentsString = argumentsString.substring(index + matchedCommandName.length()).trim();
+        return argumentsString;
+    }
+
+    @Nonnull
+    public static List<String> parseArgs(@Nonnull String argumentsString) {
+        List<String> args = new ArrayList<>();
+        Matcher matcher = SPLIT_ON_SPACES_EXCEPT_WITHIN_QUOTES.matcher(argumentsString);
+
+        while (matcher.find()) {
+            String arg = getArg(matcher);
+            args.add(arg);
+        }
+
+        return args;
+    }
+
+    @Nonnull
+    public static List<String> getArgs(@Nonnull CommandSearchResult command, @Nonnull MessageReceivedEvent event) {
+        String argumentsString = extractArgs(command, event);
+        return parseArgs(argumentsString);
     }
 
     @Nonnull

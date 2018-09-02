@@ -1,4 +1,6 @@
-package com.github.drsmugleaf.commands.api;
+package com.github.drsmugleaf.commands.api.registry;
+
+import com.github.drsmugleaf.commands.api.Command;
 
 import javax.annotation.Nonnull;
 
@@ -8,12 +10,12 @@ import javax.annotation.Nonnull;
 public class CommandSearchResult {
 
     @Nonnull
-    public final Class<Command> COMMAND;
+    public final Class<? extends Command> COMMAND;
 
     @Nonnull
     public final String MATCHED_NAME;
 
-    CommandSearchResult(@Nonnull Class<Command> command, @Nonnull String matchedName) {
+    CommandSearchResult(@Nonnull Class<? extends Command> command, @Nonnull String matchedName) {
         COMMAND = command;
         MATCHED_NAME = matchedName;
     }

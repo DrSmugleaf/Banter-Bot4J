@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.commands.translate;
 
 import com.github.drsmugleaf.commands.api.*;
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.database.models.BridgedChannel;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.Permissions;

@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.commands.music;
 
 import com.github.drsmugleaf.commands.api.*;
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.youtube.GuildMusicManager;
 import com.github.drsmugleaf.youtube.TrackUserData;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
