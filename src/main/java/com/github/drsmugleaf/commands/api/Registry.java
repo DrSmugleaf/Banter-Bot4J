@@ -112,9 +112,10 @@ class Registry {
             return;
         }
 
-        String commandName = BanterBot4J.BOT_PREFIX + command.MATCHED_NAME;
+        String matchedCommandName = command.MATCHED_NAME;
         String arguments = event.getMessage().getFormattedContent();
-        arguments = arguments.replaceFirst("(?i)" + commandName, "").trim();
+        int index = arguments.toLowerCase().indexOf(matchedCommandName.toLowerCase());
+        arguments = arguments.substring(index + matchedCommandName.length() + 1);
         CommandReceivedEvent commandEvent = new CommandReceivedEvent(event);
         Command.run(command.COMMAND, commandEvent, arguments);
     }
