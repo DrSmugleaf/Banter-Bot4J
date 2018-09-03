@@ -1,7 +1,8 @@
-package com.github.drsmugleaf.youtube;
+package com.github.drsmugleaf.music.youtube;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.env.Keys;
+import com.github.drsmugleaf.music.SearchErrorException;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;

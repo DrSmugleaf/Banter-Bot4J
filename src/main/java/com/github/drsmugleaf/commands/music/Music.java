@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.commands.music;
 
-import com.github.drsmugleaf.youtube.*;
+import com.github.drsmugleaf.music.*;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
@@ -25,7 +25,7 @@ public class Music {
     public static final AudioPlayerManager PLAYER_MANAGER = new DefaultAudioPlayerManager();
 
     @Nonnull
-    public static final Map<IGuild, GuildMusicManager> MUSIC_MANAGERS = new HashMap<>();
+    private static final Map<IGuild, GuildMusicManager> MUSIC_MANAGERS = new HashMap<>();
 
     @Nonnull
     static final Cache<AbstractMap.SimpleEntry<IGuild, IUser>, List<AudioTrack>> UNDO_STOP_CACHE = CacheBuilder

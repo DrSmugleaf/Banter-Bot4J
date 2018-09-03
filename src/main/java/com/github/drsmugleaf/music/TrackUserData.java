@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.youtube;
+package com.github.drsmugleaf.music;
 
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IUser;

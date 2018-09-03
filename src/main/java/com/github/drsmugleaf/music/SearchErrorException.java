@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.youtube;
+package com.github.drsmugleaf.music;
 
 import java.io.IOException;
 

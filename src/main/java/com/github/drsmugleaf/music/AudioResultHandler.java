@@ -1,7 +1,8 @@
-package com.github.drsmugleaf.youtube;
+package com.github.drsmugleaf.music;
 
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.music.Music;
+import com.github.drsmugleaf.music.youtube.API;
 import com.google.api.services.youtube.model.SearchResult;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;

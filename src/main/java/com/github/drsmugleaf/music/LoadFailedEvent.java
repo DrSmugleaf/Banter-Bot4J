@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.youtube;
+package com.github.drsmugleaf.music;
 
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 

@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.youtube;
+package com.github.drsmugleaf.music;
 
 import javax.annotation.Nonnull;
 import java.lang.annotation.ElementType;
