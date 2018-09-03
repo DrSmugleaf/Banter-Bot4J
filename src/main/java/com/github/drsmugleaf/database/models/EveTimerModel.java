@@ -65,7 +65,7 @@ public class EveTimerModel extends Model<EveTimerModel> {
 
     private EveTimerModel() {}
 
-    private static boolean deleteTask(@Nonnull EveTimerModel timer) {
+    public static boolean deleteTask(@Nonnull EveTimerModel timer) {
         for (Map.Entry<EveTimerModel, TimerTask> entry : TASKS.entrySet()) {
             EveTimerModel entryTimer = entry.getKey();
             TimerTask entryTask = entry.getValue();
@@ -121,32 +121,6 @@ public class EveTimerModel extends Model<EveTimerModel> {
 
         TASKS.put(timer, task);
         TIMER.schedule(task, timer.date - System.currentTimeMillis());
-    }
-
-    public static void deleteTimer(@Nonnull Command command) {
-        IChannel channel = command.EVENT.getChannel();
-        String structure = command.ARGS.get(0);
-        String system = command.ARGS.get(1);
-        EveTimerModel timer = new EveTimerModel(channel.getLongID(), structure, system, null, null);
-
-        List<EveTimerModel> timers = timer.get();
-        if (timers.isEmpty()) {
-            String response = "No timer exists assigned to channel %s with structure %s and system %s";
-            response = String.format(response, channel, structure, system);
-            command.EVENT.reply(response);
-        } else {
-            timer = timers.get(0);
-            if (!deleteTask(timer)) {
-                String response = "Couldn't delete timer assigned to channel %s with structure %s and system %s";
-                response = String.format(response, channel, structure, system);
-                command.EVENT.reply(response);
-                return;
-            }
-
-            String response = "Deleted timer assigned to channel %s with structure %s and system %s";
-            response = String.format(response, channel, structure, system);
-            command.EVENT.reply(response);
-        }
     }
 
     @EventSubscriber

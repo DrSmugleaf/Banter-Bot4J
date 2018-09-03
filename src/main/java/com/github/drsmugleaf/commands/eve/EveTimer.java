@@ -70,12 +70,6 @@ public class EveTimer extends Command {
             return;
         }
 
-        String firstArg = ARGS.first();
-        if (firstArg.equalsIgnoreCase("delete")) {
-            EveTimerModel.deleteTimer(this);
-            return;
-        }
-
         IChannel channel = EVENT.getChannel();
         String structure = ARGS.get(0);
         String system = ARGS.get(1);
