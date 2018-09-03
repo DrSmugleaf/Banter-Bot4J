@@ -20,8 +20,9 @@ public class Name extends Command {
     }
 
     @Nonnull
-    private static String wrongFormatResponse() {
-        return "**Formats:**\n" +
+    private static String invalidArgumentsResponse() {
+        return "Invalid arguments.\n" +
+               "**Formats:**\n" +
                BanterBot4J.BOT_PREFIX + "name username\n" +
                "**Examples:**\n" +
                BanterBot4J.BOT_PREFIX + "name Banter Bot4J";
@@ -31,7 +32,7 @@ public class Name extends Command {
     public void run() {
         String name = String.join(" ", ARGS);
         if (name.isEmpty()) {
-            EVENT.reply(wrongFormatResponse());
+            EVENT.reply(invalidArgumentsResponse());
             return;
         }
 

@@ -56,8 +56,9 @@ public class EveTimer extends Command {
     }
 
     @Nonnull
-    private static String wrongFormatResponse() {
-        return "**Formats:**\n" +
+    private static String invalidArgumentsResponse() {
+        return "Invalid arguments.\n" +
+               "**Formats:**\n" +
                BanterBot4J.BOT_PREFIX + "evetimer \"structure\" \"system\" \"date\"\n\n" +
                "**Examples:**\n" +
                BanterBot4J.BOT_PREFIX + "evetimer \"Fortizar\" \"Jita\" \"4d15h30m\"";
@@ -71,7 +72,7 @@ public class EveTimer extends Command {
     @Override
     public void run() {
         if (ARGS.size() != 3) {
-            EVENT.reply(wrongFormatResponse());
+            EVENT.reply(invalidArgumentsResponse());
             return;
         }
 

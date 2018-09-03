@@ -24,8 +24,9 @@ public class Blacklist extends Command {
     }
 
     @Nonnull
-    private static String wrongFormatResponse() {
-        return "**Formats:**\n" +
+    private static String invalidArgumentsResponse() {
+        return "Invalid arguments.\n" +
+               "**Formats:**\n" +
                BanterBot4J.BOT_PREFIX + "blacklist @User1 @User2 @User3\n" +
                "**Examples:**\n" +
                BanterBot4J.BOT_PREFIX + "blacklist @DrSmugleaf @Banter Bot4J";
@@ -34,7 +35,7 @@ public class Blacklist extends Command {
     @Override
     public void run() {
         if (ARGS.isEmpty()) {
-            EVENT.reply(wrongFormatResponse());
+            EVENT.reply(invalidArgumentsResponse());
             return;
         }
 

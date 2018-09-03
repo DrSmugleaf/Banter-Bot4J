@@ -23,8 +23,9 @@ public class TripwireBridge extends Command {
     }
 
     @Nonnull
-    private static String wrongFormatResponse() {
-        return "**Formats:**\n" +
+    private static String invalidArgumentsResponse() {
+        return "Invalid arguments.\n" +
+               "**Formats:**\n" +
                BanterBot4J.BOT_PREFIX + "tripwireBridge system1 system2\n" +
                "**Examples:**\n" +
                BanterBot4J.BOT_PREFIX + "tripwireRoute O-VWPB Jita";
@@ -39,7 +40,7 @@ public class TripwireBridge extends Command {
         }
 
         if (ARGS.size() != 2) {
-            EVENT.reply(wrongFormatResponse());
+            EVENT.reply(invalidArgumentsResponse());
             return;
         }
 

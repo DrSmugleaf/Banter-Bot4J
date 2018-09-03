@@ -25,8 +25,9 @@ public class TripwireRoute extends Command {
     }
 
     @Nonnull
-    private static String wrongFormatResponse() {
-        return "**Formats:**\n" +
+    private static String invalidArgumentsResponse() {
+        return "Invalid arguments.\n" +
+               "**Formats:**\n" +
                BanterBot4J.BOT_PREFIX + "tripwireRoute \"username\" \"password\" \"system1\" \"system2\"\n" +
                "**Examples:**\n" +
                BanterBot4J.BOT_PREFIX + "tripwireRoute \"DrSmugleaf Aulmais\" \"pAsSwOrD\" \"O-VWPB\" \"Jita\"";
@@ -35,7 +36,7 @@ public class TripwireRoute extends Command {
     @Override
     public void run() {
         if (ARGS.size() != 4) {
-            EVENT.reply(wrongFormatResponse());
+            EVENT.reply(invalidArgumentsResponse());
             return;
         }
 

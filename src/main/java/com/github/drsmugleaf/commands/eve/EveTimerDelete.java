@@ -30,7 +30,7 @@ public class EveTimerDelete extends Command {
     }
 
     @Nonnull
-    private static String invalidFormatResponse() {
+    private static String invalidArgumentsResponse() {
         return "Invalid arguments.\n" +
                "**Formats:**\n" +
                BanterBot4J.BOT_PREFIX + "evetimer delete \"structure\" \"system\"\n\n" +
@@ -41,7 +41,7 @@ public class EveTimerDelete extends Command {
     @Override
     public void run() {
         if (ARGS.size() != 2) {
-            EVENT.reply(invalidFormatResponse());
+            EVENT.reply(invalidArgumentsResponse());
             return;
         }
 
