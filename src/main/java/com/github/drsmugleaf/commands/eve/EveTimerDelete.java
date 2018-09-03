@@ -14,7 +14,14 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 03/09/2018
  */
-@CommandInfo(aliases = "evetimer delete")
+@CommandInfo(
+        aliases = {
+                "evetimerdelete", "evetimer delete",
+                "evetimerdel", "evetimer del",
+                "evetimerremove", "evetimer remove",
+                "evetimerrem", "evetimer rem"
+        }
+)
 public class EveTimerDelete extends Command {
 
     protected EveTimerDelete(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {

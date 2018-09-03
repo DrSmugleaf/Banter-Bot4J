@@ -3,6 +3,7 @@ package com.github.drsmugleaf.commands.eve;
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.database.models.EveTimerModel;
 import sx.blah.discord.handle.obj.IChannel;
@@ -16,6 +17,12 @@ import java.util.regex.Pattern;
 /**
  * Created by DrSmugleaf on 09/06/2018
  */
+@CommandInfo(
+        aliases = {
+                "evetimercreate", "evetimer create",
+                "evetimernew", "evetimer new"
+        }
+)
 public class EveTimer extends Command {
 
     protected EveTimer(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
