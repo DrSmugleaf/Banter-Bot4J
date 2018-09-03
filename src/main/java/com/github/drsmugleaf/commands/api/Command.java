@@ -17,7 +17,6 @@ import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -91,12 +90,15 @@ public abstract class Command implements ICommand {
     public static List<String> getAliases(@Nonnull Class<? extends Command> command) {
         CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
 
+        List<String> commandAliases = new ArrayList<>();
         if (annotation == null || annotation.aliases().length == 0) {
-            return new ArrayList<>();
+            return commandAliases;
         }
 
-        List<String> commandAliases = new ArrayList<>();
-        Collections.addAll(commandAliases, annotation.aliases());
+        for (String alias : annotation.aliases()) {
+            commandAliases.add(alias.toLowerCase());
+        }
+
         return commandAliases;
     }
 
