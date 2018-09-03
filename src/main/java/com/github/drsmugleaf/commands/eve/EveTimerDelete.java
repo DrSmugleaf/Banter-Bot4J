@@ -64,7 +64,7 @@ public class EveTimerDelete extends Command {
         }
 
         timer = timers.get(0);
-        if (!EveTimerModel.deleteTask(timer)) {
+        if (!EveTimerModel.deleteTimer(timer)) {
             String response = String.format(
                     "Couldn't delete timer assigned to channel %s with structure %s and system %s",
                     channel, structure, system

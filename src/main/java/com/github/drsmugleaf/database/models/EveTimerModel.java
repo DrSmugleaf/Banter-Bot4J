@@ -65,26 +65,6 @@ public class EveTimerModel extends Model<EveTimerModel> {
 
     private EveTimerModel() {}
 
-    public static boolean deleteTask(@Nonnull EveTimerModel timer) {
-        for (Map.Entry<EveTimerModel, TimerTask> entry : TASKS.entrySet()) {
-            EveTimerModel entryTimer = entry.getKey();
-            TimerTask entryTask = entry.getValue();
-            String entryTimerStructure = entryTimer.structure;
-            String timerStructure = timer.structure;
-            String entryTimerSystem = entryTimer.system;
-            String timerSystem = timer.system;
-
-            if (entryTimerStructure.equalsIgnoreCase(timerStructure) && entryTimerSystem.equalsIgnoreCase(timerSystem)) {
-                entryTask.cancel();
-                TASKS.remove(timer);
-                timer.delete();
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     private static void sendAlert(@Nonnull IDiscordClient client, @Nonnull EveTimerModel timer, boolean skipped) {
         String structure = timer.structure;
         String system = timer.system;
@@ -104,7 +84,7 @@ public class EveTimerModel extends Model<EveTimerModel> {
 
         Command.sendMessage(channel, "@everyone Structure timer", builder.build());
 
-        deleteTask(timer);
+        deleteTimer(timer);
     }
 
     private static void sendAlert(@Nonnull IDiscordClient client, @Nonnull EveTimerModel timer) {
@@ -121,6 +101,26 @@ public class EveTimerModel extends Model<EveTimerModel> {
 
         TASKS.put(timer, task);
         TIMER.schedule(task, timer.date - System.currentTimeMillis());
+    }
+
+    public static boolean deleteTimer(@Nonnull EveTimerModel timer) {
+        for (Map.Entry<EveTimerModel, TimerTask> entry : TASKS.entrySet()) {
+            EveTimerModel entryTimer = entry.getKey();
+            TimerTask entryTask = entry.getValue();
+            String entryTimerStructure = entryTimer.structure;
+            String timerStructure = timer.structure;
+            String entryTimerSystem = entryTimer.system;
+            String timerSystem = timer.system;
+
+            if (entryTimerStructure.equalsIgnoreCase(timerStructure) && entryTimerSystem.equalsIgnoreCase(timerSystem)) {
+                entryTask.cancel();
+                TASKS.remove(timer);
+                timer.delete();
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @EventSubscriber
