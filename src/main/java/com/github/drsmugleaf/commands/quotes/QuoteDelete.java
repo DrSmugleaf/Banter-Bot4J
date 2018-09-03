@@ -16,8 +16,9 @@ import java.util.List;
  * Created by DrSmugleaf on 21/06/2018
  */
 @CommandInfo(
+        name = "quotedelete",
         aliases = {
-                "quotedelete", "quote delete",
+                "quote delete",
                 "quotedel", "quote del",
                 "quoteremove", "quote remove",
                 "quoterem", "quote rem"

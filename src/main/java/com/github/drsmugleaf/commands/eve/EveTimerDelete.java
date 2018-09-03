@@ -15,8 +15,9 @@ import java.util.List;
  * Created by DrSmugleaf on 03/09/2018
  */
 @CommandInfo(
+        name = "evetimerdelete",
         aliases = {
-                "evetimerdelete", "evetimer delete",
+                "evetimer delete",
                 "evetimerdel", "evetimer del",
                 "evetimerremove", "evetimer remove",
                 "evetimerrem", "evetimer rem"
