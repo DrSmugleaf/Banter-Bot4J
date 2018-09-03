@@ -16,7 +16,6 @@ public enum Items implements IModifier {
 
     ABOMASITE("Abomasite", ItemCategory.MEGA_STONE),
     ABSOLITE("Absolite", ItemCategory.MEGA_STONE),
-    ZOOM_LENS("Zoom Lens"),
     ABSORB_BULB("Absorb Bulb"),
     ADAMANT_ORB("Adamant Orb"),
     AERODACTYLITE("Aerodactylite", ItemCategory.MEGA_STONE),
@@ -263,6 +262,7 @@ public enum Items implements IModifier {
     WISE_GLASSES("Wise Glasses"),
     YACHE_BERRY("Yache Berry", ItemCategory.BERRY),
     ZAP_PLATE("Zap Plate", ItemCategory.ARCEUS_PLATE),
+    ZOOM_LENS("Zoom Lens"),
     NORMALIUM_Z("Normalium Z", ItemCategory.Z_CRYSTAL),
     FIRIUM_Z("Firium Z", ItemCategory.Z_CRYSTAL),
     WATERIUM_Z("Waterium Z", ItemCategory.Z_CRYSTAL),
