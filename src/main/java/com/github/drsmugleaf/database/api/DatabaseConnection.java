@@ -71,7 +71,7 @@ class DatabaseConnection {
         Map<String, String> credentials = new HashMap<>();
 
         if (matcher.matches()) {
-            credentials.put("url", "jdbc:postgresql://" + matcher.group(3) + ":" + matcher.group(4) + "/" + matcher.group(5) + "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory");
+            credentials.put("url", "jdbc:postgresql://" + matcher.group(3) + ":" + matcher.group(4) + "/" + matcher.group(5) + "?sslmode=require");
             credentials.put("username", matcher.group(1));
             credentials.put("password", matcher.group(2));
         }
