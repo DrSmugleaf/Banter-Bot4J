@@ -51,7 +51,7 @@ public class EveTimer extends Command {
     @Nonnull
     private static String wrongFormatResponse() {
         return "**Formats:**\n" +
-               BanterBot4J.BOT_PREFIX + "evetimer \"structure\" \"system\" \"date\" (6d2h45m)\n\n" +
+               BanterBot4J.BOT_PREFIX + "evetimer \"structure\" \"system\" \"date\"\n\n" +
                "**Examples:**\n" +
                BanterBot4J.BOT_PREFIX + "evetimer \"Fortizar\" \"Jita\" \"4d15h30m\"";
     }
