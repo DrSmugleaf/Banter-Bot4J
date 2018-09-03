@@ -10,8 +10,9 @@ import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 
 import javax.annotation.Nonnull;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ import java.util.List;
 @CommandInfo(name = "quote", aliases = {"quote get", "quoteget"})
 public class QuoteGet extends Command {
 
-    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss zzz");
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneId.of("UTC"));
 
     protected QuoteGet(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
         super(event, args);
@@ -55,7 +56,8 @@ public class QuoteGet extends Command {
             return;
         }
 
-        Date date = new Date(quote.date);
+        Long quoteDate = quote.date;
+        Instant date = Instant.ofEpochMilli(quoteDate);
         String formattedDate = DATE_FORMAT.format(date);
         sendMessage(
                 EVENT.getChannel(),
