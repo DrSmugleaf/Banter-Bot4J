@@ -63,7 +63,7 @@ public class EveTimer extends Command {
 
     @Override
     public void run() {
-        if (ARGS.isEmpty()) {
+        if (ARGS.size() != 3) {
             EVENT.reply(wrongFormatResponse());
             return;
         }
