@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.eve;
 
+import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
@@ -20,8 +21,22 @@ public class EveTimerDelete extends Command {
         super(event, args);
     }
 
+    @Nonnull
+    private static String invalidFormatResponse() {
+        return "Invalid arguments.\n" +
+               "**Formats:**\n" +
+               BanterBot4J.BOT_PREFIX + "evetimer delete \"structure\" \"system\"\n\n" +
+               "**Examples:**\n" +
+               BanterBot4J.BOT_PREFIX + "evetimer delete \"Fortizar\" \"Jita\"";
+    }
+
     @Override
     public void run() {
+        if (ARGS.size() != 2) {
+            EVENT.reply(invalidFormatResponse());
+            return;
+        }
+
         IChannel channel = EVENT.getChannel();
         long channelID = channel.getLongID();
         String structure = ARGS.get(0);

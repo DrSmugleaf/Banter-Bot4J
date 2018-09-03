@@ -51,11 +51,9 @@ public class EveTimer extends Command {
     @Nonnull
     private static String wrongFormatResponse() {
         return "**Formats:**\n" +
-               BanterBot4J.BOT_PREFIX + "evetimer \"structure\" \"system\" \"date\" (6d2h45m)\n" +
-               BanterBot4J.BOT_PREFIX + "evetimer delete \"structure\" \"system\"\n\n" +
+               BanterBot4J.BOT_PREFIX + "evetimer \"structure\" \"system\" \"date\" (6d2h45m)\n\n" +
                "**Examples:**\n" +
-               BanterBot4J.BOT_PREFIX + "evetimer \"Fortizar\" \"7RM\" \"4d15h30m\"\n" +
-               BanterBot4J.BOT_PREFIX + "evetimer delete \"Fortizar\" \"7RM\"";
+               BanterBot4J.BOT_PREFIX + "evetimer \"Fortizar\" \"Jita\" \"4d15h30m\"";
     }
 
     private static boolean exists(@Nonnull String structure, @Nonnull String system) {
