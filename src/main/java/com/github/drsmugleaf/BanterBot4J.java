@@ -1,20 +1,27 @@
 package com.github.drsmugleaf;
 
-import com.github.drsmugleaf.commands.Handler;
-import com.github.drsmugleaf.commands.PokemonCommands;
-import com.github.drsmugleaf.commands.Translator;
-import com.github.drsmugleaf.env.Env;
+import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.Handler;
+import com.github.drsmugleaf.database.api.Database;
 import com.github.drsmugleaf.env.Keys;
-import com.github.drsmugleaf.models.*;
+import com.github.drsmugleaf.reflection.Reflection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.util.RequestBuffer;
+import sx.blah.discord.api.events.EventSubscriber;
+import sx.blah.discord.handle.impl.events.ReadyEvent;
+import sx.blah.discord.handle.obj.IChannel;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by DrSmugleaf on 19/05/2017.
@@ -25,62 +32,113 @@ public class BanterBot4J {
     public static final Logger LOGGER = initLogger();
 
     @Nonnull
-    private static final IDiscordClient CLIENT = buildClient();
+    public static final IDiscordClient CLIENT = buildClient();
 
     @Nonnull
-    public static final String BOT_PREFIX = getBotPrefix();
+    public static final String BOT_PREFIX = Keys.BOT_PREFIX.VALUE;
 
     @Nonnull
-    private static final Long[] OWNERS = {109067752286715904L};
+    public static final List<Long> OWNERS = Collections.unmodifiableList(Arrays.asList(109067752286715904L));
 
+    @Nullable
+    private static IChannel DISCORD_WARNING_CHANNEL = null;
+
+    @Nonnull
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss zzz");
+
+    @Nonnull
     private static IDiscordClient buildClient() {
         ClientBuilder clientBuilder = new ClientBuilder();
-        String token = Env.get(Keys.DISCORD_TOKEN);
-        clientBuilder.withToken(token).withRecommendedShardCount();
+        clientBuilder.withToken(Keys.DISCORD_TOKEN.VALUE).withRecommendedShardCount();
         return clientBuilder.build();
     }
 
-    private static String getBotPrefix() {
-        String envPrefix = Env.get(Keys.BOT_PREFIX);
-        return envPrefix == null ? "!" : envPrefix;
-    }
-
+    @Nonnull
     private static Logger initLogger() {
         return LoggerFactory.getLogger(BanterBot4J.class);
     }
 
-    public static void main(String[] args) {
-        CLIENT.getDispatcher().registerListener(new Handler());
-        CLIENT.getDispatcher().registerListeners(Guild.class, User.class, Member.class, Channel.class, GuildChannel.class, BridgedChannel.class, Translator.class, PokemonCommands.class);
-        new Database();
+    private static void registerListeners() {
+        Reflection reflection = new Reflection("com.github.drsmugleaf");
+        List<Class<?>> listenerClasses = reflection.findClassesWithMethodAnnotation(EventSubscriber.class);
+        listenerClasses.forEach(clazz -> CLIENT.getDispatcher().registerListener(clazz));
+    }
 
-        User.createTable(Database.conn);
-        Guild.createTable(Database.conn);
-        Member.createTable(Database.conn);
-        Channel.createTable(Database.conn);
-        GuildChannel.createTable(Database.conn);
-        BridgedChannel.createTable(Database.conn);
+    public static void main(String[] args) {
+        Database.init("com.github.drsmugleaf.database.models");
+        registerListeners();
+        Handler handler = new Handler("com.github.drsmugleaf.commands");
+        CLIENT.getDispatcher().registerListener(handler);
 
         CLIENT.login();
     }
 
-    public static boolean isOwner(Long userID) {
-        return Arrays.stream(BanterBot4J.OWNERS).anyMatch(id -> id.equals(userID));
+    private static void warnChannel(@Nonnull String message, @Nullable Throwable t) {
+        if (DISCORD_WARNING_CHANNEL == null) {
+            throw new IllegalStateException("No Discord warning channel has been set");
+        }
+
+        StringBuilder warning = new StringBuilder();
+
+        String date = DATE_FORMAT.format(new Date());
+        warning
+                .append("**Warning on ")
+                .append(date)
+                .append("**\n")
+                .append("**Message:** ")
+                .append(message);
+        if (t != null) {
+            StringWriter stringWriter = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(stringWriter);
+            t.printStackTrace(printWriter);
+            String stackTrace = stringWriter.toString();
+
+            warning
+                    .append("\n")
+                    .append("**Error:** ")
+                    .append(stackTrace);
+        }
+
+        Command.sendMessage(DISCORD_WARNING_CHANNEL, warning.toString());
     }
 
-    public static IUser fetchUser(long id) {
-        final IUser[] user = new IUser[1];
+    public static void warn(@Nonnull String message, @Nullable Throwable t) {
+        if (t != null) {
+            LOGGER.warn(message, t);
+        } else {
+            LOGGER.warn(message);
+        }
 
-        RequestBuffer.request(() -> {
-            try {
-                user[0] = CLIENT.fetchUser(id);
-            } catch (sx.blah.discord.util.DiscordException e) {
-                LOGGER.error("User couldn't be fetched", e);
-                throw e;
-            }
-        }).get();
+        if (DISCORD_WARNING_CHANNEL != null) {
+            warnChannel(message, t);
+        }
+    }
 
-        return user[0];
+    public static void warn(@Nonnull String message) {
+        warn(message, null);
+    }
+
+    @EventSubscriber
+    public static void handle(ReadyEvent event) {
+        String channelIDString = Keys.DISCORD_WARNING_CHANNEL.VALUE;
+        if (channelIDString.isEmpty()) {
+            LOGGER.warn("No discord warning channel id has been set as an environment property");
+            return;
+        }
+
+        Long channelID;
+        try {
+            channelID = Long.parseLong(channelIDString);
+        } catch (NumberFormatException e) {
+            throw new IllegalStateException(channelIDString + " isn't a correct discord channel id");
+        }
+
+        IChannel channel = CLIENT.getChannelByID(channelID);
+        if (channel == null) {
+            throw new IllegalStateException("No discord channel exists with id " + channelID);
+        }
+
+        DISCORD_WARNING_CHANNEL = channel;
     }
 
 }
