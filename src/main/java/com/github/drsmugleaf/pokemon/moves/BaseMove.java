@@ -3025,11 +3025,11 @@ public enum BaseMove implements IModifier, IMoves {
         BATTLE_EFFECT = line[6];
         IN_DEPTH_EFFECT = line[7].isEmpty() ? null : line[7];
         SECONDARY_EFFECT = line[8];
-        EFFECT_RATE = line[9].isEmpty() ? null : Integer.valueOf(line[9]);
-        IS_SELF_Z_MOVE = Boolean.parseBoolean(line[10]);
-        CORRESPONDING_Z_MOVE = new BaseMoves.Single(line[11]);
-        Z_MOVE_ITEM = line[12].isEmpty() ? null : Items.getItem(line[12]);
-        DETAILED_EFFECT = line[13].isEmpty() ? null : line[13];
+        DETAILED_EFFECT = line[9].isEmpty() ? null : line[9];
+        EFFECT_RATE = line[10].isEmpty() ? null : Integer.valueOf(line[10]);
+        IS_SELF_Z_MOVE = Boolean.parseBoolean(line[11]);
+        CORRESPONDING_Z_MOVE = new BaseMoves.Single(line[12]);
+        Z_MOVE_ITEM = line[13].isEmpty() ? null : Items.getItem(line[13]);
         Z_MOVE_POWER = line[14].isEmpty() ? null : Integer.valueOf(line[14]);
         IS_Z_MOVE = Boolean.parseBoolean(line[15]);
 
