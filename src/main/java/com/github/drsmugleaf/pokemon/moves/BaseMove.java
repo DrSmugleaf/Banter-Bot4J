@@ -3310,11 +3310,8 @@ public enum BaseMove implements IModifier, IMoves {
         double attackerAccuracy = attacker.calculate(BattleStat.ACCURACY);
         double defenderEvasion = target.calculate(BattleStat.EVASION);
         double probability = ACCURACY * (attackerAccuracy / defenderEvasion);
-        if (probability > 1 || probability < Math.random()) {
-            return true;
-        }
 
-        return false;
+        return probability > 1 || probability < Math.random();
     }
 
     public boolean hitsWithoutDefenderStages(@Nonnull Pokemon target, @Nonnull Action action) {
@@ -3337,11 +3334,8 @@ public enum BaseMove implements IModifier, IMoves {
 
         double attackerAccuracy = attacker.calculate(BattleStat.ACCURACY);
         double probability = ACCURACY * attackerAccuracy;
-        if (probability > 1 || probability < Math.random()) {
-            return true;
-        }
 
-        return false;
+        return probability > 1 || probability < Math.random();
     }
 
     public boolean hitsIgnoreTypes(@Nonnull Pokemon target, @Nonnull Action action) {
@@ -3361,11 +3355,8 @@ public enum BaseMove implements IModifier, IMoves {
         double attackerAccuracy = attacker.calculate(BattleStat.ACCURACY);
         double defenderEvasion = defender.calculate(BattleStat.EVASION);
         double probability = ACCURACY * (attackerAccuracy / defenderEvasion);
-        if (probability > 1 || probability < Math.random()) {
-            return true;
-        }
 
-        return false;
+        return probability > 1 || probability < Math.random();
     }
 
     protected int useAsZMove(Pokemon user, Pokemon target, Battle battle, Action action) {

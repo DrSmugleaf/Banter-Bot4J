@@ -192,11 +192,7 @@ public enum Status implements IStatus, IModifier {
 
         @Override
         public boolean onOwnAttemptAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
-            if (Math.random() < 0.25) {
-                return false;
-            }
-
-            return true;
+            return !(Math.random() < 0.25);
         }
 
         @Override

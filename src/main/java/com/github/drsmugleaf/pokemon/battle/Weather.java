@@ -16,11 +16,7 @@ public enum Weather implements IModifier {
     HARSH_SUNSHINE("Harsh Sunshine") {
         @Override
         public boolean canApplyStatus(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Status status) {
-            if (status == Status.FREEZE) {
-                return false;
-            }
-
-            return true;
+            return status != Status.FREEZE;
         }
 
         @Override

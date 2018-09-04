@@ -248,7 +248,6 @@ public enum Abilities implements IModifier {
     POWER_CONSTRUCT("Power Construct");
 
     private String NAME;
-    private boolean suppressed = false;
 
     Abilities(@Nonnull String name) {
         Holder.MAP.put(name, this);
@@ -265,7 +264,7 @@ public enum Abilities implements IModifier {
     }
 
     @Nonnull
-    public static Abilities[] getAbilities(@Nonnull JSONArray abilities) {
+    public static List<Abilities> getAbilities(@Nonnull JSONArray abilities) {
         List<Abilities> abilityList = new ArrayList<>();
 
         for (int i = 0; i < abilities.length(); i++) {
@@ -273,7 +272,7 @@ public enum Abilities implements IModifier {
             abilityList.add(ability);
         }
 
-        return abilityList.toArray(new Abilities[0]);
+        return abilityList;
     }
 
     @Nonnull

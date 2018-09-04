@@ -66,11 +66,11 @@ public class SerebiiParser {
                 "Battle Effect",
                 "In-Depth Effect",
                 "Secondary Effect",
+                "Detailed Effect",
                 "Effect Rate",
                 "Is Self Z-Move?",
                 "Corresponding Z-Move",
                 "Z-Move Item",
-                "Detailed Effect",
                 "Z-Move Power",
                 "Is Z-Move?",
                 "Z-Move Required Pokemon",
@@ -326,7 +326,7 @@ public class SerebiiParser {
                                         throw new Exception("Missing case \"" + propertyValue.text() + "\" for Pokemon Hit in battle from Serebii for move: " + name);
                                 }
 
-                                Document bulbapediaDoc = null;
+                                Document bulbapediaDoc;
                                 try {
                                     bulbapediaDoc = Jsoup.connect("https://bulbapedia.bulbagarden.net/wiki/" + name.replace(" ", "_").replace("'", "%27") + "_(move)").get();
                                 } catch (HttpStatusException e) {

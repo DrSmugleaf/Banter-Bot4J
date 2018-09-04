@@ -443,16 +443,10 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     CRAFTY_SHIELD("Crafty Shield", 0) {
         @Override
         public boolean onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
-            if (
-                    action.getCategory() == Category.OTHER
-                    && attacker != defender
-                    && action.getBaseMove() != BaseMove.PERISH_SONG
-                    && action.getBaseMove().EFFECT != MoveEffect.ENTRY_HAZARD
-                ) {
-                return false;
-            }
-
-            return true;
+            return action.getCategory() != Category.OTHER
+                   || attacker == defender
+                   || action.getBaseMove() == BaseMove.PERISH_SONG
+                   || action.getBaseMove().EFFECT == MoveEffect.ENTRY_HAZARD;
         }
     },
 
