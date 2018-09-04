@@ -17,10 +17,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,7 +45,7 @@ public class BanterBot4J {
     private static IChannel DISCORD_WARNING_CHANNEL = null;
 
     @Nonnull
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss zzz");
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
 
     @Nonnull
     private static IDiscordClient buildClient() {
@@ -80,7 +81,7 @@ public class BanterBot4J {
 
         StringBuilder warning = new StringBuilder();
 
-        String date = DATE_FORMAT.format(new Date());
+        String date = DATE_FORMAT.format(Instant.now());
         warning
                 .append("**Warning on ")
                 .append(date)

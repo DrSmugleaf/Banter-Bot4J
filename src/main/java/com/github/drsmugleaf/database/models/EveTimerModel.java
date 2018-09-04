@@ -18,6 +18,7 @@ import java.awt.*;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 
@@ -35,6 +36,8 @@ public class EveTimerModel extends Model<EveTimerModel> {
 
     @Nonnull
     private static final Map<EveTimerModel, TimerTask> TASKS = new HashMap<>();
+
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(EVE_TIMEZONE);
 
     @Column(name = "channel")
     @Relation(type = RelationTypes.ManyToOne, columnName = "id")
@@ -68,7 +71,8 @@ public class EveTimerModel extends Model<EveTimerModel> {
     private static void sendAlert(@Nonnull IDiscordClient client, @Nonnull EveTimerModel timer, boolean skipped) {
         String structure = timer.structure;
         String system = timer.system;
-        Date date = new Date(timer.date);
+        Instant date = Instant.ofEpochMilli(timer.date);
+        String formattedDate = DATE_FORMAT.format(date);
         IUser submitter = client.fetchUser(timer.submitter.id);
         IChannel channel = client.getChannelByID(timer.channel.id);
         String submitterName = submitter.getDisplayName(channel.getGuild());
@@ -79,7 +83,7 @@ public class EveTimerModel extends Model<EveTimerModel> {
                 .appendField("Structure", structure, true)
                 .appendField("System", system, true)
                 .appendField("Submitted by", submitterName, true)
-                .withFooterText(date.toString())
+                .withFooterText(formattedDate)
                 .withColor(skipped ? Color.RED : Color.GREEN);
 
         Command.sendMessage(channel, "@everyone Structure timer", builder.build());

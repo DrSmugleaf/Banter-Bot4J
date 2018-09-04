@@ -11,7 +11,7 @@ import sx.blah.discord.handle.obj.IUser;
 
 import javax.annotation.Nonnull;
 import java.time.Instant;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -21,7 +21,7 @@ import java.util.List;
 @CommandInfo(name = "quote", aliases = {"quote get", "quoteget"})
 public class QuoteGet extends Command {
 
-    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneId.of("UTC"));
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
 
     protected QuoteGet(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
         super(event, args);
