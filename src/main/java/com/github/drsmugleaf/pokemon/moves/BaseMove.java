@@ -1,7 +1,6 @@
 package com.github.drsmugleaf.pokemon.moves;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.pokemon.battle.IModifier;
 import com.github.drsmugleaf.pokemon.ability.Abilities;
 import com.github.drsmugleaf.pokemon.battle.*;
 import com.github.drsmugleaf.pokemon.events.EventDispatcher;
@@ -20,7 +19,10 @@ import com.github.drsmugleaf.pokemon.status.Status;
 import com.github.drsmugleaf.pokemon.status.VolatileStatus;
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
 import com.github.drsmugleaf.pokemon.types.Type;
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -3063,7 +3065,8 @@ public enum BaseMove implements IModifier, IMoves {
     private static List<String[]> readCsv() {
         try {
             FileReader fileReader = new FileReader("moves.csv");
-            CSVReader reader = new CSVReader(fileReader, ',');
+            CSVParser parser = new CSVParserBuilder().withSeparator(',').build();
+            CSVReader reader = new CSVReaderBuilder(fileReader).withCSVParser(parser).build();
             return reader.readAll();
         } catch (FileNotFoundException e) {
             BanterBot4J.LOGGER.error("Moves.csv file not found", e);
