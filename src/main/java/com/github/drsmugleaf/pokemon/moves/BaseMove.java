@@ -3069,7 +3069,7 @@ public enum BaseMove implements IModifier, IMoves {
             CSVReader reader = new CSVReaderBuilder(fileReader).withCSVParser(parser).build();
             return reader.readAll();
         } catch (FileNotFoundException e) {
-            BanterBot4J.LOGGER.error("Moves.csv file not found", e);
+            BanterBot4J.LOGGER.error("moves.csv file not found", e);
         } catch (IOException e) {
             BanterBot4J.LOGGER.error("Error reading csv lines", e);
         }
