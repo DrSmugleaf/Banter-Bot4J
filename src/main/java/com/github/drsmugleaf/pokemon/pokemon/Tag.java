@@ -39,6 +39,7 @@ public class Tag implements IModifier {
     @Override
     public void onTurnEnd(@Nonnull Battle battle, @Nonnull Pokemon pokemon) {
         duration--;
+
         if (duration < 0) {
             if (ACTION == null) {
                 TAG.remove(pokemon);

@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.pokemon.stats;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,19 +23,20 @@ public enum Stage {
     POSITIVE_FIVE(5, 3.5, 2.66, 2.66),
     POSITIVE_SIX(6, 4, 3, 3);
 
-    private final int STAGE;
-    private final double MAIN_STAT_MULTIPLIER;
-    private final double ACCURACY_MULTIPLIER;
-    private final double EVASION_MULTIPLIER;
+    public final int STAGE;
+    public final double MAIN_STAT_MULTIPLIER;
+    public final double ACCURACY_MULTIPLIER;
+    public final double EVASION_MULTIPLIER;
 
     Stage(int stage, double mainStatMultiplier, double accuracyMultiplier, double evasionMultiplier) {
         Holder.MAP.put(stage, this);
-        this.STAGE = stage;
-        this.MAIN_STAT_MULTIPLIER = mainStatMultiplier;
-        this.ACCURACY_MULTIPLIER = accuracyMultiplier;
-        this.EVASION_MULTIPLIER = evasionMultiplier;
+        STAGE = stage;
+        MAIN_STAT_MULTIPLIER = mainStatMultiplier;
+        ACCURACY_MULTIPLIER = accuracyMultiplier;
+        EVASION_MULTIPLIER = evasionMultiplier;
     }
 
+    @Nonnull
     public static Stage getStage(int stage) {
         if (!Holder.MAP.containsKey(stage)) {
             throw new NullPointerException("Stage " + stage + " doesn't exist");
@@ -44,17 +46,17 @@ public enum Stage {
     }
 
     public int getStage() {
-        return this.STAGE;
+        return STAGE;
     }
 
     public double getStatMultiplier(IStat stat) {
         if (stat instanceof PermanentStat) {
-            return this.MAIN_STAT_MULTIPLIER;
+            return MAIN_STAT_MULTIPLIER;
         } else if (stat instanceof BattleStat) {
             if (stat == BattleStat.ACCURACY) {
-                return this.ACCURACY_MULTIPLIER;
+                return ACCURACY_MULTIPLIER;
             } else if (stat == BattleStat.EVASION) {
-                return this.EVASION_MULTIPLIER;
+                return EVASION_MULTIPLIER;
             }
         }
 
@@ -62,18 +64,19 @@ public enum Stage {
     }
 
     public double getMainStatMultiplier() {
-        return this.MAIN_STAT_MULTIPLIER;
+        return MAIN_STAT_MULTIPLIER;
     }
 
     public double getAccuracyMultiplier() {
-        return this.ACCURACY_MULTIPLIER;
+        return ACCURACY_MULTIPLIER;
     }
 
     public double getEvasionMultiplier() {
-        return this.EVASION_MULTIPLIER;
+        return EVASION_MULTIPLIER;
     }
 
     private static class Holder {
+        @Nonnull
         static Map<Integer, Stage> MAP = new HashMap<>();
     }
     

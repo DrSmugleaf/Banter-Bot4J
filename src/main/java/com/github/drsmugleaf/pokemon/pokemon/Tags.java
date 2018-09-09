@@ -67,7 +67,9 @@ public enum Tags implements IModifier {
     },
     DOOM_DESIRE_VICTIM("Doom Desire Victim", 0);
 
-    private final String NAME;
+    @Nonnull
+    public final String NAME;
+
     private final int DURATION;
 
     Tags(@Nonnull String name, int duration) {

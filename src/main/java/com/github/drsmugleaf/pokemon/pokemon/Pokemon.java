@@ -1,24 +1,29 @@
 package com.github.drsmugleaf.pokemon.pokemon;
 
-import com.github.drsmugleaf.pokemon.battle.IModifier;
 import com.github.drsmugleaf.pokemon.ability.Abilities;
 import com.github.drsmugleaf.pokemon.ability.Ability;
+import com.github.drsmugleaf.pokemon.battle.Action;
 import com.github.drsmugleaf.pokemon.battle.Battle;
+import com.github.drsmugleaf.pokemon.battle.Generation;
+import com.github.drsmugleaf.pokemon.battle.IModifier;
 import com.github.drsmugleaf.pokemon.events.*;
 import com.github.drsmugleaf.pokemon.item.Item;
 import com.github.drsmugleaf.pokemon.item.Items;
-import com.github.drsmugleaf.pokemon.battle.Action;
 import com.github.drsmugleaf.pokemon.moves.CriticalHitStage;
 import com.github.drsmugleaf.pokemon.moves.Move;
 import com.github.drsmugleaf.pokemon.moves.Moves;
 import com.github.drsmugleaf.pokemon.stats.*;
 import com.github.drsmugleaf.pokemon.status.Statuses;
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
+import com.github.drsmugleaf.pokemon.trainer.UserException;
 import com.github.drsmugleaf.pokemon.types.Types;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by DrSmugleaf on 29/09/2017.
@@ -26,28 +31,28 @@ import java.util.*;
 public class Pokemon {
 
     @Nonnull
-    private final Trainer TRAINER;
+    public final Trainer TRAINER;
 
     @Nonnull
-    private final Species SPECIES;
+    public final Species SPECIES;
 
     @Nonnull
     public final Types TYPES;
 
     @Nonnull
-    private final String NICKNAME;
+    public final String NICKNAME;
 
     @Nonnull
     public final Ability ABILITY;
 
     @Nonnull
-    private final Nature NATURE;
+    public final Nature NATURE;
 
     @Nonnull
     public final Item ITEM;
 
     @Nonnull
-    private final Gender GENDER;
+    public final Gender GENDER;
 
     private int LEVEL;
 
@@ -74,10 +79,11 @@ public class Pokemon {
     @Nullable
     private Pokemon damagedThisTurn = null;
 
+    // Kilograms
     private double weight;
 
     @Nonnull
-    public final List<Tag> TAGS = new ArrayList<>();
+    protected final List<Tag> TAGS = new ArrayList<>();
 
     private int toxicN = 1;
 
@@ -86,20 +92,31 @@ public class Pokemon {
             @Nonnull Species species,
             @Nonnull String nickname,
             @Nonnull Abilities ability,
-            @Nullable Items item,
+            @Nonnull Items item,
             @Nonnull Nature nature,
             @Nonnull Gender gender,
             @Nonnull Integer level,
             @Nonnull Map<PermanentStat, Integer> individualValues,
             @Nonnull Map<PermanentStat, Integer> effortValues,
             @Nonnull List<Move> moves
-    ) {
+    ) throws UserException {
+        Generation generation = trainer.BATTLE.GENERATION;
+        if (generation == Generation.I || generation == Generation.II) {
+            if (nature != Nature.NONE) {
+                throw new UserException("Invalid pokemon: Can't have a nature before generation III");
+            }
+
+            if (ability != Abilities.NONE) {
+                throw new UserException("Invalid pokemon: Can't have an ability before generation III");
+            }
+        }
+
         TRAINER = trainer;
         SPECIES = species;
         TYPES = new Types(species.getTypes());
         NICKNAME = nickname;
         ABILITY = new Ability(ability);
-        this.ITEM = new Item(item);
+        ITEM = new Item(item);
         NATURE = nature;
         GENDER = gender;
         LEVEL = level;
@@ -144,26 +161,26 @@ public class Pokemon {
     public String export() {
         String string = "";
 
-        int hpEV = STATS.get(PermanentStat.HP).getEV();
-        int atkEV = STATS.get(PermanentStat.ATTACK).getEV();
-        int defEV = STATS.get(PermanentStat.DEFENSE).getEV();
-        int spaEV = STATS.get(PermanentStat.SPECIAL_ATTACK).getEV();
-        int spdEV = STATS.get(PermanentStat.SPECIAL_DEFENSE).getEV();
-        int speEV = STATS.get(PermanentStat.SPEED).getEV();
+        int hpEV = STATS.get(PermanentStat.HP).EV;
+        int atkEV = STATS.get(PermanentStat.ATTACK).EV;
+        int defEV = STATS.get(PermanentStat.DEFENSE).EV;
+        int spaEV = STATS.get(PermanentStat.SPECIAL_ATTACK).EV;
+        int spdEV = STATS.get(PermanentStat.SPECIAL_DEFENSE).EV;
+        int speEV = STATS.get(PermanentStat.SPEED).EV;
         string = string.concat(
                 String.format(
                         "%s @ %s\n" +
                         "Ability: %s\n" +
                         "EVs: %d HP / %d Atk / %d Def / %d SpA / %d SpD / %d Spe\n" +
                         "%s Nature",
-                        SPECIES.getName(), ITEM.getName(), ABILITY.getName(),
+                        SPECIES.NAME, ITEM.getName(), ABILITY.getName(),
                         hpEV, atkEV, defEV, spaEV, spdEV, speEV,
-                        NATURE.getName()
+                        NATURE.NAME
                 )
         );
 
         for (Move move : MOVES.get()) {
-            string = string.concat(String.format("\n- %s", move.getBaseMove().NAME));
+            string = string.concat(String.format("\n- %s", move.BASE_MOVE.NAME));
         }
 
         return string;
@@ -176,7 +193,7 @@ public class Pokemon {
 
     @Nonnull
     public Battle getBattle() {
-        return TRAINER.getBattle();
+        return TRAINER.BATTLE;
     }
 
     @Nonnull
@@ -186,7 +203,7 @@ public class Pokemon {
 
     @Nonnull
     public String getName() {
-        return SPECIES.getName();
+        return SPECIES.NAME;
     }
 
     @Nonnull
@@ -245,10 +262,16 @@ public class Pokemon {
         return builder.toString();
     }
 
-    public void raiseCriticalHitStage(int amount) {
+    @Nonnull
+    public CriticalHitStage getCriticalHitStage() {
+        return criticalHitStage;
+    }
+
+    @Nonnull
+    public CriticalHitStage changeCriticalHitStage(int amount) {
         int currentStage = criticalHitStage.INDEX;
-        CriticalHitStage newStage = CriticalHitStage.getStage(currentStage + amount);
-        criticalHitStage = newStage;
+        criticalHitStage = CriticalHitStage.getStage(currentStage + amount);
+        return criticalHitStage;
     }
 
     @Nullable
@@ -271,7 +294,7 @@ public class Pokemon {
     public int damage(@Nonnull Action action) {
         damagedThisTurn = action.getAttacker();
 
-        int amount = action.getMove().getBaseMove().getDamage(action.getAttacker(), this, action);
+        int amount = action.getMove().BASE_MOVE.getDamage(action.getAttacker(), this, action);
         damage(amount);
         return amount;
     }
@@ -287,6 +310,7 @@ public class Pokemon {
         EventDispatcher.dispatch(event);
 
         if (hp <= 0) {
+            hp = 0;
             kill();
         }
     }
@@ -313,7 +337,7 @@ public class Pokemon {
     public void heal(double percentage) {
         int maxHP = getMaxHP();
         int healedHP = (int) (maxHP * (percentage / 100.0d));
-        this.heal(healedHP);
+        heal(healedHP);
     }
 
     protected void kill() {
@@ -346,7 +370,7 @@ public class Pokemon {
         return damagedThisTurn == pokemon;
     }
 
-    protected double getWeight() {
+    public double getWeight() {
         return weight;
     }
 
@@ -360,21 +384,21 @@ public class Pokemon {
 
     @Nullable
     public Action getLastAction() {
-        return TRAINER.getBattle().getLastAction(this);
+        return TRAINER.BATTLE.getLastAction(this);
     }
 
     @Nonnull
     public List<Action> getHitBy() {
-        return TRAINER.getBattle().getHitBy(this);
+        return TRAINER.BATTLE.getHitBy(this);
     }
 
     @Nullable
     public Action getLastHitBy() {
-        return TRAINER.getBattle().getLastHitBy(this);
+        return TRAINER.BATTLE.getLastHitBy(this);
     }
 
     public boolean movedThisTurn() {
-        return TRAINER.getBattle().movedThisTurn(this);
+        return TRAINER.BATTLE.movedThisTurn(this);
     }
 
     public boolean isFainted() {
@@ -390,7 +414,7 @@ public class Pokemon {
     @Nullable
     public Pokemon getEnemyOppositePokemon() {
         int index = TRAINER.getActivePokemons().indexOf(this);
-        Trainer oppositeTrainer = TRAINER.getBattle().getOppositeTrainer(TRAINER);
+        Trainer oppositeTrainer = TRAINER.BATTLE.getOppositeTrainer(TRAINER);
         Pokemon oppositePokemon = null;
 
         while (oppositePokemon == null && index >= 0) {
@@ -403,7 +427,7 @@ public class Pokemon {
 
     @Nullable
     public Pokemon getRandomActiveEnemyPokemon() {
-        Trainer oppositeTrainer = TRAINER.getBattle().getOppositeTrainer(TRAINER);
+        Trainer oppositeTrainer = TRAINER.BATTLE.getOppositeTrainer(TRAINER);
         return oppositeTrainer.getRandomActivePokemon();
     }
 
@@ -436,7 +460,7 @@ public class Pokemon {
         toxicN = 1;
     }
 
-    protected boolean isAlly(@Nonnull Pokemon pokemon) {
+    public boolean isAlly(@Nonnull Pokemon pokemon) {
         return TRAINER.getActivePokemon(pokemon) > -1;
     }
 

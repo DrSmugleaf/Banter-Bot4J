@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.pokemon.battle;
 
+import com.github.drsmugleaf.pokemon.moves.DamageTags;
 import com.github.drsmugleaf.pokemon.moves.Move;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.status.BaseVolatileStatus;
@@ -48,8 +49,11 @@ public class Action extends Move {
 
     private final int TURN;
 
+    @Nonnull
+    private final List<DamageTags> TAGS = new ArrayList<>();
+
     protected Action(@Nonnull Move move, @Nonnull Pokemon attacker, @Nonnull Pokemon target, int turn) {
-        super(move.getBaseMove());
+        super(move.BASE_MOVE);
 
         MOVE = move;
         ATTACKER = attacker;
@@ -112,7 +116,7 @@ public class Action extends Move {
     }
 
     @Nullable
-    public Boolean isCritical(@Nonnull Pokemon pokemon) {
+    public Boolean wasCritical(@Nonnull Pokemon pokemon) {
         return CRITICAL.get(pokemon);
     }
 
@@ -163,7 +167,7 @@ public class Action extends Move {
 
     @Nonnull
     public Generation getGeneration() {
-        return ATTACKER.getBattle().getGeneration();
+        return ATTACKER.getBattle().GENERATION;
     }
 
     @Override
@@ -184,6 +188,19 @@ public class Action extends Move {
     @Override
     public void decreasePP(int amount) {
         MOVE.decreasePP(amount);
+    }
+
+    public void addTag(@Nonnull DamageTags... tags) {
+        Collections.addAll(TAGS, tags);
+    }
+
+    @Nonnull
+    public List<DamageTags> getTags() {
+        return new ArrayList<>(TAGS);
+    }
+
+    public boolean hasTags(@Nonnull DamageTags... tags) {
+        return TAGS.containsAll(Arrays.asList(tags));
     }
 
     @Override

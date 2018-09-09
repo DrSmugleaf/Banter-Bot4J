@@ -15,23 +15,17 @@ import javax.annotation.Nonnull;
 public class Move {
 
     @Nonnull
-    private final BaseMove BASE_MOVE;
+    public final BaseMove BASE_MOVE;
 
     @Nonnull
     private Type type;
 
     @Nonnull
-    private Category category;
+    private MoveCategory category;
 
-    @Nonnull
-    private Integer pp;
-
-    @Nonnull
-    private Integer power;
-
-    @Nonnull
-    private Integer priority;
-
+    private int pp;
+    private int power;
+    private int priority;
     private double damageMultiplier = 1.0;
 
     public Move(@Nonnull BaseMove baseMove) {
@@ -44,12 +38,13 @@ public class Move {
     }
 
     private Move(@Nonnull Move move) {
-        BASE_MOVE = move.getBaseMove();
-        type = move.getType();
-        category = move.getCategory();
-        pp = move.getPP();
-        power = move.getPower();
-        priority = move.getPriority();
+        BASE_MOVE = move.BASE_MOVE;
+        type = move.type;
+        category = move.category;
+        pp = move.pp;
+        power = move.power;
+        priority = move.priority;
+        damageMultiplier = move.damageMultiplier;
     }
 
     @Nonnull
@@ -67,11 +62,11 @@ public class Move {
     }
 
     @Nonnull
-    public Category getCategory() {
+    public MoveCategory getCategory() {
         return category;
     }
 
-    protected void setCategory(@Nonnull Category category) {
+    protected void setCategory(@Nonnull MoveCategory category) {
         this.category = category;
     }
 
@@ -116,12 +111,12 @@ public class Move {
         damageMultiplier = multiplier;
     }
 
-    protected void incrementDamageMultiplier(double multiplier) {
+    protected void increaseDamageMultiplier(double multiplier) {
         setDamageMultiplier(damageMultiplier + multiplier);
     }
 
     protected void decreaseDamageMultiplier(double multiplier) {
-        incrementDamageMultiplier(-multiplier);
+        increaseDamageMultiplier(-multiplier);
     }
 
     protected void resetDamageMultiplier() {
@@ -132,12 +127,12 @@ public class Move {
         PokemonMoveEvent event = new PokemonMoveEvent(attacker, this);
         EventDispatcher.dispatch(event);
         action.setHit(defender, true);
-        return getBaseMove().use(attacker, defender, attacker.getBattle(), action);
+        return BASE_MOVE.use(attacker, defender, attacker.getBattle(), action);
     }
 
     protected int useAsZMove(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
         attacker.ITEM.remove();
-        return getBaseMove().useAsZMove(attacker, defender, attacker.getBattle(), action);
+        return BASE_MOVE.useAsZMove(attacker, defender, attacker.getBattle(), action);
     }
 
     protected int replaceAsZMove(@Nonnull Action oldAction, @Nonnull Pokemon attacker, @Nonnull Pokemon defender) {
@@ -147,11 +142,11 @@ public class Move {
 
     protected int miss(@Nonnull Pokemon defender, @Nonnull Action action) {
         action.setHit(defender, false);
-        return getBaseMove().miss(defender);
+        return BASE_MOVE.miss(defender);
     }
 
     protected int tryUse(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
-        if (getBaseMove().hits(defender, action)) {
+        if (BASE_MOVE.hits(defender, action)) {
             decreasePP(1);
             return use(attacker, defender, action);
         } else {
@@ -160,7 +155,7 @@ public class Move {
     }
 
     protected int tryUse(@Nonnull Pokemon target, @Nonnull Action action) {
-        if (getBaseMove().hits(target, action)) {
+        if (BASE_MOVE.hits(target, action)) {
             return use(action.getAttacker(), target, action);
         } else {
             return miss(target, action);

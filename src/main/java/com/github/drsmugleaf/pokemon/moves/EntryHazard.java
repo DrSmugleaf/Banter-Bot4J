@@ -13,7 +13,7 @@ public enum EntryHazard {
     TOXIC_SPIKES("Toxic Spikes");
 
     @Nonnull
-    private final String NAME;
+    public final String NAME;
 
     EntryHazard(@Nonnull String name) {
         NAME = name;

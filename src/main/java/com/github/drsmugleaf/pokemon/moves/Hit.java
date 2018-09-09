@@ -26,8 +26,7 @@ public enum Hit {
     @Nonnull
     private final String NAME;
 
-    @Nonnull
-    private final Boolean MULTIPLE;
+    private final boolean MULTIPLE;
 
     Hit(@Nonnull String name, boolean multiple) {
         Holder.MAP.put(name.toLowerCase(), this);
@@ -35,8 +34,10 @@ public enum Hit {
         MULTIPLE = multiple;
     }
 
+    @Nonnull
     public static Hit getHit(@Nonnull String hit) {
         hit = hit.toLowerCase();
+
         if (!Holder.MAP.containsKey(hit)) {
             throw new NullPointerException("Hit " + hit + " doesn't exist");
         }
@@ -44,6 +45,7 @@ public enum Hit {
         return Holder.MAP.get(hit);
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return NAME;
@@ -59,6 +61,7 @@ public enum Hit {
     }
 
     private static class Holder {
+        @Nonnull
         static Map<String, Hit> MAP = new HashMap<>();
     }
 

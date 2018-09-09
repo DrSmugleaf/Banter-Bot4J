@@ -13,26 +13,26 @@ public enum BattleStat implements IStat {
     EVASION("Evasion", "Eva");
 
     @Nonnull
-    private final String NAME;
+    public final String NAME;
 
     @Nonnull
-    private final String ABBREVIATION;
+    public final String ABBREVIATION;
 
     BattleStat(@Nonnull String name, @Nonnull String abbreviation) {
-        this.NAME = name;
-        this.ABBREVIATION = abbreviation;
+        NAME = name;
+        ABBREVIATION = abbreviation;
     }
 
     @Nonnull
     @Override
     public String getName() {
-        return this.NAME;
+        return NAME;
     }
 
     @Nonnull
     @Override
     public String getAbbreviation() {
-        return this.ABBREVIATION;
+        return ABBREVIATION;
     }
 
     @Override

@@ -34,14 +34,17 @@ public enum Game {
     SUN_AND_MOON("Sun and Moon"),
     ULTRA_SUN_AND_ULTRA_MOON("Ultra Sun and Ultra Moon");
 
-    private final String NAME;
+    @Nonnull
+    public final String NAME;
 
     Game(@Nonnull String name) {
-        this.NAME = name;
+        NAME = name;
     }
 
+    @Nonnull
     public static Game getGame(@Nonnull String game) {
         game = game.toLowerCase();
+
         if (!Holder.MAP.containsKey(game)) {
             throw new NullPointerException("Game " + game + " doesn't exist");
         }
@@ -49,11 +52,13 @@ public enum Game {
         return Holder.MAP.get(game);
     }
 
+    @Nonnull
     public String getName() {
-        return this.NAME;
+        return NAME;
     }
 
     private static class Holder {
+        @Nonnull
         static Map<String, Game> MAP = new HashMap<>();
     }
 

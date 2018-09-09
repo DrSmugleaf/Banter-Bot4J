@@ -22,7 +22,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
             double random = Math.random();
             Integer duration;
 
-            Generation generation = action.getAttacker().getBattle().getGeneration();
+            Generation generation = action.getAttacker().getBattle().GENERATION;
             switch (generation) {
                 case I:
                 case II:
@@ -58,15 +58,15 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
 
         @Override
         public void onTrainerTurnStart(@Nonnull Trainer trainer, @Nonnull Pokemon pokemon) {
-            pokemon.STATUSES.getVolatileStatus(this).getAction().getAttacker().MOVES.setValid(BaseMove.BIND);
+            pokemon.STATUSES.getVolatileStatus(this).ACTION.getAttacker().MOVES.setValid(BaseMove.BIND);
         }
 
         @Override
         public void onEnemySendBack(@Nonnull Pokemon user, @Nonnull Pokemon enemy) {
-            Generation generation = user.getBattle().getGeneration();
+            Generation generation = user.getBattle().GENERATION;
 
             if (generation != Generation.I) {
-                Action action = user.STATUSES.getVolatileStatus(this).getAction();
+                Action action = user.STATUSES.getVolatileStatus(this).ACTION;
                 Pokemon applier = action.getAttacker();
                 if (applier == enemy) {
                     remove(user);
@@ -76,7 +76,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
 
         @Override
         public boolean onOwnAttemptAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
-            Generation generation = attacker.getBattle().getGeneration();
+            Generation generation = attacker.getBattle().GENERATION;
 
             switch (generation) {
                 case I:
@@ -95,7 +95,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
 
         @Override
         public boolean canSwitch(@Nonnull Pokemon pokemon) {
-            Generation generation = pokemon.getBattle().getGeneration();
+            Generation generation = pokemon.getBattle().GENERATION;
 
             switch (generation) {
                 case I:
@@ -139,7 +139,6 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     TAUNT("Taunt"),
     TELEKINESIS("Telekinesis"),
     TORMENT("Torment"),
-
     AQUA_RING("Aqua Ring"),
     BRACING("Bracing"),
     CENTER_OF_ATTENTION("Center of attention"),
@@ -149,7 +148,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     MAGIC_COAT("Magic Coat") {
         @Override
         public boolean onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
-            Generation generation = attacker.getBattle().getGeneration();
+            Generation generation = attacker.getBattle().GENERATION;
 
             switch (generation) {
                 case I:
@@ -161,7 +160,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
                 case IV:
                     break;
                 case V:
-                    if (action.getBaseMove() == BaseMove.DEFOG) {
+                    if (action.BASE_MOVE == BaseMove.DEFOG) {
                         action.reflect(defender);
                         return false;
                     }
@@ -187,7 +186,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
                 throw new IllegalStateException("Semi-invulnerable status not found on defending pokemon");
             }
 
-            BaseMove statusMove = status.getAction().getBaseMove();
+            BaseMove statusMove = status.ACTION.BASE_MOVE;
 
             pokemon.MOVES.setValid(statusMove);
         }
@@ -207,8 +206,8 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
                 return true;
             }
 
-            BaseMove move = action.getBaseMove();
-            BaseMove statusMove = status.getAction().getBaseMove();
+            BaseMove move = action.BASE_MOVE;
+            BaseMove statusMove = status.ACTION.BASE_MOVE;
 
             if (action.getGeneration() == Generation.I) {
                 switch (move) {
@@ -265,12 +264,11 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     TAKING_IN_SUNLIGHT("Taking in sunlight"),
     WITHDRAWING("Withdrawing"),
     WHIPPING_UP_A_WHIRLWIND("Whipping up a whirlwind"),
-
     AURORA_VEIL("Aurora Veil", 5) {
         @Override
         public void apply(@Nonnull Pokemon user, @Nonnull Action action) {
             if (user.getBattle().getWeather() != Weather.HAIL) {
-                this.fail();
+                fail();
                 return;
             }
 
@@ -279,8 +277,8 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
 
         @Override
         public double enemyDamageMultiplier(@Nonnull Pokemon pokemon, @Nonnull Action action) {
-            if (action.getCategory() == Category.PHYSICAL || action.getCategory() == Category.SPECIAL) {
-                if (action.getBattle().getVariation() == Variation.SINGLE_BATTLE) {
+            if (action.getCategory() == MoveCategory.PHYSICAL || action.getCategory() == MoveCategory.SPECIAL) {
+                if (action.getBattle().VARIATION == Variation.SINGLE_BATTLE) {
                     return 0.5;
                 } else {
                     return 0.333;
@@ -293,7 +291,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     BANEFUL_BUNKER("Baneful Bunker", 1) {
         @Override
         public boolean onEnemyAttemptAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
-            BaseMove baseMove = action.getBaseMove();
+            BaseMove baseMove = action.BASE_MOVE;
 
             switch (baseMove) {
                 case FEINT:
@@ -301,7 +299,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
                 case SHADOW_FORCE:
                 case HYPERSPACE_HOLE:
                 case HYPERSPACE_FURY:
-                    this.breakStatus(defender);
+                    breakStatus(defender);
                 case ACUPRESSURE:
                 case AROMATIC_MIST:
                 case BESTOW:
@@ -343,7 +341,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
 
         @Override
         public double damageMultiplier(@Nonnull Action action) {
-            if (action.getBaseMove().IS_Z_MOVE) {
+            if (action.BASE_MOVE.IS_Z_MOVE) {
                 return 0.25;
             }
 
@@ -353,7 +351,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     BEAK_BLAST("Beak Blast", 1) {
         @Override
         public boolean onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
-            if (action.getBaseMove().PHYSICAL_CONTACT) {
+            if (action.BASE_MOVE.PHYSICAL_CONTACT) {
                 attacker.STATUSES.setStatus(Status.BURN);
             }
 
@@ -363,13 +361,12 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     BIDE("Bide", 2) {
         @Override
         public boolean onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
-//            defender.addBideDamageTaken(action.getDamage());
+//            defender.addBideDamageTaken(action.DAMAGE);
 //            defender.setBideTarget(attacker);
             // TODO: Bide damage taken processing
             return true;
         }
     },
-
     STOCKPILE_1("Stockpile 1"),
     STOCKPILE_2("Stockpile 2"),
     STOCKPILE_3("Stockpile 3"),
@@ -377,9 +374,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     PERISH_1("Perish 1"),
     PERISH_2("Perish 2"),
     PERISH_3("Perish 3"),
-
     UPROAR("Uproar"),
-
     BOUNCE("Bounce", 1) {
         @Override
         public void onTrainerTurnStart(@Nonnull Trainer trainer, @Nonnull Pokemon pokemon) {
@@ -391,7 +386,6 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
             super.remove(user);
         }
     },
-
     LIGHT_SCREEN("Light Screen"),
     REFLECT("Reflect"),
     CHARGE("Charge", 2) {
@@ -419,7 +413,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
 
         @Override
         public double powerMultiplier(@Nonnull Pokemon attacker, @Nonnull Action action) {
-            Generation generation = attacker.getBattle().getGeneration();
+            Generation generation = attacker.getBattle().GENERATION;
 
             switch (generation) {
                 case I:
@@ -439,27 +433,27 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
             }
         }
     },
-
     CRAFTY_SHIELD("Crafty Shield", 0) {
         @Override
         public boolean onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
-            return action.getCategory() != Category.OTHER
+            return action.getCategory() != MoveCategory.OTHER
                    || attacker == defender
-                   || action.getBaseMove() == BaseMove.PERISH_SONG
-                   || action.getBaseMove().EFFECT == MoveEffect.ENTRY_HAZARD;
+                   || action.BASE_MOVE == BaseMove.PERISH_SONG
+                   || action.BASE_MOVE.EFFECT == MoveEffect.ENTRY_HAZARD;
         }
     },
-
     MIST("Mist", Integer.MAX_VALUE),
-
     SAFEGUARD("Safeguard", 5);
 
-    private final String NAME;
+    @Nonnull
+    public final String NAME;
+
+    @Nonnull
     private final Integer DURATION;
 
     BaseVolatileStatus(@Nonnull String name, @Nonnull Integer duration) {
-        this.NAME = name;
-        this.DURATION = duration;
+        NAME = name;
+        DURATION = duration;
     }
 
     BaseVolatileStatus(@Nonnull String name) {
@@ -490,7 +484,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
 
     protected void fail() {}
 
-    protected void breakStatus(Pokemon target) {
+    protected void breakStatus(@Nonnull Pokemon target) {
         target.STATUSES.removeVolatileStatus(this);
     }
 

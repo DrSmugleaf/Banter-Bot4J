@@ -10,10 +10,10 @@ public enum MoveEffect {
     ENTRY_HAZARD("Entry Hazard");
 
     @Nonnull
-    private final String NAME;
+    public final String NAME;
 
     MoveEffect(@Nonnull String name) {
-        this.NAME = name;
+        NAME = name;
     }
 
     @Nonnull

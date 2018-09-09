@@ -8,18 +8,21 @@ import java.util.*;
  */
 public class StatBuilder {
 
-    public static final List<IStat> ISTATS = new ArrayList<>();
+    @Nonnull
+    public static final List<IStat> STAT_LIST = new ArrayList<>();
+
+    @Nonnull
     private final Map<IStat, Stat> STATS = new LinkedHashMap<>();
 
     static {
-        Collections.addAll(ISTATS, PermanentStat.values());
-        Collections.addAll(ISTATS, BattleStat.values());
+        Collections.addAll(STAT_LIST, PermanentStat.values());
+        Collections.addAll(STAT_LIST, BattleStat.values());
     }
 
     public StatBuilder() {}
 
     private void finalizeStats() {
-        for (IStat stat : ISTATS) {
+        for (IStat stat : STAT_LIST) {
             if (!STATS.containsKey(stat)) {
                 STATS.put(stat, new Stat(stat, 31, 0));
             }
@@ -31,7 +34,7 @@ public class StatBuilder {
     private void sortStats() {
         Map<IStat, Stat> stats = new LinkedHashMap<>();
 
-        for (IStat stat : ISTATS) {
+        for (IStat stat : STAT_LIST) {
             stats.put(stat, STATS.get(stat));
         }
 
@@ -49,7 +52,7 @@ public class StatBuilder {
     }
 
     public void put(@Nonnull Stat stat) {
-        STATS.put(stat.getIStat(), stat);
+        STATS.put(stat.STAT, stat);
     }
 
     public void setIV(@Nonnull IStat stat, int iv) {
@@ -59,7 +62,7 @@ public class StatBuilder {
         }
 
         Stat mapStat = STATS.get(stat);
-        STATS.put(stat, new Stat(stat, mapStat.getIV(), mapStat.getIV()));
+        STATS.put(stat, new Stat(stat, mapStat.IV, mapStat.IV));
     }
 
     public void setEV(@Nonnull IStat stat, int ev) {
@@ -69,7 +72,7 @@ public class StatBuilder {
         }
 
         Stat mapStat = STATS.get(stat);
-        STATS.put(stat, new Stat(stat, mapStat.getIV(), mapStat.getEV()));
+        STATS.put(stat, new Stat(stat, mapStat.IV, mapStat.EV));
     }
 
 }

@@ -11,6 +11,7 @@ import com.github.drsmugleaf.pokemon.pokemon.Species;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon.trainer.UserException;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +24,8 @@ import java.util.regex.Pattern;
  */
 public class SmogonImporter {
 
-    public static PokemonBuilder importPokemon(String export) throws UserException {
+    @Nonnull
+    public static PokemonBuilder importPokemon(@Nonnull String export) throws UserException {
         export = export.trim();
         String[] exportArray = export.split("\n");
 
@@ -40,7 +42,7 @@ public class SmogonImporter {
         }
 
         String nameString;
-        Gender gender = null;
+        Gender gender;
         String itemString = null;
         if (exportArray[0].contains("@")) {
             nameString = exportArray[0].split("@")[0].trim();
@@ -103,10 +105,12 @@ public class SmogonImporter {
         Items item = Items.getItem(itemString);
         Abilities ability = Abilities.getAbility(abilityString);
         Nature nature = Nature.getNature(natureString);
+
         List<Move> moves = new ArrayList<>();
         for (String move : movesStringArray) {
             moves.add(new Move(BaseMove.getMove(move)));
         }
+
         Map<PermanentStat, Integer> individualValues = new HashMap<>();
         Map<PermanentStat, Integer> effortValues = new HashMap<>();
         if (effortValuesStringArray != null) {
@@ -143,7 +147,8 @@ public class SmogonImporter {
         return pokemonBuilder;
     }
 
-    public static List<PokemonBuilder> importPokemons(String export) throws UserException {
+    @Nonnull
+    public static List<PokemonBuilder> importPokemons(@Nonnull String export) throws UserException {
         String[] exportArray = export.split("\n\n");
         List<PokemonBuilder> pokemons = new ArrayList<>();
 

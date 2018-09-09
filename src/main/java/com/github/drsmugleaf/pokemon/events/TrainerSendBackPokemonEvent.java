@@ -7,10 +7,19 @@ import javax.annotation.Nonnull;
 /**
  * Created by DrSmugleaf on 19/07/2017.
  */
-public class TrainerSendBackPokemonEvent extends TrainerSendOutPokemonEvent {
+public class TrainerSendBackPokemonEvent extends TrainerEvent {
+
+    @Nonnull
+    public final Pokemon POKEMON;
 
     public TrainerSendBackPokemonEvent(@Nonnull Pokemon pokemon) {
-        super(pokemon);
+        super(pokemon.getTrainer());
+        POKEMON = pokemon;
+    }
+
+    @Nonnull
+    public Pokemon getPokemon() {
+        return POKEMON;
     }
 
 }

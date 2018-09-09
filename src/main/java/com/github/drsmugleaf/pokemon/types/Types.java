@@ -88,7 +88,7 @@ public class Types implements IModifier {
             types.add(type.getName());
         }
 
-        return types.toArray(new String[types.size()]);
+        return types.toArray(new String[0]);
     }
 
 }

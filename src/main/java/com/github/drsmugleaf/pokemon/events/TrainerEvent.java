@@ -9,16 +9,17 @@ import javax.annotation.Nonnull;
  */
 public abstract class TrainerEvent extends Event {
 
-    private final Trainer TRAINER;
+    @Nonnull
+    public final Trainer TRAINER;
 
     public TrainerEvent(@Nonnull Trainer trainer) {
-        super(trainer.getBattle());
-        this.TRAINER = trainer;
+        super(trainer.BATTLE);
+        TRAINER = trainer;
     }
 
     @Nonnull
     public Trainer getTrainer() {
-        return this.TRAINER;
+        return TRAINER;
     }
 
 }

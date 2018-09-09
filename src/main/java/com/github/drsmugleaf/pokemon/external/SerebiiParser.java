@@ -1,13 +1,15 @@
 package com.github.drsmugleaf.pokemon.external;
 
-import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.pokemon.item.Items;
 import com.github.drsmugleaf.pokemon.moves.BaseMove;
-import com.github.drsmugleaf.pokemon.moves.Category;
+import com.github.drsmugleaf.pokemon.moves.MoveCategory;
 import com.github.drsmugleaf.pokemon.moves.Hit;
 import com.github.drsmugleaf.pokemon.moves.Target;
 import com.github.drsmugleaf.pokemon.types.Type;
-import com.opencsv.CSVWriter;
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVWriterBuilder;
+import com.opencsv.ICSVWriter;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -29,11 +31,11 @@ import java.util.stream.Collectors;
 public class SerebiiParser {
 
     public static void printMoveListAsEnums() {
-        Document doc1 = null;
+        Document doc1;
         try {
             doc1 = Jsoup.connect("http://www.serebii.net/attackdex-sm/").get();
         } catch (IOException e) {
-            BanterBot4J.LOGGER.error("Error parsing Serebii move list", e);
+            throw new ParsingException("Error parsing Serebii move list", e);
         }
 
         Elements movesHtml = doc1.body().select("div > table > tbody > tr > td > form > div > select > option");
@@ -50,12 +52,13 @@ public class SerebiiParser {
         try {
             doc1 = Jsoup.connect("http://www.serebii.net/attackdex-sm/").get();
         } catch (IOException e) {
-            BanterBot4J.LOGGER.error("Error getting Serebii move list", e);
-            return;
+            throw new ParsingException("Error getting Serebii move list", e);
         }
 
-        CSVWriter writer;
-        writer = new CSVWriter(new FileWriter("moves.csv"), ',');
+        FileWriter fileWriter = new FileWriter("moves.csv");
+        CSVParser parser = new CSVParserBuilder().withSeparator(',').build();
+        ICSVWriter writer = new CSVWriterBuilder(fileWriter).withParser(parser).build();
+
         writer.writeNext(new String[]{
                 "Name",
                 "Type",
@@ -94,7 +97,9 @@ public class SerebiiParser {
 
         Elements movesHtml = doc1.body().select("div > table > tbody > tr > td > form > div > select > option");
         for (Element element : movesHtml) {
-            if (element.attr("value").isEmpty()) continue;
+            if (element.attr("value").isEmpty()) {
+                continue;
+            }
 
             String moveUrl = element.attr("value");
 
@@ -102,13 +107,12 @@ public class SerebiiParser {
             try {
                 doc = Jsoup.connect("http://www.serebii.net" + moveUrl).get();
             } catch (IOException e) {
-                BanterBot4J.LOGGER.error("Error getting Serebii page for move " + element.attr("value"), e);
-                continue;
+                throw new ParsingException("Error getting Serebii page for move " + element.attr("value"), e);
             }
 
             String name = null;
             Type type = null;
-            Category category = null;
+            MoveCategory category = null;
             Integer pp = null;
             Integer power = null;
             Integer accuracy = null;
@@ -143,24 +147,22 @@ public class SerebiiParser {
             for (int i = 0; i < 2; i++) {
                 Element table = tables.get(i);
                 Elements tableRows = table.child(0).children();
-                for (int i1 = 0; i1 < tableRows.size(); i1 = i1 + 2) {
+                for (int j = 0; j < tableRows.size(); j = j + 2) {
                     Element propertyNameRow;
                     Element propertyValueRow;
                     Elements propertyNameGroup;
                     Elements propertyValueGroup;
                     try {
-                        propertyNameRow = tableRows.get(i1);
-                        propertyValueRow = tableRows.get(i1 + 1);
+                        propertyNameRow = tableRows.get(j);
+                        propertyValueRow = tableRows.get(j + 1);
                         propertyNameGroup = propertyNameRow.children();
                         propertyValueGroup = propertyValueRow.children();
                     } catch (NullPointerException | IndexOutOfBoundsException e) {
-                        BanterBot4J.LOGGER.error("Error parsing move " + element.attr("value") + ", skipping", e);
-                        continue;
+                        throw new ParsingException("Error parsing move " + element.attr("value") + ", skipping", e);
                     }
 
                     if (propertyNameGroup == null || propertyValueGroup == null) {
-                        BanterBot4J.LOGGER.error("Null property name or value group for move " + element.attr("value") + ", skipping");
-                        continue;
+                        throw new ParsingException("Null property name or value group for move " + element.attr("value") + ", skipping");
                     }
 
                     for (int i2 = 0; i2 < propertyNameGroup.size(); i2++) {
@@ -238,7 +240,7 @@ public class SerebiiParser {
                             case "Category":
                                 Matcher cMatcher = Pattern.compile("<a href=\"/attackdex-.+/(.+).shtml\">").matcher(propertyValue.html());
                                 cMatcher.find();
-                                category = Category.getCategory(cMatcher.group(1));
+                                category = MoveCategory.getCategory(cMatcher.group(1));
                                 break;
                             case "Power Points":
                                 pp = Integer.parseInt(propertyValue.text());
@@ -330,8 +332,7 @@ public class SerebiiParser {
                                 try {
                                     bulbapediaDoc = Jsoup.connect("https://bulbapedia.bulbagarden.net/wiki/" + name.replace(" ", "_").replace("'", "%27") + "_(move)").get();
                                 } catch (HttpStatusException e) {
-                                    BanterBot4J.LOGGER.error("Error getting Bulbapedia page for move " + name, e);
-                                    continue;
+                                    throw new ParsingException("Error getting Bulbapedia page for move " + name, e);
                                 }
                                 String bTarget = bulbapediaDoc.select("tbody > tr:nth-child(5) > td > table > tbody > tr:nth-child(3) > td > small").text();
                                 switch (bTarget) {
@@ -402,8 +403,7 @@ public class SerebiiParser {
                                 copyable = propertyValue.text().equals("Yes");
                                 break;
                             default:
-                                BanterBot4J.LOGGER.error("Missing case for Serebii move property " + propertyName);
-                                break;
+                                throw new ParsingException("Missing case for Serebii move property " + propertyName);
                         }
                     }
                 }
@@ -481,7 +481,7 @@ public class SerebiiParser {
             String[] move = {
                     name, // Name
                     type.getName(), // Type
-                    category.getName(), // Category
+                    category.NAME, // Category
                     String.valueOf(pp), // PP
                     String.valueOf(power), // Power
                     String.valueOf(accuracy), // Accuracy
@@ -491,7 +491,7 @@ public class SerebiiParser {
                     effectRate != null ? String.valueOf(effectRate) : "", // Effect Rate
                     String.valueOf(isSelfZMove), // Is Self Z-Move?
                     correspondingZMove, // Corresponding Z-Move
-                    zMoveItem != null ? zMoveItem.getName() : "", // Z-Move Item
+                    zMoveItem != null ? zMoveItem.NAME : "", // Z-Move Item
                     detailedEffect != null ? detailedEffect : "", // Detailed Effect
                     zMovePower != null ? String.valueOf(zMovePower) : "", // Z-Move Power
                     !isSelfZMove && correspondingZMove == null ? "true" : "false", // Is Z-Move?

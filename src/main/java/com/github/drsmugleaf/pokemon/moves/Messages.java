@@ -50,27 +50,31 @@ public enum Messages {
     LUNAR_DANCE("Lunar Dance", "%s became cloaked in mystical moonlight!"),
     WISH("Wish", "%s's wish came true!"),
     DRAIN("Drain", "%s had its energy drained!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, target.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, target.getNickname());
         }
     },
     LEFTOVERS("Leftovers", "%s restored a little HP using its %s!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, user.getNickname(), item.getName());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, user.getNickname(), item.NAME);
         }
     },
     SHELL_BELL("Shell Bell", "%s restored a little HP using its %s!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, user.getNickname(), item.getName());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, user.getNickname(), item.NAME);
         }
     },
     BLACK_SLUDGE("Black Sludge", "%s restored a little HP using its %s!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, user.getNickname(), item.getName());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, user.getNickname(), item.NAME);
         }
     },
 
@@ -80,106 +84,123 @@ public enum Messages {
     PAIN_SPLIT("Pain Split", "The battlers shared their pain!"),
 
     STAT_BOOST_FAIL("Stat Boost Fail", "%s's %s won't go any higher!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, user.getNickname(), stat[0].getName());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, user.getNickname(), stat[0].getName());
         }
     },
     STAT_BOOST_1("Stat Boost 1", "%s's %s rose!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, user.getNickname(), stat[0].getName());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, user.getNickname(), stat[0].getName());
         }
     },
     STAT_BOOST_2("Stat Boost 2", "%s's %s rose sharply!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, user.getNickname(), stat[0].getName());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, user.getNickname(), stat[0].getName());
         }
     },
     STAT_BOOST_3("Stat Boost 3", "%s's %s rose dramatically!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, user.getNickname(), stat[0].getName());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, user.getNickname(), stat[0].getName());
         }
     },
     STAT_BOOST_ITEM_1("Stat Boost Item 1", "The %s raised %s's %s!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, item.getName(), user.getNickname(), stat[0].getName());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, item.NAME, user.getNickname(), stat[0].getName());
         }
     },
     STAT_BOOST_ITEM_2("Stat Boost Item 2", "The %s sharply raised %s's %s!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, item.getName(), user.getNickname(), stat[0].getName());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, item.NAME, user.getNickname(), stat[0].getName());
         }
     },
     STAT_BOOST_ITEM_3("Stat Boost Item 3", "The %s dramatically raised %s's %s!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, item.getName(), user.getNickname(), stat[0].getName());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, item.NAME, user.getNickname(), stat[0].getName());
         }
     },
     STAT_BOOST_Z_MOVE_1("Stat Boost Z-Move 1", "%s boosted its stats using its Z-Power!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, user.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, user.getNickname());
         }
     },
     STAT_BOOST_Z_MOVE_2("Stat Boost Z-Move 2", "%s boosted its stats sharply using its Z-Power!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, user.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, user.getNickname());
         }
     },
     STAT_BOOST_Z_MOVE_3("Stat Boost Z-Move 3", "%s boosted its stats dramatically using its Z-Power!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, user.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, user.getNickname());
         }
     },
 
     STAT_LOSS_FAIL("Stat Loss Fail", "%s's %s won't go any lower!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, user.getNickname(), stat[0].getName());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, user.getNickname(), stat[0].getName());
         }
     },
     STAT_LOSS_1("Stat Loss 1", "%s's %s fell!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, user.getNickname(), stat[0].getName());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, user.getNickname(), stat[0].getName());
         }
     },
     STAT_LOSS_2("Stat Loss 2", "%s's %s fell harshly!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, user.getNickname(), stat[0].getName());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, user.getNickname(), stat[0].getName());
         }
     },
     STAT_LOSS_3("Stat Loss 3", "%s's %s fell severely!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, user.getNickname(), stat[0].getName());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, user.getNickname(), stat[0].getName());
         }
     },
     STAT_LOSS_ITEM_1("Stat Loss Item 1", "The %s lowered %s's %s!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, item.getName(), user.getNickname(), stat[0].getName());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, item.NAME, user.getNickname(), stat[0].getName());
         }
     },
     STAT_LOSS_ITEM_2("Stat Loss Item 2", "The %s harshly lowered %s's %s!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, item.getName(), user.getNickname(), stat[0].getName());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, item.NAME, user.getNickname(), stat[0].getName());
         }
     },
     STAT_LOSS_ITEM_3("Stat Loss Item 3", "The %s harshly lowered %s's %s!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, item.getName(), user.getNickname(), stat[0].getName());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, item.NAME, user.getNickname(), stat[0].getName());
         }
     },
 
@@ -195,9 +216,10 @@ public enum Messages {
     CLEAR_NEGATIVE_BOOST("Clear Negative Boost", "%s returned its decreased stats to normal using its Z-Power!"),
 
     COPY_BOOST("Copy Boost", "%s copied %s's stat changes!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, user.getNickname(), target.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, user.getNickname(), target.getNickname());
         }
     },
 
@@ -209,103 +231,118 @@ public enum Messages {
 
     CRITICAL_HIT("Critical Hit", "A critical hit!"),
     CRITICAL_HIT_SPREAD("Critical Hit Spread", "A critical hit on %s!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, target.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, target.getNickname());
         }
     },
 
     SUPER_EFFECTIVE("Super Effective", "It's super effective!"),
     SUPER_EFFECTIVE_SPREAD("Super Effective Spread", "It's super effective on %s!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, target.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, target.getNickname());
         }
     },
 
     RESISTED("Resisted", "It's not very effective..."),
     RESISTED_SPREAD("Resisted Spread", "It's not very effective on %s.") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, target.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, target.getNickname());
         }
     },
 
     IMMUNE("Immune", "It doesn't affect %s...") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, target.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, target.getNickname());
         }
     },
     IMMUNE_CONFUSION("Immune Confusion", "%s doesn't become confused!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, target.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, target.getNickname());
         }
     },
     IMMUNE_OHKO("Immune OHKO", "%s is unaffected!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, target.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, target.getNickname());
         }
     },
     IMMUNE_NO_EFFECT("Immune No Effect", "It had no effect!"),
 
     MISS_TARGET("Miss Target", "%s avoided the attack!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, target.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, target.getNickname());
         }
     },
     MISS("Miss", "%s's attack missed!"),
 
     FAIL_SELF_MOVE_BECAUSE_SKY_DROP("Fail Self Move Because Sky Drop", "Sky Drop won't let %s go!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, target.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, target.getNickname());
         }
     },
     FAIL_BURN("Fail Burn", "%s already has a burn.") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, target.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, target.getNickname());
         }
     },
     FAIL_TOXIC("Fail Toxic", "%s is already poisoned.") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, target.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, target.getNickname());
         }
     },
     FAIL_POISON("Fail Poison", "%s is already poisoned.") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, target.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, target.getNickname());
         }
     },
     FAIL_SLEEP_UPROAR_SELF("Fail Sleep Uproar Self", "But %s can't sleep in an uproar!"),
     FAIL_SLEEP_UPROAR_TARGET("Fail Sleep Uproar Target", "But the uproar kept %s awake!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, target.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, target.getNickname());
         }
     },
     FAIL_SLEEP("Fail Sleep", "%s is already asleep!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, target.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, target.getNickname());
         }
     },
     FAIL_PARALYZED("Fail Paralyzed", "%s is already paralyzed.") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, target.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, target.getNickname());
         }
     },
     FAIL_FREEZE("Fail Freeze", "%s is already frozen solid.") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, target.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, target.getNickname());
         }
     },
     FAIL_DARK_VOID_FORME("Fail Dark Void Forme", "But %s can't use it the way it is now!"),
@@ -314,9 +351,10 @@ public enum Messages {
     FAIL_SUBSTITUTE_WEAK("Fail Substitute Weak", "But it does not have enough HP left to make a subtitute!"),
     FAIL_SUBSTITUTE("Fail Substitute", "%s already has a substitute!"),
     FAIL_SKY_DROP_HEAVY("Fail Sky Drop Heavy", "%s is too heavy to be lifted!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, target.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, target.getNickname());
         }
     },
     FAIL_SKY_DROP("Fail Sky Drop", "But it failed!"),
@@ -326,8 +364,9 @@ public enum Messages {
     FAIL_WEATHER("Fail Weather", "But it failed!"),
     FAIL_STAT_LOSS_FLOWER_VEIL("Fail Stat Loss Flower Veil", "%s surrounded itself with a veil of petals!"),
     FAIL_STAT_LOSS("Fail Stat Loss", "%s's %s was not lowered!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
             if (stat.length == 1) {
                 return String.format("%s's %s was not lowered!", target.getNickname(), stat[0].getName());
             } else {
@@ -340,9 +379,10 @@ public enum Messages {
     FAIL("Fail", "But it failed!"),
 
     NO_TARGET("No Target", "But it failed!") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            switch (battle.getGeneration()) {
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            switch (battle.GENERATION) {
                 case I:
                 case II:
                 case III:
@@ -360,9 +400,9 @@ public enum Messages {
     OHKO("OHKO", "It's a one-hit KO!"),
 
     HIT_COUNT("Hit Count", "Hit 1 time!") {
-        @Nullable
+        @Nonnull
         @Override
-        public String getMessage(Integer hitCount) {
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
             if (hitCount == 1) {
                 return "Hit 1 time!";
             } else {
@@ -374,9 +414,10 @@ public enum Messages {
     NOTHING("Nothing", "But nothing happened!"),
 
     WAITING("Waiting", "%s is waiting for %s's move...") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-            return String.format(this.MESSAGE, user.getNickname(), target.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format(MESSAGE, user.getNickname(), target.getNickname());
         }
     },
 
@@ -384,17 +425,19 @@ public enum Messages {
 
     Z_POWER("Z-Power", "%s surrounded itself with its Z-Power!"),
 
+    // TODO
 //    PREPARE(),
 
+    // TODO
 //    MUST_RECHARGE(),
 
     STATUS("Status", "%s %s") {
-        @Nullable
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, @Nullable Items item, Status status, @Nullable Move move, @Nullable Abilities ability) {
-            String message = this.MESSAGE;
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            String message = MESSAGE;
             if (item != null) {
-                message = message.concat(" by the " + item.getName() + "!");
+                message = message.concat(" by the " + item.NAME + "!");
             } else {
                 message = message.concat("!");
             }
@@ -423,11 +466,15 @@ public enum Messages {
     },
 
     CURE_STATUS("Cure Status") {
-        @Nullable
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, @Nullable Items item, Status status, @Nullable Move move, @Nullable Abilities ability) {
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            if (target == null) {
+                return String.format("%s's status cleared!", user.getNickname());
+            }
+
             if (move != null) {
-                switch (move.getBaseMove()) {
+                switch (move.BASE_MOVE) {
                     case PSYCHO_SHIFT:
                         return String.format("%s moved its status onto %s!", user.getNickname(), target.getNickname());
                     case FLAME_WHEEL:
@@ -436,9 +483,9 @@ public enum Messages {
                     case SACRED_FIRE:
                     case SCALD:
                     case STEAM_ERUPTION:
-                        return String.format("%s's %s melted the ice!", user.getNickname(), move.getBaseMove().NAME);
+                        return String.format("%s's %s melted the ice!", user.getNickname(), move.BASE_MOVE.NAME);
                     default:
-                        return String.format("%s's %s heals its status!", user.getNickname(), move.getBaseMove().NAME);
+                        return String.format("%s's %s heals its status!", user.getNickname(), move.BASE_MOVE.NAME);
                 }
             }
 
@@ -447,25 +494,25 @@ public enum Messages {
                     case NATURAL_CURE:
                         return String.format("(%s's Natural Cure activated!)", user.getNickname());
                     default:
-                        return String.format("%s's %s heals its status!", user.getNickname(), ability.getName());
+                        return String.format("%s's %s heals its status!", user.getNickname(), ability.NAME);
                 }
             }
 
             if (item != null) {
                 switch (status) {
                     case BURN:
-                        return String.format("%s's %s healed its burn!", user.getNickname(), item.getName());
+                        return String.format("%s's %s healed its burn!", user.getNickname(), item.NAME);
                     case FREEZE:
-                        return String.format("%s's %s defrosted it!", user.getNickname(), item.getName());
+                        return String.format("%s's %s defrosted it!", user.getNickname(), item.NAME);
                     case PARALYSIS:
-                        return String.format("%s's %s cured its paralysis!", user.getNickname(), item.getName());
+                        return String.format("%s's %s cured its paralysis!", user.getNickname(), item.NAME);
                     case POISON:
                     case BADLY_POISONED:
-                        return String.format("%s's %s cured its poison!", user.getNickname(), item.getName());
+                        return String.format("%s's %s cured its poison!", user.getNickname(), item.NAME);
                     case SLEEP:
-                        return String.format("%s's %s woke it up!", user.getNickname(), item.getName());
+                        return String.format("%s's %s woke it up!", user.getNickname(), item.NAME);
                     default:
-                        throw new IllegalArgumentException("Invalid status: " + status.getName());
+                        throw new IllegalArgumentException("Invalid status: " + status.NAME);
                 }
             } else {
                 switch (status) {
@@ -481,27 +528,21 @@ public enum Messages {
                     case SLEEP:
                         return String.format("%s woke up!", user.getNickname());
                     default:
-                        throw new IllegalArgumentException("Invalid status: " + status.getName());
+                        throw new IllegalArgumentException("Invalid status: " + status.NAME);
                 }
             }
-        }
-
-        @Nullable
-        @Override
-        public String getMessage(Pokemon user, VolatileStatus status) {
-            return String.format("%s's status cleared!", user.getNickname());
         }
     },
 
     CURE_TEAM("Cure Team") {
-        @Nullable
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, @Nullable Items item, Status status, @Nullable Move move, @Nullable Abilities ability) {
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
             if (move == null) {
                 throw new IllegalArgumentException("Messages.CURE_TEAM called with null move");
             }
 
-            switch (move.getBaseMove()) {
+            switch (move.BASE_MOVE) {
                 case AROMATHERAPY:
                     return "A soothing aroma wafted through the area!";
                 case HEAL_BELL:
@@ -513,40 +554,40 @@ public enum Messages {
     },
 
     ITEM("Item") {
-        @Nullable
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Move move, Abilities ability, Items item) {
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
             if (ability != null) {
                 switch (ability) {
                     case PICKUP:
-                        return String.format("%s found one %s!", user.getNickname(), item.getName());
+                        return String.format("%s found one %s!", user.getNickname(), item.NAME);
                     case FRISK:
-                        if (user.getBattle().getGeneration() == Generation.VI) {
-                            return String.format("%s frisked %s and found its %s!", user.getNickname(), target.getNickname(), item.getName());
+                        if (user.getBattle().GENERATION == Generation.VI) {
+                            return String.format("%s frisked %s and found its %s!", user.getNickname(), target.getNickname(), item.NAME);
                         }
 
-                        return String.format("%s frisked its target and found one %s!", user.getNickname(), item.getName());
+                        return String.format("%s frisked its target and found one %s!", user.getNickname(), item.NAME);
                     case MAGICIAN:
                     case PICKPOCKET:
-                        return String.format("%s stole %s's !", user.getNickname(), item.getName());
+                        return String.format("%s stole %s's !", user.getNickname(), item.NAME);
                     case HARVEST:
-                        return String.format("%s harvested one %s!", user.getNickname(), item.getName());
+                        return String.format("%s harvested one %s!", user.getNickname(), item.NAME);
                     default:
-                        return String.format("%s obtained one %s.", user.getNickname(), item.getName());
+                        return String.format("%s obtained one %s.", user.getNickname(), item.NAME);
                 }
             }
 
             if (move != null) {
-                switch (move.getBaseMove()) {
+                switch (move.BASE_MOVE) {
                     case RECYCLE:
-                        return String.format("%s found one %s!", user.getNickname(), item.getName());
+                        return String.format("%s found one %s!", user.getNickname(), item.NAME);
                     case THIEF:
                     case COVET:
-                        return String.format("%s stole %s's !", user.getNickname(), item.getName());
+                        return String.format("%s stole %s's !", user.getNickname(), item.NAME);
                     case BESTOW:
-                        return String.format("%s received %s from %s!", target.getNickname(), item.getName(), user.getNickname());
+                        return String.format("%s received %s from %s!", target.getNickname(), item.NAME, user.getNickname());
                     default:
-                        return String.format("%s obtained one %s.", user.getNickname(), item.getName());
+                        return String.format("%s obtained one %s.", user.getNickname(), item.NAME);
                 }
             }
 
@@ -554,27 +595,27 @@ public enum Messages {
                 return String.format("%s floats in the air with its Air Balloon!", user.getNickname());
             }
 
-            return String.format("%s has %s!", user.getNickname(), item.getName());
+            return String.format("%s has %s!", user.getNickname(), item.NAME);
         }
     },
 
     END_ITEM("End Item") {
-        @Nullable
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Move move, Abilities ability, Items item) {
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
             if (move != null) {
-                switch (move.getBaseMove()) {
+                switch (move.BASE_MOVE) {
                     case FLING:
-                        return String.format("%s flung its %s!", user.getNickname(), item.getName());
+                        return String.format("%s flung its %s!", user.getNickname(), item.NAME);
                     case KNOCK_OFF:
-                        return String.format("%s knocked off %s's %s!", user.getNickname(), target.getNickname(), item.getName());
+                        return String.format("%s knocked off %s's %s!", user.getNickname(), target.getNickname(), item.NAME);
                     case BUG_BITE:
                     case PLUCK:
-                        return String.format("%s stole and ate its target's %s!", user.getNickname(), item.getName());
+                        return String.format("%s stole and ate its target's %s!", user.getNickname(), item.NAME);
                     case INCINERATE:
-                        return String.format("%s's %s was burned up!", target.getNickname(), item.getName());
+                        return String.format("%s's %s was burned up!", target.getNickname(), item.NAME);
                     default:
-                        return String.format("%s lost its %s!", user.getNickname(), item.getName());
+                        return String.format("%s lost its %s!", user.getNickname(), item.NAME);
                 }
             }
 
@@ -611,24 +652,24 @@ public enum Messages {
                 case STEEL_GEM:
                 case NORMAL_GEM:
                 case FAIRY_GEM:
-                    return String.format("The %s strengthened %s's power!", user.getNickname(), item.getName());
+                    return String.format("The %s strengthened %s's power!", user.getNickname(), item.NAME);
                 default:
-                    return String.format("%s's %s activated!", user.getNickname(), item.getName());
+                    return String.format("%s's %s activated!", user.getNickname(), item.NAME);
             }
         }
     },
 
     ABILITY("Ability") {
-        @Nullable
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Move move, Abilities ability) {
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
             String userName = user.getNickname();
             String targetName = target.getNickname();
-            String targetAbilityName = target.ABILITY.get().getName();
-            String abilityName = ability.getName();
+            String targetAbilityName = target.ABILITY.get().NAME;
+            String abilityName = ability.NAME;
 
             if (ability != null) {
-                switch (move.getBaseMove()) {
+                switch (move.BASE_MOVE) {
                     case ROLE_PLAY:
                         return String.format("%s copied %s's %s Ability!", userName, targetName, targetAbilityName);
                 }
@@ -688,97 +729,97 @@ public enum Messages {
     },
 
     END_ABILITY("End Ability") {
-        @Nullable
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Move move, Abilities ability, boolean supressed) {
-            if (supressed) {
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            if (suppressed) {
                 return String.format("%s's Ability was supressed!", target.getNickname());
             } else {
-                return String.format("%s's %s was removed!", target.getNickname(), ability.getName());
+                return String.format("%s's %s was removed!", target.getNickname(), ability.NAME);
             }
         }
     },
 
     TRANSFORM("Transform") {
-        @Nullable
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
             return String.format("%s transformed into %s!", user.getNickname(), target.getName());
         }
     },
 
     FORM_ECHANGE("Form Echange") {
-        @Nullable
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
             return null;
         }
     },
 
     MEGA("Mega") {
-        @Nullable
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
             return null;
         }
     },
 
     PRIMAL("Primal") {
-        @Nullable
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
             return null;
         }
     },
 
     TYPE_CHANGE("Type Change") {
-        @Nullable
+        @Nonnull
         @Override
-        public String getMessage(VolatileStatus status, Pokemon user, Pokemon target, Abilities ability, Items item, Type type, Move targetMove, Move move, boolean zMove, boolean failed) {
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
             String userName = user.getNickname();
             String targetName = target.getNickname();
-            String typeName = type.getName();
+            String typeName = newType.getName();
 
             if (ability != null) {
                 return String.format("%s transformed into the %s type!", userName, typeName);
             }
 
-            switch (move.getBaseMove()) {
+            switch (move.BASE_MOVE) {
                 case REFLECT_TYPE:
                     return String.format("%s's type became the same as %s's type!", userName, targetName);
                 case BURN_UP:
                     return String.format("%s burned itself out!", userName);
             }
 
-            throw new IllegalArgumentException("Invalid type change for move " + move.getBaseMove().NAME);
+            throw new IllegalArgumentException("Invalid type change for move " + move.BASE_MOVE.NAME);
         }
     },
 
     TYPE_ADD("Type Add") {
-        @Nullable
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Type type) {
-            return String.format("%s type was added to %s!", type.getName(), user.getNickname());
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+            return String.format("%s type was added to %s!", newType.getName(), user.getNickname());
         }
     },
 
     ALREADY_CONFUSED("Already Confused") {
-        @Nullable
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
             return String.format("%s is already confused!", target.getNickname());
         }
     },
 
     VOLATILE_START("Volatile Start") {
-        @Nullable
+        @Nonnull
         @Override
-        public String getMessage(VolatileStatus status, Pokemon user, Pokemon target, Abilities ability, Items item, Type type, Move targetMove, Move move, boolean zMove, boolean failed) {
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
             String userName = user.getNickname();
             String targetName = target.getNickname();
 
-            if (status != null) {
-                switch (status.getBaseVolatileStatus()) {
+            if (volatileStatus != null) {
+                switch (volatileStatus.BASE_VOLATILE_STATUS) {
                     case STOCKPILE_1:
                         return String.format("%s stockpiled 1!", userName);
                     case STOCKPILE_2:
@@ -795,7 +836,7 @@ public enum Messages {
                         return String.format("%s's perish count fell to 3.", userName);
                     case INFATUATION:
                         if (item != null) {
-                            return String.format("%s fell in love from the %s!", targetName, item.getName());
+                            return String.format("%s fell in love from the %s!", targetName, item.NAME);
                         } else {
                             return String.format("%s fell in love!", targetName);
                         }
@@ -810,7 +851,7 @@ public enum Messages {
                 }
             }
 
-            switch (move.getBaseMove()) {
+            switch (move.BASE_MOVE) {
                 case POWER_TRICK:
                     return String.format("%s switched its Attack and Defense", userName);
                 case FORESIGHT:
@@ -839,7 +880,7 @@ public enum Messages {
                 case IMPRISON:
                     return String.format("%s sealed any moves its target shares with it!", userName);
                 case DISABLE:
-                    return String.format("%s's %s was disabled!", targetName, targetMove.getBaseMove().NAME);
+                    return String.format("%s's %s was disabled!", targetName, targetMove.BASE_MOVE.NAME);
                 case EMBARGO:
                     return String.format("%s can't use items anymore!", targetName);
                 case TORMENT:
@@ -856,7 +897,7 @@ public enum Messages {
                     return String.format("%s became nimble!", userName);
                 case FOCUS_ENERGY:
                     if (item != null) {
-                        return String.format("%s used the %s to get pumped!", userName, item.getName());
+                        return String.format("%s used the %s to get pumped!", userName, item.NAME);
                     } else if (zMove) {
                         return String.format("%s boosted its critical-hit ratio using its Z-Power!", userName);
                     } else {
@@ -877,7 +918,7 @@ public enum Messages {
                 case FUTURE_SIGHT:
                     return String.format("%s foresaw an attack!", userName);
                 case MIMIC:
-                    return String.format("%s learned %s!", userName, targetMove.getBaseMove().NAME);
+                    return String.format("%s learned %s!", userName, targetMove.BASE_MOVE.NAME);
                 case LASER_FOCUS:
                     return String.format("%s concentrated intensely", userName);
                 case FOLLOW_ME:
@@ -886,11 +927,11 @@ public enum Messages {
                 case POWDER:
                     return String.format("%s is covered in powder!", userName);
                 case LIGHT_SCREEN:
-                    if (user.getBattle().getGeneration() == Generation.I) {
+                    if (user.getBattle().GENERATION == Generation.I) {
                         return String.format("%s's protected against special attacks!", userName);
                     }
                 case REFLECT:
-                    if (user.getBattle().getGeneration() == Generation.I) {
+                    if (user.getBattle().GENERATION == Generation.I) {
                         return String.format("%s's gained armor!", userName);
                     }
             }
@@ -902,24 +943,27 @@ public enum Messages {
                     return String.format("%s can't get it going!", userName);
             }
 
-            return String.format("%s's %s started!", userName, move.getBaseMove().NAME);
+            return String.format("%s's %s started!", userName, move.BASE_MOVE.NAME);
         }
     },
 
-    SUBSTITUTE_DAMAGED("Subtitute Damaged") {
-        @Nullable
+    SUBSTITUTE_DAMAGED("Substitute Damaged") {
+        @Nonnull
         @Override
-        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
+        public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
             return String.format("The substitute took damage for %s!", target.getNickname());
         }
     };
 
+    @Nonnull
     private final String NAME;
+
+    @Nullable
     protected final String MESSAGE;
 
     Messages(@Nonnull String name, @Nullable String message) {
-        this.NAME = name;
-        this.MESSAGE = message;
+        NAME = name;
+        MESSAGE = message;
     }
 
     Messages(@Nonnull String name) {
@@ -928,57 +972,13 @@ public enum Messages {
 
     @Nonnull
     public String getName() {
-        return this.NAME;
+        return NAME;
     }
 
-    @Nullable
-    public String getRawMessage() {
-        return this.MESSAGE;
-    }
-
-    @Nullable
-    public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, PermanentStat[] stat, Status status, VolatileStatus volatileStatus, boolean self) {
-        return String.format(this.MESSAGE, user.getNickname());
-    }
-
-    @Nullable
-    public String getMessage(Integer hitCount) {
-        return null;
-    }
-
-    @Nullable
-    public String getMessage(Pokemon user, Pokemon target, @Nullable Items item, Status status, @Nullable Move move, @Nullable Abilities ability) {
-        return null;
-    }
-
-    @Nullable
-    public String getMessage(Pokemon user, VolatileStatus status) {
-        return null;
-    }
-
-    @Nullable
-    public String getMessage(Pokemon user, Pokemon target, Move move, Abilities ability, Items item) {
-        return null;
-    }
-
-    @Nullable
-    public String getMessage(Pokemon user, Pokemon target, Move move, Abilities ability) {
-        return null;
-    }
-
-    @Nullable
-    public String getMessage(Pokemon user, Pokemon target, Move move, Abilities ability, boolean supressed) {
-        return null;
-    }
-
-    @Nullable
-    public String getMessage(VolatileStatus status, Pokemon user, Pokemon target, Abilities ability, Items item, Type type, @Nullable Move targetMove, Move move, boolean zMove, boolean failed) {
-        return null;
-    }
-
-    @Nullable
-    public String getMessage(Pokemon user, Type type) {
-        return null;
+    // TODO: Set Nonnull and Nullable annotations on arguments
+    @Nonnull
+    public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
+        return String.format(MESSAGE, user.getNickname());
     }
 
 }

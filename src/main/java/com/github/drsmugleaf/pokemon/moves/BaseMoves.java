@@ -1,62 +1,44 @@
 package com.github.drsmugleaf.pokemon.moves;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by DrSmugleaf on 16/10/2017.
  */
-class BaseMoves {
+public class BaseMoves {
 
     @Nonnull
-    private final String[] MOVE_NAMES;
+    private final List<String> MOVE_NAMES = new ArrayList<>();
 
-    BaseMoves() {
-        MOVE_NAMES = new String[]{};
-    }
-
-    BaseMoves(@Nullable String[] moves) {
-        if (moves == null || String.join("", moves).isEmpty()) {
-            MOVE_NAMES = new String[]{};
-        } else {
-            MOVE_NAMES = moves;
-        }
+    BaseMoves(@Nonnull List<String> moveNames) {
+        MOVE_NAMES.addAll(moveNames);
     }
 
     @Nonnull
     public List<BaseMove> get() {
         List<BaseMove> moves = new ArrayList<>();
-        for (String name : MOVE_NAMES) {
-            moves.add(BaseMove.getMove(name));
+
+        for (String moveName : MOVE_NAMES) {
+            BaseMove move = BaseMove.getMove(moveName);
+            moves.add(move);
         }
+
         return moves;
     }
 
     static class Single {
 
-        @Nullable
+        @Nonnull
         private final String MOVE_NAME;
 
-        Single() {
-            MOVE_NAME = null;
+        Single(@Nonnull String moveName) {
+            MOVE_NAME = moveName;
         }
 
-        Single(@Nullable String move) {
-            if (move != null && move.isEmpty()) {
-                MOVE_NAME = null;
-            } else {
-                MOVE_NAME = move;
-            }
-        }
-
-        @Nullable
+        @Nonnull
         public BaseMove get() {
-            if (MOVE_NAME == null) {
-                return null;
-            }
-
             return BaseMove.getMove(MOVE_NAME);
         }
 

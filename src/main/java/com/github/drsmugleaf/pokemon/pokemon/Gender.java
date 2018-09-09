@@ -18,21 +18,25 @@ public enum Gender { // TODO: Add list of Genderless Pokemon / Pokemon gender ra
     FEMALE("Female", "(F)"),
     GENDERLESS("Genderless", null);
 
-    private final String NAME;
-    private final String ABBREVIATION;
+    @Nonnull
+    public final String NAME;
+
+    @Nullable
+    public final String ABBREVIATION;
 
     Gender(@Nonnull String name, @Nullable String abbreviation) {
         Holder.MAP.put(name.toLowerCase(), this);
-        this.NAME = name;
-        this.ABBREVIATION = abbreviation;
+        NAME = name;
+        ABBREVIATION = abbreviation;
     }
 
-    public static Gender getGender(String gender) {
+    @Nonnull
+    public static Gender getGender(@Nonnull String gender) {
         gender = gender.toLowerCase();
 
-        if (Objects.equals(gender, Gender.MALE.getAbbreviation())) {
+        if (Objects.equals(gender, Gender.MALE.ABBREVIATION)) {
             return Gender.MALE;
-        } else if (Objects.equals(gender, Gender.FEMALE.getAbbreviation())) {
+        } else if (Objects.equals(gender, Gender.FEMALE.ABBREVIATION)) {
             return Gender.FEMALE;
         }
 
@@ -43,6 +47,7 @@ public enum Gender { // TODO: Add list of Genderless Pokemon / Pokemon gender ra
         return Holder.MAP.get(gender);
     }
 
+    @Nonnull
     public static Gender getRandomGender() {
         if (new Random().nextBoolean()) {
             return Gender.MALE;
@@ -72,15 +77,18 @@ public enum Gender { // TODO: Add list of Genderless Pokemon / Pokemon gender ra
         return Gender.isOppositeGender(attacker, defender);
     }
 
+    @Nonnull
     public String getName() {
-        return this.NAME;
+        return NAME;
     }
 
+    @Nullable
     public String getAbbreviation() {
-        return this.ABBREVIATION;
+        return ABBREVIATION;
     }
 
     private static class Holder {
+        @Nonnull
         static Map<String, Gender> MAP = new HashMap<>();
     }
 

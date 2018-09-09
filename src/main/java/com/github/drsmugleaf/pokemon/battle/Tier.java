@@ -292,10 +292,10 @@ public enum Tier {
     }
 
     @Nonnull
-    private final String NAME;
+    public final String NAME;
 
     @Nonnull
-    private final String ABBREVIATION;
+    public final String ABBREVIATION;
 
     @Nonnull
     private final List<Clause> CLAUSES = new ArrayList<>();
@@ -329,6 +329,7 @@ public enum Tier {
     @Nonnull
     public static Tier getTier(@Nonnull String abbreviation) {
         abbreviation = abbreviation.toLowerCase();
+
         if (!Holder.MAP.containsKey(abbreviation)) {
             throw new NullPointerException("Tier " + abbreviation + " doesn't exist");
         }
@@ -464,6 +465,7 @@ public enum Tier {
     }
 
     private static class Holder {
+        @Nonnull
         static Map<String, Tier> MAP = new HashMap<>();
     }
 

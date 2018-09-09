@@ -22,7 +22,7 @@ public enum Target {
     ADJACENT_ALLY("Adjacent ally");
 
     @Nonnull
-    private final String NAME;
+    public final String NAME;
 
     Target(@Nonnull String name) {
         Holder.MAP.put(name.toLowerCase(), this);
@@ -51,6 +51,7 @@ public enum Target {
     }
 
     private static class Holder {
+        @Nonnull
         static Map<String, Target> MAP = new HashMap<>();
     }
 

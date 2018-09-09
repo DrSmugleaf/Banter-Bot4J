@@ -11,7 +11,7 @@ import java.util.*;
  */
 public class Turn {
 
-    private final int ID;
+    public final int ID;
 
     @Nonnull
     private final Map<Trainer, Pokemon> POKEMONS_SENT_OUT = new HashMap<>();
@@ -42,6 +42,7 @@ public class Turn {
         ACTIONS.add(addAt, ACTIONS.remove(removeFrom));
     }
 
+    @Nonnull
     public List<Action> getTurnOrder() {
         return new ArrayList<>(ACTIONS);
     }
@@ -76,7 +77,7 @@ public class Turn {
     }
 
     @Nonnull
-    protected List<Action> getHitBy(@Nonnull Pokemon pokemon) {
+    protected List<Action> getHitsToward(@Nonnull Pokemon pokemon) {
         List<Action> hitBy = new ArrayList<>();
 
         for (int i = ACTIONS.size() - 1; i >= 0; i--) {

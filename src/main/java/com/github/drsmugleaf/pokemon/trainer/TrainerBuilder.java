@@ -17,16 +17,20 @@ public class TrainerBuilder {
 
     private long id;
     private String name;
-    private List<String> pokemonStrings = new ArrayList<>();
+
+    @Nonnull
+    private List<String> pokemonExportStrings = new ArrayList<>();
+
     private Battle battle;
 
     public TrainerBuilder() {}
 
+    @Nonnull
     public Trainer build() throws UserException {
-        PokemonBuilder[] pokemons = new PokemonBuilder[pokemonStrings.size()];
+        PokemonBuilder[] pokemons = new PokemonBuilder[pokemonExportStrings.size()];
 
-        for (int i = 0; i < pokemonStrings.size(); i++) {
-            PokemonBuilder pokemon = SmogonImporter.importPokemon(pokemonStrings.get(i));
+        for (int i = 0; i < pokemonExportStrings.size(); i++) {
+            PokemonBuilder pokemon = SmogonImporter.importPokemon(pokemonExportStrings.get(i));
             pokemons[i] = pokemon;
         }
 
@@ -56,16 +60,17 @@ public class TrainerBuilder {
 
     @Nonnull
     public TrainerBuilder addPokemon(@Nonnull String exportString) {
-        pokemonStrings.add(exportString);
+        pokemonExportStrings.add(exportString);
         return this;
     }
 
     @Nonnull
     public TrainerBuilder addPokemons(@Nonnull String exportStrings) {
-        pokemonStrings.addAll(Arrays.asList(exportStrings.split("\n\n")));
+        pokemonExportStrings.addAll(Arrays.asList(exportStrings.split("\n\n")));
         return this;
     }
 
+    @Nonnull
     public TrainerBuilder setBattle(@Nonnull Battle battle) {
         this.battle = battle;
         return this;

@@ -9,15 +9,15 @@ import javax.annotation.Nonnull;
  */
 public class PokemonDamagedEvent extends PokemonEvent {
 
-    private final int DAMAGE;
+    public final int DAMAGE;
 
     public PokemonDamagedEvent(@Nonnull Pokemon defender, int damage) {
         super(defender);
-        this.DAMAGE = damage;
+        DAMAGE = damage;
     }
 
     public int getDamage() {
-        return this.DAMAGE;
+        return DAMAGE;
     }
 
 }

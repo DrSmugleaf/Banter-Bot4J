@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -13,8 +14,10 @@ import java.io.IOException;
  */
 public class SmogonParser {
 
+    @Nonnull
     private static final String SMOGON_URL = "http://www.smogon.com/dex/sm/pokemon/";
 
+    @Nonnull
     public static JSONArray getPokemons() throws IOException {
         Document doc;
         try {
@@ -37,11 +40,11 @@ public class SmogonParser {
     }
 
     public static void printPokemonsAsEnums() {
-        JSONArray pokemons = null;
+        JSONArray pokemons;
         try {
             pokemons = getPokemons();
-        } catch (IOException ignored) {
-            return;
+        } catch (IOException e) {
+            throw new ParsingException("Error getting pokemons", e);
         }
 
         for (int i = 0; i < pokemons.length(); i++) {
@@ -63,6 +66,7 @@ public class SmogonParser {
                                 .replace(":", "")
                                 .toUpperCase()
                 );
+
                 if (!suffix.isEmpty()) {
                     System.out.print(
                             "_" +
@@ -81,7 +85,7 @@ public class SmogonParser {
         }
     }
 
-    public static void printAbilitiesAsEnums(JSONArray abilities) {
+    public static void printAbilitiesAsEnums(@Nonnull JSONArray abilities) {
         for (int i = 0; i < abilities.length(); i++) {
             String name = abilities.getJSONObject(i).getString("name");
 
@@ -91,11 +95,12 @@ public class SmogonParser {
                     .replace("'", "")
                     .toUpperCase()
             );
+
             System.out.println("(\"" + name + "\"),");
         }
     }
 
-    public static void printItemsAsEnums(JSONArray items) {
+    public static void printItemsAsEnums(@Nonnull JSONArray items) {
         for (int i = 0; i < items.length(); i++) {
             String name = items.getJSONObject(i).getString("name");
 

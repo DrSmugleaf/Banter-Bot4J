@@ -7,8 +7,11 @@ import javax.annotation.Nonnull;
  */
 public class Setup {
 
-    private final Generation GENERATION;
-    private final Variation VARIATION;
+    @Nonnull
+    public final Generation GENERATION;
+
+    @Nonnull
+    public final Variation VARIATION;
 
     public Setup(@Nonnull Generation generation, @Nonnull Variation variation) {
         GENERATION = generation;
@@ -27,6 +30,11 @@ public class Setup {
     @Nonnull
     public Variation getVariation() {
         return VARIATION;
+    }
+
+    @Nonnull
+    public static Setup getDefault() {
+        return new Setup(Generation.VII, Variation.SINGLE_BATTLE);
     }
 
 }

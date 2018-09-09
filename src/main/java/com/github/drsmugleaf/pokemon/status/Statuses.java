@@ -21,10 +21,11 @@ public class Statuses {
 
     public Statuses() {}
 
+    @Nonnull
     private static Map<IStat, Map<IModifier, Double>> defaultModifiers() {
         Map<IStat, Map<IModifier, Double>> statModifiers = new HashMap<>();
 
-        for (IStat istat : StatBuilder.ISTATS) {
+        for (IStat istat : StatBuilder.STAT_LIST) {
             statModifiers.put(istat, new HashMap<>());
         }
 
@@ -46,7 +47,7 @@ public class Statuses {
 
     public void addVolatileStatus(@Nonnull Collection<VolatileStatus> statuses) {
         for (VolatileStatus status : statuses) {
-            BaseVolatileStatus baseStatus = status.getBaseVolatileStatus();
+            BaseVolatileStatus baseStatus = status.BASE_VOLATILE_STATUS;
             VOLATILE_STATUSES.put(baseStatus, status);
         }
     }

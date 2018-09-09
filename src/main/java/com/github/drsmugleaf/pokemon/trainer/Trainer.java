@@ -24,7 +24,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Trainer extends Player {
 
     @Nonnull
-    private final Battle BATTLE;
+    public final Battle BATTLE;
 
     @Nonnull
     private final List<Pokemon> POKEMONS = new ArrayList<>();
@@ -49,7 +49,7 @@ public class Trainer extends Player {
     @Nonnull
     private final List<EntryHazard> HAZARDS = new ArrayList<>();
 
-    protected Trainer(@Nonnull Long id, @Nonnull String name, @Nonnull Battle battle, @Nonnull PokemonBuilder... pokemonBuilders) {
+    protected Trainer(@Nonnull Long id, @Nonnull String name, @Nonnull Battle battle, @Nonnull PokemonBuilder... pokemonBuilders) throws UserException {
         super(id, name);
 
         BATTLE = battle;
@@ -60,82 +60,83 @@ public class Trainer extends Player {
             pokemons.add(pokemonBuilder.build());
         }
 
-        this.POKEMONS.addAll(pokemons);
+        POKEMONS.addAll(pokemons);
     }
 
     public void addPokemon(Pokemon pokemon) {
-        this.POKEMONS.add(pokemon);
+        POKEMONS.add(pokemon);
     }
 
     public void removePokemon(Pokemon pokemon) {
-        this.POKEMONS.remove(pokemon);
-        this.ACTIVE_POKEMONS.remove(pokemon);
+        POKEMONS.remove(pokemon);
+        ACTIVE_POKEMONS.remove(pokemon);
     }
 
     public void removeActivePokemon(Pokemon pokemon) {
-        this.ACTIVE_POKEMONS.remove(pokemon);
+        ACTIVE_POKEMONS.remove(pokemon);
     }
 
     protected void replacePokemon(Pokemon oldPokemon, Pokemon newPokemon) {
-        if (this.ACTIVE_POKEMONS.contains(oldPokemon)) {
-            this.ACTIVE_POKEMONS.add(newPokemon);
+        if (ACTIVE_POKEMONS.contains(oldPokemon)) {
+            ACTIVE_POKEMONS.add(newPokemon);
         }
-        this.removePokemon(oldPokemon);
-        this.addPokemon(newPokemon);
+
+        removePokemon(oldPokemon);
+        addPokemon(newPokemon);
     }
 
     @Nonnull
     public Pokemon getPokemon(int id) {
-        return this.POKEMONS.get(id);
+        return POKEMONS.get(id);
     }
 
     @Nonnull
     public Pokemon[] getPokemons() {
-        return this.POKEMONS.toArray(new Pokemon[0]);
+        return POKEMONS.toArray(new Pokemon[0]);
     }
 
     @Nullable
     public Pokemon getNextAliveUnactivePokemon() {
-        List<Pokemon> alivePokemons = this.getAliveInactivePokemons();
+        List<Pokemon> alivePokemons = getAliveInactivePokemons();
         return alivePokemons.get(0);
     }
 
     @Nonnull
     public List<Pokemon> getActivePokemons() {
-        return this.ACTIVE_POKEMONS;
+        return ACTIVE_POKEMONS;
     }
 
     @Nullable
     public Pokemon getActivePokemon(int index) {
-        return this.ACTIVE_POKEMONS.get(index);
+        return ACTIVE_POKEMONS.get(index);
     }
 
     public int getActivePokemon(Pokemon pokemon) {
-        return this.ACTIVE_POKEMONS.indexOf(pokemon);
+        return ACTIVE_POKEMONS.indexOf(pokemon);
     }
 
     @Nullable
     public Pokemon getRandomActivePokemon() {
-        if (this.ACTIVE_POKEMONS.isEmpty()) {
+        if (ACTIVE_POKEMONS.isEmpty()) {
             return null;
         }
 
-        int randomIndex = ThreadLocalRandom.current().nextInt(this.ACTIVE_POKEMONS.size());
-        return this.ACTIVE_POKEMONS.get(randomIndex);
+        int randomIndex = ThreadLocalRandom.current().nextInt(ACTIVE_POKEMONS.size());
+        return ACTIVE_POKEMONS.get(randomIndex);
     }
 
     @Nonnull
     public List<Pokemon> getAdjacentEnemyPokemons(Pokemon pokemon) {
-        Trainer opposingTrainer = this.BATTLE.getOppositeTrainer(this);
+        Trainer opposingTrainer = BATTLE.getOppositeTrainer(this);
         List<Pokemon> opposingPokemons = opposingTrainer.getActivePokemons();
-        int index = this.ACTIVE_POKEMONS.indexOf(pokemon);
+        int index = ACTIVE_POKEMONS.indexOf(pokemon);
         List<Pokemon> adjacentEnemyPokemons = new ArrayList<>();
 
-        if (this.ACTIVE_POKEMONS.isEmpty() || opposingPokemons.isEmpty()) {
+        if (ACTIVE_POKEMONS.isEmpty() || opposingPokemons.isEmpty()) {
             return adjacentEnemyPokemons;
         }
 
-        if (!this.ACTIVE_POKEMONS.contains(pokemon)) {
+        if (!ACTIVE_POKEMONS.contains(pokemon)) {
             return adjacentEnemyPokemons;
         }
 
@@ -150,7 +151,7 @@ public class Trainer extends Player {
 
     @Nullable
     public Pokemon getRandomAdjacentEnemyPokemon(Pokemon pokemon) {
-        List<Pokemon> adjacentEnemyPokemons = this.getAdjacentEnemyPokemons(pokemon);
+        List<Pokemon> adjacentEnemyPokemons = getAdjacentEnemyPokemons(pokemon);
         if (adjacentEnemyPokemons.isEmpty()) {
             return null;
         }
@@ -162,7 +163,7 @@ public class Trainer extends Player {
     public List<Pokemon> getAlivePokemons() {
         List<Pokemon> alivePokemons = new ArrayList<>();
 
-        for (Pokemon pokemon : this.POKEMONS) {
+        for (Pokemon pokemon : POKEMONS) {
             if (!pokemon.isFainted()) {
                 alivePokemons.add(pokemon);
             }
@@ -172,9 +173,9 @@ public class Trainer extends Player {
     }
 
     public List<Pokemon> getAliveInactivePokemons() {
-        List<Pokemon> aliveInactivePokemons = this.getAlivePokemons();
+        List<Pokemon> aliveInactivePokemons = getAlivePokemons();
 
-        aliveInactivePokemons.removeIf(this.ACTIVE_POKEMONS::contains);
+        aliveInactivePokemons.removeIf(ACTIVE_POKEMONS::contains);
         aliveInactivePokemons.removeIf(Pokemon::isFainted);
 
         return aliveInactivePokemons;
@@ -183,10 +184,10 @@ public class Trainer extends Player {
     public void addAction(Battle battle, Move move, Pokemon target, Pokemon pokemon) {
         Action action = battle.createAction(move, pokemon, target);
         pokemon.setAction(action);
-        this.ACTIONS.add(action);
+        ACTIONS.add(action);
 
-        if (this.ACTIONS.size() == this.ACTIVE_POKEMONS.size()) {
-            this.setStatus(TrainerStatus.WAITING);
+        if (ACTIONS.size() == ACTIVE_POKEMONS.size()) {
+            setStatus(TrainerStatus.WAITING);
         }
 
         TrainerChooseTargetEvent event = new TrainerChooseTargetEvent(pokemon, move, target);
@@ -194,7 +195,7 @@ public class Trainer extends Player {
     }
 
     public boolean hasAction(Pokemon pokemon) {
-        for (Action action : this.ACTIONS) {
+        for (Action action : ACTIONS) {
             if (action.getAttacker() == pokemon) {
                 return true;
             }
@@ -205,116 +206,117 @@ public class Trainer extends Player {
 
     @Nonnull
     public List<Action> getActions() {
-        return new ArrayList<>(this.ACTIONS);
+        return new ArrayList<>(ACTIONS);
     }
 
     public void resetActions() {
-        this.ACTIONS.clear();
+        ACTIONS.clear();
     }
 
     public void switchPokemon(Pokemon newPokemon, Pokemon oldPokemon) {
-        this.sendBack(oldPokemon);
-        this.sendOut(newPokemon);
+        sendBack(oldPokemon);
+        sendOut(newPokemon);
     }
 
     private void sendBack(Pokemon pokemon) {
-        this.ACTIVE_POKEMONS.remove(pokemon);
+        ACTIVE_POKEMONS.remove(pokemon);
         TrainerSendBackPokemonEvent event = new TrainerSendBackPokemonEvent(pokemon);
         EventDispatcher.dispatch(event);
     }
 
     public void sendOut(Pokemon pokemon) {
-        this.ACTIVE_POKEMONS.add(pokemon);
-        this.setStatus(TrainerStatus.WAITING);
+        ACTIVE_POKEMONS.add(pokemon);
+        setStatus(TrainerStatus.WAITING);
     }
 
     @Nullable
     public Pokemon getOppositePokemon(Pokemon pokemon) {
-        int index = this.ACTIVE_POKEMONS.indexOf(pokemon);
-        if (this.ACTIVE_POKEMONS.size() >= 3) {
-            return Lists.reverse(this.ACTIVE_POKEMONS).get(index);
+        int index = ACTIVE_POKEMONS.indexOf(pokemon);
+        if (ACTIVE_POKEMONS.size() >= 3) {
+            return Lists.reverse(ACTIVE_POKEMONS).get(index);
         }
         return null;
     }
 
     public void swapActivePokemonPlaces(Pokemon pokemon1, Pokemon pokemon2) {
-        Collections.swap(this.ACTIVE_POKEMONS, this.ACTIVE_POKEMONS.indexOf(pokemon1), this.ACTIVE_POKEMONS.indexOf(pokemon2));
+        Collections.swap(ACTIVE_POKEMONS, ACTIVE_POKEMONS.indexOf(pokemon1), ACTIVE_POKEMONS.indexOf(pokemon2));
     }
 
     public boolean hasPokemon(Pokemon pokemon) {
-        return this.POKEMONS.contains(pokemon) || this.ACTIVE_POKEMONS.contains(pokemon);
+        return POKEMONS.contains(pokemon) || ACTIVE_POKEMONS.contains(pokemon);
     }
 
     public boolean hasActivePokemon(Pokemon pokemon) {
-        return this.ACTIVE_POKEMONS.contains(pokemon);
+        return ACTIVE_POKEMONS.contains(pokemon);
     }
 
     public boolean hasInactivePokemon(Pokemon pokemon) {
-        return this.POKEMONS.contains(pokemon);
+        return POKEMONS.contains(pokemon);
     }
 
     @Nullable
     public Pokemon getPokemonInFocus() {
-        return this.pokemonInFocus;
+        return pokemonInFocus;
     }
 
-    public void setPokemonInFocus(@Nonnull Pokemon pokemon) {
-        this.pokemonInFocus = pokemon;
+    public void setPokemonInFocus(@Nonnull Pokemon newPokemon) {
+        pokemonInFocus = newPokemon;
     }
 
     public void resetPokemonInFocus() {
-        this.pokemonInFocus = null;
+        pokemonInFocus = null;
     }
 
     @Nullable
     public Move getChosenMove() {
-        return this.chosenMove;
+        return chosenMove;
     }
 
     public void setChosenMove(@Nonnull Move move) {
-        this.chosenMove = move;
-        this.setStatus(TrainerStatus.CHOOSING_TARGET);
-        TrainerChooseMoveEvent event = new TrainerChooseMoveEvent(this.pokemonInFocus, move);
+        chosenMove = move;
+        setStatus(TrainerStatus.CHOOSING_TARGET);
+        TrainerChooseMoveEvent event = new TrainerChooseMoveEvent(pokemonInFocus, move);
         EventDispatcher.dispatch(event);
     }
 
     public void resetChosenMove() {
-        this.chosenMove = null;
+        chosenMove = null;
     }
 
     @Nonnull
     public Battle getBattle() {
-        return this.BATTLE;
+        return BATTLE;
     }
 
     public boolean isReady() {
-        return this.ready;
+        return ready;
     }
 
     protected void setReady(boolean bool) {
-        this.ready = bool;
+        ready = bool;
     }
 
+    @Nonnull
     public TrainerStatus getStatus() {
-        return this.status;
+        return status;
     }
 
-    public void setStatus(TrainerStatus status) {
+    public void setStatus(@Nonnull TrainerStatus status) {
         this.status = status;
     }
 
     public void finishTurn() {
-        if (this.ACTIVE_POKEMONS.size() < 1) {
-            this.setStatus(TrainerStatus.CHOOSING_POKEMON);
+        if (ACTIVE_POKEMONS.size() < 1) {
+            setStatus(TrainerStatus.CHOOSING_POKEMON);
             TrainerChoosingPokemonEvent event = new TrainerChoosingPokemonEvent(this);
             EventDispatcher.dispatch(event);
         } else {
-            this.setStatus(TrainerStatus.CHOOSING_MOVE);
+            setStatus(TrainerStatus.CHOOSING_MOVE);
         }
     }
 
     public boolean hasOpponentOnField() {
-        for (Trainer trainer : this.BATTLE.getTrainers().values()) {
+        for (Trainer trainer : BATTLE.getTrainers().values()) {
             if (trainer == this) {
                 continue;
             }

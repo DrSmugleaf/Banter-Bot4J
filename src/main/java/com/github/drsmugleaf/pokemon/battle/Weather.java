@@ -53,10 +53,16 @@ public enum Weather implements IModifier {
     FOG("Fog"),
     SHADOW_SKY("Shadow Sky");
 
-    private final String NAME;
+    @Nonnull
+    public final String NAME;
 
     Weather(@Nonnull String name) {
-        this.NAME = name;
+        NAME = name;
+    }
+
+    @Nonnull
+    public String getName() {
+        return NAME;
     }
 
 }

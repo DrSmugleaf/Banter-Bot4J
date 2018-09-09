@@ -5,7 +5,6 @@ import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.pokemon.battle.Battle;
 import com.github.drsmugleaf.pokemon.events.*;
 import com.github.drsmugleaf.pokemon.moves.BaseMove;
-import com.github.drsmugleaf.pokemon.moves.Move;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -15,6 +14,7 @@ import sx.blah.discord.handle.obj.IPrivateChannel;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
 
+import javax.annotation.Nonnull;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -24,13 +24,15 @@ import java.util.*;
  */
 public class PokemonEvents {
 
+    @Nonnull
     static final Map<IUser, Battle> BATTLES = new HashMap<>();
 
     static {
         EventDispatcher.registerListener(new PokemonEvents());
     }
 
-    private static EmbedObject sendOutPokemonEmbed(Battle battle, IUser user) {
+    @Nonnull
+    private static EmbedObject sendOutPokemonEmbed(@Nonnull Battle battle, @Nonnull IUser user) {
         EmbedBuilder builder = new EmbedBuilder();
 
         builder.withTitle("Which Pokemon do you want to send out? (Reply with the number of the Pokemon)");
@@ -44,7 +46,7 @@ public class PokemonEvents {
             builder.appendField(
                     i+1 + ": " + pokemon.getName() + " (" + String.join(" ", pokemon.TYPES.getTypesString()) + ")",
                     "HP: " + percentageHP + "% (" + currentHP + "/" + maxHP + ")\n" +
-                    "Ability: " + pokemon.ABILITY.get().getName() + " / Item: " + (pokemon.ITEM.get() != null ? pokemon.ITEM.get().getName() : "None") + "\n" +
+                    "Ability: " + pokemon.ABILITY.get().NAME + " / Item: " + (pokemon.ITEM.get() != null ? pokemon.ITEM.get().NAME : "None") + "\n" +
                     "Stats: " + pokemon.getStatsStringWithoutHP(),
                     true
             );
@@ -53,7 +55,8 @@ public class PokemonEvents {
         return builder.build();
     }
 
-    private static EmbedObject chooseMoveEmbed(Trainer trainer) {
+    @Nonnull
+    private static EmbedObject chooseMoveEmbed(@Nonnull Trainer trainer) {
         EmbedBuilder builder = new EmbedBuilder();
 
         builder.withTitle("Which move do you want to use?");
@@ -69,13 +72,14 @@ public class PokemonEvents {
         return builder.build();
     }
 
-    private static EmbedObject chooseTargetEmbed(Trainer trainer, Move move) {
+    @Nonnull
+    private static EmbedObject chooseTargetEmbed(@Nonnull Trainer trainer) {
         EmbedBuilder builder = new EmbedBuilder();
 
         builder.withTitle("Who do you want to target?");
 
         int i = 1;
-        for (com.github.drsmugleaf.pokemon.pokemon.Pokemon pokemon : trainer.getBattle().getTargetList(trainer.getPokemonInFocus())) {
+        for (com.github.drsmugleaf.pokemon.pokemon.Pokemon pokemon : trainer.BATTLE.getTargetList(trainer.getPokemonInFocus())) {
             int currentHP = pokemon.getHP();
             int maxHP = pokemon.getMaxHP();
             double percentageHP = Math.round((100.0 * currentHP / maxHP) * 10) / 10.0;
@@ -92,7 +96,7 @@ public class PokemonEvents {
     }
 
     @EventSubscriber
-    public static void handle(MessageReceivedEvent event) {
+    public static void handle(@Nonnull MessageReceivedEvent event) {
         if (event.getMessage().getContent().startsWith("-pokemon")) {
             return;
         }
@@ -151,8 +155,8 @@ public class PokemonEvents {
     }
 
     @PokemonEventHandler(event = BattleStartedEvent.class)
-    public static void handle(BattleStartedEvent event) {
-        Battle battle = event.getBattle();
+    public static void handle(@Nonnull BattleStartedEvent event) {
+        Battle battle = event.BATTLE;
         StringBuilder response = new StringBuilder();
 
         for (Trainer trainer : battle.getTrainers().values()) {
@@ -163,7 +167,7 @@ public class PokemonEvents {
             }
 
             response
-                    .append(BanterBot4J.CLIENT.fetchUser(trainer.getID()).getName())
+                    .append(BanterBot4J.CLIENT.fetchUser(trainer.ID).getName())
                     .append("'s team:\n")
                     .append(String.join(" / ", pokemons))
                     .append("\n");
@@ -177,17 +181,17 @@ public class PokemonEvents {
     }
 
     @PokemonEventHandler(event = PokemonDamagedEvent.class)
-    public static void handle(PokemonDamagedEvent event) {
-        com.github.drsmugleaf.pokemon.pokemon.Pokemon defender = event.getPokemon();
+    public static void handle(@Nonnull PokemonDamagedEvent event) {
+        com.github.drsmugleaf.pokemon.pokemon.Pokemon defender = event.POKEMON;
         StringBuilder response = new StringBuilder();
         DecimalFormat decimalFormat = new DecimalFormat("#.#");
         decimalFormat.setRoundingMode(RoundingMode.HALF_UP);
 
-        for (Long id : event.getBattle().getTrainers().keySet()) {
+        for (Long id : event.BATTLE.getTrainers().keySet()) {
             response.delete(0, response.length());
-            String hpLoss = decimalFormat.format(100.0 * event.getDamage() / defender.calculate(PermanentStat.HP));
+            String hpLoss = decimalFormat.format(100.0 * event.DAMAGE / defender.calculate(PermanentStat.HP));
 
-            if (!defender.getTrainer().getID().equals(id)) {
+            if (!defender.getTrainer().ID.equals(id)) {
                 response.append("The opposing ");
             }
             response
@@ -202,21 +206,21 @@ public class PokemonEvents {
     }
 
     @PokemonEventHandler(event = PokemonMoveEvent.class)
-    public static void handle(PokemonMoveEvent event) {
-        com.github.drsmugleaf.pokemon.pokemon.Pokemon attacker = event.getPokemon();
+    public static void handle(@Nonnull PokemonMoveEvent event) {
+        com.github.drsmugleaf.pokemon.pokemon.Pokemon attacker = event.POKEMON;
         StringBuilder response = new StringBuilder();
 
-        for (Long id : event.getBattle().getTrainers().keySet()) {
+        for (Long id : event.BATTLE.getTrainers().keySet()) {
             response.delete(0, response.length());
 
-            if (!attacker.getTrainer().getID().equals(id)) {
+            if (!attacker.getTrainer().ID.equals(id)) {
                 response.append("The opposing ");
             }
 
             response
                     .append(attacker.getNickname())
                     .append(" used **")
-                    .append(event.getMove().getBaseMove().NAME)
+                    .append(event.MOVE.BASE_MOVE.NAME)
                     .append("**!");
 
             IPrivateChannel channel = BanterBot4J.CLIENT.fetchUser(id).getOrCreatePMChannel();
@@ -225,16 +229,16 @@ public class PokemonEvents {
     }
 
     @PokemonEventHandler(event = TrainerSendOutPokemonEvent.class)
-    public static void handle(TrainerSendOutPokemonEvent event) {
-        Trainer trainer = event.getTrainer();
-        IUser user = BanterBot4J.CLIENT.fetchUser(trainer.getID());
-        com.github.drsmugleaf.pokemon.pokemon.Pokemon pokemon = event.getPokemon();
+    public static void handle(@Nonnull TrainerSendOutPokemonEvent event) {
+        Trainer trainer = event.TRAINER;
+        IUser user = BanterBot4J.CLIENT.fetchUser(trainer.ID);
+        com.github.drsmugleaf.pokemon.pokemon.Pokemon pokemon = event.POKEMON;
         StringBuilder response = new StringBuilder();
 
-        for (Long id : event.getBattle().getTrainers().keySet()) {
+        for (Long id : event.BATTLE.getTrainers().keySet()) {
             response.delete(0, response.length());
 
-            if (!Objects.equals(trainer.getID(), id)) {
+            if (!Objects.equals(trainer.ID, id)) {
                 response
                         .append(user.getName())
                         .append(" sent out ");
@@ -259,16 +263,16 @@ public class PokemonEvents {
     }
 
     @PokemonEventHandler(event = TrainerSendBackPokemonEvent.class)
-    public static void handle(TrainerSendBackPokemonEvent event) {
-        Trainer trainer = event.getTrainer();
-        IUser user = BanterBot4J.CLIENT.fetchUser(trainer.getID());
-        com.github.drsmugleaf.pokemon.pokemon.Pokemon pokemon = event.getPokemon();
+    public static void handle(@Nonnull TrainerSendBackPokemonEvent event) {
+        Trainer trainer = event.TRAINER;
+        IUser user = BanterBot4J.CLIENT.fetchUser(trainer.ID);
+        com.github.drsmugleaf.pokemon.pokemon.Pokemon pokemon = event.POKEMON;
         StringBuilder response = new StringBuilder();
 
-        for (Long id : event.getBattle().getTrainers().keySet()) {
+        for (Long id : event.BATTLE.getTrainers().keySet()) {
             response.delete(0, response.length());
 
-            if (!Objects.equals(trainer.getID(), id)) {
+            if (!Objects.equals(trainer.ID, id)) {
                 response
                         .append(user.getName())
                         .append(" withdrew ")
@@ -294,15 +298,15 @@ public class PokemonEvents {
     }
 
     @PokemonEventHandler(event = PokemonDeathEvent.class)
-    public static void handle(PokemonDeathEvent event) {
-        com.github.drsmugleaf.pokemon.pokemon.Pokemon pokemon = event.getPokemon();
-        Trainer trainer = event.getPokemon().getTrainer();
+    public static void handle(@Nonnull PokemonDeathEvent event) {
+        com.github.drsmugleaf.pokemon.pokemon.Pokemon pokemon = event.POKEMON;
+        Trainer trainer = event.POKEMON.getTrainer();
         StringBuilder response = new StringBuilder();
 
-        for (Long id : event.getBattle().getTrainers().keySet()) {
+        for (Long id : event.BATTLE.getTrainers().keySet()) {
             response.delete(0, response.length());
 
-            if (!trainer.getID().equals(id)) {
+            if (!trainer.ID.equals(id)) {
                 response.append("The opposing ");
             }
 
@@ -317,36 +321,35 @@ public class PokemonEvents {
     }
 
     @PokemonEventHandler(event = BattleTurnStartEvent.class)
-    public static void handle(BattleTurnStartEvent event) {
-        for (Trainer trainer : event.getBattle().getTrainers().values()) {
-            IUser user = BanterBot4J.CLIENT.fetchUser(trainer.getID());
+    public static void handle(@Nonnull BattleTurnStartEvent event) {
+        for (Trainer trainer : event.BATTLE.getTrainers().values()) {
+            IUser user = BanterBot4J.CLIENT.fetchUser(trainer.ID);
 
             IPrivateChannel channel = user.getOrCreatePMChannel();
-            Command.sendMessage(channel, "**TURN " + event.getBattle().getTurn() + "**");
+            Command.sendMessage(channel, "**TURN " + event.BATTLE.getTurn() + "**");
             Command.sendMessage(channel, chooseMoveEmbed(trainer));
         }
     }
 
     @PokemonEventHandler(event = TrainerChooseMoveEvent.class)
-    public static void handle(TrainerChooseMoveEvent event) {
-        Trainer trainer = event.getTrainer();
-        Move move = event.getMove();
-        IUser user = BanterBot4J.CLIENT.fetchUser(trainer.getID());
+    public static void handle(@Nonnull TrainerChooseMoveEvent event) {
+        Trainer trainer = event.TRAINER;
+        IUser user = BanterBot4J.CLIENT.fetchUser(trainer.ID);
 
         IPrivateChannel channel = user.getOrCreatePMChannel();
-        Command.sendMessage(channel, chooseTargetEmbed(trainer, move));
+        Command.sendMessage(channel, chooseTargetEmbed(trainer));
     }
 
     @PokemonEventHandler(event = PokemonDodgeEvent.class)
-    public static void handle(PokemonDodgeEvent event) {
-        com.github.drsmugleaf.pokemon.pokemon.Pokemon target = event.getPokemon();
-        Trainer trainer = event.getPokemon().getTrainer();
+    public static void handle(@Nonnull PokemonDodgeEvent event) {
+        com.github.drsmugleaf.pokemon.pokemon.Pokemon target = event.POKEMON;
+        Trainer trainer = event.POKEMON.getTrainer();
         StringBuilder response = new StringBuilder();
 
-        for (Long id : event.getBattle().getTrainers().keySet()) {
+        for (Long id : event.BATTLE.getTrainers().keySet()) {
             response.delete(0, response.length());
 
-            if (!trainer.getID().equals(id)) {
+            if (!trainer.ID.equals(id)) {
                 response.append("The opposing ");
             }
 
@@ -360,12 +363,12 @@ public class PokemonEvents {
     }
 
     @PokemonEventHandler(event = TrainerChoosingPokemonEvent.class)
-    public static void handle(TrainerChoosingPokemonEvent event) {
+    public static void handle(@Nonnull TrainerChoosingPokemonEvent event) {
         for (Trainer trainer : event.getTrainers()) {
-            IUser user = BanterBot4J.CLIENT.fetchUser(trainer.getID());
+            IUser user = BanterBot4J.CLIENT.fetchUser(trainer.ID);
             IPrivateChannel channel = user.getOrCreatePMChannel();
 
-            Command.sendMessage(channel, sendOutPokemonEmbed(event.getBattle(), user));
+            Command.sendMessage(channel, sendOutPokemonEmbed(event.BATTLE, user));
         }
     }
 

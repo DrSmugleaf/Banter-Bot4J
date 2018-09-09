@@ -16,6 +16,7 @@ import java.util.stream.Stream;
  */
 public class EventDispatcher {
 
+    @Nonnull
     private static final Set<Method> LISTENERS = new HashSet<>();
 
     public static void registerListener(@Nonnull Object listener) {

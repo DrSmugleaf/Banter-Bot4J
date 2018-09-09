@@ -2,8 +2,8 @@ package com.github.drsmugleaf.pokemon.status;
 
 import com.github.drsmugleaf.pokemon.battle.*;
 import com.github.drsmugleaf.pokemon.moves.BaseMove;
-import com.github.drsmugleaf.pokemon.moves.Category;
 import com.github.drsmugleaf.pokemon.moves.Move;
+import com.github.drsmugleaf.pokemon.moves.MoveCategory;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.stats.IStat;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
@@ -22,7 +22,7 @@ public enum Status implements IStatus, IModifier {
     BURN("Burn") {
         @Override
         public void apply(@Nonnull Pokemon pokemon, @Nonnull Action action) {
-            if (pokemon.getBattle().getGeneration() == Generation.I) {
+            if (pokemon.getBattle().GENERATION == Generation.I) {
                 pokemon.addStatModifier(PermanentStat.ATTACK, BURN, 0.5);
             }
 
@@ -31,7 +31,7 @@ public enum Status implements IStatus, IModifier {
 
         @Override
         public void remove(@Nonnull Pokemon pokemon) {
-            if (pokemon.getBattle().getGeneration() == Generation.I) {
+            if (pokemon.getBattle().GENERATION == Generation.I) {
                 pokemon.removeStatModifier(BURN);
             }
 
@@ -40,7 +40,7 @@ public enum Status implements IStatus, IModifier {
 
         @Override
         public void onOwnTurnEnd(@Nonnull Pokemon pokemon) {
-            Generation generation = pokemon.getBattle().getGeneration();
+            Generation generation = pokemon.getBattle().GENERATION;
 
             switch (generation) {
                 case I:
@@ -74,7 +74,7 @@ public enum Status implements IStatus, IModifier {
                 case V:
                 case VI:
                 case VII:
-                    switch (action.getBaseMove()) {
+                    switch (action.BASE_MOVE) {
                         case BIDE:
                         case COUNTER:
                         case ENDEAVOR:
@@ -90,7 +90,7 @@ public enum Status implements IStatus, IModifier {
                             return 1.0;
                     }
 
-                    if (action.getCategory() == Category.PHYSICAL) {
+                    if (action.getCategory() == MoveCategory.PHYSICAL) {
                         return 0.5;
                     }
 
@@ -103,31 +103,31 @@ public enum Status implements IStatus, IModifier {
     FREEZE("Freeze") {
         @Override
         public boolean onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
-            Generation generation = attacker.getBattle().getGeneration();
+            Generation generation = attacker.getBattle().GENERATION;
 
             switch (generation) {
                 case I:
-                    if (action.getType() == Type.FIRE && action.getBaseMove() != BaseMove.FIRE_SPIN) {
-                        this.remove(defender);
+                    if (action.getType() == Type.FIRE && action.BASE_MOVE != BaseMove.FIRE_SPIN) {
+                        remove(defender);
                     }
                     break;
                 case II:
-                    if (action.getType() == Type.FIRE && action.getBaseMove() != BaseMove.FIRE_SPIN) {
-                        this.remove(defender);
+                    if (action.getType() == Type.FIRE && action.BASE_MOVE != BaseMove.FIRE_SPIN) {
+                        remove(defender);
                         break;
                     }
-                    if (action.getBaseMove() == BaseMove.TRI_ATTACK && Math.random() < 0.3333333333) {
-                        this.remove(defender);
+                    if (action.BASE_MOVE == BaseMove.TRI_ATTACK && Math.random() < 0.3333333333) {
+                        remove(defender);
                     }
                     break;
                 case III:
-                    if (action.getType() == Type.FIRE && action.getBaseMove() != BaseMove.HIDDEN_POWER) {
-                        this.remove(defender);
+                    if (action.getType() == Type.FIRE && action.BASE_MOVE != BaseMove.HIDDEN_POWER) {
+                        remove(defender);
                     }
                     break;
                 case IV:
                     if (action.getType() == Type.FIRE) {
-                        this.remove(defender);
+                        remove(defender);
                     }
                     break;
                 case V:
@@ -143,14 +143,14 @@ public enum Status implements IStatus, IModifier {
 
         @Override
         public boolean onOwnAttemptAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
-            Generation generation = attacker.getBattle().getGeneration();
+            Generation generation = attacker.getBattle().GENERATION;
 
             switch (generation) {
                 case I:
                     return true;
                 case II:
                     if (Math.random() < 0.1) {
-                        this.remove(attacker);
+                        remove(attacker);
                         return false;
                     } else {
                         return false;
@@ -161,7 +161,7 @@ public enum Status implements IStatus, IModifier {
                 case VI:
                 case VII:
                     if (Math.random() < 0.2) {
-                        this.remove(attacker);
+                        remove(attacker);
                         return true;
                     } else {
                         return false;
@@ -174,7 +174,7 @@ public enum Status implements IStatus, IModifier {
     PARALYSIS("Paralysis") {
         @Override
         public void apply(@Nonnull Pokemon pokemon, @Nonnull Action action) {
-            if (pokemon.getBattle().getGeneration() == Generation.I) {
+            if (pokemon.getBattle().GENERATION == Generation.I) {
                 pokemon.addStatModifier(PermanentStat.SPEED, PARALYSIS, 0.5);
             }
 
@@ -183,7 +183,7 @@ public enum Status implements IStatus, IModifier {
 
         @Override
         public void remove(@Nonnull Pokemon pokemon) {
-            if (pokemon.getBattle().getGeneration() == Generation.I) {
+            if (pokemon.getBattle().GENERATION == Generation.I) {
                 pokemon.removeStatModifier(PARALYSIS);
             }
 
@@ -197,7 +197,7 @@ public enum Status implements IStatus, IModifier {
 
         @Override
         public double statMultiplier(@Nonnull Pokemon pokemon, @Nonnull IStat stat) {
-            Generation generation = pokemon.getBattle().getGeneration();
+            Generation generation = pokemon.getBattle().GENERATION;
 
             if (stat == PermanentStat.SPEED) {
                 switch (generation) {
@@ -222,7 +222,7 @@ public enum Status implements IStatus, IModifier {
     POISON("Poison") {
         @Override
         public void onOwnTurnEnd(@Nonnull Pokemon pokemon) {
-            Generation generation = pokemon.getBattle().getGeneration();
+            Generation generation = pokemon.getBattle().GENERATION;
 
             switch (generation) {
                 case I:
@@ -252,7 +252,7 @@ public enum Status implements IStatus, IModifier {
 
         @Override
         public void onOwnTurnEnd(@Nonnull Pokemon pokemon) {
-            Generation generation = pokemon.getBattle().getGeneration();
+            Generation generation = pokemon.getBattle().GENERATION;
 
             switch (generation) {
                 case I:
@@ -277,7 +277,7 @@ public enum Status implements IStatus, IModifier {
 
         @Override
         public void onOwnSendBack(@Nonnull Pokemon pokemon) {
-            Generation generation = pokemon.getBattle().getGeneration();
+            Generation generation = pokemon.getBattle().GENERATION;
 
             switch (generation) {
                 case I:
@@ -299,7 +299,7 @@ public enum Status implements IStatus, IModifier {
     SLEEP("Sleep") {
         @Override
         public Integer getDuration(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move) {
-            switch (battle.getGeneration()) {
+            switch (battle.GENERATION) {
                 case I:
                     return ThreadLocalRandom.current().nextInt(1, 7 + 1);
                 case II:
@@ -312,7 +312,7 @@ public enum Status implements IStatus, IModifier {
                 case VII:
                     return ThreadLocalRandom.current().nextInt(1, 3 + 1);
                 default:
-                    throw new InvalidGenerationException(battle.getGeneration());
+                    throw new InvalidGenerationException(battle.GENERATION);
             }
         }
 
@@ -322,15 +322,16 @@ public enum Status implements IStatus, IModifier {
         }
     };
 
-    private String NAME;
+    @Nonnull
+    public String NAME;
 
     Status(@Nonnull String name) {
-        this.NAME = name;
+        NAME = name;
     }
 
     @Nonnull
     public String getName() {
-        return this.NAME;
+        return NAME;
     }
 
     @Nullable

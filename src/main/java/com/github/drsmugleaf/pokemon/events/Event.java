@@ -9,15 +9,16 @@ import javax.annotation.Nonnull;
  */
 public abstract class Event {
 
-    private final Battle BATTLE;
+    @Nonnull
+    public final Battle BATTLE;
 
     public Event(@Nonnull Battle battle) {
-        this.BATTLE = battle;
+        BATTLE = battle;
     }
 
     @Nonnull
     public Battle getBattle() {
-        return this.BATTLE;
+        return BATTLE;
     }
 
 }

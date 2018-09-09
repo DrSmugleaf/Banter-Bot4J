@@ -5,6 +5,7 @@ import com.github.drsmugleaf.pokemon.ability.Abilities;
 import com.github.drsmugleaf.pokemon.moves.Move;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
+import com.github.drsmugleaf.pokemon.trainer.UserException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,7 +31,8 @@ public class PokemonBuilder {
 
     public PokemonBuilder() {}
 
-    public Pokemon build() {
+    @Nonnull
+    public Pokemon build() throws UserException {
         return new Pokemon(
                 trainer,
                 species,

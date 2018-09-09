@@ -9,9 +9,9 @@ import javax.annotation.Nonnull;
  */
 public class VolatileStatus {
 
-    private final BaseVolatileStatus BASE_VOLATILE_STATUS;
-    private final Action ACTION;
-    private final int DURATION;
+    public final BaseVolatileStatus BASE_VOLATILE_STATUS;
+    public final Action ACTION;
+    public final int DURATION;
 
     protected VolatileStatus(
             @Nonnull BaseVolatileStatus baseVolatileStatus,
@@ -30,10 +30,12 @@ public class VolatileStatus {
         this(baseVolatileStatus, action, baseVolatileStatus.getDuration(action));
     }
 
+    @Nonnull
     public BaseVolatileStatus getBaseVolatileStatus() {
         return BASE_VOLATILE_STATUS;
     }
 
+    @Nonnull
     public Action getAction() {
         return ACTION;
     }

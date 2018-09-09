@@ -1043,24 +1043,40 @@ public enum Species {
         }
     }
 
-    private final String NAME;
+    @Nonnull
+    public final String NAME;
+
+    @Nonnull
     private final List<Generation> GENERATIONS = new ArrayList<>();
+
+    @Nonnull
     private final List<Abilities> ABILITIES = new ArrayList<>();
+
+    @Nonnull
     private final List<Type> TYPES = new ArrayList<>();
+
+    @Nonnull
     private final List<Tier> TIERS = new ArrayList<>();
+
+    @Nonnull
     private final Map<PermanentStat, Integer> STATS = new HashMap<>();
+
+    @Nonnull
     private final List<Species> EVOLUTIONS = new ArrayList<>();
+
     private Double WEIGHT = null;
     private Double HEIGHT = null;
     private String SUFFIX = null;
 
     Species(@Nonnull String name) {
         Holder.MAP.put(name.toLowerCase(), this);
-        this.NAME = name;
+        NAME = name;
     }
 
+    @Nonnull
     public static Species getPokemon(@Nonnull String pokemon) {
         pokemon = pokemon.toLowerCase();
+
         if (!Holder.MAP.containsKey(pokemon)) {
             throw new NullPointerException("Pokemon " + pokemon + " doesn't exist");
         }
@@ -1076,121 +1092,146 @@ public enum Species {
         return pokemon.getName().contains("Silvally");
     }
 
+    @Nonnull
     public String getName() {
-        return this.NAME;
+        return NAME;
     }
 
+    @Nonnull
     public List<Generation> getGenerations() {
-        return this.GENERATIONS;
+        return new ArrayList<>(GENERATIONS);
     }
 
-    private Species addGenerations(Generation... generations) {
-        Collections.addAll(this.GENERATIONS, generations);
+    @Nonnull
+    private Species addGenerations(@Nonnull Generation... generations) {
+        Collections.addAll(GENERATIONS, generations);
         return this;
     }
 
-    private Species addGenerations(Collection<Generation> generations) {
+    @Nonnull
+    private Species addGenerations(@Nonnull Collection<Generation> generations) {
         GENERATIONS.addAll(generations);
         return this;
     }
 
-    private Species setGenerations(Generation... generations) {
-        this.GENERATIONS.clear();
-        return this.addGenerations(generations);
+    @Nonnull
+    private Species setGenerations(@Nonnull Generation... generations) {
+        GENERATIONS.clear();
+        return addGenerations(generations);
     }
 
+    @Nonnull
     public List<Abilities> getAbilities() {
-        return this.ABILITIES;
+        return new ArrayList<>(ABILITIES);
     }
 
-    private Species addAbilities(Abilities... abilities) {
-        Collections.addAll(this.ABILITIES, abilities);
+    @Nonnull
+    private Species addAbilities(@Nonnull Abilities... abilities) {
+        Collections.addAll(ABILITIES, abilities);
         return this;
     }
 
-    private Species setAbilities(Abilities... abilities) {
-        this.ABILITIES.clear();
-        return this.addAbilities(abilities);
+    @Nonnull
+    private Species setAbilities(@Nonnull Abilities... abilities) {
+        ABILITIES.clear();
+        return addAbilities(abilities);
     }
 
+    @Nonnull
     public List<Type> getTypes() {
-        return this.TYPES;
+        return new ArrayList<>(TYPES);
     }
 
-    private Species addTypes(Type... types) {
-        Collections.addAll(this.TYPES, types);
+    @Nonnull
+    private Species addTypes(@Nonnull Type... types) {
+        Collections.addAll(TYPES, types);
         return this;
     }
 
-    private Species setTypes(Type... types) {
-        this.TYPES.clear();
+    @Nonnull
+    private Species setTypes(@Nonnull Type... types) {
+        TYPES.clear();
         return this;
     }
 
+    @Nonnull
     public List<Tier> getTiers() {
-        return this.TIERS;
+        return TIERS;
     }
 
-    private Species addTiers(Tier... tiers) {
-        Collections.addAll(this.TIERS, tiers);
+    @Nonnull
+    private Species addTiers(@Nonnull Tier... tiers) {
+        Collections.addAll(TIERS, tiers);
         return this;
     }
 
-    private Species setTiers(Tier... tiers) {
-        this.TIERS.clear();
+    @Nonnull
+    private Species setTiers(@Nonnull Tier... tiers) {
+        TIERS.clear();
         return this;
     }
 
+    @Nonnull
     public Map<PermanentStat, Integer> getStats() {
-        return this.STATS;
+        return STATS;
     }
 
-    private Species addStats(PermanentStat stat, int amount) {
-        this.STATS.put(stat, amount);
+    @Nonnull
+    private Species addStats(@Nonnull PermanentStat stat, int amount) {
+        STATS.put(stat, amount);
         return this;
     }
 
+    @Nonnull
     public List<Species> getEvolutions() {
-        return this.EVOLUTIONS;
+        return EVOLUTIONS;
     }
 
-    private Species addEvolutions(Species... evolutions) {
-        Collections.addAll(this.EVOLUTIONS, evolutions);
+    @Nonnull
+    private Species addEvolutions(@Nonnull Species... evolutions) {
+        Collections.addAll(EVOLUTIONS, evolutions);
         return this;
     }
 
-    private Species setEvolutions(Species... evolutions) {
-        this.EVOLUTIONS.clear();
-        return this.addEvolutions(evolutions);
+    @Nonnull
+    private Species setEvolutions(@Nonnull Species... evolutions) {
+        EVOLUTIONS.clear();
+        return addEvolutions(evolutions);
     }
 
+    @Nonnull
     public Double getWeight() {
-        return this.WEIGHT;
+        return WEIGHT;
     }
 
+    @Nonnull
     private Species setWeight(double weight) {
-        this.WEIGHT = weight;
+        WEIGHT = weight;
         return this;
     }
 
+    @Nonnull
     public Double getHeight() {
-        return this.HEIGHT;
+        return HEIGHT;
     }
 
+    @Nonnull
     private Species setHeight(double height) {
-        this.HEIGHT = HEIGHT;
+        HEIGHT = HEIGHT;
         return this;
     }
 
+    @Nonnull
     public String getSuffix() {
-        return this.SUFFIX;
+        return SUFFIX;
     }
 
-    private void setSuffix(String suffix) {
-        this.SUFFIX = suffix;
+    private void setSuffix(@Nonnull String suffix) {
+        SUFFIX = suffix;
     }
 
     private static class Holder {
+        @Nonnull
         static Map<String, Species> MAP = new HashMap<>();
     }
 

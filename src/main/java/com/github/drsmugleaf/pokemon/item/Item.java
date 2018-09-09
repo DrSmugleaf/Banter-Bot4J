@@ -10,29 +10,21 @@ import javax.annotation.Nullable;
  */
 public class Item {
 
-    @Nullable
+    @Nonnull
     private Items item;
 
-    public Item(@Nullable Items item) {
+    public Item(@Nonnull Items item) {
         this.item = item;
     }
 
-    @Nullable
+    @Nonnull
     public String getName() {
-        if (item == null) {
-            return null;
-        }
-
-        return item.getName();
+        return item.NAME;
     }
 
-    @Nullable
+    @Nonnull
     public ItemCategory getCategory() {
-        if (item == null) {
-            return null;
-        }
-
-        return item.getCategory();
+        return item.CATEGORY;
     }
 
     @Nullable
@@ -41,40 +33,42 @@ public class Item {
     }
 
     public boolean is() {
-        return item != null;
+        return item != Items.NONE;
     }
 
-    public boolean is(@Nullable Items item) {
+    public boolean is(@Nonnull Items item) {
         return this.item == item;
     }
 
-    public boolean is(@Nullable ItemCategory category) {
-        if (item == null && category == null) {
-            return true;
-        }
-
-        return item != null && item.getCategory() == category;
+    public boolean is(@Nonnull ItemCategory category) {
+        return item.CATEGORY == category;
     }
 
+    @Nonnull
     public Items remove() {
-        Items item = this.item;
-        this.item = null;
-        return item;
+        return set(Items.NONE);
     }
 
-    public void set(@Nonnull Items item) {
+    @Nonnull
+    public Items set(@Nonnull Items item) {
+        Items oldItem = this.item;
         this.item = item;
+        return oldItem;
     }
 
-    public void steal(@Nonnull Pokemon pokemon) {
-        Items item = pokemon.ITEM.remove();
-        if (item != null) {
-            set(item);
+    @Nonnull
+    public Items steal(@Nonnull Pokemon pokemon) {
+        Items stolenItem = pokemon.ITEM.remove();
+
+        if (stolenItem != Items.NONE) {
+            set(stolenItem);
         }
+
+        return stolenItem;
     }
 
-    public void use(@Nonnull Pokemon pokemon) {
-        if (item != null) {
+    public void tryUse(@Nonnull Pokemon pokemon) {
+        if (item != Items.NONE) {
             item.use(pokemon, pokemon.getBattle());
         }
     }

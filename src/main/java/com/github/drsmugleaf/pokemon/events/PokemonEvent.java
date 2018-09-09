@@ -9,16 +9,17 @@ import javax.annotation.Nonnull;
  */
 public abstract class PokemonEvent extends Event {
 
-    private final Pokemon POKEMON;
+    @Nonnull
+    public final Pokemon POKEMON;
 
     public PokemonEvent(@Nonnull Pokemon pokemon) {
         super(pokemon.getBattle());
-        this.POKEMON = pokemon;
+        POKEMON = pokemon;
     }
 
     @Nonnull
     public Pokemon getPokemon() {
-        return this.POKEMON;
+        return POKEMON;
     }
 
 }

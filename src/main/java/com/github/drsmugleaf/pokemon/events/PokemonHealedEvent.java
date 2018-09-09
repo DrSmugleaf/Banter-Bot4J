@@ -7,14 +7,17 @@ import javax.annotation.Nonnull;
 /**
  * Created by DrSmugleaf on 19/07/2017.
  */
-public class PokemonHealedEvent extends PokemonDamagedEvent {
+public class PokemonHealedEvent extends PokemonEvent {
+
+    public final int HEAL;
 
     public PokemonHealedEvent(@Nonnull Pokemon defender, int heal) {
-        super(defender, -heal);
+        super(defender);
+        HEAL = heal;
     }
 
     public int getHeal() {
-        return -super.getDamage();
+        return HEAL;
     }
 
 }

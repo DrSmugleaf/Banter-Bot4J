@@ -11,26 +11,26 @@ import java.util.Objects;
 /**
  * Created by DrSmugleaf on 07/06/2017.
  */
-public enum Category {
+public enum MoveCategory {
 
     PHYSICAL("Physical", PermanentStat.ATTACK),
     SPECIAL("Special", PermanentStat.SPECIAL_ATTACK),
     OTHER("Other", null);
 
     @Nonnull
-    private final String NAME;
+    public final String NAME;
 
     @Nullable
-    private final PermanentStat STAT;
+    public final PermanentStat STAT;
 
-    Category(@Nonnull String name, @Nullable PermanentStat stat) {
+    MoveCategory(@Nonnull String name, @Nullable PermanentStat stat) {
         Holder.MAP.put(name.toLowerCase(), this);
         NAME = name;
         STAT = stat;
     }
 
     @Nonnull
-    public static Category getCategory(@Nonnull String category) {
+    public static MoveCategory getCategory(@Nonnull String category) {
         category = category.toLowerCase();
 
         if (Objects.equals(category, "non-damaging")) {
@@ -38,7 +38,7 @@ public enum Category {
         }
 
         if (!Holder.MAP.containsKey(category)) {
-            throw new NullPointerException("Category " + category + " doesn't exist");
+            throw new NullPointerException("Move category " + category + " doesn't exist");
         }
 
         return Holder.MAP.get(category);
@@ -55,7 +55,8 @@ public enum Category {
     }
 
     private static class Holder {
-        static Map<String, Category> MAP = new HashMap<>();
+        @Nonnull
+        static Map<String, MoveCategory> MAP = new HashMap<>();
     }
 
 }

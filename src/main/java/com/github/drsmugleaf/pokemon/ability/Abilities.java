@@ -5,6 +5,7 @@ import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import org.json.JSONArray;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.util.*;
 
@@ -13,6 +14,7 @@ import java.util.*;
  */
 public enum Abilities implements IModifier {
 
+    NONE("None"),
     ADAPTABILITY("Adaptability"),
     AERILATE("Aerilate"),
     AFTERMATH("Aftermath"),
@@ -247,20 +249,27 @@ public enum Abilities implements IModifier {
     WATER_COMPACTION("Water Compaction"),
     POWER_CONSTRUCT("Power Construct");
 
-    private String NAME;
+    @Nonnull
+    public final String NAME;
 
     Abilities(@Nonnull String name) {
-        Holder.MAP.put(name, this);
-        this.NAME = name;
+        Holder.MAP.put(name.toLowerCase(), this);
+        NAME = name;
     }
 
     @Nonnull
-    public static Abilities getAbility(@Nonnull String ability) {
-        if(!Holder.MAP.containsKey(ability)) {
-            throw new NullPointerException("Ability " + ability + " doesn't exist");
+    public static Abilities getAbility(@Nullable String abilityName) {
+        if (abilityName == null) {
+            return NONE;
         }
 
-        return Holder.MAP.get(ability);
+        abilityName = abilityName.toLowerCase();
+
+        if(!Holder.MAP.containsKey(abilityName)) {
+            throw new NullPointerException("Ability " + abilityName + " doesn't exist");
+        }
+
+        return Holder.MAP.get(abilityName);
     }
 
     @Nonnull
@@ -275,11 +284,6 @@ public enum Abilities implements IModifier {
         return abilityList;
     }
 
-    @Nonnull
-    public String getName() {
-        return this.NAME;
-    }
-
     @Override
     @OverridingMethodsMustInvokeSuper
     public void onOwnSendOut(@Nonnull Pokemon pokemon) {
@@ -287,6 +291,7 @@ public enum Abilities implements IModifier {
     }
 
     private static class Holder {
+        @Nonnull
         static Map<String, Abilities> MAP = new HashMap<>();
     }
 

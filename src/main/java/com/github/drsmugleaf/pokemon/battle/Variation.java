@@ -11,14 +11,16 @@ public enum Variation {
     DOUBLE_BATTLE("Double Battle"),
     TRIPLE_BATTLE("Triple Battle");
 
+    @Nonnull
     private final String NAME;
 
     Variation(@Nonnull String name) {
-        this.NAME = name;
+        NAME = name;
     }
 
+    @Nonnull
     public String getName() {
-        return this.NAME;
+        return NAME;
     }
 
 }

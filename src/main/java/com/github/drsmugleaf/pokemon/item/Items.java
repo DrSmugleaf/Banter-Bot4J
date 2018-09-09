@@ -14,6 +14,7 @@ import java.util.Map;
  */
 public enum Items implements IModifier {
 
+    NONE("None"),
     ABOMASITE("Abomasite", ItemCategory.MEGA_STONE),
     ABSOLITE("Absolite", ItemCategory.MEGA_STONE),
     ABSORB_BULB("Absorb Bulb"),
@@ -318,13 +319,16 @@ public enum Items implements IModifier {
     DARK_MEMORY("Dark Memory", ItemCategory.SILVALLY_MEMORY),
     FAIRY_MEMORY("Fairy Memory", ItemCategory.SILVALLY_MEMORY);
 
-    private final String NAME;
-    private final ItemCategory CATEGORY;
+    @Nonnull
+    public final String NAME;
+
+    @Nonnull
+    public final ItemCategory CATEGORY;
 
     Items(@Nonnull String name, @Nonnull ItemCategory category) {
         Holder.MAP.put(name.toLowerCase(), this);
-        this.NAME = name;
-        this.CATEGORY = category;
+        NAME = name;
+        CATEGORY = category;
     }
 
     Items(@Nonnull String name) {
@@ -332,8 +336,13 @@ public enum Items implements IModifier {
     }
 
     @Nonnull
-    public static Items getItem(@Nonnull String item) {
+    public static Items getItem(@Nullable String item) {
+        if (item == null) {
+            return NONE;
+        }
+
         item = item.toLowerCase();
+
         if (!Holder.MAP.containsKey(item)) {
             throw new NullPointerException("Item " + item + " doesn't exist");
         }
@@ -343,17 +352,18 @@ public enum Items implements IModifier {
 
     @Nonnull
     public String getName() {
-        return this.NAME;
+        return NAME;
     }
 
-    @Nullable
+    @Nonnull
     public ItemCategory getCategory() {
-        return this.CATEGORY;
+        return CATEGORY;
     }
 
     public void use(@Nonnull Pokemon user, @Nonnull Battle battle) {}
 
     private static class Holder {
+        @Nonnull
         static Map<String, Items> MAP = new HashMap<>();
     }
 

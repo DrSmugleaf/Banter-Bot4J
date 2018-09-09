@@ -18,7 +18,7 @@ public class Ability {
 
     @Nonnull
     public String getName() {
-        return ABILITY.getName();
+        return ABILITY.NAME;
     }
 
     @Nonnull

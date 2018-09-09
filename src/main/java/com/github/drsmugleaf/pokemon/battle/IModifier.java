@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.pokemon.battle;
 
 import com.github.drsmugleaf.pokemon.item.Items;
+import com.github.drsmugleaf.pokemon.moves.DamageTags;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.stats.IStat;
 import com.github.drsmugleaf.pokemon.status.Status;
@@ -64,7 +65,7 @@ public interface IModifier {
 
     default void onEnemyItemUsed(@Nonnull Pokemon user, @Nonnull Items item) {}
 
-    default boolean hits(@Nonnull Pokemon target, @Nonnull Action action) {
+    default boolean hits(@Nonnull Pokemon target, @Nonnull Action action, DamageTags... tags) {
         return true;
     }
 

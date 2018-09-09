@@ -3,26 +3,24 @@ package com.github.drsmugleaf.pokemon.events;
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 20/07/2017.
  */
 public class TrainerChoosingPokemonEvent extends Event {
 
+    @Nonnull
     private final List<Trainer> TRAINERS;
 
     public TrainerChoosingPokemonEvent(@Nonnull Trainer... trainers) {
-        super(trainers[0].getBattle());
-        TRAINERS = new ArrayList<>(Arrays.asList(trainers));
+        super(trainers[0].BATTLE);
+        TRAINERS = Collections.unmodifiableList(Arrays.asList(trainers));
     }
 
     public TrainerChoosingPokemonEvent(@Nonnull Collection<Trainer> trainers) {
-        super(trainers.iterator().next().getBattle());
-        TRAINERS = new ArrayList<>(trainers);
+        super(trainers.iterator().next().BATTLE);
+        TRAINERS = Collections.unmodifiableList(new ArrayList<>(trainers));
     }
 
     @Nonnull

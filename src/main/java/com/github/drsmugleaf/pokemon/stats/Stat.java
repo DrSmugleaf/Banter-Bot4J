@@ -11,11 +11,11 @@ import javax.annotation.Nonnull;
 public class Stat implements IStat {
 
     @Nonnull
-    private final IStat STAT;
+    public final IStat STAT;
 
-    private final int IV;
+    public final int IV;
 
-    private final int EV;
+    public final int EV;
 
     @Nonnull
     private Stage STAGE = Stage.ZERO;
@@ -27,7 +27,7 @@ public class Stat implements IStat {
     }
 
     @Nonnull
-    public IStat getIStat() {
+    public IStat getStat() {
         return STAT;
     }
 
@@ -50,6 +50,7 @@ public class Stat implements IStat {
         return EV;
     }
 
+    @Nonnull
     public Stage getStage() {
         return STAGE;
     }
@@ -59,7 +60,7 @@ public class Stat implements IStat {
     }
 
     public void raiseStage(int amount) {
-        int currentStage = getStage().getStage();
+        int currentStage = getStage().STAGE;
         Stage newStage = Stage.getStage(currentStage + amount);
         setStage(newStage);
     }
@@ -73,7 +74,7 @@ public class Stat implements IStat {
     }
 
     public void resetLoweredStage() {
-        if (STAGE.getStage() < Stage.ZERO.getStage()) {
+        if (STAGE.STAGE < Stage.ZERO.STAGE) {
             setStage(Stage.ZERO);
         }
     }

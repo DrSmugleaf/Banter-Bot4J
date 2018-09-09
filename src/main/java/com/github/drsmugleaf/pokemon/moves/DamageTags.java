@@ -10,6 +10,8 @@ public enum DamageTags {
     NO_STAB,
     NO_STAGES,
     PHYSICAL,
-    SPECIAL
+    SPECIAL,
+    IGNORE_TYPES,
+    NO_DEFENDER_STAGES
 
 }

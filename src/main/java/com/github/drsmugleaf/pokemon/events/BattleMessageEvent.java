@@ -9,16 +9,17 @@ import javax.annotation.Nonnull;
  */
 public class BattleMessageEvent extends Event {
 
-    private final String MESSAGE;
+    @Nonnull
+    public final String MESSAGE;
 
     public BattleMessageEvent(@Nonnull Battle battle, @Nonnull String message) {
         super(battle);
-        this.MESSAGE = message;
+        MESSAGE = message;
     }
 
     @Nonnull
     public String getMessage() {
-        return this.MESSAGE;
+        return MESSAGE;
     }
 
 }

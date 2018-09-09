@@ -10,16 +10,17 @@ import javax.annotation.Nonnull;
  */
 public class TrainerChooseTargetEvent extends TrainerChooseMoveEvent {
 
-    private final Pokemon TARGET;
+    @Nonnull
+    public final Pokemon TARGET;
 
     public TrainerChooseTargetEvent(@Nonnull Pokemon pokemon, @Nonnull Move move, @Nonnull Pokemon target) {
         super(pokemon, move);
-        this.TARGET = target;
+        TARGET = target;
     }
 
     @Nonnull
     public Pokemon getTarget() {
-        return this.TARGET;
+        return TARGET;
     }
 
 }

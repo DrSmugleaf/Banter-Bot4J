@@ -7,11 +7,14 @@ import javax.annotation.Nonnull;
  */
 public class Player {
 
-    private final Long ID;
+    @Nonnull
+    public final Long ID;
+
+    @Nonnull
     private String name;
 
     protected Player(@Nonnull Long id, @Nonnull String name) {
-        this.ID = id;
+        ID = id;
         this.name = name;
     }
 

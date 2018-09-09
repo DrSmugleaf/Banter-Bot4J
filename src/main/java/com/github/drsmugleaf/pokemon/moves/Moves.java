@@ -23,7 +23,7 @@ public class Moves {
     public Moves(@Nonnull List<Move> moves) {
         MOVES = new ArrayList<>(moves);
         for (Move move : MOVES) {
-            VALID_MOVES.add(move.getBaseMove());
+            VALID_MOVES.add(move.BASE_MOVE);
         }
     }
 
@@ -37,7 +37,7 @@ public class Moves {
         name = name.toLowerCase();
 
         for (Move move : MOVES) {
-            if (Objects.equals(move.getBaseMove().NAME.toLowerCase(), name)) {
+            if (Objects.equals(move.BASE_MOVE.NAME.toLowerCase(), name)) {
                 return move;
             }
         }
@@ -53,7 +53,7 @@ public class Moves {
     public void resetValid() {
         VALID_MOVES.clear();
         for (Move move : MOVES) {
-            VALID_MOVES.add(move.getBaseMove());
+            VALID_MOVES.add(move.BASE_MOVE);
         }
     }
 
@@ -108,7 +108,7 @@ public class Moves {
         List<BaseMove> baseMoveList = Arrays.asList(moves);
 
         for (Move move : MOVES) {
-            if (baseMoveList.contains(move.getBaseMove())) {
+            if (baseMoveList.contains(move.BASE_MOVE)) {
                 return true;
             }
         }

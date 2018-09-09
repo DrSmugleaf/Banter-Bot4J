@@ -178,23 +178,32 @@ public enum Format {
                 );
     }
 
-    private final String NAME;
-    private final String ABBREVIATION;
+    @Nonnull
+    public final String NAME;
+
+    @Nullable
+    public final String ABBREVIATION;
+
+    @Nonnull
     private final List<Clause> CLAUSES = new ArrayList<>();
-    private Tier TIER;
+
+    @Nullable
+    private Tier TIER = null;
 
     Format(@Nonnull String name, @Nullable String abbreviation) {
         Holder.MAP.put(name.toLowerCase(), this);
-        this.NAME = name;
-        this.ABBREVIATION = abbreviation;
+        NAME = name;
+        ABBREVIATION = abbreviation;
     }
 
     Format(@Nonnull String name) {
         this(name, null);
     }
 
+    @Nonnull
     public static Format getFormat(@Nonnull String name) {
         name = name.toLowerCase();
+
         if (!Holder.MAP.containsKey(name)) {
             throw new NullPointerException("Format " + name + " doesn't exist");
         }
@@ -204,20 +213,20 @@ public enum Format {
 
     @Nonnull
     public String getName() {
-        return this.NAME;
+        return NAME;
     }
 
     @Nullable
     public String getAbbreviation() {
-        return this.ABBREVIATION;
+        return ABBREVIATION;
     }
 
-    public boolean isValid(Battle battle) {
-        if (!TIER.isValid(battle)) {
+    public boolean isValid(@Nonnull Battle battle) {
+        if (TIER != null && !TIER.isValid(battle)) {
             return false;
         }
 
-        for (Clause clause : this.CLAUSES) {
+        for (Clause clause : CLAUSES) {
             if (!clause.isValid(battle)) {
                 return false;
             }
@@ -228,30 +237,34 @@ public enum Format {
 
     @Nonnull
     public List<Clause> getClauses() {
-        return this.CLAUSES;
-    }
-
-    private Format addClauses(Clause... clauses) {
-        Collections.addAll(this.CLAUSES, clauses);
-        return this;
-    }
-
-    private Format setClauses(Clause... clauses) {
-        this.CLAUSES.clear();
-        return this.addClauses(clauses);
+        return CLAUSES;
     }
 
     @Nonnull
-    public Tier getTier() {
-        return this.TIER;
-    }
-
-    public Format setTier(Tier tier) {
-        this.TIER = tier;
+    private Format addClauses(@Nonnull Clause... clauses) {
+        Collections.addAll(CLAUSES, clauses);
         return this;
     }
 
-    public static class Holder {
+    @Nonnull
+    private Format setClauses(@Nonnull Clause... clauses) {
+        CLAUSES.clear();
+        return addClauses(clauses);
+    }
+
+    @Nullable
+    public Tier getTier() {
+        return TIER;
+    }
+
+    @Nonnull
+    public Format setTier(@Nonnull Tier tier) {
+        TIER = tier;
+        return this;
+    }
+
+    private static class Holder {
+        @Nonnull
         static Map<String, Format> MAP = new HashMap<>();
     }
 

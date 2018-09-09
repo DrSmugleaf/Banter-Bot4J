@@ -16,15 +16,16 @@ public enum ItemCategory {
     GENESECT_DRIVE("Genesect Drive"),
     SILVALLY_MEMORY("Silvally Memory");
 
-    private final String NAME;
+    @Nonnull
+    public final String NAME;
 
     ItemCategory(@Nonnull String name) {
-        this.NAME = name;
+        NAME = name;
     }
 
     @Nonnull
     public String getName() {
-        return this.NAME;
+        return NAME;
     }
 
 }

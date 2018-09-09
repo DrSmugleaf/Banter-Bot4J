@@ -12,6 +12,7 @@ import java.util.Map;
  */
 public enum Nature {
 
+    NONE(-1, "None", null, null),
     HARDY(0, "Hardy", null, null),
     LONELY(1, "Lonely", PermanentStat.ATTACK, PermanentStat.DEFENSE),
     BRAVE(2, "Brave", PermanentStat.ATTACK, PermanentStat.SPEED),
@@ -38,21 +39,34 @@ public enum Nature {
     CAREFUL(23, "Careful", PermanentStat.SPECIAL_DEFENSE, PermanentStat.SPECIAL_ATTACK),
     QUIRKY(24, "Quirky", null, null);
 
-    private final Integer ID;
-    private final String NAME;
-    private final PermanentStat INCREASED_STAT;
-    private final PermanentStat DECREASED_STAT;
+    @Nonnull
+    public final Integer ID;
+
+    @Nonnull
+    public final String NAME;
+
+    @Nullable
+    public final PermanentStat INCREASED_STAT;
+
+    @Nullable
+    public final PermanentStat DECREASED_STAT;
 
     Nature(@Nonnull Integer id, @Nonnull String name, @Nullable PermanentStat increasedStat, @Nullable PermanentStat decreasedStat) {
         Holder.MAP.put(name, this);
-        this.ID = id;
-        this.NAME = name;
-        this.INCREASED_STAT = increasedStat;
-        this.DECREASED_STAT = decreasedStat;
+        ID = id;
+        NAME = name;
+        INCREASED_STAT = increasedStat;
+        DECREASED_STAT = decreasedStat;
     }
 
     @Nonnull
-    public static Nature getNature(@Nonnull String name) {
+    public static Nature getNature(@Nullable String name) {
+        if (name == null) {
+            return NONE;
+        }
+
+        name = name.toLowerCase();
+
         if (!Holder.MAP.containsKey(name)) {
             throw new NullPointerException("Nature " + " doesn't exist");
         }
@@ -62,28 +76,28 @@ public enum Nature {
 
     @Nonnull
     public Integer getID() {
-        return this.ID;
+        return ID;
     }
 
     @Nonnull
     public String getName() {
-        return this.NAME;
+        return NAME;
     }
 
     @Nullable
     public PermanentStat getIncreasedStat() {
-        return this.INCREASED_STAT;
+        return INCREASED_STAT;
     }
 
     @Nullable
     public PermanentStat getDecreasedStat() {
-        return this.DECREASED_STAT;
+        return DECREASED_STAT;
     }
 
     public double getNatureMultiplier(@Nonnull PermanentStat stat) {
-        if (this.getIncreasedStat() != null && this.getIncreasedStat().equals(stat)) {
+        if (INCREASED_STAT != null && INCREASED_STAT.equals(stat)) {
             return 1.1;
-        } else if (this.getDecreasedStat() != null && this.getDecreasedStat().equals(stat)) {
+        } else if (DECREASED_STAT != null && DECREASED_STAT.equals(stat)) {
             return 0.9;
         } else {
             return 1.0;
@@ -91,6 +105,7 @@ public enum Nature {
     }
 
     private static class Holder {
+        @Nonnull
         static Map<String, Nature> MAP = new HashMap<>();
     }
 

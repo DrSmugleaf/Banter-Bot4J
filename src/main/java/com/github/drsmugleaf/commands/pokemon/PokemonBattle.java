@@ -16,11 +16,12 @@ import java.util.Map.Entry;
 /**
  * Created by DrSmugleaf on 11/06/2017.
  */
-public class Pokemon extends Command {
+public class PokemonBattle extends Command {
 
+    @Nonnull
     private static final Map<IUser, TrainerBuilder> awaitingTrainer = new LinkedHashMap<>();
 
-    protected Pokemon(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected PokemonBattle(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
         super(event, args);
     }
 
@@ -52,11 +53,12 @@ public class Pokemon extends Command {
                 .setSetup(setup)
                 .addTrainer(trainerBuilder1, trainerBuilder2);
 
-        Battle battle = null;
+        Battle battle;
         try {
             battle = battleBuilder.build();
         } catch (UserException e) {
             sendMessage(EVENT.getChannel(), e.getMessage());
+            return;
         }
 
         PokemonEvents.BATTLES.put(user1, battle);

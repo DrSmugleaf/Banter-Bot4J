@@ -19,11 +19,11 @@ public enum PermanentStat implements IStat {
             Stat stat = pokemon.STATS.get(this);
 
             int baseStat = stat.getBase(pokemon.getSpecies());
-            int iv = stat.getIV();
-            int ev = stat.getEV();
+            int iv = stat.IV;
+            int ev = stat.EV;
             int level = pokemon.getLevel();
 
-            Generation generation = pokemon.getBattle().getGeneration();
+            Generation generation = pokemon.getBattle().GENERATION;
             switch (generation) {
                 case I:
                 case II:
@@ -41,7 +41,7 @@ public enum PermanentStat implements IStat {
 
         @Override
         public double calculateWithoutStages(@Nonnull Pokemon pokemon) {
-            return this.calculate(pokemon);
+            return calculate(pokemon);
         }
     },
     ATTACK("Attack", "Atk"),
@@ -51,15 +51,15 @@ public enum PermanentStat implements IStat {
     SPEED("Speed", "Spe");
 
     @Nonnull
-    private final String NAME;
+    public final String NAME;
 
     @Nonnull
-    private final String ABBREVIATION;
+    public final String ABBREVIATION;
 
     PermanentStat(@Nonnull String name, @Nonnull String abbreviation) {
         Holder.MAP.put(name.toLowerCase(), this);
-        this.NAME = name;
-        this.ABBREVIATION = abbreviation;
+        NAME = name;
+        ABBREVIATION = abbreviation;
     }
 
     @Nonnull
@@ -75,13 +75,13 @@ public enum PermanentStat implements IStat {
     @Nonnull
     @Override
     public String getName() {
-        return this.NAME;
+        return NAME;
     }
 
     @Nonnull
     @Override
     public String getAbbreviation() {
-        return this.ABBREVIATION;
+        return ABBREVIATION;
     }
 
     @Override
@@ -89,12 +89,12 @@ public enum PermanentStat implements IStat {
         Stat stat = pokemon.STATS.get(this);
 
         int baseStat = stat.getBase(pokemon.getSpecies());
-        int iv = stat.getIV();
-        int ev = stat.getEV();
+        int iv = stat.IV;
+        int ev = stat.EV;
         int level = pokemon.getLevel();
         double stageMultiplier = stat.getStage().getStatMultiplier(this);
 
-        Generation generation = pokemon.getBattle().getGeneration();
+        Generation generation = pokemon.getBattle().GENERATION;
         switch (generation) {
             case I:
             case II:
@@ -116,12 +116,12 @@ public enum PermanentStat implements IStat {
         Stat stat = pokemon.STATS.get(this);
 
         int baseStat = stat.getBase(pokemon.getSpecies());
-        int iv = stat.getIV();
-        int ev = stat.getEV();
+        int iv = stat.IV;
+        int ev = stat.EV;
         int level = pokemon.getLevel();
         double stageMultiplier = 1.0;
 
-        Generation generation = pokemon.getBattle().getGeneration();
+        Generation generation = pokemon.getBattle().GENERATION;
         switch (generation) {
             case I:
             case II:
@@ -139,6 +139,7 @@ public enum PermanentStat implements IStat {
     }
 
     private static class Holder {
+        @Nonnull
         static Map<String, PermanentStat> MAP = new HashMap<>();
     }
 

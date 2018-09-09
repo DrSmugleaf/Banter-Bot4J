@@ -28,7 +28,7 @@ public class Stats {
         Map<IStat, Stage> stages = new LinkedHashMap<>();
 
         for (Stat stat : STATS.values()) {
-            stages.put(stat.getIStat(), stat.getStage());
+            stages.put(stat.STAT, stat.getStage());
         }
 
         return stages;
