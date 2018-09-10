@@ -1074,6 +1074,11 @@ public enum Species {
     Species(@Nonnull String name, @Nonnull Gender... genders) {
         Holder.MAP.put(name.toLowerCase(), this);
         NAME = name;
+
+        if (genders.length == 0) {
+            throw new IllegalArgumentException("No genders set for Pokemon " + name);
+        }
+
         Collections.addAll(VALID_GENDERS, genders);
     }
 

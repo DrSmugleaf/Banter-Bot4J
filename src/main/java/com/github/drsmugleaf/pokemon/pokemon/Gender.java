@@ -4,10 +4,8 @@ import com.github.drsmugleaf.pokemon.ability.Abilities;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by DrSmugleaf on 24/06/2017.
@@ -48,12 +46,10 @@ public enum Gender { // TODO: Add list of Genderless Pokemon / Pokemon gender ra
     }
 
     @Nonnull
-    public static Gender getRandomGender() {
-        if (new Random().nextBoolean()) {
-            return Gender.MALE;
-        } else {
-            return Gender.FEMALE;
-        }
+    public static Gender getRandomGender(@Nonnull Species pokemon) {
+        List<Gender> genders = pokemon.getValidGenders();
+        int index = ThreadLocalRandom.current().nextInt(genders.size());
+        return genders.get(index);
     }
 
     public static boolean isOppositeGender(@Nonnull Pokemon pokemon1, @Nonnull Pokemon pokemon2) {

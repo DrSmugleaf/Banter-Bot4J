@@ -103,12 +103,16 @@ public class Pokemon {
         Generation generation = trainer.BATTLE.GENERATION;
         if (generation == Generation.I || generation == Generation.II) {
             if (nature != Nature.NONE) {
-                throw new UserException("Invalid pokemon: Can't have a nature before generation III");
+                throw new UserException(nickname + " can't have a nature before generation III");
             }
 
             if (ability != Abilities.NONE) {
-                throw new UserException("Invalid pokemon: Can't have an ability before generation III");
+                throw new UserException(nickname + " can't have an ability before generation III");
             }
+        }
+
+        if (!species.getValidGenders().contains(gender)) {
+            throw new UserException(nickname + " has an invalid gender for its species");
         }
 
         TRAINER = trainer;

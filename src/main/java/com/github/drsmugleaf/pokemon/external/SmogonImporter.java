@@ -56,13 +56,15 @@ public class SmogonImporter {
             nameString = exportArray[0].trim();
         }
 
+        Species pokemon = Species.getPokemon(nameString);
         if (nameString.contains("(M)") || nameString.contains("(F)")) {
             nameString = nameString.replaceAll("\\(M\\)|\\(F\\)", "");
             Matcher matcher = Pattern.compile("(\\(\\w\\))").matcher(nameString);
             matcher.find();
             gender = Gender.getGender(matcher.group());
         } else {
-            gender = Gender.getRandomGender();
+            // Also works for genderless Pokemon
+            gender = Gender.getRandomGender(pokemon);
         }
 
         String abilityString = null;
@@ -101,7 +103,6 @@ public class SmogonImporter {
             throw new UserException(nameString + " has no moves.");
         }
 
-        Species pokemon = Species.getPokemon(nameString);
         Items item = Items.getItem(itemString);
         Abilities ability = Abilities.getAbility(abilityString);
         Nature nature = Nature.getNature(natureString);
