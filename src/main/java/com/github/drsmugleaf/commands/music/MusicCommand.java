@@ -36,7 +36,6 @@ public abstract class MusicCommand extends Command {
         try {
             lastMessage.delete();
         } catch (MissingPermissionsException ignored) {}
-
     }
 
     @Nonnull

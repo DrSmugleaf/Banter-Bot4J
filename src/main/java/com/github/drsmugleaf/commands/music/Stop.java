@@ -30,12 +30,11 @@ public class Stop extends MusicCommand {
         IUser author = EVENT.getAuthor();
 
         GuildMusicManager musicManager = Music.getGuildMusicManager(guild);
-        if (musicManager.getScheduler().getCurrentTrack() == null) {
+        TrackScheduler scheduler = musicManager.getScheduler();
+        if (scheduler.getCurrentTrack() == null) {
             EVENT.reply("There aren't any tracks currently playing or in the queue.");
             return;
         }
-
-        TrackScheduler scheduler = Music.getGuildMusicManager(guild).getScheduler();
 
         AbstractMap.SimpleEntry<IGuild, IUser> pair = new AbstractMap.SimpleEntry<>(guild, author);
         Music.UNDO_STOP_CACHE.put(pair, scheduler.cloneTracks());
