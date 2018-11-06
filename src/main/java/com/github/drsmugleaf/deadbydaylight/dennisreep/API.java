@@ -44,7 +44,7 @@ public class API {
     @Nonnull
     public static List<SurvivorPerk> getSurvivorPerkData() {
         JsonArray json = getResponse("getSurvivorPerkData/").get("SurvivorPerk").getAsJsonArray();
-        return GSON.fromJson(json, new TypeToken<ArrayList<KillerPerk>>(){}.getType());
+        return GSON.fromJson(json, new TypeToken<ArrayList<SurvivorPerk>>(){}.getType());
     }
 
 }
