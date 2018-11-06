@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
+import com.github.drsmugleaf.deadbydaylight.SurvivorPerks;
 import com.github.drsmugleaf.deadbydaylight.Survivors;
 import com.google.gson.annotations.SerializedName;
 
@@ -19,4 +20,14 @@ public class SurvivorPerk extends Perk {
         SURVIVOR = survivor;
     }
 
+    @Nonnull
+    public static SurvivorPerk from(@Nonnull SurvivorPerks perk) {
+        return PerksAPI.getSurvivorPerkData().get(perk);
+    }
+
+    @Nonnull
+    @Override
+    public SurvivorPerks toPerk() {
+        return SurvivorPerks.from(NAME);
+    }
 }

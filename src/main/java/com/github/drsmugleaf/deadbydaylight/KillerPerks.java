@@ -75,6 +75,17 @@ public enum KillerPerks implements IPerk {
     }
 
     @Nonnull
+    public static KillerPerks from(@Nonnull String name) {
+        for (KillerPerks perk : values()) {
+            if (perk.NAME.equalsIgnoreCase(name)) {
+                return perk;
+            }
+        }
+
+        throw new IllegalArgumentException("No killer perk exists with name " + name);
+    }
+
+    @Nonnull
     public String getName() {
         return NAME;
     }

@@ -1,7 +1,5 @@
 package com.github.drsmugleaf.deadbydaylight;
 
-import com.github.drsmugleaf.deadbydaylight.dennisreep.Tiers;
-
 import javax.annotation.Nonnull;
 
 /**
@@ -75,20 +73,21 @@ public enum SurvivorPerks implements IPerk {
     @Nonnull
     public final String DESCRIPTION;
 
-    @Nonnull
-    public String imageUrl;
-
-    @Nonnull
-    public Tiers tier;
-
-    public double rating;
-
-    public long ratings;
-
     SurvivorPerks(@Nonnull String name, @Nonnull Survivors survivor, @Nonnull String description) {
         NAME = name;
         SURVIVOR = survivor;
         DESCRIPTION = description;
+    }
+
+    @Nonnull
+    public static SurvivorPerks from(@Nonnull String name) {
+        for (SurvivorPerks perk : values()) {
+            if (perk.NAME.equalsIgnoreCase(name)) {
+                return perk;
+            }
+        }
+
+        throw new IllegalArgumentException("No survivor perk exists with name " + name);
     }
 
     @Nonnull

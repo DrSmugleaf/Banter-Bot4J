@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
+import com.github.drsmugleaf.deadbydaylight.IPerk;
 import com.google.gson.annotations.SerializedName;
 
 import javax.annotation.Nonnull;
@@ -36,5 +37,8 @@ public abstract class Perk {
         RATING = rating;
         RATINGS = ratings;
     }
+
+    @Nonnull
+    public abstract IPerk toPerk();
 
 }
