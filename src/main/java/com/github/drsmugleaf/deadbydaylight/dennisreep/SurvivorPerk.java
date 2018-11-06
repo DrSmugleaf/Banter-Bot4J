@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
+import com.github.drsmugleaf.deadbydaylight.Survivors;
 import com.github.drsmugleaf.deadbydaylight.Tiers;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,9 +13,9 @@ public class SurvivorPerk extends Perk {
 
     @Nonnull
     @SerializedName("Survivor")
-    public final String SURVIVOR;
+    public final Survivors SURVIVOR;
 
-    SurvivorPerk(@Nonnull String imageUrl, @Nonnull String name, @Nonnull Tiers tier, double rating, long ratings, @Nonnull String survivor) {
+    SurvivorPerk(@Nonnull String imageUrl, @Nonnull String name, @Nonnull Tiers tier, double rating, long ratings, @Nonnull Survivors survivor) {
         super(imageUrl, name, tier, rating, ratings);
         SURVIVOR = survivor;
     }

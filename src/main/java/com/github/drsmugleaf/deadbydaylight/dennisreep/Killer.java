@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
+import com.github.drsmugleaf.deadbydaylight.Killers;
 import com.github.drsmugleaf.deadbydaylight.Tiers;
 import com.google.gson.annotations.SerializedName;
 
@@ -16,7 +17,7 @@ public class Killer {
 
     @Nonnull
     @SerializedName("KillerName")
-    public final String KILLER;
+    public final Killers KILLER;
 
     @Nonnull
     @SerializedName("Tier")
@@ -30,7 +31,7 @@ public class Killer {
     @SerializedName("Ratings")
     public final long RATINGS;
 
-    Killer(@Nonnull String imageUrl, @Nonnull String killer, @Nonnull Tiers tier, double rating, long ratings) {
+    Killer(@Nonnull String imageUrl, @Nonnull Killers killer, @Nonnull Tiers tier, double rating, long ratings) {
         IMAGE_URL = imageUrl;
         KILLER = killer;
         TIER = tier;
