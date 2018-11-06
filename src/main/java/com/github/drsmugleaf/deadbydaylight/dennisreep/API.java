@@ -36,15 +36,9 @@ public class API {
     }
 
     @Nonnull
-    public static String getKillerPerkData() {
+    public static List<KillerPerk> getKillerPerkData() {
         JsonArray json = getResponse("getKillerPerkData/").get("KillerPerk").getAsJsonArray();
-        List<KillerPerk> perks = GSON.fromJson(json, new TypeToken<ArrayList<KillerPerk>>(){}.getType());
-        System.out.println(perks);
-        for (KillerPerk perk : perks) {
-            System.out.println(perk.NAME);
-        }
-
-        return "";
+        return GSON.fromJson(json, new TypeToken<ArrayList<KillerPerk>>(){}.getType());
     }
 
 }
