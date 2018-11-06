@@ -1,7 +1,6 @@
 package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
 import com.github.drsmugleaf.deadbydaylight.Survivors;
-import com.github.drsmugleaf.deadbydaylight.Tiers;
 import com.google.gson.annotations.SerializedName;
 
 import javax.annotation.Nonnull;

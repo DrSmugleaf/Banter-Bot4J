@@ -1,7 +1,7 @@
-package com.github.drsmugleaf.deadbydaylight;
+package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
+import java.awt.Color;
 
 /**
  * Created by DrSmugleaf on 06/11/2018

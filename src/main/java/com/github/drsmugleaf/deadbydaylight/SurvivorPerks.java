@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.deadbydaylight;
 
+import com.github.drsmugleaf.deadbydaylight.dennisreep.Tiers;
+
 import javax.annotation.Nonnull;
 
 /**
