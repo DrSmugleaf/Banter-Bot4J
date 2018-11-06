@@ -12,17 +12,23 @@ import java.util.List;
  */
 public class PerksAPI extends API {
 
+    @Nonnull
+    private static final String KILLER_PERK_DATA_ENDPOINT = "getKillerPerkData/";
+
+    @Nonnull
+    private static final String SURVIVOR_PERK_DATA_ENDPOINT = "getSurvivorPerkData/";
+
     private PerksAPI() {}
 
     @Nonnull
     public static List<KillerPerk> getKillerPerkData() {
-        JsonArray json = getResponse("getKillerPerkData/").get("KillerPerk").getAsJsonArray();
+        JsonArray json = getResponse(KILLER_PERK_DATA_ENDPOINT).get("KillerPerk").getAsJsonArray();
         return GSON.fromJson(json, new TypeToken<ArrayList<KillerPerk>>(){}.getType());
     }
 
     @Nonnull
     public static List<SurvivorPerk> getSurvivorPerkData() {
-        JsonArray json = getResponse("getSurvivorPerkData/").get("SurvivorPerk").getAsJsonArray();
+        JsonArray json = getResponse(SURVIVOR_PERK_DATA_ENDPOINT).get("SurvivorPerk").getAsJsonArray();
         return GSON.fromJson(json, new TypeToken<ArrayList<SurvivorPerk>>(){}.getType());
     }
 
