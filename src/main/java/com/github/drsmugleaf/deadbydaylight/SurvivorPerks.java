@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by DrSmugleaf on 05/11/2018
  */
-public enum SurvivorPerks {
+public enum SurvivorPerks implements IPerk {
 
     ACE_IN_THE_HOLE("Ace In The Hole", Survivors.ACE_VISCONTI, "Lady Luck always seems to be throwing something good your way.\nWhen retrieving an Item  from a Chest , there is a 100 % chance that an Add-on  of Very Rare Rarity or lower will be attached to it.\n10/25/50 % chance to find a second Add-on of Uncommon Rarity or lower.\n\"Everything that glitters isn't gold. But gold isn't worth a damn in this place, so this should come in handy.\" — Ace Visconti\nUnique to Ace Visconti‎‎ until Level 40, at which point its Teachable version can then be learned and taught to the other Survivors."),
     ADRENALINE("Adrenaline", Survivors.MEG_THOMAS, "You are fuelled by unexpected energy when on the verge of escape.\nInstantly heal one Health State and sprint at 150 % of your normal running speed for 5 seconds when the Exit Gates  are powered.\nAdrenaline is on hold if you are disabled at the moment it should take effect and will activate when freed.\nAdrenaline will wake you up if you are asleep when it triggers.\nAdrenaline ignores Exhaustion.\nCauses Exhaustion  for 60/50/40 seconds.\nYou do not recover from Exhaustion when running.\nUnique to Meg Thomas until Level 40, at which point its Teachable version can then be learned and taught to the other Survivors."),

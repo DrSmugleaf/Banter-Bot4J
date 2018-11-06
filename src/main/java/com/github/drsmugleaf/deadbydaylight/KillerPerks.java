@@ -5,7 +5,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by DrSmugleaf on 06/11/2018
  */
-public enum KillerPerks {
+public enum KillerPerks implements IPerk {
 
     A_NURSES_CALLING("A Nurse's Calling", Killers.NURSE, "Unlocks potential in one's Aura-reading ability.\nThe Auras  of Survivors who are healing or being healed are revealed to you when they are within 20/24/28 metres of range.\n\"Still attached to the fragments of her past life, she is drawn to those in need of help.\"\nUnique to The Nurse until Level 40, at which point its Teachable version can then be learned and taught to the other Killers."),
     AGITATION("Agitation", Killers.TRAPPER, "You get excited in anticipation of hooking your prey.\nIncreases your movement speed while transporting bodies by 6/12/18 %. While transporting a body, your Terror Radius is increased by 6/8/12 metres.\n\"At some point, the excitement of hooking one of us becomes more important than the desire to kill us.\"\nUnique to The Trapper until Level 40, at which point its Teachable version can then be learned and taught to the other Killers."),
