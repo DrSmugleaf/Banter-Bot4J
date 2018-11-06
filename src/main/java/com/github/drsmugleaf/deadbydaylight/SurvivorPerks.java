@@ -79,10 +79,8 @@ public enum SurvivorPerks {
     @Nonnull
     public Tiers tier;
 
-    @Nonnull
     public double rating;
 
-    @Nonnull
     public long ratings;
 
     SurvivorPerks(@Nonnull String name, @Nonnull Survivors survivor, @Nonnull String description) {

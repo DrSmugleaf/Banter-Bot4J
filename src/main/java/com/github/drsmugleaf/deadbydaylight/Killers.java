@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
  */
 public enum Killers {
 
+    ALL("All", "All"),
     CANNIBAL("Cannibal", "Junior Sawyer"),
     CLOWN("Clown", "Jeffrey Hawk"),
     DOCTOR("Doctor", "Herman Carter"),
