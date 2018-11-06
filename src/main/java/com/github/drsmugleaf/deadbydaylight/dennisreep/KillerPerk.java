@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 public class KillerPerk extends Perk {
 
     @Nonnull
-    @SerializedName("Killer")
+    @SerializedName(value = "Killer", alternate = {"PerkKiller"})
     public final String KILLER;
 
     KillerPerk(@Nonnull String imageUrl, @Nonnull String name, @Nonnull Tiers tier, double rating, long ratings, @Nonnull String killer) {

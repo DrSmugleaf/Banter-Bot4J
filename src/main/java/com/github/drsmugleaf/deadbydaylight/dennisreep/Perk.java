@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 public abstract class Perk {
 
     @Nonnull
-    @SerializedName("Image")
+    @SerializedName(value = "Image", alternate = {"PerkIcon"})
     public final String IMAGE_URL;
 
     @Nonnull
