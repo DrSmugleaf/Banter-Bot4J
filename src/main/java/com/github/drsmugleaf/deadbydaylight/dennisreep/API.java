@@ -15,7 +15,7 @@ import java.io.IOException;
 public abstract class API {
 
     @Nonnull
-    static final String PATH = "https://dennisreep.nl/dbd/api/v2/";
+    private static final String PATH = "https://dennisreep.nl/dbd/api/v2/";
 
     @Nonnull
     static final Gson GSON = new GsonBuilder().create();
