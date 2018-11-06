@@ -8,15 +8,15 @@ import javax.annotation.Nonnull;
 /**
  * Created by DrSmugleaf on 06/11/2018
  */
-public class KillerPerk extends Perk {
+public class SurvivorPerk extends Perk {
 
     @Nonnull
-    @SerializedName("Killer")
-    public final String KILLER;
+    @SerializedName("Survivor")
+    public final String SURVIVOR;
 
-    KillerPerk(@Nonnull String imageUrl, @Nonnull String name, @Nonnull Tiers tier, double rating, long ratings, @Nonnull String killer) {
+    SurvivorPerk(@Nonnull String imageUrl, @Nonnull String name, @Nonnull Tiers tier, double rating, long ratings, @Nonnull String survivor) {
         super(imageUrl, name, tier, rating, ratings);
-        KILLER = killer;
+        SURVIVOR = survivor;
     }
 
 }
