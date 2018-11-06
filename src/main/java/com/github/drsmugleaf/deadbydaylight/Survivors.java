@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
  */
 public enum Survivors {
 
+    ALL("All"),
     ACE_VISCONTI("Ace Visconti"),
     ADAM_FRANCIS("Adam Francis"),
     BILL_OVERBECK("Bill Overbeck"),
