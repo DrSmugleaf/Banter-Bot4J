@@ -5,7 +5,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by DrSmugleaf on 05/11/2018
  */
-public enum Perks {
+public enum SurvivorPerks {
 
     ACE_IN_THE_HOLE("Ace In The Hole", Survivors.ACE_VISCONTI, "Lady Luck always seems to be throwing something good your way. When retrieving an Item  from a Chest , there is a 100 % chance that an Add-on  of Very Rare Rarity or lower will be attached to it. 10/25/50 % chance to find a second Add-on of Uncommon Rarity or lower. \"Everything that glitters isn't gold. But gold isn't worth a damn in this place, so this should come in handy.\" — Ace Visconti Unique to Ace Visconti‎‎ until Level 40, at which point its Teachable version can then be learned and taught to the other Survivors."),
     ADRENALINE("Adrenaline", Survivors.MEG_THOMAS, "You are fuelled by unexpected energy when on the verge of escape. Instantly heal one Health State and sprint at 150 % of your normal running speed for 5 seconds when the Exit Gates  are powered. Adrenaline is on hold if you are disabled at the moment it should take effect and will activate when freed. Adrenaline will wake you up if you are asleep when it triggers. Adrenaline ignores Exhaustion. Causes Exhaustion  for 60/50/40 seconds. You do not recover from Exhaustion when running. Unique to Meg Thomas until Level 40, at which point its Teachable version can then be learned and taught to the other Survivors."),
@@ -73,7 +73,19 @@ public enum Perks {
     @Nonnull
     public final String DESCRIPTION;
 
-    Perks(@Nonnull String name, @Nonnull Survivors survivor, @Nonnull String description) {
+    @Nonnull
+    public String imageUrl;
+
+    @Nonnull
+    public Tiers tier;
+
+    @Nonnull
+    public double rating;
+
+    @Nonnull
+    public long ratings;
+
+    SurvivorPerks(@Nonnull String name, @Nonnull Survivors survivor, @Nonnull String description) {
         NAME = name;
         SURVIVOR = survivor;
         DESCRIPTION = description;
