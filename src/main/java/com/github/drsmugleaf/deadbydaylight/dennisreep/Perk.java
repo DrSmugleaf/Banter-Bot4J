@@ -45,6 +45,29 @@ public abstract class Perk implements Comparable<Perk> {
     }
 
     @Nonnull
+    public String getImageUrl() {
+        return IMAGE_URL;
+    }
+
+    @Nonnull
+    public String getName() {
+        return NAME;
+    }
+
+    @Nonnull
+    public Tiers getTier() {
+        return TIER;
+    }
+
+    public double getRating() {
+        return RATING;
+    }
+
+    public long getRatings() {
+        return RATINGS;
+    }
+
+    @Nonnull
     public abstract IPerk toPerk();
 
 }
