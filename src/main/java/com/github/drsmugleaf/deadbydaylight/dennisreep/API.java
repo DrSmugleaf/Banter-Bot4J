@@ -18,7 +18,7 @@ public abstract class API {
     private static final String PATH = "https://dennisreep.nl/dbd/api/v2/";
 
     @Nonnull
-    static final Gson GSON = new GsonBuilder().create();
+    protected static final Gson GSON = new GsonBuilder().create();
 
     @Nonnull
     static JsonObject getResponse(@Nonnull final String endpoint) {

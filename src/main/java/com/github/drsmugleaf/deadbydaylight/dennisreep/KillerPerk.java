@@ -2,6 +2,7 @@ package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
 import com.github.drsmugleaf.deadbydaylight.KillerPerks;
 import com.github.drsmugleaf.deadbydaylight.Killers;
+import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 
 import javax.annotation.Nonnull;
@@ -18,6 +19,11 @@ public class KillerPerk extends Perk {
     KillerPerk(@Nonnull String imageUrl, @Nonnull String name, @Nonnull Tiers tier, double rating, long ratings, @Nonnull Killers killer) {
         super(imageUrl, name, tier, rating, ratings);
         KILLER = killer;
+    }
+
+    @Nonnull
+    public static KillerPerk from(@Nonnull JsonElement json) {
+        return API.GSON.fromJson(json, KillerPerk.class);
     }
 
     @Nonnull
