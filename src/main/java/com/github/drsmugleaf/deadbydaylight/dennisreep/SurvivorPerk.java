@@ -27,14 +27,18 @@ public class SurvivorPerk extends Perk {
         JsonObject object = json.getAsJsonObject();
 
         if (object.get("Image").getAsString().toLowerCase().contains("dejavu")) {
-            object.addProperty("PerkName", "Déjà Vu");
+            object.addProperty("PerkName", SurvivorPerks.DEJA_VU.NAME);
         }
 
         if (object.get("PerkName").getAsString().equalsIgnoreCase("Open Handed")) {
-            object.addProperty("PerkName", "Open-Handed");
+            object.addProperty("PerkName", SurvivorPerks.OPEN_HANDED.NAME);
         }
 
-        return API.GSON.fromJson(json, SurvivorPerk.class);
+        String survivor = object.get("Survivor").getAsString();
+        survivor = NameResolver.resolveSurvivorName(survivor);
+        object.addProperty("Survivor", survivor);
+
+        return API.GSON.fromJson(object, SurvivorPerk.class);
     }
 
     @Nonnull
