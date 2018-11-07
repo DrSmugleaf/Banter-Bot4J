@@ -3,6 +3,7 @@ package com.github.drsmugleaf.deadbydaylight.dennisreep;
 import com.github.drsmugleaf.deadbydaylight.KillerPerks;
 import com.github.drsmugleaf.deadbydaylight.Killers;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 import javax.annotation.Nonnull;
@@ -23,7 +24,13 @@ public class KillerPerk extends Perk {
 
     @Nonnull
     public static KillerPerk from(@Nonnull JsonElement json) {
-        return API.GSON.fromJson(json, KillerPerk.class);
+        JsonObject object = json.getAsJsonObject();
+
+        if (object.get("PerkName").getAsString().toLowerCase().equalsIgnoreCase("Barbecue & Chili")) {
+            object.addProperty("PerkName", KillerPerks.BARBECUE_AND_CHILLI.NAME);
+        }
+
+        return API.GSON.fromJson(object, KillerPerk.class);
     }
 
     @Nonnull
