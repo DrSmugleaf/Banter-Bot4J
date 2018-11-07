@@ -21,7 +21,7 @@ public abstract class API {
     protected static final Gson GSON = new GsonBuilder().create();
 
     @Nonnull
-    static JsonObject getResponse(@Nonnull final String endpoint) {
+    protected static JsonObject getResponse(@Nonnull final String endpoint) {
         final String URL = PATH + endpoint;
 
         String body;

@@ -43,7 +43,7 @@ public class SurvivorPerk extends Perk {
 
     @Nonnull
     public static SurvivorPerk from(@Nonnull SurvivorPerks perk) {
-        return PerksAPI.getSurvivorPerkData().get(perk);
+        return PerksAPI.SURVIVOR_PERKS.get().get(perk);
     }
 
     @Nonnull

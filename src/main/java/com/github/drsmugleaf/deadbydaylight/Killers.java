@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.deadbydaylight;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by DrSmugleaf on 06/11/2018
@@ -31,6 +32,24 @@ public enum Killers implements ICharacter {
     Killers(@Nonnull String fullName, @Nonnull String name) {
         NAME = name;
         FULL_NAME = fullName;
+    }
+
+    private static boolean nameMatches(@Nonnull Killers killer, @Nonnull String name) {
+        return killer.FULL_NAME.equalsIgnoreCase(name) ||
+               killer.NAME.equalsIgnoreCase(name) ||
+               ("The" + killer.FULL_NAME).equalsIgnoreCase(name) ||
+               ("The" + killer.NAME).equalsIgnoreCase(name);
+    }
+
+    @Nullable
+    public static Killers from(@Nonnull String name) {
+        for (Killers killer : values()) {
+            if (nameMatches(killer, name)) {
+                return killer;
+            }
+        }
+
+        return null;
     }
 
     @Nonnull

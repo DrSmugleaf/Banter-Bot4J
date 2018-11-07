@@ -48,7 +48,7 @@ public class KillerPerk extends Perk {
 
     @Nonnull
     public static KillerPerk from(@Nonnull KillerPerks perk) {
-        return PerksAPI.getKillerPerkData().get(perk);
+        return PerksAPI.KILLER_PERKS.get().get(perk);
     }
 
     @Nonnull

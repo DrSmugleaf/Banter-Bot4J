@@ -31,13 +31,13 @@ public class NameResolver {
         Map<String, String> names = new HashMap<>();
         List<String> namesSeen = new ArrayList<>();
 
-        for (T survivor : enumClass.getEnumConstants()) {
-            String name = survivor.getName().toLowerCase();
+        for (T character : enumClass.getEnumConstants()) {
+            String name = character.getName().toLowerCase();
             if (namesSeen.contains(name)) {
-                throw new IllegalStateException("Found a repeated full survivor name: " + name);
+                throw new IllegalStateException("Found a repeated full character name: " + name);
             }
 
-            names.put(name, survivor.name());
+            names.put(name, character.name());
 
             String[] nameArray = name.split(" ");
             if (nameArray[0].equals(name)) {
@@ -49,7 +49,7 @@ public class NameResolver {
             if (namesSeen.contains(name)) {
                 names.remove(name);
             } else {
-                names.put(name, survivor.name());
+                names.put(name, character.name());
             }
 
             namesSeen.add(name);
