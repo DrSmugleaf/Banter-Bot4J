@@ -25,7 +25,7 @@ public class KillersAPI extends API {
 
     @Nonnull
     public static List<KillerPerk> getKillerData(@Nonnull Killers killer) {
-        String endpoint = KILLER_DATA_ENDPOINT + "?killer=" + killer.NICKNAME;
+        String endpoint = KILLER_DATA_ENDPOINT + "?killer=" + killer.NAME;
         JsonArray json = getResponse(endpoint).get("Killers").getAsJsonArray();
         return GSON.fromJson(json, new TypeToken<ArrayList<KillerPerk>>(){}.getType());
     }

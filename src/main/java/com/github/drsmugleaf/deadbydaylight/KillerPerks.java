@@ -86,6 +86,7 @@ public enum KillerPerks implements IPerk {
     }
 
     @Nonnull
+    @Override
     public String getName() {
         return NAME;
     }

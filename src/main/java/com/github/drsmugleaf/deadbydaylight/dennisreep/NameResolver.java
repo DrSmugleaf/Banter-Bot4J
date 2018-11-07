@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
+import com.github.drsmugleaf.deadbydaylight.ICharacter;
+import com.github.drsmugleaf.deadbydaylight.Killers;
 import com.github.drsmugleaf.deadbydaylight.Survivors;
 
 import javax.annotation.Nonnull;
@@ -13,17 +15,29 @@ import java.util.Map;
  */
 public class NameResolver {
 
-    private static Map<String, String> SURVIVOR_NAMES = new HashMap<>();
+    @Nonnull
+    private static final Map<String, String> KILLER_NAMES = new HashMap<>();
+
+    @Nonnull
+    private static final Map<String, String> SURVIVOR_NAMES = new HashMap<>();
 
     static {
+        registerKillers();
+        registerSurvivors();
+    }
+
+    @Nonnull
+    private static <T extends Enum<T> & ICharacter> Map<String, String> register(Class<T> enumClass) {
+        Map<String, String> names = new HashMap<>();
         List<String> namesSeen = new ArrayList<>();
-        for (Survivors survivor : Survivors.values()) {
-            String name = survivor.NAME.toLowerCase();
+
+        for (T survivor : enumClass.getEnumConstants()) {
+            String name = survivor.getName().toLowerCase();
             if (namesSeen.contains(name)) {
                 throw new IllegalStateException("Found a repeated full survivor name: " + name);
             }
 
-            SURVIVOR_NAMES.put(name, survivor.name());
+            names.put(name, survivor.name());
 
             String[] nameArray = name.split(" ");
             if (nameArray[0].equals(name)) {
@@ -33,17 +47,47 @@ public class NameResolver {
             name = nameArray[0];
 
             if (namesSeen.contains(name)) {
-                SURVIVOR_NAMES.remove(name);
+                names.remove(name);
             } else {
-                SURVIVOR_NAMES.put(name, survivor.name());
+                names.put(name, survivor.name());
             }
 
             namesSeen.add(name);
         }
+
+        return names;
     }
 
+    private static void registerKillers() {
+        Map<String, String> killers = register(Killers.class);
+        KILLER_NAMES.putAll(killers);
+    }
+
+    private static void registerSurvivors() {
+        Map<String, String> survivors = register(Survivors.class);
+        SURVIVOR_NAMES.putAll(survivors);
+    }
+
+    @Nonnull
+    public static String resolveKillerName(@Nonnull String name) {
+        name = name.toLowerCase();
+
+        if (!KILLER_NAMES.containsKey(name)) {
+            throw new IllegalArgumentException("No killer found with name " + name);
+        }
+
+        return KILLER_NAMES.get(name);
+    }
+
+    @Nonnull
     public static String resolveSurvivorName(@Nonnull String name) {
-        return SURVIVOR_NAMES.get(name.toLowerCase());
+        name = name.toLowerCase();
+
+        if (!SURVIVOR_NAMES.containsKey(name)) {
+            throw new IllegalArgumentException("No survivor found with name " + name);
+        }
+
+        return SURVIVOR_NAMES.get(name);
     }
 
 }

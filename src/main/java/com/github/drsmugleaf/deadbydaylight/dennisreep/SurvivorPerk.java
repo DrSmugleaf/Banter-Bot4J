@@ -34,9 +34,9 @@ public class SurvivorPerk extends Perk {
             object.addProperty("PerkName", SurvivorPerks.OPEN_HANDED.NAME);
         }
 
-        String survivor = object.get("Survivor").getAsString();
-        survivor = NameResolver.resolveSurvivorName(survivor);
-        object.addProperty("Survivor", survivor);
+        String survivorName = object.get("Survivor").getAsString();
+        survivorName = NameResolver.resolveSurvivorName(survivorName);
+        object.addProperty("Survivor", survivorName);
 
         return API.GSON.fromJson(object, SurvivorPerk.class);
     }
@@ -49,12 +49,7 @@ public class SurvivorPerk extends Perk {
     @Nonnull
     @Override
     public SurvivorPerks toPerk() {
-        String name = NAME;
-        if (name.equalsIgnoreCase("Open Handed")) {
-            name = "Open-Handed";
-        }
-
-        return SurvivorPerks.from(name);
+        return SurvivorPerks.from(NAME);
     }
 
 }

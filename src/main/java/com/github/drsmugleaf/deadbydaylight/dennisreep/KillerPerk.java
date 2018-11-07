@@ -30,6 +30,19 @@ public class KillerPerk extends Perk {
             object.addProperty("PerkName", KillerPerks.BARBECUE_AND_CHILLI.NAME);
         }
 
+        String killerName;
+        if (object.has("Killer")) {
+            killerName = object.get("Killer").getAsString();
+        } else if (object.has("PerkKiller")) {
+            killerName = object.get("PerkKiller").getAsString();
+            object.remove("PerkKiller");
+        } else {
+            throw new IllegalArgumentException("No Killer or PerkKiller member found in json " + json);
+        }
+
+        killerName = NameResolver.resolveKillerName(killerName);
+        object.addProperty("Killer", killerName);
+
         return API.GSON.fromJson(object, KillerPerk.class);
     }
 

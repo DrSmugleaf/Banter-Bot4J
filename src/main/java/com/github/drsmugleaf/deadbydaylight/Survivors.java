@@ -5,7 +5,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by DrSmugleaf on 06/11/2018
  */
-public enum Survivors {
+public enum Survivors implements ICharacter {
 
     ALL("All"),
     ACE_VISCONTI("Ace Visconti"),
@@ -31,6 +31,7 @@ public enum Survivors {
     }
 
     @Nonnull
+    @Override
     public String getName() {
         return NAME;
     }

@@ -91,6 +91,7 @@ public enum SurvivorPerks implements IPerk {
     }
 
     @Nonnull
+    @Override
     public String getName() {
         return NAME;
     }
