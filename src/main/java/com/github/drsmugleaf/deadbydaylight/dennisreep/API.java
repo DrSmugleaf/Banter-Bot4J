@@ -33,6 +33,9 @@ public abstract class API {
     public static final String SURVIVOR_ROULETTE_URL = "https://dennisreep.nl/dbd/roulette/survivor/";
 
     @Nonnull
+    public static final String LOGO_URL = "https://d1u5p3l4wpay3k.cloudfront.net/deadbydaylight_gamepedia_en/c/c7/Logo_dbd.png?version=fee2d7168217d35e77e33571b0023b2c";
+
+    @Nonnull
     private static final String PATH = "https://dennisreep.nl/dbd/api/v2/";
 
     @Nonnull
