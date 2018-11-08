@@ -32,14 +32,12 @@ public class RandomCivilizationVI extends Command {
             return;
         }
 
-        int amount;
-        try {
-            amount = Integer.parseInt(ARGS.get(0));
-        } catch (NumberFormatException e) {
+        if (!ARGS.isInteger(0)) {
             EVENT.reply("Invalid number of leaders requested: " + ARGS.get(0));
             return;
         }
 
+        int amount = ARGS.getInteger(0);
         if (amount > CIV_AMOUNT) {
             EVENT.reply("Too many leaders requested. Limit: " + CIV_AMOUNT);
             return;

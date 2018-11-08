@@ -71,6 +71,22 @@ public class Arguments extends ArrayList<String> {
         return get(size() - 1);
     }
 
+    public boolean isInteger(int index) {
+        String argument = get(index);
+
+        try {
+            Integer.parseInt(argument);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public int getInteger(int index) {
+        String argument = get(index);
+        return Integer.parseInt(argument);
+    }
+
     @Override
     public String toString() {
         return String.join(" ", this);
