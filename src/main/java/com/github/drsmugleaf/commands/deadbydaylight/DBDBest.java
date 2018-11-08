@@ -29,21 +29,42 @@ public class DBDBest extends Command {
                BanterBot4J.BOT_PREFIX + "dbdbest claudette";
     }
 
+    @Nonnull
+    private static String getBestKillerPerksNames(int amount) {
+        List<String> bestPerks = PerksAPI.KILLER_PERKS.get().getBest(amount).getNames();
+        return String.join(", ", bestPerks);
+    }
+
+    @Nonnull
+    private static String getBestSurvivorPerksNames(int amount) {
+        List<String> bestPerks = PerksAPI.SURVIVOR_PERKS.get().getBest(amount).getNames();
+        return String.join(", ", bestPerks);
+    }
+
+    @Nonnull
+    private static String getBestPerksResponse(int amount) {
+        if (amount == 1) {
+            return "Best Killer perk:\n" +
+                   getBestKillerPerksNames(1) + "\n" +
+                   "Best Survivor perk:\n" +
+                   getBestSurvivorPerksNames(1);
+        }
+
+        return "Best " + amount + " Killer perks:\n" +
+               getBestKillerPerksNames(amount) + "\n" +
+               "Best " + amount + " Survivor perks:\n" +
+               getBestSurvivorPerksNames(amount);
+    }
+
     @Override
     public void run() {
         if (ARGS.isEmpty()) {
-            StringBuilder builder = new StringBuilder("Best Killer perks:\n");
-
-            List<String> bestKillerPerks = PerksAPI.KILLER_PERKS.get().getBest(4).getNames();
-            String bestKillerPerksNames = String.join(", ", bestKillerPerks);
-            builder.append(bestKillerPerksNames).append("\nBest Survivor perks:\n");
-
-            List<String> bestSurvivorPerks = PerksAPI.SURVIVOR_PERKS.get().getBest(4).getNames();
-            String bestSurvivorPerksNames = String.join(", ", bestSurvivorPerks);
-            builder.append(bestSurvivorPerksNames);
-
-            EVENT.reply(builder.toString());
-            return;
+            String response = getBestPerksResponse(4);
+            EVENT.reply(response);
+        } else if (ARGS.size() == 1 && ARGS.isInteger(0)) {
+            int amount = ARGS.getInteger(0);
+            String response = getBestPerksResponse(amount);
+            EVENT.reply(response);
         }
     }
 
