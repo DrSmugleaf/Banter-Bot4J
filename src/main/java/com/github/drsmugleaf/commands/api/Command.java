@@ -16,6 +16,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +29,9 @@ public abstract class Command implements ICommand {
 
     @Nonnull
     protected static final Logger LOGGER = LoggerFactory.getLogger(Handler.class);
+
+    @Nonnull
+    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
 
     @Nonnull
     public final CommandReceivedEvent EVENT;
@@ -142,6 +148,11 @@ public abstract class Command implements ICommand {
     @Nonnull
     public IMessage sendMessage(@Nonnull String content, @Nonnull EmbedObject embed) {
         return sendMessage(EVENT.getChannel(), content, embed);
+    }
+
+    @Nonnull
+    public String getDate() {
+        return DATE_FORMAT.format(Instant.now());
     }
 
 }
