@@ -15,6 +15,9 @@ import java.io.IOException;
 public abstract class API {
 
     @Nonnull
+    public static final String HOME_URL = "https://dennisreep.nl/dbd/";
+
+    @Nonnull
     public static final String KILLER_PERKS_URL = "https://dennisreep.nl/dbd/perks/killer/";
 
     @Nonnull
