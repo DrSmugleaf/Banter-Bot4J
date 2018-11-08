@@ -15,6 +15,21 @@ import java.io.IOException;
 public abstract class API {
 
     @Nonnull
+    public static final String KILLER_PERKS_URL = "https://dennisreep.nl/dbd/perks/killer/";
+
+    @Nonnull
+    public static final String SURVIVOR_PERKS_URL = "https://dennisreep.nl/dbd/perks/survivor/";
+
+    @Nonnull
+    public static final String KILLERS_URL = "https://dennisreep.nl/dbd/killers/";
+
+    @Nonnull
+    public static final String KILLER_ROULETTE_URL = "https://dennisreep.nl/dbd/roulette/killer/";
+
+    @Nonnull
+    public static final String SURVIVOR_ROULETTE_URL = "https://dennisreep.nl/dbd/roulette/survivor/";
+
+    @Nonnull
     private static final String PATH = "https://dennisreep.nl/dbd/api/v2/";
 
     @Nonnull
