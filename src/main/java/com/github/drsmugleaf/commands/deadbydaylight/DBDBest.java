@@ -4,12 +4,13 @@ import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
+import com.github.drsmugleaf.deadbydaylight.KillerPerks;
+import com.github.drsmugleaf.deadbydaylight.SurvivorPerks;
 import com.github.drsmugleaf.deadbydaylight.dennisreep.*;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.util.EmbedBuilder;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
 
 /**
  * Created by DrSmugleaf on 07/11/2018
@@ -32,20 +33,20 @@ public class DBDBest extends Command {
     }
 
     @Nonnull
-    private static Collection<KillerPerk> getBestKillerPerks(int amount) {
-        return PerksAPI.KILLER_PERKS.get().getBest(amount).values();
+    private static Perks<KillerPerks, KillerPerk> getBestKillerPerks(int amount) {
+        return PerksAPI.KILLER_PERKS.get().getBest(amount);
     }
 
     @Nonnull
-    private static Collection<SurvivorPerk> getBestSurvivorPerks(int amount) {
-        return PerksAPI.SURVIVOR_PERKS.get().getBest(amount).values();
+    private static Perks<SurvivorPerks, SurvivorPerk> getBestSurvivorPerks(int amount) {
+        return PerksAPI.SURVIVOR_PERKS.get().getBest(amount);
     }
 
     @Nonnull
     private EmbedObject getBestPerksResponse(int amount) {
         EmbedBuilder builder = new EmbedBuilder();
         builder
-                .withTitle("Best Dead By Daylight Perks")
+                .withTitle("Best Dead by Daylight Perks")
                 .withUrl(API.HOME_URL)
                 .withDescription(amount + " Perks")
                 .withThumbnail(API.LOGO_URL)
@@ -53,24 +54,34 @@ public class DBDBest extends Command {
 
         if (amount == 1) {
             builder
-                    .withTitle("Best Dead by Daylight Perks")
+                    .withTitle("Best Dead by Daylight Perk")
                     .withDescription(amount + " Perk");
         }
 
-        for (KillerPerk perk : getBestKillerPerks(amount)) {
+        Perks<KillerPerks, KillerPerk> killerPerks = getBestKillerPerks(amount);
+        String killerRating = String.format("%.2f", killerPerks.getAverageRating());
+
+        builder.appendField("KILLER PERKS", "Average Rating: " + killerRating + " ★", false);
+
+        for (KillerPerk perk : killerPerks.values()) {
             builder.appendField(
                     perk.NAME + " (" + perk.TIER.NAME + ")",
-                    perk.RATING + "★ (" + perk.RATINGS + ")",
+                    perk.RATING + " ★ (" + perk.RATINGS + ")",
                     true
             );
         }
 
-        builder.appendField("\u200b", "\u200b", false);
+        Perks<SurvivorPerks, SurvivorPerk> survivorPerks = getBestSurvivorPerks(amount);
+        String survivorRating = String.format("%.2f", killerPerks.getAverageRating());
 
-        for (SurvivorPerk perk : getBestSurvivorPerks(amount)) {
+        builder
+                .appendField("\u200b", "\u200b", false)
+                .appendField("SURVIVOR PERKS", "Average Rating: " + survivorRating + " ★", false);
+
+        for (SurvivorPerk perk : survivorPerks.values()) {
             builder.appendField(
                     perk.NAME + " (" + perk.TIER.NAME + ")",
-                    perk.RATING + "★ (" + perk.RATINGS + ")",
+                    perk.RATING + " ★ (" + perk.RATINGS + ")",
                     true
             );
         }

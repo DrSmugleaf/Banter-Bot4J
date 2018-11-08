@@ -42,6 +42,16 @@ public class Perks<K extends Enum<K>, V extends Perk> extends LinkedHashMap<K, V
                 ));
     }
 
+    public double getAverageRating() {
+        double ratings = 0.0;
+        for (V perk : values()) {
+            ratings += perk.RATING;
+        }
+        ratings /= values().size();
+
+        return ratings;
+    }
+
     public List<String> getNames() {
         return values()
                 .stream()
