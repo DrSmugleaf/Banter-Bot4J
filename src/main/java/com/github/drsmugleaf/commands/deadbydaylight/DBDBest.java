@@ -4,10 +4,12 @@ import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
-import com.github.drsmugleaf.deadbydaylight.dennisreep.PerksAPI;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.*;
+import sx.blah.discord.api.internal.json.objects.EmbedObject;
+import sx.blah.discord.util.EmbedBuilder;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Created by DrSmugleaf on 07/11/2018
@@ -30,40 +32,60 @@ public class DBDBest extends Command {
     }
 
     @Nonnull
-    private static String getBestKillerPerksNames(int amount) {
-        List<String> bestPerks = PerksAPI.KILLER_PERKS.get().getBest(amount).getNames();
-        return String.join(", ", bestPerks);
+    private static Collection<KillerPerk> getBestKillerPerks(int amount) {
+        return PerksAPI.KILLER_PERKS.get().getBest(amount).values();
     }
 
     @Nonnull
-    private static String getBestSurvivorPerksNames(int amount) {
-        List<String> bestPerks = PerksAPI.SURVIVOR_PERKS.get().getBest(amount).getNames();
-        return String.join(", ", bestPerks);
+    private static Collection<SurvivorPerk> getBestSurvivorPerks(int amount) {
+        return PerksAPI.SURVIVOR_PERKS.get().getBest(amount).values();
     }
 
     @Nonnull
-    private static String getBestPerksResponse(int amount) {
+    private EmbedObject getBestPerksResponse(int amount) {
+        EmbedBuilder builder = new EmbedBuilder();
+        builder
+                .withTitle("Best Dead By Daylight Perks")
+                .withUrl(API.HOME_URL)
+                .withDescription(amount + " Perks")
+                .withThumbnail(API.LOGO_URL)
+                .withFooterText(getDate());
+
         if (amount == 1) {
-            return "Best Killer perk:\n" +
-                   getBestKillerPerksNames(1) + "\n" +
-                   "Best Survivor perk:\n" +
-                   getBestSurvivorPerksNames(1);
+            builder
+                    .withTitle("Best Dead by Daylight Perks")
+                    .withDescription(amount + " Perk");
         }
 
-        return "Best " + amount + " Killer perks:\n" +
-               getBestKillerPerksNames(amount) + "\n" +
-               "Best " + amount + " Survivor perks:\n" +
-               getBestSurvivorPerksNames(amount);
+        for (KillerPerk perk : getBestKillerPerks(amount)) {
+            builder.appendField(
+                    perk.NAME + " (" + perk.TIER.NAME + ")",
+                    perk.RATING + "★ (" + perk.RATINGS + ")",
+                    true
+            );
+        }
+
+        builder.appendField("\u200b", "\u200b", false);
+
+        for (SurvivorPerk perk : getBestSurvivorPerks(amount)) {
+            builder.appendField(
+                    perk.NAME + " (" + perk.TIER.NAME + ")",
+                    perk.RATING + "★ (" + perk.RATINGS + ")",
+                    true
+            );
+        }
+
+        return builder.build();
     }
 
     @Override
     public void run() {
         if (ARGS.isEmpty()) {
-            String response = getBestPerksResponse(4);
+            EmbedObject response = getBestPerksResponse(4);
             EVENT.reply(response);
         } else if (ARGS.size() == 1 && ARGS.isInteger(0)) {
             int amount = ARGS.getInteger(0);
-            String response = getBestPerksResponse(amount);
+            EmbedObject response = getBestPerksResponse(amount);
             EVENT.reply(response);
         }
     }
