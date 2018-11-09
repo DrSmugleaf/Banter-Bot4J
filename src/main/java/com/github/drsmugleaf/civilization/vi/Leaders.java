@@ -48,6 +48,8 @@ public enum Leaders {
     VICTORIA("Victoria"),
     WILHELMINA("Wilhelmina");
 
+    public static final int AMOUNT = Leaders.values().length;
+
     @Nonnull
     public final String NAME;
 

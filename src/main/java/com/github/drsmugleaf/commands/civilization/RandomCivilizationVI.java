@@ -17,8 +17,6 @@ import java.util.stream.Collectors;
 @CommandInfo(aliases = "randomcivilization6")
 public class RandomCivilizationVI extends Command {
 
-    private final int CIV_AMOUNT = Leaders.values().length;
-
     protected RandomCivilizationVI(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
         super(event, args);
     }
@@ -38,8 +36,8 @@ public class RandomCivilizationVI extends Command {
         }
 
         int amount = ARGS.getInteger(0);
-        if (amount > CIV_AMOUNT) {
-            EVENT.reply("Too many leaders requested. Limit: " + CIV_AMOUNT);
+        if (amount > Leaders.AMOUNT) {
+            EVENT.reply("Too many leaders requested. Limit: " + Leaders.AMOUNT);
             return;
         }
 
