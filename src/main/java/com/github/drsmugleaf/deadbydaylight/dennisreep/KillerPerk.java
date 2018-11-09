@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
+import com.github.drsmugleaf.deadbydaylight.ICharacter;
 import com.github.drsmugleaf.deadbydaylight.KillerPerks;
 import com.github.drsmugleaf.deadbydaylight.Killers;
 import com.google.gson.JsonElement;
@@ -49,6 +50,12 @@ public class KillerPerk extends Perk {
     @Nonnull
     public static KillerPerk from(@Nonnull KillerPerks perk) {
         return PerksAPI.KILLER_PERKS.get().get(perk);
+    }
+
+    @Nonnull
+    @Override
+    public ICharacter getCharacter() {
+        return KILLER;
     }
 
     @Nonnull

@@ -2,6 +2,7 @@ package com.github.drsmugleaf.deadbydaylight;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by DrSmugleaf on 06/11/2018
@@ -50,6 +51,13 @@ public enum Killers implements ICharacter {
         }
 
         return null;
+    }
+
+    @Nonnull
+    public static Killers random() {
+        Killers[] killers = values();
+        int index = ThreadLocalRandom.current().nextInt(1, killers.length);
+        return killers[index];
     }
 
     @Nonnull

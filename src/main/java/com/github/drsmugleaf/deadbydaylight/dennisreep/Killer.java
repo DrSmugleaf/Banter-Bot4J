@@ -1,6 +1,8 @@
 package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
 import com.github.drsmugleaf.deadbydaylight.Killers;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 import javax.annotation.Nonnull;
@@ -36,6 +38,16 @@ public class Killer {
         TIER = tier;
         RATING = rating;
         RATINGS = ratings;
+    }
+
+    @Nonnull
+    public static Killer from(@Nonnull JsonElement json) {
+        JsonObject object = json.getAsJsonObject();
+        String killerName = object.get("KillerName").getAsString();
+        killerName = NameResolver.resolveKillerName(killerName);
+        object.addProperty("KillerName", killerName);
+
+        return API.GSON.fromJson(json, Killer.class);
     }
 
 }
