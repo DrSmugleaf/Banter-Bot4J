@@ -79,20 +79,6 @@ public abstract class Command implements ICommand {
     }
 
     @Nonnull
-    public static String getName(@Nonnull Class<? extends Command> command) {
-        String commandName;
-        CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
-
-        if (annotation == null || annotation.name().isEmpty()) {
-            commandName = command.getSimpleName();
-        } else {
-            commandName = annotation.name();
-        }
-
-        return commandName.toLowerCase();
-    }
-
-    @Nonnull
     public static List<String> getAliases(@Nonnull Class<? extends Command> command) {
         CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
 
@@ -106,6 +92,25 @@ public abstract class Command implements ICommand {
         }
 
         return commandAliases;
+    }
+
+    @Nonnull
+    public static String getDate() {
+        return DATE_FORMAT.format(Instant.now());
+    }
+
+    @Nonnull
+    public static String getName(@Nonnull Class<? extends Command> command) {
+        String commandName;
+        CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
+
+        if (annotation == null || annotation.name().isEmpty()) {
+            commandName = command.getSimpleName();
+        } else {
+            commandName = annotation.name();
+        }
+
+        return commandName.toLowerCase();
     }
 
     @Nonnull
@@ -148,11 +153,6 @@ public abstract class Command implements ICommand {
     @Nonnull
     public IMessage sendMessage(@Nonnull String content, @Nonnull EmbedObject embed) {
         return sendMessage(EVENT.getChannel(), content, embed);
-    }
-
-    @Nonnull
-    public String getDate() {
-        return DATE_FORMAT.format(Instant.now());
     }
 
 }

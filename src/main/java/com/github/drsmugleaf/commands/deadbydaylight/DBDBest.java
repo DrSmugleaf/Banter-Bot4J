@@ -43,7 +43,7 @@ public class DBDBest extends Command {
     }
 
     @Nonnull
-    private EmbedObject getBestPerksResponse(int amount) {
+    private static EmbedObject getBestPerksResponse(int amount) {
         EmbedBuilder builder = new EmbedBuilder();
         builder
                 .withTitle("Best Dead by Daylight Perks")
