@@ -25,7 +25,7 @@ public class DBDRoulette extends Command {
 
     @Nonnull
     private static EmbedObject getKillerResponse() {
-        Killers randomKiller = Killers.SHAPE;
+        Killers randomKiller = Killers.random();
         Killer killer = KillersAPI.KILLERS.get().get(randomKiller);
         Perks<KillerPerks, KillerPerk> randomPerks = KillersAPI.getKillerData(randomKiller).getRandom(4);
         String perkRating = String.format("%.2f", randomPerks.getAverageRating());
