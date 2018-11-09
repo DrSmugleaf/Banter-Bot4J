@@ -14,7 +14,13 @@ import java.util.stream.Collectors;
 /**
  * Created by DrSmugleaf on 31/08/2018
  */
-@CommandInfo(aliases = "randomcivilization6")
+@CommandInfo(aliases = {
+        "random civilization vi", "random civilizationvi", "r civilization vi", "r civilizationvi",
+        "randomcivvi", "random civ vi", "random civvi",
+        "randomcivilization6", "rcivilization6",
+        "random civilization 6", "random civilization6", "r civilization 6", "r civilization6",
+        "randomciv6", "random civ 6", "random civ6", "r civ 6", "r civ6", "rciv6"
+})
 public class RandomCivilizationVI extends Command {
 
     protected RandomCivilizationVI(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
