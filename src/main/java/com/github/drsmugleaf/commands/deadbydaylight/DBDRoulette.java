@@ -5,10 +5,7 @@ import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.deadbydaylight.KillerPerks;
 import com.github.drsmugleaf.deadbydaylight.Killers;
-import com.github.drsmugleaf.deadbydaylight.dennisreep.Killer;
-import com.github.drsmugleaf.deadbydaylight.dennisreep.KillerPerk;
-import com.github.drsmugleaf.deadbydaylight.dennisreep.KillersAPI;
-import com.github.drsmugleaf.deadbydaylight.dennisreep.Perks;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.*;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.util.EmbedBuilder;
 
@@ -29,13 +26,15 @@ public class DBDRoulette extends Command {
         Killer killer = KillersAPI.KILLERS.get().get(randomKiller);
         Perks<KillerPerks, KillerPerk> randomPerks = KillersAPI.getKillerData(randomKiller).getRandom(4);
         String perkRating = String.format("%.2f", randomPerks.getAverageRating());
+        Tiers perkTier = randomPerks.getTier();
 
         EmbedBuilder builder = new EmbedBuilder();
         builder
                 .withTitle(randomKiller.FULL_NAME + ": " + randomKiller.NAME + " (" + killer.RATING + " ★)")
                 .withDescription("Average perk rating: " + perkRating + " ★")
                 .withThumbnail(killer.IMAGE_URL)
-                .withFooterText(getDate());
+                .withFooterText(getDate())
+                .withColor(perkTier.COLOR.brighter());
 
         int i = 1;
         for (KillerPerk perk : randomPerks.values()) {

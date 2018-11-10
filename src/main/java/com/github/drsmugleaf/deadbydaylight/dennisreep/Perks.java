@@ -21,6 +21,7 @@ public class Perks<K extends Enum<K> & IPerk, V extends Perk> extends LinkedHash
         super();
     }
 
+    @Nonnull
     public Perks<K, V> getBest(int amount) {
         if (amount > size()) {
             amount = size();
@@ -44,6 +45,7 @@ public class Perks<K extends Enum<K> & IPerk, V extends Perk> extends LinkedHash
                 ));
     }
 
+    @Nonnull
     public Perks<K, V> getRandom(int amount) {
         if (amount > size()) {
             amount = size();
@@ -68,6 +70,7 @@ public class Perks<K extends Enum<K> & IPerk, V extends Perk> extends LinkedHash
                 ));
     }
 
+    @Nonnull
     public Perks<K, V> getRandom(int amount, @Nonnull Killers killer) {
         if (amount > size()) {
             amount = size();
@@ -106,11 +109,18 @@ public class Perks<K extends Enum<K> & IPerk, V extends Perk> extends LinkedHash
         return ratings;
     }
 
+    @Nonnull
     public List<String> getNames() {
         return values()
                 .stream()
                 .map(Perk::getName)
                 .collect(Collectors.toList());
+    }
+
+    @Nonnull
+    public Tiers getTier() {
+        double rating = getAverageRating();
+        return Tiers.from(rating);
     }
 
     public Perks<K, V> sortByValues() {
