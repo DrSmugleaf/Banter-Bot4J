@@ -42,7 +42,7 @@ public class MergeImages extends Command {
                 url = new URL(urlName);
                 urlImage = ImageIO.read(url);
             } catch (IllegalArgumentException | IOException e) {
-                throw new InvalidURLException(urlName);
+                throw new InvalidURLException(urlName, e);
             }
 
             images[i] = urlImage;
@@ -77,7 +77,7 @@ public class MergeImages extends Command {
                 url = new URL(urlName);
                 urlImage = ImageIO.read(url);
             } catch (IOException e) {
-                throw new InvalidURLException(urlName);
+                throw new InvalidURLException(urlName, e);
             }
 
             images[i] = urlImage;
@@ -125,6 +125,10 @@ public class MergeImages extends Command {
             InputStream is = new ByteArrayInputStream(os.toByteArray());
             EVENT.getChannel().sendFile("", is, "image.png");
         } catch (InvalidURLException e) {
+            if (e.getCause().getCause().getMessage().contains("403 for URL")) {
+                EVENT.reply("I don't have permission to access one of the links. Please upload this one to imgur: " + e.URL);
+                return;
+            }
             EVENT.reply("Invalid URL: " + e.URL);
         } catch (IOException e) {
             EVENT.reply("An error occurred making the new image, try again later or contact the bot owner.");
