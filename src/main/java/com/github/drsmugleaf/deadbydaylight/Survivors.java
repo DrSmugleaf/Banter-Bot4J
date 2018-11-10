@@ -1,6 +1,11 @@
 package com.github.drsmugleaf.deadbydaylight;
 
+import com.github.drsmugleaf.BanterBot4J;
+
 import javax.annotation.Nonnull;
+import java.io.*;
+import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by DrSmugleaf on 06/11/2018
@@ -24,6 +29,9 @@ public enum Survivors implements ICharacter {
     QUENTIN_SMITH("Quentin Smith");
 
     @Nonnull
+    private static final String IMAGES_PATH = Objects.requireNonNull(Survivors.class.getClassLoader().getResource("deadbydaylight/survivors")).getFile();
+
+    @Nonnull
     public final String NAME;
 
     Survivors(@Nonnull String name) {
@@ -31,9 +39,27 @@ public enum Survivors implements ICharacter {
     }
 
     @Nonnull
+    public static Survivors random() {
+        Survivors[] survivors = values();
+        int index = ThreadLocalRandom.current().nextInt(1, survivors.length);
+        return survivors[index];
+    }
+
+    @Nonnull
     @Override
     public String getName() {
         return NAME;
+    }
+
+    @Nonnull
+    public InputStream getImage() {
+        String fileName = "/" + NAME.toLowerCase() + ".png";
+        try {
+            return new FileInputStream(IMAGES_PATH + fileName);
+        } catch (FileNotFoundException e) {
+            BanterBot4J.warn("Image for DBD survivor " + NAME + " not found", e);
+            throw new IllegalStateException("Image for " + NAME + " not found", e);
+        }
     }
 
 }
