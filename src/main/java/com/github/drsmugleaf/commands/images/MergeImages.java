@@ -41,7 +41,7 @@ public class MergeImages extends Command {
             try {
                 url = new URL(urlName);
                 urlImage = ImageIO.read(url);
-            } catch (IOException e) {
+            } catch (IllegalArgumentException | IOException e) {
                 throw new InvalidURLException(urlName);
             }
 
