@@ -51,7 +51,8 @@ public class Perks<K extends Enum<K> & IPerk, V extends Perk> extends LinkedHash
             amount = size();
         }
 
-        Set<Map.Entry<K, V>> entrySet = entrySet();
+        Perks<K, V> perks = new Perks<>(this);
+        Set<Map.Entry<K, V>> entrySet = perks.entrySet();
         List<Map.Entry<K, V>> keyList = new ArrayList<>(entrySet);
         Collections.shuffle(keyList);
         Set<Map.Entry<K, V>> randomSet = new HashSet<>(keyList.subList(0, amount));
@@ -76,7 +77,8 @@ public class Perks<K extends Enum<K> & IPerk, V extends Perk> extends LinkedHash
             amount = size();
         }
 
-        Set<Map.Entry<K, V>> entrySet = entrySet();
+        Perks<K, V> perks = new Perks<>(this);
+        Set<Map.Entry<K, V>> entrySet = perks.entrySet();
         entrySet.removeIf(entry -> {
             ICharacter character = entry.getValue().getCharacter();
             return character != Killers.ALL && character != killer;
@@ -123,10 +125,26 @@ public class Perks<K extends Enum<K> & IPerk, V extends Perk> extends LinkedHash
         return Tiers.from(rating);
     }
 
+    @Nonnull
+    public Perks<K, V> getWithinRating(double from, double to) {
+        new Perks<>(this).entrySet()
+                .removeIf(entry -> {
+                    double perkRating = entry.getValue().getTier().THRESHOLD;
+                    return perkRating < from || perkRating > to;
+                });
+
+        return this;
+    }
+
+    @Nonnull
+    public Perks<K, V> getWithinRating(@Nonnull Tiers from, @Nonnull Tiers to) {
+        return getWithinRating(from.THRESHOLD, to.THRESHOLD);
+    }
+
     public Perks<K, V> sortByValues() {
-        LinkedHashMap<K, V> map = entrySet()
+        return entrySet()
                 .stream()
-                .sorted(Comparator.comparing(Map.Entry::getValue))
+                .sorted(Map.Entry.comparingByValue())
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         Map.Entry::getValue,
@@ -137,10 +155,8 @@ public class Perks<K extends Enum<K> & IPerk, V extends Perk> extends LinkedHash
                                     "Value: " + v.getName()
                             );
                         },
-                        LinkedHashMap::new
+                        Perks::new
                 ));
-
-        return new Perks<>(map);
     }
 
 }

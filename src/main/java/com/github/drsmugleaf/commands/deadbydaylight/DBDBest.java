@@ -8,14 +8,16 @@ import com.github.drsmugleaf.deadbydaylight.KillerPerks;
 import com.github.drsmugleaf.deadbydaylight.SurvivorPerks;
 import com.github.drsmugleaf.deadbydaylight.dennisreep.*;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
-import sx.blah.discord.util.EmbedBuilder;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * Created by DrSmugleaf on 07/11/2018
  */
 public class DBDBest extends Command {
+
+    private static final int MAX_PERK_AMOUNT = Math.max(KillerPerks.values().length, SurvivorPerks.values().length);
 
     protected DBDBest(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
         super(event, args);
@@ -26,9 +28,11 @@ public class DBDBest extends Command {
         return "Invalid arguments.\n" +
                "**Formats:**\n" +
                BanterBot4J.BOT_PREFIX + "dbdbest charactername\n" +
+               BanterBot4J.BOT_PREFIX + "dbdbest amount\n" +
                "**Examples:**\n" +
+               BanterBot4J.BOT_PREFIX + "dbdbest 8\n" +
                BanterBot4J.BOT_PREFIX + "dbdbest michael myers\n" +
-               BanterBot4J.BOT_PREFIX + "dbdbest trapper\n" +
+               BanterBot4J.BOT_PREFIX + "dbdbest trapper 5\n" +
                BanterBot4J.BOT_PREFIX + "dbdbest claudette";
     }
 
@@ -43,8 +47,8 @@ public class DBDBest extends Command {
     }
 
     @Nonnull
-    private static EmbedObject getBestPerksResponse(int amount) {
-        EmbedBuilder builder = new EmbedBuilder();
+    private static List<EmbedObject> getBestPerksResponse(int amount) {
+        LargeEmbedBuilder builder = new LargeEmbedBuilder();
         builder
                 .withTitle("Best Dead by Daylight Perks")
                 .withUrl(API.HOME_URL)
@@ -86,18 +90,38 @@ public class DBDBest extends Command {
             );
         }
 
-        return builder.build();
+        return builder.buildAll();
     }
 
     @Override
     public void run() {
         if (ARGS.isEmpty()) {
-            EmbedObject response = getBestPerksResponse(4);
-            EVENT.reply(response);
-        } else if (ARGS.size() == 1 && ARGS.isInteger(0)) {
+            List<EmbedObject> embeds = getBestPerksResponse(4);
+            EVENT.reply(embeds.get(0));
+            if (embeds.size() > 1) {
+                for (EmbedObject embed : embeds) {
+                    sendMessage(embed);
+                }
+            }
+        } else if (ARGS.size() == 1) {
+            if (!ARGS.isInteger(0)) {
+                EVENT.reply(invalidArgumentsResponse());
+                return;
+            }
+
             int amount = ARGS.getInteger(0);
-            EmbedObject response = getBestPerksResponse(amount);
-            EVENT.reply(response);
+            if (amount > MAX_PERK_AMOUNT) {
+                EVENT.reply("Too many perks requested. Maximum amount of perks: " + MAX_PERK_AMOUNT);
+                return;
+            }
+
+            List<EmbedObject> embeds = getBestPerksResponse(amount);
+            EVENT.reply(embeds.get(0));
+            if (embeds.size() > 1) {
+                for (EmbedObject embed : embeds) {
+                    sendMessage(embed);
+                }
+            }
         }
     }
 
