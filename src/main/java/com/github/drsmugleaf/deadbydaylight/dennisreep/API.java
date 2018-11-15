@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
+import com.github.drsmugleaf.BanterBot4J;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -7,7 +8,11 @@ import com.google.gson.JsonParser;
 import org.jsoup.Jsoup;
 
 import javax.annotation.Nonnull;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Objects;
 
 /**
  * Created by DrSmugleaf on 06/11/2018
@@ -33,13 +38,24 @@ public abstract class API {
     public static final String SURVIVOR_ROULETTE_URL = "https://dennisreep.nl/dbd/roulette/survivor/";
 
     @Nonnull
-    public static final String LOGO_URL = "https://d1u5p3l4wpay3k.cloudfront.net/deadbydaylight_gamepedia_en/c/c7/Logo_dbd.png?version=fee2d7168217d35e77e33571b0023b2c";
+    private static final String IMAGES_PATH = Objects.requireNonNull(API.class.getClassLoader().getResource("deadbydaylight")).getFile();
 
     @Nonnull
     private static final String PATH = "https://dennisreep.nl/dbd/api/v2/";
 
     @Nonnull
     protected static final Gson GSON = new GsonBuilder().create();
+
+    @Nonnull
+    public static InputStream getDBDLogo() {
+        String fileName = "/logo.png";
+        try {
+            return new FileInputStream(IMAGES_PATH + fileName);
+        } catch (FileNotFoundException e) {
+            BanterBot4J.warn("DBD logo image not found", e);
+            throw new IllegalStateException("DBD logo image not found", e);
+        }
+    }
 
     @Nonnull
     protected static JsonObject getResponse(@Nonnull final String endpoint) {

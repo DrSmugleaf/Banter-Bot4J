@@ -56,11 +56,7 @@ public class DBDBest extends Command {
                     .withDescription(perkAmount + " Perks");
         }
 
-        if (killer == null || killer == Killers.ALL) {
-            builder.withThumbnail(API.LOGO_URL);
-        } else {
-            builder.withThumbnail("attachment://image.png");
-        }
+        builder.withThumbnail("attachment://image.png");
 
         return builder;
     }
@@ -139,7 +135,8 @@ public class DBDBest extends Command {
     public void run() {
         if (ARGS.isEmpty()) {
             List<EmbedObject> embeds = getBestPerksResponse(4);
-            EVENT.reply(embeds.get(0));
+            InputStream image = API.getDBDLogo();
+            EVENT.getChannel().sendFile(embeds.get(0), image, "image.png");
             if (embeds.size() > 1) {
                 for (EmbedObject embed : embeds) {
                     sendMessage(embed);
@@ -176,7 +173,8 @@ public class DBDBest extends Command {
             }
 
             List<EmbedObject> embeds = getBestPerksResponse(amount);
-            EVENT.reply(embeds.get(0));
+            InputStream image = API.getDBDLogo();
+            EVENT.getChannel().sendFile(embeds.get(0), image, "image.png");
             if (embeds.size() > 1) {
                 for (EmbedObject embed : embeds) {
                     sendMessage(embed);
