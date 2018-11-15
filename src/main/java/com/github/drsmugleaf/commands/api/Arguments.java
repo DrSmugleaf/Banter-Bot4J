@@ -4,6 +4,7 @@ import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -69,6 +70,74 @@ public class Arguments extends ArrayList<String> {
     @Nonnull
     public String last() {
         return get(size() - 1);
+    }
+
+    @Nonnull
+    public String getFrom(int start, int end) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = start; i < end; i++) {
+            builder.append(get(i)).append(" ");
+        }
+
+        return builder.toString().trim();
+    }
+
+    @Nonnull
+    public String getFrom(int start) {
+        return getFrom(start, size());
+    }
+
+    public boolean isDouble(int... indexes) {
+        for (int i : indexes) {
+            String argument = get(i).replace(',', '.');
+
+            try {
+                Double.parseDouble(argument);
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Nullable
+    public Integer findFirstIntegerIndex() {
+        for (int i = 0; i < size(); i++) {
+            if (isInteger(i)) {
+                return i;
+            }
+        }
+
+        return null;
+    }
+
+    public boolean hasInteger() {
+        return findFirstIntegerIndex() != null;
+    }
+
+    public boolean isInteger(int... indexes) {
+        for (int i : indexes) {
+            String argument = get(i);
+
+            try {
+                Integer.parseInt(argument);
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public double getDouble(int index) {
+        String argument = get(index).replace(',', '.');
+        return Double.parseDouble(argument);
+    }
+
+    public int getInteger(int index) {
+        String argument = get(index);
+        return Integer.parseInt(argument);
     }
 
     @Override

@@ -16,6 +16,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +29,9 @@ public abstract class Command implements ICommand {
 
     @Nonnull
     protected static final Logger LOGGER = LoggerFactory.getLogger(Handler.class);
+
+    @Nonnull
+    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
 
     @Nonnull
     public final CommandReceivedEvent EVENT;
@@ -73,20 +79,6 @@ public abstract class Command implements ICommand {
     }
 
     @Nonnull
-    public static String getName(@Nonnull Class<? extends Command> command) {
-        String commandName;
-        CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
-
-        if (annotation == null || annotation.name().isEmpty()) {
-            commandName = command.getSimpleName();
-        } else {
-            commandName = annotation.name();
-        }
-
-        return commandName.toLowerCase();
-    }
-
-    @Nonnull
     public static List<String> getAliases(@Nonnull Class<? extends Command> command) {
         CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
 
@@ -100,6 +92,25 @@ public abstract class Command implements ICommand {
         }
 
         return commandAliases;
+    }
+
+    @Nonnull
+    public static String getDate() {
+        return DATE_FORMAT.format(Instant.now());
+    }
+
+    @Nonnull
+    public static String getName(@Nonnull Class<? extends Command> command) {
+        String commandName;
+        CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
+
+        if (annotation == null || annotation.name().isEmpty()) {
+            commandName = command.getSimpleName();
+        } else {
+            commandName = annotation.name();
+        }
+
+        return commandName.toLowerCase();
     }
 
     @Nonnull

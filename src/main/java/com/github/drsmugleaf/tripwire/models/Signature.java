@@ -106,7 +106,7 @@ public class Signature {
 
     @Nonnull
     public static Signature fromJson(@Nonnull JsonElement json) {
-        return API.gson.fromJson(json, Signature.class);
+        return API.GSON.fromJson(json, Signature.class);
     }
 
     @Nonnull

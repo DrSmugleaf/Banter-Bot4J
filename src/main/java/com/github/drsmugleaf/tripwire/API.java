@@ -39,7 +39,7 @@ public class API {
     private static final SessionManager SESSION_MANAGER = new SessionManager();
 
     @Nonnull
-    public static final Gson gson = new GsonBuilder().setDateFormat("YYYY-MM-DD HH:mm:ss").create();
+    public static final Gson GSON = new GsonBuilder().setDateFormat("YYYY-MM-DD HH:mm:ss").create();
 
     @Nonnull
     public static Connection.Response refresh(long id, @Nonnull String username, @Nonnull String password) {
