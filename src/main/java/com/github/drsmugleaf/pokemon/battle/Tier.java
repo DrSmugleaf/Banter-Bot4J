@@ -25,6 +25,7 @@ public enum Tier {
     NEVERUSED("NeverUsed", "NU"),
     PARTIALLYUSED_BANLIST("PartiallyUsed Banlist", "PUBL"),
     PARTIALLYUSED("PartiallyUsed", "PU"),
+    UNTIERED("Untiered", "Untiered"),
     LITTLE_CUP("Little Cup", "LC"),
     DOUBLES("Doubles", "Doubles"),
     LIMBO("Limbo", "Limbo");
