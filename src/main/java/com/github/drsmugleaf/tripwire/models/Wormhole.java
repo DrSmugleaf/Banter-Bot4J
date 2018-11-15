@@ -67,7 +67,7 @@ public class Wormhole {
 
     @Nonnull
     public static Wormhole fromJson(@Nonnull JsonElement json) {
-        return API.gson.fromJson(json, Wormhole.class);
+        return API.GSON.fromJson(json, Wormhole.class);
     }
 
     @Nonnull

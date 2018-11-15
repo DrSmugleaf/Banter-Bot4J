@@ -33,9 +33,6 @@ public class Music {
             .expireAfterWrite(1, TimeUnit.MINUTES)
             .build();
 
-    @Nonnull
-    private static Map<IGuild, IMessage> lastMessage = new HashMap<>();
-
     static {
         AudioSourceManagers.registerRemoteSources(PLAYER_MANAGER);
         EventDispatcher.registerListener(new Music());

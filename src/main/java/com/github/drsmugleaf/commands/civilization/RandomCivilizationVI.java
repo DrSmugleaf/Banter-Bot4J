@@ -14,10 +14,14 @@ import java.util.stream.Collectors;
 /**
  * Created by DrSmugleaf on 31/08/2018
  */
-@CommandInfo(aliases = "randomcivilization6")
+@CommandInfo(aliases = {
+        "random civilization vi", "random civilizationvi", "r civilization vi", "r civilizationvi",
+        "randomcivvi", "random civ vi", "random civvi",
+        "randomcivilization6", "rcivilization6",
+        "random civilization 6", "random civilization6", "r civilization 6", "r civilization6",
+        "randomciv6", "random civ 6", "random civ6", "r civ 6", "r civ6", "rciv6"
+})
 public class RandomCivilizationVI extends Command {
-
-    private final int CIV_AMOUNT = Leaders.values().length;
 
     protected RandomCivilizationVI(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
         super(event, args);
@@ -32,16 +36,14 @@ public class RandomCivilizationVI extends Command {
             return;
         }
 
-        int amount;
-        try {
-            amount = Integer.parseInt(ARGS.get(0));
-        } catch (NumberFormatException e) {
+        if (!ARGS.isInteger(0)) {
             EVENT.reply("Invalid number of leaders requested: " + ARGS.get(0));
             return;
         }
 
-        if (amount > CIV_AMOUNT) {
-            EVENT.reply("Too many leaders requested. Limit: " + CIV_AMOUNT);
+        int amount = ARGS.getInteger(0);
+        if (amount > Leaders.AMOUNT) {
+            EVENT.reply("Too many leaders requested. Limit: " + Leaders.AMOUNT);
             return;
         }
 
