@@ -37,6 +37,11 @@ public class EveCheapestBlueprints extends Command {
 
     @Override
     public void run() {
+        if (ARGS.isEmpty()) {
+            EVENT.reply("You didn't give a blueprint name to search for");
+            return;
+        }
+
         IMessage reply = EVENT.reply("Contacting the EVE Online API, please wait");
         List<PublicContractsResponse> contracts = getContracts(THE_FORGE_REGION_ID);
         if (contracts.isEmpty()) {
