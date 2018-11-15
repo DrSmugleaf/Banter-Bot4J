@@ -131,8 +131,15 @@ public class Perks<K extends Enum<K> & IPerk, V extends Perk> extends LinkedHash
     }
 
     @Nonnull
-    public Perks<K, V> getWithinRating(double from, @Nullable Double to) {
-        final Double finalTo;
+    public Perks<K, V> getWithinRating(@Nullable Double from, @Nullable Double to) {
+        final double finalFrom;
+        if (from == null) {
+            finalFrom = Double.MIN_VALUE;
+        } else {
+            finalFrom = from;
+        }
+
+        final double finalTo;
         if (to == null) {
             finalTo = Double.MAX_VALUE;
         } else {
@@ -143,7 +150,7 @@ public class Perks<K extends Enum<K> & IPerk, V extends Perk> extends LinkedHash
         newPerks.entrySet()
                 .removeIf(entry -> {
                     double perkRating = entry.getValue().getRating();
-                    return perkRating < from || perkRating > finalTo;
+                    return perkRating < finalFrom || perkRating > finalTo;
                 });
 
         return newPerks;

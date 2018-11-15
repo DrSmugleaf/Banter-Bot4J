@@ -41,7 +41,7 @@ public class DBDRoulette extends Command {
     }
 
     @Nonnull
-    private static EmbedObject getKillerResponse(double minimumRating, @Nullable Double maximumRating) {
+    private static EmbedObject getKillerResponse(@Nullable Double minimumRating, @Nullable Double maximumRating) {
         Killers randomKiller = Killers.random();
         Killer killer = KillersAPI.KILLERS.get().get(randomKiller);
         Perks<KillerPerks, KillerPerk> randomPerks = KillersAPI.getKillerData(randomKiller)
@@ -83,7 +83,7 @@ public class DBDRoulette extends Command {
         return builder.build();
     }
 
-    private void sendSurvivorResponse(double minimumRating, @Nullable Double maximumRating) {
+    private void sendSurvivorResponse(@Nullable Double minimumRating, @Nullable Double maximumRating) {
         Survivors survivor = Survivors.random();
         Perks<SurvivorPerks, SurvivorPerk> randomPerks = PerksAPI.SURVIVOR_PERKS.get()
                 .getWithinRating(minimumRating, maximumRating)
@@ -141,14 +141,14 @@ public class DBDRoulette extends Command {
         }
 
         String type = ARGS.first().toLowerCase();
-        double minimumRating;
+        Double minimumRating = null;
         Double maximumRating = null;
         if (ARGS.size() == 2) {
             minimumRating = ARGS.getDouble(1);
         } else if (ARGS.size() == 3) {
             minimumRating = ARGS.getDouble(1);
             maximumRating = ARGS.getDouble(2);
-        } else {
+        } else if (ARGS.size() > 3) {
             EVENT.reply(invalidArgumentsResponse());
             return;
         }
