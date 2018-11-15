@@ -55,7 +55,8 @@ public class DBDRoulette extends Command {
                 .withTitle(randomKiller.FULL_NAME + ": " + randomKiller.NAME + " (" + killer.RATING + " ★)")
                 .withThumbnail(killer.IMAGE_URL)
                 .withFooterText(getDate())
-                .withColor(perkTier.COLOR.brighter());
+                .withColor(perkTier.COLOR.brighter())
+                .withUrl(API.HOME_URL);
 
         if (randomPerks.size() < 4) {
             builder.appendField("Not enough perks in this rating range", "Perks found: " + randomPerks.size(), true);
@@ -95,7 +96,8 @@ public class DBDRoulette extends Command {
                 .withTitle(survivor.NAME)
                 .withThumbnail("attachment://image.png")
                 .withFooterText(getDate())
-                .withColor(perkTier.COLOR.brighter());
+                .withColor(perkTier.COLOR.brighter())
+                .withUrl(API.HOME_URL);
 
         EmbedObject embed;
         InputStream image = survivor.getImage();
