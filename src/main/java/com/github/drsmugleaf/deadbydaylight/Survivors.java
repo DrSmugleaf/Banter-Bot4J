@@ -3,6 +3,7 @@ package com.github.drsmugleaf.deadbydaylight;
 import com.github.drsmugleaf.BanterBot4J;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.*;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
@@ -38,6 +39,22 @@ public enum Survivors implements ICharacter {
         NAME = name;
     }
 
+    @Nullable
+    public static Survivors from(@Nonnull String name) {
+        for (Survivors survivor : values()) {
+            if (survivor.NAME.equalsIgnoreCase(name)) {
+                return survivor;
+            }
+
+            String[] nameArray = survivor.NAME.split(" ");
+            if (nameArray[0].equalsIgnoreCase(name)) {
+                return survivor;
+            }
+        }
+
+        return null;
+    }
+
     @Nonnull
     public static Survivors random() {
         Survivors[] survivors = values();
@@ -52,6 +69,7 @@ public enum Survivors implements ICharacter {
     }
 
     @Nonnull
+    @Override
     public InputStream getImage() {
         String fileName = "/" + NAME.toLowerCase() + ".png";
         try {

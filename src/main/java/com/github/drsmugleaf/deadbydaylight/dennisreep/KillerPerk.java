@@ -19,7 +19,7 @@ public class KillerPerk extends Perk {
     public final Killers KILLER;
 
     KillerPerk(@Nonnull String imageUrl, @Nonnull String name, @Nonnull Tiers tier, double rating, long ratings, @Nonnull Killers killer) {
-        super(imageUrl, name, tier, rating, ratings);
+        super(name, tier, rating, ratings);
         KILLER = killer;
     }
 

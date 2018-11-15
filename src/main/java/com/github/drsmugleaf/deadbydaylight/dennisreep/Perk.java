@@ -13,10 +13,6 @@ import javax.annotation.Nonnull;
 public abstract class Perk implements Comparable<Perk> {
 
     @Nonnull
-    @SerializedName(value = "Image", alternate = {"PerkIcon"})
-    public final String IMAGE_URL;
-
-    @Nonnull
     @SerializedName("PerkName")
     public final String NAME;
 
@@ -24,16 +20,13 @@ public abstract class Perk implements Comparable<Perk> {
     @SerializedName("Tier")
     public final Tiers TIER;
 
-    @Nonnull
     @SerializedName("Rating")
     public final double RATING;
 
-    @Nonnull
     @SerializedName("Ratings")
     public final long RATINGS;
 
-    Perk(@Nonnull String imageUrl, @Nonnull String name, @Nonnull Tiers tier, double rating, long ratings) {
-        IMAGE_URL = imageUrl;
+    Perk(@Nonnull String name, @Nonnull Tiers tier, double rating, long ratings) {
         NAME = name;
         TIER = tier;
         RATING = rating;
@@ -43,11 +36,6 @@ public abstract class Perk implements Comparable<Perk> {
     @Override
     public int compareTo(@NotNull Perk other) {
         return Double.compare(other.RATING, RATING);
-    }
-
-    @Nonnull
-    public String getImageUrl() {
-        return IMAGE_URL;
     }
 
     @Nonnull

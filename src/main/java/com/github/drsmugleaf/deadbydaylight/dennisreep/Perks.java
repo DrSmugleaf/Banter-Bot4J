@@ -5,6 +5,7 @@ import com.github.drsmugleaf.deadbydaylight.IPerk;
 import com.github.drsmugleaf.deadbydaylight.Killers;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -53,9 +54,11 @@ public class Perks<K extends Enum<K> & IPerk, V extends Perk> extends LinkedHash
 
         Perks<K, V> perks = new Perks<>(this);
         Set<Map.Entry<K, V>> entrySet = perks.entrySet();
+
         List<Map.Entry<K, V>> keyList = new ArrayList<>(entrySet);
         Collections.shuffle(keyList);
         Set<Map.Entry<K, V>> randomSet = new HashSet<>(keyList.subList(0, amount));
+
         return randomSet.stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
@@ -77,15 +80,17 @@ public class Perks<K extends Enum<K> & IPerk, V extends Perk> extends LinkedHash
             amount = size();
         }
 
-        Perks<K, V> perks = new Perks<>(this);
-        Set<Map.Entry<K, V>> entrySet = perks.entrySet();
+        Perks<K, V> newPerks = new Perks<>(this);
+        Set<Map.Entry<K, V>> entrySet = newPerks.entrySet();
         entrySet.removeIf(entry -> {
             ICharacter character = entry.getValue().getCharacter();
             return character != Killers.ALL && character != killer;
         });
+
         List<Map.Entry<K, V>> keyList = new ArrayList<>(entrySet);
         Collections.shuffle(keyList);
         Set<Map.Entry<K, V>> randomSet = new HashSet<>(keyList.subList(0, amount));
+
         return randomSet.stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
@@ -126,14 +131,22 @@ public class Perks<K extends Enum<K> & IPerk, V extends Perk> extends LinkedHash
     }
 
     @Nonnull
-    public Perks<K, V> getWithinRating(double from, double to) {
-        new Perks<>(this).entrySet()
+    public Perks<K, V> getWithinRating(double from, @Nullable Double to) {
+        final Double finalTo;
+        if (to == null) {
+            finalTo = Double.MAX_VALUE;
+        } else {
+            finalTo = to;
+        }
+
+        Perks<K, V> newPerks = new Perks<>(this);
+        newPerks.entrySet()
                 .removeIf(entry -> {
-                    double perkRating = entry.getValue().getTier().THRESHOLD;
-                    return perkRating < from || perkRating > to;
+                    double perkRating = entry.getValue().getRating();
+                    return perkRating < from || perkRating > finalTo;
                 });
 
-        return this;
+        return newPerks;
     }
 
     @Nonnull

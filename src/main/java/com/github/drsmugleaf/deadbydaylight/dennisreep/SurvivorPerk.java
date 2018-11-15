@@ -19,7 +19,7 @@ public class SurvivorPerk extends Perk {
     public final Survivors SURVIVOR;
 
     SurvivorPerk(@Nonnull String imageUrl, @Nonnull String name, @Nonnull Tiers tier, double rating, long ratings, @Nonnull Survivors survivor) {
-        super(imageUrl, name, tier, rating, ratings);
+        super(name, tier, rating, ratings);
         SURVIVOR = survivor;
     }
 
