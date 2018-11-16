@@ -3110,7 +3110,7 @@ public enum BaseMove implements IModifier, IMoves {
 
     @NotNull
     public static BaseMove getMove(@NotNull String move) {
-        move = move.toLowerCase();
+        move = move.trim().toLowerCase();
 
         if (move.startsWith("hidden power")) {
             return Holder.MAP.get("hidden power");

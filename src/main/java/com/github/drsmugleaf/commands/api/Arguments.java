@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class Arguments extends ArrayList<String> {
 
     @NotNull
-    private static final Pattern SPLIT_ON_SPACES_EXCEPT_WITHIN_QUOTES = Pattern.compile("\"([^\"]*)\"|'([^']*)'|[^\\s]+");
+    private static final Pattern SPLIT_ON_SPACES_EXCEPT_WITHIN_QUOTES = Pattern.compile("\"([^\"]*)\"|'([^']*)'|[^\\s]+|(\n)");
 
     Arguments(@NotNull CommandSearchResult command, @NotNull CommandReceivedEvent event) {
         super(getArgs(command, event));
