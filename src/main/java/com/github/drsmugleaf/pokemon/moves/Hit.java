@@ -24,9 +24,9 @@ public enum Hit {
     SPECIAL("Special", false);
 
     @Nonnull
-    private final String NAME;
+    public final String NAME;
 
-    private final boolean MULTIPLE;
+    public final boolean MULTIPLE;
 
     Hit(@Nonnull String name, boolean multiple) {
         Holder.MAP.put(name.toLowerCase(), this);
