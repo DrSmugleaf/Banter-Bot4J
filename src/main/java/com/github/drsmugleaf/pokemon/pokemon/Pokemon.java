@@ -468,4 +468,8 @@ public class Pokemon {
         return TRAINER.getActivePokemon(pokemon) > -1;
     }
 
+    public boolean affectedBy(@Nonnull Action action) {
+        return !TYPES.isImmune(action);
+    }
+
 }
