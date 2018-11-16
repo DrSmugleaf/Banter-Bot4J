@@ -1,38 +1,38 @@
 package com.github.drsmugleaf.pokemon.battle;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 28/09/2017.
  */
 public class Setup {
 
-    @Nonnull
+    @NotNull
     public final Generation GENERATION;
 
-    @Nonnull
+    @NotNull
     public final Variation VARIATION;
 
-    public Setup(@Nonnull Generation generation, @Nonnull Variation variation) {
+    public Setup(@NotNull Generation generation, @NotNull Variation variation) {
         GENERATION = generation;
         VARIATION = variation;
     }
 
-    public Setup(@Nonnull Setup setup) {
+    public Setup(@NotNull Setup setup) {
         this(setup.GENERATION, setup.VARIATION);
     }
 
-    @Nonnull
+    @NotNull
     public Generation getGeneration() {
         return GENERATION;
     }
 
-    @Nonnull
+    @NotNull
     public Variation getVariation() {
         return VARIATION;
     }
 
-    @Nonnull
+    @NotNull
     public static Setup getDefault() {
         return new Setup(Generation.VII, Variation.SINGLE_BATTLE);
     }

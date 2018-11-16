@@ -7,24 +7,24 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 06/11/2018
  */
 public class SurvivorPerk extends Perk {
 
-    @Nonnull
+    @NotNull
     @SerializedName("Survivor")
     public final Survivors SURVIVOR;
 
-    SurvivorPerk(@Nonnull String imageUrl, @Nonnull String name, @Nonnull Tiers tier, double rating, long ratings, @Nonnull Survivors survivor) {
+    SurvivorPerk(@NotNull String imageUrl, @NotNull String name, @NotNull Tiers tier, double rating, long ratings, @NotNull Survivors survivor) {
         super(name, tier, rating, ratings);
         SURVIVOR = survivor;
     }
 
-    @Nonnull
-    public static SurvivorPerk from(@Nonnull JsonElement json) {
+    @NotNull
+    public static SurvivorPerk from(@NotNull JsonElement json) {
         JsonObject object = json.getAsJsonObject();
 
         if (object.get("Image").getAsString().toLowerCase().contains("dejavu")) {
@@ -42,18 +42,18 @@ public class SurvivorPerk extends Perk {
         return API.GSON.fromJson(object, SurvivorPerk.class);
     }
 
-    @Nonnull
-    public static SurvivorPerk from(@Nonnull SurvivorPerks perk) {
+    @NotNull
+    public static SurvivorPerk from(@NotNull SurvivorPerks perk) {
         return PerksAPI.SURVIVOR_PERKS.get().get(perk);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ICharacter getCharacter() {
         return SURVIVOR;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public SurvivorPerks toPerk() {
         return SurvivorPerks.from(NAME);

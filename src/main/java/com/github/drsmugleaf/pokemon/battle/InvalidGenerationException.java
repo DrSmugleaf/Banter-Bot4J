@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.pokemon.battle;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 28/06/2017.
@@ -23,11 +23,11 @@ public class InvalidGenerationException extends IllegalArgumentException {
         super(cause);
     }
 
-    public InvalidGenerationException(@Nonnull Generation generation, @Nonnull String message) {
+    public InvalidGenerationException(@NotNull Generation generation, @NotNull String message) {
         super("Invalid generation: " + generation.NAME + ". " + message);
     }
 
-    public InvalidGenerationException(@Nonnull Generation generation) {
+    public InvalidGenerationException(@NotNull Generation generation) {
         this(generation, "");
     }
 

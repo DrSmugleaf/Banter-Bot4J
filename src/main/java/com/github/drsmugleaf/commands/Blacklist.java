@@ -10,7 +10,7 @@ import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
@@ -19,11 +19,11 @@ import java.util.List;
 @CommandInfo(permissions = {Permissions.KICK, Permissions.BAN})
 public class Blacklist extends Command {
 
-    protected Blacklist(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected Blacklist(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 
-    @Nonnull
+    @NotNull
     private static String invalidArgumentsResponse() {
         return "Invalid arguments.\n" +
                "**Formats:**\n" +

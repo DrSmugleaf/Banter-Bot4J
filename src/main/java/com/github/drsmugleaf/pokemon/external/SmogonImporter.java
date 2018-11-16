@@ -11,7 +11,7 @@ import com.github.drsmugleaf.pokemon.pokemon.Species;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon.trainer.UserException;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,8 +24,8 @@ import java.util.regex.Pattern;
  */
 public class SmogonImporter {
 
-    @Nonnull
-    public static PokemonBuilder importPokemon(@Nonnull String export) throws UserException {
+    @NotNull
+    public static PokemonBuilder importPokemon(@NotNull String export) throws UserException {
         export = export.trim();
         String[] exportArray = export.split("\n");
 
@@ -148,8 +148,8 @@ public class SmogonImporter {
         return pokemonBuilder;
     }
 
-    @Nonnull
-    public static List<PokemonBuilder> importPokemons(@Nonnull String export) throws UserException {
+    @NotNull
+    public static List<PokemonBuilder> importPokemons(@NotNull String export) throws UserException {
         String[] exportArray = export.split("\n\n");
         List<PokemonBuilder> pokemons = new ArrayList<>();
 

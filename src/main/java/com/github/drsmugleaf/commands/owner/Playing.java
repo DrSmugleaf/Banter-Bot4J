@@ -8,7 +8,7 @@ import com.github.drsmugleaf.commands.api.tags.Tags;
 import sx.blah.discord.handle.obj.ActivityType;
 import sx.blah.discord.handle.obj.StatusType;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 10/06/2018
@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
 @CommandInfo(tags = {Tags.OWNER_ONLY})
 public class Playing extends Command {
 
-    protected Playing(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected Playing(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 

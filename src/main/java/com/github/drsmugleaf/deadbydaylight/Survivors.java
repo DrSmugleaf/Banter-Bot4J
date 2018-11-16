@@ -2,8 +2,8 @@ package com.github.drsmugleaf.deadbydaylight;
 
 import com.github.drsmugleaf.BanterBot4J;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.io.*;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
@@ -29,18 +29,18 @@ public enum Survivors implements ICharacter {
     NEA_KARLSSON("Nea Karlsson"),
     QUENTIN_SMITH("Quentin Smith");
 
-    @Nonnull
+    @NotNull
     private static final String IMAGES_PATH = Objects.requireNonNull(Survivors.class.getClassLoader().getResource("deadbydaylight/survivors")).getFile();
 
-    @Nonnull
+    @NotNull
     public final String NAME;
 
-    Survivors(@Nonnull String name) {
+    Survivors(@NotNull String name) {
         NAME = name;
     }
 
     @Nullable
-    public static Survivors from(@Nonnull String name) {
+    public static Survivors from(@NotNull String name) {
         for (Survivors survivor : values()) {
             if (survivor.NAME.equalsIgnoreCase(name)) {
                 return survivor;
@@ -55,20 +55,20 @@ public enum Survivors implements ICharacter {
         return null;
     }
 
-    @Nonnull
+    @NotNull
     public static Survivors random() {
         Survivors[] survivors = values();
         int index = ThreadLocalRandom.current().nextInt(1, survivors.length);
         return survivors[index];
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getName() {
         return NAME;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public InputStream getImage() {
         String fileName = "/" + NAME.toLowerCase() + ".png";

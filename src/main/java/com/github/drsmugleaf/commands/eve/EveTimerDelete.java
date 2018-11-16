@@ -8,7 +8,7 @@ import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.database.models.EveTimerModel;
 import sx.blah.discord.handle.obj.IChannel;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
@@ -25,11 +25,11 @@ import java.util.List;
 )
 public class EveTimerDelete extends Command {
 
-    protected EveTimerDelete(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected EveTimerDelete(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 
-    @Nonnull
+    @NotNull
     private static String invalidArgumentsResponse() {
         return "Invalid arguments.\n" +
                "**Formats:**\n" +

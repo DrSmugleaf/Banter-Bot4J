@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tripwire.route;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,16 +9,16 @@ import java.util.stream.Collectors;
  */
 public class Route {
 
-    @Nonnull
+    @NotNull
     public final SystemGraph GRAPH;
 
-    @Nonnull
+    @NotNull
     private StarSystem ORIGIN;
 
-    @Nonnull
+    @NotNull
     private StarSystem DESTINATION;
 
-    Route(@Nonnull SystemGraph graph, @Nonnull StarSystem origin, @Nonnull StarSystem destination) {
+    Route(@NotNull SystemGraph graph, @NotNull StarSystem origin, @NotNull StarSystem destination) {
         GRAPH = graph;
         ORIGIN = origin;
         DESTINATION = destination;
@@ -26,23 +26,23 @@ public class Route {
         graph.calculateShortestPathFromSource(origin);
     }
 
-    @Nonnull
+    @NotNull
     public StarSystem getOrigin() {
         return ORIGIN;
     }
 
-    public void setOrigin(@Nonnull StarSystem origin) {
+    public void setOrigin(@NotNull StarSystem origin) {
         ORIGIN = origin;
         recalculate();
     }
 
 
-    @Nonnull
+    @NotNull
     public StarSystem getDestination() {
         return DESTINATION;
     }
 
-    public void setDestination(@Nonnull StarSystem destination) {
+    public void setDestination(@NotNull StarSystem destination) {
         DESTINATION = destination;
     }
 
@@ -60,7 +60,7 @@ public class Route {
         return DESTINATION.SHORTEST_PATH.size();
     }
 
-    @Nonnull
+    @NotNull
     public String info() {
         return size() + " jumps: " + toString();
     }

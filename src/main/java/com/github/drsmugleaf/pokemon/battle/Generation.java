@@ -4,7 +4,7 @@ import com.github.drsmugleaf.pokemon.moves.CriticalHitStage;
 import com.github.drsmugleaf.pokemon.moves.InvalidCriticalStageException;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 /**
@@ -14,13 +14,13 @@ public enum Generation {
 
     I("Generation I", "RB") {
         @Override
-        public double getCriticalPercentage(@Nonnull CriticalHitStage stage) {
+        public double getCriticalPercentage(@NotNull CriticalHitStage stage) {
             throw new InvalidGenerationException(this, "Generation I doesn't have critical hit percentages");
         }
     },
     II("Generation II", "GS") {
         @Override
-        public double getCriticalPercentage(@Nonnull CriticalHitStage stage) {
+        public double getCriticalPercentage(@NotNull CriticalHitStage stage) {
             switch (stage) {
                 case ZERO:
                     return 6.25;
@@ -39,25 +39,25 @@ public enum Generation {
     },
     III("Generation III", "RS") {
         @Override
-        public double getCriticalPercentage(@Nonnull CriticalHitStage stage) {
+        public double getCriticalPercentage(@NotNull CriticalHitStage stage) {
             return II.getCriticalPercentage(stage);
         }
     },
     IV("Generation IV", "DP") {
         @Override
-        public double getCriticalPercentage(@Nonnull CriticalHitStage stage) {
+        public double getCriticalPercentage(@NotNull CriticalHitStage stage) {
             return II.getCriticalPercentage(stage);
         }
     },
     V("Generation V", "BW") {
         @Override
-        public double getCriticalPercentage(@Nonnull CriticalHitStage stage) {
+        public double getCriticalPercentage(@NotNull CriticalHitStage stage) {
             return II.getCriticalPercentage(stage);
         }
     },
     VI("Generation VI", "XY") {
         @Override
-        public double getCriticalPercentage(@Nonnull CriticalHitStage stage) {
+        public double getCriticalPercentage(@NotNull CriticalHitStage stage) {
             switch (stage) {
                 case ZERO:
                     return 6.25;
@@ -75,7 +75,7 @@ public enum Generation {
     },
     VII("Generation VII", "SM") {
         @Override
-        public double getCriticalPercentage(@Nonnull CriticalHitStage stage) {
+        public double getCriticalPercentage(@NotNull CriticalHitStage stage) {
             switch (stage) {
                 case ZERO:
                     return 4.1666666667;
@@ -154,27 +154,27 @@ public enum Generation {
                 );
     }
 
-    @Nonnull
+    @NotNull
     public final String NAME;
 
-    @Nonnull
+    @NotNull
     public final String SHORTHAND;
 
-    @Nonnull
+    @NotNull
     private final List<Game> CORE_GAMES = new ArrayList<>();
 
     private int NEW_POKEMONS;
 
     private int TOTAL_POKEMONS;
 
-    Generation(@Nonnull String name, @Nonnull String shorthand) {
+    Generation(@NotNull String name, @NotNull String shorthand) {
         Holder.MAP.put(shorthand.toLowerCase(), this);
         NAME = name;
         SHORTHAND = shorthand;
     }
 
-    @Nonnull
-    public static Generation getGeneration(@Nonnull String shorthand) {
+    @NotNull
+    public static Generation getGeneration(@NotNull String shorthand) {
         shorthand = shorthand.toLowerCase();
 
         if (!Holder.MAP.containsKey(shorthand)) {
@@ -185,13 +185,13 @@ public enum Generation {
     }
 
     @Contract(pure = true)
-    @Nonnull
+    @NotNull
     public String getName() {
         return NAME;
     }
 
     @Contract(pure = true)
-    @Nonnull
+    @NotNull
     public String getShorthand() {
         return SHORTHAND;
     }
@@ -201,7 +201,7 @@ public enum Generation {
         return NEW_POKEMONS;
     }
 
-    @Nonnull
+    @NotNull
     private Generation setNewPokemons(int amount) {
         NEW_POKEMONS = amount;
         return this;
@@ -212,27 +212,27 @@ public enum Generation {
         return TOTAL_POKEMONS;
     }
 
-    @Nonnull
+    @NotNull
     private Generation setTotalPokemons(int amount) {
         TOTAL_POKEMONS = amount;
         return this;
     }
 
-    @Nonnull
+    @NotNull
     public List<Game> getCoreGames() {
         return new ArrayList<>(CORE_GAMES);
     }
 
-    @Nonnull
-    private Generation setCoreGames(@Nonnull Game... games) {
+    @NotNull
+    private Generation setCoreGames(@NotNull Game... games) {
         Collections.addAll(CORE_GAMES, games);
         return this;
     }
 
-    public abstract double getCriticalPercentage(@Nonnull CriticalHitStage stage);
+    public abstract double getCriticalPercentage(@NotNull CriticalHitStage stage);
 
     private static class Holder {
-        @Nonnull
+        @NotNull
         static Map<String, Generation> MAP = new HashMap<>();
     }
 

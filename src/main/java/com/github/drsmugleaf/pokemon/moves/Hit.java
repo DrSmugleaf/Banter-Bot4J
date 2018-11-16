@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.pokemon.moves;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,19 +23,19 @@ public enum Hit {
     ADJACENT_ALLY("Adjacent Ally", false),
     SPECIAL("Special", false);
 
-    @Nonnull
+    @NotNull
     public final String NAME;
 
     public final boolean MULTIPLE;
 
-    Hit(@Nonnull String name, boolean multiple) {
+    Hit(@NotNull String name, boolean multiple) {
         Holder.MAP.put(name.toLowerCase(), this);
         NAME = name;
         MULTIPLE = multiple;
     }
 
-    @Nonnull
-    public static Hit getHit(@Nonnull String hit) {
+    @NotNull
+    public static Hit getHit(@NotNull String hit) {
         hit = hit.toLowerCase();
 
         if (!Holder.MAP.containsKey(hit)) {
@@ -45,13 +45,13 @@ public enum Hit {
         return Holder.MAP.get(hit);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String toString() {
         return NAME;
     }
 
-    @Nonnull
+    @NotNull
     public String getName() {
         return NAME;
     }
@@ -61,7 +61,7 @@ public enum Hit {
     }
 
     private static class Holder {
-        @Nonnull
+        @NotNull
         static Map<String, Hit> MAP = new HashMap<>();
     }
 

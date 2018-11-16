@@ -7,7 +7,7 @@ import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 import sx.blah.discord.util.Image;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.spi.ImageReaderSpi;
@@ -22,7 +22,7 @@ import java.util.Iterator;
 @CommandInfo(tags = {Tags.OWNER_ONLY})
 public class Avatar extends Command {
 
-    protected Avatar(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected Avatar(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 

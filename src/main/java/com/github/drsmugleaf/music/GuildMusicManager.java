@@ -3,7 +3,7 @@ package com.github.drsmugleaf.music;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 05/09/2017.
@@ -14,7 +14,7 @@ public class GuildMusicManager {
     private final AudioProvider PROVIDER;
     private final TrackScheduler SCHEDULER;
 
-    public GuildMusicManager(@Nonnull AudioPlayerManager manager) {
+    public GuildMusicManager(@NotNull AudioPlayerManager manager) {
         PLAYER = manager.createPlayer();
         PLAYER.setVolume(25);
         PROVIDER = new AudioProvider(PLAYER);
@@ -22,12 +22,12 @@ public class GuildMusicManager {
         PLAYER.addListener(SCHEDULER);
     }
 
-    @Nonnull
+    @NotNull
     public AudioProvider getProvider() {
         return PROVIDER;
     }
 
-    @Nonnull
+    @NotNull
     public TrackScheduler getScheduler() {
         return SCHEDULER;
     }

@@ -18,8 +18,8 @@ import com.github.drsmugleaf.pokemon.trainer.Trainer;
 import com.github.drsmugleaf.pokemon.trainer.UserException;
 import com.github.drsmugleaf.pokemon.types.Types;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,47 +30,47 @@ import java.util.Map;
  */
 public class Pokemon {
 
-    @Nonnull
+    @NotNull
     public final Trainer TRAINER;
 
-    @Nonnull
+    @NotNull
     public final Species SPECIES;
 
-    @Nonnull
+    @NotNull
     public final Types TYPES;
 
-    @Nonnull
+    @NotNull
     public final String NICKNAME;
 
-    @Nonnull
+    @NotNull
     public final Ability ABILITY;
 
-    @Nonnull
+    @NotNull
     public final Nature NATURE;
 
-    @Nonnull
+    @NotNull
     public final Item ITEM;
 
-    @Nonnull
+    @NotNull
     public final Gender GENDER;
 
     private int LEVEL;
 
-    @Nonnull
+    @NotNull
     public final Stats STATS;
 
-    @Nonnull
+    @NotNull
     private final Map<IStat, Map<IModifier, Double>> STAT_MODIFIERS = getDefaultStatModifiers();
 
-    @Nonnull
+    @NotNull
     private CriticalHitStage criticalHitStage = CriticalHitStage.ZERO;
 
     private int hp;
 
-    @Nonnull
+    @NotNull
     public final Statuses STATUSES = new Statuses();
 
-    @Nonnull
+    @NotNull
     public final Moves MOVES;
 
     @Nullable
@@ -82,23 +82,23 @@ public class Pokemon {
     // Kilograms
     private double weight;
 
-    @Nonnull
+    @NotNull
     protected final List<Tag> TAGS = new ArrayList<>();
 
     private int toxicN = 1;
 
     protected Pokemon(
-            @Nonnull Trainer trainer,
-            @Nonnull Species species,
-            @Nonnull String nickname,
-            @Nonnull Abilities ability,
-            @Nonnull Items item,
-            @Nonnull Nature nature,
-            @Nonnull Gender gender,
-            @Nonnull Integer level,
-            @Nonnull Map<PermanentStat, Integer> individualValues,
-            @Nonnull Map<PermanentStat, Integer> effortValues,
-            @Nonnull List<Move> moves
+            @NotNull Trainer trainer,
+            @NotNull Species species,
+            @NotNull String nickname,
+            @NotNull Abilities ability,
+            @NotNull Items item,
+            @NotNull Nature nature,
+            @NotNull Gender gender,
+            @NotNull Integer level,
+            @NotNull Map<PermanentStat, Integer> individualValues,
+            @NotNull Map<PermanentStat, Integer> effortValues,
+            @NotNull List<Move> moves
     ) throws UserException {
         Generation generation = trainer.BATTLE.GENERATION;
         if (generation == Generation.I || generation == Generation.II) {
@@ -146,7 +146,7 @@ public class Pokemon {
         weight = species.getWeight();
     }
 
-    @Nonnull
+    @NotNull
     private static Map<IStat, Map<IModifier, Double>> getDefaultStatModifiers() {
         Map<IStat, Map<IModifier, Double>> statModifiers = new HashMap<>();
 
@@ -161,7 +161,7 @@ public class Pokemon {
         return statModifiers;
     }
 
-    @Nonnull
+    @NotNull
     public String export() {
         String string = "";
 
@@ -190,42 +190,42 @@ public class Pokemon {
         return string;
     }
 
-    @Nonnull
+    @NotNull
     public Trainer getTrainer() {
         return TRAINER;
     }
 
-    @Nonnull
+    @NotNull
     public Battle getBattle() {
         return TRAINER.BATTLE;
     }
 
-    @Nonnull
+    @NotNull
     public Species getSpecies() {
         return SPECIES;
     }
 
-    @Nonnull
+    @NotNull
     public String getName() {
         return SPECIES.NAME;
     }
 
-    @Nonnull
+    @NotNull
     public String getNickname() {
         return NICKNAME;
     }
 
-    @Nonnull
+    @NotNull
     public Nature getNature() {
         return NATURE;
     }
 
-    @Nonnull
+    @NotNull
     public Gender getGender() {
         return GENDER;
     }
 
-    @Nonnull
+    @NotNull
     public Integer getLevel() {
         return LEVEL;
     }
@@ -234,15 +234,15 @@ public class Pokemon {
         LEVEL = level;
     }
 
-    public double calculate(@Nonnull IStat stat) {
+    public double calculate(@NotNull IStat stat) {
         return STATS.get(stat).calculate(this);
     }
 
-    public double calculateWithoutStages(@Nonnull IStat stat) {
+    public double calculateWithoutStages(@NotNull IStat stat) {
         return STATS.get(stat).calculateWithoutStages(this);
     }
 
-    @Nonnull
+    @NotNull
     public String getStatsStringWithoutHP() {
         StringBuilder builder = new StringBuilder();
         PermanentStat[] stats = PermanentStat.values();
@@ -266,12 +266,12 @@ public class Pokemon {
         return builder.toString();
     }
 
-    @Nonnull
+    @NotNull
     public CriticalHitStage getCriticalHitStage() {
         return criticalHitStage;
     }
 
-    @Nonnull
+    @NotNull
     public CriticalHitStage changeCriticalHitStage(int amount) {
         int currentStage = criticalHitStage.INDEX;
         criticalHitStage = CriticalHitStage.getStage(currentStage + amount);
@@ -283,7 +283,7 @@ public class Pokemon {
         return action;
     }
 
-    public void setAction(@Nonnull Action action) {
+    public void setAction(@NotNull Action action) {
         this.action = action;
     }
 
@@ -295,7 +295,7 @@ public class Pokemon {
         return (int) STATS.get(PermanentStat.HP).calculate(this);
     }
 
-    public int damage(@Nonnull Action action) {
+    public int damage(@NotNull Action action) {
         damagedThisTurn = action.getAttacker();
 
         int amount = action.getMove().BASE_MOVE.getDamage(action.getAttacker(), this, action);
@@ -370,7 +370,7 @@ public class Pokemon {
         return damagedThisTurn != null;
     }
 
-    public boolean isDamagedThisTurnBy(@Nonnull Pokemon pokemon) {
+    public boolean isDamagedThisTurnBy(@NotNull Pokemon pokemon) {
         return damagedThisTurn == pokemon;
     }
 
@@ -382,7 +382,7 @@ public class Pokemon {
         this.weight = weight;
     }
 
-    public double getStabMultiplier(@Nonnull Move move) {
+    public double getStabMultiplier(@NotNull Move move) {
         return 1.0;
     }
 
@@ -391,7 +391,7 @@ public class Pokemon {
         return TRAINER.BATTLE.getLastAction(this);
     }
 
-    @Nonnull
+    @NotNull
     public List<Action> getHitBy() {
         return TRAINER.BATTLE.getHitBy(this);
     }
@@ -409,7 +409,7 @@ public class Pokemon {
         return hp <= 0;
     }
 
-    public void retarget(@Nonnull Pokemon pokemon) {
+    public void retarget(@NotNull Pokemon pokemon) {
         if (action != null) {
             action.setTarget(pokemon);
         }
@@ -440,11 +440,11 @@ public class Pokemon {
         return TRAINER.getRandomAdjacentEnemyPokemon(this);
     }
 
-    public void addStatModifier(@Nonnull IStat stat, @Nonnull IModifier source, double modifier) {
+    public void addStatModifier(@NotNull IStat stat, @NotNull IModifier source, double modifier) {
         STAT_MODIFIERS.get(stat).put(source, modifier);
     }
 
-    public void removeStatModifier(@Nonnull IModifier... sources) {
+    public void removeStatModifier(@NotNull IModifier... sources) {
         for (Map<IModifier, Double> iBattleDoubleMap : STAT_MODIFIERS.values()) {
             for (IModifier source : sources) {
                 iBattleDoubleMap.remove(source);
@@ -464,11 +464,11 @@ public class Pokemon {
         toxicN = 1;
     }
 
-    public boolean isAlly(@Nonnull Pokemon pokemon) {
+    public boolean isAlly(@NotNull Pokemon pokemon) {
         return TRAINER.getActivePokemon(pokemon) > -1;
     }
 
-    public boolean affectedBy(@Nonnull Action action) {
+    public boolean affectedBy(@NotNull Action action) {
         return !TYPES.isImmune(action);
     }
 

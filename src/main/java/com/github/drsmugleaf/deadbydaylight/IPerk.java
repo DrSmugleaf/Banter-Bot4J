@@ -1,13 +1,13 @@
 package com.github.drsmugleaf.deadbydaylight;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 06/11/2018
  */
 public interface IPerk {
 
-    @Nonnull
+    @NotNull
     String getName();
 
 }

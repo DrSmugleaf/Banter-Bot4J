@@ -11,7 +11,7 @@ import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.AbstractMap;
 
 /**
@@ -20,7 +20,7 @@ import java.util.AbstractMap;
 @CommandInfo(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
 public class Stop extends MusicCommand {
 
-    protected Stop(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected Stop(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 

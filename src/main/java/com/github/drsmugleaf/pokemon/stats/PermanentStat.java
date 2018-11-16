@@ -4,7 +4,7 @@ import com.github.drsmugleaf.pokemon.battle.Generation;
 import com.github.drsmugleaf.pokemon.battle.InvalidGenerationException;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +15,7 @@ public enum PermanentStat implements IStat {
 
     HP("Health", "HP") {
         @Override
-        public double calculate(@Nonnull Pokemon pokemon) {
+        public double calculate(@NotNull Pokemon pokemon) {
             Stat stat = pokemon.STATS.get(this);
 
             int baseStat = stat.getBase(pokemon.getSpecies());
@@ -40,7 +40,7 @@ public enum PermanentStat implements IStat {
         }
 
         @Override
-        public double calculateWithoutStages(@Nonnull Pokemon pokemon) {
+        public double calculateWithoutStages(@NotNull Pokemon pokemon) {
             return calculate(pokemon);
         }
     },
@@ -50,20 +50,20 @@ public enum PermanentStat implements IStat {
     SPECIAL_DEFENSE("Special Defense", "SpD"),
     SPEED("Speed", "Spe");
 
-    @Nonnull
+    @NotNull
     public final String NAME;
 
-    @Nonnull
+    @NotNull
     public final String ABBREVIATION;
 
-    PermanentStat(@Nonnull String name, @Nonnull String abbreviation) {
+    PermanentStat(@NotNull String name, @NotNull String abbreviation) {
         Holder.MAP.put(name.toLowerCase(), this);
         NAME = name;
         ABBREVIATION = abbreviation;
     }
 
-    @Nonnull
-    public static PermanentStat getStat(@Nonnull String name) {
+    @NotNull
+    public static PermanentStat getStat(@NotNull String name) {
         name = name.toLowerCase();
         if (!Holder.MAP.containsKey(name)) {
             throw new NullPointerException("PermanentStat " + name + " doesn't exist");
@@ -72,20 +72,20 @@ public enum PermanentStat implements IStat {
         return Holder.MAP.get(name);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getName() {
         return NAME;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getAbbreviation() {
         return ABBREVIATION;
     }
 
     @Override
-    public double calculate(@Nonnull Pokemon pokemon) {
+    public double calculate(@NotNull Pokemon pokemon) {
         Stat stat = pokemon.STATS.get(this);
 
         int baseStat = stat.getBase(pokemon.getSpecies());
@@ -112,7 +112,7 @@ public enum PermanentStat implements IStat {
     }
 
     @Override
-    public double calculateWithoutStages(@Nonnull Pokemon pokemon) {
+    public double calculateWithoutStages(@NotNull Pokemon pokemon) {
         Stat stat = pokemon.STATS.get(this);
 
         int baseStat = stat.getBase(pokemon.getSpecies());
@@ -139,7 +139,7 @@ public enum PermanentStat implements IStat {
     }
 
     private static class Holder {
-        @Nonnull
+        @NotNull
         static Map<String, PermanentStat> MAP = new HashMap<>();
     }
 

@@ -10,8 +10,8 @@ import com.github.drsmugleaf.pokemon.moves.Move;
 import com.github.drsmugleaf.pokemon.status.BaseVolatileStatus;
 import com.google.common.collect.Lists;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,16 +23,16 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Trainer extends Player {
 
-    @Nonnull
+    @NotNull
     public final Battle BATTLE;
 
-    @Nonnull
+    @NotNull
     private final List<Pokemon> POKEMONS = new ArrayList<>();
 
-    @Nonnull
+    @NotNull
     private final List<Pokemon> ACTIVE_POKEMONS = new ArrayList<>();
 
-    @Nonnull
+    @NotNull
     private final List<Action> ACTIONS = new ArrayList<>();
 
     @Nullable
@@ -43,13 +43,13 @@ public class Trainer extends Player {
 
     private boolean ready = false;
 
-    @Nonnull
+    @NotNull
     private TrainerStatus status = TrainerStatus.NONE;
 
-    @Nonnull
+    @NotNull
     private final List<EntryHazard> HAZARDS = new ArrayList<>();
 
-    protected Trainer(@Nonnull Long id, @Nonnull String name, @Nonnull Battle battle, @Nonnull PokemonBuilder... pokemonBuilders) throws UserException {
+    protected Trainer(@NotNull Long id, @NotNull String name, @NotNull Battle battle, @NotNull PokemonBuilder... pokemonBuilders) throws UserException {
         super(id, name);
 
         BATTLE = battle;
@@ -85,12 +85,12 @@ public class Trainer extends Player {
         addPokemon(newPokemon);
     }
 
-    @Nonnull
+    @NotNull
     public Pokemon getPokemon(int id) {
         return POKEMONS.get(id);
     }
 
-    @Nonnull
+    @NotNull
     public Pokemon[] getPokemons() {
         return POKEMONS.toArray(new Pokemon[0]);
     }
@@ -101,7 +101,7 @@ public class Trainer extends Player {
         return alivePokemons.get(0);
     }
 
-    @Nonnull
+    @NotNull
     public List<Pokemon> getActivePokemons() {
         return ACTIVE_POKEMONS;
     }
@@ -125,7 +125,7 @@ public class Trainer extends Player {
         return ACTIVE_POKEMONS.get(randomIndex);
     }
 
-    @Nonnull
+    @NotNull
     public List<Pokemon> getAdjacentEnemyPokemons(Pokemon pokemon) {
         Trainer opposingTrainer = BATTLE.getOppositeTrainer(this);
         List<Pokemon> opposingPokemons = opposingTrainer.getActivePokemons();
@@ -204,7 +204,7 @@ public class Trainer extends Player {
         return false;
     }
 
-    @Nonnull
+    @NotNull
     public List<Action> getActions() {
         return new ArrayList<>(ACTIONS);
     }
@@ -259,7 +259,7 @@ public class Trainer extends Player {
         return pokemonInFocus;
     }
 
-    public void setPokemonInFocus(@Nonnull Pokemon newPokemon) {
+    public void setPokemonInFocus(@NotNull Pokemon newPokemon) {
         pokemonInFocus = newPokemon;
     }
 
@@ -272,7 +272,7 @@ public class Trainer extends Player {
         return chosenMove;
     }
 
-    public void setChosenMove(@Nonnull Move move) {
+    public void setChosenMove(@NotNull Move move) {
         chosenMove = move;
         setStatus(TrainerStatus.CHOOSING_TARGET);
         TrainerChooseMoveEvent event = new TrainerChooseMoveEvent(pokemonInFocus, move);
@@ -283,7 +283,7 @@ public class Trainer extends Player {
         chosenMove = null;
     }
 
-    @Nonnull
+    @NotNull
     public Battle getBattle() {
         return BATTLE;
     }
@@ -296,12 +296,12 @@ public class Trainer extends Player {
         ready = bool;
     }
 
-    @Nonnull
+    @NotNull
     public TrainerStatus getStatus() {
         return status;
     }
 
-    public void setStatus(@Nonnull TrainerStatus status) {
+    public void setStatus(@NotNull TrainerStatus status) {
         this.status = status;
     }
 
@@ -329,22 +329,22 @@ public class Trainer extends Player {
         return false;
     }
 
-    public void removeVolatileStatus(@Nonnull BaseVolatileStatus... volatileStatuses) {
+    public void removeVolatileStatus(@NotNull BaseVolatileStatus... volatileStatuses) {
         for (Pokemon pokemon : ACTIVE_POKEMONS) {
             pokemon.STATUSES.removeVolatileStatus(volatileStatuses);
         }
     }
 
-    protected void addEntryHazard(@Nonnull EntryHazard hazard) {
+    protected void addEntryHazard(@NotNull EntryHazard hazard) {
         HAZARDS.add(hazard);
     }
 
-    @Nonnull
+    @NotNull
     public List<EntryHazard> getHazards() {
         return new ArrayList<>(HAZARDS);
     }
 
-    public void removeEntryHazard(@Nonnull EntryHazard... hazards) {
+    public void removeEntryHazard(@NotNull EntryHazard... hazards) {
         HAZARDS.removeAll(Arrays.asList(hazards));
     }
 

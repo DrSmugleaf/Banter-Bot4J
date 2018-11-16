@@ -2,22 +2,22 @@ package com.github.drsmugleaf.pokemon.events;
 
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 17/07/2017.
  */
 public abstract class PokemonEvent extends Event {
 
-    @Nonnull
+    @NotNull
     public final Pokemon POKEMON;
 
-    public PokemonEvent(@Nonnull Pokemon pokemon) {
+    public PokemonEvent(@NotNull Pokemon pokemon) {
         super(pokemon.getBattle());
         POKEMON = pokemon;
     }
 
-    @Nonnull
+    @NotNull
     public Pokemon getPokemon() {
         return POKEMON;
     }

@@ -9,8 +9,8 @@ import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.util.MissingPermissionsException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,14 +19,14 @@ import java.util.Map;
  */
 public abstract class MusicCommand extends Command {
 
-    @Nonnull
+    @NotNull
     private static final Map<IGuild, IMessage> LAST_MESSAGES = new HashMap<>();
 
-    protected MusicCommand(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected MusicCommand(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 
-    private static void deleteLastMessage(@Nonnull IMessage newMessage) {
+    private static void deleteLastMessage(@NotNull IMessage newMessage) {
         IGuild guild = newMessage.getGuild();
         IMessage lastMessage = LAST_MESSAGES.put(guild, newMessage);
         if (lastMessage == null) {
@@ -38,38 +38,38 @@ public abstract class MusicCommand extends Command {
         } catch (MissingPermissionsException ignored) {}
     }
 
-    @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nullable String content, @Nullable EmbedObject embed) {
+    @NotNull
+    public static IMessage sendMessage(@NotNull IChannel channel, @Nullable String content, @Nullable EmbedObject embed) {
         IMessage message = Command.sendMessage(channel, content, embed);
         deleteLastMessage(message);
         return message;
     }
 
-    @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull String content) {
+    @NotNull
+    public static IMessage sendMessage(@NotNull IChannel channel, @NotNull String content) {
         return sendMessage(channel, content, null);
     }
 
-    @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull EmbedObject embed) {
+    @NotNull
+    public static IMessage sendMessage(@NotNull IChannel channel, @NotNull EmbedObject embed) {
         return sendMessage(channel, null, embed);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public IMessage sendMessage(@Nonnull String content) {
+    public IMessage sendMessage(@NotNull String content) {
         return MusicCommand.sendMessage(EVENT.getChannel(), content);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public IMessage sendMessage(@Nonnull EmbedObject embed) {
+    public IMessage sendMessage(@NotNull EmbedObject embed) {
         return MusicCommand.sendMessage(EVENT.getChannel(), embed);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public IMessage sendMessage(@Nonnull String content, @Nonnull EmbedObject embed) {
+    public IMessage sendMessage(@NotNull String content, @NotNull EmbedObject embed) {
         return MusicCommand.sendMessage(EVENT.getChannel(), content, embed);
     }
 

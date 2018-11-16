@@ -12,7 +12,7 @@ import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.Permissions;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
@@ -21,7 +21,7 @@ import java.util.List;
 @CommandInfo(permissions = {Permissions.MANAGE_CHANNELS}, tags = {Tags.GUILD_ONLY})
 public class Bridge extends Command {
 
-    protected Bridge(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected Bridge(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 

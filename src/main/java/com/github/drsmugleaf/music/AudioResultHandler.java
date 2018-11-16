@@ -11,7 +11,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IUser;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
@@ -24,7 +24,7 @@ public class AudioResultHandler implements AudioLoadResultHandler {
     private final IUser SUBMITTER;
     private final String SEARCH_STRING;
 
-    public AudioResultHandler(@Nonnull IChannel channel, @Nonnull IUser submitter, @Nonnull String searchString) {
+    public AudioResultHandler(@NotNull IChannel channel, @NotNull IUser submitter, @NotNull String searchString) {
         MUSIC_MANAGER = Music.getGuildMusicManager(channel.getGuild());
         CHANNEL = channel;
         SUBMITTER = submitter;

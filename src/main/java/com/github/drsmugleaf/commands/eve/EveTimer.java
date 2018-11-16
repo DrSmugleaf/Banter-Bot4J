@@ -8,8 +8,8 @@ import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.database.models.EveTimerModel;
 import sx.blah.discord.handle.obj.IChannel;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.time.ZonedDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,12 +25,12 @@ import java.util.regex.Pattern;
 )
 public class EveTimer extends Command {
 
-    protected EveTimer(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected EveTimer(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 
-    @Nonnull
-    private static Long parseDate(@Nonnull String date) {
+    @NotNull
+    private static Long parseDate(@NotNull String date) {
         Long days = parseDatePortion(date, Pattern.compile("(\\d+)d"));
         Long hours = parseDatePortion(date, Pattern.compile("(\\d+)h"));
         Long minutes = parseDatePortion(date, Pattern.compile("(\\d+)m"));
@@ -46,7 +46,7 @@ public class EveTimer extends Command {
     }
 
     @Nullable
-    private static Long parseDatePortion(@Nonnull String input, @Nonnull Pattern regex) {
+    private static Long parseDatePortion(@NotNull String input, @NotNull Pattern regex) {
         Matcher matcher = regex.matcher(input);
         if (matcher.find()) {
             return Long.parseLong(matcher.group(1));
@@ -55,7 +55,7 @@ public class EveTimer extends Command {
         return null;
     }
 
-    @Nonnull
+    @NotNull
     private static String invalidArgumentsResponse() {
         return "Invalid arguments.\n" +
                "**Formats:**\n" +
@@ -64,7 +64,7 @@ public class EveTimer extends Command {
                BanterBot4J.BOT_PREFIX + "evetimer \"Fortizar\" \"Jita\" \"4d15h30m\"";
     }
 
-    private static boolean exists(@Nonnull String structure, @Nonnull String system) {
+    private static boolean exists(@NotNull String structure, @NotNull String system) {
         EveTimerModel timer = new EveTimerModel(null, structure, system, null, null);
         return !timer.get().isEmpty();
     }

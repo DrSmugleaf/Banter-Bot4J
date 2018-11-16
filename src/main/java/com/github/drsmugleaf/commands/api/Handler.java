@@ -10,7 +10,7 @@ import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.Permissions;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -21,17 +21,17 @@ import java.util.List;
  */
 public class Handler {
 
-    @Nonnull
+    @NotNull
     private final Registry COMMAND_REGISTRY;
 
-    public Handler(@Nonnull String commandsPackageName) {
+    public Handler(@NotNull String commandsPackageName) {
         Reflection reflection = new Reflection(commandsPackageName);
         List<Class<Command>> commands = reflection.findSubtypesOf(Command.class);
         COMMAND_REGISTRY = new Registry(commands);
     }
 
     @EventSubscriber
-    public void handle(@Nonnull MessageReceivedEvent event) {
+    public void handle(@NotNull MessageReceivedEvent event) {
         String message = event.getMessage().getContent();
         if (message.isEmpty()) {
             return;

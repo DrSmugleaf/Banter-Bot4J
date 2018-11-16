@@ -5,18 +5,18 @@ import com.github.drsmugleaf.deadbydaylight.IPerk;
 import com.google.gson.annotations.SerializedName;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 06/11/2018
  */
 public abstract class Perk implements Comparable<Perk> {
 
-    @Nonnull
+    @NotNull
     @SerializedName("PerkName")
     public final String NAME;
 
-    @Nonnull
+    @NotNull
     @SerializedName("Tier")
     public final Tiers TIER;
 
@@ -26,7 +26,7 @@ public abstract class Perk implements Comparable<Perk> {
     @SerializedName("Ratings")
     public final long RATINGS;
 
-    Perk(@Nonnull String name, @Nonnull Tiers tier, double rating, long ratings) {
+    Perk(@NotNull String name, @NotNull Tiers tier, double rating, long ratings) {
         NAME = name;
         TIER = tier;
         RATING = rating;
@@ -38,12 +38,12 @@ public abstract class Perk implements Comparable<Perk> {
         return Double.compare(other.RATING, RATING);
     }
 
-    @Nonnull
+    @NotNull
     public String getName() {
         return NAME;
     }
 
-    @Nonnull
+    @NotNull
     public Tiers getTier() {
         return TIER;
     }
@@ -56,10 +56,10 @@ public abstract class Perk implements Comparable<Perk> {
         return RATINGS;
     }
 
-    @Nonnull
+    @NotNull
     public abstract ICharacter getCharacter();
 
-    @Nonnull
+    @NotNull
     public abstract IPerk toPerk();
 
 }

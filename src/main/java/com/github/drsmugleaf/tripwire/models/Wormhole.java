@@ -6,8 +6,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,11 +34,11 @@ public class Wormhole {
     @SerializedName("parent")
     public final String PARENT;
 
-    @Nonnull
+    @NotNull
     @SerializedName("life")
     public final String LIFE;
 
-    @Nonnull
+    @NotNull
     @SerializedName("mass")
     public final String MASS;
 
@@ -51,8 +51,8 @@ public class Wormhole {
             int secondaryID,
             @Nullable String type,
             @Nullable String parent,
-            @Nonnull String life,
-            @Nonnull String mass,
+            @NotNull String life,
+            @NotNull String mass,
             double maskID
     ) {
         ID = id;
@@ -65,13 +65,13 @@ public class Wormhole {
         MASK_ID = maskID;
     }
 
-    @Nonnull
-    public static Wormhole fromJson(@Nonnull JsonElement json) {
+    @NotNull
+    public static Wormhole fromJson(@NotNull JsonElement json) {
         return API.GSON.fromJson(json, Wormhole.class);
     }
 
-    @Nonnull
-    public static List<Wormhole> fromJson(@Nonnull String json) {
+    @NotNull
+    public static List<Wormhole> fromJson(@NotNull String json) {
         JsonObject wormholes = new JsonParser().parse(json).getAsJsonObject().getAsJsonObject("wormholes");
         List<Wormhole> wormholeList = new ArrayList<>();
 

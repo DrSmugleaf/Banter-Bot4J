@@ -3,7 +3,7 @@ package com.github.drsmugleaf.pokemon.battle;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 /**
@@ -13,15 +13,15 @@ public class Turn {
 
     public final int ID;
 
-    @Nonnull
+    @NotNull
     private final Map<Trainer, Pokemon> POKEMONS_SENT_OUT = new HashMap<>();
 
-    @Nonnull
+    @NotNull
     private final List<Action> ACTIONS = new ArrayList<>();
 
     private boolean executed = false;
 
-    protected Turn(@Nonnull Battle battle) {
+    protected Turn(@NotNull Battle battle) {
         ID = battle.getTurn() + 1;
     }
 
@@ -29,12 +29,12 @@ public class Turn {
         return ID;
     }
 
-    @Nonnull
+    @NotNull
     public Map<Trainer, Pokemon> getPokemonsSentOut() {
         return new HashMap<>(POKEMONS_SENT_OUT);
     }
 
-    protected void sendOut(@Nonnull Trainer trainer, @Nonnull Pokemon pokemon) {
+    protected void sendOut(@NotNull Trainer trainer, @NotNull Pokemon pokemon) {
         POKEMONS_SENT_OUT.put(trainer, pokemon);
     }
 
@@ -42,12 +42,12 @@ public class Turn {
         ACTIONS.add(addAt, ACTIONS.remove(removeFrom));
     }
 
-    @Nonnull
+    @NotNull
     public List<Action> getTurnOrder() {
         return new ArrayList<>(ACTIONS);
     }
 
-    protected void execute(@Nonnull Collection<Trainer> trainers) {
+    protected void execute(@NotNull Collection<Trainer> trainers) {
         if (executed) {
             throw new IllegalStateException("Turn " + ID + " was already executed");
         }
@@ -76,8 +76,8 @@ public class Turn {
         POKEMONS_SENT_OUT.clear();
     }
 
-    @Nonnull
-    protected List<Action> getHitsToward(@Nonnull Pokemon pokemon) {
+    @NotNull
+    protected List<Action> getHitsToward(@NotNull Pokemon pokemon) {
         List<Action> hitBy = new ArrayList<>();
 
         for (int i = ACTIONS.size() - 1; i >= 0; i--) {

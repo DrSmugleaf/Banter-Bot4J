@@ -8,7 +8,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,13 +18,13 @@ import java.util.Map;
  */
 public class TranslatedMessage {
 
-    @Nonnull
+    @NotNull
     final IMessage MESSAGE;
 
-    @Nonnull
+    @NotNull
     final Map<BridgedChannel, IMessage> MESSAGES_SENT = new HashMap<>();
 
-    public TranslatedMessage(@Nonnull MessageReceivedEvent event) {
+    public TranslatedMessage(@NotNull MessageReceivedEvent event) {
         MESSAGE = event.getMessage();
     }
 
@@ -47,7 +47,7 @@ public class TranslatedMessage {
         return translations;
     }
 
-    private void sendTranslation(@Nonnull BridgedChannel bridgedChannel, @Nonnull String translation) {
+    private void sendTranslation(@NotNull BridgedChannel bridgedChannel, @NotNull String translation) {
         IMessage message = Command.sendMessage(bridgedChannel.bridged(), translation);
         MESSAGES_SENT.put(bridgedChannel, message);
     }
@@ -61,7 +61,7 @@ public class TranslatedMessage {
         }
     }
 
-    void updateTranslations(@Nonnull IMessage editedMessage) {
+    void updateTranslations(@NotNull IMessage editedMessage) {
         for (Map.Entry<BridgedChannel, IMessage> entry : MESSAGES_SENT.entrySet()) {
             BridgedChannel bridgedChannel = entry.getKey();
             IMessage message = entry.getValue();
@@ -85,8 +85,8 @@ public class TranslatedMessage {
         }
     }
 
-    @Nonnull
-    String formatMessage(@Nonnull String translation) {
+    @NotNull
+    String formatMessage(@NotNull String translation) {
         IGuild guild = MESSAGE.getGuild();
         String authorName = MESSAGE.getAuthor().getDisplayName(guild);
 

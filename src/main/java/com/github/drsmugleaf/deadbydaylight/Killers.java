@@ -2,8 +2,8 @@ package com.github.drsmugleaf.deadbydaylight;
 
 import com.github.drsmugleaf.BanterBot4J;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -30,21 +30,21 @@ public enum Killers implements ICharacter {
     TRAPPER("Evan MacMillan", "Trapper"),
     WRAITH("Philip Ojomo", "Wraith");
 
-    @Nonnull
+    @NotNull
     private static final String IMAGES_PATH = Objects.requireNonNull(Killers.class.getClassLoader().getResource("deadbydaylight/killers")).getFile();
 
-    @Nonnull
+    @NotNull
     public final String FULL_NAME;
 
-    @Nonnull
+    @NotNull
     public final String NAME;
 
-    Killers(@Nonnull String fullName, @Nonnull String name) {
+    Killers(@NotNull String fullName, @NotNull String name) {
         NAME = name;
         FULL_NAME = fullName;
     }
 
-    private static boolean nameMatches(@Nonnull Killers killer, @Nullable String name) {
+    private static boolean nameMatches(@NotNull Killers killer, @Nullable String name) {
         if (name == null) {
             return false;
         }
@@ -66,19 +66,19 @@ public enum Killers implements ICharacter {
         return null;
     }
 
-    @Nonnull
+    @NotNull
     public static Killers random() {
         Killers[] killers = values();
         int index = ThreadLocalRandom.current().nextInt(1, killers.length);
         return killers[index];
     }
 
-    @Nonnull
+    @NotNull
     public String getFullName() {
         return FULL_NAME;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public InputStream getImage() {
         String fileName = "/" + NAME.toLowerCase() + ".png";
@@ -90,7 +90,7 @@ public enum Killers implements ICharacter {
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getName() {
         return NAME;

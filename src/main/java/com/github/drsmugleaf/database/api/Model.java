@@ -3,7 +3,7 @@ package com.github.drsmugleaf.database.api;
 import com.github.drsmugleaf.database.api.annotations.Column;
 import com.github.drsmugleaf.database.api.annotations.Relation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -18,7 +18,7 @@ import java.util.*;
 public abstract class Model<T extends Model<T>> {
 
     @SuppressWarnings("unchecked")
-    static <T extends Model<T>> void createTable(@Nonnull Class<T> model) {
+    static <T extends Model<T>> void createTable(@NotNull Class<T> model) {
         for (TypeResolver column : getColumns(model)) {
             if (column.FIELD.isAnnotationPresent(Relation.class)) {
                 Class<?> relatedModelClass = column.FIELD.getType();
@@ -36,8 +36,8 @@ public abstract class Model<T extends Model<T>> {
         }
     }
 
-    @Nonnull
-    static <T extends Model<T>> List<TypeResolver> getColumns(@Nonnull Class<T> model) {
+    @NotNull
+    static <T extends Model<T>> List<TypeResolver> getColumns(@NotNull Class<T> model) {
         List<TypeResolver> fields = new ArrayList<>();
 
         for (Field field : model.getDeclaredFields()) {
@@ -50,7 +50,7 @@ public abstract class Model<T extends Model<T>> {
         return fields;
     }
 
-    @Nonnull
+    @NotNull
     @SuppressWarnings("unchecked")
     final Map<TypeResolver, Object> getColumns() {
         Map<TypeResolver, Object> columns = new HashMap<>();
@@ -97,7 +97,7 @@ public abstract class Model<T extends Model<T>> {
         }
     }
 
-    @Nonnull
+    @NotNull
     public final List<T> get() {
         List<T> models = new ArrayList<>();
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
@@ -202,9 +202,9 @@ public abstract class Model<T extends Model<T>> {
         }
     }
 
-    @Nonnull
+    @NotNull
     @SuppressWarnings("unchecked")
-    static <T extends Model<T>> T newInstance(@Nonnull Class<?> model) {
+    static <T extends Model<T>> T newInstance(@NotNull Class<?> model) {
         try {
             Constructor<T> constructor = (Constructor<T>) model.getDeclaredConstructor();
             constructor.setAccessible(true);
@@ -214,8 +214,8 @@ public abstract class Model<T extends Model<T>> {
         }
     }
 
-    @Nonnull
-    static <T extends Model<T>> T newInstance(@Nonnull Model<T> model) {
+    @NotNull
+    static <T extends Model<T>> T newInstance(@NotNull Model<T> model) {
         return newInstance(model.getClass());
     }
 

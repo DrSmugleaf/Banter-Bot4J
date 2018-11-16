@@ -6,8 +6,8 @@ import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -15,10 +15,10 @@ import java.util.*;
  */
 public class Registry {
 
-    @Nonnull
+    @NotNull
     private final List<Class<Command>> COMMANDS;
 
-    public Registry(@Nonnull List<Class<Command>> commands) {
+    public Registry(@NotNull List<Class<Command>> commands) {
         COMMANDS = Collections.unmodifiableList(commands);
 
         List<CommandSearchResult> duplicates = findDuplicates();
@@ -28,7 +28,7 @@ public class Registry {
         }
     }
 
-    @Nonnull
+    @NotNull
     private List<CommandSearchResult> findDuplicates() {
         Set<String> uniqueAliases = new HashSet<>();
         List<CommandSearchResult> duplicateAliases = new ArrayList<>();
@@ -54,8 +54,8 @@ public class Registry {
         return duplicateAliases;
     }
 
-    @Nonnull
-    private String formatDuplicates(@Nonnull List<CommandSearchResult> duplicates) {
+    @NotNull
+    private String formatDuplicates(@NotNull List<CommandSearchResult> duplicates) {
         if (duplicates.isEmpty()) {
             return "";
         }
@@ -73,7 +73,7 @@ public class Registry {
     }
 
     @Nullable
-    public CommandSearchResult findCommand(@Nonnull MessageReceivedEvent event) {
+    public CommandSearchResult findCommand(@NotNull MessageReceivedEvent event) {
         String message = event.getMessage().getContent().substring(BanterBot4J.BOT_PREFIX.length()).toLowerCase();
         List<CommandSearchResult> matches = new ArrayList<>();
 

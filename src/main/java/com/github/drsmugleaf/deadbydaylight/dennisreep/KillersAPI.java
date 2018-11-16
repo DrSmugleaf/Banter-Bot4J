@@ -10,7 +10,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -21,15 +21,15 @@ import java.util.concurrent.TimeUnit;
  */
 public class KillersAPI extends API {
 
-    @Nonnull
+    @NotNull
     private static final String KILLER_DATA_ENDPOINT = "getKillerData/";
 
-    @Nonnull
+    @NotNull
     public static final Supplier<Map<Killers, Killer>> KILLERS = Suppliers.memoizeWithExpiration(
             KillersAPI::getKillerData, 12, TimeUnit.HOURS
     );
 
-    @Nonnull
+    @NotNull
     private static final Cache<Killers, Perks<KillerPerks, KillerPerk>> KILLER_PERKS = CacheBuilder
             .newBuilder()
             .expireAfterWrite(12, TimeUnit.HOURS)
@@ -37,7 +37,7 @@ public class KillersAPI extends API {
 
     private KillersAPI() {}
 
-    @Nonnull
+    @NotNull
     private static Map<Killers, Killer> getKillerData() {
         JsonArray json = getResponse(KILLER_DATA_ENDPOINT).get("Killers").getAsJsonArray();
         Map<Killers, Killer> killers = new LinkedHashMap<>();
@@ -49,8 +49,8 @@ public class KillersAPI extends API {
         return killers;
     }
 
-    @Nonnull
-    public static Perks<KillerPerks, KillerPerk> getKillerData(@Nonnull Killers killer) {
+    @NotNull
+    public static Perks<KillerPerks, KillerPerk> getKillerData(@NotNull Killers killer) {
         String endpoint = KILLER_DATA_ENDPOINT + "?killer=" + killer.NAME;
         JsonArray json = getResponse(endpoint).get("Killers").getAsJsonArray();
         Map<KillerPerks, KillerPerk> perks = new HashMap<>();

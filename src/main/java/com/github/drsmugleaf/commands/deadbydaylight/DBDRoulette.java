@@ -12,8 +12,8 @@ import com.github.drsmugleaf.deadbydaylight.dennisreep.*;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.util.EmbedBuilder;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.io.InputStream;
 
 /**
@@ -21,11 +21,11 @@ import java.io.InputStream;
  */
 public class DBDRoulette extends Command {
 
-    protected DBDRoulette(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected DBDRoulette(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 
-    @Nonnull
+    @NotNull
     private static String invalidArgumentsResponse() {
         return "Invalid arguments.\n" +
                "**Formats:**\n" +
@@ -40,7 +40,7 @@ public class DBDRoulette extends Command {
                BanterBot4J.BOT_PREFIX + "dbdroulette friends 2,50 4.32";
     }
 
-    @Nonnull
+    @NotNull
     private static EmbedObject getKillerResponse(@Nullable Double minimumRating, @Nullable Double maximumRating) {
         Killers randomKiller = Killers.random();
         Killer killer = KillersAPI.KILLERS.get().get(randomKiller);

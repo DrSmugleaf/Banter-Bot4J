@@ -2,7 +2,7 @@ package com.github.drsmugleaf.pokemon.events;
 
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 19/07/2017.
@@ -11,7 +11,7 @@ public class PokemonHealedEvent extends PokemonEvent {
 
     public final int HEAL;
 
-    public PokemonHealedEvent(@Nonnull Pokemon defender, int heal) {
+    public PokemonHealedEvent(@NotNull Pokemon defender, int heal) {
         super(defender);
         HEAL = heal;
     }

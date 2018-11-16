@@ -2,21 +2,21 @@ package com.github.drsmugleaf.pokemon.stats;
 
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 14/09/2017.
  */
 public interface IStat {
 
-    @Nonnull
+    @NotNull
     String getName();
 
-    @Nonnull
+    @NotNull
     String getAbbreviation();
 
-    double calculate(@Nonnull Pokemon pokemon);
+    double calculate(@NotNull Pokemon pokemon);
 
-    double calculateWithoutStages(@Nonnull Pokemon pokemon);
+    double calculateWithoutStages(@NotNull Pokemon pokemon);
 
 }

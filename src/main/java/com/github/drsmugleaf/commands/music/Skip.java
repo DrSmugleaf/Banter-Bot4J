@@ -11,7 +11,7 @@ import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,10 +23,10 @@ import java.util.Map;
 @CommandInfo(tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL, Tags.DELETE_COMMAND_MESSAGE})
 public class Skip extends MusicCommand {
 
-    @Nonnull
+    @NotNull
     private static final Map<IGuild, List<IUser>> SKIP_VOTES = new HashMap<>();
 
-    protected Skip(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected Skip(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 

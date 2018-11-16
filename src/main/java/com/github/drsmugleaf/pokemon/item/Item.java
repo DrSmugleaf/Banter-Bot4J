@@ -2,27 +2,27 @@ package com.github.drsmugleaf.pokemon.item;
 
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by DrSmugleaf on 15/10/2017.
  */
 public class Item {
 
-    @Nonnull
+    @NotNull
     private Items item;
 
-    public Item(@Nonnull Items item) {
+    public Item(@NotNull Items item) {
         this.item = item;
     }
 
-    @Nonnull
+    @NotNull
     public String getName() {
         return item.NAME;
     }
 
-    @Nonnull
+    @NotNull
     public ItemCategory getCategory() {
         return item.CATEGORY;
     }
@@ -36,28 +36,28 @@ public class Item {
         return item != Items.NONE;
     }
 
-    public boolean is(@Nonnull Items item) {
+    public boolean is(@NotNull Items item) {
         return this.item == item;
     }
 
-    public boolean is(@Nonnull ItemCategory category) {
+    public boolean is(@NotNull ItemCategory category) {
         return item.CATEGORY == category;
     }
 
-    @Nonnull
+    @NotNull
     public Items remove() {
         return set(Items.NONE);
     }
 
-    @Nonnull
-    public Items set(@Nonnull Items item) {
+    @NotNull
+    public Items set(@NotNull Items item) {
         Items oldItem = this.item;
         this.item = item;
         return oldItem;
     }
 
-    @Nonnull
-    public Items steal(@Nonnull Pokemon pokemon) {
+    @NotNull
+    public Items steal(@NotNull Pokemon pokemon) {
         Items stolenItem = pokemon.ITEM.remove();
 
         if (stolenItem != Items.NONE) {
@@ -67,7 +67,7 @@ public class Item {
         return stolenItem;
     }
 
-    public void tryUse(@Nonnull Pokemon pokemon) {
+    public void tryUse(@NotNull Pokemon pokemon) {
         if (item != Items.NONE) {
             item.use(pokemon, pokemon.getBattle());
         }

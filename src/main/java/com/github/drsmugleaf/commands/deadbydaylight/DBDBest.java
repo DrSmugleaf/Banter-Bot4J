@@ -10,8 +10,8 @@ import com.github.drsmugleaf.deadbydaylight.SurvivorPerks;
 import com.github.drsmugleaf.deadbydaylight.dennisreep.*;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.io.InputStream;
 import java.util.List;
 
@@ -22,11 +22,11 @@ public class DBDBest extends Command {
 
     private static final int MAX_PERK_AMOUNT = Math.max(KillerPerks.values().length, SurvivorPerks.values().length);
 
-    protected DBDBest(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected DBDBest(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 
-    @Nonnull
+    @NotNull
     private static String invalidArgumentsResponse() {
         return "**Formats:**\n" +
                BanterBot4J.BOT_PREFIX + "dbdbest amount\n" +
@@ -39,7 +39,7 @@ public class DBDBest extends Command {
                "Survivors don't have a survivor specific perk ranking.";
     }
 
-    @Nonnull
+    @NotNull
     private static LargeEmbedBuilder getBaseEmbed(int perkAmount, @Nullable Killers killer) {
         LargeEmbedBuilder builder = new LargeEmbedBuilder();
         builder
@@ -61,7 +61,7 @@ public class DBDBest extends Command {
         return builder;
     }
 
-    @Nonnull
+    @NotNull
     private static Perks<KillerPerks, KillerPerk> getBestKillerPerks(int amount, @Nullable Killers killer) {
         if (killer == null) {
             return PerksAPI.KILLER_PERKS.get().getBest(amount);
@@ -71,12 +71,12 @@ public class DBDBest extends Command {
         return killerData.getBest(amount);
     }
 
-    @Nonnull
+    @NotNull
     private static Perks<SurvivorPerks, SurvivorPerk> getBestSurvivorPerks(int amount) {
         return PerksAPI.SURVIVOR_PERKS.get().getBest(amount);
     }
 
-    @Nonnull
+    @NotNull
     private static List<EmbedObject> getBestPerksResponse(int amount) {
         LargeEmbedBuilder builder = getBaseEmbed(amount, null);
 
@@ -111,8 +111,8 @@ public class DBDBest extends Command {
         return builder.buildAll();
     }
 
-    @Nonnull
-    private static List<EmbedObject> getBestKillerPerksResponse(int amount, @Nonnull Killers killer) {
+    @NotNull
+    private static List<EmbedObject> getBestKillerPerksResponse(int amount, @NotNull Killers killer) {
         LargeEmbedBuilder builder = getBaseEmbed(amount, killer);
 
         Perks<KillerPerks, KillerPerk> killerPerks = getBestKillerPerks(amount, killer);

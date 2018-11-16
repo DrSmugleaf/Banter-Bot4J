@@ -2,7 +2,7 @@ package com.github.drsmugleaf.pokemon.events;
 
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 /**
@@ -10,20 +10,20 @@ import java.util.*;
  */
 public class TrainerChoosingPokemonEvent extends Event {
 
-    @Nonnull
+    @NotNull
     private final List<Trainer> TRAINERS;
 
-    public TrainerChoosingPokemonEvent(@Nonnull Trainer... trainers) {
+    public TrainerChoosingPokemonEvent(@NotNull Trainer... trainers) {
         super(trainers[0].BATTLE);
         TRAINERS = Collections.unmodifiableList(Arrays.asList(trainers));
     }
 
-    public TrainerChoosingPokemonEvent(@Nonnull Collection<Trainer> trainers) {
+    public TrainerChoosingPokemonEvent(@NotNull Collection<Trainer> trainers) {
         super(trainers.iterator().next().BATTLE);
         TRAINERS = Collections.unmodifiableList(new ArrayList<>(trainers));
     }
 
-    @Nonnull
+    @NotNull
     public List<Trainer> getTrainers() {
         return TRAINERS;
     }

@@ -4,7 +4,7 @@ import com.github.drsmugleaf.pokemon.battle.Action;
 import com.github.drsmugleaf.pokemon.battle.IModifier;
 import com.github.drsmugleaf.pokemon.moves.Move;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,19 +15,19 @@ import java.util.List;
  */
 public class Types implements IModifier {
 
-    @Nonnull
+    @NotNull
     private final List<Type> TYPES = new ArrayList<>();
 
-    public Types(@Nonnull List<Type> types) {
+    public Types(@NotNull List<Type> types) {
         TYPES.addAll(types);
     }
 
-    @Nonnull
+    @NotNull
     public List<Type> getTypes() {
         return new ArrayList<>(TYPES);
     }
 
-    public boolean isType(@Nonnull Type... types) {
+    public boolean isType(@NotNull Type... types) {
         for (Type type : types) {
             if (!TYPES.contains(type)) {
                 return false;
@@ -37,16 +37,16 @@ public class Types implements IModifier {
         return true;
     }
 
-    public void setTypes(@Nonnull Collection<Type> types) {
+    public void setTypes(@NotNull Collection<Type> types) {
         TYPES.clear();
         TYPES.addAll(types);
     }
 
-    public void setTypes(@Nonnull Type... types) {
+    public void setTypes(@NotNull Type... types) {
         setTypes(Arrays.asList(types));
     }
 
-    public boolean isImmune(@Nonnull Move move) {
+    public boolean isImmune(@NotNull Move move) {
         Type moveType = move.getType();
 
         for (Type type : TYPES) {
@@ -59,7 +59,7 @@ public class Types implements IModifier {
     }
 
     @Override
-    public double damageMultiplier(@Nonnull Action action) {
+    public double damageMultiplier(@NotNull Action action) {
         Type moveType = action.getType();
 
         double modifier = 1.0;
@@ -80,7 +80,7 @@ public class Types implements IModifier {
         return modifier;
     }
 
-    @Nonnull
+    @NotNull
     public String[] getTypesString() {
         List<String> types = new ArrayList<>();
 

@@ -4,15 +4,15 @@ import com.github.drsmugleaf.pokemon.battle.IModifier;
 import com.github.drsmugleaf.pokemon.battle.Action;
 import com.github.drsmugleaf.pokemon.battle.Battle;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by DrSmugleaf on 01/01/2018.
  */
 public class Tag implements IModifier {
 
-    @Nonnull
+    @NotNull
     private final Tags TAG;
 
     private int duration;
@@ -20,13 +20,13 @@ public class Tag implements IModifier {
     @Nullable
     private final Action ACTION;
 
-    protected Tag(@Nonnull Tags tag, @Nullable Action action) {
+    protected Tag(@NotNull Tags tag, @Nullable Action action) {
         TAG = tag;
         duration = TAG.getDuration();
         ACTION = action;
     }
 
-    @Nonnull
+    @NotNull
     public Tags getBaseTag() {
         return TAG;
     }
@@ -37,7 +37,7 @@ public class Tag implements IModifier {
     }
 
     @Override
-    public void onTurnEnd(@Nonnull Battle battle, @Nonnull Pokemon pokemon) {
+    public void onTurnEnd(@NotNull Battle battle, @NotNull Pokemon pokemon) {
         duration--;
 
         if (duration < 0) {

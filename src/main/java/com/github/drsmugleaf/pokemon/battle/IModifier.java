@@ -6,98 +6,98 @@ import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.stats.IStat;
 import com.github.drsmugleaf.pokemon.status.Status;
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by DrSmugleaf on 18/09/2017.
  */
 public interface IModifier {
 
-    default void onTrainerTurnStart(@Nonnull Trainer trainer, @Nonnull Pokemon pokemon) {}
+    default void onTrainerTurnStart(@NotNull Trainer trainer, @NotNull Pokemon pokemon) {}
 
-    default void onTurnStart(@Nonnull Action action) {}
+    default void onTurnStart(@NotNull Action action) {}
 
-    default void onOwnSendBack(@Nonnull Pokemon pokemon) {}
+    default void onOwnSendBack(@NotNull Pokemon pokemon) {}
 
-    default void onEnemySendBack(@Nonnull Pokemon user, @Nonnull Pokemon enemy) {}
+    default void onEnemySendBack(@NotNull Pokemon user, @NotNull Pokemon enemy) {}
 
-    default void onOwnSendOut(@Nonnull Pokemon pokemon) {}
+    default void onOwnSendOut(@NotNull Pokemon pokemon) {}
 
-    default void onEnemySendOut(@Nonnull Pokemon pokemon) {}
+    default void onEnemySendOut(@NotNull Pokemon pokemon) {}
 
-    default void onOwnTurnStart(@Nonnull Pokemon pokemon) {}
+    default void onOwnTurnStart(@NotNull Pokemon pokemon) {}
 
-    default void onEnemyTurnStart(@Nonnull Pokemon pokemon) {}
+    default void onEnemyTurnStart(@NotNull Pokemon pokemon) {}
 
-    default boolean onOwnAttemptAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+    default boolean onOwnAttemptAttack(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {
         return true;
     }
 
-    default boolean onEnemyAttemptAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+    default boolean onEnemyAttemptAttack(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {
         return true;
     }
 
-    default void onOwnDealAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {}
+    default void onOwnDealAttack(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {}
 
-    default void onEnemyDealAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {}
+    default void onEnemyDealAttack(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {}
 
-    default boolean onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+    default boolean onOwnReceiveAttack(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {
         return true;
     }
 
-    default void onEnemyReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {}
+    default void onEnemyReceiveAttack(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {}
 
-    default void onPokemonFailAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {}
+    default void onPokemonFailAttack(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {}
 
-    default void onEnemyFailAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {}
+    default void onEnemyFailAttack(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {}
 
-    default void onOwnFaint(@Nullable Pokemon attacker, @Nonnull Pokemon defender) {}
+    default void onOwnFaint(@Nullable Pokemon attacker, @NotNull Pokemon defender) {}
 
-    default void onOwnTurnEnd(@Nonnull Pokemon pokemon) {}
+    default void onOwnTurnEnd(@NotNull Pokemon pokemon) {}
 
-    default void onEnemyTurnEnd(@Nonnull Pokemon pokemon) {}
+    default void onEnemyTurnEnd(@NotNull Pokemon pokemon) {}
 
-    default void onTurnEnd(@Nonnull Battle battle, @Nonnull Pokemon pokemon) {}
+    default void onTurnEnd(@NotNull Battle battle, @NotNull Pokemon pokemon) {}
 
-    default void onOwnItemUsed(@Nonnull Pokemon user, @Nonnull Items item) {}
+    default void onOwnItemUsed(@NotNull Pokemon user, @NotNull Items item) {}
 
-    default void onEnemyItemUsed(@Nonnull Pokemon user, @Nonnull Items item) {}
+    default void onEnemyItemUsed(@NotNull Pokemon user, @NotNull Items item) {}
 
-    default boolean hits(@Nonnull Pokemon target, @Nonnull Action action, DamageTags... tags) {
+    default boolean hits(@NotNull Pokemon target, @NotNull Action action, DamageTags... tags) {
         return true;
     }
 
-    default double ownDamageMultiplier(@Nonnull Pokemon pokemon, @Nonnull Action action) {
+    default double ownDamageMultiplier(@NotNull Pokemon pokemon, @NotNull Action action) {
         return 1.0;
     }
 
-    default double enemyDamageMultiplier(@Nonnull Pokemon pokemon, @Nonnull Action action) {
+    default double enemyDamageMultiplier(@NotNull Pokemon pokemon, @NotNull Action action) {
         return 1.0;
     }
 
-    default double damageMultiplier(@Nonnull Action action) {
+    default double damageMultiplier(@NotNull Action action) {
         return 1.0;
     }
 
-    default double damageMultiplier(@Nonnull Weather weather, @Nonnull Pokemon pokemon) {
+    default double damageMultiplier(@NotNull Weather weather, @NotNull Pokemon pokemon) {
         return 1.0;
     }
 
-    default double powerMultiplier(@Nonnull Pokemon attacker, @Nonnull Action action) {
+    default double powerMultiplier(@NotNull Pokemon attacker, @NotNull Action action) {
         return 1.0;
     }
 
-    default double statMultiplier(@Nonnull Pokemon pokemon, @Nonnull IStat stat) {
+    default double statMultiplier(@NotNull Pokemon pokemon, @NotNull IStat stat) {
         return 1.0;
     }
 
-    default boolean canApplyStatus(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Status status) {
+    default boolean canApplyStatus(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Status status) {
         return true;
     }
 
-    default boolean canSwitch(@Nonnull Pokemon pokemon) {
+    default boolean canSwitch(@NotNull Pokemon pokemon) {
         return true;
     }
 

@@ -7,8 +7,8 @@ import net.troja.eve.esi.ApiException;
 import net.troja.eve.esi.api.UniverseApi;
 import net.troja.eve.esi.model.UniverseNamesResponse;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,7 +19,7 @@ public class StarSystem extends Node<StarSystem> {
 
     final int ID;
 
-    StarSystem(int id, @Nonnull String name) {
+    StarSystem(int id, @NotNull String name) {
         super(name);
         ID = id;
     }
@@ -28,8 +28,8 @@ public class StarSystem extends Node<StarSystem> {
         return id != null && id > 30000001;
     }
 
-    @Nonnull
-    static Map<Integer, StarSystem> fromIDs(@Nonnull Collection<Integer> IDs) {
+    @NotNull
+    static Map<Integer, StarSystem> fromIDs(@NotNull Collection<Integer> IDs) {
         Map<Integer, StarSystem> starSystems = new HashMap<>();
         IDs.removeIf(id -> !StarSystem.isValid(id));
 
@@ -77,8 +77,8 @@ public class StarSystem extends Node<StarSystem> {
         return starSystems;
     }
 
-    @Nonnull
-    static Map<Integer, StarSystem> fromSignatures(@Nonnull Collection<Signature> signatures) {
+    @NotNull
+    static Map<Integer, StarSystem> fromSignatures(@NotNull Collection<Signature> signatures) {
         Set<Integer> ids = signatures.stream().map(signature -> signature.SYSTEM_ID).collect(Collectors.toSet());
         return fromIDs(ids);
     }

@@ -7,7 +7,7 @@ import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 10/06/2018
@@ -15,11 +15,11 @@ import javax.annotation.Nonnull;
 @CommandInfo(tags = {Tags.OWNER_ONLY})
 public class Name extends Command {
 
-    protected Name(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected Name(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 
-    @Nonnull
+    @NotNull
     private static String invalidArgumentsResponse() {
         return "Invalid arguments.\n" +
                "**Formats:**\n" +

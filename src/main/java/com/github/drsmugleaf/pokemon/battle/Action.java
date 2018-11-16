@@ -6,8 +6,8 @@ import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.status.BaseVolatileStatus;
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -15,44 +15,44 @@ import java.util.*;
  */
 public class Action extends Move {
 
-    @Nonnull
+    @NotNull
     private final Move MOVE;
 
-    @Nonnull
+    @NotNull
     private final Pokemon ATTACKER;
 
-    @Nonnull
+    @NotNull
     private final List<Pokemon> DEFENDERS = new ArrayList<>();
 
     private int TARGET_POSITION;
 
-    @Nonnull
+    @NotNull
     private Pokemon TARGET_POKEMON;
 
-    @Nonnull
+    @NotNull
     private Trainer TARGET_TEAM;
 
-    @Nonnull
+    @NotNull
     private Map<Pokemon, Integer> DAMAGE = new LinkedHashMap<>();
 
-    @Nonnull
+    @NotNull
     private Map<Pokemon, Boolean> CRITICAL = new LinkedHashMap<>();
 
-    @Nonnull
+    @NotNull
     private Map<Pokemon, Boolean> HIT = new LinkedHashMap<>();
 
-    @Nonnull
+    @NotNull
     private final List<BaseVolatileStatus> ATTACKER_VOLATILE_STATUSES = new ArrayList<>();
 
-    @Nonnull
+    @NotNull
     private final List<BaseVolatileStatus> TARGET_VOLATILE_STATUSES = new ArrayList<>();
 
     private final int TURN;
 
-    @Nonnull
+    @NotNull
     private final List<DamageTags> TAGS = new ArrayList<>();
 
-    protected Action(@Nonnull Move move, @Nonnull Pokemon attacker, @Nonnull Pokemon target, int turn) {
+    protected Action(@NotNull Move move, @NotNull Pokemon attacker, @NotNull Pokemon target, int turn) {
         super(move.BASE_MOVE);
 
         MOVE = move;
@@ -67,22 +67,22 @@ public class Action extends Move {
         TURN = turn;
     }
 
-    @Nonnull
+    @NotNull
     public Move getMove() {
         return MOVE;
     }
 
-    @Nonnull
+    @NotNull
     public Pokemon getAttacker() {
         return ATTACKER;
     }
 
-    @Nonnull
+    @NotNull
     public List<Pokemon> getDefenders() {
         return DEFENDERS;
     }
 
-    public void addDefender(@Nonnull Pokemon pokemon) {
+    public void addDefender(@NotNull Pokemon pokemon) {
         DEFENDERS.add(pokemon);
     }
 
@@ -90,73 +90,73 @@ public class Action extends Move {
         return TARGET_POSITION;
     }
 
-    @Nonnull
+    @NotNull
     public Pokemon getTargetPokemon() {
         return TARGET_POKEMON;
     }
 
-    @Nonnull
+    @NotNull
     public Trainer getTargetTeam() {
         return TARGET_TEAM;
     }
 
-    public void setTarget(@Nonnull Pokemon target) {
+    public void setTarget(@NotNull Pokemon target) {
         TARGET_POSITION = target.getTrainer().getActivePokemon(target);
         TARGET_POKEMON = target;
         TARGET_TEAM = target.getTrainer();
     }
 
     @Nullable
-    public Integer getDamage(@Nonnull Pokemon pokemon) {
+    public Integer getDamage(@NotNull Pokemon pokemon) {
         return DAMAGE.get(pokemon);
     }
 
-    public void setDamage(@Nonnull Pokemon pokemon, int damage) {
+    public void setDamage(@NotNull Pokemon pokemon, int damage) {
         DAMAGE.put(pokemon, damage);
     }
 
     @Nullable
-    public Boolean wasCritical(@Nonnull Pokemon pokemon) {
+    public Boolean wasCritical(@NotNull Pokemon pokemon) {
         return CRITICAL.get(pokemon);
     }
 
-    public void setCritical(@Nonnull Pokemon pokemon, boolean bool) {
+    public void setCritical(@NotNull Pokemon pokemon, boolean bool) {
         CRITICAL.put(pokemon, bool);
     }
 
-    @Nonnull
+    @NotNull
     public Map<Pokemon, Boolean> hit() {
         return new HashMap<>(HIT);
     }
 
     @Nullable
-    public Boolean hit(@Nonnull Pokemon pokemon) {
+    public Boolean hit(@NotNull Pokemon pokemon) {
         return HIT.get(pokemon);
     }
 
-    public void setHit(@Nonnull Pokemon pokemon, boolean bool) {
+    public void setHit(@NotNull Pokemon pokemon, boolean bool) {
         HIT.put(pokemon, bool);
     }
 
-    @Nonnull
+    @NotNull
     public List<BaseVolatileStatus> getAttackerVolatileStatuses() {
         return ATTACKER_VOLATILE_STATUSES;
     }
 
-    public boolean attackerHasVolatileStatus(@Nonnull BaseVolatileStatus status) {
+    public boolean attackerHasVolatileStatus(@NotNull BaseVolatileStatus status) {
         return ATTACKER_VOLATILE_STATUSES.contains(status);
     }
 
-    @Nonnull
+    @NotNull
     public List<BaseVolatileStatus> getTargetVolatileStatuses() {
         return TARGET_VOLATILE_STATUSES;
     }
 
-    public boolean targetHasVolatileStatus(@Nonnull BaseVolatileStatus status) {
+    public boolean targetHasVolatileStatus(@NotNull BaseVolatileStatus status) {
         return TARGET_VOLATILE_STATUSES.contains(status);
     }
 
-    @Nonnull
+    @NotNull
     public Battle getBattle() {
         return ATTACKER.getBattle();
     }
@@ -165,7 +165,7 @@ public class Action extends Move {
         return TURN;
     }
 
-    @Nonnull
+    @NotNull
     public Generation getGeneration() {
         return ATTACKER.getBattle().GENERATION;
     }
@@ -190,21 +190,21 @@ public class Action extends Move {
         MOVE.decreasePP(amount);
     }
 
-    public void addTag(@Nonnull DamageTags... tags) {
+    public void addTag(@NotNull DamageTags... tags) {
         Collections.addAll(TAGS, tags);
     }
 
-    @Nonnull
+    @NotNull
     public List<DamageTags> getTags() {
         return new ArrayList<>(TAGS);
     }
 
-    public boolean hasTags(@Nonnull DamageTags... tags) {
+    public boolean hasTags(@NotNull DamageTags... tags) {
         return TAGS.containsAll(Arrays.asList(tags));
     }
 
     @Override
-    protected int use(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+    protected int use(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {
         return super.use(attacker, defender, action);
     }
 
@@ -218,7 +218,7 @@ public class Action extends Move {
         super.tryUse(ATTACKER, target, this);
     }
 
-    public void reflect(@Nonnull Pokemon reflector) {
+    public void reflect(@NotNull Pokemon reflector) {
         Action action = getBattle().replaceAction(this, MOVE, reflector, ATTACKER);
         action.MOVE.useAsReflect(action.ATTACKER, action.TARGET_POKEMON, action.ATTACKER.getBattle(), action);
     }

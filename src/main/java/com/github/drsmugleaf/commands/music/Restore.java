@@ -9,7 +9,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.AbstractMap;
 import java.util.List;
 
@@ -19,7 +19,7 @@ import java.util.List;
 @CommandInfo(aliases = {"undostop"}, tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
 public class Restore extends MusicCommand {
 
-    protected Restore(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected Restore(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 

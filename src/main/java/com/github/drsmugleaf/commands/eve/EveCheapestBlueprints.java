@@ -12,8 +12,8 @@ import net.troja.eve.esi.model.PublicContractsResponse;
 import net.troja.eve.esi.model.UniverseIdsResponse;
 import sx.blah.discord.handle.obj.IMessage;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +31,7 @@ public class EveCheapestBlueprints extends Command {
 
     private static final UniverseApi UNIVERSE_API = new UniverseApi();
 
-    protected EveCheapestBlueprints(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected EveCheapestBlueprints(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 
@@ -79,7 +79,7 @@ public class EveCheapestBlueprints extends Command {
     }
 
     @Nullable
-    private Integer getItemID(@Nonnull String name) {
+    private Integer getItemID(@NotNull String name) {
         UniverseIdsResponse response;
         try {
             response = UNIVERSE_API.postUniverseIds(Collections.singletonList(name), null, null, null);
@@ -91,7 +91,7 @@ public class EveCheapestBlueprints extends Command {
         return response.getInventoryTypes().get(0).getId();
     }
 
-    @Nonnull
+    @NotNull
     private List<PublicContractsResponse> getContracts(int regionID) {
         List<PublicContractsResponse> contracts;
         try {
@@ -104,11 +104,11 @@ public class EveCheapestBlueprints extends Command {
         return contracts;
     }
 
-    private boolean isItemExchangeContract(@Nonnull PublicContractsResponse contract) {
+    private boolean isItemExchangeContract(@NotNull PublicContractsResponse contract) {
         return contract.getType() == PublicContractsResponse.TypeEnum.ITEM_EXCHANGE;
     }
 
-    private boolean isSellingBlueprint(@Nonnull PublicContractsResponse contract) {
+    private boolean isSellingBlueprint(@NotNull PublicContractsResponse contract) {
         if (contract.getVolume() > 1) {
             return false;
         }
@@ -135,7 +135,7 @@ public class EveCheapestBlueprints extends Command {
         return false;
     }
 
-    private boolean containsItem(@Nonnull PublicContractsResponse contract, @Nonnull String itemName) {
+    private boolean containsItem(@NotNull PublicContractsResponse contract, @NotNull String itemName) {
         Integer contractID = contract.getContractId();
         List<PublicContractsItemsResponse> contractItems;
         try {

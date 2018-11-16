@@ -2,7 +2,7 @@ package com.github.drsmugleaf.pokemon.status;
 
 import com.github.drsmugleaf.pokemon.battle.Action;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 03/07/2017.
@@ -14,8 +14,8 @@ public class VolatileStatus {
     public final int DURATION;
 
     protected VolatileStatus(
-            @Nonnull BaseVolatileStatus baseVolatileStatus,
-            @Nonnull Action action,
+            @NotNull BaseVolatileStatus baseVolatileStatus,
+            @NotNull Action action,
             int duration
     ) {
         BASE_VOLATILE_STATUS = baseVolatileStatus;
@@ -24,18 +24,18 @@ public class VolatileStatus {
     }
 
     protected VolatileStatus(
-            @Nonnull BaseVolatileStatus baseVolatileStatus,
-            @Nonnull Action action
+            @NotNull BaseVolatileStatus baseVolatileStatus,
+            @NotNull Action action
     ) {
         this(baseVolatileStatus, action, baseVolatileStatus.getDuration(action));
     }
 
-    @Nonnull
+    @NotNull
     public BaseVolatileStatus getBaseVolatileStatus() {
         return BASE_VOLATILE_STATUS;
     }
 
-    @Nonnull
+    @NotNull
     public Action getAction() {
         return ACTION;
     }

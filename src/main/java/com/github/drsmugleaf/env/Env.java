@@ -2,7 +2,7 @@ package com.github.drsmugleaf.env;
 
 import com.github.drsmugleaf.BanterBot4J;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +13,7 @@ import java.util.Properties;
  */
 class Env {
 
-    @Nonnull
+    @NotNull
     static final Properties PROPERTIES = new Properties();
 
     static {

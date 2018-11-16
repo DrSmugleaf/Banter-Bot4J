@@ -9,7 +9,7 @@ import com.github.drsmugleaf.database.models.BridgedChannel;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.Permissions;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
@@ -18,7 +18,7 @@ import java.util.List;
 @CommandInfo(permissions = {Permissions.MANAGE_CHANNELS}, tags = {Tags.GUILD_ONLY})
 public class Unbridge extends Command {
 
-    protected Unbridge(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected Unbridge(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 

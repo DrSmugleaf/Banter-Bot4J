@@ -12,8 +12,8 @@ import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.RateLimitException;
 import sx.blah.discord.util.RequestBuffer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
@@ -27,24 +27,24 @@ import java.util.List;
  */
 public abstract class Command implements ICommand {
 
-    @Nonnull
+    @NotNull
     protected static final Logger LOGGER = LoggerFactory.getLogger(Handler.class);
 
-    @Nonnull
+    @NotNull
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
 
-    @Nonnull
+    @NotNull
     public final CommandReceivedEvent EVENT;
 
-    @Nonnull
+    @NotNull
     public final Arguments ARGS;
 
-    protected Command(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected Command(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         EVENT = event;
         ARGS = args;
     }
 
-    protected static void run(@Nonnull CommandSearchResult commandSearch, @Nonnull CommandReceivedEvent event) {
+    protected static void run(@NotNull CommandSearchResult commandSearch, @NotNull CommandReceivedEvent event) {
         Class<? extends Command> commandClass = commandSearch.COMMAND;
         CommandInfo annotation = commandClass.getDeclaredAnnotation(CommandInfo.class);
 
@@ -74,12 +74,12 @@ public abstract class Command implements ICommand {
         command.run();
     }
 
-    public static boolean isOwner(@Nonnull IUser user) {
+    public static boolean isOwner(@NotNull IUser user) {
         return BanterBot4J.OWNERS.contains(user.getLongID());
     }
 
-    @Nonnull
-    public static List<String> getAliases(@Nonnull Class<? extends Command> command) {
+    @NotNull
+    public static List<String> getAliases(@NotNull Class<? extends Command> command) {
         CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
 
         List<String> commandAliases = new ArrayList<>();
@@ -94,13 +94,13 @@ public abstract class Command implements ICommand {
         return commandAliases;
     }
 
-    @Nonnull
+    @NotNull
     public static String getDate() {
         return DATE_FORMAT.format(Instant.now());
     }
 
-    @Nonnull
-    public static String getName(@Nonnull Class<? extends Command> command) {
+    @NotNull
+    public static String getName(@NotNull Class<? extends Command> command) {
         String commandName;
         CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
 
@@ -113,8 +113,8 @@ public abstract class Command implements ICommand {
         return commandName.toLowerCase();
     }
 
-    @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nullable String content, @Nullable EmbedObject embed) {
+    @NotNull
+    public static IMessage sendMessage(@NotNull IChannel channel, @Nullable String content, @Nullable EmbedObject embed) {
         if (content == null) {
             content = "";
         }
@@ -130,28 +130,28 @@ public abstract class Command implements ICommand {
         }).get();
     }
 
-    @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull String content) {
+    @NotNull
+    public static IMessage sendMessage(@NotNull IChannel channel, @NotNull String content) {
         return sendMessage(channel, content, null);
     }
 
-    @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull EmbedObject embed) {
+    @NotNull
+    public static IMessage sendMessage(@NotNull IChannel channel, @NotNull EmbedObject embed) {
         return sendMessage(channel, null, embed);
     }
 
-    @Nonnull
-    public IMessage sendMessage(@Nonnull String content) {
+    @NotNull
+    public IMessage sendMessage(@NotNull String content) {
         return sendMessage(EVENT.getChannel(), content);
     }
 
-    @Nonnull
-    public IMessage sendMessage(@Nonnull EmbedObject embed) {
+    @NotNull
+    public IMessage sendMessage(@NotNull EmbedObject embed) {
         return sendMessage(EVENT.getChannel(), embed);
     }
 
-    @Nonnull
-    public IMessage sendMessage(@Nonnull String content, @Nonnull EmbedObject embed) {
+    @NotNull
+    public IMessage sendMessage(@NotNull String content, @NotNull EmbedObject embed) {
         return sendMessage(EVENT.getChannel(), content, embed);
     }
 

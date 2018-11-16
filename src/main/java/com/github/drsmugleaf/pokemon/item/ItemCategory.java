@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.pokemon.item;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 18/09/2017.
@@ -16,14 +16,14 @@ public enum ItemCategory {
     GENESECT_DRIVE("Genesect Drive"),
     SILVALLY_MEMORY("Silvally Memory");
 
-    @Nonnull
+    @NotNull
     public final String NAME;
 
-    ItemCategory(@Nonnull String name) {
+    ItemCategory(@NotNull String name) {
         NAME = name;
     }
 
-    @Nonnull
+    @NotNull
     public String getName() {
         return NAME;
     }

@@ -5,7 +5,7 @@ import com.google.common.collect.Multimap;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -17,16 +17,16 @@ import java.util.Map;
  */
 public class Systems {
 
-    @Nonnull
+    @NotNull
     private static final String STARGATES_FILE_NAME = "./src/main/java/com/github/drsmugleaf/eve/stargates.csv";
 
-    @Nonnull
+    @NotNull
     private static final String SYSTEMS_FILE_NAME = "./src/main/java/com/github/drsmugleaf/eve/systems.csv";
 
-    @Nonnull
+    @NotNull
     public static final Multimap<Integer, Integer> CONNECTIONS = ArrayListMultimap.create();
 
-    @Nonnull
+    @NotNull
     public static final Map<Integer, String> NAMES = new HashMap<>();
 
     static {

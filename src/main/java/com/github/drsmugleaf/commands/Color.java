@@ -13,8 +13,8 @@ import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RoleBuilder;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @CommandInfo(tags = {Tags.GUILD_ONLY})
 public class Color extends Command {
 
-    protected Color(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected Color(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 

@@ -4,7 +4,7 @@ import com.github.drsmugleaf.deadbydaylight.ICharacter;
 import com.github.drsmugleaf.deadbydaylight.Killers;
 import com.github.drsmugleaf.deadbydaylight.Survivors;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,10 +15,10 @@ import java.util.Map;
  */
 public class NameResolver {
 
-    @Nonnull
+    @NotNull
     private static final Map<String, String> KILLER_NAMES = new HashMap<>();
 
-    @Nonnull
+    @NotNull
     private static final Map<String, String> SURVIVOR_NAMES = new HashMap<>();
 
     static {
@@ -26,7 +26,7 @@ public class NameResolver {
         registerSurvivors();
     }
 
-    @Nonnull
+    @NotNull
     private static <T extends Enum<T> & ICharacter> Map<String, String> register(Class<T> enumClass) {
         Map<String, String> names = new HashMap<>();
         List<String> namesSeen = new ArrayList<>();
@@ -68,8 +68,8 @@ public class NameResolver {
         SURVIVOR_NAMES.putAll(survivors);
     }
 
-    @Nonnull
-    public static String resolveKillerName(@Nonnull String name) {
+    @NotNull
+    public static String resolveKillerName(@NotNull String name) {
         name = name.toLowerCase();
 
         if (!KILLER_NAMES.containsKey(name)) {
@@ -79,8 +79,8 @@ public class NameResolver {
         return KILLER_NAMES.get(name);
     }
 
-    @Nonnull
-    public static String resolveSurvivorName(@Nonnull String name) {
+    @NotNull
+    public static String resolveSurvivorName(@NotNull String name) {
         name = name.toLowerCase();
 
         if (!SURVIVOR_NAMES.containsKey(name)) {

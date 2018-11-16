@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.commands.images;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 
 /**
@@ -8,10 +8,10 @@ import java.io.IOException;
  */
 public class InvalidURLException extends IOException {
 
-    @Nonnull
+    @NotNull
     public final String URL;
 
-    public InvalidURLException(@Nonnull String url, Throwable cause) {
+    public InvalidURLException(@NotNull String url, Throwable cause) {
         super("Invalid image URL: " + url, cause);
         URL = url;
     }

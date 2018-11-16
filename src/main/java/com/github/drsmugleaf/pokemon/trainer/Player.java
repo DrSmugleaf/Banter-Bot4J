@@ -1,34 +1,34 @@
 package com.github.drsmugleaf.pokemon.trainer;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 29/09/2017.
  */
 public class Player {
 
-    @Nonnull
+    @NotNull
     public final Long ID;
 
-    @Nonnull
+    @NotNull
     private String name;
 
-    protected Player(@Nonnull Long id, @Nonnull String name) {
+    protected Player(@NotNull Long id, @NotNull String name) {
         ID = id;
         this.name = name;
     }
 
-    @Nonnull
+    @NotNull
     public Long getID() {
         return ID;
     }
 
-    @Nonnull
+    @NotNull
     public String getName() {
         return name;
     }
 
-    public void setName(@Nonnull String name) {
+    public void setName(@NotNull String name) {
         this.name = name;
     }
 

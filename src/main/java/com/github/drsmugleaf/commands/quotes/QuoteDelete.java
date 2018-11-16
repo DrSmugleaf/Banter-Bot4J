@@ -9,7 +9,7 @@ import com.github.drsmugleaf.database.models.Quote;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
@@ -26,7 +26,7 @@ import java.util.List;
 )
 public class QuoteDelete extends Command {
 
-    protected QuoteDelete(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected QuoteDelete(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 

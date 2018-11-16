@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.database.api;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -11,7 +11,7 @@ public class Query implements AutoCloseable {
 
     final PreparedStatement STATEMENT;
 
-    Query(@Nonnull PreparedStatement statement) {
+    Query(@NotNull PreparedStatement statement) {
         STATEMENT = statement;
     }
 

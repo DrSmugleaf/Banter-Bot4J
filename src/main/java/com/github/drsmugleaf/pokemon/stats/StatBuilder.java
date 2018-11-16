@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.pokemon.stats;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 /**
@@ -8,10 +8,10 @@ import java.util.*;
  */
 public class StatBuilder {
 
-    @Nonnull
+    @NotNull
     public static final List<IStat> STAT_LIST = new ArrayList<>();
 
-    @Nonnull
+    @NotNull
     private final Map<IStat, Stat> STATS = new LinkedHashMap<>();
 
     static {
@@ -47,15 +47,15 @@ public class StatBuilder {
         return STATS;
     }
 
-    public void put(@Nonnull IStat stat) {
+    public void put(@NotNull IStat stat) {
         STATS.put(stat, new Stat(stat, 31, 0));
     }
 
-    public void put(@Nonnull Stat stat) {
+    public void put(@NotNull Stat stat) {
         STATS.put(stat.STAT, stat);
     }
 
-    public void setIV(@Nonnull IStat stat, int iv) {
+    public void setIV(@NotNull IStat stat, int iv) {
         if (!STATS.containsKey(stat)) {
             STATS.put(stat, new Stat(stat, iv, 0));
             return;
@@ -65,7 +65,7 @@ public class StatBuilder {
         STATS.put(stat, new Stat(stat, mapStat.IV, mapStat.IV));
     }
 
-    public void setEV(@Nonnull IStat stat, int ev) {
+    public void setEV(@NotNull IStat stat, int ev) {
         if (!STATS.containsKey(stat)) {
             STATS.put(stat, new Stat(stat, 31, ev));
             return;

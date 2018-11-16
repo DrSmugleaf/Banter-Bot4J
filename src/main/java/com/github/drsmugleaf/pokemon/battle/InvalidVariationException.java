@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.pokemon.battle;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 26/09/2017.
@@ -23,11 +23,11 @@ public class InvalidVariationException extends IllegalArgumentException {
         super(cause);
     }
 
-    public InvalidVariationException(@Nonnull Variation variation, @Nonnull String message) {
+    public InvalidVariationException(@NotNull Variation variation, @NotNull String message) {
         super("Invalid variation: " + variation.getName() + ". " + message);
     }
 
-    public InvalidVariationException(@Nonnull Variation variation) {
+    public InvalidVariationException(@NotNull Variation variation) {
         this(variation, "");
     }
 

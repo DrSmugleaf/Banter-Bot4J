@@ -5,14 +5,14 @@ import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.database.models.EveDowntimeUser;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 21/06/2018
  */
 public class EveDowntime extends Command {
 
-    protected EveDowntime(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected EveDowntime(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 

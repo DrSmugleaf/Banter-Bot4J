@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.pokemon.moves;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 24/09/2017.
@@ -9,14 +9,14 @@ public enum MoveEffect {
 
     ENTRY_HAZARD("Entry Hazard");
 
-    @Nonnull
+    @NotNull
     public final String NAME;
 
-    MoveEffect(@Nonnull String name) {
+    MoveEffect(@NotNull String name) {
         NAME = name;
     }
 
-    @Nonnull
+    @NotNull
     public String getName() {
         return NAME;
     }

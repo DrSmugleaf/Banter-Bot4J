@@ -2,8 +2,8 @@ package com.github.drsmugleaf.pokemon.pokemon;
 
 import com.github.drsmugleaf.pokemon.ability.Abilities;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -16,20 +16,20 @@ public enum Gender { // TODO: Add list of Genderless Pokemon / Pokemon gender ra
     FEMALE("Female", "(F)"),
     GENDERLESS("Genderless", null);
 
-    @Nonnull
+    @NotNull
     public final String NAME;
 
     @Nullable
     public final String ABBREVIATION;
 
-    Gender(@Nonnull String name, @Nullable String abbreviation) {
+    Gender(@NotNull String name, @Nullable String abbreviation) {
         Holder.MAP.put(name.toLowerCase(), this);
         NAME = name;
         ABBREVIATION = abbreviation;
     }
 
-    @Nonnull
-    public static Gender getGender(@Nonnull String gender) {
+    @NotNull
+    public static Gender getGender(@NotNull String gender) {
         gender = gender.toLowerCase();
 
         if (Objects.equals(gender, Gender.MALE.ABBREVIATION)) {
@@ -45,14 +45,14 @@ public enum Gender { // TODO: Add list of Genderless Pokemon / Pokemon gender ra
         return Holder.MAP.get(gender);
     }
 
-    @Nonnull
-    public static Gender getRandomGender(@Nonnull Species pokemon) {
+    @NotNull
+    public static Gender getRandomGender(@NotNull Species pokemon) {
         List<Gender> genders = pokemon.getValidGenders();
         int index = ThreadLocalRandom.current().nextInt(genders.size());
         return genders.get(index);
     }
 
-    public static boolean isOppositeGender(@Nonnull Pokemon pokemon1, @Nonnull Pokemon pokemon2) {
+    public static boolean isOppositeGender(@NotNull Pokemon pokemon1, @NotNull Pokemon pokemon2) {
         switch (pokemon1.getGender()) {
             case MALE:
                 return pokemon2.getGender() == Gender.FEMALE;
@@ -65,7 +65,7 @@ public enum Gender { // TODO: Add list of Genderless Pokemon / Pokemon gender ra
         }
     }
 
-    public static boolean isInfatuatable(@Nonnull Pokemon attacker, @Nonnull Pokemon defender) {
+    public static boolean isInfatuatable(@NotNull Pokemon attacker, @NotNull Pokemon defender) {
         if (defender.ABILITY.get() == Abilities.OBLIVIOUS) {
             return false;
         }
@@ -73,7 +73,7 @@ public enum Gender { // TODO: Add list of Genderless Pokemon / Pokemon gender ra
         return Gender.isOppositeGender(attacker, defender);
     }
 
-    @Nonnull
+    @NotNull
     public String getName() {
         return NAME;
     }
@@ -84,7 +84,7 @@ public enum Gender { // TODO: Add list of Genderless Pokemon / Pokemon gender ra
     }
 
     private static class Holder {
-        @Nonnull
+        @NotNull
         static Map<String, Gender> MAP = new HashMap<>();
     }
 

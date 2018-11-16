@@ -9,7 +9,7 @@ import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.Permissions;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 09/06/2018
@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 @CommandInfo(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL, Tags.DELETE_COMMAND_MESSAGE})
 public class Resume extends MusicCommand {
 
-    protected Resume(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected Resume(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 

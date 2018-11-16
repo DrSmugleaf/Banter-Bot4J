@@ -4,8 +4,8 @@ import com.github.drsmugleaf.pokemon.battle.IModifier;
 import com.github.drsmugleaf.pokemon.battle.Battle;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -319,23 +319,23 @@ public enum Items implements IModifier {
     DARK_MEMORY("Dark Memory", ItemCategory.SILVALLY_MEMORY),
     FAIRY_MEMORY("Fairy Memory", ItemCategory.SILVALLY_MEMORY);
 
-    @Nonnull
+    @NotNull
     public final String NAME;
 
-    @Nonnull
+    @NotNull
     public final ItemCategory CATEGORY;
 
-    Items(@Nonnull String name, @Nonnull ItemCategory category) {
+    Items(@NotNull String name, @NotNull ItemCategory category) {
         Holder.MAP.put(name.toLowerCase(), this);
         NAME = name;
         CATEGORY = category;
     }
 
-    Items(@Nonnull String name) {
+    Items(@NotNull String name) {
         this(name, ItemCategory.DEFAULT);
     }
 
-    @Nonnull
+    @NotNull
     public static Items getItem(@Nullable String item) {
         if (item == null) {
             return NONE;
@@ -350,20 +350,20 @@ public enum Items implements IModifier {
         return Holder.MAP.get(item);
     }
 
-    @Nonnull
+    @NotNull
     public String getName() {
         return NAME;
     }
 
-    @Nonnull
+    @NotNull
     public ItemCategory getCategory() {
         return CATEGORY;
     }
 
-    public void use(@Nonnull Pokemon user, @Nonnull Battle battle) {}
+    public void use(@NotNull Pokemon user, @NotNull Battle battle) {}
 
     private static class Holder {
-        @Nonnull
+        @NotNull
         static Map<String, Items> MAP = new HashMap<>();
     }
 

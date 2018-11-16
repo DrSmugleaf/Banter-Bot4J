@@ -3,7 +3,7 @@ package com.github.drsmugleaf.commands.deadbydaylight;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.util.EmbedBuilder;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class LargeEmbedBuilder extends EmbedBuilder {
 
-    @Nonnull
+    @NotNull
     private final List<EmbedBuilder> builders = new ArrayList<>();
 
     public LargeEmbedBuilder() {
@@ -20,7 +20,7 @@ public class LargeEmbedBuilder extends EmbedBuilder {
         builders.add(this);
     }
 
-    @Nonnull
+    @NotNull
     private EmbedBuilder getCurrentBuilder() {
         return builders.get(builders.size() - 1);
     }
@@ -42,7 +42,7 @@ public class LargeEmbedBuilder extends EmbedBuilder {
         return builder.appendField(title, content, inline);
     }
 
-    @Nonnull
+    @NotNull
     public List<EmbedObject> buildAll() {
         List<EmbedObject> embeds = new ArrayList<>();
 

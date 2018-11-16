@@ -1,27 +1,27 @@
 package com.github.drsmugleaf.pokemon.ability;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 15/10/2017.
  */
 public class Ability {
 
-    @Nonnull
+    @NotNull
     private final Abilities ABILITY;
 
     private boolean suppressed = false;
 
-    public Ability(@Nonnull Abilities ability) {
+    public Ability(@NotNull Abilities ability) {
         ABILITY = ability;
     }
 
-    @Nonnull
+    @NotNull
     public String getName() {
         return ABILITY.NAME;
     }
 
-    @Nonnull
+    @NotNull
     public Abilities get() {
         return ABILITY;
     }

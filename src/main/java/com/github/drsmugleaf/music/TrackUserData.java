@@ -3,20 +3,20 @@ package com.github.drsmugleaf.music;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IUser;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 02/03/2018.
  */
 public class TrackUserData {
 
-    @Nonnull
+    @NotNull
     public final IChannel CHANNEL;
 
-    @Nonnull
+    @NotNull
     public final IUser SUBMITTER;
 
-    protected TrackUserData(@Nonnull IChannel channel, @Nonnull IUser submitter) {
+    protected TrackUserData(@NotNull IChannel channel, @NotNull IUser submitter) {
         CHANNEL = channel;
         SUBMITTER = submitter;
     }

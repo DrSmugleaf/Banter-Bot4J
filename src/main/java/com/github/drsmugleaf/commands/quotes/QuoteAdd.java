@@ -7,7 +7,7 @@ import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.database.models.Quote;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 21/06/2018
@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 @CommandInfo(name = "quote add", aliases = "quoteadd")
 public class QuoteAdd extends Command {
 
-    protected QuoteAdd(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected QuoteAdd(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 

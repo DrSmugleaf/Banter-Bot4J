@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.pokemon.battle;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -178,30 +178,30 @@ public enum Format {
                 );
     }
 
-    @Nonnull
+    @NotNull
     public final String NAME;
 
     @Nullable
     public final String ABBREVIATION;
 
-    @Nonnull
+    @NotNull
     private final List<Clause> CLAUSES = new ArrayList<>();
 
     @Nullable
     private Tier TIER = null;
 
-    Format(@Nonnull String name, @Nullable String abbreviation) {
+    Format(@NotNull String name, @Nullable String abbreviation) {
         Holder.MAP.put(name.toLowerCase(), this);
         NAME = name;
         ABBREVIATION = abbreviation;
     }
 
-    Format(@Nonnull String name) {
+    Format(@NotNull String name) {
         this(name, null);
     }
 
-    @Nonnull
-    public static Format getFormat(@Nonnull String name) {
+    @NotNull
+    public static Format getFormat(@NotNull String name) {
         name = name.toLowerCase();
 
         if (!Holder.MAP.containsKey(name)) {
@@ -211,7 +211,7 @@ public enum Format {
         return Holder.MAP.get(name);
     }
 
-    @Nonnull
+    @NotNull
     public String getName() {
         return NAME;
     }
@@ -221,7 +221,7 @@ public enum Format {
         return ABBREVIATION;
     }
 
-    public boolean isValid(@Nonnull Battle battle) {
+    public boolean isValid(@NotNull Battle battle) {
         if (TIER != null && !TIER.isValid(battle)) {
             return false;
         }
@@ -235,19 +235,19 @@ public enum Format {
         return true;
     }
 
-    @Nonnull
+    @NotNull
     public List<Clause> getClauses() {
         return CLAUSES;
     }
 
-    @Nonnull
-    private Format addClauses(@Nonnull Clause... clauses) {
+    @NotNull
+    private Format addClauses(@NotNull Clause... clauses) {
         Collections.addAll(CLAUSES, clauses);
         return this;
     }
 
-    @Nonnull
-    private Format setClauses(@Nonnull Clause... clauses) {
+    @NotNull
+    private Format setClauses(@NotNull Clause... clauses) {
         CLAUSES.clear();
         return addClauses(clauses);
     }
@@ -257,14 +257,14 @@ public enum Format {
         return TIER;
     }
 
-    @Nonnull
-    public Format setTier(@Nonnull Tier tier) {
+    @NotNull
+    public Format setTier(@NotNull Tier tier) {
         TIER = tier;
         return this;
     }
 
     private static class Holder {
-        @Nonnull
+        @NotNull
         static Map<String, Format> MAP = new HashMap<>();
     }
 

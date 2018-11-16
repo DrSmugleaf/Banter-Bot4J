@@ -7,24 +7,24 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 06/11/2018
  */
 public class KillerPerk extends Perk {
 
-    @Nonnull
+    @NotNull
     @SerializedName(value = "Killer", alternate = {"PerkKiller"})
     public final Killers KILLER;
 
-    KillerPerk(@Nonnull String imageUrl, @Nonnull String name, @Nonnull Tiers tier, double rating, long ratings, @Nonnull Killers killer) {
+    KillerPerk(@NotNull String imageUrl, @NotNull String name, @NotNull Tiers tier, double rating, long ratings, @NotNull Killers killer) {
         super(name, tier, rating, ratings);
         KILLER = killer;
     }
 
-    @Nonnull
-    public static KillerPerk from(@Nonnull JsonElement json) {
+    @NotNull
+    public static KillerPerk from(@NotNull JsonElement json) {
         JsonObject object = json.getAsJsonObject();
 
         if (object.get("PerkName").getAsString().toLowerCase().equalsIgnoreCase("Barbecue & Chili")) {
@@ -47,18 +47,18 @@ public class KillerPerk extends Perk {
         return API.GSON.fromJson(object, KillerPerk.class);
     }
 
-    @Nonnull
-    public static KillerPerk from(@Nonnull KillerPerks perk) {
+    @NotNull
+    public static KillerPerk from(@NotNull KillerPerks perk) {
         return PerksAPI.KILLER_PERKS.get().get(perk);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ICharacter getCharacter() {
         return KILLER;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public KillerPerks toPerk() {
         return KillerPerks.from(NAME);

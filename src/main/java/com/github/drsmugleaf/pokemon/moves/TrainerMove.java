@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.pokemon.moves;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 16/10/2017.
@@ -9,14 +9,14 @@ public enum TrainerMove implements IMoves {
 
     SWITCH("Switch");
 
-    @Nonnull
+    @NotNull
     public final String NAME;
 
-    TrainerMove(@Nonnull String name) {
+    TrainerMove(@NotNull String name) {
         NAME = name;
     }
 
-    @Nonnull
+    @NotNull
     public String getName() {
         return NAME;
     }

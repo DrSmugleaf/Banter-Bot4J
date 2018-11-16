@@ -6,7 +6,7 @@ import com.github.drsmugleaf.pokemon.moves.BaseMove;
 import com.github.drsmugleaf.pokemon.pokemon.Species;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 /**
@@ -292,43 +292,43 @@ public enum Tier {
                 );
     }
 
-    @Nonnull
+    @NotNull
     public final String NAME;
 
-    @Nonnull
+    @NotNull
     public final String ABBREVIATION;
 
-    @Nonnull
+    @NotNull
     private final List<Clause> CLAUSES = new ArrayList<>();
 
-    @Nonnull
+    @NotNull
     private final List<Species> BANNED_POKEMONS = new ArrayList<>();
 
-    @Nonnull
+    @NotNull
     private final List<BaseMove> BANNED_MOVES = new ArrayList<>();
 
-    @Nonnull
+    @NotNull
     private final List<Tier> BANNED_TIERS = new ArrayList<>();
 
-    @Nonnull
+    @NotNull
     private final List<Items> BANNED_ITEMS = new ArrayList<>();
 
-    @Nonnull
+    @NotNull
     private final List<Abilities> BANNED_ABILITIES = new ArrayList<>();
 
-    Tier(@Nonnull String name, @Nonnull String abbreviation, @Nonnull Clause... clauses) {
+    Tier(@NotNull String name, @NotNull String abbreviation, @NotNull Clause... clauses) {
         Holder.MAP.put(abbreviation.toLowerCase(), this);
         NAME = name;
         ABBREVIATION = abbreviation;
         Collections.addAll(CLAUSES, clauses);
     }
 
-    Tier(@Nonnull String name, @Nonnull String abbreviation) {
+    Tier(@NotNull String name, @NotNull String abbreviation) {
         this(name, abbreviation, new Clause[]{});
     }
 
-    @Nonnull
-    public static Tier getTier(@Nonnull String abbreviation) {
+    @NotNull
+    public static Tier getTier(@NotNull String abbreviation) {
         abbreviation = abbreviation.toLowerCase();
 
         if (!Holder.MAP.containsKey(abbreviation)) {
@@ -338,17 +338,17 @@ public enum Tier {
         return Holder.MAP.get(abbreviation);
     }
 
-    @Nonnull
+    @NotNull
     public String getName() {
         return NAME;
     }
 
-    @Nonnull
+    @NotNull
     public String getAbbreviation() {
         return ABBREVIATION;
     }
 
-    public boolean isValid(@Nonnull Battle battle) {
+    public boolean isValid(@NotNull Battle battle) {
         for (Clause clause : CLAUSES) {
             if (!clause.isValid(battle)) {
                 return false;
@@ -359,114 +359,114 @@ public enum Tier {
     }
 
     @Contract(pure = true)
-    @Nonnull
+    @NotNull
     public List<Clause> getClauses() {
         return CLAUSES;
     }
 
-    @Nonnull
-    private Tier addClauses(@Nonnull Clause... clauses) {
+    @NotNull
+    private Tier addClauses(@NotNull Clause... clauses) {
         Collections.addAll(CLAUSES, clauses);
         return this;
     }
 
-    @Nonnull
-    private Tier setClauses(@Nonnull Clause... clauses) {
+    @NotNull
+    private Tier setClauses(@NotNull Clause... clauses) {
         CLAUSES.clear();
         return addClauses(clauses);
     }
 
     @Contract(pure = true)
-    @Nonnull
+    @NotNull
     public List<Species> getBannedPokemons() {
         return BANNED_POKEMONS;
     }
 
-    @Nonnull
-    private Tier addBannedPokemons(@Nonnull Species... pokemons) {
+    @NotNull
+    private Tier addBannedPokemons(@NotNull Species... pokemons) {
         Collections.addAll(BANNED_POKEMONS, pokemons);
         return this;
     }
 
-    @Nonnull
-    private Tier setBannedPokemons(@Nonnull Species... pokemons) {
+    @NotNull
+    private Tier setBannedPokemons(@NotNull Species... pokemons) {
         BANNED_POKEMONS.clear();
         return addBannedPokemons(pokemons);
     }
 
-    @Nonnull
+    @NotNull
     public List<BaseMove> getBannedMoves() {
         return BANNED_MOVES;
     }
 
-    @Nonnull
-    private Tier addBannedMoves(@Nonnull BaseMove... moves) {
+    @NotNull
+    private Tier addBannedMoves(@NotNull BaseMove... moves) {
         Collections.addAll(BANNED_MOVES, moves);
         return this;
     }
 
-    @Nonnull
-    private Tier setBannedMoves(@Nonnull BaseMove... moves) {
+    @NotNull
+    private Tier setBannedMoves(@NotNull BaseMove... moves) {
         BANNED_MOVES.clear();
         return addBannedMoves(moves);
     }
 
     @Contract(pure = true)
-    @Nonnull
+    @NotNull
     public List<Tier> getBannedTiers() {
         return BANNED_TIERS;
     }
 
-    @Nonnull
-    private Tier addBannedTiers(@Nonnull Tier... tiers) {
+    @NotNull
+    private Tier addBannedTiers(@NotNull Tier... tiers) {
         Collections.addAll(BANNED_TIERS, tiers);
         return this;
     }
 
-    @Nonnull
-    private Tier setBannedTiers(@Nonnull Tier... tiers) {
+    @NotNull
+    private Tier setBannedTiers(@NotNull Tier... tiers) {
         BANNED_TIERS.clear();
         return addBannedTiers(tiers);
     }
 
     @Contract(pure = true)
-    @Nonnull
+    @NotNull
     public List<Items> getBannedItems() {
         return BANNED_ITEMS;
     }
 
-    @Nonnull
-    private Tier addBannedItems(@Nonnull Items... items) {
+    @NotNull
+    private Tier addBannedItems(@NotNull Items... items) {
         Collections.addAll(BANNED_ITEMS, items);
         return this;
     }
 
-    @Nonnull
-    private Tier setBannedItems(@Nonnull Items... items) {
+    @NotNull
+    private Tier setBannedItems(@NotNull Items... items) {
         BANNED_ITEMS.clear();
         return addBannedItems(items);
     }
 
     @Contract(pure = true)
-    @Nonnull
+    @NotNull
     public List<Abilities> getBannedAbilities() {
         return BANNED_ABILITIES;
     }
 
-    @Nonnull
-    private Tier addBannedAbilities(@Nonnull Abilities... abilities) {
+    @NotNull
+    private Tier addBannedAbilities(@NotNull Abilities... abilities) {
         Collections.addAll(BANNED_ABILITIES, abilities);
         return this;
     }
 
-    @Nonnull
-    private Tier setBannedAbilities(@Nonnull Abilities... abilities) {
+    @NotNull
+    private Tier setBannedAbilities(@NotNull Abilities... abilities) {
         BANNED_ABILITIES.clear();
         return addBannedAbilities(abilities);
     }
 
     private static class Holder {
-        @Nonnull
+        @NotNull
         static Map<String, Tier> MAP = new HashMap<>();
     }
 

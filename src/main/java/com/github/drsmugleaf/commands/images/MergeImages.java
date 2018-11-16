@@ -7,7 +7,7 @@ import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -24,12 +24,12 @@ import java.util.List;
 @CommandInfo(tags = {Tags.DELETE_COMMAND_MESSAGE})
 public class MergeImages extends Command {
 
-    protected MergeImages(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected MergeImages(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 
-    @Nonnull
-    private static BufferedImage concatenateImagesVertical(@Nonnull List<String> urls) throws InvalidURLException {
+    @NotNull
+    private static BufferedImage concatenateImagesVertical(@NotNull List<String> urls) throws InvalidURLException {
         int amount = urls.size();
         BufferedImage images[] = new BufferedImage[amount];
         int maxWidth = 0;
@@ -63,8 +63,8 @@ public class MergeImages extends Command {
         return image;
     }
 
-    @Nonnull
-    private static BufferedImage concatenateImagesHorizontal(@Nonnull List<String> urls) throws InvalidURLException {
+    @NotNull
+    private static BufferedImage concatenateImagesHorizontal(@NotNull List<String> urls) throws InvalidURLException {
         int amount = urls.size();
         BufferedImage images[] = new BufferedImage[amount];
         int maxHeight = 0;

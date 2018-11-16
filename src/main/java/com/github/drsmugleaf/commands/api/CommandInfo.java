@@ -3,7 +3,7 @@ package com.github.drsmugleaf.commands.api;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 import sx.blah.discord.handle.obj.Permissions;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -16,16 +16,16 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface CommandInfo {
 
-    @Nonnull
+    @NotNull
     String name() default "";
 
-    @Nonnull
+    @NotNull
     String[] aliases() default {};
 
-    @Nonnull
+    @NotNull
     Permissions[] permissions() default {};
 
-    @Nonnull
+    @NotNull
     Tags[] tags() default {};
 
 }

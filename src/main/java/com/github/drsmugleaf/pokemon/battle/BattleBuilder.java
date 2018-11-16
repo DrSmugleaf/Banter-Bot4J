@@ -3,7 +3,7 @@ package com.github.drsmugleaf.pokemon.battle;
 import com.github.drsmugleaf.pokemon.trainer.TrainerBuilder;
 import com.github.drsmugleaf.pokemon.trainer.UserException;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,15 +13,15 @@ import java.util.List;
  */
 public class BattleBuilder {
 
-    @Nonnull
+    @NotNull
     private Setup SETUP = Setup.getDefault();
 
-    @Nonnull
+    @NotNull
     private final List<TrainerBuilder> TRAINERS = new ArrayList<>();
 
     public BattleBuilder() {}
 
-    @Nonnull
+    @NotNull
     public Battle build() throws UserException {
         if (TRAINERS.isEmpty()) {
             throw new IllegalStateException("No trainers have been added to the battle");
@@ -30,24 +30,24 @@ public class BattleBuilder {
         return new Battle(SETUP, TRAINERS);
     }
 
-    @Nonnull
+    @NotNull
     public Setup getSetup() {
         return SETUP;
     }
 
-    @Nonnull
-    public BattleBuilder setSetup(@Nonnull Setup setup) {
+    @NotNull
+    public BattleBuilder setSetup(@NotNull Setup setup) {
         SETUP = setup;
         return this;
     }
 
-    @Nonnull
+    @NotNull
     public List<TrainerBuilder> getTrainers() {
         return TRAINERS;
     }
 
-    @Nonnull
-    public BattleBuilder addTrainer(@Nonnull TrainerBuilder... trainerBuilders) {
+    @NotNull
+    public BattleBuilder addTrainer(@NotNull TrainerBuilder... trainerBuilders) {
         TRAINERS.addAll(Arrays.asList(trainerBuilders));
         return this;
     }

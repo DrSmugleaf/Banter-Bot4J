@@ -2,8 +2,8 @@ package com.github.drsmugleaf.pokemon.pokemon;
 
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,10 +39,10 @@ public enum Nature {
     CAREFUL(23, "Careful", PermanentStat.SPECIAL_DEFENSE, PermanentStat.SPECIAL_ATTACK),
     QUIRKY(24, "Quirky", null, null);
 
-    @Nonnull
+    @NotNull
     public final Integer ID;
 
-    @Nonnull
+    @NotNull
     public final String NAME;
 
     @Nullable
@@ -51,7 +51,7 @@ public enum Nature {
     @Nullable
     public final PermanentStat DECREASED_STAT;
 
-    Nature(@Nonnull Integer id, @Nonnull String name, @Nullable PermanentStat increasedStat, @Nullable PermanentStat decreasedStat) {
+    Nature(@NotNull Integer id, @NotNull String name, @Nullable PermanentStat increasedStat, @Nullable PermanentStat decreasedStat) {
         Holder.MAP.put(name, this);
         ID = id;
         NAME = name;
@@ -59,7 +59,7 @@ public enum Nature {
         DECREASED_STAT = decreasedStat;
     }
 
-    @Nonnull
+    @NotNull
     public static Nature getNature(@Nullable String name) {
         if (name == null) {
             return NONE;
@@ -74,12 +74,12 @@ public enum Nature {
         return Holder.MAP.get(name);
     }
 
-    @Nonnull
+    @NotNull
     public Integer getID() {
         return ID;
     }
 
-    @Nonnull
+    @NotNull
     public String getName() {
         return NAME;
     }
@@ -94,7 +94,7 @@ public enum Nature {
         return DECREASED_STAT;
     }
 
-    public double getNatureMultiplier(@Nonnull PermanentStat stat) {
+    public double getNatureMultiplier(@NotNull PermanentStat stat) {
         if (INCREASED_STAT != null && INCREASED_STAT.equals(stat)) {
             return 1.1;
         } else if (DECREASED_STAT != null && DECREASED_STAT.equals(stat)) {
@@ -105,7 +105,7 @@ public enum Nature {
     }
 
     private static class Holder {
-        @Nonnull
+        @NotNull
         static Map<String, Nature> MAP = new HashMap<>();
     }
 

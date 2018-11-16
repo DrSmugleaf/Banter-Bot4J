@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.database.api.types;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.math.BigDecimal;
 import java.sql.*;
 
@@ -44,24 +44,24 @@ public enum PostgresTypes implements SQLTypes {
 
     TINYINT("int2", Byte.class);
 
-    @Nonnull
+    @NotNull
     private final String NAME;
 
-    @Nonnull
+    @NotNull
     private final Class<?> CLASS;
 
-    PostgresTypes(@Nonnull String name, @Nonnull Class<?> clazz) {
+    PostgresTypes(@NotNull String name, @NotNull Class<?> clazz) {
         NAME = name;
         CLASS = clazz;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getName() {
         return NAME;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Class<?> getJavaType() {
         return CLASS;

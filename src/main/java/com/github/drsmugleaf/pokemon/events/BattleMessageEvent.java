@@ -2,22 +2,22 @@ package com.github.drsmugleaf.pokemon.events;
 
 import com.github.drsmugleaf.pokemon.battle.Battle;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 23/07/2017.
  */
 public class BattleMessageEvent extends Event {
 
-    @Nonnull
+    @NotNull
     public final String MESSAGE;
 
-    public BattleMessageEvent(@Nonnull Battle battle, @Nonnull String message) {
+    public BattleMessageEvent(@NotNull Battle battle, @NotNull String message) {
         super(battle);
         MESSAGE = message;
     }
 
-    @Nonnull
+    @NotNull
     public String getMessage() {
         return MESSAGE;
     }

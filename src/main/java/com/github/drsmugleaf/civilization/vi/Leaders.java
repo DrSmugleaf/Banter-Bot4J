@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.civilization.vi;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -50,21 +50,21 @@ public enum Leaders {
 
     public static final int AMOUNT = Leaders.values().length;
 
-    @Nonnull
+    @NotNull
     public final String NAME;
 
-    Leaders(@Nonnull String name) {
+    Leaders(@NotNull String name) {
         NAME = name;
     }
 
-    @Nonnull
+    @NotNull
     public static List<Leaders> random(int amount) {
         List<Leaders> leaders = new ArrayList<>(Arrays.asList(values()));
         Collections.shuffle(leaders);
         return leaders.subList(0, amount);
     }
 
-    @Nonnull
+    @NotNull
     public String getName() {
         return NAME;
     }

@@ -13,7 +13,7 @@ import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.IPrivateChannel;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.ws.rs.ProcessingException;
 import java.util.List;
 import java.util.Timer;
@@ -25,10 +25,10 @@ import java.util.TimerTask;
 @Table(name = "eve_downtime_users")
 public class EveDowntimeUser extends Model<EveDowntimeUser> {
 
-    @Nonnull
+    @NotNull
     private static final Timer DOWNTIME_TIMER = new Timer("Eve Online Downtime Timer", true);
 
-    @Nonnull
+    @NotNull
     private static final StatusApi STATUS_API = new StatusApi();
 
     private static boolean wasEveOffline = false;

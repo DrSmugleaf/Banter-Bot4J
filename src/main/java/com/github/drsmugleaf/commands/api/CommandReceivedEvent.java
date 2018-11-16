@@ -10,8 +10,8 @@ import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.RateLimitException;
 import sx.blah.discord.util.RequestBuffer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Comparator;
 import java.util.List;
 
@@ -20,26 +20,26 @@ import java.util.List;
  */
 public class CommandReceivedEvent extends MessageReceivedEvent {
 
-    @Nonnull
+    @NotNull
     protected IDiscordClient client;
 
-    protected CommandReceivedEvent(@Nonnull IMessage message) {
+    protected CommandReceivedEvent(@NotNull IMessage message) {
         super(message);
         client = message.getClient();
     }
 
-    protected CommandReceivedEvent(@Nonnull MessageReceivedEvent event) {
+    protected CommandReceivedEvent(@NotNull MessageReceivedEvent event) {
         this(event.getMessage());
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IDiscordClient getClient() {
         return client;
     }
 
     @Nullable
-    public static IRole getHighestRole(@Nonnull List<IRole> roles) {
+    public static IRole getHighestRole(@NotNull List<IRole> roles) {
         if (roles.isEmpty()) {
             return null;
         }
@@ -49,7 +49,7 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
     }
 
     @Nullable
-    public static IRole getHighestRole(@Nonnull IUser user, @Nonnull IGuild guild) {
+    public static IRole getHighestRole(@NotNull IUser user, @NotNull IGuild guild) {
         List<IRole> roles = user.getRolesForGuild(guild);
         return getHighestRole(roles);
     }
@@ -65,7 +65,7 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
         return getHighestRole(roles);
     }
 
-    @Nonnull
+    @NotNull
     public IMessage reply(@Nullable String content, @Nullable EmbedObject embed) {
         if (content == null) {
             content = "";
@@ -82,13 +82,13 @@ public class CommandReceivedEvent extends MessageReceivedEvent {
         }).get();
     }
 
-    @Nonnull
-    public IMessage reply(@Nonnull String content) {
+    @NotNull
+    public IMessage reply(@NotNull String content) {
         return reply(content, null);
     }
 
-    @Nonnull
-    public IMessage reply(@Nonnull EmbedObject embed) {
+    @NotNull
+    public IMessage reply(@NotNull EmbedObject embed) {
         return reply(null, embed);
     }
 

@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.awt.Color;
 
 /**
@@ -15,21 +15,21 @@ public enum Tiers {
     D("D", 1.50, new Color(60, 0, 0, 127)),
     F("F", 0.00, new Color(0, 0, 0, 127));
 
-    @Nonnull
+    @NotNull
     public final String NAME;
 
     public final double THRESHOLD;
 
-    @Nonnull
+    @NotNull
     public final Color COLOR;
 
-    Tiers(@Nonnull String name, double threshold, @Nonnull Color color) {
+    Tiers(@NotNull String name, double threshold, @NotNull Color color) {
         NAME = name;
         THRESHOLD = threshold;
         COLOR = color;
     }
 
-    @Nonnull
+    @NotNull
     public static Tiers from(double rating) {
         for (Tiers tier : values()) {
             if (rating >= tier.THRESHOLD) {
@@ -40,7 +40,7 @@ public enum Tiers {
         return F;
     }
 
-    @Nonnull
+    @NotNull
     public String getName() {
         return NAME;
     }

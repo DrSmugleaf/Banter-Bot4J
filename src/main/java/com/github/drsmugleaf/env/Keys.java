@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.env;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by DrSmugleaf on 16/01/2018.
@@ -17,7 +17,7 @@ public enum Keys {
     TRIPWIRE_TEST_USERNAME(""),
     TRIPWIRE_TEST_PASSWORD("");
 
-    @Nonnull
+    @NotNull
     public final String VALUE;
 
     Keys(@Nullable String defaultValue) {

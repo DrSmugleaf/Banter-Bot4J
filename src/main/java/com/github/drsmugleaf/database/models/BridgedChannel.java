@@ -9,7 +9,7 @@ import com.github.drsmugleaf.database.api.annotations.Table;
 import com.github.drsmugleaf.translator.Languages;
 import sx.blah.discord.handle.obj.IChannel;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 19/01/2018.
@@ -45,12 +45,12 @@ public class BridgedChannel extends Model<BridgedChannel> {
     private BridgedChannel() {
     }
 
-    @Nonnull
+    @NotNull
     public IChannel channel() {
         return BanterBot4J.CLIENT.getChannelByID(channel.id);
     }
 
-    @Nonnull
+    @NotNull
     public IChannel bridged() {
         return BanterBot4J.CLIENT.getChannelByID(bridged.id);
     }

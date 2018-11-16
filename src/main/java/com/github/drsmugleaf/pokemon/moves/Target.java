@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.pokemon.moves;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,16 +21,16 @@ public enum Target {
     SELF_OR_ADJACENT_ALLY("Self or adjacent ally"),
     ADJACENT_ALLY("Adjacent ally");
 
-    @Nonnull
+    @NotNull
     public final String NAME;
 
-    Target(@Nonnull String name) {
+    Target(@NotNull String name) {
         Holder.MAP.put(name.toLowerCase(), this);
         NAME = name;
     }
 
-    @Nonnull
-    public static Target getTarget(@Nonnull String target) {
+    @NotNull
+    public static Target getTarget(@NotNull String target) {
         target = target.toLowerCase();
         if (!Holder.MAP.containsKey(target)) {
             throw new NullPointerException("Target " + target + " doesn't exist");
@@ -39,19 +39,19 @@ public enum Target {
         return Holder.MAP.get(target);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String toString() {
         return NAME;
     }
 
-    @Nonnull
+    @NotNull
     public String getName() {
         return NAME;
     }
 
     private static class Holder {
-        @Nonnull
+        @NotNull
         static Map<String, Target> MAP = new HashMap<>();
     }
 

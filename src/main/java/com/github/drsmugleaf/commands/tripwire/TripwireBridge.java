@@ -9,7 +9,7 @@ import com.github.drsmugleaf.tripwire.route.Route;
 import com.github.drsmugleaf.tripwire.route.StarSystem;
 import sx.blah.discord.handle.obj.IUser;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,11 +18,11 @@ import java.util.List;
  */
 public class TripwireBridge extends Command {
 
-    protected TripwireBridge(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected TripwireBridge(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 
-    @Nonnull
+    @NotNull
     private static String invalidArgumentsResponse() {
         return "Invalid arguments.\n" +
                "**Formats:**\n" +

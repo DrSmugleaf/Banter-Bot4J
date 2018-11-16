@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.deadbydaylight;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 05/11/2018
@@ -64,23 +64,23 @@ public enum SurvivorPerks implements IPerk {
     WE_ARE_GONNA_LIVE_FOREVER("We're Gonna Live Forever", Survivors.DAVID_KING, "Your few friends deserve the best protection.\nEach time you rescue or take a hit to protect a Survivor, gain 25 % stackable bonus to all Bloodpoint gains up to a maximum of 50/75/100 %.\nThe bonus Bloodpoints are only awarded post-trial.\n\"Come on then, let's 'ave it! I don't give a shit pal.\" — David King\nUnique to David King until Level 30, at which point its Teachable version can then be learned and taught to the other Survivors."),
     WINDOWS_OF_OPPORTUNITY("Windows Of Opportunity", Survivors.KATE_DENSON, "Unlocks potential in one's Aura-reading ability.\nAuras of Pallets  and vaults are revealed to you when within a range of 20 metres.\nWindows Of Opportunity has a cool-down of 60/50/40 seconds when vaulting or dropping a Pallet during a Chase.\n\"Rise and shine, work hard, carve out your name, Take aim, pull the trigger, hit the bulls eye for fame, Know the value of faith, an' family, and don't you complain, Open wide, your windows of opportunity\" — Kate Denson's \"Windows Of Opportunity\"\nUnique to Kate Denson until Level 35, at which point its Teachable version can then be learned and taught to the other Survivors.");
 
-    @Nonnull
+    @NotNull
     public final String NAME;
 
-    @Nonnull
+    @NotNull
     public final Survivors SURVIVOR;
 
-    @Nonnull
+    @NotNull
     public final String DESCRIPTION;
 
-    SurvivorPerks(@Nonnull String name, @Nonnull Survivors survivor, @Nonnull String description) {
+    SurvivorPerks(@NotNull String name, @NotNull Survivors survivor, @NotNull String description) {
         NAME = name;
         SURVIVOR = survivor;
         DESCRIPTION = description;
     }
 
-    @Nonnull
-    public static SurvivorPerks from(@Nonnull String name) {
+    @NotNull
+    public static SurvivorPerks from(@NotNull String name) {
         for (SurvivorPerks perk : values()) {
             if (perk.NAME.equalsIgnoreCase(name)) {
                 return perk;
@@ -90,18 +90,18 @@ public enum SurvivorPerks implements IPerk {
         throw new IllegalArgumentException("No survivor perk exists with name " + name);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getName() {
         return NAME;
     }
 
-    @Nonnull
+    @NotNull
     public Survivors getSurvivor() {
         return SURVIVOR;
     }
 
-    @Nonnull
+    @NotNull
     public String getDescription() {
         return DESCRIPTION;
     }

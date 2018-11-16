@@ -10,7 +10,7 @@ import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.EmbedBuilder;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 @CommandInfo(tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
 public class Queue extends MusicCommand {
 
-    protected Queue(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected Queue(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 

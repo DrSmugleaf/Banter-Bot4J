@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.dijkstra;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,23 +11,23 @@ import java.util.Map;
  */
 public abstract class Node<T extends Node<T>> {
 
-    @Nonnull
+    @NotNull
     public final String NAME;
 
-    @Nonnull
+    @NotNull
     public final List<T> SHORTEST_PATH = new LinkedList<>();
 
-    @Nonnull
+    @NotNull
     Integer distance = Integer.MAX_VALUE;
 
-    @Nonnull
+    @NotNull
     final Map<T, Integer> ADJACENT_NODES = new HashMap<>();
 
-    public void addDestination(@Nonnull T destination, @Nonnull Integer distance) {
+    public void addDestination(@NotNull T destination, @NotNull Integer distance) {
         ADJACENT_NODES.put(destination, distance);
     }
 
-    protected Node(@Nonnull String name) {
+    protected Node(@NotNull String name) {
         NAME = name;
     }
 

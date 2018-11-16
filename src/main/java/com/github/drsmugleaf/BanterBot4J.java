@@ -13,8 +13,8 @@ import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.obj.IChannel;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.Instant;
@@ -29,32 +29,32 @@ import java.util.List;
  */
 public class BanterBot4J {
 
-    @Nonnull
+    @NotNull
     public static final Logger LOGGER = initLogger();
 
-    @Nonnull
+    @NotNull
     public static final IDiscordClient CLIENT = buildClient();
 
-    @Nonnull
+    @NotNull
     public static final String BOT_PREFIX = Keys.BOT_PREFIX.VALUE;
 
-    @Nonnull
+    @NotNull
     public static final List<Long> OWNERS = Collections.unmodifiableList(Arrays.asList(109067752286715904L));
 
     @Nullable
     private static IChannel DISCORD_WARNING_CHANNEL = null;
 
-    @Nonnull
+    @NotNull
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
 
-    @Nonnull
+    @NotNull
     private static IDiscordClient buildClient() {
         ClientBuilder clientBuilder = new ClientBuilder();
         clientBuilder.withToken(Keys.DISCORD_TOKEN.VALUE).withRecommendedShardCount();
         return clientBuilder.build();
     }
 
-    @Nonnull
+    @NotNull
     private static Logger initLogger() {
         return LoggerFactory.getLogger(BanterBot4J.class);
     }
@@ -74,7 +74,7 @@ public class BanterBot4J {
         CLIENT.login();
     }
 
-    private static void warnChannel(@Nonnull String message, @Nullable Throwable t) {
+    private static void warnChannel(@NotNull String message, @Nullable Throwable t) {
         if (DISCORD_WARNING_CHANNEL == null) {
             throw new IllegalStateException("No Discord warning channel has been set");
         }
@@ -103,7 +103,7 @@ public class BanterBot4J {
         Command.sendMessage(DISCORD_WARNING_CHANNEL, warning.toString());
     }
 
-    public static void warn(@Nonnull String message, @Nullable Throwable t) {
+    public static void warn(@NotNull String message, @Nullable Throwable t) {
         if (t != null) {
             LOGGER.warn(message, t);
         } else {
@@ -115,7 +115,7 @@ public class BanterBot4J {
         }
     }
 
-    public static void warn(@Nonnull String message) {
+    public static void warn(@NotNull String message) {
         warn(message, null);
     }
 

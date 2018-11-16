@@ -9,7 +9,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -17,14 +17,14 @@ import java.util.concurrent.TimeUnit;
  */
 public class Translator {
 
-    @Nonnull
+    @NotNull
     private static final Cache<Long, TranslatedMessage> MESSAGES = CacheBuilder
             .newBuilder()
             .expireAfterWrite(1, TimeUnit.MINUTES)
             .build();
 
     @EventSubscriber
-    public static void handle(@Nonnull MessageReceivedEvent event) {
+    public static void handle(@NotNull MessageReceivedEvent event) {
         IUser author = event.getAuthor();
         if (author.isBot()) {
             return;
@@ -36,7 +36,7 @@ public class Translator {
     }
 
     @EventSubscriber
-    public static void handle(@Nonnull MessageEditEvent event) {
+    public static void handle(@NotNull MessageEditEvent event) {
         IUser author = event.getAuthor();
         if (author.isBot()) {
             return;
@@ -53,7 +53,7 @@ public class Translator {
     }
 
     @EventSubscriber
-    public static void handle(@Nonnull MessageDeleteEvent event) {
+    public static void handle(@NotNull MessageDeleteEvent event) {
         IUser author = event.getAuthor();
         if (author != null && author.isBot()) {
             return;

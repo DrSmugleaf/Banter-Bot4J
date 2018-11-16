@@ -3,41 +3,41 @@ package com.github.drsmugleaf.pokemon.stats;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.pokemon.Species;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 08/10/2017.
  */
 public class Stat implements IStat {
 
-    @Nonnull
+    @NotNull
     public final IStat STAT;
 
     public final int IV;
 
     public final int EV;
 
-    @Nonnull
+    @NotNull
     private Stage STAGE = Stage.ZERO;
 
-    protected Stat(@Nonnull IStat stat, int iv, int ev) {
+    protected Stat(@NotNull IStat stat, int iv, int ev) {
         STAT = stat;
         IV = iv;
         EV = ev;
     }
 
-    @Nonnull
+    @NotNull
     public IStat getStat() {
         return STAT;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getName() {
         return STAT.getName();
     }
 
-    @Nonnull
+    @NotNull
     public String getAbbreviation() {
         return STAT.getAbbreviation();
     }
@@ -50,12 +50,12 @@ public class Stat implements IStat {
         return EV;
     }
 
-    @Nonnull
+    @NotNull
     public Stage getStage() {
         return STAGE;
     }
 
-    public void setStage(@Nonnull Stage stage) {
+    public void setStage(@NotNull Stage stage) {
         STAGE = stage;
     }
 
@@ -79,7 +79,7 @@ public class Stat implements IStat {
         }
     }
 
-    public int getBase(@Nonnull Species species) {
+    public int getBase(@NotNull Species species) {
         if (STAT instanceof PermanentStat) {
             return species.getStats().get(STAT);
         }
@@ -87,11 +87,11 @@ public class Stat implements IStat {
         return 1;
     }
 
-    public double calculate(@Nonnull Pokemon pokemon) {
+    public double calculate(@NotNull Pokemon pokemon) {
         return STAT.calculate(pokemon);
     }
 
-    public double calculateWithoutStages(@Nonnull Pokemon pokemon) {
+    public double calculateWithoutStages(@NotNull Pokemon pokemon) {
         return STAT.calculateWithoutStages(pokemon);
     }
 

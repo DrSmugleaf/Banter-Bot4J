@@ -2,14 +2,14 @@ package com.github.drsmugleaf.pokemon.events;
 
 import com.github.drsmugleaf.pokemon.battle.Battle;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 19/07/2017.
  */
 public class BattleTurnStartEvent extends Event {
 
-    public BattleTurnStartEvent(@Nonnull Battle battle) {
+    public BattleTurnStartEvent(@NotNull Battle battle) {
         super(battle);
     }
 

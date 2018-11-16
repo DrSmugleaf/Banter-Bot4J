@@ -10,8 +10,8 @@ import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
 import com.github.drsmugleaf.pokemon.types.Type;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -21,7 +21,7 @@ public enum Status implements IStatus, IModifier {
 
     BURN("Burn") {
         @Override
-        public void apply(@Nonnull Pokemon pokemon, @Nonnull Action action) {
+        public void apply(@NotNull Pokemon pokemon, @NotNull Action action) {
             if (pokemon.getBattle().GENERATION == Generation.I) {
                 pokemon.addStatModifier(PermanentStat.ATTACK, BURN, 0.5);
             }
@@ -30,7 +30,7 @@ public enum Status implements IStatus, IModifier {
         }
 
         @Override
-        public void remove(@Nonnull Pokemon pokemon) {
+        public void remove(@NotNull Pokemon pokemon) {
             if (pokemon.getBattle().GENERATION == Generation.I) {
                 pokemon.removeStatModifier(BURN);
             }
@@ -39,7 +39,7 @@ public enum Status implements IStatus, IModifier {
         }
 
         @Override
-        public void onOwnTurnEnd(@Nonnull Pokemon pokemon) {
+        public void onOwnTurnEnd(@NotNull Pokemon pokemon) {
             Generation generation = pokemon.getBattle().GENERATION;
 
             switch (generation) {
@@ -62,7 +62,7 @@ public enum Status implements IStatus, IModifier {
         }
 
         @Override
-        public double damageMultiplier(@Nonnull Action action) {
+        public double damageMultiplier(@NotNull Action action) {
             Generation generation = action.getGeneration();
 
             switch (generation) {
@@ -102,7 +102,7 @@ public enum Status implements IStatus, IModifier {
     },
     FREEZE("Freeze") {
         @Override
-        public boolean onOwnReceiveAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+        public boolean onOwnReceiveAttack(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {
             Generation generation = attacker.getBattle().GENERATION;
 
             switch (generation) {
@@ -142,7 +142,7 @@ public enum Status implements IStatus, IModifier {
         }
 
         @Override
-        public boolean onOwnAttemptAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+        public boolean onOwnAttemptAttack(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {
             Generation generation = attacker.getBattle().GENERATION;
 
             switch (generation) {
@@ -173,7 +173,7 @@ public enum Status implements IStatus, IModifier {
     },
     PARALYSIS("Paralysis") {
         @Override
-        public void apply(@Nonnull Pokemon pokemon, @Nonnull Action action) {
+        public void apply(@NotNull Pokemon pokemon, @NotNull Action action) {
             if (pokemon.getBattle().GENERATION == Generation.I) {
                 pokemon.addStatModifier(PermanentStat.SPEED, PARALYSIS, 0.5);
             }
@@ -182,7 +182,7 @@ public enum Status implements IStatus, IModifier {
         }
 
         @Override
-        public void remove(@Nonnull Pokemon pokemon) {
+        public void remove(@NotNull Pokemon pokemon) {
             if (pokemon.getBattle().GENERATION == Generation.I) {
                 pokemon.removeStatModifier(PARALYSIS);
             }
@@ -191,12 +191,12 @@ public enum Status implements IStatus, IModifier {
         }
 
         @Override
-        public boolean onOwnAttemptAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+        public boolean onOwnAttemptAttack(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {
             return !(Math.random() < 0.25);
         }
 
         @Override
-        public double statMultiplier(@Nonnull Pokemon pokemon, @Nonnull IStat stat) {
+        public double statMultiplier(@NotNull Pokemon pokemon, @NotNull IStat stat) {
             Generation generation = pokemon.getBattle().GENERATION;
 
             if (stat == PermanentStat.SPEED) {
@@ -221,7 +221,7 @@ public enum Status implements IStatus, IModifier {
     },
     POISON("Poison") {
         @Override
-        public void onOwnTurnEnd(@Nonnull Pokemon pokemon) {
+        public void onOwnTurnEnd(@NotNull Pokemon pokemon) {
             Generation generation = pokemon.getBattle().GENERATION;
 
             switch (generation) {
@@ -245,13 +245,13 @@ public enum Status implements IStatus, IModifier {
     },
     BADLY_POISONED("Badly poisoned") {
         @Override
-        public void remove(@Nonnull Pokemon user) {
+        public void remove(@NotNull Pokemon user) {
             user.resetToxicN();
             super.remove(user);
         }
 
         @Override
-        public void onOwnTurnEnd(@Nonnull Pokemon pokemon) {
+        public void onOwnTurnEnd(@NotNull Pokemon pokemon) {
             Generation generation = pokemon.getBattle().GENERATION;
 
             switch (generation) {
@@ -276,7 +276,7 @@ public enum Status implements IStatus, IModifier {
         }
 
         @Override
-        public void onOwnSendBack(@Nonnull Pokemon pokemon) {
+        public void onOwnSendBack(@NotNull Pokemon pokemon) {
             Generation generation = pokemon.getBattle().GENERATION;
 
             switch (generation) {
@@ -317,19 +317,19 @@ public enum Status implements IStatus, IModifier {
         }
 
         @Override
-        public boolean onOwnAttemptAttack(@Nonnull Pokemon attacker, @Nonnull Pokemon defender, @Nonnull Action action) {
+        public boolean onOwnAttemptAttack(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {
             return false;
         }
     };
 
-    @Nonnull
+    @NotNull
     public String NAME;
 
-    Status(@Nonnull String name) {
+    Status(@NotNull String name) {
         NAME = name;
     }
 
-    @Nonnull
+    @NotNull
     public String getName() {
         return NAME;
     }
@@ -340,12 +340,12 @@ public enum Status implements IStatus, IModifier {
     }
 
     @Override
-    public void apply(@Nonnull Pokemon pokemon, @Nonnull Action action) {
+    public void apply(@NotNull Pokemon pokemon, @NotNull Action action) {
         pokemon.STATUSES.setStatus(this);
     }
 
     @Override
-    public void remove(@Nonnull Pokemon pokemon) {
+    public void remove(@NotNull Pokemon pokemon) {
         pokemon.STATUSES.resetStatus();
     }
 

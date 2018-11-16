@@ -3,8 +3,8 @@ package com.github.drsmugleaf.commands.api;
 import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -15,15 +15,15 @@ import java.util.regex.Pattern;
  */
 public class Arguments extends ArrayList<String> {
 
-    @Nonnull
+    @NotNull
     private static final Pattern SPLIT_ON_SPACES_EXCEPT_WITHIN_QUOTES = Pattern.compile("\"([^\"]*)\"|'([^']*)'|[^\\s]+");
 
-    Arguments(@Nonnull CommandSearchResult command, @Nonnull CommandReceivedEvent event) {
+    Arguments(@NotNull CommandSearchResult command, @NotNull CommandReceivedEvent event) {
         super(getArgs(command, event));
     }
 
-    @Nonnull
-    private static String getArg(@Nonnull Matcher matcher) {
+    @NotNull
+    private static String getArg(@NotNull Matcher matcher) {
         for (int i = 1; i <= matcher.groupCount(); i++) {
             String match = matcher.group(i);
             if (match != null) {
@@ -34,8 +34,8 @@ public class Arguments extends ArrayList<String> {
         return matcher.group();
     }
 
-    @Nonnull
-    private static String extractArgs(@Nonnull CommandSearchResult command, @Nonnull MessageReceivedEvent event) {
+    @NotNull
+    private static String extractArgs(@NotNull CommandSearchResult command, @NotNull MessageReceivedEvent event) {
         String matchedCommandName = command.MATCHED_NAME;
         String argumentsString = event.getMessage().getFormattedContent();
         int index = argumentsString.toLowerCase().indexOf(matchedCommandName.toLowerCase());
@@ -43,8 +43,8 @@ public class Arguments extends ArrayList<String> {
         return argumentsString;
     }
 
-    @Nonnull
-    public static List<String> parseArgs(@Nonnull String argumentsString) {
+    @NotNull
+    public static List<String> parseArgs(@NotNull String argumentsString) {
         List<String> args = new ArrayList<>();
         Matcher matcher = SPLIT_ON_SPACES_EXCEPT_WITHIN_QUOTES.matcher(argumentsString);
 
@@ -56,23 +56,23 @@ public class Arguments extends ArrayList<String> {
         return args;
     }
 
-    @Nonnull
-    public static List<String> getArgs(@Nonnull CommandSearchResult command, @Nonnull MessageReceivedEvent event) {
+    @NotNull
+    public static List<String> getArgs(@NotNull CommandSearchResult command, @NotNull MessageReceivedEvent event) {
         String argumentsString = extractArgs(command, event);
         return parseArgs(argumentsString);
     }
 
-    @Nonnull
+    @NotNull
     public String first() {
         return get(0);
     }
 
-    @Nonnull
+    @NotNull
     public String last() {
         return get(size() - 1);
     }
 
-    @Nonnull
+    @NotNull
     public String getFrom(int start, int end) {
         StringBuilder builder = new StringBuilder();
         for (int i = start; i < end; i++) {
@@ -82,7 +82,7 @@ public class Arguments extends ArrayList<String> {
         return builder.toString().trim();
     }
 
-    @Nonnull
+    @NotNull
     public String getFrom(int start) {
         return getFrom(start, size());
     }

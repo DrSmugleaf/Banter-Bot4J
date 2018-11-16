@@ -2,8 +2,8 @@ package com.github.drsmugleaf.pokemon.moves;
 
 import com.github.drsmugleaf.pokemon.battle.Action;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -11,23 +11,23 @@ import java.util.*;
  */
 public class Moves {
 
-    @Nonnull
+    @NotNull
     private final List<Move> MOVES;
 
-    @Nonnull
+    @NotNull
     private final List<BaseMove> VALID_MOVES = new ArrayList<>();
 
-    @Nonnull
+    @NotNull
     private final Map<Move, Integer> DISABLED_MOVES = new HashMap<>();
 
-    public Moves(@Nonnull List<Move> moves) {
+    public Moves(@NotNull List<Move> moves) {
         MOVES = new ArrayList<>(moves);
         for (Move move : MOVES) {
             VALID_MOVES.add(move.BASE_MOVE);
         }
     }
 
-    @Nonnull
+    @NotNull
     public List<Move> get() {
         return new ArrayList<>(MOVES);
     }
@@ -45,7 +45,7 @@ public class Moves {
         return null;
     }
 
-    @Nonnull
+    @NotNull
     public List<BaseMove> getValid() {
         return new ArrayList<>(VALID_MOVES);
     }
@@ -57,12 +57,12 @@ public class Moves {
         }
     }
 
-    public void setValid(@Nonnull BaseMove... moves) {
+    public void setValid(@NotNull BaseMove... moves) {
         VALID_MOVES.clear();
         VALID_MOVES.addAll(Arrays.asList(moves));
     }
 
-    @Nonnull
+    @NotNull
     public Map<Move, Integer> getDisabled() {
         return new HashMap<>(DISABLED_MOVES);
     }
@@ -71,18 +71,18 @@ public class Moves {
         return !DISABLED_MOVES.isEmpty();
     }
 
-    private void disable(int duration, @Nonnull List<Move> moves) {
+    private void disable(int duration, @NotNull List<Move> moves) {
         for (Move move : moves) {
             DISABLED_MOVES.put(move, duration);
         }
     }
 
-    public void disable(int duration, @Nonnull Move... moves) {
+    public void disable(int duration, @NotNull Move... moves) {
         List<Move> moveList = Arrays.asList(moves);
         disable(duration, moveList);
     }
 
-    public void disable(int duration, @Nonnull Action... actions) {
+    public void disable(int duration, @NotNull Action... actions) {
         List<Move> moveList = new ArrayList<>();
         for (Action action : actions) {
             moveList.add(action.getMove());
@@ -100,11 +100,11 @@ public class Moves {
         return false;
     }
 
-    public boolean hasAll(@Nonnull BaseMove... moves) {
+    public boolean hasAll(@NotNull BaseMove... moves) {
         return MOVES.containsAll(Arrays.asList(moves));
     }
 
-    public boolean hasOne(@Nonnull BaseMove... moves) {
+    public boolean hasOne(@NotNull BaseMove... moves) {
         List<BaseMove> baseMoveList = Arrays.asList(moves);
 
         for (Move move : MOVES) {
@@ -116,7 +116,7 @@ public class Moves {
         return false;
     }
 
-    public boolean hasOne(@Nonnull String... name) {
+    public boolean hasOne(@NotNull String... name) {
         BaseMove[] moves = Arrays.stream(name).map(BaseMove::getMove).toArray(BaseMove[]::new);
         return hasOne(moves);
     }

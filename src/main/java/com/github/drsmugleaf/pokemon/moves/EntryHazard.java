@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.pokemon.moves;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 04/10/2017.
@@ -12,14 +12,14 @@ public enum EntryHazard {
     STICKY_WEB("Sticky Web"),
     TOXIC_SPIKES("Toxic Spikes");
 
-    @Nonnull
+    @NotNull
     public final String NAME;
 
-    EntryHazard(@Nonnull String name) {
+    EntryHazard(@NotNull String name) {
         NAME = name;
     }
 
-    @Nonnull
+    @NotNull
     public String getName() {
         return NAME;
     }

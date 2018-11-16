@@ -7,8 +7,8 @@ import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
 import com.github.drsmugleaf.pokemon.trainer.UserException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +31,7 @@ public class PokemonBuilder {
 
     public PokemonBuilder() {}
 
-    @Nonnull
+    @NotNull
     public Pokemon build() throws UserException {
         return new Pokemon(
                 trainer,
@@ -53,8 +53,8 @@ public class PokemonBuilder {
         return trainer;
     }
 
-    @Nonnull
-    public PokemonBuilder setTrainer(@Nonnull Trainer trainer) {
+    @NotNull
+    public PokemonBuilder setTrainer(@NotNull Trainer trainer) {
         this.trainer = trainer;
         return this;
     }
@@ -64,8 +64,8 @@ public class PokemonBuilder {
         return species;
     }
 
-    @Nonnull
-    public PokemonBuilder setSpecies(@Nonnull Species species) {
+    @NotNull
+    public PokemonBuilder setSpecies(@NotNull Species species) {
         this.species = species;
         return this;
     }
@@ -75,8 +75,8 @@ public class PokemonBuilder {
         return nickname;
     }
 
-    @Nonnull
-    public PokemonBuilder setNickname(@Nonnull String nickname) {
+    @NotNull
+    public PokemonBuilder setNickname(@NotNull String nickname) {
         this.nickname = nickname;
         return this;
     }
@@ -86,8 +86,8 @@ public class PokemonBuilder {
         return item;
     }
 
-    @Nonnull
-    public PokemonBuilder setItem(@Nonnull Items item) {
+    @NotNull
+    public PokemonBuilder setItem(@NotNull Items item) {
         this.item = item;
         return this;
     }
@@ -97,8 +97,8 @@ public class PokemonBuilder {
         return nature;
     }
 
-    @Nonnull
-    public PokemonBuilder setNature(@Nonnull Nature nature) {
+    @NotNull
+    public PokemonBuilder setNature(@NotNull Nature nature) {
         this.nature = nature;
         return this;
     }
@@ -108,8 +108,8 @@ public class PokemonBuilder {
         return ability;
     }
 
-    @Nonnull
-    public PokemonBuilder setAbility(@Nonnull Abilities ability) {
+    @NotNull
+    public PokemonBuilder setAbility(@NotNull Abilities ability) {
         this.ability = ability;
         return this;
     }
@@ -119,8 +119,8 @@ public class PokemonBuilder {
         return gender;
     }
 
-    @Nonnull
-    public PokemonBuilder setGender(@Nonnull Gender gender) {
+    @NotNull
+    public PokemonBuilder setGender(@NotNull Gender gender) {
         this.gender = gender;
         return this;
     }
@@ -129,7 +129,7 @@ public class PokemonBuilder {
         return level;
     }
 
-    @Nonnull
+    @NotNull
     public PokemonBuilder setLevel(int level) {
         this.level = level;
         return this;
@@ -140,8 +140,8 @@ public class PokemonBuilder {
         return individualValues;
     }
 
-    @Nonnull
-    public PokemonBuilder setIndividualValues(@Nonnull Map<PermanentStat, Integer> individualValues) {
+    @NotNull
+    public PokemonBuilder setIndividualValues(@NotNull Map<PermanentStat, Integer> individualValues) {
         this.individualValues = individualValues;
         return this;
     }
@@ -151,8 +151,8 @@ public class PokemonBuilder {
         return effortValues;
     }
 
-    @Nonnull
-    public PokemonBuilder setEffortValues(@Nonnull Map<PermanentStat, Integer> effortValues) {
+    @NotNull
+    public PokemonBuilder setEffortValues(@NotNull Map<PermanentStat, Integer> effortValues) {
         this.effortValues = effortValues;
         return this;
     }
@@ -162,8 +162,8 @@ public class PokemonBuilder {
         return moves;
     }
 
-    @Nonnull
-    public PokemonBuilder setMoves(@Nonnull List<Move> moves) {
+    @NotNull
+    public PokemonBuilder setMoves(@NotNull List<Move> moves) {
         this.moves = moves;
         return this;
     }

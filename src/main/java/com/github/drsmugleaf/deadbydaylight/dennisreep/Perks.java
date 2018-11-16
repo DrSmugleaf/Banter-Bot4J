@@ -4,8 +4,8 @@ import com.github.drsmugleaf.deadbydaylight.ICharacter;
 import com.github.drsmugleaf.deadbydaylight.IPerk;
 import com.github.drsmugleaf.deadbydaylight.Killers;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,7 +22,7 @@ public class Perks<K extends Enum<K> & IPerk, V extends Perk> extends LinkedHash
         super();
     }
 
-    @Nonnull
+    @NotNull
     public Perks<K, V> getBest(int amount) {
         if (amount > size()) {
             amount = size();
@@ -46,7 +46,7 @@ public class Perks<K extends Enum<K> & IPerk, V extends Perk> extends LinkedHash
                 ));
     }
 
-    @Nonnull
+    @NotNull
     public Perks<K, V> getRandom(int amount) {
         if (amount > size()) {
             amount = size();
@@ -74,8 +74,8 @@ public class Perks<K extends Enum<K> & IPerk, V extends Perk> extends LinkedHash
                 ));
     }
 
-    @Nonnull
-    public Perks<K, V> getRandom(int amount, @Nonnull Killers killer) {
+    @NotNull
+    public Perks<K, V> getRandom(int amount, @NotNull Killers killer) {
         if (amount > size()) {
             amount = size();
         }
@@ -116,7 +116,7 @@ public class Perks<K extends Enum<K> & IPerk, V extends Perk> extends LinkedHash
         return ratings;
     }
 
-    @Nonnull
+    @NotNull
     public List<String> getNames() {
         return values()
                 .stream()
@@ -124,13 +124,13 @@ public class Perks<K extends Enum<K> & IPerk, V extends Perk> extends LinkedHash
                 .collect(Collectors.toList());
     }
 
-    @Nonnull
+    @NotNull
     public Tiers getTier() {
         double rating = getAverageRating();
         return Tiers.from(rating);
     }
 
-    @Nonnull
+    @NotNull
     public Perks<K, V> getWithinRating(@Nullable Double from, @Nullable Double to) {
         final double finalFrom;
         if (from == null) {
@@ -156,8 +156,8 @@ public class Perks<K extends Enum<K> & IPerk, V extends Perk> extends LinkedHash
         return newPerks;
     }
 
-    @Nonnull
-    public Perks<K, V> getWithinRating(@Nonnull Tiers from, @Nonnull Tiers to) {
+    @NotNull
+    public Perks<K, V> getWithinRating(@NotNull Tiers from, @NotNull Tiers to) {
         return getWithinRating(from.THRESHOLD, to.THRESHOLD);
     }
 

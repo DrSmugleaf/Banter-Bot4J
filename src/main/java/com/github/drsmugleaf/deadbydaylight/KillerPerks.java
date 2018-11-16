@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.deadbydaylight;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 06/11/2018
@@ -59,23 +59,23 @@ public enum KillerPerks implements IPerk {
     UNRELENTING("Unrelenting", Killers.ALL, "You recuperate faster from missed attacks made with your main weapon.\nThe cool-down of missed attacks is reduced by 20/25/30 %."),
     WHISPERS("Whispers", Killers.ALL, "You have a rudimentary understanding of the Entity 's voice.\nSporadically hear the Entity's Whisper when standing within a 48/40/32 metres of a Survivor.\n\"It's unclear as to the motivations of the fog, but it is undeniable that it often takes the beast's side.\" — Unknown, Notebook");
 
-    @Nonnull
+    @NotNull
     public final String NAME;
 
-    @Nonnull
+    @NotNull
     public final Killers KILLER;
 
-    @Nonnull
+    @NotNull
     public final String DESCRIPTION;
 
-    KillerPerks(@Nonnull String name, @Nonnull Killers killer, @Nonnull String description) {
+    KillerPerks(@NotNull String name, @NotNull Killers killer, @NotNull String description) {
         NAME = name;
         KILLER = killer;
         DESCRIPTION = description;
     }
 
-    @Nonnull
-    public static KillerPerks from(@Nonnull String name) {
+    @NotNull
+    public static KillerPerks from(@NotNull String name) {
         for (KillerPerks perk : values()) {
             if (perk.NAME.equalsIgnoreCase(name)) {
                 return perk;
@@ -85,18 +85,18 @@ public enum KillerPerks implements IPerk {
         throw new IllegalArgumentException("No killer perk exists with name " + name);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getName() {
         return NAME;
     }
 
-    @Nonnull
+    @NotNull
     public Killers getKiller() {
         return KILLER;
     }
 
-    @Nonnull
+    @NotNull
     public String getDescription() {
         return DESCRIPTION;
     }

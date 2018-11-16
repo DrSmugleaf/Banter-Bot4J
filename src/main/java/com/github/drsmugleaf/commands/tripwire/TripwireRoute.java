@@ -8,7 +8,7 @@ import com.github.drsmugleaf.tripwire.route.Route;
 import com.github.drsmugleaf.tripwire.route.SystemGraph;
 import sx.blah.discord.handle.obj.IUser;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,14 +17,14 @@ import java.util.Map;
  */
 public class TripwireRoute extends Command {
 
-    @Nonnull
+    @NotNull
     static final Map<IUser, Route> ROUTES = new HashMap<>();
 
-    protected TripwireRoute(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected TripwireRoute(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 
-    @Nonnull
+    @NotNull
     private static String invalidArgumentsResponse() {
         return "Invalid arguments.\n" +
                "**Formats:**\n" +

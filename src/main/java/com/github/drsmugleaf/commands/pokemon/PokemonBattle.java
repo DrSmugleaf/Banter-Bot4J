@@ -8,7 +8,7 @@ import com.github.drsmugleaf.pokemon.trainer.TrainerBuilder;
 import com.github.drsmugleaf.pokemon.trainer.UserException;
 import sx.blah.discord.handle.obj.IUser;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,10 +18,10 @@ import java.util.Map.Entry;
  */
 public class PokemonBattle extends Command {
 
-    @Nonnull
+    @NotNull
     private static final Map<IUser, TrainerBuilder> awaitingTrainer = new LinkedHashMap<>();
 
-    protected PokemonBattle(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected PokemonBattle(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 

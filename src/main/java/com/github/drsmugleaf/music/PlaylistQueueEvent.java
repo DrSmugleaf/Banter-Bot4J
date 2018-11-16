@@ -2,7 +2,7 @@ package com.github.drsmugleaf.music;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
@@ -12,7 +12,7 @@ public class PlaylistQueueEvent extends Event {
 
     public final List<AudioTrack> TRACKS;
 
-    protected PlaylistQueueEvent(@Nonnull List<AudioTrack> tracks) {
+    protected PlaylistQueueEvent(@NotNull List<AudioTrack> tracks) {
         TRACKS = tracks;
     }
 

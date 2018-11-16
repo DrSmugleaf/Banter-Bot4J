@@ -9,7 +9,7 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import sx.blah.discord.handle.obj.*;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.List;
@@ -21,13 +21,13 @@ import java.util.concurrent.TimeUnit;
  */
 public class Music {
 
-    @Nonnull
+    @NotNull
     public static final AudioPlayerManager PLAYER_MANAGER = new DefaultAudioPlayerManager();
 
-    @Nonnull
+    @NotNull
     private static final Map<IGuild, GuildMusicManager> MUSIC_MANAGERS = new HashMap<>();
 
-    @Nonnull
+    @NotNull
     static final Cache<AbstractMap.SimpleEntry<IGuild, IUser>, List<AudioTrack>> UNDO_STOP_CACHE = CacheBuilder
             .newBuilder()
             .expireAfterWrite(1, TimeUnit.MINUTES)
@@ -49,7 +49,7 @@ public class Music {
     }
 
     @TrackEventHandler(event = TrackStartEvent.class)
-    public static void handle(@Nonnull TrackStartEvent event) {
+    public static void handle(@NotNull TrackStartEvent event) {
         AudioTrack track = event.TRACK;
         if (track == null) {
             return;
@@ -69,7 +69,7 @@ public class Music {
     }
 
     @TrackEventHandler(event = TrackQueueEvent.class)
-    public static void handle(@Nonnull TrackQueueEvent event) {
+    public static void handle(@NotNull TrackQueueEvent event) {
         AudioTrack track = event.TRACK;
         if (track == null) {
             return;
@@ -81,20 +81,20 @@ public class Music {
     }
 
     @TrackEventHandler(event = NoMatchesEvent.class)
-    public static void handle(@Nonnull NoMatchesEvent event) {
+    public static void handle(@NotNull NoMatchesEvent event) {
         AudioResultHandler handler = event.getHandler();
         String response = String.format("No results found for %s.", handler.getSearchString());
         MusicCommand.sendMessage(handler.getChannel(), response);
     }
 
     @TrackEventHandler(event = LoadFailedEvent.class)
-    public static void handle(@Nonnull LoadFailedEvent event) {
+    public static void handle(@NotNull LoadFailedEvent event) {
         String response = String.format("Error playing track: %s", event.getException().getMessage());
         MusicCommand.sendMessage(event.getHandler().getChannel(), response);
     }
 
     @TrackEventHandler(event = PlaylistQueueEvent.class)
-    public static void handle(@Nonnull PlaylistQueueEvent event) {
+    public static void handle(@NotNull PlaylistQueueEvent event) {
         List<AudioTrack> tracks = event.TRACKS;
         AudioTrack firstTrack = tracks.get(0);
         IChannel channel = firstTrack.getUserData(TrackUserData.class).CHANNEL;

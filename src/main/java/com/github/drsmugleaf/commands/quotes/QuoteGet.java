@@ -9,7 +9,7 @@ import com.github.drsmugleaf.database.models.Quote;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -23,7 +23,7 @@ public class QuoteGet extends Command {
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
 
-    protected QuoteGet(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
+    protected QuoteGet(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
         super(event, args);
     }
 

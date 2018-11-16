@@ -7,7 +7,7 @@ import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 import sx.blah.discord.util.MissingPermissionsException;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 16/01/2018.
@@ -16,7 +16,7 @@ public enum Tags implements Tag {
 
     DELETE_COMMAND_MESSAGE {
         @Override
-        public void execute(@Nonnull CommandReceivedEvent event) {
+        public void execute(@NotNull CommandReceivedEvent event) {
             try {
                 event.getMessage().delete();
             } catch (MissingPermissionsException ignored) {
@@ -25,11 +25,11 @@ public enum Tags implements Tag {
     },
     GUILD_ONLY {
         @Override
-        public boolean isValid(@Nonnull CommandReceivedEvent event) {
+        public boolean isValid(@NotNull CommandReceivedEvent event) {
             return event.getGuild() != null;
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public String message() {
             return "That command must be used in a server channel.";
@@ -37,11 +37,11 @@ public enum Tags implements Tag {
     },
     OWNER_ONLY {
         @Override
-        public boolean isValid(@Nonnull CommandReceivedEvent event) {
+        public boolean isValid(@NotNull CommandReceivedEvent event) {
             return Command.isOwner(event.getAuthor());
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public String message() {
             return "You don't have permission to use that command.";
@@ -49,7 +49,7 @@ public enum Tags implements Tag {
     },
     SAME_VOICE_CHANNEL {
         @Override
-        public boolean isValid(@Nonnull CommandReceivedEvent event) {
+        public boolean isValid(@NotNull CommandReceivedEvent event) {
             if (!GUILD_ONLY.isValid(event)) {
                 return false;
             }
@@ -63,7 +63,7 @@ public enum Tags implements Tag {
             return botVoiceChannel == authorVoiceChannel;
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public String message() {
             return "You aren't in the same voice channel as me.";
@@ -71,7 +71,7 @@ public enum Tags implements Tag {
     },
     VOICE_ONLY {
         @Override
-        public boolean isValid(@Nonnull CommandReceivedEvent event) {
+        public boolean isValid(@NotNull CommandReceivedEvent event) {
             if (!GUILD_ONLY.isValid(event)) {
                 return false;
             }
@@ -83,23 +83,23 @@ public enum Tags implements Tag {
             return authorVoiceChannel != null;
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public String message() {
             return "You must be in a voice channel to use that command.";
         }
     };
 
-    public boolean isValid(@Nonnull CommandReceivedEvent event) {
+    public boolean isValid(@NotNull CommandReceivedEvent event) {
         return true;
     }
 
-    @Nonnull
+    @NotNull
     public String message() {
         return "You can't use that command.";
     }
 
-    public void execute(@Nonnull CommandReceivedEvent event) {
+    public void execute(@NotNull CommandReceivedEvent event) {
     }
 
 }
