@@ -178,7 +178,7 @@ public enum Status implements IStatus, IModifier {
                 pokemon.addStatModifier(PermanentStat.SPEED, PARALYSIS, 0.5);
             }
 
-            if (action.getGeneration().isAbove(Generation.VI) && pokemon.TYPES.isType(Type.ELECTRIC)) {
+            if (action.getGeneration().isAbove(Generation.V) && pokemon.TYPES.isType(Type.ELECTRIC)) {
                 fail();
                 return;
             }
