@@ -231,6 +231,10 @@ public enum Generation {
 
     public abstract double getCriticalPercentage(@NotNull CriticalHitStage stage);
 
+    public boolean isAbove(@NotNull Generation generation) {
+        return ordinal() > generation.ordinal();
+    }
+
     private static class Holder {
         @NotNull
         static Map<String, Generation> MAP = new HashMap<>();

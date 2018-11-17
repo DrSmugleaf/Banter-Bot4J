@@ -178,6 +178,11 @@ public enum Status implements IStatus, IModifier {
                 pokemon.addStatModifier(PermanentStat.SPEED, PARALYSIS, 0.5);
             }
 
+            if (action.getGeneration().isAbove(Generation.VI) && pokemon.TYPES.isType(Type.ELECTRIC)) {
+                fail();
+                return;
+            }
+
             super.apply(pokemon, action);
         }
 
@@ -343,6 +348,8 @@ public enum Status implements IStatus, IModifier {
     public void apply(@NotNull Pokemon pokemon, @NotNull Action action) {
         pokemon.STATUSES.setStatus(this);
     }
+
+    protected void fail() {}
 
     @Override
     public void remove(@NotNull Pokemon pokemon) {
