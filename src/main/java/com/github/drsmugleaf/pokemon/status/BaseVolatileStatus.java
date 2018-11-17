@@ -2,12 +2,15 @@ package com.github.drsmugleaf.pokemon.status;
 
 import com.github.drsmugleaf.pokemon.ability.Abilities;
 import com.github.drsmugleaf.pokemon.battle.*;
-import com.github.drsmugleaf.pokemon.moves.*;
+import com.github.drsmugleaf.pokemon.moves.BaseMove;
+import com.github.drsmugleaf.pokemon.moves.Move;
+import com.github.drsmugleaf.pokemon.moves.MoveCategory;
+import com.github.drsmugleaf.pokemon.moves.MoveEffect;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
 import com.github.drsmugleaf.pokemon.types.Type;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 /**

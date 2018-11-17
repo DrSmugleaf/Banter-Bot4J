@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.pokemon.item;
 
-import com.github.drsmugleaf.pokemon.battle.IModifier;
 import com.github.drsmugleaf.pokemon.battle.Battle;
+import com.github.drsmugleaf.pokemon.battle.IModifier;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 
 import org.jetbrains.annotations.NotNull;

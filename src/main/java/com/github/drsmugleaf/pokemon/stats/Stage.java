@@ -8,7 +8,7 @@ import java.util.Map;
  * Created by DrSmugleaf on 10/06/2017.
  */
 public enum Stage {
-    
+
     NEGATIVE_SIX(-6, 0.25, 0.33, 0.33),
     NEGATIVE_FIVE(-5, 0.285, 0.375, 0.375),
     NEGATIVE_FOUR(-4, 0.33, 0.428, 0.428),

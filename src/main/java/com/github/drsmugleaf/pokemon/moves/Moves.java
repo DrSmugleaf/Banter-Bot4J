@@ -1,9 +1,9 @@
 package com.github.drsmugleaf.pokemon.moves;
 
 import com.github.drsmugleaf.pokemon.battle.Action;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.*;
 
 /**
@@ -18,7 +18,7 @@ public class Moves {
     private final List<BaseMove> VALID_MOVES = new ArrayList<>();
 
     @NotNull
-    private final Map<Move, Integer> DISABLED_MOVES = new HashMap<>();
+    private final Map<BaseMove, Integer> DISABLED_MOVES = new HashMap<>();
 
     public Moves(@NotNull List<Move> moves) {
         MOVES = new ArrayList<>(moves);
@@ -63,7 +63,7 @@ public class Moves {
     }
 
     @NotNull
-    public Map<Move, Integer> getDisabled() {
+    public Map<BaseMove, Integer> getDisabled() {
         return new HashMap<>(DISABLED_MOVES);
     }
 
@@ -71,22 +71,23 @@ public class Moves {
         return !DISABLED_MOVES.isEmpty();
     }
 
-    private void disable(int duration, @NotNull List<Move> moves) {
-        for (Move move : moves) {
+    public void disable(int duration, @NotNull List<BaseMove> moves) {
+        for (BaseMove move : moves) {
             DISABLED_MOVES.put(move, duration);
         }
     }
 
-    public void disable(int duration, @NotNull Move... moves) {
-        List<Move> moveList = Arrays.asList(moves);
+    public void disable(int duration, @NotNull BaseMove... moves) {
+        List<BaseMove> moveList = Arrays.asList(moves);
         disable(duration, moveList);
     }
 
     public void disable(int duration, @NotNull Action... actions) {
-        List<Move> moveList = new ArrayList<>();
+        List<BaseMove> moveList = new ArrayList<>();
         for (Action action : actions) {
-            moveList.add(action.getMove());
+            moveList.add(action.BASE_MOVE);
         }
+
         disable(duration, moveList);
     }
 

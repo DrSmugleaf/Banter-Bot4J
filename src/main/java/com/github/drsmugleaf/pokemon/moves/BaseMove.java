@@ -1944,7 +1944,7 @@ public enum BaseMove implements IModifier, IMoves {
                     targetMoves.removeIf(move -> move.getPP() <= 0);
 
                     int randomIndex = ThreadLocalRandom.current().nextInt(targetMoves.size());
-                    Move randomMove = targetMoves.get(randomIndex);
+                    BaseMove randomMove = targetMoves.get(randomIndex).BASE_MOVE;
                     duration = ThreadLocalRandom.current().nextInt(6 + 1);
 
                     target.MOVES.disable(duration, randomMove);
