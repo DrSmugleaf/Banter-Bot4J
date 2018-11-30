@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.tak;
+package com.github.drsmugleaf.tak.player;
 
 import org.jetbrains.annotations.NotNull;
 
