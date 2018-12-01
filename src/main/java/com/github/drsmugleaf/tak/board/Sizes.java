@@ -12,10 +12,14 @@ public enum Sizes {
     EIGHT(8, 2, 50);
 
     private final int SIZE;
-    private final int STONES;
     private final int CAPSTONES;
+    private final int STONES;
 
     Sizes(int size, int capstones, int stones) {
+        if (size <= 0) {
+            throw new IllegalArgumentException("Board size less than or equal to 0. Size: " + size);
+        }
+
         SIZE = size;
         STONES = stones;
         CAPSTONES = capstones;
@@ -25,11 +29,12 @@ public enum Sizes {
         return SIZE;
     }
 
+    public int getCapstones() {
+        return CAPSTONES;
+    }
+
     public int getStones() {
         return STONES;
     }
 
-    public int getCapstones() {
-        return CAPSTONES;
-    }
 }

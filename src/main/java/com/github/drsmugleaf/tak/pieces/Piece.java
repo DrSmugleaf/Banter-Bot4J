@@ -13,7 +13,7 @@ public class Piece {
     @NotNull
     private final Type TYPE;
 
-    Piece(@NotNull Color color, @NotNull Type type) {
+    public Piece(@NotNull Color color, @NotNull Type type) {
         COLOR = color;
         TYPE = type;
     }

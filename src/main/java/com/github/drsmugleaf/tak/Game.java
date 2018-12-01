@@ -1,6 +1,8 @@
 package com.github.drsmugleaf.tak;
 
 import com.github.drsmugleaf.tak.board.Board;
+import com.github.drsmugleaf.tak.pieces.Piece;
+import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,6 +29,20 @@ public class Game {
     @NotNull
     public List<Player> getPlayers() {
         return new ArrayList<>(PLAYERS);
+    }
+
+    public boolean canPlace(@NotNull Player player, @NotNull Type type, int row, int square) {
+        return player.getHand().has(type) && BOARD.canPlace(type, row, square);
+    }
+
+    public boolean place(@NotNull Player player, @NotNull Type type, int row, int square) {
+        if (!canPlace(player, type, row, square)) {
+            return false;
+        }
+
+        Piece piece = player.getHand().takePiece(type);
+        BOARD.place(piece, row, square);
+        return true;
     }
 
 }

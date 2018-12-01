@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.tak.board;
 
+import com.github.drsmugleaf.tak.pieces.Piece;
+import com.github.drsmugleaf.tak.pieces.Type;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -17,6 +19,14 @@ public class Row {
     @NotNull
     public Square[] getSquares() {
         return SQUARES;
+    }
+
+    public boolean canPlace(@NotNull Type type, int square) {
+        return square < SQUARES.length && SQUARES[square].canPlace(type);
+    }
+
+    public void place(@NotNull Piece piece, int square) {
+        SQUARES[square].place(piece);
     }
 
 }
