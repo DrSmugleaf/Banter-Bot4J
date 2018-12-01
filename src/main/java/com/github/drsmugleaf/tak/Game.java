@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.tak;
 
+import com.github.drsmugleaf.tak.board.Board;
 import com.github.drsmugleaf.tak.player.Player;
 import org.jetbrains.annotations.NotNull;
 

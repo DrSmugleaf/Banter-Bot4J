@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.tak;
+package com.github.drsmugleaf.tak.board;
 
 import org.jetbrains.annotations.NotNull;
 
