@@ -15,17 +15,6 @@ public class Row {
     }
 
     @NotNull
-    public static Row[] getRows(int height, int width) {
-        Row[] rows = new Row[height];
-
-        for (int i = 0; i < rows.length; i++) {
-            rows[i] = new Row(width);
-        }
-
-        return rows;
-    }
-
-    @NotNull
     public Square[] getSquares() {
         return SQUARES;
     }

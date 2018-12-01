@@ -11,7 +11,13 @@ public class Board {
     private final Row[] PIECES;
 
     private Board(int height, int width) {
-        PIECES = Row.getRows(height, width);
+        Row[] rows = new Row[height];
+
+        for (int i = 0; i < rows.length; i++) {
+            rows[i] = new Row(width);
+        }
+
+        PIECES = rows;
     }
 
     @NotNull
