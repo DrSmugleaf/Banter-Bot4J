@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.tak.player;
 
+import com.github.drsmugleaf.tak.board.Sizes;
 import com.github.drsmugleaf.tak.pieces.Color;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,9 +14,12 @@ public class Hand {
 
     private int PIECES;
 
-    private Hand(@NotNull Color color, int pieces) {
+    private int CAPSTONES;
+
+    Hand(@NotNull Color color, @NotNull Sizes size) {
         COLOR = color;
-        PIECES = pieces;
+        PIECES = size.getStones();
+        CAPSTONES = size.getCapstones();
     }
 
     @NotNull
@@ -25,6 +29,10 @@ public class Hand {
 
     public int getPieces() {
         return PIECES;
+    }
+
+    public int getCapstones() {
+        return CAPSTONES;
     }
 
 }

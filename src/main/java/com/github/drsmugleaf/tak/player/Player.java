@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.tak.player;
 
+import com.github.drsmugleaf.tak.board.Sizes;
+import com.github.drsmugleaf.tak.pieces.Color;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -8,15 +10,24 @@ import org.jetbrains.annotations.NotNull;
 public class Player {
 
     @NotNull
-    public final String NAME;
+    private final String NAME;
 
-    Player(@NotNull String name) {
+    @NotNull
+    private final Hand HAND;
+
+    public Player(@NotNull String name, @NotNull Color color, @NotNull Sizes size) {
         NAME = name;
+        HAND = new Hand(color, size);
     }
 
     @NotNull
     public String getName() {
         return NAME;
+    }
+
+    @NotNull
+    public Hand getHand() {
+        return HAND;
     }
 
 }
