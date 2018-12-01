@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.tak;
 
-import com.github.drsmugleaf.tak.pieces.Piece;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -9,10 +8,10 @@ import org.jetbrains.annotations.NotNull;
 public class Board {
 
     @NotNull
-    private final Piece[][] PIECES;
+    private final Row[] PIECES;
 
     private Board(int height, int width) {
-        PIECES = new Piece[height][width];
+        PIECES = Row.getRows(height, width);
     }
 
     @NotNull
