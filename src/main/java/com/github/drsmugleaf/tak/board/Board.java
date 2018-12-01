@@ -10,11 +10,16 @@ public class Board {
     @NotNull
     private final Row[] PIECES;
 
-    private Board(int height, int width) {
-        Row[] rows = new Row[height];
+    @NotNull
+    private final Sizes SIZE;
+
+    private Board(@NotNull Sizes size) {
+        SIZE = size;
+
+        Row[] rows = new Row[size.getSize()];
 
         for (int i = 0; i < rows.length; i++) {
-            rows[i] = new Row(width);
+            rows[i] = new Row(size.getSize());
         }
 
         PIECES = rows;
@@ -22,7 +27,7 @@ public class Board {
 
     @NotNull
     public Board getDefault() {
-        return new Board(5, 5);
+        return new Board(Sizes.FIVE);
     }
 
 }
