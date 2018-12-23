@@ -36,7 +36,6 @@ public class Route {
         recalculate();
     }
 
-
     @Nonnull
     public StarSystem getDestination() {
         return DESTINATION;

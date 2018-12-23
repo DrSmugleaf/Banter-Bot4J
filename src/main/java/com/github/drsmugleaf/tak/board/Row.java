@@ -18,7 +18,7 @@ public class Row {
 
     @NotNull
     public Square[] getSquares() {
-        return SQUARES;
+        return SQUARES.clone();
     }
 
     public boolean canPlace(@NotNull Type type, int square) {

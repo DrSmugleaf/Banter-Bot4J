@@ -1,10 +1,12 @@
 package com.github.drsmugleaf.tak;
 
 import com.github.drsmugleaf.tak.board.Board;
+import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,6 +45,22 @@ public class Game {
         Piece piece = player.getHand().takePiece(type);
         BOARD.place(piece, row, square);
         return true;
+    }
+
+    @Nullable
+    public Player checkVictory() {
+        Color winningColor = BOARD.hasRoad();
+        if (winningColor == null) {
+            return null;
+        }
+
+        for (Player player : PLAYERS) {
+            if (player.getHand().getColor() == winningColor) {
+                return player;
+            }
+        }
+
+        throw new IllegalStateException("No player found for winning color " + winningColor);
     }
 
 }
