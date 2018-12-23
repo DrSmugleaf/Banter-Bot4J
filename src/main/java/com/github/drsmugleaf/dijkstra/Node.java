@@ -12,9 +12,6 @@ import java.util.Map;
 public abstract class Node<T extends Node<T>> {
 
     @Nonnull
-    public final String NAME;
-
-    @Nonnull
     public final List<T> SHORTEST_PATH = new LinkedList<>();
 
     @Nonnull
@@ -25,10 +22,6 @@ public abstract class Node<T extends Node<T>> {
 
     public void addDestination(@Nonnull T destination, @Nonnull Integer distance) {
         ADJACENT_NODES.put(destination, distance);
-    }
-
-    protected Node(@Nonnull String name) {
-        NAME = name;
     }
 
 }

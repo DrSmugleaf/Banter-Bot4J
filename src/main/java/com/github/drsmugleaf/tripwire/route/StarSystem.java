@@ -6,6 +6,7 @@ import com.github.drsmugleaf.tripwire.models.Signature;
 import net.troja.eve.esi.ApiException;
 import net.troja.eve.esi.api.UniverseApi;
 import net.troja.eve.esi.model.UniverseNamesResponse;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,9 +20,12 @@ public class StarSystem extends Node<StarSystem> {
 
     final int ID;
 
+    @NotNull
+    public final String NAME;
+
     StarSystem(int id, @Nonnull String name) {
-        super(name);
         ID = id;
+        NAME = name;
     }
 
     public static boolean isValid(@Nullable Integer id) {
