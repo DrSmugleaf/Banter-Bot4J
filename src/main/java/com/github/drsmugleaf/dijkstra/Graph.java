@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.dijkstra;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
@@ -8,21 +10,6 @@ import java.util.*;
  * Created by DrSmugleaf on 19/05/2018.
  */
 public abstract class Graph<T extends Node<T>> {
-
-    @Nonnull
-    public final Set<T> NODES = new HashSet<>();
-
-    protected Graph(@Nonnull Collection<T> nodes) {
-        NODES.addAll(nodes);
-    }
-
-    public void addNode(@Nonnull T nodeA) {
-        NODES.add(nodeA);
-    }
-
-    public void addNode(@Nonnull Collection<T> nodes) {
-        NODES.addAll(nodes);
-    }
 
     @Nullable
     private T getLowestDistanceNode(@Nonnull Set<T> unsettledNodes) {
@@ -79,5 +66,8 @@ public abstract class Graph<T extends Node<T>> {
 
         return this;
     }
+
+    @NotNull
+    public abstract Set<T> getNodes();
 
 }

@@ -60,7 +60,7 @@ public class TripwireBridge extends Command {
         Route route = TripwireRoute.ROUTES.get(author);
         StarSystem firstSystem = null;
         StarSystem secondSystem = null;
-        for (StarSystem node : route.GRAPH.NODES) {
+        for (StarSystem node : route.GRAPH.getNodes()) {
             if (node.NAME.equalsIgnoreCase(ARGS.get(0))) {
                 firstSystem = node;
             }

@@ -4,24 +4,24 @@ import com.github.drsmugleaf.dijkstra.Graph;
 import com.github.drsmugleaf.tripwire.API;
 import com.github.drsmugleaf.tripwire.models.Signature;
 import com.github.drsmugleaf.tripwire.models.Wormhole;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 19/05/2018.
  */
 public class SystemGraph extends Graph<StarSystem> {
 
+    private final Set<StarSystem> NODES;
+
     SystemGraph(Collection<StarSystem> systems) {
-        super(systems);
+        NODES = new HashSet<>(systems);
     }
 
-    @Nonnull
-    static SystemGraph fromSignaturesAndWormholes(@Nonnull Map<Integer, Signature> signatures, @Nonnull List<Wormhole> wormholes) {
+    @NotNull
+    static SystemGraph fromSignaturesAndWormholes(@NotNull Map<Integer, Signature> signatures, @NotNull List<Wormhole> wormholes) {
         Map<Integer, StarSystem> systems = StarSystem.fromSignatures(signatures.values());
 
         for (Wormhole wormhole : wormholes) {
@@ -38,7 +38,7 @@ public class SystemGraph extends Graph<StarSystem> {
     }
 
     @Nullable
-    public static Route getRoute(long id, @Nonnull String username, @Nonnull String password, @Nonnull String from, @Nonnull String to) {
+    public static Route getRoute(long id, @NotNull String username, @NotNull String password, @NotNull String from, @NotNull String to) {
         String response = API.refresh(id, username, password).body();
         Map<Integer, Signature> signatures = Signature.fromJson(response);
         List<Wormhole> wormholes = Wormhole.fromJson(response);
@@ -49,7 +49,7 @@ public class SystemGraph extends Graph<StarSystem> {
 
         StarSystem origin = null;
         StarSystem destination = null;
-        for (StarSystem node : graph.NODES) {
+        for (StarSystem node : graph.getNodes()) {
             if (node.NAME.equalsIgnoreCase(from)) {
                 origin = node;
             }
@@ -64,6 +64,12 @@ public class SystemGraph extends Graph<StarSystem> {
         }
 
         return new Route(graph, origin, destination);
+    }
+
+    @NotNull
+    @Override
+    public Set<StarSystem> getNodes() {
+        return NODES;
     }
 
 }
