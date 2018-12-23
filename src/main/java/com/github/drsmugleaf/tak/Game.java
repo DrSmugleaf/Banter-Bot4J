@@ -23,7 +23,7 @@ public class Game {
     @NotNull
     private final List<Player> PLAYERS = new ArrayList<>();
 
-    Game(@NotNull Board board, @NotNull Collection<Player> players) {
+    public Game(@NotNull Board board, @NotNull Collection<Player> players) {
         BOARD = board;
         PLAYERS.addAll(players);
     }

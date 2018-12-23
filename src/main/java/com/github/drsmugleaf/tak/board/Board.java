@@ -22,7 +22,7 @@ public class Board extends Graph<Square> {
     @NotNull
     private final Sizes SIZE;
 
-    private Board(@NotNull Sizes size) {
+    public Board(@NotNull Sizes size) {
         SIZE = size;
 
         Row[] rows = new Row[size.getSize()];
