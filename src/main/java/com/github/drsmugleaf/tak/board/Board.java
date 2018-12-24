@@ -1,20 +1,18 @@
 package com.github.drsmugleaf.tak.board;
 
-import com.github.drsmugleaf.dijkstra.Graph;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by DrSmugleaf on 01/12/2018
  */
-public class Board extends Graph<Square> {
+public class Board {
 
     @NotNull
     private final Row[] ROWS;
@@ -24,11 +22,46 @@ public class Board extends Graph<Square> {
 
     public Board(@NotNull Sizes size) {
         SIZE = size;
+        int boardSize = SIZE.getSize();
+
+        Row[] rows = new Row[boardSize];
+
+        for (int row = 0; row < rows.length; row++) {
+            rows[row] = new Row(boardSize);
+
+            for (int column = 0; column < boardSize; column++) {
+                rows[row].SQUARES[column] = new Square(row, column);
+            }
+        }
+
+        ROWS = rows;
+    }
+
+    public Board(@NotNull Square[][] squares) {
+        Sizes size = Sizes.getPreset(squares.length);
+        if (size == null) {
+            throw new IllegalArgumentException("No preset found for array length " + squares.length);
+        }
+
+        for (Square[] row : squares) {
+            int rowLength = row.length;
+            int expectedLength = size.getSize();
+            if (rowLength != expectedLength) {
+                throw new IllegalArgumentException("Array isn't a square. Expected size " + expectedLength + " found " + rowLength);
+            }
+        }
+
+        SIZE = size;
 
         Row[] rows = new Row[size.getSize()];
 
         for (int i = 0; i < rows.length; i++) {
-            rows[i] = new Row(size.getSize());
+            Row row = new Row(size.getSize());
+            for (int j = 0; j < row.getSquares().length; j++) {
+                row.setSquare(j, squares[i][j]);
+            }
+
+            rows[i] = row;
         }
 
         ROWS = rows;
@@ -47,7 +80,7 @@ public class Board extends Graph<Square> {
 
     @NotNull
     public Board getDefault() {
-        return new Board(Sizes.FIVE);
+        return new Board(Sizes.getDefault());
     }
 
     @NotNull
@@ -99,12 +132,16 @@ public class Board extends Graph<Square> {
     }
 
     @NotNull
-    public AdjacentSquares getAdjacent(int rowIndex, int columnIndex) {
-        if (rowIndex >= ROWS.length) {
+    public AdjacentSquares getAdjacent(@NotNull Square square) {
+        Square[][] board = toArray();
+        int rowIndex = square.getRow();
+        int columnIndex = square.getColumn();
+
+        if (rowIndex >= board.length) {
             throw new ArrayIndexOutOfBoundsException("Row " + rowIndex + " is out of bounds");
         }
 
-        Square[] row = ROWS[rowIndex].getSquares();
+        Square[] row = board[rowIndex];
         if (columnIndex >= row.length) {
             throw new ArrayIndexOutOfBoundsException("Column " + columnIndex + " is out of bounds");
         }
@@ -113,7 +150,7 @@ public class Board extends Graph<Square> {
 
         Square upSquare = null;
         if (rowIndex > 0) {
-            upSquare = ROWS[rowIndex].getSquares()[columnIndex];
+            upSquare = ROWS[rowIndex - 1].getSquares()[columnIndex];
         }
 
         Square rightSquare = null;
@@ -123,7 +160,7 @@ public class Board extends Graph<Square> {
 
         Square downSquare = null;
         if ((rowIndex + 1) < ROWS.length) {
-            downSquare = ROWS[rowIndex].getSquares()[columnIndex];
+            downSquare = ROWS[rowIndex + 1].getSquares()[columnIndex];
         }
 
         Square leftSquare = null;
@@ -134,59 +171,55 @@ public class Board extends Graph<Square> {
         return new AdjacentSquares(centerSquare, upSquare, rightSquare, downSquare, leftSquare);
     }
 
-    @NotNull
-    @Override
-    public Set<Square> getNodes() {
-        Set<Square> nodes = new HashSet<>();
+    private boolean isConnected(@NotNull Square origin, @NotNull Square destination) {
+        List<Square> connections = getAdjacent(origin).getConnections();
+        List<Square> visited = new ArrayList<>();
+        visited.add(origin);
 
-        Square[][] board = toArray();
-        for (int i = 0; i < board.length; i++) {
-            Square[] row = board[i];
-
-            for (int j = 0; j < row.length; j++) {
-                Square square = row[j];
-                List<Square> adjacentSquares = getAdjacent(i, j).getAll();
-
-                for (Square adjacentSquare : adjacentSquares) {
-                    if (square.connectsTo(adjacentSquare)) {
-                        square.addDestination(square, 1);
-                        adjacentSquare.addDestination(square, 1);
-                    }
-                }
-            }
+        for (Square connection : connections) {
+            getAllConnections(connection, destination, visited);
         }
 
-        return nodes;
+        return visited.contains(destination);
+
+    }
+
+    private void getAllConnections(@NotNull Square squareOne, @NotNull Square squareTwo, @NotNull List<Square> visited) {
+        List<Square> connections = getAdjacent(squareOne).getConnections();
+        visited.add(squareOne);
+
+        for (Square connection : connections) {
+            if (visited.contains(connection)) {
+                continue;
+            }
+
+            getAllConnections(connection, squareTwo, visited);
+        }
     }
 
     @Nullable
     public Color hasRoad() {
         Row firstRow = getFirstRow();
         for (Square origin : firstRow.getSquares()) {
-            calculateShortestPathFromSource(origin);
-
-            for (Square lastSquare : getLastRow().getSquares()) {
-                if (!lastSquare.SHORTEST_PATH.isEmpty()) {
-                    if (lastSquare.getTopPiece() == null) {
+            for (Square destination : getLastRow().getSquares()) {
+                if (isConnected(origin, destination)) {
+                    if (origin.getTopPiece() == null) {
                         throw new IllegalStateException("Valid road found but the last top piece doesn't exist");
                     }
 
-                    return lastSquare.getTopPiece().getColor();
+                    return origin.getTopPiece().getColor();
                 }
             }
         }
 
-        Square[] firstColumn = getFirstColumn();
-        for (Square origin : firstColumn) {
-            calculateShortestPathFromSource(origin);
-
-            for (Square lastSquare : getLastColumn()) {
-                if (!lastSquare.SHORTEST_PATH.isEmpty()) {
-                    if (lastSquare.getTopPiece() == null) {
+        for (Square origin : getFirstColumn()) {
+            for (Square destination : getLastColumn()) {
+                if (isConnected(origin, destination)) {
+                    if (origin.getTopPiece() == null) {
                         throw new IllegalStateException("Valid road found but the last top piece doesn't exist");
                     }
 
-                    return lastSquare.getTopPiece().getColor();
+                    return origin.getTopPiece().getColor();
                 }
             }
         }

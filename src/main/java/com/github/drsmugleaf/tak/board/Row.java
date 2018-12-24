@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public class Row {
 
     @NotNull
-    private final Square[] SQUARES;
+    protected final Square[] SQUARES;
 
     Row(int width) {
         SQUARES = new Square[width];
@@ -19,6 +19,10 @@ public class Row {
     @NotNull
     public Square[] getSquares() {
         return SQUARES.clone();
+    }
+
+    protected void setSquare(int i, @NotNull Square square) {
+        SQUARES[i] = square;
     }
 
     public boolean canPlace(@NotNull Type type, int square) {

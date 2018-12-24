@@ -34,7 +34,7 @@ public class Game {
     }
 
     public boolean canPlace(@NotNull Player player, @NotNull Type type, int row, int square) {
-        return player.getHand().has(type) && BOARD.canPlace(type, row, square);
+        return PLAYERS.contains(player) && player.getHand().has(type) && BOARD.canPlace(type, row, square);
     }
 
     public boolean place(@NotNull Player player, @NotNull Type type, int row, int square) {

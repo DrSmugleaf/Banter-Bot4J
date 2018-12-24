@@ -1,5 +1,8 @@
 package com.github.drsmugleaf.tak.board;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Created by DrSmugleaf on 01/12/2018
  */
@@ -23,6 +26,22 @@ public enum Sizes {
         SIZE = size;
         STONES = stones;
         CAPSTONES = capstones;
+    }
+
+    @NotNull
+    public static Sizes getDefault() {
+        return FIVE;
+    }
+
+    @Nullable
+    public static Sizes getPreset(int size) {
+        for (Sizes preset : values()) {
+            if (preset.getSize() == size) {
+                return preset;
+            }
+        }
+
+        return null;
     }
 
     public int getSize() {

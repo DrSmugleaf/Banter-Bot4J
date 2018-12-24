@@ -1,23 +1,47 @@
 package com.github.drsmugleaf.tak.board;
 
-import com.github.drsmugleaf.dijkstra.Node;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by DrSmugleaf on 01/12/2018
  */
-public class Square extends Node<Square> {
+public class Square {
 
     @NotNull
     private final List<Piece> PIECES = new ArrayList<>();
 
-    Square() {}
+    @NotNull
+    private final int ROW;
+
+    @NotNull
+    private final int COLUMN;
+
+    Square(int row, int column) {
+        ROW = row;
+        COLUMN = column;
+    }
+
+    public int getRow() {
+        return ROW;
+    }
+
+    public int getColumn() {
+        return COLUMN;
+    }
+
+    @NotNull
+    public static Square createCustom(int row, int column, @NotNull Piece... pieces) {
+        Square square = new Square(row, column);
+        Collections.addAll(square.PIECES, pieces);
+        return square;
+    }
 
     @NotNull
     public List<Piece> getPieces() {
@@ -56,6 +80,11 @@ public class Square extends Node<Square> {
         }
 
         return connectsTo(square.getTopPiece());
+    }
+
+    @Override
+    public String toString() {
+        return getTopPiece().getColor().toString();
     }
 
 }
