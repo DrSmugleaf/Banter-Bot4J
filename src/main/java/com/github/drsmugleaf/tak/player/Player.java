@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tak.player;
 
-import com.github.drsmugleaf.tak.board.Sizes;
+import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.pieces.Color;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +15,7 @@ public class Player {
     @NotNull
     private final Hand HAND;
 
-    public Player(@NotNull String name, @NotNull Color color, @NotNull Sizes size) {
+    public Player(@NotNull String name, @NotNull Color color, @NotNull Preset size) {
         NAME = name;
         HAND = new Hand(color, size);
     }

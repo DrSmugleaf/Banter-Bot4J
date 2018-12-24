@@ -18,9 +18,9 @@ public class Board {
     private final Row[] ROWS;
 
     @NotNull
-    private final Sizes SIZE;
+    private final Preset SIZE;
 
-    public Board(@NotNull Sizes size) {
+    public Board(@NotNull Preset size) {
         SIZE = size;
         int boardSize = SIZE.getSize();
 
@@ -38,7 +38,7 @@ public class Board {
     }
 
     public Board(@NotNull Square[][] squares) {
-        Sizes size = Sizes.getPreset(squares.length);
+        Preset size = Preset.getPreset(squares.length);
         if (size == null) {
             throw new IllegalArgumentException("No preset found for array length " + squares.length);
         }
@@ -80,7 +80,7 @@ public class Board {
 
     @NotNull
     public Board getDefault() {
-        return new Board(Sizes.getDefault());
+        return new Board(Preset.getDefault());
     }
 
     @NotNull
@@ -181,7 +181,6 @@ public class Board {
         }
 
         return visited.contains(destination);
-
     }
 
     private void getAllConnections(@NotNull Square squareOne, @NotNull Square squareTwo, @NotNull List<Square> visited) {

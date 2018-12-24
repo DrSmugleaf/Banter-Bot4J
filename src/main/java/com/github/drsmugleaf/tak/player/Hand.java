@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tak.player;
 
-import com.github.drsmugleaf.tak.board.Sizes;
+import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
@@ -18,7 +18,7 @@ public class Hand {
 
     private int CAPSTONES;
 
-    Hand(@NotNull Color color, @NotNull Sizes size) {
+    Hand(@NotNull Color color, @NotNull Preset size) {
         COLOR = color;
         PIECES = size.getStones();
         CAPSTONES = size.getCapstones();

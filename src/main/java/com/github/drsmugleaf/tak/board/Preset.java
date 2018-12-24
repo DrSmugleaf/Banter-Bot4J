@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Created by DrSmugleaf on 01/12/2018
  */
-public enum Sizes {
+public enum Preset {
 
     THREE(3, 0, 10),
     FOUR(4, 0, 15),
@@ -18,7 +18,7 @@ public enum Sizes {
     private final int CAPSTONES;
     private final int STONES;
 
-    Sizes(int size, int capstones, int stones) {
+    Preset(int size, int capstones, int stones) {
         if (size <= 0) {
             throw new IllegalArgumentException("Board size less than or equal to 0. Size: " + size);
         }
@@ -29,13 +29,13 @@ public enum Sizes {
     }
 
     @NotNull
-    public static Sizes getDefault() {
+    public static Preset getDefault() {
         return FIVE;
     }
 
     @Nullable
-    public static Sizes getPreset(int size) {
-        for (Sizes preset : values()) {
+    public static Preset getPreset(int size) {
+        for (Preset preset : values()) {
             if (preset.getSize() == size) {
                 return preset;
             }
