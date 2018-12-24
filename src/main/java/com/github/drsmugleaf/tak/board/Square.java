@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.tak.board;
 
+import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
 import org.jetbrains.annotations.NotNull;
@@ -49,6 +50,24 @@ public class Square {
     }
 
     @Nullable
+    public Color getColor() {
+        if (getTopPiece() == null) {
+            return null;
+        }
+
+        return getTopPiece().getColor();
+    }
+
+    @Nullable
+    public Type getType() {
+        if (getTopPiece() == null) {
+            return null;
+        }
+
+        return getTopPiece().getType();
+    }
+
+    @Nullable
     public Piece getTopPiece() {
         if (PIECES.isEmpty()) {
             return null;
@@ -71,7 +90,7 @@ public class Square {
             return false;
         }
 
-        return getTopPiece().getColor() == piece.getColor() && getTopPiece().getType().formsRoad() && piece.getType().formsRoad();
+        return getColor() == piece.getColor() && getTopPiece().getType().formsRoad() && piece.getType().formsRoad();
     }
 
     public boolean connectsTo(@Nullable Square square) {
@@ -84,7 +103,19 @@ public class Square {
 
     @Override
     public String toString() {
-        return getTopPiece().getColor().toString();
+        StringBuilder builder = new StringBuilder();
+        List<Piece> pieces = getPieces();
+
+        for (int i = 0; i < pieces.size(); i++) {
+            Piece piece = pieces.get(i);
+            builder.append(piece.getColor());
+
+            if (i < pieces.size() - 1) {
+                builder.append(" ");
+            }
+        }
+
+        return builder.toString();
     }
 
 }

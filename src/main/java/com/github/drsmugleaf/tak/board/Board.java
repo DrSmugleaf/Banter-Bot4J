@@ -78,6 +78,28 @@ public class Board {
         return squares;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        Square[][] board = toArray();
+
+        for (int rowIndex = 0; rowIndex < board.length; rowIndex++) {
+            Square[] row = board[rowIndex];
+
+            for (int column = 0; column < row.length; column++) {
+                builder.append(row[column]);
+
+                if (column < row.length - 1) {
+                    builder.append(", ");
+                } else {
+                    builder.append("\n");
+                }
+            }
+        }
+
+        return builder.toString();
+    }
+
     @NotNull
     public Board getDefault() {
         return new Board(Preset.getDefault());
@@ -206,7 +228,7 @@ public class Board {
                         throw new IllegalStateException("Valid road found but the last top piece doesn't exist");
                     }
 
-                    return origin.getTopPiece().getColor();
+                    return origin.getColor();
                 }
             }
         }
@@ -218,7 +240,7 @@ public class Board {
                         throw new IllegalStateException("Valid road found but the last top piece doesn't exist");
                     }
 
-                    return origin.getTopPiece().getColor();
+                    return origin.getColor();
                 }
             }
         }

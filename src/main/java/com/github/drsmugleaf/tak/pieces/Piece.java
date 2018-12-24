@@ -28,4 +28,9 @@ public class Piece {
         return TYPE;
     }
 
+    @Override
+    public String toString() {
+        return COLOR.toString();
+    }
+
 }
