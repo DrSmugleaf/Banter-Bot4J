@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.tak;
 
 import com.github.drsmugleaf.tak.board.Board;
+import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
@@ -9,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -23,9 +23,13 @@ public class Game {
     @NotNull
     private final List<Player> PLAYERS = new ArrayList<>();
 
-    public Game(@NotNull Board board, @NotNull Collection<Player> players) {
-        BOARD = board;
-        PLAYERS.addAll(players);
+    public Game(@NotNull Preset preset, @NotNull String playerName1, @NotNull String playerName2) {
+        BOARD = new Board(preset);
+
+        Player player1 = new Player(playerName1, Color.BLACK, preset);
+        Player player2 = new Player(playerName2, Color.WHITE, preset);
+        PLAYERS.add(player1);
+        PLAYERS.add(player2);
     }
 
     @NotNull
