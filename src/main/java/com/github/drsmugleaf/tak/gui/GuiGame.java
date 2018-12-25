@@ -2,10 +2,10 @@ package com.github.drsmugleaf.tak.gui;
 
 import com.github.drsmugleaf.tak.Game;
 import com.github.drsmugleaf.tak.board.Preset;
+import com.github.drsmugleaf.tak.board.Square;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -15,7 +15,10 @@ import java.util.List;
  */
 public class GuiGame extends Game {
 
+    @NotNull
     private final BoardPanel BOARD;
+
+    @NotNull
     private final JFrame FRAME;
 
     public GuiGame(@NotNull Preset preset, @NotNull String player1, @NotNull String player2) {
@@ -24,6 +27,7 @@ public class GuiGame extends Game {
         FRAME = setupFrame();
     }
 
+    @NotNull
     private JFrame setupFrame() {
         JFrame frame = new JFrame("Tak");
 
@@ -41,24 +45,18 @@ public class GuiGame extends Game {
         return frame;
     }
 
+    @NotNull
     @Override
-    public @NotNull List<Player> getPlayers() {
+    public List<Player> getPlayers() {
         return super.getPlayers();
     }
 
+    @NotNull
     @Override
-    public boolean canPlace(@NotNull Player player, @NotNull Type type, int row, int square) {
-        return super.canPlace(player, type, row, square);
-    }
-
-    @Override
-    public boolean place(@NotNull Player player, @NotNull Type type, int row, int square) {
-        return super.place(player, type, row, square);
-    }
-
-    @Override
-    public @Nullable Player checkVictory() {
-        return super.checkVictory();
+    public Square place(@NotNull Player player, @NotNull Type type, int row, int column) {
+        Square square = super.place(player, type, row, column);
+        BOARD.pieces[row][column].update(square);
+        return square;
     }
 
 }

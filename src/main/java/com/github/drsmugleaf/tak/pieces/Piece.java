@@ -5,8 +5,12 @@ import com.github.drsmugleaf.tak.board.Preset;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
@@ -45,7 +49,7 @@ public class Piece {
     }
 
     @NotNull
-    public InputStream getImage() {
+    public InputStream toImage() {
         StringBuilder builder = new StringBuilder(IMAGES_PATH).append("/");
         switch (getColor()) {
             case BLACK:
@@ -79,6 +83,18 @@ public class Piece {
             BanterBot4J.warn("No image found in path " + filePath, e);
             throw new IllegalStateException("No image found in path " + filePath, e);
         }
+    }
+
+    @NotNull
+    public Image toImage(int height, int width) {
+        BufferedImage image;
+        try {
+            image = ImageIO.read(toImage());
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading image input stream", e);
+        }
+
+        return image.getScaledInstance(width, height, Image.SCALE_FAST);
     }
 
 }

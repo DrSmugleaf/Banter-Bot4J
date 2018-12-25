@@ -119,8 +119,9 @@ public class Board {
         return row < ROWS.length && ROWS[row].canPlace(type, square);
     }
 
-    public void place(@NotNull Piece piece, int row, int square) {
-        ROWS[row].place(piece, square);
+    @NotNull
+    public Square place(@NotNull Piece piece, int row, int column) {
+        return ROWS[row].place(piece, column);
     }
 
     @NotNull

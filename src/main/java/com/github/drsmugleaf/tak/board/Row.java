@@ -29,8 +29,9 @@ public class Row {
         return square < SQUARES.length && SQUARES[square].canPlace(type);
     }
 
-    public void place(@NotNull Piece piece, int square) {
-        SQUARES[square].place(piece);
+    @NotNull
+    public Square place(@NotNull Piece piece, int column) {
+        return SQUARES[column].place(piece);
     }
 
 }

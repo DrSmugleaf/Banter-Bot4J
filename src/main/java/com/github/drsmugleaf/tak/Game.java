@@ -2,6 +2,7 @@ package com.github.drsmugleaf.tak;
 
 import com.github.drsmugleaf.tak.board.Board;
 import com.github.drsmugleaf.tak.board.Preset;
+import com.github.drsmugleaf.tak.board.Square;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
@@ -41,14 +42,14 @@ public class Game {
         return PLAYERS.contains(player) && player.getHand().has(type) && BOARD.canPlace(type, row, square);
     }
 
-    public boolean place(@NotNull Player player, @NotNull Type type, int row, int square) {
-        if (!canPlace(player, type, row, square)) {
-            return false;
+    @NotNull
+    public Square place(@NotNull Player player, @NotNull Type type, int row, int column) {
+        if (!canPlace(player, type, row, column)) {
+            throw new IllegalStateException("Invalid place call");
         }
 
         Piece piece = player.getHand().takePiece(type);
-        BOARD.place(piece, row, square);
-        return true;
+        return BOARD.place(piece, row, column);
     }
 
     @Nullable

@@ -81,8 +81,10 @@ public class Square {
         return topPiece == null || type.ignoresBlock() || !topPiece.getType().blocks();
     }
 
-    public void place(@NotNull Piece piece) {
+    @NotNull
+    public Square place(@NotNull Piece piece) {
         PIECES.add(piece);
+        return this;
     }
 
     public boolean connectsTo(@Nullable Piece piece) {
