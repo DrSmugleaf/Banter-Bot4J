@@ -18,7 +18,7 @@ public class BoardPanel {
     private final JButton[][] pieces;
     public final JPanel board;
 
-    public BoardPanel(@NotNull Preset preset) {
+    BoardPanel(@NotNull Preset preset) {
         int dimensions = preset.getSize();
         pieces = new JButton[dimensions][dimensions];
         board = new JPanel(new GridLayout(0, dimensions));

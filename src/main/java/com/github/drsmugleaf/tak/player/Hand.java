@@ -18,10 +18,10 @@ public class Hand {
 
     private int CAPSTONES;
 
-    Hand(@NotNull Color color, @NotNull Preset size) {
+    Hand(@NotNull Color color, @NotNull Preset preset) {
         COLOR = color;
-        PIECES = size.getStones();
-        CAPSTONES = size.getCapstones();
+        PIECES = preset.getStones();
+        CAPSTONES = preset.getCapstones();
     }
 
     @NotNull

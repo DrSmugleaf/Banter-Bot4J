@@ -15,9 +15,9 @@ public class Player {
     @NotNull
     private final Hand HAND;
 
-    public Player(@NotNull String name, @NotNull Color color, @NotNull Preset size) {
+    public Player(@NotNull String name, @NotNull Color color, @NotNull Preset preset) {
         NAME = name;
-        HAND = new Hand(color, size);
+        HAND = new Hand(color, preset);
     }
 
     @NotNull

@@ -18,11 +18,11 @@ public class Board {
     private final Row[] ROWS;
 
     @NotNull
-    private final Preset SIZE;
+    private final Preset PRESET;
 
-    public Board(@NotNull Preset size) {
-        SIZE = size;
-        int boardSize = SIZE.getSize();
+    public Board(@NotNull Preset preset) {
+        PRESET = preset;
+        int boardSize = PRESET.getSize();
 
         Row[] rows = new Row[boardSize];
 
@@ -38,25 +38,24 @@ public class Board {
     }
 
     public Board(@NotNull Square[][] squares) {
-        Preset size = Preset.getPreset(squares.length);
-        if (size == null) {
+        Preset preset = Preset.getPreset(squares.length);
+        if (preset == null) {
             throw new IllegalArgumentException("No preset found for array length " + squares.length);
         }
 
+        PRESET = preset;
+        int boardSize = PRESET.getSize();
         for (Square[] row : squares) {
             int rowLength = row.length;
-            int expectedLength = size.getSize();
-            if (rowLength != expectedLength) {
-                throw new IllegalArgumentException("Array isn't a square. Expected size " + expectedLength + " found " + rowLength);
+            if (rowLength != boardSize) {
+                throw new IllegalArgumentException("Array isn't a square. Expected preset " + expectedLength + " found " + rowLength);
             }
         }
 
-        SIZE = size;
-
-        Row[] rows = new Row[size.getSize()];
+        Row[] rows = new Row[boardSize];
 
         for (int i = 0; i < rows.length; i++) {
-            Row row = new Row(size.getSize());
+            Row row = new Row(boardSize);
             for (int j = 0; j < row.getSquares().length; j++) {
                 row.setSquare(j, squares[i][j]);
             }
@@ -69,7 +68,8 @@ public class Board {
 
     @NotNull
     public Square[][] toArray() {
-        Square[][] squares = new Square[SIZE.getSize()][SIZE.getSize()];
+        int boardSize = PRESET.getSize();
+        Square[][] squares = new Square[boardSize][boardSize];
         for (int i = 0; i < ROWS.length; i++) {
             Row currentRow = ROWS[i];
             squares[i] = currentRow.getSquares();
@@ -110,6 +110,11 @@ public class Board {
         return ROWS.clone();
     }
 
+    @NotNull
+    public Preset getPreset() {
+        return PRESET;
+    }
+
     public boolean canPlace(@NotNull Type type, int row, int square) {
         return row < ROWS.length && ROWS[row].canPlace(type, square);
     }
@@ -130,7 +135,7 @@ public class Board {
 
     @NotNull
     public Square[] getFirstColumn() {
-        Square[] squares = new Square[SIZE.getSize()];
+        Square[] squares = new Square[PRESET.getSize()];
 
         for (int i = 0; i < ROWS.length; i++) {
             Row row = ROWS[i];
@@ -142,7 +147,7 @@ public class Board {
 
     @NotNull
     public Square[] getLastColumn() {
-        Square[] squares = new Square[SIZE.getSize()];
+        Square[] squares = new Square[PRESET.getSize()];
 
         for (int i = 0; i < ROWS.length; i++) {
             Row row = ROWS[i];
