@@ -48,7 +48,7 @@ public class Board {
         for (Square[] row : squares) {
             int rowLength = row.length;
             if (rowLength != boardSize) {
-                throw new IllegalArgumentException("Array isn't a square. Expected preset " + expectedLength + " found " + rowLength);
+                throw new IllegalArgumentException("Array isn't a square. Expected preset " + boardSize + " found " + rowLength);
             }
         }
 
