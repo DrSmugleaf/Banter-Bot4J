@@ -77,6 +77,10 @@ public class SquareButton {
         for (int i = 0; i < pieces.size(); i++) {
             Piece piece = pieces.get(i);
             int pieceSize = SIZE - 20 * i;
+            if (pieceSize < 10) {
+                pieceSize = 10;
+            }
+
             Image image = piece.toImage(pieceSize, pieceSize);
 
             g.drawImage(
