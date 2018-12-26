@@ -7,11 +7,13 @@ import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.Player;
+import com.github.drsmugleaf.tak.player.PlayerInformation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Created by DrSmugleaf on 01/12/2018
@@ -24,13 +26,24 @@ public class Game {
     @NotNull
     private final List<Player> PLAYERS = new ArrayList<>();
 
-    public Game(@NotNull Preset preset, @NotNull String playerName1, @NotNull String playerName2) {
-        BOARD = new Board(preset);
+    @NotNull
+    private Player nextPlayer;
 
-        Player player1 = new Player(playerName1, Color.BLACK, preset);
-        Player player2 = new Player(playerName2, Color.WHITE, preset);
+    @Nullable
+    private Player winner = null;
+
+    public Game(@NotNull Preset preset, @NotNull String playerName1, @NotNull String playerName2, @NotNull Function<PlayerInformation, Player> playerMaker) {
+        BOARD = new Board(preset);
+        Player player1 = playerMaker.apply(new PlayerInformation(playerName1, this, Color.BLACK, preset));
+        Player player2 = playerMaker.apply(new PlayerInformation(playerName2, this, Color.WHITE, preset));
         PLAYERS.add(player1);
         PLAYERS.add(player2);
+        nextPlayer = player1;
+    }
+
+    @NotNull
+    public Board getBoard() {
+        return BOARD;
     }
 
     @NotNull
@@ -38,18 +51,21 @@ public class Game {
         return new ArrayList<>(PLAYERS);
     }
 
-    public boolean canPlace(@NotNull Player player, @NotNull Type type, int row, int square) {
-        return PLAYERS.contains(player) && player.getHand().has(type) && BOARD.canPlace(type, row, square);
+    public boolean canPlace(@NotNull Player player, @NotNull Type type, int row, int column) {
+        return nextPlayer == player && player.getHand().has(type) && BOARD.canPlace(type, row, column);
     }
 
     @NotNull
     public Square place(@NotNull Player player, @NotNull Type type, int row, int column) {
         if (!canPlace(player, type, row, column)) {
-            throw new IllegalStateException("Invalid place call");
+            throw new IllegalStateException("Invalid place call, piece type " + type + " at row " + row + " and column " + column);
         }
 
         Piece piece = player.getHand().takePiece(type);
-        return BOARD.place(piece, row, column);
+        Square square = BOARD.place(piece, row, column);
+        nextPlayer = getOtherPlayer(player);
+        checkVictory();
+        return square;
     }
 
     @Nullable
@@ -61,11 +77,46 @@ public class Game {
 
         for (Player player : PLAYERS) {
             if (player.getHand().getColor() == winningColor) {
+                winner = player;
                 return player;
             }
         }
 
         throw new IllegalStateException("No player found for winning color " + winningColor);
+    }
+
+    @NotNull
+    public Player getNextPlayer() {
+        return nextPlayer;
+    }
+
+    @NotNull
+    public Player getOtherPlayer(@NotNull Player player1) {
+        for (Player player : PLAYERS) {
+            if (player != player1) {
+                return player;
+            }
+        }
+
+        throw new IllegalStateException("No other player found");
+    }
+
+    public boolean isActive() {
+        return winner == null;
+    }
+
+    public void surrender(@NotNull Player loser) {
+        if (winner != null) {
+            throw new IllegalStateException("Game already ended");
+        }
+
+        winner = getOtherPlayer(loser);
+    }
+
+    public void start() {
+        while (isActive()) {
+            getNextPlayer().nextTurn();
+        }
     }
 
 }

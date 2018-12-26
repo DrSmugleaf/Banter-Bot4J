@@ -25,8 +25,8 @@ public class Row {
         SQUARES[i] = square;
     }
 
-    public boolean canPlace(@NotNull Type type, int square) {
-        return square < SQUARES.length && SQUARES[square].canPlace(type);
+    public boolean canPlace(@NotNull Type type, int column) {
+        return column < SQUARES.length && SQUARES[column].canPlace(type);
     }
 
     @NotNull

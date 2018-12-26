@@ -115,8 +115,8 @@ public class Board {
         return PRESET;
     }
 
-    public boolean canPlace(@NotNull Type type, int row, int square) {
-        return row < ROWS.length && ROWS[row].canPlace(type, square);
+    public boolean canPlace(@NotNull Type type, int row, int column) {
+        return row < ROWS.length && ROWS[row].canPlace(type, column);
     }
 
     @NotNull

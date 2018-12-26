@@ -45,7 +45,7 @@ public class Hand {
             case CAPSTONE:
                 return getCapstones();
             default:
-                throw new IllegalArgumentException("Unrecognized type: " + type);
+                throw new IllegalArgumentException("Unrecognized piece type: " + type);
         }
     }
 

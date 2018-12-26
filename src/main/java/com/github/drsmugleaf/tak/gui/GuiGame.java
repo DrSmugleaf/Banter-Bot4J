@@ -3,12 +3,12 @@ package com.github.drsmugleaf.tak.gui;
 import com.github.drsmugleaf.tak.Game;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.board.Square;
+import com.github.drsmugleaf.tak.bot.RandomFlatBot;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.util.List;
 
 /**
  * Created by DrSmugleaf on 25/12/2018
@@ -22,7 +22,7 @@ public class GuiGame extends Game {
     private final JFrame FRAME;
 
     public GuiGame(@NotNull Preset preset, @NotNull String player1, @NotNull String player2) {
-        super(preset, player1, player2);
+        super(preset, player1, player2, RandomFlatBot::from);
         BOARD = new BoardPanel(preset);
         FRAME = setupFrame();
     }
@@ -40,15 +40,11 @@ public class GuiGame extends Game {
 
             frame.setMinimumSize(frame.getSize());
             frame.setVisible(true);
+
+            start();
         });
 
         return frame;
-    }
-
-    @NotNull
-    @Override
-    public List<Player> getPlayers() {
-        return super.getPlayers();
     }
 
     @NotNull
