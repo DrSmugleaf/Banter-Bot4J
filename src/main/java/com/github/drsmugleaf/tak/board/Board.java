@@ -205,13 +205,13 @@ public class Board {
         visited.add(origin);
 
         for (Square connection : connections) {
-            getAllConnections(connection, destination, visited);
+            getAllConnections(connection, visited);
         }
 
         return visited.contains(destination);
     }
 
-    private void getAllConnections(@NotNull Square squareOne, @NotNull Square squareTwo, @NotNull List<Square> visited) {
+    private void getAllConnections(@NotNull Square squareOne, @NotNull List<Square> visited) {
         List<Square> connections = getAdjacent(squareOne).getConnections();
         visited.add(squareOne);
 
@@ -220,7 +220,7 @@ public class Board {
                 continue;
             }
 
-            getAllConnections(connection, squareTwo, visited);
+            getAllConnections(connection, visited);
         }
     }
 
