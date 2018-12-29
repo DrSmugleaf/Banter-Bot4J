@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.tak.bot.minimax;
 
+import com.github.drsmugleaf.tak.board.Board;
+import com.github.drsmugleaf.tak.board.Row;
 import com.github.drsmugleaf.tak.board.Square;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
@@ -15,7 +17,7 @@ import java.util.List;
 public class Node {
 
     @NotNull
-    private final Square[][] BOARD;
+    private final Board BOARD;
     private final int SCORE;
 
     @NotNull
@@ -24,15 +26,22 @@ public class Node {
     @NotNull
     private final List<Node> CHILDREN = new ArrayList<>();
 
-    protected Node(@NotNull Square[][] board, @NotNull Color nextColor) {
+    protected Node(@NotNull Board board, @NotNull Color nextColor) {
         BOARD = board;
         SCORE = computeScore();
 
         NEXT_COLOR = nextColor;
     }
 
-    public int getScore() {
-        return SCORE;
+    public int getScore(@NotNull Color color) {
+        switch (color) {
+            case BLACK:
+                return SCORE;
+            case WHITE:
+                return -SCORE;
+            default:
+                throw new IllegalArgumentException("Unrecognized color: " + color);
+        }
     }
 
     @NotNull
@@ -44,15 +53,14 @@ public class Node {
     private List<Node> getAllPossible() {
         List<Node> allBoards = new ArrayList<>();
 
-        for (int row = 0; row < BOARD.length; row++) {
-            for (int column = 0; column < BOARD[row].length; column++) {
-                Square[][] board = BOARD.clone();
-                Square square = board[row][column];
+        for (Row row : BOARD.getRows()) {
+            for (Square square : row.getSquares()) {
+                Board copy = BOARD.copy();
 
                 Piece piece = new Piece(NEXT_COLOR, Type.FLAT_STONE);
                 square.place(piece);
 
-                Node node = new Node(board, NEXT_COLOR.getOpposite());
+                Node node = new Node(copy, NEXT_COLOR.getOpposite());
                 allBoards.add(node);
             }
         }
@@ -63,8 +71,8 @@ public class Node {
     private int computeScore() {
         int score = 0;
 
-        for (Square[] row : BOARD) {
-            for (Square square : row) {
+        for (Row row : BOARD.getRows()) {
+            for (Square square : row.getSquares()) {
                 Piece topPiece = square.getTopPiece();
                 if (topPiece == null) {
                     continue;
@@ -87,16 +95,21 @@ public class Node {
         return score;
     }
 
-    protected void computeToDepth(int depth) {
+    @NotNull
+    protected List<Node> computeToDepth(int depth, @NotNull List<Node> nodes) {
         if (depth < 1) {
-            return;
+            nodes.add(this);
+            return nodes;
         }
 
         CHILDREN.addAll(getAllPossible());
+        nodes.addAll(CHILDREN);
 
         for (Node child : CHILDREN) {
-            child.computeToDepth(depth - 1);
+            child.computeToDepth(depth - 1, nodes);
         }
+
+        return nodes;
     }
 
 }

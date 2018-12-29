@@ -67,6 +67,11 @@ public class Board {
     }
 
     @NotNull
+    public Board copy() {
+        return new Board(toArray());
+    }
+
+    @NotNull
     public Square[][] toArray() {
         int boardSize = PRESET.getSize();
         Square[][] squares = new Square[boardSize][boardSize];
