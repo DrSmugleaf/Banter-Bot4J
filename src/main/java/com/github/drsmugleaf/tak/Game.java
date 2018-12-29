@@ -52,7 +52,7 @@ public class Game {
     }
 
     public boolean canPlace(@NotNull Player player, @NotNull Type type, int row, int column) {
-        return nextPlayer == player && player.getHand().has(type) && BOARD.canPlace(type, row, column);
+        return nextPlayer == player && BOARD.canPlace(type, row, column);
     }
 
     @NotNull

@@ -43,7 +43,7 @@ public abstract class Player {
     }
 
     public final boolean canPlace(@NotNull Type type, int row, int column) {
-        return GAME.canPlace(this, type, row, column);
+        return getHand().has(type) && GAME.canPlace(this, type, row, column);
     }
 
     @NotNull
