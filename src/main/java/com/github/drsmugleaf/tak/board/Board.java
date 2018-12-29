@@ -15,10 +15,10 @@ import java.util.List;
 public class Board {
 
     @NotNull
-    private final Row[] ROWS;
+    private final Preset PRESET;
 
     @NotNull
-    private final Preset PRESET;
+    private final Row[] ROWS;
 
     public Board(@NotNull Preset preset) {
         PRESET = preset;
@@ -66,27 +66,25 @@ public class Board {
         ROWS = rows;
     }
 
+    private Board(@NotNull Board board) {
+        this(board.toArray());
+    }
+
     @NotNull
     public Board copy() {
-        Square[][] board = toArray();
-        for (int i = 0; i < board.length; i++) {
-            Square[] row = board[i];
-            for (int j = 0; j < row.length; j++) {
-                Square square = row[j].copy();
-                board[i][j] = square;
-            }
-        }
-
-        return new Board(board);
+        return new Board(this);
     }
 
     @NotNull
     public Square[][] toArray() {
         int boardSize = PRESET.getSize();
         Square[][] squares = new Square[boardSize][boardSize];
+
         for (int i = 0; i < ROWS.length; i++) {
-            Row currentRow = ROWS[i];
-            squares[i] = currentRow.getSquares();
+            Square[] row = ROWS[i].getSquares();
+            for (int j = 0; j < row.length; j++) {
+                squares[i][j] = row[j].copy();
+            }
         }
 
         return squares;
@@ -178,6 +176,10 @@ public class Board {
 
         for (Square[] row : toArray()) {
             for (Square square : row) {
+                if (square.getColor() != color) {
+                    continue;
+                }
+
                 AdjacentSquares adjacent = getAdjacent(square);
                 amount += adjacent.getConnections().size();
             }
@@ -188,15 +190,15 @@ public class Board {
 
     @NotNull
     public AdjacentSquares getAdjacent(@NotNull Square square) {
-        Square[][] board = toArray();
+        Row[] rows = getRows();
         int rowIndex = square.getRow();
         int columnIndex = square.getColumn();
 
-        if (rowIndex >= board.length) {
+        if (rowIndex >= rows.length) {
             throw new ArrayIndexOutOfBoundsException("Row " + rowIndex + " is out of bounds");
         }
 
-        Square[] row = board[rowIndex];
+        Square[] row = rows[rowIndex].getSquares();
         if (columnIndex >= row.length) {
             throw new ArrayIndexOutOfBoundsException("Column " + columnIndex + " is out of bounds");
         }
