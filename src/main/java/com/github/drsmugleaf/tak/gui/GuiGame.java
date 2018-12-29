@@ -3,12 +3,13 @@ package com.github.drsmugleaf.tak.gui;
 import com.github.drsmugleaf.tak.Game;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.board.Square;
-import com.github.drsmugleaf.tak.bot.RandomFlatBot;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.Player;
+import com.github.drsmugleaf.tak.player.PlayerInformation;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.util.function.Function;
 
 /**
  * Created by DrSmugleaf on 25/12/2018
@@ -16,14 +17,14 @@ import javax.swing.*;
 public class GuiGame extends Game {
 
     @NotNull
-    private final BoardPanel BOARD;
+    private final BoardPanel BOARD_PANEL;
 
     @NotNull
     private final JFrame FRAME;
 
-    public GuiGame(@NotNull Preset preset, @NotNull String player1, @NotNull String player2) {
-        super(preset, player1, player2, RandomFlatBot::from);
-        BOARD = new BoardPanel(preset);
+    public GuiGame(@NotNull Preset preset, @NotNull String playerName1, @NotNull String playerName2, @NotNull Function<PlayerInformation, Player> playerMaker1, @NotNull Function<PlayerInformation, Player> playerMaker2) {
+        super(preset, playerName1, playerName2, playerMaker1, playerMaker2);
+        BOARD_PANEL = new BoardPanel(preset);
         FRAME = setupFrame();
     }
 
@@ -32,7 +33,7 @@ public class GuiGame extends Game {
         JFrame frame = new JFrame("Tak");
 
         SwingUtilities.invokeLater(() -> {
-            frame.add(BOARD.gui);
+            frame.add(BOARD_PANEL.gui);
             frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             frame.setLocationByPlatform(true);
 
@@ -51,7 +52,7 @@ public class GuiGame extends Game {
     @Override
     public Square place(@NotNull Player player, @NotNull Type type, int row, int column) {
         Square square = super.place(player, type, row, column);
-        BOARD.pieces[row][column].update(square);
+        BOARD_PANEL.pieces[row][column].update(square);
         return square;
     }
 

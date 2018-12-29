@@ -3,7 +3,6 @@ package com.github.drsmugleaf.tak.bot.minimax;
 import com.github.drsmugleaf.tak.Game;
 import com.github.drsmugleaf.tak.board.Coordinates;
 import com.github.drsmugleaf.tak.board.Preset;
-import com.github.drsmugleaf.tak.bot.RandomFlatBot;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.Player;
@@ -21,10 +20,6 @@ public class MinimaxFlatBot extends Player {
 
     @NotNull
     public static Player from(@NotNull PlayerInformation information) {
-        if (information.NAME.equals("2")) {
-            return RandomFlatBot.from(information);
-        }
-
         return new MinimaxFlatBot(information.NAME, information.GAME, information.COLOR, information.PRESET);
     }
 
