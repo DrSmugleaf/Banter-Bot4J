@@ -173,6 +173,19 @@ public class Board {
         return squares;
     }
 
+    public int countAdjacent(@NotNull Color color) {
+        int amount = 0;
+
+        for (Square[] row : toArray()) {
+            for (Square square : row) {
+                AdjacentSquares adjacent = getAdjacent(square);
+                amount += adjacent.getConnections().size();
+            }
+        }
+
+        return amount;
+    }
+
     @NotNull
     public AdjacentSquares getAdjacent(@NotNull Square square) {
         Square[][] board = toArray();

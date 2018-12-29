@@ -7,7 +7,6 @@ import com.github.drsmugleaf.tak.board.Square;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
-import com.github.drsmugleaf.tak.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,14 +34,10 @@ public class Node {
     @Nullable
     private Coordinates COORDINATES;
 
-    @NotNull
-    private final Player PLAYER;
-
-    protected Node(@NotNull Board board, @NotNull Color nextColor, @NotNull Player player) {
+    protected Node(@NotNull Board board, @NotNull Color nextColor) {
         BOARD = board;
         SCORE = computeScore();
         NEXT_COLOR = nextColor;
-        PLAYER = player;
     }
 
     @Nullable
@@ -79,17 +74,16 @@ public class Node {
         for (int i = 0; i < rows.length; i++) {
             Row row = rows[i];
             for (int j = 0; j < row.getSquares().length; j++) {
-                Square square = row.getSquares()[j];
                 Board copy = BOARD.copy();
 
                 Piece piece = new Piece(NEXT_COLOR, Type.FLAT_STONE);
-                if (!PLAYER.canPlace(piece.getType(), i, j)) {
+                if (!copy.canPlace(piece.getType(), i, j)) {
                     continue;
                 }
 
-                square.place(piece);
+                copy.place(piece, i, j);
 
-                Node node = new Node(copy, NEXT_COLOR.getOpposite(), PLAYER);
+                Node node = new Node(copy, NEXT_COLOR.getOpposite());
                 node.COORDINATES = new Coordinates(i, j);
                 allBoards.add(node);
             }
@@ -99,6 +93,18 @@ public class Node {
     }
 
     private int computeScore() {
+        Color winner = BOARD.hasRoad();
+        if (winner != null) {
+            switch (winner) {
+                case BLACK:
+                    return Integer.MAX_VALUE;
+                case WHITE:
+                    return Integer.MIN_VALUE;
+                default:
+                    throw new IllegalArgumentException("Unrecognized color: " + winner);
+            }
+        }
+
         int score = 0;
 
         for (Row row : BOARD.getRows()) {
@@ -122,6 +128,9 @@ public class Node {
             }
         }
 
+        score += BOARD.countAdjacent(Color.BLACK);
+        score -= BOARD.countAdjacent(Color.WHITE);
+
         return score;
     }
 
@@ -133,11 +142,11 @@ public class Node {
         CHILDREN.addAll(getAllPossible());
 
         for (Node child : CHILDREN) {
-            if (BEST_CHILD == null || BEST_CHILD.getScore(color) < getScore(color)) {
+            child.computeToDepth(depth - 1, color);
+
+            if (BEST_CHILD == null || BEST_CHILD.getScore(color) < child.getScore(color)) {
                 BEST_CHILD = child;
             }
-
-            child.computeToDepth(depth - 1, color);
         }
     }
 
