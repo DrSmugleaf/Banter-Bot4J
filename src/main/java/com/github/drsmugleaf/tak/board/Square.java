@@ -18,15 +18,22 @@ public class Square {
     @NotNull
     private final List<Piece> PIECES = new ArrayList<>();
 
-    @NotNull
     private final int ROW;
-
-    @NotNull
     private final int COLUMN;
 
     Square(int row, int column) {
         ROW = row;
         COLUMN = column;
+    }
+
+    private Square(@NotNull Square square) {
+        this(square.getRow(), square.getColumn());
+        PIECES.addAll(square.getPieces());
+    }
+
+    @NotNull
+    public Square copy() {
+        return new Square(this);
     }
 
     public int getRow() {

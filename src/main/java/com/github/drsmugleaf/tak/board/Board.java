@@ -68,7 +68,16 @@ public class Board {
 
     @NotNull
     public Board copy() {
-        return new Board(toArray());
+        Square[][] board = toArray();
+        for (int i = 0; i < board.length; i++) {
+            Square[] row = board[i];
+            for (int j = 0; j < row.length; j++) {
+                Square square = row[j].copy();
+                board[i][j] = square;
+            }
+        }
+
+        return new Board(board);
     }
 
     @NotNull

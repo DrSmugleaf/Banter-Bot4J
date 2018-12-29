@@ -1,12 +1,15 @@
 package com.github.drsmugleaf.tak.bot.minimax;
 
 import com.github.drsmugleaf.tak.board.Board;
+import com.github.drsmugleaf.tak.board.Coordinates;
 import com.github.drsmugleaf.tak.board.Row;
 import com.github.drsmugleaf.tak.board.Square;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
+import com.github.drsmugleaf.tak.player.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +29,30 @@ public class Node {
     @NotNull
     private final List<Node> CHILDREN = new ArrayList<>();
 
-    protected Node(@NotNull Board board, @NotNull Color nextColor) {
+    @Nullable
+    private Node BEST_CHILD;
+
+    @Nullable
+    private Coordinates COORDINATES;
+
+    @NotNull
+    private final Player PLAYER;
+
+    protected Node(@NotNull Board board, @NotNull Color nextColor, @NotNull Player player) {
         BOARD = board;
         SCORE = computeScore();
-
         NEXT_COLOR = nextColor;
+        PLAYER = player;
+    }
+
+    @Nullable
+    public Node getBestChild() {
+        return BEST_CHILD;
+    }
+
+    @Nullable
+    public Coordinates getCoordinates() {
+        return COORDINATES;
     }
 
     public int getScore(@NotNull Color color) {
@@ -53,14 +75,22 @@ public class Node {
     private List<Node> getAllPossible() {
         List<Node> allBoards = new ArrayList<>();
 
-        for (Row row : BOARD.getRows()) {
-            for (Square square : row.getSquares()) {
+        Row[] rows = BOARD.getRows();
+        for (int i = 0; i < rows.length; i++) {
+            Row row = rows[i];
+            for (int j = 0; j < row.getSquares().length; j++) {
+                Square square = row.getSquares()[j];
                 Board copy = BOARD.copy();
 
                 Piece piece = new Piece(NEXT_COLOR, Type.FLAT_STONE);
+                if (!PLAYER.canPlace(piece.getType(), i, j)) {
+                    continue;
+                }
+
                 square.place(piece);
 
-                Node node = new Node(copy, NEXT_COLOR.getOpposite());
+                Node node = new Node(copy, NEXT_COLOR.getOpposite(), PLAYER);
+                node.COORDINATES = new Coordinates(i, j);
                 allBoards.add(node);
             }
         }
@@ -95,21 +125,20 @@ public class Node {
         return score;
     }
 
-    @NotNull
-    protected List<Node> computeToDepth(int depth, @NotNull List<Node> nodes) {
+    protected void computeToDepth(int depth, @NotNull Color color) {
         if (depth < 1) {
-            nodes.add(this);
-            return nodes;
+            return;
         }
 
         CHILDREN.addAll(getAllPossible());
-        nodes.addAll(CHILDREN);
 
         for (Node child : CHILDREN) {
-            child.computeToDepth(depth - 1, nodes);
-        }
+            if (BEST_CHILD == null || BEST_CHILD.getScore(color) < getScore(color)) {
+                BEST_CHILD = child;
+            }
 
-        return nodes;
+            child.computeToDepth(depth - 1, color);
+        }
     }
 
 }
