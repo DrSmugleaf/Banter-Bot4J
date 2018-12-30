@@ -25,6 +25,17 @@ public class RandomFlatBot extends Player {
         return new RandomFlatBot(information.NAME, information.GAME, information.COLOR, information.PRESET);
     }
 
+    @Override
+    public void nextTurn() {
+        if (getHand().has(Type.FLAT_STONE)) {
+            getCoordinates(Type.FLAT_STONE).place(this, Type.FLAT_STONE);
+        } else if (getHand().has(Type.CAPSTONE)) {
+            getCoordinates(Type.CAPSTONE).place(this, Type.CAPSTONE);
+        } else {
+            surrender();
+        }
+    }
+
     @NotNull
     private Coordinates getCoordinates(@NotNull Type type) {
         int boardSize = getGame().getBoard().getPreset().getSize();
@@ -43,17 +54,6 @@ public class RandomFlatBot extends Player {
         }
 
         return new Coordinates(randomRow, randomColumn);
-    }
-
-    @Override
-    public void nextTurn() {
-        if (getHand().has(Type.FLAT_STONE)) {
-            getCoordinates(Type.FLAT_STONE).place(this, Type.FLAT_STONE);
-        } else if (getHand().has(Type.CAPSTONE)) {
-            getCoordinates(Type.CAPSTONE).place(this, Type.CAPSTONE);
-        } else {
-            surrender();
-        }
     }
 
 }
