@@ -235,6 +235,10 @@ public class Board {
     }
 
     private boolean isConnected(@NotNull Square origin, @NotNull Square destination) {
+        if (origin.getColor() == null || origin.getColor() != destination.getColor()) {
+            return false;
+        }
+
         List<Square> connections = getAdjacent(origin).getConnections();
         List<Square> visited = new ArrayList<>();
         visited.add(origin);
