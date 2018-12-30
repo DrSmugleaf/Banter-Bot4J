@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.tak.bot.minimax;
+package com.github.drsmugleaf.tak.bot;
 
 import com.github.drsmugleaf.tak.Game;
 import com.github.drsmugleaf.tak.board.*;
