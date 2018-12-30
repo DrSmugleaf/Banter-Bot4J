@@ -31,7 +31,7 @@ public class MinimaxFlatBot extends Player {
 
     @NotNull
     public static Function<PlayerInformation, Player> from(int depth) {
-        return (PlayerInformation information) -> from(information, depth);
+        return information -> from(information, depth);
     }
 
     @NotNull
