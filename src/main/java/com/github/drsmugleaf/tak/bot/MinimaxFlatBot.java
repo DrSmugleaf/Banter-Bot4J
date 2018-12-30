@@ -9,7 +9,6 @@ import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
 import javafx.util.Pair;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by DrSmugleaf on 26/12/2018
@@ -27,7 +26,7 @@ public class MinimaxFlatBot extends Player {
 
     @Override
     public void nextTurn() {
-        Coordinates bestCoordinates = getBestCoordinates(getGame().getBoard(), Integer.MIN_VALUE, Integer.MAX_VALUE, 3);
+        Coordinates bestCoordinates = getBestCoordinates(getGame().getBoard(), 3);
         if (!getHand().has(Type.FLAT_STONE) || bestCoordinates == null) {
             surrender();
             return;
@@ -36,9 +35,8 @@ public class MinimaxFlatBot extends Player {
         bestCoordinates.place(this, Type.FLAT_STONE);
     }
 
-    @Nullable
-    private Coordinates getBestCoordinates(@NotNull Board board, int alpha, int beta, int depth) {
-        return getMax(board, getGame().getNextPlayer().getHand().getColor(), alpha, beta, depth).getKey();
+    private Coordinates getBestCoordinates(@NotNull Board board, int depth) {
+        return getMax(board, getGame().getNextPlayer().getHand().getColor(), Integer.MIN_VALUE, Integer.MAX_VALUE, depth).getKey();
     }
 
     private boolean isTerminal(@NotNull Board board) {
@@ -98,7 +96,7 @@ public class MinimaxFlatBot extends Player {
                 } else {
                     return getScore(copy);
                 }
-            });
+            }) - depth;
 
             if (nextPlayer == getHand().getColor()) {
                 if (score > alpha) {
