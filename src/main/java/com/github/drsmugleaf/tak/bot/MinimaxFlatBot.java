@@ -79,19 +79,20 @@ public class MinimaxFlatBot extends Player {
                     continue;
                 }
 
+                int adjacentScore = board.getAdjacent(square).getConnections().size() * 10;
+
                 Color topColor = topPiece.getColor();
                 if (topColor == getHand().getColor()) {
                     score++;
+                    score += adjacentScore;
                 } else if (topColor == getHand().getColor().getOpposite()) {
                     score--;
+                    score -= adjacentScore;
                 } else {
                     throw new IllegalArgumentException("Unrecognized piece color: " + topColor);
                 }
             }
         }
-
-        score += board.countAdjacent(getHand().getColor()) * 10;
-        score -= board.countAdjacent(getHand().getColor().getOpposite()) * 10;
 
         return score;
     }
