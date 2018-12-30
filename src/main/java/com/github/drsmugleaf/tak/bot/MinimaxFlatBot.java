@@ -10,23 +10,38 @@ import com.github.drsmugleaf.tak.player.PlayerInformation;
 import javafx.util.Pair;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Function;
+
 /**
  * Created by DrSmugleaf on 26/12/2018
  */
 public class MinimaxFlatBot extends Player {
 
-    public MinimaxFlatBot(@NotNull String name, @NotNull Game game, @NotNull Color color, @NotNull Preset preset) {
+    private final int DEPTH;
+
+    public MinimaxFlatBot(@NotNull String name, @NotNull Game game, @NotNull Color color, @NotNull Preset preset, int depth) {
         super(name, game, color, preset);
+        DEPTH = depth;
+    }
+
+    @NotNull
+    public static Player from(@NotNull PlayerInformation information, int depth) {
+        return new MinimaxFlatBot(information.NAME, information.GAME, information.COLOR, information.PRESET, depth);
+    }
+
+    @NotNull
+    public static Function<PlayerInformation, Player> from(int depth) {
+        return (PlayerInformation information) -> from(information, depth);
     }
 
     @NotNull
     public static Player from(@NotNull PlayerInformation information) {
-        return new MinimaxFlatBot(information.NAME, information.GAME, information.COLOR, information.PRESET);
+        return from(information, 3);
     }
 
     @Override
     public void nextTurn() {
-        Coordinates bestCoordinates = getBestCoordinates(getGame().getBoard(), 3);
+        Coordinates bestCoordinates = getBestCoordinates(getGame().getBoard(), DEPTH);
         if (!getHand().has(Type.FLAT_STONE) || bestCoordinates == null) {
             surrender();
             return;
