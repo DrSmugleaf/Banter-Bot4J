@@ -94,6 +94,12 @@ public class Square {
         return this;
     }
 
+    @NotNull
+    public Square remove(@NotNull Piece piece) {
+        PIECES.remove(piece);
+        return this;
+    }
+
     public boolean connectsTo(@Nullable Piece piece) {
         if (piece == null || getTopPiece() == null) {
             return false;

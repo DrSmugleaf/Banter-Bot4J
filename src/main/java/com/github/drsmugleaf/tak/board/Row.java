@@ -34,4 +34,9 @@ public class Row {
         return SQUARES[column].place(piece);
     }
 
+    @NotNull
+    public Square remove(@NotNull Piece piece, int column) {
+        return SQUARES[column].remove(piece);
+    }
+
 }

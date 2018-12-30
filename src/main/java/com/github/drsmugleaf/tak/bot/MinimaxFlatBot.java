@@ -84,21 +84,21 @@ public class MinimaxFlatBot extends Player {
     }
 
     @NotNull
-    private Pair<Coordinates, Integer> getMax(@NotNull Board board, @NotNull Color nextPlayer, int alpha, int beta, int depth) {
-        depth--;
+    private Pair<Coordinates, Integer> getMax(@NotNull Board board, @NotNull Color nextPlayer, int alpha, int beta, final int depth) {
         Coordinates bestMove = null;
         int score = 0;
 
         for (Coordinates coordinates : getAvailableFlatMoves(board)) {
-            Board copy = board.copy();
             Piece piece = new Piece(nextPlayer, Type.FLAT_STONE);
-            copy.place(piece, coordinates.getRow(), coordinates.getColumn());
-
-            if (depth >= 1 && !isTerminal(copy)) {
-                score = getMax(copy, nextPlayer.getOpposite(), alpha, beta, depth).getValue();
-            } else {
-                score = getScore(copy);
-            }
+            int finalAlpha = alpha;
+            int finalBeta = beta;
+            score = board.with(piece, coordinates.getRow(), coordinates.getColumn(), copy -> {
+                if (depth > 1 && !isTerminal(copy)) {
+                    return getMax(copy, nextPlayer.getOpposite(), finalAlpha, finalBeta, depth - 1).getValue();
+                } else {
+                    return getScore(copy);
+                }
+            });
 
             if (nextPlayer == getHand().getColor()) {
                 if (score > alpha) {
