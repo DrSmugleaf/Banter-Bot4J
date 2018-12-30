@@ -119,7 +119,7 @@ public class Board {
 
     @NotNull
     public Row[] getRows() {
-        return ROWS.clone();
+        return ROWS;
     }
 
     @NotNull
@@ -174,8 +174,8 @@ public class Board {
     public int countAdjacent(@NotNull Color color) {
         int amount = 0;
 
-        for (Square[] row : toArray()) {
-            for (Square square : row) {
+        for (Row row : getRows()) {
+            for (Square square : row.getSquares()) {
                 if (square.getColor() != color) {
                     continue;
                 }
