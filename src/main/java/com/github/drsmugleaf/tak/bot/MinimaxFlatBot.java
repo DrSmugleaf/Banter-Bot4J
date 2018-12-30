@@ -77,8 +77,8 @@ public class MinimaxFlatBot extends Player {
             }
         }
 
-        score += board.countAdjacent(getHand().getColor());
-        score -= board.countAdjacent(getHand().getColor().getOpposite());
+        score += board.countAdjacent(getHand().getColor()) * 10;
+        score -= board.countAdjacent(getHand().getColor().getOpposite()) * 10;
 
         return score;
     }
