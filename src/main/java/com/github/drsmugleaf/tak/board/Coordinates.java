@@ -12,9 +12,13 @@ public class Coordinates {
     private int ROW;
     private int COLUMN;
 
-    public Coordinates(int row, int column) {
+    @NotNull
+    private final Type PIECE;
+
+    public Coordinates(int row, int column, Type piece) {
         ROW = row;
         COLUMN = column;
+        PIECE = piece;
     }
 
     public int getRow() {
@@ -33,8 +37,17 @@ public class Coordinates {
         COLUMN = column;
     }
 
-    public void place(@NotNull Player player, @NotNull Type type) {
-        player.place(type, ROW, COLUMN);
+    @NotNull
+    public Type getPiece() {
+        return PIECE;
+    }
+
+    public boolean canPlace(@NotNull Player player) {
+        return player.canPlace(PIECE, ROW, COLUMN);
+    }
+
+    public void place(@NotNull Player player) {
+        player.place(PIECE, ROW, COLUMN);
     }
 
 }

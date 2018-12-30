@@ -9,17 +9,18 @@ import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
 import javafx.util.Pair;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
 /**
  * Created by DrSmugleaf on 26/12/2018
  */
-public class MinimaxFlatBot extends Player {
+public class MinimaxFlatBot extends Bot {
 
     private final int DEPTH;
 
-    public MinimaxFlatBot(@NotNull String name, @NotNull Game game, @NotNull Color color, @NotNull Preset preset, int depth) {
+    private MinimaxFlatBot(@NotNull String name, @NotNull Game game, @NotNull Color color, @NotNull Preset preset, int depth) {
         super(name, game, color, preset);
         DEPTH = depth;
     }
@@ -39,19 +40,15 @@ public class MinimaxFlatBot extends Player {
         return from(information, 3);
     }
 
+    @Nullable
     @Override
-    public void nextTurn() {
-        Coordinates bestCoordinates = getBestCoordinates(getGame().getBoard(), DEPTH);
-        if (!getHand().has(Type.FLAT_STONE) || bestCoordinates == null) {
-            surrender();
-            return;
+    public Coordinates getNextMove() {
+        if (!getHand().has(Type.FLAT_STONE)) {
+            return null;
         }
 
-        bestCoordinates.place(this, Type.FLAT_STONE);
-    }
-
-    private Coordinates getBestCoordinates(@NotNull Board board, int depth) {
-        return getMax(board, getGame().getNextPlayer().getHand().getColor(), Integer.MIN_VALUE, Integer.MAX_VALUE, depth).getKey();
+        Game game = getGame();
+        return getMax(game.getBoard(), game.getNextPlayer().getHand().getColor(), Integer.MIN_VALUE, Integer.MAX_VALUE, DEPTH).getKey();
     }
 
     private boolean isTerminal(@NotNull Board board) {

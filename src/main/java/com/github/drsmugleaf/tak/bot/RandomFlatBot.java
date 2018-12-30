@@ -8,15 +8,16 @@ import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by DrSmugleaf on 25/12/2018
  */
-public class RandomFlatBot extends Player {
+public class RandomFlatBot extends Bot {
 
-    public RandomFlatBot(@NotNull String name, @NotNull Game game, @NotNull Color color, @NotNull Preset preset) {
+    private RandomFlatBot(@NotNull String name, @NotNull Game game, @NotNull Color color, @NotNull Preset preset) {
         super(name, game, color, preset);
     }
 
@@ -25,19 +26,18 @@ public class RandomFlatBot extends Player {
         return new RandomFlatBot(information.NAME, information.GAME, information.COLOR, information.PRESET);
     }
 
+    @Nullable
     @Override
-    public void nextTurn() {
+    public Coordinates getNextMove() {
+        Type type;
         if (getHand().has(Type.FLAT_STONE)) {
-            getCoordinates(Type.FLAT_STONE).place(this, Type.FLAT_STONE);
+            type = Type.FLAT_STONE;
         } else if (getHand().has(Type.CAPSTONE)) {
-            getCoordinates(Type.CAPSTONE).place(this, Type.CAPSTONE);
+            type = Type.CAPSTONE;
         } else {
-            surrender();
+            return null;
         }
-    }
 
-    @NotNull
-    private Coordinates getCoordinates(@NotNull Type type) {
         int boardSize = getGame().getBoard().getPreset().getSize();
         int randomRow = ThreadLocalRandom.current().nextInt(0, boardSize + 1);
         int randomColumn = ThreadLocalRandom.current().nextInt(0 , boardSize + 1);
@@ -53,7 +53,7 @@ public class RandomFlatBot extends Player {
             surrender();
         }
 
-        return new Coordinates(randomRow, randomColumn);
+        return new Coordinates(randomRow, randomColumn, type);
     }
 
 }

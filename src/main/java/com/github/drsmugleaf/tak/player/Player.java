@@ -38,7 +38,7 @@ public abstract class Player {
             Square[] row = rows[i].getSquares();
             for (int j = 0; j < row.length; j++) {
                 if (canPlace(Type.FLAT_STONE, i, j)) {
-                    moves.add(new Coordinates(i, j));
+                    moves.add(new Coordinates(i, j, Type.FLAT_STONE));
                 }
             }
         }
