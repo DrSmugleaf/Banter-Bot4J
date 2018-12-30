@@ -27,7 +27,7 @@ public class MinimaxFlatBot extends Player {
 
     @Override
     public void nextTurn() {
-        Coordinates bestCoordinates = getBestCoordinates(getGame().getBoard(), Integer.MIN_VALUE, Integer.MAX_VALUE, 2);
+        Coordinates bestCoordinates = getBestCoordinates(getGame().getBoard(), Integer.MIN_VALUE, Integer.MAX_VALUE, 3);
         if (!getHand().has(Type.FLAT_STONE) || bestCoordinates == null) {
             surrender();
             return;
