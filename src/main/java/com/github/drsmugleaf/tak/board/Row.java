@@ -18,7 +18,7 @@ public class Row {
 
     @NotNull
     public Square[] getSquares() {
-        return SQUARES.clone();
+        return SQUARES;
     }
 
     protected void setSquare(int i, @NotNull Square square) {
