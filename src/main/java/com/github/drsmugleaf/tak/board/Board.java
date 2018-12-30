@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import static com.github.drsmugleaf.tak.pieces.Color.BLACK;
+import static com.github.drsmugleaf.tak.pieces.Color.WHITE;
+
 /**
  * Created by DrSmugleaf on 01/12/2018
  */
@@ -19,6 +22,9 @@ public class Board {
     private final Preset PRESET;
 
     @NotNull
+    private final Column[] COLUMNS;
+
+    @NotNull
     private final Row[] ROWS;
 
     public Board(@NotNull Preset preset) {
@@ -26,15 +32,22 @@ public class Board {
         int boardSize = PRESET.getSize();
 
         Row[] rows = new Row[boardSize];
+        Column[] columns = new Column[boardSize];
 
-        for (int row = 0; row < rows.length; row++) {
-            rows[row] = new Row(boardSize);
+        for (int i = 0; i < boardSize; i++) {
+            columns[i] = new Column(boardSize);
+            rows[i] = new Row(boardSize);
+        }
 
+        for (int row = 0; row < boardSize; row++) {
             for (int column = 0; column < boardSize; column++) {
-                rows[row].SQUARES[column] = new Square(row, column);
+                Square square = new Square(row, column);
+                rows[row].SQUARES[column] = square;
+                columns[column].SQUARES[row] = square;
             }
         }
 
+        COLUMNS = columns;
         ROWS = rows;
     }
 
@@ -54,16 +67,22 @@ public class Board {
         }
 
         Row[] rows = new Row[boardSize];
+        Column[] columns = new Column[boardSize];
 
-        for (int i = 0; i < rows.length; i++) {
-            Row row = new Row(boardSize);
-            for (int j = 0; j < row.getSquares().length; j++) {
-                row.setSquare(j, squares[i][j]);
-            }
-
-            rows[i] = row;
+        for (int i = 0; i < boardSize; i++) {
+            columns[i] = new Column(boardSize);
+            rows[i] = new Row(boardSize);
         }
 
+        for (int row = 0; row < boardSize; row++) {
+            for (int column = 0; column < boardSize; column++) {
+                rows[row].setSquare(column, squares[row][column]);
+                columns[column] = new Column(boardSize);
+                columns[column].setSquare(row, squares[row][column]);
+            }
+        }
+
+        COLUMNS = columns;
         ROWS = rows;
     }
 
@@ -119,6 +138,11 @@ public class Board {
     }
 
     @NotNull
+    public Column[] getColumns() {
+        return COLUMNS;
+    }
+
+    @NotNull
     public Row[] getRows() {
         return ROWS;
     }
@@ -153,28 +177,13 @@ public class Board {
     }
 
     @NotNull
-    public Square[] getFirstColumn() {
-        Square[] squares = new Square[PRESET.getSize()];
-
-        for (int i = 0; i < ROWS.length; i++) {
-            Row row = ROWS[i];
-            squares[i] = row.getSquares()[0];
-        }
-
-        return squares;
+    public Column getFirstColumn() {
+        return COLUMNS[0];
     }
 
     @NotNull
-    public Square[] getLastColumn() {
-        Square[] squares = new Square[PRESET.getSize()];
-
-        for (int i = 0; i < ROWS.length; i++) {
-            Row row = ROWS[i];
-            Square[] rowSquares = row.getSquares();
-            squares[i] = rowSquares[rowSquares.length - 1];
-        }
-
-        return squares;
+    public Column getLastColumn() {
+        return COLUMNS[COLUMNS.length - 1];
     }
 
     public int countAdjacent(@NotNull Color color) {
@@ -263,34 +272,83 @@ public class Board {
         }
     }
 
+    public boolean hasRoad(@NotNull Color color) {
+        if (hasPieceInEveryRow(color)) {
+            for (Square origin : getFirstRow().getSquares()) {
+                if (origin.getColor() != color) {
+                    continue;
+                }
+
+                for (Square destination : getLastRow().getSquares()) {
+                    if (destination.getColor() != color) {
+                        continue;
+                    }
+
+                    if (isConnected(origin, destination)) {
+                        if (origin.getTopPiece() == null) {
+                            throw new IllegalStateException("Valid road found but the last top piece doesn't exist");
+                        }
+
+                        return true;
+                    }
+                }
+            }
+        }
+
+        if (hasPieceInEveryColumn(color)) {
+            for (Square origin : getFirstColumn().getSquares()) {
+                if (origin.getColor() != color) {
+                    continue;
+                }
+
+                for (Square destination : getLastColumn().getSquares()) {
+                    if (destination.getColor() != color) {
+                        continue;
+                    }
+
+                    if (isConnected(origin, destination)) {
+                        if (origin.getTopPiece() == null) {
+                            throw new IllegalStateException("Valid road found but the last top piece doesn't exist");
+                        }
+
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     @Nullable
     public Color hasRoad() {
-        Row firstRow = getFirstRow();
-        for (Square origin : firstRow.getSquares()) {
-            for (Square destination : getLastRow().getSquares()) {
-                if (isConnected(origin, destination)) {
-                    if (origin.getTopPiece() == null) {
-                        throw new IllegalStateException("Valid road found but the last top piece doesn't exist");
-                    }
+        if (hasRoad(BLACK)) {
+            return BLACK;
+        } else if (hasRoad(WHITE)) {
+            return WHITE;
+        } else {
+            return null;
+        }
+    }
 
-                    return origin.getColor();
-                }
+    public boolean hasPieceInEveryColumn(@NotNull Color color) {
+        for (Column column : COLUMNS) {
+            if (!column.hasSquare(color)) {
+                return false;
             }
         }
 
-        for (Square origin : getFirstColumn()) {
-            for (Square destination : getLastColumn()) {
-                if (isConnected(origin, destination)) {
-                    if (origin.getTopPiece() == null) {
-                        throw new IllegalStateException("Valid road found but the last top piece doesn't exist");
-                    }
+        return true;
+    }
 
-                    return origin.getColor();
-                }
+    public boolean hasPieceInEveryRow(@NotNull Color color) {
+        for (Row row : ROWS) {
+            if (!row.hasSquare(color)) {
+                return false;
             }
         }
 
-        return null;
+        return true;
     }
 
     public int with(@NotNull Piece piece, int row, int column, @NotNull Function<Board, Integer> function) {
