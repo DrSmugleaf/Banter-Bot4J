@@ -10,6 +10,17 @@ import java.util.List;
  */
 public enum Type {
 
+    CAPSTONE(true, true, true) {
+        @Override
+        public void place(@NotNull Square square, List<Piece> pieces, @NotNull Piece piece) {
+            Piece topPiece = square.getTopPiece();
+            if (topPiece != null && topPiece.getType() == STANDING_STONE) {
+                topPiece.flatten();
+            }
+
+            pieces.add(piece);
+        }
+    },
     FLAT_STONE(false, false, true) {
         @Override
         public void place(@NotNull Square square, List<Piece> pieces, @NotNull Piece piece) {
@@ -21,18 +32,7 @@ public enum Type {
         public void place(@NotNull Square square, List<Piece> pieces, @NotNull Piece piece) {
             pieces.add(piece);
         }
-    },
-    CAPSTONE(true, true, true) {
-        @Override
-        public void place(@NotNull Square square, List<Piece> pieces, @NotNull Piece piece) {
-            Piece topPiece = square.getTopPiece();
-            if (topPiece != null && topPiece.getType() == STANDING_STONE) {
-                topPiece.flatten();
-            }
-
-            pieces.add(piece);
-        }
-    }; // TODO: Don't flatten another capstone?
+    };
 
     private final boolean BLOCKS;
     private final boolean IGNORES_BLOCK;

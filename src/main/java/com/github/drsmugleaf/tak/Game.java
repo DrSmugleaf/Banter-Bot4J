@@ -131,7 +131,12 @@ public class Game {
 
     public void start() {
         while (isActive()) {
-            getNextPlayer().nextTurn();
+            Player nextPlayer = getNextPlayer();
+            if (!nextPlayer.getHand().hasAny()) {
+                nextPlayer.surrender();
+            }
+
+            nextPlayer.nextTurn();
         }
     }
 

@@ -53,6 +53,10 @@ public class Hand {
         return getAmount(type) > 0;
     }
 
+    public boolean hasAny() {
+        return has(Type.FLAT_STONE) || has(Type.STANDING_STONE) || has(Type.CAPSTONE);
+    }
+
     @NotNull
     public Piece takePiece(@NotNull Type type) {
         if (!has(type)) {

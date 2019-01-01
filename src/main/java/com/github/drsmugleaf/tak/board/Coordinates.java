@@ -15,7 +15,7 @@ public class Coordinates {
     @NotNull
     private final Type PIECE;
 
-    public Coordinates(int row, int column, Type piece) {
+    public Coordinates(int row, int column, @NotNull Type piece) {
         ROW = row;
         COLUMN = column;
         PIECE = piece;
