@@ -39,7 +39,7 @@ public class GuiPlayer extends Player {
                     if (game.getNextPlayer() == this) {
                         NEXT_MOVE = new Coordinates(finalRowIndex, finalColumnIndex, Type.FLAT_STONE);
                         synchronized (this) {
-                            this.notifyAll();
+                            this.notify();
                         }
                     }
                 });
