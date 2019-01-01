@@ -74,9 +74,8 @@ public class GuiGame extends Game {
 
     @Override
     public void start() {
-        if (areAllBots()) {
-            super.start();
-        }
+        Thread thread = new Thread(super::start);
+        thread.start();
     }
 
 }

@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.tak.gui;
 
 import com.github.drsmugleaf.tak.Game;
+import com.github.drsmugleaf.tak.board.Coordinates;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Type;
@@ -15,6 +16,9 @@ public class GuiPlayer extends Player {
 
     @NotNull
     private final GuiGame GAME;
+
+    @NotNull
+    private Coordinates NEXT_MOVE;
 
     public GuiPlayer(@NotNull String name, @NotNull Game game, @NotNull Color color, @NotNull Preset preset) {
         super(name, game, color, preset);
@@ -33,8 +37,10 @@ public class GuiPlayer extends Player {
                 int finalColumnIndex = columnIndex;
                 square.getButton().addActionListener(e -> {
                     if (game.getNextPlayer() == this) {
-                        place(Type.FLAT_STONE, finalRowIndex, finalColumnIndex);
-                        game.getNextPlayer().nextTurn();
+                        NEXT_MOVE = new Coordinates(finalRowIndex, finalColumnIndex, Type.FLAT_STONE);
+                        synchronized (this) {
+                            this.notifyAll();
+                        }
                     }
                 });
             }
@@ -47,6 +53,18 @@ public class GuiPlayer extends Player {
     }
 
     @Override
-    public void nextTurn() {}
+    public void nextTurn() {
+        try {
+            synchronized (this) {
+                this.wait();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            surrender();
+            return;
+        }
+
+        NEXT_MOVE.place(this);
+    }
 
 }
