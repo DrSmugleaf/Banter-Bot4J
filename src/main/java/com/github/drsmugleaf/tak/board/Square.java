@@ -85,7 +85,9 @@ public class Square {
 
     public boolean canPlace(@NotNull Type type) {
         Piece topPiece = getTopPiece();
-        return topPiece == null || type.ignoresBlock() || !topPiece.getType().blocks();
+        return topPiece == null ||
+               (type.ignoresBlock() && !topPiece.getType().ignoresBlock()) ||
+               !topPiece.getType().blocks();
     }
 
     @NotNull
