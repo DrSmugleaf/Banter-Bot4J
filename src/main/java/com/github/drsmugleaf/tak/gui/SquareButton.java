@@ -36,6 +36,11 @@ public class SquareButton {
     }
 
     @NotNull
+    protected JButton getButton() {
+        return BUTTON;
+    }
+
+    @NotNull
     protected static SquareButton[][] fromPreset(@NotNull Preset preset) {
         int size = preset.getSize();
         SquareButton[][] squares = new SquareButton[size][size];

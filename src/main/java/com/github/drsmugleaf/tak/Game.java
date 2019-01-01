@@ -32,8 +32,24 @@ public class Game {
     @Nullable
     private Player winner = null;
 
-    public Game(@NotNull Preset preset, @NotNull String playerName1, @NotNull String playerName2, @NotNull Function<PlayerInformation, Player> playerMaker1, @NotNull Function<PlayerInformation, Player> playerMaker2) {
+    public Game(
+            @NotNull Preset preset,
+            @NotNull String playerName1,
+            @NotNull String playerName2,
+            @NotNull Function<PlayerInformation, Player> playerMaker1,
+            @NotNull Function<PlayerInformation, Player> playerMaker2
+    ) {
         BOARD = new Board(preset);
+        setup(preset, playerName1, playerName2, playerMaker1, playerMaker2);
+    }
+
+    protected void setup(
+            @NotNull Preset preset,
+            @NotNull String playerName1,
+            @NotNull String playerName2,
+            @NotNull Function<PlayerInformation, Player> playerMaker1,
+            @NotNull Function<PlayerInformation, Player> playerMaker2
+    ) {
         Player player1 = playerMaker1.apply(new PlayerInformation(playerName1, this, Color.BLACK, preset));
         Player player2 = playerMaker2.apply(new PlayerInformation(playerName2, this, Color.WHITE, preset));
         PLAYERS.add(player1);

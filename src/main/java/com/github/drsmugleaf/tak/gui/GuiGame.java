@@ -3,6 +3,7 @@ package com.github.drsmugleaf.tak.gui;
 import com.github.drsmugleaf.tak.Game;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.board.Square;
+import com.github.drsmugleaf.tak.bot.Bot;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
@@ -17,15 +18,30 @@ import java.util.function.Function;
 public class GuiGame extends Game {
 
     @NotNull
-    private final BoardPanel BOARD_PANEL;
+    protected BoardPanel BOARD_PANEL;
 
     @NotNull
-    private final JFrame FRAME;
+    protected JFrame FRAME;
 
     public GuiGame(@NotNull Preset preset, @NotNull String playerName1, @NotNull String playerName2, @NotNull Function<PlayerInformation, Player> playerMaker1, @NotNull Function<PlayerInformation, Player> playerMaker2) {
         super(preset, playerName1, playerName2, playerMaker1, playerMaker2);
+    }
+
+    private boolean areAllBots() {
+        for (Player player : getPlayers()) {
+            if (!(player instanceof Bot)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    protected void setup(@NotNull Preset preset, @NotNull String playerName1, @NotNull String playerName2, @NotNull Function<PlayerInformation, Player> playerMaker1, @NotNull Function<PlayerInformation, Player> playerMaker2) {
         BOARD_PANEL = new BoardPanel(preset);
         FRAME = setupFrame();
+        super.setup(preset, playerName1, playerName2, playerMaker1, playerMaker2);
     }
 
     @NotNull
@@ -54,6 +70,13 @@ public class GuiGame extends Game {
         Square square = super.place(player, type, row, column);
         BOARD_PANEL.pieces[row][column].update(square);
         return square;
+    }
+
+    @Override
+    public void start() {
+        if (areAllBots()) {
+            super.start();
+        }
     }
 
 }
