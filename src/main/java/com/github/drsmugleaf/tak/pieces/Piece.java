@@ -26,7 +26,7 @@ public class Piece {
     private final Color COLOR;
 
     @NotNull
-    private final Type TYPE;
+    private Type TYPE;
 
     public Piece(@NotNull Color color, @NotNull Type type) {
         COLOR = color;
@@ -41,6 +41,14 @@ public class Piece {
     @NotNull
     public Type getType() {
         return TYPE;
+    }
+
+    public void flatten() {
+        if (getType() != Type.STANDING_STONE) {
+            throw new IllegalStateException("Piece isn't a standing stone");
+        }
+
+        TYPE = Type.FLAT_STONE;
     }
 
     @Override

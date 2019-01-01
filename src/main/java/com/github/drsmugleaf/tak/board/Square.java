@@ -92,7 +92,7 @@ public class Square {
 
     @NotNull
     public Square place(@NotNull Piece piece) {
-        PIECES.add(piece);
+        piece.getType().place(this, PIECES, piece);
         return this;
     }
 

@@ -1,13 +1,38 @@
 package com.github.drsmugleaf.tak.pieces;
 
+import com.github.drsmugleaf.tak.board.Square;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+
 /**
  * Created by DrSmugleaf on 01/12/2018
  */
 public enum Type {
 
-    FLAT_STONE(false, false, true),
-    STANDING_STONE(true, false, false),
-    CAPSTONE(true, true, true); // TODO: Don't flatten another capstone?
+    FLAT_STONE(false, false, true) {
+        @Override
+        public void place(@NotNull Square square, List<Piece> pieces, @NotNull Piece piece) {
+            pieces.add(piece);
+        }
+    },
+    STANDING_STONE(true, false, false) {
+        @Override
+        public void place(@NotNull Square square, List<Piece> pieces, @NotNull Piece piece) {
+            pieces.add(piece);
+        }
+    },
+    CAPSTONE(true, true, true) {
+        @Override
+        public void place(@NotNull Square square, List<Piece> pieces, @NotNull Piece piece) {
+            Piece topPiece = square.getTopPiece();
+            if (topPiece != null && topPiece.getType() == STANDING_STONE) {
+                topPiece.flatten();
+            }
+
+            pieces.add(piece);
+        }
+    }; // TODO: Don't flatten another capstone?
 
     private final boolean BLOCKS;
     private final boolean IGNORES_BLOCK;
@@ -30,5 +55,7 @@ public enum Type {
     public boolean formsRoad() {
         return FORMS_ROAD;
     }
+
+    public abstract void place(@NotNull Square square, List<Piece> pieces, @NotNull Piece piece);
 
 }
