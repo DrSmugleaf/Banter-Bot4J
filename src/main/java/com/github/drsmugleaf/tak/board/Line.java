@@ -6,15 +6,15 @@ import com.github.drsmugleaf.tak.pieces.Type;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Created by DrSmugleaf on 30/12/2018
+ * Created by DrSmugleaf on 02/01/2019
  */
-public class Column {
+public class Line {
 
     @NotNull
     protected final Square[] SQUARES;
 
-    Column(int height) {
-        SQUARES = new Square[height];
+    protected Line(int size) {
+        SQUARES = new Square[size];
     }
 
     @NotNull
@@ -22,22 +22,22 @@ public class Column {
         return SQUARES;
     }
 
+    public boolean canPlace(@NotNull Type type, int location) {
+        return location < SQUARES.length && SQUARES[location].canPlace(type);
+    }
+
+    @NotNull
+    public Square place(@NotNull Piece piece, int location) {
+        return SQUARES[location].place(piece);
+    }
+
+    @NotNull
+    public Square remove(@NotNull Piece piece, int location) {
+        return SQUARES[location].remove(piece);
+    }
+
     protected void setSquare(int i, @NotNull Square square) {
         SQUARES[i] = square;
-    }
-
-    public boolean canPlace(@NotNull Type type, int row) {
-        return row < SQUARES.length && SQUARES[row].canPlace(type);
-    }
-
-    @NotNull
-    public Square place(@NotNull Piece piece, int row) {
-        return SQUARES[row].place(piece);
-    }
-
-    @NotNull
-    public Square remove(@NotNull Piece piece, int row) {
-        return SQUARES[row].remove(piece);
     }
 
     public boolean hasSquare(@NotNull Color color) {

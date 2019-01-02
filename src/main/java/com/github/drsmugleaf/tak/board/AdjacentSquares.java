@@ -22,7 +22,7 @@ public class AdjacentSquares {
     @NotNull
     private final List<Square> ADJACENT = new ArrayList<>();
 
-    AdjacentSquares(@NotNull Square center, @Nullable Square up, @Nullable Square right, @Nullable Square down, @Nullable Square left) {
+    protected AdjacentSquares(@NotNull Square center, @Nullable Square up, @Nullable Square right, @Nullable Square down, @Nullable Square left) {
         CENTER = center;
         ADJACENT.add(UP, up);
         ADJACENT.add(RIGHT, right);

@@ -13,8 +13,13 @@ import java.awt.*;
  */
 public class BoardPanel {
 
+    @NotNull
     protected final JPanel gui = new JPanel(new BorderLayout(3, 3));
+
+    @NotNull
     protected final SquareButton[][] pieces;
+
+    @NotNull
     protected final JPanel board;
 
     protected BoardPanel(@NotNull Preset preset) {
@@ -26,9 +31,9 @@ public class BoardPanel {
         board.setBorder(new LineBorder(Color.BLACK));
         gui.add(board);
 
-        for (int i = 0; i < pieces.length; i++) {
-            for (int j = 0; j < pieces[i].length; j++) {
-                board.add(pieces[i][j].toJButton());
+        for (SquareButton[] row : pieces) {
+            for (SquareButton square : row) {
+                board.add(square.toJButton());
             }
         }
     }

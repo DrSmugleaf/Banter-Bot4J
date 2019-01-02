@@ -92,7 +92,7 @@ public class Game {
         }
 
         for (Player player : PLAYERS) {
-            if (player.getHand().getColor() == winningColor) {
+            if (player.getColor() == winningColor) {
                 winner = player;
                 return player;
             }
@@ -134,6 +134,7 @@ public class Game {
             Player nextPlayer = getNextPlayer();
             if (!nextPlayer.getHand().hasAny()) {
                 nextPlayer.surrender();
+                return;
             }
 
             nextPlayer.nextTurn();

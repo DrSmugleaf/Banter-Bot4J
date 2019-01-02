@@ -21,27 +21,17 @@ public class Square {
     private final int ROW;
     private final int COLUMN;
 
-    Square(int row, int column) {
+    protected Square(int row, int column) {
         ROW = row;
         COLUMN = column;
     }
 
     private Square(@NotNull Square square) {
         this(square.getRow(), square.getColumn());
-        PIECES.addAll(square.getPieces());
-    }
 
-    @NotNull
-    public Square copy() {
-        return new Square(this);
-    }
-
-    public int getRow() {
-        return ROW;
-    }
-
-    public int getColumn() {
-        return COLUMN;
+        for (Piece piece : square.getPieces()) {
+            PIECES.add(piece.copy());
+        }
     }
 
     @NotNull
@@ -49,6 +39,19 @@ public class Square {
         Square square = new Square(row, column);
         Collections.addAll(square.PIECES, pieces);
         return square;
+    }
+
+    @NotNull
+    public Square copy() {
+        return new Square(this);
+    }
+
+    public int getColumn() {
+        return COLUMN;
+    }
+
+    public int getRow() {
+        return ROW;
     }
 
     @NotNull
@@ -85,9 +88,7 @@ public class Square {
 
     public boolean canPlace(@NotNull Type type) {
         Piece topPiece = getTopPiece();
-        return topPiece == null ||
-               (type.ignoresBlock() && !topPiece.getType().ignoresBlock()) ||
-               !topPiece.getType().blocks();
+        return topPiece == null || type.ignoresBlock(topPiece) || !topPiece.getType().blocks();
     }
 
     @NotNull

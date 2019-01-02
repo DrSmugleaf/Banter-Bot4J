@@ -30,15 +30,15 @@ public abstract class Player {
     }
 
     @NotNull
-    public final List<Coordinates> getAvailableFlatMoves(@NotNull Board board) {
+    public final List<Coordinates> getAvailablePlaces(@NotNull Board board, @NotNull Type type) {
         List<Coordinates> moves = new ArrayList<>();
 
-        Row[] rows = board.getRows();
+        Line[] rows = board.getRows();
         for (int i = 0; i < rows.length; i++) {
             Square[] row = rows[i].getSquares();
             for (int j = 0; j < row.length; j++) {
-                if (canPlace(Type.FLAT_STONE, i, j)) {
-                    moves.add(new Coordinates(i, j, Type.FLAT_STONE));
+                if (canPlace(type, i, j)) {
+                    moves.add(new Coordinates(i, j, type));
                 }
             }
         }
@@ -47,8 +47,8 @@ public abstract class Player {
     }
 
     @NotNull
-    public final List<Coordinates> getAvailableFlatMoves() {
-        return getAvailableFlatMoves(getGame().getBoard());
+    public final List<Coordinates> getAvailablePlaces(@NotNull Type type) {
+        return getAvailablePlaces(getGame().getBoard(), type);
     }
 
     @NotNull
@@ -64,6 +64,11 @@ public abstract class Player {
     @NotNull
     public final Hand getHand() {
         return HAND;
+    }
+
+    @NotNull
+    public final Color getColor() {
+        return getHand().getColor();
     }
 
     public final boolean canPlace(@NotNull Type type, int row, int column) {

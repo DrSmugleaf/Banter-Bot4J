@@ -10,7 +10,12 @@ import java.util.List;
  */
 public enum Type {
 
-    CAPSTONE(true, true, true) {
+    CAPSTONE("capstone.png", true, true, true) {
+        @Override
+        public boolean ignoresBlock(@NotNull Piece topPiece) {
+            return topPiece.getType() != CAPSTONE;
+        }
+
         @Override
         public void place(@NotNull Square square, List<Piece> pieces, @NotNull Piece piece) {
             Piece topPiece = square.getTopPiece();
@@ -21,34 +26,32 @@ public enum Type {
             pieces.add(piece);
         }
     },
-    FLAT_STONE(false, false, true) {
-        @Override
-        public void place(@NotNull Square square, List<Piece> pieces, @NotNull Piece piece) {
-            pieces.add(piece);
-        }
-    },
-    STANDING_STONE(true, false, false) {
-        @Override
-        public void place(@NotNull Square square, List<Piece> pieces, @NotNull Piece piece) {
-            pieces.add(piece);
-        }
-    };
+    FLAT_STONE("flat.png", false, false, true),
+    STANDING_STONE("wall.png", true, false, false);
 
+    @NotNull
+    private final String FILE_NAME;
     private final boolean BLOCKS;
     private final boolean IGNORES_BLOCK;
     private final boolean FORMS_ROAD;
 
-    Type(boolean blocks, boolean ignoresBlock, boolean formsRoad) {
+    Type(@NotNull String fileName, boolean blocks, boolean ignoresBlock, boolean formsRoad) {
+        FILE_NAME = fileName;
         BLOCKS = blocks;
         IGNORES_BLOCK = ignoresBlock;
         FORMS_ROAD = formsRoad;
+    }
+
+    @NotNull
+    protected String getFileName() {
+        return FILE_NAME;
     }
 
     public boolean blocks() {
         return BLOCKS;
     }
 
-    public boolean ignoresBlock() {
+    public boolean ignoresBlock(@NotNull Piece topPiece) {
         return IGNORES_BLOCK;
     }
 
@@ -56,6 +59,8 @@ public enum Type {
         return FORMS_ROAD;
     }
 
-    public abstract void place(@NotNull Square square, List<Piece> pieces, @NotNull Piece piece);
+    public void place(@NotNull Square square, List<Piece> pieces, @NotNull Piece piece) {
+        pieces.add(piece);
+    }
 
 }

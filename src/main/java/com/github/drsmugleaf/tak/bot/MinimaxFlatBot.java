@@ -48,7 +48,7 @@ public class MinimaxFlatBot extends Bot {
         }
 
         Game game = getGame();
-        return getMax(game.getBoard(), game.getNextPlayer().getHand().getColor(), Integer.MIN_VALUE, Integer.MAX_VALUE, DEPTH).getKey();
+        return getMax(game.getBoard(), game.getNextPlayer().getColor(), Integer.MIN_VALUE, Integer.MAX_VALUE, DEPTH).getKey();
     }
 
     private boolean isTerminal(@NotNull Board board) {
@@ -58,9 +58,9 @@ public class MinimaxFlatBot extends Bot {
     private int getScore(@NotNull Board board) {
         Color winner = board.hasRoad();
         if (winner != null) {
-            if (winner == getHand().getColor()) {
+            if (winner == getColor()) {
                 return Integer.MAX_VALUE;
-            } else if (winner == getHand().getColor().getOpposite()) {
+            } else if (winner == getColor().getOpposite()) {
                 return Integer.MIN_VALUE;
             } else {
                 throw new IllegalArgumentException("Unrecognized color: " + winner);
@@ -69,7 +69,7 @@ public class MinimaxFlatBot extends Bot {
 
         int score = 0;
 
-        for (Row row : board.getRows()) {
+        for (Line row : board.getRows()) {
             for (Square square : row.getSquares()) {
                 Piece topPiece = square.getTopPiece();
                 if (topPiece == null) {
@@ -79,10 +79,10 @@ public class MinimaxFlatBot extends Bot {
                 int adjacentScore = board.getAdjacent(square).getConnections().size() * 10;
 
                 Color topColor = topPiece.getColor();
-                if (topColor == getHand().getColor()) {
+                if (topColor == getColor()) {
                     score++;
                     score += adjacentScore;
-                } else if (topColor == getHand().getColor().getOpposite()) {
+                } else if (topColor == getColor().getOpposite()) {
                     score--;
                     score -= adjacentScore;
                 } else {
@@ -99,7 +99,7 @@ public class MinimaxFlatBot extends Bot {
         Coordinates bestMove = null;
         int score = 0;
 
-        for (Coordinates coordinates : getAvailableFlatMoves(board)) {
+        for (Coordinates coordinates : getAvailablePlaces(board, Type.FLAT_STONE)) {
             Piece piece = new Piece(nextPlayer, Type.FLAT_STONE);
             int finalAlpha = alpha;
             int finalBeta = beta;
@@ -111,12 +111,12 @@ public class MinimaxFlatBot extends Bot {
                 }
             }) - depth;
 
-            if (nextPlayer == getHand().getColor()) {
+            if (nextPlayer == getColor()) {
                 if (score > alpha) {
                     alpha = score;
                     bestMove = coordinates;
                 }
-            } else if (nextPlayer.getOpposite() == getHand().getColor()) {
+            } else if (nextPlayer.getOpposite() == getColor()) {
                 if (score < beta) {
                     beta = score;
                     bestMove = coordinates;

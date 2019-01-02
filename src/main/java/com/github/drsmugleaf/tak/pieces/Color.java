@@ -7,19 +7,34 @@ import org.jetbrains.annotations.NotNull;
  */
 public enum Color {
 
-    BLACK,
-    WHITE;
+    BLACK("black/") {
+        @NotNull
+        @Override
+        public Color getOpposite() {
+            return WHITE;
+        }
+    },
+    WHITE("white/") {
+        @NotNull
+        @Override
+        public Color getOpposite() {
+            return BLACK;
+        }
+    };
 
     @NotNull
-    public Color getOpposite() {
-        switch (this) {
-            case BLACK:
-                return WHITE;
-            case WHITE:
-                return BLACK;
-            default:
-                throw new IllegalStateException("Unrecognized color: " + this);
-        }
+    private final String FOLDER_NAME;
+
+    Color(@NotNull String folderName) {
+        FOLDER_NAME = folderName;
     }
+
+    @NotNull
+    protected String getFolderName() {
+        return FOLDER_NAME;
+    }
+
+    @NotNull
+    public abstract Color getOpposite();
 
 }

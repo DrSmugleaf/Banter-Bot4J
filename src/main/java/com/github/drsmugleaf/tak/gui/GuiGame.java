@@ -3,7 +3,6 @@ package com.github.drsmugleaf.tak.gui;
 import com.github.drsmugleaf.tak.Game;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.board.Square;
-import com.github.drsmugleaf.tak.bot.Bot;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
@@ -25,16 +24,6 @@ public class GuiGame extends Game {
 
     public GuiGame(@NotNull Preset preset, @NotNull String playerName1, @NotNull String playerName2, @NotNull Function<PlayerInformation, Player> playerMaker1, @NotNull Function<PlayerInformation, Player> playerMaker2) {
         super(preset, playerName1, playerName2, playerMaker1, playerMaker2);
-    }
-
-    private boolean areAllBots() {
-        for (Player player : getPlayers()) {
-            if (!(player instanceof Bot)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     @Override

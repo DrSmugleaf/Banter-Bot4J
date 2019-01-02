@@ -22,21 +22,21 @@ public class Board {
     private final Preset PRESET;
 
     @NotNull
-    private final Column[] COLUMNS;
+    private final Line[] COLUMNS;
 
     @NotNull
-    private final Row[] ROWS;
+    private final Line[] ROWS;
 
     public Board(@NotNull Preset preset) {
         PRESET = preset;
         int boardSize = PRESET.getSize();
 
-        Row[] rows = new Row[boardSize];
-        Column[] columns = new Column[boardSize];
+        Line[] rows = new Line[boardSize];
+        Line[] columns = new Line[boardSize];
 
         for (int i = 0; i < boardSize; i++) {
-            columns[i] = new Column(boardSize);
-            rows[i] = new Row(boardSize);
+            columns[i] = new Line(boardSize);
+            rows[i] = new Line(boardSize);
         }
 
         for (int row = 0; row < boardSize; row++) {
@@ -66,18 +66,18 @@ public class Board {
             }
         }
 
-        Row[] rows = new Row[boardSize];
-        Column[] columns = new Column[boardSize];
+        Line[] rows = new Line[boardSize];
+        Line[] columns = new Line[boardSize];
 
         for (int i = 0; i < boardSize; i++) {
-            columns[i] = new Column(boardSize);
-            rows[i] = new Row(boardSize);
+            columns[i] = new Line(boardSize);
+            rows[i] = new Line(boardSize);
         }
 
         for (int row = 0; row < boardSize; row++) {
             for (int column = 0; column < boardSize; column++) {
                 rows[row].setSquare(column, squares[row][column]);
-                columns[column] = new Column(boardSize);
+                columns[column] = new Line(boardSize);
                 columns[column].setSquare(row, squares[row][column]);
             }
         }
@@ -138,12 +138,12 @@ public class Board {
     }
 
     @NotNull
-    public Column[] getColumns() {
+    public Line[] getColumns() {
         return COLUMNS;
     }
 
     @NotNull
-    public Row[] getRows() {
+    public Line[] getRows() {
         return ROWS;
     }
 
@@ -167,29 +167,29 @@ public class Board {
     }
 
     @NotNull
-    public Row getFirstRow() {
+    public Line getFirstRow() {
         return ROWS[0];
     }
 
     @NotNull
-    public Row getLastRow() {
+    public Line getLastRow() {
         return ROWS[ROWS.length - 1];
     }
 
     @NotNull
-    public Column getFirstColumn() {
+    public Line getFirstColumn() {
         return COLUMNS[0];
     }
 
     @NotNull
-    public Column getLastColumn() {
+    public Line getLastColumn() {
         return COLUMNS[COLUMNS.length - 1];
     }
 
     public int countAdjacent(@NotNull Color color) {
         int amount = 0;
 
-        for (Row row : getRows()) {
+        for (Line row : getRows()) {
             for (Square square : row.getSquares()) {
                 if (square.getColor() != color) {
                     continue;
@@ -205,7 +205,7 @@ public class Board {
 
     @NotNull
     public AdjacentSquares getAdjacent(@NotNull Square square) {
-        Row[] rows = getRows();
+        Line[] rows = getRows();
         int rowIndex = square.getRow();
         int columnIndex = square.getColumn();
 
@@ -272,49 +272,39 @@ public class Board {
         }
     }
 
-    public boolean hasRoad(@NotNull Color color) {
-        if (hasPieceInEveryRow(color)) {
-            for (Square origin : getFirstRow().getSquares()) {
-                if (origin.getColor() != color) {
+    public boolean hasRoad(@NotNull Color color, @NotNull Line line1, @NotNull Line line2) {
+        for (Square origin : line1.getSquares()) {
+            if (origin.getColor() != color) {
+                continue;
+            }
+
+            for (Square destination : line2.getSquares()) {
+                if (destination.getColor() != color) {
                     continue;
                 }
 
-                for (Square destination : getLastRow().getSquares()) {
-                    if (destination.getColor() != color) {
-                        continue;
+                if (isConnected(origin, destination)) {
+                    if (origin.getTopPiece() == null) {
+                        throw new IllegalStateException("Valid road found but the last top piece doesn't exist");
                     }
 
-                    if (isConnected(origin, destination)) {
-                        if (origin.getTopPiece() == null) {
-                            throw new IllegalStateException("Valid road found but the last top piece doesn't exist");
-                        }
-
-                        return true;
-                    }
+                    return true;
                 }
             }
         }
 
-        if (hasPieceInEveryColumn(color)) {
-            for (Square origin : getFirstColumn().getSquares()) {
-                if (origin.getColor() != color) {
-                    continue;
-                }
+        return false;
+    }
 
-                for (Square destination : getLastColumn().getSquares()) {
-                    if (destination.getColor() != color) {
-                        continue;
-                    }
-
-                    if (isConnected(origin, destination)) {
-                        if (origin.getTopPiece() == null) {
-                            throw new IllegalStateException("Valid road found but the last top piece doesn't exist");
-                        }
-
-                        return true;
-                    }
-                }
+    public boolean hasRoad(@NotNull Color color) {
+        if (hasPieceInEveryRow(color)) {
+            if (hasRoad(color, getFirstRow(), getLastRow())) {
+                return true;
             }
+        }
+
+        if (hasPieceInEveryColumn(color)) {
+            return hasRoad(color, getFirstColumn(), getLastColumn());
         }
 
         return false;
@@ -332,7 +322,7 @@ public class Board {
     }
 
     public boolean hasPieceInEveryColumn(@NotNull Color color) {
-        for (Column column : COLUMNS) {
+        for (Line column : COLUMNS) {
             if (!column.hasSquare(color)) {
                 return false;
             }
@@ -342,7 +332,7 @@ public class Board {
     }
 
     public boolean hasPieceInEveryRow(@NotNull Color color) {
-        for (Row row : ROWS) {
+        for (Line row : ROWS) {
             if (!row.hasSquare(color)) {
                 return false;
             }
