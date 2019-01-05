@@ -22,9 +22,13 @@ public class Line {
         return SQUARES;
     }
 
-    public boolean canMove(@NotNull Square origin, @NotNull Square destination, int pieces) {
-        int row = origin.getRow();
-        return row < SQUARES.length && SQUARES[row].canMove(destination, pieces);
+    public boolean canMove(int origin, @NotNull Square destination, int pieces) {
+        return origin < SQUARES.length && SQUARES[origin].canMove(destination, pieces);
+    }
+
+    @NotNull
+    public Square move(int origin, @NotNull Square destination, int pieces) {
+        return SQUARES[origin].move(destination, pieces);
     }
 
     public boolean canPlace(int location) {

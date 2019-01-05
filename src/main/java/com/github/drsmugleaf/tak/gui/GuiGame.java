@@ -54,6 +54,14 @@ public class GuiGame extends Game {
         return frame;
     }
 
+    @Override
+    public Square move(Player player, @NotNull Square origin, @NotNull Square destination, int pieces) {
+        Square square = super.move(player, origin, destination, pieces);
+        BOARD_PANEL.pieces[origin.getRow()][origin.getColumn()].update(origin);
+        BOARD_PANEL.pieces[destination.getRow()][destination.getColumn()].update(destination);
+        return square;
+    }
+
     @NotNull
     @Override
     public Square place(@NotNull Player player, @NotNull Type type, int column, int row) {

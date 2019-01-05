@@ -30,20 +30,51 @@ public abstract class Player {
     }
 
     @NotNull
+    public final List<MovingCoordinates> getAvailableMoves(@NotNull Board board, @NotNull Type type) {
+        List<MovingCoordinates> moves = new ArrayList<>();
+
+        Line[] rows = board.getRows();
+        for (Line row : rows) {
+            for (Square origin : row.getSquares()) {
+                AdjacentSquares adjacent = GAME.getBoard().getAdjacent(origin);
+
+                for (Square destination : adjacent.getAll()) {
+                    if (destination == null) {
+                        continue;
+                    }
+
+                    for (int amount = 0; amount < GAME.getBoard().getPreset().getCarryLimit(); amount++) {
+                        if (canMove(origin, destination, amount)) {
+                            moves.add(new MovingCoordinates(origin, destination, amount));
+                        }
+                    }
+                }
+            }
+        }
+
+        return moves;
+    }
+
+    @NotNull
+    public final List<MovingCoordinates> getAvailableMoves(@NotNull Type type) {
+        return getAvailableMoves(getGame().getBoard(), type);
+    }
+
+    @NotNull
     public final List<Coordinates> getAvailablePlaces(@NotNull Board board, @NotNull Type type) {
-        List<Coordinates> moves = new ArrayList<>();
+        List<Coordinates> places = new ArrayList<>();
 
         Line[] rows = board.getRows();
         for (int i = 0; i < rows.length; i++) {
             Square[] row = rows[i].getSquares();
             for (int j = 0; j < row.length; j++) {
                 if (canPlace(type, j, i)) {
-                    moves.add(new Coordinates(j, i, type));
+                    places.add(new Coordinates(j, i, type));
                 }
             }
         }
 
-        return moves;
+        return places;
     }
 
     @NotNull
@@ -71,10 +102,20 @@ public abstract class Player {
         return getHand().getColor();
     }
 
+    public final boolean canMove(@NotNull Square origin, @NotNull Square destination, int pieces) {
+        return origin.getColor() == getColor() && GAME.canMove(this, origin, destination, pieces);
+    }
+
+    @NotNull
+    public final Square move(@NotNull Square origin, @NotNull Square destination, int pieces) {
+        return GAME.move(this, origin, destination, pieces);
+    }
+
     public final boolean canPlace(@NotNull Type type, int column, int row) {
         return getHand().has(type) && GAME.canPlace(this, column, row);
     }
 
+    @NotNull
     public final Square place(@NotNull Type type, int column, int row) {
         return GAME.place(this, type, column, row);
     }

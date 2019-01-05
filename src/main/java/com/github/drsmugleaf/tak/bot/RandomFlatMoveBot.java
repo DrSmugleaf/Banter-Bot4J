@@ -2,6 +2,7 @@ package com.github.drsmugleaf.tak.bot;
 
 import com.github.drsmugleaf.tak.Game;
 import com.github.drsmugleaf.tak.board.Coordinates;
+import com.github.drsmugleaf.tak.board.MovingCoordinates;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Type;
@@ -14,17 +15,17 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Created by DrSmugleaf on 25/12/2018
+ * Created by DrSmugleaf on 05/01/2019
  */
-public class RandomFlatBot extends Bot {
+public class RandomFlatMoveBot extends RandomFlatBot {
 
-    protected RandomFlatBot(@NotNull String name, @NotNull Game game, @NotNull Color color, @NotNull Preset preset) {
+    protected RandomFlatMoveBot(@NotNull String name, @NotNull Game game, @NotNull Color color, @NotNull Preset preset) {
         super(name, game, color, preset);
     }
 
     @NotNull
     public static Player from(@NotNull PlayerInformation information) {
-        return new RandomFlatBot(information.NAME, information.GAME, information.COLOR, information.PRESET);
+        return new RandomFlatMoveBot(information.NAME, information.GAME, information.COLOR, information.PRESET);
     }
 
     @Nullable
@@ -39,13 +40,19 @@ public class RandomFlatBot extends Bot {
             return null;
         }
 
-        List<Coordinates> availablePlaces = getAvailablePlaces(type);
-        if (availablePlaces.isEmpty()) {
-            return null;
-        }
 
-        int random = ThreadLocalRandom.current().nextInt(availablePlaces.size());
-        return availablePlaces.get(random);
+        boolean move = ThreadLocalRandom.current().nextBoolean();
+        if (move && getHand().getPieces() < getGame().getBoard().getPreset().getStones()) {
+            List<MovingCoordinates> availableMoves = getAvailableMoves(type);
+            if (availableMoves.isEmpty()) {
+                return null;
+            }
+
+            int random = ThreadLocalRandom.current().nextInt(availableMoves.size());
+            return availableMoves.get(random);
+        } else {
+            return super.getNextMove();
+        }
     }
 
 }

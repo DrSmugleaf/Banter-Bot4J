@@ -36,12 +36,12 @@ public class AdjacentSquares {
 
     @NotNull
     public List<Square> getAll() {
-        return new ArrayList<>(ADJACENT);
+        return ADJACENT;
     }
 
     @NotNull
     public List<Square> getConnections() {
-        List<Square> squares = getAll();
+        List<Square> squares = new ArrayList<>(getAll());
         squares.removeIf(square -> !getCenter().connectsTo(square));
         return squares;
     }

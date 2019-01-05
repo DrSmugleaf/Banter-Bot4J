@@ -87,7 +87,7 @@ public class Square {
     }
 
     public boolean canMove(@NotNull Square other, int pieces) {
-        if (!isAdjacentTo(other)) {
+        if (pieces > PIECES.size()) {
             return false;
         }
 
@@ -108,6 +108,16 @@ public class Square {
         return pieces == 1 && thisTopPiece.getType().canMoveTo(otherTopPiece);
     }
 
+    @NotNull
+    public Square move(@NotNull Square destination, int pieces) {
+        for (int i = pieces - 1; i >= 0; i--) {
+            Piece piece = PIECES.remove(i);
+            destination.PIECES.add(piece);
+        }
+
+        return this;
+    }
+
     public boolean canPlace() {
         return getTopPiece() == null;
     }
@@ -122,14 +132,6 @@ public class Square {
     public Square remove(@NotNull Piece piece) {
         PIECES.remove(piece);
         return this;
-    }
-
-    public boolean isAdjacentTo(@NotNull Square other) {
-        int otherColumn = other.getColumn();
-        int otherRow = other.getRow();
-
-        return (getColumn() - otherColumn == 1 || otherColumn - getColumn() == 1) &&
-               (getRow() - otherRow == 1 || otherRow - getRow() == 1);
     }
 
     public boolean connectsTo(@Nullable Piece piece) {

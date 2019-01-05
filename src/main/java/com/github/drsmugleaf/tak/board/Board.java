@@ -150,7 +150,20 @@ public class Board {
 
     public boolean canMove(@NotNull Square origin, @NotNull Square destination, int pieces) {
         int column = origin.getColumn();
-        return column < COLUMNS.length && COLUMNS[column].canMove(origin, destination, pieces) && pieces <= PRESET.getCarryLimit();
+        int row = origin.getRow();
+        AdjacentSquares adjacent = getAdjacent(origin);
+
+        return column < COLUMNS.length &&
+               COLUMNS[column].canMove(row, destination, pieces) &&
+               pieces <= PRESET.getCarryLimit() &&
+               adjacent.contains(destination);
+    }
+
+    @NotNull
+    public Square move(@NotNull Square origin, @NotNull Square destination, int pieces) {
+        int column = origin.getColumn();
+        int row = origin.getRow();
+        return COLUMNS[column].move(row, destination, pieces);
     }
 
     public boolean canPlace(int column, int row) {
@@ -159,12 +172,12 @@ public class Board {
 
     @NotNull
     public Square place(@NotNull Piece piece, int column, int row) {
-        return ROWS[row].place(piece, column);
+        return COLUMNS[column].place(piece, row);
     }
 
     @NotNull
     private Square remove(@NotNull Piece piece, int column, int row) {
-        return ROWS[row].remove(piece, column);
+        return COLUMNS[column].remove(piece, row);
     }
 
     @NotNull
@@ -190,8 +203,8 @@ public class Board {
     public int countAdjacent(@NotNull Color color) {
         int amount = 0;
 
-        for (Line row : getRows()) {
-            for (Square square : row.getSquares()) {
+        for (Line column : getColumns()) {
+            for (Square square : column.getSquares()) {
                 if (square.getColor() != color) {
                     continue;
                 }

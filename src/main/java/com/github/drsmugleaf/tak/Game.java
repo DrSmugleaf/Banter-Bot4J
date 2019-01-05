@@ -73,6 +73,14 @@ public class Game {
         return nextPlayer == player && BOARD.canMove(origin, destination, pieces);
     }
 
+    public Square move(Player player, @NotNull Square origin, @NotNull Square destination, int pieces) {
+        if (!canMove(player, origin, destination, pieces)) {
+            throw new IllegalStateException("Invalid move call, origin " + origin + ", destination " + destination + " and pieces " + pieces);
+        }
+
+        return BOARD.move(origin, destination, pieces);
+    }
+
     public boolean canPlace(@NotNull Player player, int column, int row) {
         return nextPlayer == player && BOARD.canPlace(column, row);
     }
