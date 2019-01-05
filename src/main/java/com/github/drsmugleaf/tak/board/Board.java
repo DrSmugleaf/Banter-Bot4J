@@ -150,7 +150,7 @@ public class Board {
 
     public boolean canMove(@NotNull Square origin, @NotNull Square destination, int pieces) {
         int column = origin.getColumn();
-        return column < COLUMNS.length && COLUMNS[column].canMove(origin, destination, pieces);
+        return column < COLUMNS.length && COLUMNS[column].canMove(origin, destination, pieces) && pieces <= PRESET.getCarryLimit();
     }
 
     public boolean canPlace(int column, int row) {

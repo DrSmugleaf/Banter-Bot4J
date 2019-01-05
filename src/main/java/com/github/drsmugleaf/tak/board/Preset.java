@@ -79,4 +79,8 @@ public enum Preset {
         return STONES;
     }
 
+    public int getCarryLimit() {
+        return getSize();
+    }
+
 }
