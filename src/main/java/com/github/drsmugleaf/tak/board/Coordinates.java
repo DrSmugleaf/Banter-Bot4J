@@ -15,7 +15,7 @@ public class Coordinates {
     @NotNull
     private final Type PIECE;
 
-    public Coordinates(int row, int column, @NotNull Type piece) {
+    public Coordinates(int column, int row, @NotNull Type piece) {
         ROW = row;
         COLUMN = column;
         PIECE = piece;
@@ -43,11 +43,11 @@ public class Coordinates {
     }
 
     public boolean canPlace(@NotNull Player player) {
-        return player.canPlace(PIECE, ROW, COLUMN);
+        return player.canPlace(PIECE, COLUMN, ROW);
     }
 
     public void place(@NotNull Player player) {
-        player.place(PIECE, ROW, COLUMN);
+        player.place(PIECE, COLUMN, ROW);
     }
 
 }

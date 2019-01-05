@@ -44,7 +44,7 @@ public class GuiPlayer extends Player {
                 JButton button = square.getButton();
                 button.addActionListener(e -> {
                     if (game.getNextPlayer() == this) {
-                        NEXT_MOVE = new Coordinates(finalRowIndex, finalColumnIndex, Type.FLAT_STONE);
+                        NEXT_MOVE = new Coordinates(finalColumnIndex, finalRowIndex, Type.FLAT_STONE);
                         if (NEXT_MOVE.canPlace(this)) {
                             synchronized (this) {
                                 this.notify();
@@ -71,7 +71,7 @@ public class GuiPlayer extends Player {
                             return;
                         }
 
-                        NEXT_MOVE = new Coordinates(finalRowIndex, finalColumnIndex, type);
+                        NEXT_MOVE = new Coordinates(finalColumnIndex, finalRowIndex, type);
                         if (NEXT_MOVE.canPlace(player)) {
                             synchronized (player) {
                                 player.notify();

@@ -43,17 +43,17 @@ public class RandomFlatBot extends Bot {
         int randomColumn = ThreadLocalRandom.current().nextInt(0 , boardSize + 1);
         int attempts = 0;
 
-        while (!canPlace(type, randomRow, randomColumn) && attempts < 100) {
+        while (!canPlace(type, randomColumn, randomRow)) {
+            if (attempts >= 100) {
+                return null;
+            }
+
             randomRow = ThreadLocalRandom.current().nextInt(0, boardSize + 1);
             randomColumn = ThreadLocalRandom.current().nextInt(0, boardSize + 1);
             attempts++;
         }
 
-        if (attempts >= 100) {
-            surrender();
-        }
-
-        return new Coordinates(randomRow, randomColumn, type);
+        return new Coordinates(randomColumn, randomRow, type);
     }
 
 }

@@ -18,16 +18,16 @@ public class Square {
     @NotNull
     private final List<Piece> PIECES = new ArrayList<>();
 
-    private final int ROW;
     private final int COLUMN;
+    private final int ROW;
 
-    protected Square(int row, int column) {
-        ROW = row;
+    protected Square(int column, int row) {
         COLUMN = column;
+        ROW = row;
     }
 
     private Square(@NotNull Square square) {
-        this(square.getRow(), square.getColumn());
+        this(square.getColumn(), square.getRow());
 
         for (Piece piece : square.getPieces()) {
             PIECES.add(piece.copy());
@@ -35,8 +35,8 @@ public class Square {
     }
 
     @NotNull
-    public static Square createCustom(int row, int column, @NotNull Piece... pieces) {
-        Square square = new Square(row, column);
+    public static Square createCustom(int column, int row, @NotNull Piece... pieces) {
+        Square square = new Square(column, row);
         Collections.addAll(square.PIECES, pieces);
         return square;
     }
@@ -86,9 +86,30 @@ public class Square {
         return PIECES.get(PIECES.size() - 1);
     }
 
-    public boolean canPlace(@NotNull Type type) {
-        Piece topPiece = getTopPiece();
-        return topPiece == null || type.ignoresBlock(topPiece) || !topPiece.getType().blocks();
+    public boolean canMove(@NotNull Square other, int pieces) {
+        if (!isAdjacentTo(other)) {
+            return false;
+        }
+
+        Piece thisTopPiece = getTopPiece();
+        if (thisTopPiece == null) {
+            return false;
+        }
+
+        Piece otherTopPiece = other.getTopPiece();
+        if (otherTopPiece == null) {
+            return true;
+        }
+
+        if (pieces != 1 && otherTopPiece.getType().blocks()) {
+            return false;
+        }
+
+        return pieces == 1 && thisTopPiece.getType().canMoveTo(otherTopPiece);
+    }
+
+    public boolean canPlace() {
+        return getTopPiece() == null;
     }
 
     @NotNull
@@ -101,6 +122,14 @@ public class Square {
     public Square remove(@NotNull Piece piece) {
         PIECES.remove(piece);
         return this;
+    }
+
+    public boolean isAdjacentTo(@NotNull Square other) {
+        int otherColumn = other.getColumn();
+        int otherRow = other.getRow();
+
+        return (getColumn() - otherColumn == 1 || otherColumn - getColumn() == 1) &&
+               (getRow() - otherRow == 1 || otherRow - getRow() == 1);
     }
 
     public boolean connectsTo(@Nullable Piece piece) {
@@ -119,6 +148,7 @@ public class Square {
         return connectsTo(square.getTopPiece());
     }
 
+    @NotNull
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

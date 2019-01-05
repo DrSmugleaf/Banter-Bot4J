@@ -37,8 +37,8 @@ public abstract class Player {
         for (int i = 0; i < rows.length; i++) {
             Square[] row = rows[i].getSquares();
             for (int j = 0; j < row.length; j++) {
-                if (canPlace(type, i, j)) {
-                    moves.add(new Coordinates(i, j, type));
+                if (canPlace(type, j, i)) {
+                    moves.add(new Coordinates(j, i, type));
                 }
             }
         }
@@ -71,13 +71,12 @@ public abstract class Player {
         return getHand().getColor();
     }
 
-    public final boolean canPlace(@NotNull Type type, int row, int column) {
-        return getHand().has(type) && GAME.canPlace(this, type, row, column);
+    public final boolean canPlace(@NotNull Type type, int column, int row) {
+        return getHand().has(type) && GAME.canPlace(this, column, row);
     }
 
-    @NotNull
-    public final Square place(@NotNull Type type, int row, int column) {
-        return GAME.place(this, type, row, column);
+    public final Square place(@NotNull Type type, int column, int row) {
+        return GAME.place(this, type, column, row);
     }
 
     public final void surrender() {

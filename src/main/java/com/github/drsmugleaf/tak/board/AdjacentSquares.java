@@ -30,6 +30,10 @@ public class AdjacentSquares {
         ADJACENT.add(LEFT, left);
     }
 
+    public boolean contains(@NotNull Square square) {
+        return ADJACENT.contains(square);
+    }
+
     @NotNull
     public List<Square> getAll() {
         return new ArrayList<>(ADJACENT);

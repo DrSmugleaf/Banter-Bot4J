@@ -103,7 +103,7 @@ public class MinimaxFlatBot extends Bot {
             Piece piece = new Piece(nextPlayer, Type.FLAT_STONE);
             int finalAlpha = alpha;
             int finalBeta = beta;
-            score = board.with(piece, coordinates.getRow(), coordinates.getColumn(), copy -> {
+            score = board.with(piece, coordinates.getColumn(), coordinates.getRow(), copy -> {
                 if (depth > 1 && !isTerminal(copy)) {
                     return getMax(copy, nextPlayer.getOpposite(), finalAlpha, finalBeta, depth - 1).getValue();
                 } else {

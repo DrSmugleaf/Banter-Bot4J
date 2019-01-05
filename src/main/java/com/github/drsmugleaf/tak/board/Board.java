@@ -2,16 +2,12 @@ package com.github.drsmugleaf.tak.board;
 
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
-import com.github.drsmugleaf.tak.pieces.Type;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-
-import static com.github.drsmugleaf.tak.pieces.Color.BLACK;
-import static com.github.drsmugleaf.tak.pieces.Color.WHITE;
 
 /**
  * Created by DrSmugleaf on 01/12/2018
@@ -41,7 +37,7 @@ public class Board {
 
         for (int row = 0; row < boardSize; row++) {
             for (int column = 0; column < boardSize; column++) {
-                Square square = new Square(row, column);
+                Square square = new Square(column, row);
                 rows[row].SQUARES[column] = square;
                 columns[column].SQUARES[row] = square;
             }
@@ -152,17 +148,22 @@ public class Board {
         return PRESET;
     }
 
-    public boolean canPlace(@NotNull Type type, int row, int column) {
-        return row < ROWS.length && ROWS[row].canPlace(type, column);
+    public boolean canMove(@NotNull Square origin, @NotNull Square destination, int pieces) {
+        int column = origin.getColumn();
+        return column < COLUMNS.length && COLUMNS[column].canMove(origin, destination, pieces);
+    }
+
+    public boolean canPlace(int column, int row) {
+        return column < COLUMNS.length && COLUMNS[column].canPlace(row);
     }
 
     @NotNull
-    public Square place(@NotNull Piece piece, int row, int column) {
+    public Square place(@NotNull Piece piece, int column, int row) {
         return ROWS[row].place(piece, column);
     }
 
     @NotNull
-    private Square remove(@NotNull Piece piece, int row, int column) {
+    private Square remove(@NotNull Piece piece, int column, int row) {
         return ROWS[row].remove(piece, column);
     }
 
@@ -312,10 +313,10 @@ public class Board {
 
     @Nullable
     public Color hasRoad() {
-        if (hasRoad(BLACK)) {
-            return BLACK;
-        } else if (hasRoad(WHITE)) {
-            return WHITE;
+        if (hasRoad(Color.BLACK)) {
+            return Color.BLACK;
+        } else if (hasRoad(Color.WHITE)) {
+            return Color.WHITE;
         } else {
             return null;
         }
@@ -341,12 +342,34 @@ public class Board {
         return true;
     }
 
-    public int with(@NotNull Piece piece, int row, int column, @NotNull Function<Board, Integer> function) {
-        place(piece, row, column);
+    public int with(@NotNull Piece piece, int column, int row, @NotNull Function<Board, Integer> function) {
+        place(piece, column, row);
         Integer result = function.apply(this);
-        remove(piece, row, column);
+        remove(piece, column, row);
 
         return result;
+    }
+
+    public boolean isFull() {
+        for (Square[] row : toArray()) {
+            for (Square square : row) {
+                if (square.getTopPiece() == null) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public int countFlat(@NotNull Color color) {
+        int amount = 0;
+
+        for (Line column : getColumns()) {
+            amount += column.countFlat(color);
+        }
+
+        return amount;
     }
 
 }

@@ -12,7 +12,7 @@ public enum Type {
 
     CAPSTONE("capstone.png", true, true, true) {
         @Override
-        public boolean ignoresBlock(@NotNull Piece topPiece) {
+        public boolean canMoveTo(@NotNull Piece topPiece) {
             return topPiece.getType() != CAPSTONE;
         }
 
@@ -51,12 +51,16 @@ public enum Type {
         return BLOCKS;
     }
 
-    public boolean ignoresBlock(@NotNull Piece topPiece) {
+    public boolean ignoresBlock() {
         return IGNORES_BLOCK;
     }
 
     public boolean formsRoad() {
         return FORMS_ROAD;
+    }
+
+    public boolean canMoveTo(@NotNull Piece topPiece) {
+        return ignoresBlock() || !topPiece.getType().blocks();
     }
 
     public void place(@NotNull Square square, List<Piece> pieces, @NotNull Piece piece) {

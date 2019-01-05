@@ -55,8 +55,8 @@ public class GuiGame extends Game {
 
     @NotNull
     @Override
-    public Square place(@NotNull Player player, @NotNull Type type, int row, int column) {
-        Square square = super.place(player, type, row, column);
+    public Square place(@NotNull Player player, @NotNull Type type, int column, int row) {
+        Square square = super.place(player, type, column, row);
         BOARD_PANEL.pieces[row][column].update(square);
         return square;
     }

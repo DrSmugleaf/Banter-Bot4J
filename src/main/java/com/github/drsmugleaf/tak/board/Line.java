@@ -22,8 +22,13 @@ public class Line {
         return SQUARES;
     }
 
-    public boolean canPlace(@NotNull Type type, int location) {
-        return location < SQUARES.length && SQUARES[location].canPlace(type);
+    public boolean canMove(@NotNull Square origin, @NotNull Square destination, int pieces) {
+        int row = origin.getRow();
+        return row < SQUARES.length && SQUARES[row].canMove(destination, pieces);
+    }
+
+    public boolean canPlace(int location) {
+        return location < SQUARES.length && SQUARES[location].canPlace();
     }
 
     @NotNull
@@ -48,6 +53,19 @@ public class Line {
         }
 
         return false;
+    }
+
+    public int countFlat(@NotNull Color color) {
+        int amount = 0;
+
+        for (Square square : SQUARES) {
+            Piece topPiece = square.getTopPiece();
+            if (topPiece != null && topPiece.getColor() == color && topPiece.getType() == Type.FLAT_STONE) {
+                amount++;
+            }
+        }
+
+        return amount;
     }
 
 }
