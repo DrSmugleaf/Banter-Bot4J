@@ -7,6 +7,7 @@ import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.function.Function;
@@ -61,10 +62,12 @@ public class GuiGame extends Game {
         return square;
     }
 
+    @Nullable
     @Override
-    public void start() {
+    public Player start() {
         Thread thread = new Thread(super::start);
         thread.start();
+        return getWinner();
     }
 
 }

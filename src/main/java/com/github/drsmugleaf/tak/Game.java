@@ -88,7 +88,7 @@ public class Game {
     }
 
     @Nullable
-    public Player checkVictory() {
+    private Player checkVictory() {
         boolean blackWins = BOARD.hasRoad(Color.BLACK);
         boolean whiteWins = BOARD.hasRoad(Color.WHITE);
         if (blackWins && whiteWins) {
@@ -111,16 +111,16 @@ public class Game {
     }
 
     @Nullable
-    public Player forceVictory() {
+    private Player forceVictory() {
         int blackFlat = getBoard().countFlat(Color.BLACK);
         int whiteFlat = getBoard().countFlat(Color.WHITE);
 
         if (blackFlat > whiteFlat) {
             return PLAYERS.get(Color.BLACK);
-        } else if (whiteFlat > blackFlat) {
+        } else if (blackFlat < whiteFlat) {
             return PLAYERS.get(Color.WHITE);
         } else {
-            return nextPlayer;
+            return null;
         }
     }
 
@@ -138,6 +138,11 @@ public class Game {
         return active;
     }
 
+    @Nullable
+    public Player getWinner() {
+        return winner;
+    }
+
     public void surrender(@NotNull Player loser) {
         if (winner != null) {
             throw new IllegalStateException("Game already ended");
@@ -147,18 +152,25 @@ public class Game {
         active = false;
     }
 
-    public void start() {
+    @Nullable
+    public Player start() {
+        Player winner = null;
+
         while (isActive()) {
             nextPlayer.nextTurn();
 
-            Player winner = checkVictory();
-            if (winner == null && (!nextPlayer.getHand().hasAny() || getBoard().isFull())) {
-                forceVictory();
-                return;
+            winner = checkVictory();
+            if (winner != null) {
+                break;
+            } else if (!nextPlayer.getHand().hasAny() || getBoard().isFull()) {
+                winner = forceVictory();
+                break;
             }
 
             nextPlayer = getOtherPlayer(nextPlayer);
         }
+
+        return winner;
     }
 
 }
