@@ -10,6 +10,7 @@ import com.github.drsmugleaf.tak.player.PlayerInformation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -38,22 +39,13 @@ public class RandomFlatBot extends Bot {
             return null;
         }
 
-        int boardSize = getGame().getBoard().getPreset().getSize();
-        int randomRow = ThreadLocalRandom.current().nextInt(0, boardSize + 1);
-        int randomColumn = ThreadLocalRandom.current().nextInt(0 , boardSize + 1);
-        int attempts = 0;
-
-        while (!canPlace(type, randomColumn, randomRow)) {
-            if (attempts >= 100) {
-                return null;
-            }
-
-            randomRow = ThreadLocalRandom.current().nextInt(0, boardSize + 1);
-            randomColumn = ThreadLocalRandom.current().nextInt(0, boardSize + 1);
-            attempts++;
+        List<Coordinates> availablePlaces = getAvailablePlaces(type);
+        if (availablePlaces.isEmpty()) {
+            return null;
         }
 
-        return new Coordinates(randomColumn, randomRow, type);
+        int random = ThreadLocalRandom.current().nextInt(availablePlaces.size());
+        return availablePlaces.get(random);
     }
 
 }
