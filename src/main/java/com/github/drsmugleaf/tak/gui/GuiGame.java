@@ -10,12 +10,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.function.Function;
 
 /**
  * Created by DrSmugleaf on 25/12/2018
  */
 public class GuiGame extends Game {
+
+    @NotNull
+    private static final Image APPLICATION_ICON = Images.get("logo.jpg");
 
     @NotNull
     protected BoardPanel BOARD_PANEL;
@@ -39,6 +43,7 @@ public class GuiGame extends Game {
         JFrame frame = new JFrame("Tak");
 
         SwingUtilities.invokeLater(() -> {
+            frame.setIconImage(APPLICATION_ICON);
             frame.add(BOARD_PANEL.gui);
             frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             frame.setLocationByPlatform(true);

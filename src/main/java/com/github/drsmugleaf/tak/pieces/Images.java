@@ -1,7 +1,6 @@
 package com.github.drsmugleaf.tak.pieces;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.tak.board.Preset;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -21,7 +20,7 @@ import java.util.Objects;
 public class Images {
 
     @Nonnull
-    private static final String IMAGES_PATH = Objects.requireNonNull(Preset.class.getClassLoader().getResource("tak/pieces")).getFile();
+    private static final String IMAGES_PATH = Objects.requireNonNull(Images.class.getClassLoader().getResource("tak/pieces")).getFile();
 
     @NotNull
     private static final Map<Color, Map<Type, Image>> IMAGES = registerAll();

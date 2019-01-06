@@ -25,13 +25,20 @@ public class SquareButton {
     @NotNull
     private final JButton BUTTON;
 
-    protected SquareButton(int size, @NotNull Color color) {
+    private final int ROW;
+
+    private final int COLUMN;
+
+    protected SquareButton(int size, int column, int row) {
         SIZE = size;
+        COLUMN = column;
+        ROW = row;
+
         JButton button = new JButton();
         button.setMargin(margin);
-        ImageIcon icon = getDefaultImage();
+        ImageIcon icon = new ImageIcon(getDefaultImage());
         button.setIcon(icon);
-        button.setBackground(color);
+
         BUTTON = button;
     }
 
@@ -47,14 +54,7 @@ public class SquareButton {
 
         for (int i = 0; i < squares.length; i++) {
             for (int j = 0; j < squares[i].length; j++) {
-                Color color;
-                if ((i + j) % 2 == 0) {
-                    color = Color.WHITE;
-                } else {
-                    color = Color.GRAY;
-                }
-
-                squares[i][j] = new SquareButton(SINGLE_SQUARE_SIZE / size, color);
+                squares[i][j] = new SquareButton(SINGLE_SQUARE_SIZE / size, j, i);
             }
         }
 
@@ -62,8 +62,21 @@ public class SquareButton {
     }
 
     @NotNull
-    private ImageIcon getDefaultImage() {
-        return new ImageIcon(new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB));
+    private Image getDefaultImage() {
+        String file;
+        if ((COLUMN + ROW) % 2 == 0) {
+            file = "squares/white square.jpg";
+        } else {
+            file = "squares/orange square.jpg";
+        }
+
+        Image image = Images.get(file).getScaledInstance(SIZE, SIZE, Image.SCALE_SMOOTH);
+        BufferedImage background = new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = background.createGraphics();
+        graphics.drawImage(image, 0, 0, null);
+        graphics.dispose();
+
+        return background;
     }
 
     @NotNull
@@ -74,7 +87,7 @@ public class SquareButton {
     @NotNull
     protected JButton update(@NotNull Square square) {
         List<Piece> pieces = square.getPieces();
-        Image background = getDefaultImage().getImage();
+        Image background = getDefaultImage();
         Graphics g = background.getGraphics();
         int backgroundHeight = background.getHeight(null);
         int backgroundWidth = background.getWidth(null);
