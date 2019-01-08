@@ -28,4 +28,10 @@ public class Piece {
         return TYPE;
     }
 
+    @NotNull
+    @Override
+    public String toString() {
+        return TYPE.toString();
+    }
+
 }
