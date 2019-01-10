@@ -1,13 +1,42 @@
 package com.github.drsmugleaf.mechwarrioronline.battlemechs;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Created by DrSmugleaf on 10/01/2019
  */
 public enum Tonnage {
 
-    LIGHT,
-    MEDIUM,
-    HEAVY,
-    ASSAULT
+    LIGHT(20, 35),
+    MEDIUM(40, 55),
+    HEAVY(60, 75),
+    ASSAULT(80, 100);
+
+    private final int MINIMUM;
+    private final int MAXIMUM;
+
+    Tonnage(int minimum, int maximum) {
+        MINIMUM = minimum;
+        MAXIMUM = maximum;
+    }
+
+    @NotNull
+    public static Tonnage getByWeight(int weight) {
+        for (Tonnage tonnage : values()) {
+            if (weight >= tonnage.getMinimum() && weight <= tonnage.getMaximum()) {
+                return tonnage;
+            }
+        }
+
+        throw new IllegalArgumentException("Invalid weight: " + weight + ". Minimum weight " + LIGHT.getMinimum() + ", maximum weight " + ASSAULT.getMaximum());
+    }
+
+    public int getMinimum() {
+        return MINIMUM;
+    }
+
+    public int getMaximum() {
+        return MAXIMUM;
+    }
 
 }
