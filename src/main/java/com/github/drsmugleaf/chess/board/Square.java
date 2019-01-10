@@ -33,4 +33,5 @@ public class Square {
 
         return piece.toString();
     }
+
 }

@@ -13,9 +13,14 @@ public class Piece {
     @NotNull
     private final Type TYPE;
 
-    public Piece(@NotNull Color color, @NotNull Type type) {
+    private int row;
+    private int column;
+
+    public Piece(@NotNull Color color, @NotNull Type type, int row, int column) {
         COLOR = color;
         TYPE = type;
+        this.row = row;
+        this.column = column; 
     }
 
     @NotNull
@@ -26,6 +31,18 @@ public class Piece {
     @NotNull
     public Type getType() {
         return TYPE;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public int getForward() {
+        return COLOR.getForward();
     }
 
     @NotNull
