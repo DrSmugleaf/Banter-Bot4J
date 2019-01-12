@@ -22,7 +22,7 @@ public class Equipment {
     ).getFile();
 
     @NotNull
-    private static final Map<Factions, List<Equipment>> EQUIPMENT = getEquipment();
+    private static final Map<Factions, List<Equipment>> EQUIPMENT = registerEquipment();
 
     @NotNull
     private final String NAME;
@@ -179,7 +179,7 @@ public class Equipment {
     }
 
     @NotNull
-    private static Map<Factions, List<Equipment>> getEquipment() {
+    private static Map<Factions, List<Equipment>> registerEquipment() {
         Map<Factions, List<Equipment>> map = new EnumMap<>(Factions.class);
 
         for (Factions faction : Factions.values()) {
@@ -224,8 +224,95 @@ public class Equipment {
         return csv;
     }
 
-    public static void get() {
+    @NotNull
+    public static Map<Factions, List<Equipment>> getEquipment() {
+        return EQUIPMENT;
+    }
 
+    @NotNull
+    public String getName() {
+        return NAME;
+    }
+
+    @Nullable
+    public Double getDamage() {
+        return DAMAGE;
+    }
+
+    @Nullable
+    public Double getHeat() {
+        return HEAT;
+    }
+
+    @Nullable
+    public String getCooldown() {
+        return COOLDOWN;
+    }
+
+    @NotNull
+    public String getRange() {
+        return RANGE;
+    }
+
+    public int getMaxRange() {
+        return MAX_RANGE;
+    }
+
+    public int getSlots() {
+        return SLOTS;
+    }
+
+    public double getTons() {
+        return TONS;
+    }
+
+    @Nullable
+    public Integer getSpeed() {
+        return SPEED;
+    }
+
+    @Nullable
+    public String getAmmoPerTon() {
+        return AMMO_PER_TON;
+    }
+
+    @Nullable
+    public String getDuration() {
+        return DURATION;
+    }
+
+    @Nullable
+    public Double getDps() {
+        return DPS;
+    }
+
+    @Nullable
+    public Double getDph() {
+        return DPH;
+    }
+
+    @Nullable
+    public Double getDpsPerTon() {
+        return DPS_PER_TON;
+    }
+
+    @Nullable
+    public Double getHps() {
+        return HPS;
+    }
+
+    @Nullable
+    public Double getImpulse() {
+        return IMPULSE;
+    }
+
+    public double getHealth() {
+        return HEALTH;
+    }
+
+    @Nullable
+    public Integer getCosts() {
+        return COSTS;
     }
 
 }
