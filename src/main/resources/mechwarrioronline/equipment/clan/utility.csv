@@ -1,0 +1,6 @@
+Name,Damage,Heat,Cooldown,Range,Max Range,Slots,Tons,Speed,Ammo/t,DPS,DPH,DPS/T,HPS,Impulse,Health,Costs
+C-AMS,3.5,,,165,250,1,0.5,100,2200,,,,,0.001,7.5,200000
+C-LASER AMS,3.5,2.85,,165,250,1,1,100,0,,,,,0.001,7.5,
+C-LIGHT TAG,,,,450,450,1,0.5,,∞,,,,,,7.5,
+C-NARC,,,7,600,600,1,2,500,13,,,,,,7.5,200000
+C-TAG,,,,750,750,1,1,,∞,,,,,,7.5,100000

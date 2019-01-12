@@ -1,0 +1,5 @@
+Name,Damage,Heat,Cooldown,Range,Max Range,Slots,Tons,Speed,Ammo/t,DPS,DPH,DPS/T,HPS,Impulse,Health,Costs
+AMS,3.5,,,165,250,1,0.5,100,2200,,,,,0.001,7.5,200000
+LASER AMS,3.5,2.85,,165,250,2,1.5,100,0,,,,,0.001,7.5,
+NARC,,,7,450,450,2,3,500,13,,,,,,10,200000
+TAG,,,,750,750,1,1,,∞,,,,,,7.5,100000
