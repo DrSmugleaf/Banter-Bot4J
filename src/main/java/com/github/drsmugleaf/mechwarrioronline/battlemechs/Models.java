@@ -47,7 +47,7 @@ public enum Models {
     KINTARO("Kintaro", Tonnage.MEDIUM),
     PHOENIX_HAWK("Phoenix Hawk", Tonnage.MEDIUM),
     SHADOW_CAT("Shadow Cat", Tonnage.MEDIUM),
-    SHADOWHAWK("Shadowhawk", Tonnage.MEDIUM),
+    SHADOWHAWK("Shadow Hawk", Tonnage.MEDIUM),
     STORMCROW("Stormcrow", Tonnage.MEDIUM),
     TREBUCHET("Trebuchet", Tonnage.MEDIUM),
     WOLVERINE("Wolverine", Tonnage.MEDIUM),
@@ -110,7 +110,7 @@ public enum Models {
     STALKER("Stalker", Tonnage.ASSAULT),
     SUPERNOVA("Supernova", Tonnage.ASSAULT),
     VICTOR("Victor", Tonnage.ASSAULT),
-    WARHAW("Warhaw", Tonnage.ASSAULT),
+    WARHAWK("Warhawk", Tonnage.ASSAULT),
     ZEUS("Zeus", Tonnage.ASSAULT);
 
     @NotNull
@@ -122,6 +122,18 @@ public enum Models {
     Models(@NotNull String name, @NotNull Tonnage tonnage) {
         NAME = name;
         TONNAGE = tonnage;
+    }
+
+    public static Models from(@NotNull String name) {
+        name = name.toLowerCase();
+
+        for (Models model : values()) {
+            if (model.NAME.toLowerCase().equals(name)) {
+                return model;
+            }
+        }
+
+        throw new IllegalArgumentException("No model found with name " + name);
     }
 
     @NotNull

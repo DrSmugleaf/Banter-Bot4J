@@ -7,17 +7,21 @@ import org.jetbrains.annotations.NotNull;
  */
 public enum Hardpoints {
 
-    AMS("AMS"),
-    BALLISTIC("B"),
-    ECM("ECM"),
-    ENERGY("E"),
-    MISSILE("M");
+    AMS("AMS", "AMS"),
+    BALLISTIC("B", "Ballistic"),
+    ECM("ECM", "ECM"),
+    ENERGY("E", "Energy"),
+    MISSILE("M", "Missile");
 
     @NotNull
     private final String ABBREVIATION;
 
-    Hardpoints(@NotNull String abbreviation) {
+    @NotNull
+    private final String NAME;
+
+    Hardpoints(@NotNull String abbreviation, @NotNull String name) {
         ABBREVIATION = abbreviation;
+        NAME = name;
     }
 
     @NotNull
@@ -34,6 +38,11 @@ public enum Hardpoints {
     @NotNull
     public String getAbbreviation() {
         return ABBREVIATION;
+    }
+
+    @NotNull
+    public String getName() {
+        return NAME;
     }
 
 }

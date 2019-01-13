@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.mechwarrioronline.equipment;
 
 import com.github.drsmugleaf.mechwarrioronline.Factions;
+import com.github.drsmugleaf.mechwarrioronline.battlemechs.Hardpoints;
 import com.opencsv.*;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import org.jetbrains.annotations.NotNull;
@@ -14,15 +15,15 @@ import java.util.*;
 /**
  * Created by DrSmugleaf on 10/01/2019
  */
-public class Equipment {
+public class Item {
 
     @NotNull
     private static final String PATH = Objects.requireNonNull(
-            Equipment.class.getClassLoader().getResource("mechwarrioronline/equipment")
+            Item.class.getClassLoader().getResource("mechwarrioronline/equipment")
     ).getFile();
 
     @NotNull
-    private static final Map<Factions, List<Equipment>> EQUIPMENT = registerEquipment();
+    private static final Map<Factions, List<Item>> ITEMS = registerItems();
 
     @NotNull
     private final String NAME;
@@ -72,7 +73,10 @@ public class Equipment {
     @Nullable
     private final Integer COSTS;
 
-    private Equipment(
+    @NotNull
+    private final Hardpoints HARDPOINT;
+
+    private Item(
             @NotNull String name,
             @Nullable Double damage,
             @Nullable Double heat,
@@ -90,8 +94,8 @@ public class Equipment {
             @Nullable Double hps,
             @Nullable Double impulse,
             double health,
-            @Nullable Integer costs
-    ) {
+            @Nullable Integer costs,
+            @NotNull Hardpoints hardpoint) {
         NAME = name;
         DAMAGE = damage;
         HEAT = heat;
@@ -110,9 +114,10 @@ public class Equipment {
         IMPULSE = impulse;
         HEALTH = health;
         COSTS = costs;
+        HARDPOINT = hardpoint;
     }
 
-    private Equipment(
+    private Item(
             @NotNull String name,
             @Nullable String damage,
             @Nullable String heat,
@@ -130,8 +135,8 @@ public class Equipment {
             @Nullable String hps,
             @Nullable String impulse,
             @NotNull String health,
-            @Nullable String costs
-    ) {
+            @Nullable String costs,
+            @NotNull Hardpoints hardpoint) {
         this(
                 name,
                 damage != null ? Double.valueOf(damage) : null,
@@ -150,13 +155,14 @@ public class Equipment {
                 hps != null ? Double.valueOf(hps) : null,
                 impulse != null ? Double.valueOf(impulse) : null,
                 health != null ? Double.valueOf(health) : null,
-                costs != null ? Integer.valueOf(costs) : null
+                costs != null ? Integer.valueOf(costs) : null,
+                hardpoint
         );
     }
 
     @NotNull
-    private static Equipment from(@NotNull Map<String, String> csv) {
-        return new Equipment(
+    private static Item from(@NotNull Map<String, String> csv, @NotNull Hardpoints hardpoint) {
+        return new Item(
                 csv.get("Name"),
                 csv.get("Damage"),
                 csv.get("Heat"),
@@ -174,23 +180,24 @@ public class Equipment {
                 csv.get("HPS"),
                 csv.get("Impulse"),
                 csv.get("Health"),
-                csv.get("Costs")
+                csv.get("Costs"),
+                hardpoint
         );
     }
 
     @NotNull
-    private static Map<Factions, List<Equipment>> registerEquipment() {
-        Map<Factions, List<Equipment>> map = new EnumMap<>(Factions.class);
+    private static Map<Factions, List<Item>> registerItems() {
+        Map<Factions, List<Item>> map = new EnumMap<>(Factions.class);
 
         for (Factions faction : Factions.values()) {
             map.put(faction, new ArrayList<>());
 
-            for (Types type : Types.values()) {
-                String csvPath = PATH + "/" + faction.getName().toLowerCase() + "/" + type.getName().toLowerCase() + ".csv";
+            for (Hardpoints hardpoint : Hardpoints.values()) {
+                String csvPath = PATH + "/" + faction.getName().toLowerCase() + "/" + hardpoint.getName().toLowerCase() + ".csv";
                 List<Map<String, String>> csv = read(csvPath);
                 for (Map<String, String> line : csv) {
-                    Equipment equipment = from(line);
-                    map.get(faction).add(equipment);
+                    Item item = from(line, hardpoint);
+                    map.get(faction).add(item);
                 }
             }
 
@@ -216,17 +223,32 @@ public class Equipment {
                 csv.add(line);
             }
         } catch (FileNotFoundException e) {
-            throw new IllegalStateException("Folder " + PATH + " not found", e);
+            throw new IllegalStateException("File " + PATH + " not found", e);
         } catch (IOException e) {
-            throw new IllegalStateException("Error reading folder " + PATH, e);
+            throw new IllegalStateException("Error reading file " + PATH, e);
         }
 
         return csv;
     }
 
     @NotNull
-    public static Map<Factions, List<Equipment>> getEquipment() {
-        return EQUIPMENT;
+    public static Map<Factions, List<Item>> getItems() {
+        return ITEMS;
+    }
+
+    @NotNull
+    public static Item getItem(@NotNull String name) {
+        name = name.toLowerCase();
+
+        for (List<Item> items : ITEMS.values()) {
+            for (Item item : items) {
+                if (item.NAME.toLowerCase().equals(name)) {
+                    return item;
+                }
+            }
+        }
+
+        throw new IllegalArgumentException("No item found with name " + name);
     }
 
     @NotNull
@@ -313,6 +335,11 @@ public class Equipment {
     @Nullable
     public Integer getCosts() {
         return COSTS;
+    }
+
+    @NotNull
+    public Hardpoints getHardpoint() {
+        return HARDPOINT;
     }
 
 }
