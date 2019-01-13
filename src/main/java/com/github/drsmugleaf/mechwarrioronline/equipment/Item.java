@@ -95,7 +95,8 @@ public class Item {
             @Nullable Double impulse,
             double health,
             @Nullable Integer costs,
-            @NotNull Hardpoints hardpoint) {
+            @NotNull Hardpoints hardpoint
+    ) {
         NAME = name;
         DAMAGE = damage;
         HEAT = heat;
@@ -136,7 +137,8 @@ public class Item {
             @Nullable String impulse,
             @NotNull String health,
             @Nullable String costs,
-            @NotNull Hardpoints hardpoint) {
+            @NotNull Hardpoints hardpoint
+    ) {
         this(
                 name,
                 damage != null ? Double.valueOf(damage) : null,
