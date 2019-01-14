@@ -8,7 +8,8 @@ import org.jetbrains.annotations.NotNull;
 public enum Factions {
 
     CLAN("Clan"),
-    INNER_SPHERE("Inner Sphere");
+    INNER_SPHERE("Inner Sphere"),
+    NONE("None");
 
     @NotNull
     private final String NAME;

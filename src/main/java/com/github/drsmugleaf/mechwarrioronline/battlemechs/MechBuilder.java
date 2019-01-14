@@ -16,11 +16,11 @@ public class MechBuilder {
     @NotNull
     private final List<Item> ITEMS = new ArrayList<>();
 
-    @Nullable
-    private Factions faction = null;
+    @NotNull
+    private Factions faction = Factions.NONE;
 
-    private int minimumWeight = Integer.MIN_VALUE;
-    private int maximumWeight = Integer.MAX_VALUE;
+    private int minimumWeight = Tonnage.getSmallest();
+    private int maximumWeight = Tonnage.getBiggest();
 
     public MechBuilder() {}
 
@@ -29,10 +29,10 @@ public class MechBuilder {
         List<Mech> validMechs = new ArrayList<>();
         Collection<List<BattleMech>> allMechs = new ArrayList<>();
 
-        if (faction != null) {
-            allMechs.add(BattleMech.getMechs().get(faction));
-        } else {
+        if (faction == Factions.NONE) {
             allMechs = BattleMech.getMechs().values();
+        } else {
+            allMechs.add(BattleMech.getMechs().get(faction));
         }
 
         for (List<BattleMech> mechs : allMechs) {
@@ -140,7 +140,7 @@ public class MechBuilder {
                 .append(", ")
                 .append("Faction: ");
 
-        if (faction == null) {
+        if (faction == Factions.NONE) {
             builder.append("Any");
         } else {
             builder.append(faction.getName());

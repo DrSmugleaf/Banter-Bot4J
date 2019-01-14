@@ -31,6 +31,34 @@ public enum Tonnage {
         throw new IllegalArgumentException("Invalid weight: " + weight + ". Minimum weight " + LIGHT.getMinimum() + ", maximum weight " + ASSAULT.getMaximum());
     }
 
+    public static int getSmallest() {
+        int minimum = Integer.MAX_VALUE;
+
+        for (Tonnage tonnage : values()) {
+            int thisMinimum = tonnage.getMinimum();
+
+            if (minimum > thisMinimum) {
+                minimum = thisMinimum;
+            }
+        }
+
+        return minimum;
+    }
+
+    public static int getBiggest() {
+        int maximum = Integer.MIN_VALUE;
+
+        for (Tonnage tonnage : values()) {
+            int thisMaximum = tonnage.getMaximum();
+
+            if (maximum < thisMaximum) {
+                maximum = thisMaximum;
+            }
+        }
+
+        return maximum;
+    }
+
     public int getMinimum() {
         return MINIMUM;
     }
