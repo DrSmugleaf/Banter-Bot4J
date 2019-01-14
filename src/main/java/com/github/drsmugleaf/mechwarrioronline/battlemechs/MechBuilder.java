@@ -52,24 +52,58 @@ public class MechBuilder {
         return validMechs;
     }
 
-    public boolean addItem(@NotNull Item item) {
-        return ITEMS.add(item);
+    @NotNull
+    public MechBuilder addItem(@NotNull Item item, int amount) {
+        for (int i = 0; i < amount; i++) {
+            ITEMS.add(item);
+        }
+
+        return this;
     }
 
-    public boolean addItem(@NotNull Items item) {
-        return ITEMS.add(Item.getItem(item));
+    @NotNull
+    public MechBuilder addItem(@NotNull Items item, int amount) {
+        for (int i = 0; i < amount; i++) {
+            ITEMS.add(Item.getItem(item));
+        }
+
+        return this;
     }
 
-    public void setFaction(@Nullable Factions faction) {
+    @NotNull
+    public List<Item> getItems() {
+        return new ArrayList<>(ITEMS);
+    }
+
+    @NotNull
+    public Factions getFaction() {
+        return faction;
+    }
+
+    @NotNull
+    public MechBuilder setFaction(@Nullable Factions faction) {
         this.faction = faction;
+        return this;
     }
 
-    public void setMinimumWeight(int weight) {
+    public int getMinimumWeight() {
+        return minimumWeight;
+    }
+
+    @NotNull
+    public MechBuilder setMinimumWeight(int weight) {
         minimumWeight = weight;
+        return this;
     }
 
-    public void setMaximumWeight(int weight) {
+    public int getMaximumWeight() {
+        return maximumWeight;
+    }
+
+    @NotNull
+    public MechBuilder setMaximumWeight(int weight) {
         maximumWeight = weight;
+        return this;
     }
 
     @NotNull
@@ -81,8 +115,7 @@ public class MechBuilder {
         }
 
         Map<Item, Integer> items = new HashMap<>();
-        for (int i = 0; i < ITEMS.size(); i++) {
-            Item item = ITEMS.get(i);
+        for (Item item : ITEMS) {
             if (!items.containsKey(item)) {
                 items.put(item, 1);
                 continue;
