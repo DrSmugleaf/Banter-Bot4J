@@ -239,6 +239,19 @@ public class Item {
     }
 
     @NotNull
+    public static Item getItem(@NotNull Items enumItem) {
+        for (List<Item> items : ITEMS.values()) {
+            for (Item item : items) {
+                if (item.NAME.equals(enumItem.getName())) {
+                    return item;
+                }
+            }
+        }
+
+        throw new IllegalArgumentException("No item found with name " + enumItem.getName());
+    }
+
+    @NotNull
     public static Item getItem(@NotNull String name) {
         name = name.toLowerCase();
 

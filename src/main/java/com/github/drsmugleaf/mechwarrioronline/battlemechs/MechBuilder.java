@@ -2,6 +2,7 @@ package com.github.drsmugleaf.mechwarrioronline.battlemechs;
 
 import com.github.drsmugleaf.mechwarrioronline.Factions;
 import com.github.drsmugleaf.mechwarrioronline.equipment.Item;
+import com.github.drsmugleaf.mechwarrioronline.equipment.Items;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,6 +54,10 @@ public class MechBuilder {
 
     public boolean addItem(@NotNull Item item) {
         return ITEMS.add(item);
+    }
+
+    public boolean addItem(@NotNull Items item) {
+        return ITEMS.add(Item.getItem(item));
     }
 
     public void setFaction(@Nullable Factions faction) {
