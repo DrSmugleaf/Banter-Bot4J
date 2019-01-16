@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 /**
  * Created by DrSmugleaf on 12/01/2019
  */
-public class BattleMech {
+public class BattleMech extends MechInformation {
 
     @NotNull
     private static final String PATH = Objects.requireNonNull(
@@ -57,42 +57,6 @@ public class BattleMech {
     @NotNull
     private static final Map<Factions, List<BattleMech>> MECHS = registerMechs();
 
-    @NotNull
-    private final Models MODEL;
-
-    @NotNull
-    private final String NAME;
-
-    @NotNull
-    private final Map<Sections, List<Hardpoint>> SECTIONS;
-
-    private final int JUMP_JETS;
-    private final int MINIMUM_ENGINE;
-    private final int MAXIMUM_ENGINE;
-
-    @NotNull
-    private final String DEFAULT_ENGINE;
-
-    @NotNull
-    private final Map<Hardpoints, Integer> HARDPOINTS;
-
-    @NotNull
-    private final String ROTATION;
-
-    @Nullable
-    private final Integer COST_MC;
-
-    @Nullable
-    private final Integer COST_CBILLS;
-
-    private final int WEIGHT;
-
-    @NotNull
-    private final Tonnage TONNAGE;
-
-    @NotNull
-    private final Factions FACTION;
-
     private BattleMech(
             @NotNull Models model,
             @NotNull String name,
@@ -109,38 +73,25 @@ public class BattleMech {
             @NotNull Tonnage tonnage,
             @NotNull Factions faction
     ) {
-        MODEL = model;
-        NAME = name;
-        SECTIONS = Collections.unmodifiableMap(sections);
-        JUMP_JETS = jumpJets;
-        MINIMUM_ENGINE = minimumEngine;
-        MAXIMUM_ENGINE = maximumEngine;
-        DEFAULT_ENGINE = defaultEngine;
-        HARDPOINTS = Collections.unmodifiableMap(hardpoints);
-        ROTATION = rotation;
-        COST_MC = costMC;
-        COST_CBILLS = costCBills;
-        WEIGHT = weight;
-        TONNAGE = tonnage;
-        FACTION = faction;
+        super(model, name, sections, jumpJets, minimumEngine, maximumEngine, defaultEngine, hardpoints, rotation, costMC, costCBills, weight, tonnage, faction);
     }
 
     protected BattleMech(@NotNull BattleMech mech) {
         this(
-                mech.MODEL,
-                mech.NAME,
-                mech.SECTIONS,
-                mech.JUMP_JETS,
-                mech.MINIMUM_ENGINE,
-                mech.MAXIMUM_ENGINE,
-                mech.DEFAULT_ENGINE,
-                mech.HARDPOINTS,
-                mech.ROTATION,
-                mech.COST_MC,
-                mech.COST_CBILLS,
-                mech.WEIGHT,
-                mech.TONNAGE,
-                mech.FACTION
+                mech.getModel(),
+                mech.getName(),
+                mech.getSections(),
+                mech.getJumpJets(),
+                mech.getMinimumEngine(),
+                mech.getMaximumEngine(),
+                mech.getDefaultEngine(),
+                mech.getHardpoints(),
+                mech.getRotation(),
+                mech.getCostMC(),
+                mech.getCostCBills(),
+                mech.getWeight(),
+                mech.getTonnage(),
+                mech.getFaction()
         );
     }
 
@@ -334,70 +285,145 @@ public class BattleMech {
         return MECHS;
     }
 
-    @NotNull
-    public Models getModel() {
-        return MODEL;
+    @Override
+    public @NotNull Models getModel() {
+        return super.getModel();
     }
 
-    @NotNull
-    public String getName() {
-        return NAME;
+    @Override
+    public @NotNull BattleMech setModel(@NotNull Models model) {
+        return this;
     }
 
-    @NotNull
-    public Map<Sections, List<Hardpoint>> getSections() {
-        return SECTIONS;
+    @Override
+    public @NotNull String getName() {
+        return super.getName();
     }
 
+    @Override
+    public @NotNull BattleMech setName(@NotNull String name) {
+        return this;
+    }
+
+    @Override
+    public @NotNull Map<Sections, List<Hardpoint>> getSections() {
+        return super.getSections();
+    }
+
+    @Override
+    public @NotNull BattleMech setSections(@NotNull Map<Sections, List<Hardpoint>> sections) {
+        return this;
+    }
+
+    @Override
     public int getJumpJets() {
-        return JUMP_JETS;
+        return super.getJumpJets();
     }
 
+    @Override
+    public @NotNull BattleMech setJumpJets(int jumpJets) {
+        return this;
+    }
+
+    @Override
     public int getMinimumEngine() {
-        return MINIMUM_ENGINE;
+        return super.getMinimumEngine();
     }
 
+    @Override
+    public @NotNull BattleMech setMinimumEngine(int minimumEngine) {
+        return this;
+    }
+
+    @Override
     public int getMaximumEngine() {
-        return MAXIMUM_ENGINE;
+        return super.getMaximumEngine();
     }
 
-    @NotNull
-    public String getDefaultEngine() {
-        return DEFAULT_ENGINE;
+    @Override
+    public @NotNull BattleMech setMaximumEngine(int maximumEngine) {
+        return this;
     }
 
-    @NotNull
-    public Map<Hardpoints, Integer> getHardpoints() {
-        return HARDPOINTS;
+    @Override
+    public @NotNull String getDefaultEngine() {
+        return super.getDefaultEngine();
     }
 
-    @NotNull
-    public String getRotation() {
-        return ROTATION;
+    @Override
+    public @NotNull BattleMech setDefaultEngine(@NotNull String defaultEngine) {
+        return this;
     }
 
-    @Nullable
-    public Integer getCostMC() {
-        return COST_MC;
+    @Override
+    public @NotNull Map<Hardpoints, Integer> getHardpoints() {
+        return super.getHardpoints();
     }
 
-    @Nullable
-    public Integer getCostCBills() {
-        return COST_CBILLS;
+    @Override
+    public @NotNull BattleMech setHardpoints(@NotNull Map<Hardpoints, Integer> hardpoints) {
+        return this;
     }
 
+    @Override
+    public @NotNull String getRotation() {
+        return super.getRotation();
+    }
+
+    @Override
+    public @NotNull BattleMech setRotation(@NotNull String rotation) {
+        return this;
+    }
+
+    @Override
+    public @Nullable Integer getCostMC() {
+        return super.getCostMC();
+    }
+
+    @Override
+    public @NotNull BattleMech setCostMC(@NotNull Integer costMC) {
+        return this;
+    }
+
+    @Override
+    public @Nullable Integer getCostCBills() {
+        return super.getCostCBills();
+    }
+
+    @Override
+    public @NotNull BattleMech setCostCBills(@NotNull Integer costCBills) {
+        return this;
+    }
+
+    @Override
     public int getWeight() {
-        return WEIGHT;
+        return super.getWeight();
     }
 
     @NotNull
-    public Tonnage getTonnage() {
-        return TONNAGE;
+    @Override
+    public BattleMech setWeight(int weight) {{
+        return this;
+    }}
+
+    @Override
+    public @NotNull Tonnage getTonnage() {
+        return super.getTonnage();
     }
 
-    @NotNull
-    public Factions getFaction() {
-        return FACTION;
+    @Override
+    public @NotNull BattleMech setTonnage(@NotNull Tonnage tonnage) {
+        return this;
+    }
+
+    @Override
+    public @NotNull Factions getFaction() {
+        return super.getFaction();
+    }
+
+    @Override
+    public @NotNull BattleMech setFaction(@NotNull Factions faction) {
+        return this;
     }
 
 }
