@@ -19,6 +19,9 @@ public class MechBuilder {
     @NotNull
     private Factions faction = Factions.NONE;
 
+    @Nullable
+    private Integer engineRating = null;
+
     private int minimumWeight = Tonnage.getSmallest();
     private int maximumWeight = Tonnage.getBiggest();
 
@@ -37,6 +40,12 @@ public class MechBuilder {
 
         for (List<BattleMech> mechs : allMechs) {
             for (BattleMech battlemech : mechs) {
+                int minimumEngineRating = battlemech.getMinimumEngine();
+                int maximumEngineRating = battlemech.getMaximumEngine();
+                if (engineRating != null && (engineRating < minimumEngineRating || engineRating > maximumEngineRating)) {
+                    continue;
+                }
+
                 int weight = battlemech.getWeight();
                 if (weight < minimumWeight || weight > maximumWeight) {
                     continue;
@@ -62,12 +71,22 @@ public class MechBuilder {
     }
 
     @NotNull
+    public MechBuilder addItem(@NotNull Item item) {
+        return addItem(item, 1);
+    }
+
+    @NotNull
     public MechBuilder addItem(@NotNull Items item, int amount) {
         for (int i = 0; i < amount; i++) {
             ITEMS.add(Item.getItem(item));
         }
 
         return this;
+    }
+
+    @NotNull
+    public MechBuilder addItem(@NotNull Items item) {
+        return addItem(item, 1);
     }
 
     @NotNull
@@ -81,8 +100,19 @@ public class MechBuilder {
     }
 
     @NotNull
-    public MechBuilder setFaction(@Nullable Factions faction) {
+    public MechBuilder setFaction(@NotNull Factions faction) {
         this.faction = faction;
+        return this;
+    }
+
+    @Nullable
+    public Integer getEngineRating() {
+        return engineRating;
+    }
+
+    @NotNull
+    public MechBuilder setEngineRating(int rating) {
+        engineRating = rating;
         return this;
     }
 

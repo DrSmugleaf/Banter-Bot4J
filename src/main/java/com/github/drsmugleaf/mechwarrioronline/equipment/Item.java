@@ -192,6 +192,10 @@ public class Item {
         Map<Factions, List<Item>> map = new EnumMap<>(Factions.class);
 
         for (Factions faction : Factions.values()) {
+            if (faction == Factions.NONE) {
+                continue;
+            }
+
             map.put(faction, new ArrayList<>());
 
             for (Hardpoints hardpoint : Hardpoints.values()) {

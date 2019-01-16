@@ -276,6 +276,10 @@ public class BattleMech {
         Map<Factions, List<BattleMech>> mechs = new EnumMap<>(Factions.class);
 
         for (Factions faction : Factions.values()) {
+            if (faction == Factions.NONE) {
+                continue;
+            }
+
             mechs.put(faction, new ArrayList<>());
             String csvPath = PATH + "/" + faction.getName().toLowerCase() + ".csv";
             List<Map<String, String>> csv = read(csvPath);
