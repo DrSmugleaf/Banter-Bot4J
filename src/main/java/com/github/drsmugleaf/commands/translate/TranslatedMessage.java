@@ -9,6 +9,7 @@ import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,9 +36,14 @@ public class TranslatedMessage {
         for (BridgedChannel bridgedChannel : bridgedChannels) {
             Languages channelLanguage = bridgedChannel.channelLanguage;
             Languages bridgedLanguage = bridgedChannel.bridgedLanguage;
-            String translation = API.translate(channelLanguage, bridgedLanguage, MESSAGE.getFormattedContent());
-            if (translation == null) {
-                continue;
+
+            String content = MESSAGE.getFormattedContent();
+            String translation = null;
+            if (!content.isEmpty()) {
+                translation = API.translate(channelLanguage, bridgedLanguage, content);
+                if (translation == null) {
+                    continue;
+                }
             }
 
             translation = formatMessage(translation);
@@ -86,11 +92,15 @@ public class TranslatedMessage {
     }
 
     @Nonnull
-    String formatMessage(@Nonnull String translation) {
+    String formatMessage(@Nullable String translation) {
         IGuild guild = MESSAGE.getGuild();
         String authorName = MESSAGE.getAuthor().getDisplayName(guild);
 
-        StringBuilder message = new StringBuilder("**" + authorName + "**: " + translation);
+        StringBuilder message = new StringBuilder("**" + authorName + "**: ");
+        if (translation != null) {
+            message.append(translation);
+        }
+
         for (IMessage.Attachment attachment : MESSAGE.getAttachments()) {
             message
                     .append("\n")
