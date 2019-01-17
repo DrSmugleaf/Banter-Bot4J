@@ -20,7 +20,7 @@ public class Translator {
     @Nonnull
     private static final Cache<Long, TranslatedMessage> MESSAGES = CacheBuilder
             .newBuilder()
-            .expireAfterWrite(1, TimeUnit.MINUTES)
+            .expireAfterWrite(5, TimeUnit.MINUTES)
             .build();
 
     @EventSubscriber
