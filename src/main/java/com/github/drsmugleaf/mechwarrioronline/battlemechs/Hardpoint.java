@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.mechwarrioronline.battlemechs;
 
+import com.github.drsmugleaf.mechwarrioronline.equipment.Hardpoints;
 import org.jetbrains.annotations.NotNull;
 
 /**

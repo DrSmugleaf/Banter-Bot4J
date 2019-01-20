@@ -1,7 +1,6 @@
 package com.github.drsmugleaf.mechwarrioronline.equipment;
 
 import com.github.drsmugleaf.mechwarrioronline.Factions;
-import com.github.drsmugleaf.mechwarrioronline.battlemechs.Hardpoints;
 import com.opencsv.*;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import org.jetbrains.annotations.NotNull;

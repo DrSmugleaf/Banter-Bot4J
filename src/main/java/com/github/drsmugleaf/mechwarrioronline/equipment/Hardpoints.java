@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.mechwarrioronline.battlemechs;
+package com.github.drsmugleaf.mechwarrioronline.equipment;
 
 import org.jetbrains.annotations.NotNull;
 
