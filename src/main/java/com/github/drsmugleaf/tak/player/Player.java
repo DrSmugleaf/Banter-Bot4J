@@ -43,7 +43,7 @@ public abstract class Player {
                         continue;
                     }
 
-                    for (int amount = 0; amount < GAME.getBoard().getPreset().getCarryLimit(); amount++) {
+                    for (int amount = 1; amount < GAME.getBoard().getPreset().getCarryLimit(); amount++) {
                         if (canMove(origin, destination, amount)) {
                             moves.add(new MovingCoordinates(origin, destination, amount));
                         }

@@ -154,9 +154,9 @@ public class Board {
         AdjacentSquares adjacent = getAdjacent(origin);
 
         return column < COLUMNS.length &&
-               COLUMNS[column].canMove(row, destination, pieces) &&
                pieces <= PRESET.getCarryLimit() &&
-               adjacent.contains(destination);
+               adjacent.contains(destination) &&
+               COLUMNS[column].canMove(row, destination, pieces);
     }
 
     @NotNull

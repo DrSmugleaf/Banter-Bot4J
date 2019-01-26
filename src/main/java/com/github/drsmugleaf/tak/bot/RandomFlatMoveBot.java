@@ -40,7 +40,6 @@ public class RandomFlatMoveBot extends RandomFlatBot {
             return null;
         }
 
-
         boolean move = ThreadLocalRandom.current().nextBoolean();
         if (move && getHand().getPieces() < getGame().getBoard().getPreset().getStones()) {
             List<MovingCoordinates> availableMoves = getAvailableMoves(type);

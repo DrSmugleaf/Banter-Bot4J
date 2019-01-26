@@ -17,7 +17,7 @@ public class MovingCoordinates extends Coordinates {
     private final int PIECES;
 
     public MovingCoordinates(@NotNull Square origin, @NotNull Square destination, int pieces) {
-        super(origin.getColumn(), origin.getRow(), origin.getTopPiece().getType());
+        super(origin.getColumn(), destination.getRow(), origin.getTopPiece().getType());
         ORIGIN = origin;
         DESTINATION = destination;
         PIECES = pieces;

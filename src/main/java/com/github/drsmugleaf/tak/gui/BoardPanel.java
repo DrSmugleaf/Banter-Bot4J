@@ -33,7 +33,7 @@ public class BoardPanel {
 
         for (SquareButton[] row : pieces) {
             for (SquareButton square : row) {
-                board.add(square.toJButton());
+                board.add(square.getButton());
             }
         }
     }

@@ -25,9 +25,8 @@ public class SquareButton {
     @NotNull
     private final JButton BUTTON;
 
-    private final int ROW;
-
     private final int COLUMN;
+    private final int ROW;
 
     protected SquareButton(int size, int column, int row) {
         SIZE = size;
@@ -80,11 +79,6 @@ public class SquareButton {
     }
 
     @NotNull
-    protected JButton toJButton() {
-        return BUTTON;
-    }
-
-    @NotNull
     protected JButton update(@NotNull Square square) {
         List<Piece> pieces = square.getPieces();
         Image background = getDefaultImage();
@@ -113,7 +107,15 @@ public class SquareButton {
 
         BUTTON.setIcon(new ImageIcon(background));
 
-        return toJButton();
+        return getButton();
+    }
+
+    public int getColumn() {
+        return COLUMN;
+    }
+
+    public int getRow() {
+        return ROW;
     }
 
 }
