@@ -11,6 +11,7 @@ import javafx.util.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -18,9 +19,9 @@ import java.util.function.Function;
  */
 public class MinimaxFlatBot extends Bot {
 
-    private final int DEPTH;
+    protected final int DEPTH;
 
-    private MinimaxFlatBot(@NotNull String name, @NotNull Game game, @NotNull Color color, @NotNull Preset preset, int depth) {
+    protected MinimaxFlatBot(@NotNull String name, @NotNull Game game, @NotNull Color color, @NotNull Preset preset, int depth) {
         super(name, game, color, preset);
         DEPTH = depth;
     }
@@ -47,8 +48,16 @@ public class MinimaxFlatBot extends Bot {
             return null;
         }
 
-        Game game = getGame();
-        return getMax(game.getBoard(), game.getNextPlayer().getColor(), Integer.MIN_VALUE, Integer.MAX_VALUE, DEPTH).getKey();
+        return getBestPlace().getKey();
+    }
+
+    @NotNull
+    protected Pair<Coordinates, Integer> getBestPlace() {
+        Board board = getGame().getBoard();
+        Color nextColor = getGame().getNextPlayer().getColor();
+        List<Coordinates> availablePlaces = getAvailablePlaces(Type.FLAT_STONE);
+
+        return getMax(availablePlaces, board, nextColor, Integer.MIN_VALUE, Integer.MAX_VALUE, DEPTH);
     }
 
     private boolean isTerminal(@NotNull Board board) {
@@ -95,17 +104,16 @@ public class MinimaxFlatBot extends Bot {
     }
 
     @NotNull
-    private Pair<Coordinates, Integer> getMax(@NotNull Board board, @NotNull Color nextPlayer, int alpha, int beta, final int depth) {
+    protected final Pair<Coordinates, Integer> getMax(@NotNull List<? extends Coordinates> moves, @NotNull Board board, @NotNull Color nextPlayer, int alpha, int beta, final int depth) {
         Coordinates bestMove = null;
         int score = 0;
 
-        for (Coordinates coordinates : getAvailablePlaces(board, Type.FLAT_STONE)) {
-            Piece piece = new Piece(nextPlayer, Type.FLAT_STONE);
+        for (Coordinates coordinates : moves) {
             int finalAlpha = alpha;
             int finalBeta = beta;
-            score = board.with(piece, coordinates.getColumn(), coordinates.getRow(), copy -> {
+            score = coordinates.with(board, nextPlayer, copy -> {
                 if (depth > 1 && !isTerminal(copy)) {
-                    return getMax(copy, nextPlayer.getOpposite(), finalAlpha, finalBeta, depth - 1).getValue();
+                    return getMax(getAvailablePlaces(copy, Type.FLAT_STONE), copy, nextPlayer.getOpposite(), finalAlpha, finalBeta, depth - 1).getValue();
                 } else {
                     return getScore(copy);
                 }

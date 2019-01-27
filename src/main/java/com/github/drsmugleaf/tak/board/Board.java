@@ -7,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * Created by DrSmugleaf on 01/12/2018
@@ -176,7 +175,7 @@ public class Board {
     }
 
     @NotNull
-    private Square remove(@NotNull Piece piece, int column, int row) {
+    protected Square remove(@NotNull Piece piece, int column, int row) {
         return COLUMNS[column].remove(piece, row);
     }
 
@@ -353,14 +352,6 @@ public class Board {
         }
 
         return true;
-    }
-
-    public int with(@NotNull Piece piece, int column, int row, @NotNull Function<Board, Integer> function) {
-        place(piece, column, row);
-        Integer result = function.apply(this);
-        remove(piece, column, row);
-
-        return result;
     }
 
     public boolean isFull() {

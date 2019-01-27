@@ -1,8 +1,12 @@
 package com.github.drsmugleaf.tak.board;
 
+import com.github.drsmugleaf.tak.pieces.Color;
+import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Function;
 
 /**
  * Created by DrSmugleaf on 26/12/2018
@@ -48,6 +52,15 @@ public class Coordinates {
 
     public void place(@NotNull Player player) {
         player.place(PIECE, COLUMN, ROW);
+    }
+
+    public int with(@NotNull Board board, @NotNull Color nextPlayer, @NotNull Function<Board, Integer> function) {
+        Piece piece = new Piece(nextPlayer, PIECE);
+        board.place(piece, COLUMN, ROW);
+        Integer result = function.apply(board);
+        board.remove(piece, COLUMN, ROW);
+
+        return result;
     }
 
 }

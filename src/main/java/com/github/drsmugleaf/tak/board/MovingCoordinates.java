@@ -1,7 +1,10 @@
 package com.github.drsmugleaf.tak.board;
 
+import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.player.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Function;
 
 /**
  * Created by DrSmugleaf on 01/01/2019
@@ -39,6 +42,15 @@ public class MovingCoordinates extends Coordinates {
     @Override
     public void place(@NotNull Player player) {
         move(player);
+    }
+
+    @Override
+    public int with(@NotNull Board board, @NotNull Color nextPlayer, @NotNull Function<Board, Integer> function) {
+        board.move(ORIGIN, DESTINATION, PIECES);
+        Integer result = function.apply(board);
+        board.move(DESTINATION, ORIGIN, PIECES);
+
+        return result;
     }
 
 }

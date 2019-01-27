@@ -30,7 +30,7 @@ public abstract class Player {
     }
 
     @NotNull
-    public final List<MovingCoordinates> getAvailableMoves(@NotNull Board board, @NotNull Type type) {
+    public final List<MovingCoordinates> getAvailableMoves(@NotNull Board board) {
         List<MovingCoordinates> moves = new ArrayList<>();
 
         Line[] rows = board.getRows();
@@ -56,8 +56,8 @@ public abstract class Player {
     }
 
     @NotNull
-    public final List<MovingCoordinates> getAvailableMoves(@NotNull Type type) {
-        return getAvailableMoves(getGame().getBoard(), type);
+    public final List<MovingCoordinates> getAvailableMoves() {
+        return getAvailableMoves(getGame().getBoard());
     }
 
     @NotNull

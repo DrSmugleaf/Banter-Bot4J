@@ -5,7 +5,6 @@ import com.github.drsmugleaf.tak.board.Coordinates;
 import com.github.drsmugleaf.tak.board.MovingCoordinates;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.pieces.Color;
-import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
 import org.jetbrains.annotations.NotNull;
@@ -31,27 +30,14 @@ public class RandomFlatMoveBot extends RandomFlatBot {
     @Nullable
     @Override
     public Coordinates getNextMove() {
-        Type type;
-        if (getHand().has(Type.FLAT_STONE)) {
-            type = Type.FLAT_STONE;
-        } else if (getHand().has(Type.CAPSTONE)) {
-            type = Type.CAPSTONE;
-        } else {
-            return null;
-        }
-
         boolean move = ThreadLocalRandom.current().nextBoolean();
-        if (move && getHand().getPieces() < getGame().getBoard().getPreset().getStones()) {
-            List<MovingCoordinates> availableMoves = getAvailableMoves(type);
-            if (availableMoves.isEmpty()) {
-                return null;
-            }
-
-            int random = ThreadLocalRandom.current().nextInt(availableMoves.size());
-            return availableMoves.get(random);
-        } else {
+        List<MovingCoordinates> availableMoves = getAvailableMoves();
+        if (!move || availableMoves.isEmpty()) {
             return super.getNextMove();
         }
+
+        int random = ThreadLocalRandom.current().nextInt(availableMoves.size());
+        return availableMoves.get(random);
     }
 
 }

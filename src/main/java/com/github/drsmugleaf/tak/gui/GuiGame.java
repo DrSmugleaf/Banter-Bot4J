@@ -59,6 +59,7 @@ public class GuiGame extends Game {
         return frame;
     }
 
+    @NotNull
     @Override
     public Square move(Player player, @NotNull Square origin, @NotNull Square destination, int pieces) {
         Square square = super.move(player, origin, destination, pieces);

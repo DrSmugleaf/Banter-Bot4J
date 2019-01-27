@@ -30,16 +30,11 @@ public class RandomFlatBot extends Bot {
     @Nullable
     @Override
     public Coordinates getNextMove() {
-        Type type;
-        if (getHand().has(Type.FLAT_STONE)) {
-            type = Type.FLAT_STONE;
-        } else if (getHand().has(Type.CAPSTONE)) {
-            type = Type.CAPSTONE;
-        } else {
+        if (!getHand().has(Type.FLAT_STONE)) {
             return null;
         }
 
-        List<Coordinates> availablePlaces = getAvailablePlaces(type);
+        List<Coordinates> availablePlaces = getAvailablePlaces(Type.FLAT_STONE);
         if (availablePlaces.isEmpty()) {
             return null;
         }
