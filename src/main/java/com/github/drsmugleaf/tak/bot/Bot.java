@@ -21,7 +21,7 @@ public abstract class Bot extends Player {
     public abstract Coordinates getNextMove();
 
     @Override
-    public void nextTurn() {
+    public final void nextTurn() {
         Coordinates move = getNextMove();
         if (move == null) {
             surrender();

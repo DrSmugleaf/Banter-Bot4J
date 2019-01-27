@@ -7,7 +7,6 @@ import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,36 +51,22 @@ public class GuiGame extends Game {
 
             frame.setMinimumSize(frame.getSize());
             frame.setVisible(true);
-
-            start();
         });
 
         return frame;
     }
 
-    @NotNull
     @Override
-    public Square move(Player player, @NotNull Square origin, @NotNull Square destination, int pieces) {
-        Square square = super.move(player, origin, destination, pieces);
+    public void onPieceMove(@NotNull Player player, @NotNull Square origin, @NotNull Square destination, int pieces) {
         BOARD_PANEL.pieces[origin.getRow()][origin.getColumn()].update(origin);
         BOARD_PANEL.pieces[destination.getRow()][destination.getColumn()].update(destination);
-        return square;
     }
 
-    @NotNull
     @Override
-    public Square place(@NotNull Player player, @NotNull Type type, int column, int row) {
-        Square square = super.place(player, type, column, row);
+    public void onPiecePlace(@NotNull Player player, @NotNull Type type, @NotNull Square square) {
+        int column = square.getColumn();
+        int row = square.getRow();
         BOARD_PANEL.pieces[row][column].update(square);
-        return square;
-    }
-
-    @Nullable
-    @Override
-    public Player start() {
-        Thread thread = new Thread(super::start);
-        thread.start();
-        return getWinner();
     }
 
 }

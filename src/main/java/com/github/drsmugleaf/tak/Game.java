@@ -70,7 +70,7 @@ public class Game {
     }
 
     public boolean canMove(@NotNull Player player, @NotNull Square origin, @NotNull Square destination, int pieces) {
-        return nextPlayer == player && BOARD.canMove(origin, destination, pieces);
+        return isActive() && nextPlayer == player && BOARD.canMove(origin, destination, pieces);
     }
 
     @NotNull
@@ -79,11 +79,13 @@ public class Game {
             throw new IllegalStateException("Invalid move call, origin " + origin + ", destination " + destination + " and pieces " + pieces);
         }
 
-        return BOARD.move(origin, destination, pieces);
+        Square square = BOARD.move(origin, destination, pieces);
+        onPieceMove(player, origin, destination, pieces);
+        return square;
     }
 
     public boolean canPlace(@NotNull Player player, int column, int row) {
-        return nextPlayer == player && BOARD.canPlace(column, row);
+        return isActive() && nextPlayer == player && BOARD.canPlace(column, row);
     }
 
     @NotNull
@@ -93,7 +95,9 @@ public class Game {
         }
 
         Piece piece = player.getHand().takePiece(type);
-        return BOARD.place(piece, column, row);
+        Square square = BOARD.place(piece, column, row);
+        onPiecePlace(player, type, square);
+        return square;
     }
 
     @Nullable
@@ -114,9 +118,8 @@ public class Game {
         }
 
         Player winner = PLAYERS.get(winningColor);
-        this.winner = winner;
-        active = false;
-        return winner;
+        setWinner(winner);
+        return getWinner();
     }
 
     @Nullable
@@ -147,39 +150,60 @@ public class Game {
         return active;
     }
 
+    public void end() {
+        active = false;
+    }
+
     @Nullable
     public Player getWinner() {
         return winner;
     }
 
+    private void setWinner(@Nullable Player winner) {
+        this.winner = winner;
+    }
+
     public void surrender(@NotNull Player loser) {
-        if (winner != null) {
+        if (!isActive()) {
             throw new IllegalStateException("Game already ended");
         }
 
-        winner = getOtherPlayer(loser);
-        active = false;
+        setWinner(getOtherPlayer(loser));
+        end();
     }
 
     @Nullable
     public Player start() {
-        Player winner = null;
-
         while (isActive()) {
-            nextPlayer.nextTurn();
-
-            winner = checkVictory();
-            if (winner != null) {
-                break;
-            } else if (!nextPlayer.getHand().hasAny() || getBoard().isFull()) {
-                winner = forceVictory();
-                break;
-            }
-
-            nextPlayer = getOtherPlayer(nextPlayer);
+            nextTurn();
         }
 
-        return winner;
+        onGameEnd(getWinner());
+
+        return getWinner();
     }
+
+    protected void nextTurn() {
+        nextPlayer.nextTurn();
+
+        setWinner(checkVictory());
+        if (getWinner() != null) {
+            end();
+        } else if (!nextPlayer.getHand().hasAny() || getBoard().isFull()) {
+            setWinner(forceVictory());
+            end();
+        }
+
+        nextPlayer = getOtherPlayer(nextPlayer);
+        onTurnEnd(getOtherPlayer(nextPlayer));
+    }
+
+    protected void onPieceMove(@NotNull Player player, @NotNull Square origin, @NotNull Square destination, int pieces) {}
+
+    protected void onPiecePlace(@NotNull Player player, @NotNull Type type, @NotNull Square square) {}
+
+    protected void onTurnEnd(@NotNull Player player) {}
+
+    protected void onGameEnd(@Nullable Player winner) {}
 
 }

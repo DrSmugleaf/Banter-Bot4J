@@ -135,11 +135,12 @@ public class Square {
     }
 
     public boolean connectsTo(@Nullable Piece piece) {
-        if (piece == null || getTopPiece() == null) {
+        Piece topPiece = getTopPiece();
+        if (piece == null || topPiece == null) {
             return false;
         }
 
-        return getColor() == piece.getColor() && getTopPiece().getType().formsRoad() && piece.getType().formsRoad();
+        return getColor() == piece.getColor() && topPiece.getType().formsRoad() && piece.getType().formsRoad();
     }
 
     public boolean connectsTo(@Nullable Square square) {
