@@ -30,6 +30,15 @@ public abstract class Player {
     }
 
     @NotNull
+    public final List<Coordinates> getAvailableActions(@NotNull Board board, @NotNull Type type) {
+        List<MovingCoordinates> moves = getAvailableMoves();
+        List<Coordinates> places = getAvailablePlaces(board, type);
+        places.addAll(moves);
+
+        return places;
+    }
+
+    @NotNull
     public List<Coordinates> getAvailableActions(@NotNull Board board) {
         List<MovingCoordinates> moves = getAvailableMoves(board);
         List<Coordinates> places = getAvailablePlaces(board);

@@ -1,55 +1,30 @@
-package com.github.drsmugleaf.tak.bot;
+package com.github.drsmugleaf.tak.bot.minimax;
 
 import com.github.drsmugleaf.tak.Game;
 import com.github.drsmugleaf.tak.board.*;
+import com.github.drsmugleaf.tak.bot.Bot;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
-import com.github.drsmugleaf.tak.pieces.Type;
-import com.github.drsmugleaf.tak.player.Player;
-import com.github.drsmugleaf.tak.player.PlayerInformation;
 import javafx.util.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Function;
 
 /**
- * Created by DrSmugleaf on 26/12/2018
+ * Created by DrSmugleaf on 16/03/2019
  */
-public class MinimaxFlatBot extends Bot {
+public abstract class MinimaxBot extends Bot {
 
     protected final int DEPTH;
 
-    protected MinimaxFlatBot(@NotNull String name, @NotNull Game game, @NotNull Color color, @NotNull Preset preset, int depth) {
+    protected MinimaxBot(@NotNull String name, @NotNull Game game, @NotNull Color color, @NotNull Preset preset, int depth) {
         super(name, game, color, preset);
         DEPTH = depth;
     }
 
-    @NotNull
-    public static Player from(@NotNull PlayerInformation information, int depth) {
-        return new MinimaxFlatBot(information.NAME, information.GAME, information.COLOR, information.PRESET, depth);
-    }
-
-    @NotNull
-    public static Function<PlayerInformation, Player> from(int depth) {
-        return information -> from(information, depth);
-    }
-
-    @NotNull
-    public static Player from(@NotNull PlayerInformation information) {
-        return from(information, 3);
-    }
-
-    @NotNull
     @Override
-    public List<Coordinates> getAvailableActions(@NotNull Board board) {
-        return getAvailablePlaces(board, Type.FLAT_STONE);
-    }
-
-    @Nullable
-    @Override
-    public Coordinates getNextMove() {
+    public @Nullable Coordinates getNextMove() {
         return getBestPlace().getKey();
     }
 

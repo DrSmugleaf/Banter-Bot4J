@@ -26,6 +26,7 @@ public class BoardPanel extends Board {
     private BoardPanel(@NotNull Preset preset, @NotNull SquareButton[][] squares) {
         super(squares);
         BUTTONS = squares;
+
         int dimensions = preset.getSize();
         BOARD = new JPanel(new GridLayout(0, dimensions));
 

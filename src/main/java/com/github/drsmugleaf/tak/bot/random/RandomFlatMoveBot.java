@@ -1,11 +1,11 @@
-package com.github.drsmugleaf.tak.bot;
+package com.github.drsmugleaf.tak.bot.random;
 
 import com.github.drsmugleaf.tak.Game;
 import com.github.drsmugleaf.tak.board.Board;
 import com.github.drsmugleaf.tak.board.Coordinates;
-import com.github.drsmugleaf.tak.board.MovingCoordinates;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.pieces.Color;
+import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 05/01/2019
  */
-public class RandomFlatMoveBot extends RandomFlatBot {
+public class RandomFlatMoveBot extends RandomBot {
 
     protected RandomFlatMoveBot(@NotNull String name, @NotNull Game game, @NotNull Color color, @NotNull Preset preset) {
         super(name, game, color, preset);
@@ -29,11 +29,7 @@ public class RandomFlatMoveBot extends RandomFlatBot {
     @NotNull
     @Override
     public List<Coordinates> getAvailableActions(@NotNull Board board) {
-        List<MovingCoordinates> moves = getAvailableMoves(board);
-        List<Coordinates> places = getAvailablePlaces(board);
-        places.addAll(moves);
-
-        return places;
+        return getAvailableActions(board, Type.FLAT_STONE);
     }
 
 }
