@@ -30,6 +30,20 @@ public abstract class Player {
     }
 
     @NotNull
+    public List<Coordinates> getAvailableActions(@NotNull Board board) {
+        List<MovingCoordinates> moves = getAvailableMoves(board);
+        List<Coordinates> places = getAvailablePlaces(board);
+        places.addAll(moves);
+
+        return places;
+    }
+
+    @NotNull
+    public final List<Coordinates> getAvailableActions() {
+        return getAvailableActions(getGame().getBoard());
+    }
+
+    @NotNull
     public final List<MovingCoordinates> getAvailableMoves(@NotNull Board board) {
         List<MovingCoordinates> moves = new ArrayList<>();
 
@@ -78,8 +92,29 @@ public abstract class Player {
     }
 
     @NotNull
+    public final List<Coordinates> getAvailablePlaces(@NotNull Board board, @NotNull List<Type> types) {
+        List<Coordinates> places = new ArrayList<>();
+
+        for (Type type : types) {
+            places.addAll(getAvailablePlaces(board, type));
+        }
+
+        return places;
+    }
+
+    @NotNull
+    public final List<Coordinates> getAvailablePlaces(@NotNull Board board) {
+        return getAvailablePlaces(board, Type.getTypes());
+    }
+
+    @NotNull
     public final List<Coordinates> getAvailablePlaces(@NotNull Type type) {
         return getAvailablePlaces(getGame().getBoard(), type);
+    }
+
+    @NotNull
+    public final List<Coordinates> getAvailablePlaces() {
+        return getAvailablePlaces(getGame().getBoard(), Type.getTypes());
     }
 
     @NotNull

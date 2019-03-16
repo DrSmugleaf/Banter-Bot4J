@@ -6,11 +6,10 @@ import com.github.drsmugleaf.tak.board.Coordinates;
 import com.github.drsmugleaf.tak.board.MovingCoordinates;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.pieces.Color;
+import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
-import javafx.util.Pair;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Function;
@@ -39,26 +38,14 @@ public class MinimaxFlatMoveBot extends MinimaxFlatBot {
         return from(information, 3);
     }
 
-    @Nullable
+    @NotNull
     @Override
-    public Coordinates getNextMove() {
-        List<MovingCoordinates> availableMoves = getAvailableMoves();
-        if (availableMoves.isEmpty()) {
-            return super.getNextMove();
-        }
+    public List<Coordinates> getAvailableActions(@NotNull Board board) {
+        List<MovingCoordinates> moves = getAvailableMoves(board);
+        List<Coordinates> places = getAvailablePlaces(board, Type.FLAT_STONE);
+        places.addAll(moves);
 
-        Board board = getGame().getBoard();
-        Color nextColor = getGame().getNextPlayer().getColor();
-        Pair<Coordinates, Integer> move = getMax(availableMoves, board, nextColor, Integer.MIN_VALUE, Integer.MAX_VALUE, DEPTH);
-        Integer moveScore = move.getValue();
-        Pair<Coordinates, Integer> place = getBestPlace();
-        Integer placeScore = place.getValue();
-
-        if (moveScore > placeScore) {
-            return move.getKey();
-        } else {
-            return place.getKey();
-        }
+        return places;
     }
 
 }

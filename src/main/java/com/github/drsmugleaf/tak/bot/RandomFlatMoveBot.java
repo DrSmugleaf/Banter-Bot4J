@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.tak.bot;
 
 import com.github.drsmugleaf.tak.Game;
+import com.github.drsmugleaf.tak.board.Board;
 import com.github.drsmugleaf.tak.board.Coordinates;
 import com.github.drsmugleaf.tak.board.MovingCoordinates;
 import com.github.drsmugleaf.tak.board.Preset;
@@ -8,10 +9,8 @@ import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by DrSmugleaf on 05/01/2019
@@ -27,17 +26,14 @@ public class RandomFlatMoveBot extends RandomFlatBot {
         return new RandomFlatMoveBot(information.NAME, information.GAME, information.COLOR, information.PRESET);
     }
 
-    @Nullable
+    @NotNull
     @Override
-    public Coordinates getNextMove() {
-        boolean move = ThreadLocalRandom.current().nextBoolean();
-        List<MovingCoordinates> availableMoves = getAvailableMoves();
-        if (!move || availableMoves.isEmpty()) {
-            return super.getNextMove();
-        }
+    public List<Coordinates> getAvailableActions(@NotNull Board board) {
+        List<MovingCoordinates> moves = getAvailableMoves(board);
+        List<Coordinates> places = getAvailablePlaces(board);
+        places.addAll(moves);
 
-        int random = ThreadLocalRandom.current().nextInt(availableMoves.size());
-        return availableMoves.get(random);
+        return places;
     }
 
 }

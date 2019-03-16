@@ -41,13 +41,15 @@ public class MinimaxFlatBot extends Bot {
         return from(information, 3);
     }
 
+    @NotNull
+    @Override
+    public List<Coordinates> getAvailableActions(@NotNull Board board) {
+        return getAvailablePlaces(board, Type.FLAT_STONE);
+    }
+
     @Nullable
     @Override
     public Coordinates getNextMove() {
-        if (!getHand().has(Type.FLAT_STONE)) {
-            return null;
-        }
-
         return getBestPlace().getKey();
     }
 
@@ -55,9 +57,8 @@ public class MinimaxFlatBot extends Bot {
     protected Pair<Coordinates, Integer> getBestPlace() {
         Board board = getGame().getBoard();
         Color nextColor = getGame().getNextPlayer().getColor();
-        List<Coordinates> availablePlaces = getAvailablePlaces(Type.FLAT_STONE);
 
-        return getMax(availablePlaces, board, nextColor, Integer.MIN_VALUE, Integer.MAX_VALUE, DEPTH);
+        return getMax(getAvailableActions(), board, nextColor, Integer.MIN_VALUE, Integer.MAX_VALUE, DEPTH);
     }
 
     private boolean isTerminal(@NotNull Board board) {
@@ -113,7 +114,8 @@ public class MinimaxFlatBot extends Bot {
             int finalBeta = beta;
             score = coordinates.with(board, nextPlayer, copy -> {
                 if (depth > 1 && !isTerminal(copy)) {
-                    return getMax(getAvailablePlaces(copy, Type.FLAT_STONE), copy, nextPlayer.getOpposite(), finalAlpha, finalBeta, depth - 1).getValue();
+                    List<Coordinates> availableActions = getGame().getPlayer(nextPlayer.getOpposite()).getAvailableActions(copy);
+                    return getMax(availableActions, copy, nextPlayer.getOpposite(), finalAlpha, finalBeta, depth - 1).getValue();
                 } else {
                     return getScore(copy);
                 }

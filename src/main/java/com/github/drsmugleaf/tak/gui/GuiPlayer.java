@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.tak.gui;
 
-import com.github.drsmugleaf.tak.Game;
 import com.github.drsmugleaf.tak.board.Coordinates;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.pieces.Color;
@@ -21,15 +20,12 @@ public class GuiPlayer extends Player {
     @NotNull
     private Coordinates NEXT_MOVE;
 
-    public GuiPlayer(@NotNull String name, @NotNull Game game, @NotNull Color color, @NotNull Preset preset) {
+    public GuiPlayer(@NotNull String name, @NotNull GuiGame game, @NotNull Color color, @NotNull Preset preset) {
         super(name, game, color, preset);
 
-        if (!(game instanceof GuiGame)) {
-            throw new IllegalArgumentException("Can't add " + GuiPlayer.class + " to game instance that isn't " + GuiGame.class);
-        }
-        GAME = (GuiGame) game;
+        GAME = game;
 
-        SquareButton[][] pieces = GAME.BOARD_PANEL.pieces;
+        SquareButton[][] pieces = GAME.getBoardPanel().getButtons();
         for (SquareButton[] row : pieces) {
             for (SquareButton square : row) {
                 JButton button = square.getButton();
@@ -39,7 +35,7 @@ public class GuiPlayer extends Player {
     }
 
     @NotNull
-    public static Player from(@NotNull PlayerInformation information) {
+    public static Player from(@NotNull PlayerInformation<GuiGame> information) {
         return new GuiPlayer(information.NAME, information.GAME, information.COLOR, information.PRESET);
     }
 
@@ -47,7 +43,7 @@ public class GuiPlayer extends Player {
     public void nextTurn() {
         try {
             synchronized (this) {
-                this.wait();
+                wait();
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

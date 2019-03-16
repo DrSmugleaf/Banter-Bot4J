@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.tak.gui;
 
+import com.github.drsmugleaf.tak.board.Board;
 import com.github.drsmugleaf.tak.board.Preset;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,31 +12,61 @@ import java.awt.*;
 /**
  * Created by DrSmugleaf on 25/12/2018
  */
-public class BoardPanel {
+public class BoardPanel extends Board {
 
     @NotNull
-    protected final JPanel gui = new JPanel(new BorderLayout(3, 3));
+    private final JPanel GUI = new JPanel(new BorderLayout(3, 3));
 
     @NotNull
-    protected final SquareButton[][] pieces;
+    private final JPanel BOARD;
 
     @NotNull
-    protected final JPanel board;
+    private final SquareButton[][] BUTTONS;
 
-    protected BoardPanel(@NotNull Preset preset) {
+    private BoardPanel(@NotNull Preset preset, @NotNull SquareButton[][] squares) {
+        super(squares);
+        BUTTONS = squares;
         int dimensions = preset.getSize();
-        pieces = SquareButton.fromPreset(preset);
-        board = new JPanel(new GridLayout(0, dimensions));
+        BOARD = new JPanel(new GridLayout(0, dimensions));
 
-        gui.setBorder(new EmptyBorder(5, 5, 5, 5));
-        board.setBorder(new LineBorder(Color.BLACK));
-        gui.add(board);
+        GUI.setBorder(new EmptyBorder(5, 5, 5, 5));
+        BOARD.setBorder(new LineBorder(Color.BLACK));
+        GUI.add(BOARD);
 
-        for (SquareButton[] row : pieces) {
-            for (SquareButton square : row) {
-                board.add(square.getButton());
+        for (SquareButton[] column : squares) {
+            for (SquareButton square : column) {
+                BOARD.add(square.getButton());
             }
         }
+    }
+
+    @NotNull
+    public static BoardPanel from(@NotNull Preset preset) {
+        int dimensions = preset.getSize();
+        SquareButton[][] board = new SquareButton[dimensions][dimensions];
+        for (int i = 0; i < board.length; i++) {
+            SquareButton[] row = board[i];
+            for (int j = 0; j < row.length; j++) {
+                board[i][j] = new SquareButton(i, j, preset);
+            }
+        }
+
+        return new BoardPanel(preset, board);
+    }
+
+    @NotNull
+    protected JPanel getGui() {
+        return GUI;
+    }
+
+    @NotNull
+    protected JPanel getBoard() {
+        return BOARD;
+    }
+
+    @NotNull
+    protected SquareButton[][] getButtons() {
+        return BUTTONS;
     }
 
 }

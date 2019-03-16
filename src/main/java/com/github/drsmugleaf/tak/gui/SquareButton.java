@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 25/12/2018
  */
-public class SquareButton {
+public class SquareButton extends Square {
 
     private static final int SINGLE_SQUARE_SIZE = 800;
 
@@ -25,13 +25,9 @@ public class SquareButton {
     @NotNull
     private final JButton BUTTON;
 
-    private final int COLUMN;
-    private final int ROW;
-
-    protected SquareButton(int size, int column, int row) {
-        SIZE = size;
-        COLUMN = column;
-        ROW = row;
+    protected SquareButton(int column, int row, @NotNull Preset preset) {
+        super(column, row);
+        SIZE = SINGLE_SQUARE_SIZE / preset.getSize();
 
         JButton button = new JButton();
         button.setMargin(margin);
@@ -47,23 +43,9 @@ public class SquareButton {
     }
 
     @NotNull
-    protected static SquareButton[][] fromPreset(@NotNull Preset preset) {
-        int size = preset.getSize();
-        SquareButton[][] squares = new SquareButton[size][size];
-
-        for (int i = 0; i < squares.length; i++) {
-            for (int j = 0; j < squares[i].length; j++) {
-                squares[i][j] = new SquareButton(SINGLE_SQUARE_SIZE / size, j, i);
-            }
-        }
-
-        return squares;
-    }
-
-    @NotNull
     private Image getDefaultImage() {
         String file;
-        if ((COLUMN + ROW) % 2 == 0) {
+        if ((getColumn() + getRow()) % 2 == 0) {
             file = "squares/white square.jpg";
         } else {
             file = "squares/orange square.jpg";
@@ -78,9 +60,9 @@ public class SquareButton {
         return background;
     }
 
-    @NotNull
-    protected JButton update(@NotNull Square square) {
-        List<Piece> pieces = square.getPieces();
+    @Override
+    protected void onUpdate() {
+        List<Piece> pieces = getPieces();
         Image background = getDefaultImage();
         Graphics g = background.getGraphics();
         int backgroundHeight = background.getHeight(null);
@@ -104,18 +86,7 @@ public class SquareButton {
         }
 
         g.dispose();
-
         BUTTON.setIcon(new ImageIcon(background));
-
-        return getButton();
-    }
-
-    public int getColumn() {
-        return COLUMN;
-    }
-
-    public int getRow() {
-        return ROW;
     }
 
 }

@@ -56,9 +56,9 @@ public class Coordinates {
 
     public int with(@NotNull Board board, @NotNull Color nextPlayer, @NotNull Function<Board, Integer> function) {
         Piece piece = new Piece(nextPlayer, PIECE);
-        board.place(piece, COLUMN, ROW);
+        board.placeSilent(piece, COLUMN, ROW);
         Integer result = function.apply(board);
-        board.remove(piece, COLUMN, ROW);
+        board.removeSilent(piece, COLUMN, ROW);
 
         return result;
     }

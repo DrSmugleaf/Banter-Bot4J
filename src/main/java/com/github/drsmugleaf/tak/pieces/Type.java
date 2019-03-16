@@ -3,6 +3,8 @@ package com.github.drsmugleaf.tak.pieces;
 import com.github.drsmugleaf.tak.board.Square;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -30,6 +32,9 @@ public enum Type {
     STANDING_STONE("wall.png", true, false, false);
 
     @NotNull
+    private static final List<Type> TYPES = Collections.unmodifiableList(Arrays.asList(values()));
+
+    @NotNull
     private final String FILE_NAME;
     private final boolean BLOCKS;
     private final boolean IGNORES_BLOCK;
@@ -40,6 +45,11 @@ public enum Type {
         BLOCKS = blocks;
         IGNORES_BLOCK = ignoresBlock;
         FORMS_ROAD = formsRoad;
+    }
+
+    @NotNull
+    public static List<Type> getTypes() {
+        return TYPES;
     }
 
     @NotNull

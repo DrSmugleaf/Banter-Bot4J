@@ -27,8 +27,8 @@ public class Line {
     }
 
     @NotNull
-    public Square move(int origin, @NotNull Square destination, int pieces) {
-        return SQUARES[origin].move(destination, pieces);
+    public Square move(int origin, @NotNull Square destination, int pieces, boolean silent) {
+        return SQUARES[origin].move(destination, pieces, silent);
     }
 
     public boolean canPlace(int location) {
@@ -36,13 +36,13 @@ public class Line {
     }
 
     @NotNull
-    public Square place(@NotNull Piece piece, int location) {
-        return SQUARES[location].place(piece);
+    public Square place(@NotNull Piece piece, int location, boolean silent) {
+        return SQUARES[location].place(piece, silent);
     }
 
     @NotNull
-    public Square remove(@NotNull Piece piece, int location) {
-        return SQUARES[location].remove(piece);
+    public Square remove(@NotNull Piece piece, int location, boolean silent) {
+        return SQUARES[location].remove(piece, silent);
     }
 
     protected void setSquare(int i, @NotNull Square square) {

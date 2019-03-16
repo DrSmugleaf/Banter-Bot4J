@@ -26,29 +26,21 @@ public class MovingCoordinates extends Coordinates {
         PIECES = pieces;
     }
 
-    public boolean canMove(@NotNull Player player) {
-        return player.canMove(ORIGIN, DESTINATION, PIECES);
-    }
-
-    public void move(@NotNull Player player) {
-        player.move(ORIGIN, DESTINATION, PIECES);
-    }
-
     @Override
     public boolean canPlace(@NotNull Player player) {
-        return canMove(player);
+        return player.canMove(ORIGIN, DESTINATION, PIECES);
     }
 
     @Override
     public void place(@NotNull Player player) {
-        move(player);
+        player.move(ORIGIN, DESTINATION, PIECES);
     }
 
     @Override
     public int with(@NotNull Board board, @NotNull Color nextPlayer, @NotNull Function<Board, Integer> function) {
-        board.move(ORIGIN, DESTINATION, PIECES);
+        board.moveSilent(ORIGIN, DESTINATION, PIECES);
         Integer result = function.apply(board);
-        board.move(DESTINATION, ORIGIN, PIECES);
+        board.moveSilent(DESTINATION, ORIGIN, PIECES);
 
         return result;
     }

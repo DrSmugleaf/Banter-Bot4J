@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.tak.bot;
 
 import com.github.drsmugleaf.tak.Game;
+import com.github.drsmugleaf.tak.board.Board;
 import com.github.drsmugleaf.tak.board.Coordinates;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.pieces.Color;
@@ -27,20 +28,22 @@ public class RandomFlatBot extends Bot {
         return new RandomFlatBot(information.NAME, information.GAME, information.COLOR, information.PRESET);
     }
 
+    @NotNull
+    @Override
+    public List<Coordinates> getAvailableActions(@NotNull Board board) {
+        return getAvailablePlaces(board, Type.FLAT_STONE);
+    }
+
     @Nullable
     @Override
     public Coordinates getNextMove() {
-        if (!getHand().has(Type.FLAT_STONE)) {
+        List<Coordinates> availableActions = getAvailableActions();
+        if (availableActions.isEmpty()) {
             return null;
         }
 
-        List<Coordinates> availablePlaces = getAvailablePlaces(Type.FLAT_STONE);
-        if (availablePlaces.isEmpty()) {
-            return null;
-        }
-
-        int random = ThreadLocalRandom.current().nextInt(availablePlaces.size());
-        return availablePlaces.get(random);
+        int random = ThreadLocalRandom.current().nextInt(availableActions.size());
+        return availableActions.get(random);
     }
 
 }

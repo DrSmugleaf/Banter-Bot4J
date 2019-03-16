@@ -54,26 +54,25 @@ public class Board {
 
         PRESET = preset;
         int boardSize = PRESET.getSize();
-        for (Square[] row : squares) {
-            int rowLength = row.length;
-            if (rowLength != boardSize) {
-                throw new IllegalArgumentException("Array isn't a square. Expected preset " + boardSize + " found " + rowLength);
+        for (Square[] column : squares) {
+            int columnLength = column.length;
+            if (columnLength != boardSize) {
+                throw new IllegalArgumentException("Array isn't a square. Expected size: " + boardSize + ". Found: " + columnLength);
             }
         }
 
-        Line[] rows = new Line[boardSize];
         Line[] columns = new Line[boardSize];
+        Line[] rows = new Line[boardSize];
 
         for (int i = 0; i < boardSize; i++) {
             columns[i] = new Line(boardSize);
             rows[i] = new Line(boardSize);
         }
 
-        for (int row = 0; row < boardSize; row++) {
-            for (int column = 0; column < boardSize; column++) {
-                rows[row].setSquare(column, squares[row][column]);
-                columns[column] = new Line(boardSize);
-                columns[column].setSquare(row, squares[row][column]);
+        for (int column = 0; column < boardSize; column++) {
+            for (int row = 0; row < boardSize; row++) {
+                columns[column].setSquare(row, squares[column][row]);
+                rows[row].setSquare(column, squares[column][row]);
             }
         }
 
@@ -159,10 +158,20 @@ public class Board {
     }
 
     @NotNull
-    public Square move(@NotNull Square origin, @NotNull Square destination, int pieces) {
+    private Square move(@NotNull Square origin, @NotNull Square destination, int pieces, boolean silent) {
         int column = origin.getColumn();
         int row = origin.getRow();
-        return COLUMNS[column].move(row, destination, pieces);
+        return COLUMNS[column].move(row, destination, pieces, silent);
+    }
+
+    @NotNull
+    public Square move(@NotNull Square origin, @NotNull Square destination, int pieces) {
+        return move(origin, destination, pieces, false);
+    }
+
+    @NotNull
+    public Square moveSilent(@NotNull Square origin, @NotNull Square destination, int pieces) {
+        return move(origin, destination, pieces, true);
     }
 
     public boolean canPlace(int column, int row) {
@@ -170,13 +179,33 @@ public class Board {
     }
 
     @NotNull
+    public Square place(@NotNull Piece piece, int column, int row, boolean silent) {
+        return COLUMNS[column].place(piece, row, silent);
+    }
+
+    @NotNull
     public Square place(@NotNull Piece piece, int column, int row) {
-        return COLUMNS[column].place(piece, row);
+        return COLUMNS[column].place(piece, row, false);
+    }
+
+    @NotNull
+    public Square placeSilent(@NotNull Piece piece, int column, int row) {
+        return COLUMNS[column].place(piece, row, true);
+    }
+
+    @NotNull
+    protected Square remove(@NotNull Piece piece, int column, int row, boolean silent) {
+        return COLUMNS[column].remove(piece, row, silent);
     }
 
     @NotNull
     protected Square remove(@NotNull Piece piece, int column, int row) {
-        return COLUMNS[column].remove(piece, row);
+        return COLUMNS[column].remove(piece, row, false);
+    }
+
+    @NotNull
+    protected Square removeSilent(@NotNull Piece piece, int column, int row) {
+        return COLUMNS[column].remove(piece, row, true);
     }
 
     @NotNull

@@ -2,8 +2,7 @@ package com.github.drsmugleaf.tak.gui;
 
 import com.github.drsmugleaf.tak.Game;
 import com.github.drsmugleaf.tak.board.Preset;
-import com.github.drsmugleaf.tak.board.Square;
-import com.github.drsmugleaf.tak.pieces.Type;
+import com.github.drsmugleaf.tak.bot.MinimaxFlatMoveBot;
 import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
 import org.jetbrains.annotations.NotNull;
@@ -21,20 +20,24 @@ public class GuiGame extends Game {
     private static final Image APPLICATION_ICON = Images.get("logo.jpg");
 
     @NotNull
-    protected BoardPanel BOARD_PANEL;
+    private final BoardPanel BOARD_PANEL;
 
     @NotNull
-    protected JFrame FRAME;
+    private JFrame FRAME;
 
-    public GuiGame(@NotNull Preset preset, @NotNull String playerName1, @NotNull String playerName2, @NotNull Function<PlayerInformation, Player> playerMaker1, @NotNull Function<PlayerInformation, Player> playerMaker2) {
-        super(preset, playerName1, playerName2, playerMaker1, playerMaker2);
+    private GuiGame(@NotNull BoardPanel board, @NotNull Preset preset, @NotNull String playerName1, @NotNull String playerName2, @NotNull Function<PlayerInformation, Player> playerMaker1, @NotNull Function<PlayerInformation, Player> playerMaker2) {
+        super(board, preset, playerName1, playerName2, playerMaker1, playerMaker2);
+        BOARD_PANEL = board;
+        FRAME = setupFrame();
     }
 
-    @Override
-    protected void setup(@NotNull Preset preset, @NotNull String playerName1, @NotNull String playerName2, @NotNull Function<PlayerInformation, Player> playerMaker1, @NotNull Function<PlayerInformation, Player> playerMaker2) {
-        BOARD_PANEL = new BoardPanel(preset);
-        FRAME = setupFrame();
-        super.setup(preset, playerName1, playerName2, playerMaker1, playerMaker2);
+    public GuiGame(@NotNull Preset preset, @NotNull String playerName1, @NotNull String playerName2, @NotNull Function<PlayerInformation, Player> playerMaker1, @NotNull Function<PlayerInformation, Player> playerMaker2) {
+        this(BoardPanel.from(preset), preset, playerName1, playerName2, playerMaker1, playerMaker2);
+    }
+
+    public static void main(String[] args) {
+        GuiGame game = new GuiGame(Preset.getDefault(), "1", "2", MinimaxFlatMoveBot::from, MinimaxFlatMoveBot::from);
+        game.start();
     }
 
     @NotNull
@@ -43,7 +46,7 @@ public class GuiGame extends Game {
 
         SwingUtilities.invokeLater(() -> {
             frame.setIconImage(APPLICATION_ICON);
-            frame.add(BOARD_PANEL.gui);
+            frame.add(BOARD_PANEL.getGui());
             frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             frame.setLocationByPlatform(true);
 
@@ -56,17 +59,14 @@ public class GuiGame extends Game {
         return frame;
     }
 
-    @Override
-    public void onPieceMove(@NotNull Player player, @NotNull Square origin, @NotNull Square destination, int pieces) {
-        BOARD_PANEL.pieces[origin.getRow()][origin.getColumn()].update(origin);
-        BOARD_PANEL.pieces[destination.getRow()][destination.getColumn()].update(destination);
+    @NotNull
+    protected BoardPanel getBoardPanel() {
+        return BOARD_PANEL;
     }
 
-    @Override
-    public void onPiecePlace(@NotNull Player player, @NotNull Type type, @NotNull Square square) {
-        int column = square.getColumn();
-        int row = square.getRow();
-        BOARD_PANEL.pieces[row][column].update(square);
+    @NotNull
+    protected JFrame getFrame() {
+        return FRAME;
     }
 
 }

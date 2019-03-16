@@ -87,7 +87,7 @@ public class Square {
     }
 
     public boolean canMove(@NotNull Square other, int pieces) {
-        if (pieces > PIECES.size()) {
+        if (pieces <= 0 || pieces > PIECES.size()) {
             return false;
         }
 
@@ -109,10 +109,15 @@ public class Square {
     }
 
     @NotNull
-    public Square move(@NotNull Square destination, int pieces) {
+    public Square move(@NotNull Square destination, int pieces, boolean silent) {
         for (int i = pieces - 1; i >= 0; i--) {
             Piece piece = PIECES.remove(i);
             destination.PIECES.add(piece);
+        }
+
+        if (!silent) {
+            onUpdate();
+            destination.onUpdate();
         }
 
         return this;
@@ -123,14 +128,24 @@ public class Square {
     }
 
     @NotNull
-    public Square place(@NotNull Piece piece) {
+    public Square place(@NotNull Piece piece, boolean silent) {
         piece.getType().place(this, PIECES, piece);
+
+        if (!silent) {
+            onUpdate();
+        }
+
         return this;
     }
 
     @NotNull
-    public Square remove(@NotNull Piece piece) {
+    public Square remove(@NotNull Piece piece, boolean silent) {
         PIECES.remove(piece);
+
+        if (!silent) {
+            onUpdate();
+        }
+
         return this;
     }
 
@@ -168,5 +183,7 @@ public class Square {
 
         return builder.toString();
     }
+
+    protected void onUpdate() {}
 
 }
