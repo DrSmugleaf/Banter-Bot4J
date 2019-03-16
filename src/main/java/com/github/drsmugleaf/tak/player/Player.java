@@ -5,6 +5,7 @@ import com.github.drsmugleaf.tak.board.*;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Type;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -169,5 +170,19 @@ public abstract class Player {
     }
 
     public abstract void nextTurn();
+
+    public void onEnemyPieceMove(@NotNull Player player, @NotNull Square origin, @NotNull Square destination, int pieces) {}
+
+    public void onOwnPieceMove(@NotNull Square origin, @NotNull Square destination, int pieces) {}
+
+    public void onEnemyPiecePlace(@NotNull Player player, @NotNull Type type, @NotNull Square square) {}
+
+    public void onOwnPiecePlace(@NotNull Type type, @NotNull Square square) {}
+
+    public void onEnemyTurnEnd(@NotNull Player player) {}
+
+    public void onOwnTurnEnd() {}
+
+    public void onGameEnd(@Nullable Player winner) {}
 
 }

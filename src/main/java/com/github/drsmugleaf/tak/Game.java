@@ -82,7 +82,7 @@ public class Game {
     @NotNull
     public Square move(Player player, @NotNull Square origin, @NotNull Square destination, int pieces) {
         if (!canMove(player, origin, destination, pieces)) {
-            throw new IllegalStateException("Invalid move call, origin " + origin + ", destination " + destination + " and pieces " + pieces);
+            throw new IllegalGameCall(this, "Illegal move call, origin " + origin + ", destination " + destination + " and pieces " + pieces);
         }
 
         Square square = BOARD.move(origin, destination, pieces);
@@ -97,7 +97,7 @@ public class Game {
     @NotNull
     public Square place(@NotNull Player player, @NotNull Type type, int column, int row) {
         if (!canPlace(player, column, row)) {
-            throw new IllegalStateException("Invalid place call, piece type " + type + " at row " + row + " and column " + column);
+            throw new IllegalGameCall(this, "Illegal place call, piece type " + type + " at row " + row + " and column " + column);
         }
 
         Piece piece = player.getHand().takePiece(type);
@@ -171,7 +171,7 @@ public class Game {
 
     public void surrender(@NotNull Player loser) {
         if (!isActive()) {
-            throw new IllegalStateException("Game already ended");
+            throw new IllegalGameCall(this, "Game already ended");
         }
 
         setWinner(getOtherPlayer(loser));
@@ -204,12 +204,25 @@ public class Game {
         onTurnEnd(getOtherPlayer(nextPlayer));
     }
 
-    protected void onPieceMove(@NotNull Player player, @NotNull Square origin, @NotNull Square destination, int pieces) {}
+    protected void onPieceMove(@NotNull Player player, @NotNull Square origin, @NotNull Square destination, int pieces) {
+        player.onOwnPieceMove(origin, destination, pieces);
+        getOtherPlayer(player).onEnemyPieceMove(player, origin, destination, pieces);
+    }
 
-    protected void onPiecePlace(@NotNull Player player, @NotNull Type type, @NotNull Square square) {}
+    protected void onPiecePlace(@NotNull Player player, @NotNull Type type, @NotNull Square square) {
+        player.onOwnPiecePlace(type, square);
+        getOtherPlayer(player).onEnemyPiecePlace(player, type, square);
+    }
 
-    protected void onTurnEnd(@NotNull Player player) {}
+    protected void onTurnEnd(@NotNull Player player) {
+        player.onOwnTurnEnd();
+        getOtherPlayer(player).onEnemyTurnEnd(player);
+    }
 
-    protected void onGameEnd(@Nullable Player winner) {}
+    protected void onGameEnd(@Nullable Player winner) {
+        for (Player player : PLAYERS.values()) {
+            player.onGameEnd(winner);
+        }
+    }
 
 }
