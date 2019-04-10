@@ -31,7 +31,7 @@ public class RandomCivilizationVI extends Command {
     public void run() {
         if (ARGS.size() < 1) {
             EVENT.reply("Missing an amount of leaders to return.\n" +
-                        "Format: " + BanterBot4J.BOT_PREFIX + "randomciviliation6 amount\n" +
+                        "Format: " + BanterBot4J.BOT_PREFIX + "randomcivilization6 amount\n" +
                         "Example: " + BanterBot4J.BOT_PREFIX + "randomcivilization6 3");
             return;
         }
