@@ -3,46 +3,67 @@ package com.github.drsmugleaf.article13.vote;
 import com.google.common.collect.ImmutableSet;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by DrSmugleaf on 08/04/2019
  */
 public enum Decision {
 
-    FOR("FOR"),
+    FOR("FOR", "YES"),
     AGAINST("AGAINST"),
     ABSTAINED("ABSTAINED"),
-    NOT_PRESENT("NOT PRESENT");
+    ABSENT("ABSENT", "NOT PRESENT", "-");
 
     @Nonnull
-    private static final ImmutableSet<Decision> VOTE_TYPES = ImmutableSet.copyOf(values());
+    private static final ImmutableSet<Decision> DECISIONS = ImmutableSet.copyOf(values());
 
     @Nonnull
     private final String NAME;
 
-    Decision(@Nonnull String name) {
-        NAME = name;
+    @Nonnull
+    private final String[] ALIASES;
+
+    Decision(@Nonnull String... name) {
+        NAME = name[0];
+        ALIASES = name;
     }
 
     @Nonnull
-    public static ImmutableSet<Decision> getVoteTypes() {
-        return VOTE_TYPES;
+    public static ImmutableSet<Decision> getDecisions() {
+        return DECISIONS;
     }
 
     @Nonnull
+    public static Set<String> getDecisionNames() {
+        return getDecisions().stream().map(Decision::getName).collect(Collectors.toSet());
+    }
+
+    @Nullable
     public static Decision from(@Nonnull String vote) {
-        for (Decision type : VOTE_TYPES) {
-            if (vote.contains(type.getName())) {
-                return type;
+        vote = vote.toLowerCase();
+
+        for (Decision decision : getDecisions()) {
+            for (String alias : decision.ALIASES) {
+                if (vote.contains(alias.toLowerCase())) {
+                    return decision;
+                }
             }
         }
 
-        throw new IllegalArgumentException("No vote type found for vote: " + vote);
+        return null;
     }
 
     @Nonnull
     public String getName() {
         return NAME;
+    }
+
+    @Nonnull
+    public String[] getAliases() {
+        return ALIASES.clone();
     }
 
 }

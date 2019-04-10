@@ -2,8 +2,10 @@ package com.github.drsmugleaf.article13.vote;
 
 import com.github.drsmugleaf.article13.csv.Sheet;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +22,7 @@ public class Vote {
     private final String NAME;
 
     private Vote(@Nonnull String name) {
-        NAME = name;
+        NAME = name.replaceAll("\n", " ");
     }
 
     @Nonnull
@@ -29,7 +31,11 @@ public class Vote {
 
         List<Sheet> sheets = Sheet.getVoteSheets();
         for (String header : sheets.get(0).getHeaders()) {
-            votes.put(header, new Vote(header));
+            if (!(header.contains("Vote") || header.contains("Pledge"))) {
+                continue;
+            }
+
+            votes.put(header.replaceAll("\n", " "), new Vote(header));
         }
 
         return ImmutableMap.copyOf(votes);
@@ -41,8 +47,21 @@ public class Vote {
     }
 
     @Nonnull
+    public static ImmutableSet<String> getVoteNames() {
+        return getVotes().keySet();
+    }
+
+    @Nullable
     public static Vote getVote(@Nonnull String name) {
-        return VOTES.get(name);
+        name = name.toLowerCase();
+
+        for (Vote vote : getVotes().values()) {
+            if (vote.getName().toLowerCase().contains(name)) {
+                return vote;
+            }
+        }
+
+        return null;
     }
 
     @Nonnull

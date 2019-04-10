@@ -52,13 +52,15 @@ public class Member {
     private static ImmutableMap<Vote, Decision> getVotes(@Nonnull Map<String, String> csvLine) {
         Map<Vote, Decision> votes = new HashMap<>();
 
-        for (String column : csvLine.values()) {
-            if (!(column.contains("Vote") || column.contains("Pledge"))) {
+        for (Map.Entry<String, String> entry : csvLine.entrySet()) {
+            String header = entry.getKey();
+            if (!(header.contains("Vote") || header.contains("Pledge"))) {
                 continue;
             }
 
-            Vote vote = Vote.getVote(column.replaceAll("\n", ""));
-            Decision decision = Decision.from(column);
+            String value = entry.getValue();
+            Vote vote = Vote.getVote(header.replaceAll("\n", " "));
+            Decision decision = Decision.from(value);
             votes.put(vote, decision);
         }
 

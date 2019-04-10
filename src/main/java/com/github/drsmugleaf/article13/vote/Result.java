@@ -1,8 +1,7 @@
 package com.github.drsmugleaf.article13.vote;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.EnumMap;
 import java.util.Map;
 
 /**
@@ -29,11 +28,19 @@ public class Result implements Comparable<Result> {
     }
 
     @Nonnull
-    public static List<Result> from(@Nonnull Map<Decision, Integer> map) {
-        List<Result> results = new ArrayList<>();
+    public static Map<Decision, Result> from(@Nonnull Map<Decision, Integer> map) {
+        Map<Decision, Result> results = new EnumMap<>(Decision.class);
+
         for (Map.Entry<Decision, Integer> entry : map.entrySet()) {
+            Decision decision = entry.getKey();
             Result result = from(entry);
-            results.add(result);
+            results.put(decision, result);
+        }
+
+        for (Decision decision : Decision.getDecisions()) {
+            if (!results.containsKey(decision)) {
+                results.put(decision, new Result(decision, 0));
+            }
         }
 
         return results;

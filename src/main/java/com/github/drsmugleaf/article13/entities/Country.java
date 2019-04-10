@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -78,12 +79,12 @@ public class Country {
 
     @Nonnull
     public static ImmutableSet<String> getCountryNames() {
-        return COUNTRIES.keySet();
+        return getCountries().keySet();
     }
 
-    @Nonnull
+    @Nullable
     public static Country getCountry(@Nonnull String name) {
-        return COUNTRIES.get(name);
+        return getCountries().get(name);
     }
 
     @Nonnull
@@ -103,7 +104,7 @@ public class Country {
 
     @Nonnull
     public ImmutableSet<String> getPartyNames() {
-        return PARTIES.keySet();
+        return getParties().keySet();
     }
 
 }

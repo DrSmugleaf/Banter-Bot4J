@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.article13.vote;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -14,11 +14,11 @@ public class Votes {
     private final Vote VOTE;
 
     @Nonnull
-    private final ImmutableList<Result> RESULTS;
+    private final ImmutableMap<Decision, Result> RESULTS;
 
     public Votes(@Nonnull Vote vote, @Nonnull Map<Decision, Integer> results) {
         VOTE = vote;
-        RESULTS = ImmutableList.copyOf(Result.from(results));
+        RESULTS = ImmutableMap.copyOf(Result.from(results));
     }
 
     @Nonnull
@@ -27,8 +27,13 @@ public class Votes {
     }
 
     @Nonnull
-    public ImmutableList<Result> getResults() {
+    public ImmutableMap<Decision, Result> getResults() {
         return RESULTS;
+    }
+
+    @Nonnull
+    public Result getResult(@Nonnull Decision decision) {
+        return getResults().get(decision);
     }
 
 }
