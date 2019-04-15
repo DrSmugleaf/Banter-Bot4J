@@ -58,7 +58,7 @@ public class Handler {
         }
 
         CommandReceivedEvent commandEvent = new CommandReceivedEvent(event);
-        CommandInfo annotation = result.COMMAND.getCommandInfo();
+        CommandInfo annotation = result.getEntry().getCommandInfo();
         if (annotation != null) {
             if (commandEvent.getGuild() != null) {
                 if (commandEvent.getGuild() != null) {

@@ -8,14 +8,24 @@ import javax.annotation.Nonnull;
 public class CommandSearchResult {
 
     @Nonnull
-    public final Entry COMMAND;
+    private final Entry ENTRY;
 
     @Nonnull
-    public final String MATCHED_NAME;
+    private final String MATCHED_NAME;
 
-    CommandSearchResult(@Nonnull Entry command, @Nonnull String matchedName) {
-        COMMAND = command;
+    CommandSearchResult(@Nonnull Entry entry, @Nonnull String matchedName) {
+        ENTRY = entry;
         MATCHED_NAME = matchedName;
+    }
+
+    @Nonnull
+    public Entry getEntry() {
+        return ENTRY;
+    }
+
+    @Nonnull
+    public String getMatchedName() {
+        return MATCHED_NAME;
     }
 
 }

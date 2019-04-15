@@ -15,7 +15,7 @@ import java.util.*;
 public class Registry {
 
     @Nonnull
-    private final ImmutableList<Entry> COMMANDS;
+    private final ImmutableList<Entry> ENTRIES;
 
     public Registry(@Nonnull List<Class<Command>> commands) {
         List<Entry> entries = new ArrayList<>();
@@ -24,7 +24,7 @@ public class Registry {
             entries.add(entry);
         }
 
-        COMMANDS = ImmutableList.copyOf(entries);
+        ENTRIES = ImmutableList.copyOf(entries);
 
         List<CommandSearchResult> duplicates = findDuplicates();
         if (!duplicates.isEmpty()) {
@@ -38,10 +38,10 @@ public class Registry {
         Set<String> uniqueAliases = new HashSet<>();
         List<CommandSearchResult> duplicateAliases = new ArrayList<>();
 
-        for (Entry command : COMMANDS) {
-            for (String alias : command.getAllAliases()) {
+        for (Entry entry : ENTRIES) {
+            for (String alias : entry.getAllAliases()) {
                 if (!uniqueAliases.add(alias)) {
-                    CommandSearchResult result = new CommandSearchResult(command, alias);
+                    CommandSearchResult result = new CommandSearchResult(entry, alias);
                     duplicateAliases.add(result);
                 }
             }
@@ -53,16 +53,16 @@ public class Registry {
     @Nonnull
     private String formatDuplicates(@Nonnull List<CommandSearchResult> duplicates) {
         if (duplicates.isEmpty()) {
-            return "";
+            return "No duplicate command names found";
         }
 
         StringBuilder builder = new StringBuilder("Duplicate command names found:");
         for (CommandSearchResult duplicate : duplicates) {
             builder
                     .append("\n")
-                    .append(duplicate.COMMAND)
+                    .append(duplicate.getEntry())
                     .append(": ")
-                    .append(duplicate.MATCHED_NAME);
+                    .append(duplicate.getMatchedName());
         }
 
         return builder.toString();
@@ -77,10 +77,10 @@ public class Registry {
         while (argsList.size() > 0) {
             String args = String.join(" ", argsList);
 
-            for (Entry command : COMMANDS) {
-                for (String alias : command.getAllAliases()) {
+            for (Entry entry : ENTRIES) {
+                for (String alias : entry.getAllAliases()) {
                     if (alias.equalsIgnoreCase(args)) {
-                        CommandSearchResult result = new CommandSearchResult(command, alias);
+                        CommandSearchResult result = new CommandSearchResult(entry, alias);
                         matches.add(result);
                     }
                 }

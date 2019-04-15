@@ -46,11 +46,10 @@ public abstract class Command implements ICommand {
     }
 
     private boolean setArguments(@Nonnull Entry entry) {
-        for (CommandField commandField : entry.getArguments()) {
+        for (CommandField commandField : entry.getCommandFields()) {
             Field field = commandField.getField();
             Object arg = ARGS.getArg(commandField);
             if (arg == null) {
-                reply("Invalid arguments\n" + invalidFormatResponse());
                 return false;
             }
 
@@ -66,7 +65,7 @@ public abstract class Command implements ICommand {
     }
 
     protected static void run(@Nonnull CommandSearchResult commandSearch, @Nonnull CommandReceivedEvent event) {
-        Entry entry = commandSearch.COMMAND;
+        Entry entry = commandSearch.getEntry();
         CommandInfo annotation = entry.getCommandInfo();
 
         if (annotation != null) {
@@ -162,11 +161,6 @@ public abstract class Command implements ICommand {
     @Nonnull
     public IMessage reply(@Nonnull String content, @Nonnull EmbedObject embed) {
         return EVENT.reply(content, embed);
-    }
-
-    @Nonnull
-    public String invalidFormatResponse() {
-        return "";
     }
 
 }

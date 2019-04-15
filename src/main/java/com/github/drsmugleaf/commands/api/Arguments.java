@@ -1,7 +1,9 @@
 package com.github.drsmugleaf.commands.api;
 
+import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.registry.CommandField;
 import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
+import com.github.drsmugleaf.commands.api.registry.Entry;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import javax.annotation.Nonnull;
@@ -20,8 +22,16 @@ public class Arguments extends ArrayList<String> {
     @Nonnull
     private static final Pattern SPLIT_ON_SPACES_EXCEPT_WITHIN_QUOTES = Pattern.compile("\"([^\"]*)\"|'([^']*)'|[^\\s]+");
 
-    Arguments(@Nonnull CommandSearchResult command, @Nonnull CommandReceivedEvent event) {
-        super(getArgs(command, event));
+    @Nonnull
+    private final CommandSearchResult RESULT;
+
+    @Nonnull
+    private final CommandReceivedEvent EVENT;
+
+    Arguments(@Nonnull CommandSearchResult result, @Nonnull CommandReceivedEvent event) {
+        super(getArgs(result, event));
+        RESULT = result;
+        EVENT = event;
     }
 
     @Nonnull
@@ -38,7 +48,7 @@ public class Arguments extends ArrayList<String> {
 
     @Nonnull
     private static String extractArgs(@Nonnull CommandSearchResult command, @Nonnull MessageReceivedEvent event) {
-        String matchedCommandName = command.MATCHED_NAME;
+        String matchedCommandName = command.getMatchedName();
         String argumentsString = event.getMessage().getFormattedContent();
         int index = argumentsString.toLowerCase().indexOf(matchedCommandName.toLowerCase());
         argumentsString = argumentsString.substring(index + matchedCommandName.length()).trim();
@@ -59,8 +69,8 @@ public class Arguments extends ArrayList<String> {
     }
 
     @Nonnull
-    public static List<String> getArgs(@Nonnull CommandSearchResult command, @Nonnull MessageReceivedEvent event) {
-        String argumentsString = extractArgs(command, event);
+    public static List<String> getArgs(@Nonnull CommandSearchResult result, @Nonnull MessageReceivedEvent event) {
+        String argumentsString = extractArgs(result, event);
         return parseArgs(argumentsString);
     }
 
@@ -138,10 +148,14 @@ public class Arguments extends ArrayList<String> {
         return Double.parseDouble(argument);
     }
 
-    @Nonnull
+    @Nullable
     public Integer getInteger(int index) {
         String argument = get(index);
-        return Integer.parseInt(argument);
+        try {
+            return Integer.parseInt(argument);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     @Override
@@ -160,17 +174,74 @@ public class Arguments extends ArrayList<String> {
         Argument argument = commandField.getArgument();
         int position = argument.position() - 1;
         if (!has(position)) {
+            EVENT.reply(getInvalidArgumentsResponse());
             return null;
         }
 
+        Object arg = null;
         Class<?> fieldType = field.getType();
         if (fieldType == String.class) {
-            return get(position);
+            arg = get(position);
         } else if (fieldType == Integer.class) {
-            return getInteger(position);
+            arg = getInteger(position);
+
+            int minimum = argument.minimum();
+            int maximum = argument.maximum();
+            if (arg != null) {
+                if ((Integer) arg < minimum) {
+                    EVENT.reply("Not enough " + field.getName() + " requested. Minimum: " + minimum);
+                    return null;
+                } else if ((Integer) arg > maximum) {
+                    EVENT.reply("Too many " + field.getName() + " requested. Maximum: " + maximum);
+                    return null;
+                }
+            }
         }
 
-        throw new IllegalArgumentException("No valid conversion found for field type " + fieldType.getName());
+        if (arg == null) {
+            EVENT.reply(getInvalidArgumentsResponse());
+            return null;
+        } else {
+            return arg;
+        }
+    }
+
+    @Nonnull
+    public String getInvalidArgumentsResponse() {
+        Entry entry = RESULT.getEntry();
+        StringBuilder response = new StringBuilder();
+        response
+                .append("Invalid arguments.\n**Formats:**\n")
+                .append(BanterBot4J.BOT_PREFIX)
+                .append(entry.getName());
+
+        for (CommandField field : entry.getCommandFields()) {
+            String fieldName = field.getField().getName();
+            response
+                    .append(" ")
+                    .append(fieldName);
+        }
+
+        response
+                .append("\n**Example:**\n")
+                .append(BanterBot4J.BOT_PREFIX)
+                .append(entry.getName());
+
+        for (CommandField field : entry.getCommandFields()) {
+            String example = field.getArgument().example();
+            response.append(" ");
+
+            if (example.contains(" ")) {
+                response
+                        .append("\"")
+                        .append(example)
+                        .append("\"");
+            } else {
+                response.append(example);
+            }
+        }
+
+        return response.toString();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.api;
 
+import javax.annotation.Nonnull;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -13,5 +14,11 @@ import java.lang.annotation.Target;
 public @interface Argument {
 
     int position();
+
+    int minimum() default 1;
+
+    int maximum() default Integer.MAX_VALUE;
+
+    @Nonnull String example();
 
 }

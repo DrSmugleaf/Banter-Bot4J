@@ -21,12 +21,12 @@ public class Entry {
     private final CommandInfo COMMAND_INFO;
 
     @Nonnull
-    private final ImmutableList<CommandField> ARGUMENTS;
+    private final ImmutableList<CommandField> COMMAND_FIELDS;
 
     protected Entry(@Nonnull Class<? extends Command> command) {
         COMMAND = command;
         COMMAND_INFO = command.getDeclaredAnnotation(CommandInfo.class);
-        ARGUMENTS = ImmutableList.copyOf(CommandField.from(command));
+        COMMAND_FIELDS = ImmutableList.copyOf(CommandField.from(command));
     }
 
     @Nonnull
@@ -77,8 +77,8 @@ public class Entry {
     }
 
     @Nonnull
-    public ImmutableList<CommandField> getArguments() {
-        return ARGUMENTS;
+    public ImmutableList<CommandField> getCommandFields() {
+        return COMMAND_FIELDS;
     }
 
 }
