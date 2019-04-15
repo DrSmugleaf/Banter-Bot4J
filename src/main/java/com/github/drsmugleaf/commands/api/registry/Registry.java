@@ -2,6 +2,7 @@ package com.github.drsmugleaf.commands.api.registry;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.*;
+import com.google.common.collect.ImmutableList;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import javax.annotation.Nonnull;
@@ -14,10 +15,16 @@ import java.util.*;
 public class Registry {
 
     @Nonnull
-    private final List<Class<Command>> COMMANDS;
+    private final ImmutableList<Entry> COMMANDS;
 
     public Registry(@Nonnull List<Class<Command>> commands) {
-        COMMANDS = Collections.unmodifiableList(commands);
+        List<Entry> entries = new ArrayList<>();
+        for (Class<Command> command : commands) {
+            Entry entry = new Entry(command);
+            entries.add(entry);
+        }
+
+        COMMANDS = ImmutableList.copyOf(entries);
 
         List<CommandSearchResult> duplicates = findDuplicates();
         if (!duplicates.isEmpty()) {
@@ -31,20 +38,11 @@ public class Registry {
         Set<String> uniqueAliases = new HashSet<>();
         List<CommandSearchResult> duplicateAliases = new ArrayList<>();
 
-        for (Class<Command> command : COMMANDS) {
-            String commandName = Command.getName(command);
-            if (!uniqueAliases.add(commandName)) {
-                duplicateAliases.add(new CommandSearchResult(command, commandName));
-            }
-
-            CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
-            if (annotation != null) {
-                for (String alias : annotation.aliases()) {
-                    alias = alias.toLowerCase();
-
-                    if (!uniqueAliases.add(alias)) {
-                        duplicateAliases.add(new CommandSearchResult(command, alias));
-                    }
+        for (Entry command : COMMANDS) {
+            for (String alias : command.getAllAliases()) {
+                if (!uniqueAliases.add(alias)) {
+                    CommandSearchResult result = new CommandSearchResult(command, alias);
+                    duplicateAliases.add(result);
                 }
             }
         }
@@ -79,16 +77,11 @@ public class Registry {
         while (argsList.size() > 0) {
             String args = String.join(" ", argsList);
 
-            for (Class<Command> command : COMMANDS) {
-                String commandName = Command.getName(command);
-                if (commandName.equalsIgnoreCase(args)) {
-                    matches.add(new CommandSearchResult(command, commandName));
-                }
-
-                List<String> aliases = Command.getAliases(command);
-                for (String alias : aliases) {
+            for (Entry command : COMMANDS) {
+                for (String alias : command.getAllAliases()) {
                     if (alias.equalsIgnoreCase(args)) {
-                        matches.add(new CommandSearchResult(command, alias));
+                        CommandSearchResult result = new CommandSearchResult(command, alias);
+                        matches.add(result);
                     }
                 }
             }

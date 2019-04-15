@@ -1,10 +1,12 @@
 package com.github.drsmugleaf.commands.api;
 
+import com.github.drsmugleaf.commands.api.registry.CommandField;
 import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -130,12 +132,14 @@ public class Arguments extends ArrayList<String> {
         return true;
     }
 
-    public double getDouble(int index) {
+    @Nonnull
+    public Double getDouble(int index) {
         String argument = get(index).replace(',', '.');
         return Double.parseDouble(argument);
     }
 
-    public int getInteger(int index) {
+    @Nonnull
+    public Integer getInteger(int index) {
         String argument = get(index);
         return Integer.parseInt(argument);
     }
@@ -143,6 +147,30 @@ public class Arguments extends ArrayList<String> {
     @Override
     public String toString() {
         return String.join(" ", this);
+    }
+
+    public boolean has(int index) {
+        return index < size();
+    }
+
+    @Nullable
+    public Object getArg(@Nonnull CommandField commandField) {
+        Field field = commandField.getField();
+
+        Argument argument = commandField.getArgument();
+        int position = argument.position() - 1;
+        if (!has(position)) {
+            return null;
+        }
+
+        Class<?> fieldType = field.getType();
+        if (fieldType == String.class) {
+            return get(position);
+        } else if (fieldType == Integer.class) {
+            return getInteger(position);
+        }
+
+        throw new IllegalArgumentException("No valid conversion found for field type " + fieldType.getName());
     }
 
 }

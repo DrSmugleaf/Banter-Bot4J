@@ -5,6 +5,7 @@ import com.github.drsmugleaf.commands.api.Handler;
 import com.github.drsmugleaf.database.api.Database;
 import com.github.drsmugleaf.env.Keys;
 import com.github.drsmugleaf.reflection.Reflection;
+import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.ClientBuilder;
@@ -21,7 +22,6 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -39,7 +39,11 @@ public class BanterBot4J {
     public static final String BOT_PREFIX = Keys.BOT_PREFIX.VALUE;
 
     @Nonnull
-    public static final List<Long> OWNERS = Collections.unmodifiableList(Arrays.asList(109067752286715904L));
+    public static final ImmutableList<Long> OWNERS = ImmutableList.copyOf(
+            Arrays.asList(
+                    109067752286715904L
+            )
+    );
 
     @Nullable
     private static IChannel DISCORD_WARNING_CHANNEL = null;

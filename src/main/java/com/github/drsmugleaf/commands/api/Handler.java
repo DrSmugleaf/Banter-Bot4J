@@ -52,13 +52,13 @@ public class Handler {
             }
         }
 
-        CommandSearchResult command = COMMAND_REGISTRY.findCommand(event);
-        if (command == null) {
+        CommandSearchResult result = COMMAND_REGISTRY.findCommand(event);
+        if (result == null) {
             return;
         }
 
         CommandReceivedEvent commandEvent = new CommandReceivedEvent(event);
-        CommandInfo annotation = command.COMMAND.getDeclaredAnnotation(CommandInfo.class);
+        CommandInfo annotation = result.COMMAND.getCommandInfo();
         if (annotation != null) {
             if (commandEvent.getGuild() != null) {
                 if (commandEvent.getGuild() != null) {
@@ -80,7 +80,7 @@ public class Handler {
             }
         }
 
-        Command.run(command, commandEvent);
+        Command.run(result, commandEvent);
     }
 
 }
