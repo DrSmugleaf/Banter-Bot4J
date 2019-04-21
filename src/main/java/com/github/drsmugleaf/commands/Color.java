@@ -1,10 +1,8 @@
 package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IRole;
@@ -13,7 +11,6 @@ import sx.blah.discord.handle.obj.Permissions;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RoleBuilder;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,10 +20,6 @@ import java.util.stream.Collectors;
  */
 @CommandInfo(tags = {Tags.GUILD_ONLY})
 public class Color extends Command {
-
-    protected Color(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        super(event, args);
-    }
 
     @Nullable
     private static java.awt.Color resolve(String string) {
@@ -54,7 +47,7 @@ public class Color extends Command {
         IUser author = EVENT.getAuthor();
 
         List<IRole> roles = guild.getRolesByName("color-" + author.getStringID());
-        if (ARGS.isEmpty()) {
+        if (ARGUMENTS.isEmpty()) {
             if (roles.isEmpty()) {
                 EVENT.reply("You don't have a name color. Use " + BanterBot4J.BOT_PREFIX + "color name OR hexadecimal code to assign one.");
                 return;
@@ -84,7 +77,7 @@ public class Color extends Command {
             return;
         }
 
-        String requestedColor = ARGS.get(0);
+        String requestedColor = ARGUMENTS.get(0);
         java.awt.Color color = resolve(requestedColor);
         if (color == null) {
             EVENT.reply("Invalid color. Make sure it is a hexadecimal string (0000FF) or a simple color like red.");

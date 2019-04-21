@@ -1,10 +1,8 @@
 package com.github.drsmugleaf.commands.eve;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.database.models.EveTimerModel;
 import sx.blah.discord.handle.obj.IChannel;
 
@@ -24,10 +22,6 @@ import java.util.regex.Pattern;
         }
 )
 public class EveTimer extends Command {
-
-    protected EveTimer(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        super(event, args);
-    }
 
     @Nonnull
     private static Long parseDate(@Nonnull String date) {
@@ -71,14 +65,14 @@ public class EveTimer extends Command {
 
     @Override
     public void run() {
-        if (ARGS.size() != 3) {
+        if (ARGUMENTS.size() != 3) {
             EVENT.reply(invalidArgumentsResponse());
             return;
         }
 
         IChannel channel = EVENT.getChannel();
-        String structure = ARGS.get(0);
-        String system = ARGS.get(1);
+        String structure = ARGUMENTS.get(0);
+        String system = ARGUMENTS.get(1);
         if (exists(structure, system)) {
             String response = "Timer for structure %s in system %s already exists";
             response = String.format(response, structure, system);
@@ -86,7 +80,7 @@ public class EveTimer extends Command {
             return;
         }
 
-        Long date = parseDate(ARGS.get(2));
+        Long date = parseDate(ARGUMENTS.get(2));
         Long submitter = EVENT.getAuthor().getLongID();
         EveTimerModel eveTimerModel = new EveTimerModel(channel.getLongID(), structure, system, date, submitter);
         eveTimerModel.save();

@@ -1,6 +1,8 @@
 package com.github.drsmugleaf.commands.api;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.commands.api.converter.Result;
+import com.github.drsmugleaf.commands.api.converter.TypeConverters;
 import com.github.drsmugleaf.commands.api.registry.CommandField;
 import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
 import com.github.drsmugleaf.commands.api.registry.Entry;
@@ -16,9 +18,8 @@ import sx.blah.discord.util.RequestBuffer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.reflect.Constructor;
+import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -26,43 +27,18 @@ import java.time.format.DateTimeFormatter;
 /**
  * Created by DrSmugleaf on 09/06/2018
  */
-public abstract class Command implements ICommand {
+public class Command implements ICommand {
 
     @Nonnull
-    protected static final Logger LOGGER = LoggerFactory.getLogger(Handler.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(Command.class);
 
     @Nonnull
-    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
 
-    @Nonnull
-    public final CommandReceivedEvent EVENT;
+    public CommandReceivedEvent EVENT;
+    public Arguments ARGUMENTS;
 
-    @Nonnull
-    public final Arguments ARGS;
-
-    protected Command(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        EVENT = event;
-        ARGS = args;
-    }
-
-    private boolean setArguments(@Nonnull Entry entry) {
-        for (CommandField commandField : entry.getCommandFields()) {
-            Field field = commandField.getField();
-            Object arg = ARGS.getArg(commandField);
-            if (arg == null) {
-                return false;
-            }
-
-            field.setAccessible(true);
-            try {
-                field.set(this, arg);
-            } catch (IllegalAccessException e) {
-                throw new IllegalStateException("Error setting command argument " + field, e);
-            }
-        }
-
-        return true;
-    }
+    protected Command() {}
 
     protected static void run(@Nonnull CommandSearchResult commandSearch, @Nonnull CommandReceivedEvent event) {
         Entry entry = commandSearch.getEntry();
@@ -74,23 +50,10 @@ public abstract class Command implements ICommand {
             }
         }
 
-        Command command;
-        try {
-            Constructor<? extends Command> constructor = entry.getCommand().getDeclaredConstructor(CommandReceivedEvent.class, Arguments.class);
-            constructor.setAccessible(true);
-            Arguments arguments = new Arguments(commandSearch, event);
-            command = constructor.newInstance(event, arguments);
-        } catch (InstantiationException | IllegalAccessException e) {
-            LOGGER.error("Error running command " + entry.getName(), e);
-            return;
-        } catch (NoSuchMethodException e) {
-            LOGGER.error("No constructor found for command " + entry.getName(), e);
-            return;
-        } catch (InvocationTargetException e) {
-            LOGGER.error("Error creating command instance for command " + entry.getName(), e);
-            return;
-        }
-
+        Command command = entry.newInstance();
+        Arguments arguments = new Arguments(commandSearch, event);
+        Entry.setEventField(command, event);
+        Entry.setArgsField(command, arguments);
 
         if (command.setArguments(entry)) {
             command.run();
@@ -107,12 +70,22 @@ public abstract class Command implements ICommand {
     }
 
     @Nonnull
+    public CommandReceivedEvent getEvent() {
+        return EVENT;
+    }
+
+    @Nonnull
+    public Arguments getArguments() {
+        return ARGUMENTS;
+    }
+
+    @Nonnull
     public static IMessage sendMessage(@Nonnull IChannel channel, @Nullable String content, @Nullable EmbedObject embed) {
         if (content == null) {
             content = "";
         }
 
-        String finalContent = content;
+        final String finalContent = content;
         return RequestBuffer.request(() -> {
             try {
                 return channel.sendMessage(finalContent, embed);
@@ -133,6 +106,34 @@ public abstract class Command implements ICommand {
         return sendMessage(channel, null, embed);
     }
 
+    private boolean setArguments(@Nonnull Entry entry) {
+        for (CommandField commandField : entry.getCommandFields()) {
+            Field field = commandField.getField();
+            field.setAccessible(true);
+
+            Object def;
+            try {
+                def = field.get(this);
+            } catch (IllegalAccessException e) {
+                throw new IllegalStateException("Error getting command argument " + field, e);
+            }
+
+            Result result = ARGUMENTS.getArg(commandField, def);
+            if (!result.isValid()) {
+                EVENT.reply(result.getErrorResponse());
+                return false;
+            }
+
+            try {
+                field.set(this, result.getElement());
+            } catch (IllegalAccessException e) {
+                throw new IllegalStateException("Error setting command argument " + field, e);
+            }
+        }
+
+        return true;
+    }
+
     @Nonnull
     public IMessage sendMessage(@Nonnull String content) {
         return sendMessage(EVENT.getChannel(), content);
@@ -149,6 +150,30 @@ public abstract class Command implements ICommand {
     }
 
     @Nonnull
+    public IMessage sendFile(@Nonnull EmbedObject embed, @Nonnull InputStream file, @Nonnull String fileName) {
+        return RequestBuffer.request(() -> {
+            try {
+                return EVENT.getChannel().sendFile(embed, file, fileName);
+            } catch (RateLimitException e) {
+                LOGGER.error("Message could not be sent", e);
+                throw e;
+            }
+        }).get();
+    }
+
+    @Nonnull
+    public IMessage sendFile(@Nonnull String content, @Nonnull InputStream file, @Nonnull String fileName) {
+        return RequestBuffer.request(() -> {
+            try {
+                return EVENT.getChannel().sendFile(content, file, fileName);
+            } catch (RateLimitException e) {
+                LOGGER.error("Message could not be sent", e);
+                throw e;
+            }
+        }).get();
+    }
+
+    @Nonnull
     public IMessage reply(@Nonnull String content) {
         return EVENT.reply(content);
     }
@@ -162,5 +187,10 @@ public abstract class Command implements ICommand {
     public IMessage reply(@Nonnull String content, @Nonnull EmbedObject embed) {
         return EVENT.reply(content, embed);
     }
+
+    @Override
+    public void run() {}
+
+    public void registerConverters(@Nonnull TypeConverters converter) {}
 
 }

@@ -15,10 +15,20 @@ public @interface Argument {
 
     int position();
 
-    int minimum() default 1;
+    long minimum() default 1;
 
-    int maximum() default Integer.MAX_VALUE;
+    long maximum() default Long.MAX_VALUE;
 
     @Nonnull String example();
+
+    boolean optional() default false;
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    @interface Maximum {
+
+        @Nonnull String value();
+
+    }
 
 }

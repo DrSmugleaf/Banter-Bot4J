@@ -1,13 +1,18 @@
 package com.github.drsmugleaf.commands.api.registry;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.*;
+import com.github.drsmugleaf.commands.api.Arguments;
+import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.converter.TypeConverters;
 import com.google.common.collect.ImmutableList;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by DrSmugleaf on 21/06/2018
@@ -15,9 +20,14 @@ import java.util.*;
 public class Registry {
 
     @Nonnull
+    private final TypeConverters CONVERTERS;
+
+    @Nonnull
     private final ImmutableList<Entry> ENTRIES;
 
     public Registry(@Nonnull List<Class<Command>> commands) {
+        CONVERTERS = new TypeConverters();
+
         List<Entry> entries = new ArrayList<>();
         for (Class<Command> command : commands) {
             Entry entry = new Entry(command);
@@ -25,12 +35,18 @@ public class Registry {
         }
 
         ENTRIES = ImmutableList.copyOf(entries);
+        CONVERTERS.registerConverters(entries);
 
         List<CommandSearchResult> duplicates = findDuplicates();
         if (!duplicates.isEmpty()) {
             String duplicatesString = formatDuplicates(duplicates);
             throw new DuplicateCommandNameException(duplicatesString);
         }
+    }
+
+    @Nonnull
+    public TypeConverters getConverters() {
+        return CONVERTERS;
     }
 
     @Nonnull

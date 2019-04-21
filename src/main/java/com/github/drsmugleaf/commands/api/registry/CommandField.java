@@ -19,9 +19,30 @@ public class CommandField {
     @Nonnull
     private final Argument ARGUMENT;
 
+    private final long MAXIMUM;
+
     private CommandField(@Nonnull Field field) {
         FIELD = field;
         ARGUMENT = field.getDeclaredAnnotation(Argument.class);
+        MAXIMUM = getMaximum(FIELD, ARGUMENT);
+    }
+
+    private static long getMaximum(@Nonnull Field field, @Nonnull Argument argument) {
+        for (Field declaredField : field.getDeclaringClass().getDeclaredFields()) {
+            Argument.Maximum maximumAnnotation = declaredField.getDeclaredAnnotation(Argument.Maximum.class);
+
+            if (maximumAnnotation != null && maximumAnnotation.value().equals(field.getName())) {
+                declaredField.setAccessible(true);
+
+                try {
+                    return declaredField.getInt(null);
+                } catch (IllegalAccessException e) {
+                    throw new IllegalArgumentException("Error accessing field " + declaredField, e);
+                }
+            }
+        }
+
+        return argument.maximum();
     }
 
     @Nonnull
@@ -46,6 +67,10 @@ public class CommandField {
     @Nonnull
     public Argument getArgument() {
         return ARGUMENT;
+    }
+
+    public long getMaximum() {
+        return MAXIMUM;
     }
 
 }

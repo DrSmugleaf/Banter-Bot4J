@@ -1,11 +1,11 @@
 package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
 import com.github.drsmugleaf.deadbydaylight.ICharacter;
-import com.github.drsmugleaf.deadbydaylight.IPerk;
 import com.google.gson.annotations.SerializedName;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by DrSmugleaf on 06/11/2018
@@ -56,10 +56,7 @@ public abstract class Perk implements Comparable<Perk> {
         return RATINGS;
     }
 
-    @Nonnull
+    @Nullable
     public abstract ICharacter getCharacter();
-
-    @Nonnull
-    public abstract IPerk toPerk();
 
 }

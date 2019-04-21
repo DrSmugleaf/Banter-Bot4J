@@ -1,9 +1,10 @@
 package com.github.drsmugleaf.commands.civilization;
 
 import com.github.drsmugleaf.civilization.vi.Leaders;
-import com.github.drsmugleaf.commands.api.*;
+import com.github.drsmugleaf.commands.api.Argument;
+import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.CommandInfo;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,12 +20,11 @@ import java.util.stream.Collectors;
 })
 public class RandomCivilizationVI extends Command {
 
-    @Argument(position = 1, example = "3", maximum = 36) // maximum = Leaders.AMOUNT
-    private Integer leaders;
+    @Argument.Maximum("leaders")
+    private static final int MAXIMUM_LEADERS = Leaders.AMOUNT;
 
-    protected RandomCivilizationVI(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        super(event, args);
-    }
+    @Argument(position = 1, example = "3")
+    private Integer leaders;
 
     @Override
     public void run() {

@@ -1,6 +1,9 @@
 package com.github.drsmugleaf.commands.api;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.commands.api.converter.ConversionException;
+import com.github.drsmugleaf.commands.api.converter.Result;
+import com.github.drsmugleaf.commands.api.converter.Converter;
 import com.github.drsmugleaf.commands.api.registry.CommandField;
 import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
 import com.github.drsmugleaf.commands.api.registry.Entry;
@@ -167,43 +170,63 @@ public class Arguments extends ArrayList<String> {
         return index < size();
     }
 
-    @Nullable
-    public Object getArg(@Nonnull CommandField commandField) {
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    public <E> Result<E> getArg(@Nonnull CommandField commandField, @Nullable E def) {
         Field field = commandField.getField();
-
         Argument argument = commandField.getArgument();
         int position = argument.position() - 1;
+
         if (!has(position)) {
-            EVENT.reply(getInvalidArgumentsResponse());
-            return null;
-        }
-
-        Object arg = null;
-        Class<?> fieldType = field.getType();
-        if (fieldType == String.class) {
-            arg = get(position);
-        } else if (fieldType == Integer.class) {
-            arg = getInteger(position);
-
-            int minimum = argument.minimum();
-            int maximum = argument.maximum();
-            if (arg != null) {
-                if ((Integer) arg < minimum) {
-                    EVENT.reply("Not enough " + field.getName() + " requested. Minimum: " + minimum);
-                    return null;
-                } else if ((Integer) arg > maximum) {
-                    EVENT.reply("Too many " + field.getName() + " requested. Maximum: " + maximum);
-                    return null;
-                }
+            if (def != null) {
+                return new Result<>(def, "");
             }
+
+            if (!argument.optional()) {
+                return new Result<>(null, "Invalid arguments.\n" + getInvalidArgumentsResponse());
+            }
+
+            return new Result<>(null, "");
         }
+
+        Class<?> fieldType = field.getType();
+        Converter<String, ?> converter = BanterBot4J.getHandler().getRegistry().getConverters().find(String.class, fieldType);
+        if (converter == null) {
+            throw new IllegalStateException("No converter found for type" + fieldType);
+        }
+
+        Object arg;
+        String stringArg = getStringArg(commandField);
+        Result<?> result;
+        try {
+            result = converter.convert(commandField, stringArg);
+        } catch (ConversionException e) {
+            return new Result<>(null, "Invalid " + field.getName() + ".\n" + getInvalidArgumentsResponse());
+        }
+
+        if (!result.isValid()) {
+            return new Result<>(null, result.getErrorResponse());
+        }
+
+        arg = result.getElement();
 
         if (arg == null) {
-            EVENT.reply(getInvalidArgumentsResponse());
-            return null;
+            return new Result<>(null, "Invalid arguments.\n" + getInvalidArgumentsResponse());
         } else {
-            return arg;
+            return new Result<>((E) arg, "");
         }
+    }
+
+    @Nullable
+    public String getStringArg(@Nonnull CommandField field) {
+        int position = field.getArgument().position() - 1;
+        return get(position);
+    }
+
+    @Nullable
+    public Integer getIntegerArg(@Nonnull CommandField field) {
+        int position = field.getArgument().position() - 1;
+        return getInteger(position);
     }
 
     @Nonnull
@@ -211,7 +234,7 @@ public class Arguments extends ArrayList<String> {
         Entry entry = RESULT.getEntry();
         StringBuilder response = new StringBuilder();
         response
-                .append("Invalid arguments.\n**Formats:**\n")
+                .append("**Formats:**\n")
                 .append(BanterBot4J.BOT_PREFIX)
                 .append(entry.getName());
 

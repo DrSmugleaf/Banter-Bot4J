@@ -1,7 +1,9 @@
 package com.github.drsmugleaf.commands.api.registry;
 
+import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.google.common.collect.ImmutableList;
 
 import javax.annotation.Nonnull;
@@ -27,6 +29,40 @@ public class Entry {
         COMMAND = command;
         COMMAND_INFO = command.getDeclaredAnnotation(CommandInfo.class);
         COMMAND_FIELDS = ImmutableList.copyOf(CommandField.from(command));
+    }
+
+    @Nonnull
+    public static CommandReceivedEvent getEvent(@Nonnull Command command) {
+        try {
+            return (CommandReceivedEvent) Command.class.getField("EVENT").get(command);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            throw new IllegalStateException("Error getting event field for command " + command, e);
+        }
+    }
+
+    public static void setEventField(@Nonnull Command command, @Nonnull CommandReceivedEvent event) {
+        try {
+            Command.class.getDeclaredField("EVENT").set(command, event);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            throw new IllegalStateException("Error setting event field for command " + command, e);
+        }
+    }
+
+    @Nonnull
+    public static Arguments getArgs(@Nonnull Command command) {
+        try {
+            return (Arguments) Command.class.getDeclaredField("ARGUMENTS").get(command);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            throw new IllegalStateException("Error getting args field for command " + command, e);
+        }
+    }
+
+    public static void setArgsField(@Nonnull Command command, @Nonnull Arguments args) {
+        try {
+            Command.class.getDeclaredField("ARGUMENTS").set(command, args);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            throw new IllegalStateException("Error setting args field for command " + command, e);
+        }
     }
 
     @Nonnull
@@ -79,6 +115,15 @@ public class Entry {
     @Nonnull
     public ImmutableList<CommandField> getCommandFields() {
         return COMMAND_FIELDS;
+    }
+
+    @Nonnull
+    public Command newInstance() {
+        try {
+            return COMMAND.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new IllegalStateException("Error creating instance of command " + getName(), e);
+        }
     }
 
 }

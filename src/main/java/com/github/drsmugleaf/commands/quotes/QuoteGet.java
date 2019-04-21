@@ -1,15 +1,12 @@
 package com.github.drsmugleaf.commands.quotes;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.database.models.Quote;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 
-import javax.annotation.Nonnull;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -23,15 +20,11 @@ public class QuoteGet extends Command {
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
 
-    protected QuoteGet(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        super(event, args);
-    }
-
     @Override
     public void run() {
         long id;
         try {
-            id = Long.parseLong(ARGS.toString());
+            id = Long.parseLong(ARGUMENTS.toString());
         } catch (NumberFormatException e) {
             EVENT.reply("Invalid command format. Example: `" + BanterBot4J.BOT_PREFIX + "quote 1`");
             return;

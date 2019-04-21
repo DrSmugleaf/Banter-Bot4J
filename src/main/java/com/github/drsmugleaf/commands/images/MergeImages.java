@@ -1,10 +1,8 @@
 package com.github.drsmugleaf.commands.images;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 
 import javax.annotation.Nonnull;
@@ -23,10 +21,6 @@ import java.util.List;
  */
 @CommandInfo(tags = {Tags.DELETE_COMMAND_MESSAGE})
 public class MergeImages extends Command {
-
-    protected MergeImages(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        super(event, args);
-    }
 
     @Nonnull
     private static BufferedImage concatenateImagesVertical(@Nonnull List<String> urls) throws InvalidURLException {
@@ -100,14 +94,14 @@ public class MergeImages extends Command {
 
     @Override
     public void run() {
-        String orientation = ARGS.first().toLowerCase();
+        String orientation = ARGUMENTS.first().toLowerCase();
         if (!orientation.equals("vertical") && !orientation.equals("horizontal")) {
             EVENT.reply("Invalid orientation. Valid orientations: vertical, horizontal.");
             return;
         }
 
-        ARGS.remove(0);
-        if (ARGS.size() < 2) {
+        ARGUMENTS.remove(0);
+        if (ARGUMENTS.size() < 2) {
             EVENT.reply("You only gave 1 image link.");
             return;
         }
@@ -115,15 +109,15 @@ public class MergeImages extends Command {
         try {
             BufferedImage image;
             if (orientation.equals("vertical")) {
-                image = concatenateImagesVertical(ARGS);
+                image = concatenateImagesVertical(ARGUMENTS);
             } else {
-                image = concatenateImagesHorizontal(ARGS);
+                image = concatenateImagesHorizontal(ARGUMENTS);
             }
 
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             ImageIO.write(image, "png", os);
             InputStream is = new ByteArrayInputStream(os.toByteArray());
-            EVENT.getChannel().sendFile("", is, "image.png");
+            sendFile("", is, "image.png");
         } catch (InvalidURLException e) {
             if (e.getCause().getCause().getMessage().contains("403 for URL")) {
                 EVENT.reply("I don't have permission to access one of the links. Please upload this one to imgur: " + e.URL);

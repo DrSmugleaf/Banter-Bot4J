@@ -1,7 +1,6 @@
 package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
@@ -19,10 +18,6 @@ import java.util.List;
 @CommandInfo(permissions = {Permissions.KICK, Permissions.BAN})
 public class Blacklist extends Command {
 
-    protected Blacklist(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        super(event, args);
-    }
-
     @Nonnull
     private static String invalidArgumentsResponse() {
         return "Invalid arguments.\n" +
@@ -34,7 +29,7 @@ public class Blacklist extends Command {
 
     @Override
     public void run() {
-        if (ARGS.isEmpty()) {
+        if (ARGUMENTS.isEmpty()) {
             EVENT.reply(invalidArgumentsResponse());
             return;
         }

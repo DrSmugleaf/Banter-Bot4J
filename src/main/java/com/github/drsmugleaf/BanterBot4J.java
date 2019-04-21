@@ -52,6 +52,9 @@ public class BanterBot4J {
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
 
     @Nonnull
+    private static Handler HANDLER;
+
+    @Nonnull
     private static IDiscordClient buildClient() {
         ClientBuilder clientBuilder = new ClientBuilder();
         clientBuilder.withToken(Keys.DISCORD_TOKEN.VALUE).withRecommendedShardCount();
@@ -73,6 +76,7 @@ public class BanterBot4J {
         Database.init("com.github.drsmugleaf.database.models");
         registerListeners();
         Handler handler = new Handler("com.github.drsmugleaf.commands");
+        HANDLER = handler;
         CLIENT.getDispatcher().registerListener(handler);
 
         CLIENT.login();
@@ -131,7 +135,7 @@ public class BanterBot4J {
             return;
         }
 
-        Long channelID;
+        long channelID;
         try {
             channelID = Long.parseLong(channelIDString);
         } catch (NumberFormatException e) {
@@ -144,6 +148,11 @@ public class BanterBot4J {
         }
 
         DISCORD_WARNING_CHANNEL = channel;
+    }
+
+    @Nonnull
+    public static Handler getHandler() {
+        return HANDLER;
     }
 
 }

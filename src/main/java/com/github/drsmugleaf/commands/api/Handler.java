@@ -30,6 +30,11 @@ public class Handler {
         COMMAND_REGISTRY = new Registry(commands);
     }
 
+    @Nonnull
+    public Registry getRegistry() {
+        return COMMAND_REGISTRY;
+    }
+
     @EventSubscriber
     public void handle(@Nonnull MessageReceivedEvent event) {
         String message = event.getMessage().getContent();
@@ -61,21 +66,19 @@ public class Handler {
         CommandInfo annotation = result.getEntry().getCommandInfo();
         if (annotation != null) {
             if (commandEvent.getGuild() != null) {
-                if (commandEvent.getGuild() != null) {
-                    List<Permissions> annotationPermissions = Arrays.asList(annotation.permissions());
-                    EnumSet<Permissions> authorPermissions = commandEvent.getAuthor().getPermissionsForGuild(commandEvent.getGuild());
+                List<Permissions> annotationPermissions = Arrays.asList(annotation.permissions());
+                EnumSet<Permissions> authorPermissions = commandEvent.getAuthor().getPermissionsForGuild(commandEvent.getGuild());
 
-                    if (!annotationPermissions.isEmpty() && Collections.disjoint(authorPermissions, Arrays.asList(annotation.permissions()))) {
-                        commandEvent.reply("You don't have permission to use that command.");
-                        return;
-                    }
+                if (!annotationPermissions.isEmpty() && Collections.disjoint(authorPermissions, Arrays.asList(annotation.permissions()))) {
+                    commandEvent.reply("You don't have permission to use that command.");
+                    return;
                 }
+            }
 
-                for (Tag tags : annotation.tags()) {
-                    if (!tags.isValid(commandEvent)) {
-                        commandEvent.reply(tags.message());
-                        return;
-                    }
+            for (Tag tags : annotation.tags()) {
+                if (!tags.isValid(commandEvent)) {
+                    commandEvent.reply(tags.message());
+                    return;
                 }
             }
         }

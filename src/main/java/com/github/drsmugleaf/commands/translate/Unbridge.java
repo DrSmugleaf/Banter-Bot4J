@@ -1,15 +1,12 @@
 package com.github.drsmugleaf.commands.translate;
 
-import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 import com.github.drsmugleaf.database.models.BridgedChannel;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.Permissions;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -18,20 +15,16 @@ import java.util.List;
 @CommandInfo(permissions = {Permissions.MANAGE_CHANNELS}, tags = {Tags.GUILD_ONLY})
 public class Unbridge extends Command {
 
-    protected Unbridge(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        super(event, args);
-    }
-
     @Override
     public void run() {
-        if (ARGS.isEmpty()) {
+        if (ARGUMENTS.isEmpty()) {
             EVENT.reply("You didn't provide a channel name.");
             return;
         }
 
-        List<IChannel> channels = EVENT.getGuild().getChannelsByName(ARGS.get(0));
+        List<IChannel> channels = EVENT.getGuild().getChannelsByName(ARGUMENTS.get(0));
         if (channels.isEmpty()) {
-            EVENT.reply("No channels found with name " + ARGS.get(0));
+            EVENT.reply("No channels found with name " + ARGUMENTS.get(0));
             return;
         }
 
