@@ -1,9 +1,7 @@
 package com.github.drsmugleaf.commands.tripwire;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.eve.Systems;
 import com.github.drsmugleaf.tripwire.route.Route;
 import com.github.drsmugleaf.tripwire.route.StarSystem;
@@ -17,10 +15,6 @@ import java.util.List;
  * Created by DrSmugleaf on 10/06/2018
  */
 public class TripwireBridge extends Command {
-
-    protected TripwireBridge(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        super(event, args);
-    }
 
     @Nonnull
     private static String invalidArgumentsResponse() {
@@ -39,13 +33,13 @@ public class TripwireBridge extends Command {
             return;
         }
 
-        if (ARGS.size() != 2) {
+        if (ARGUMENTS.size() != 2) {
             EVENT.reply(invalidArgumentsResponse());
             return;
         }
 
         List<String> invalidSystems = new ArrayList<>();
-        for (String system : ARGS) {
+        for (String system : ARGUMENTS) {
             if (!Systems.NAMES.containsValue(system)) {
                 invalidSystems.add(system);
             }
@@ -61,22 +55,22 @@ public class TripwireBridge extends Command {
         StarSystem firstSystem = null;
         StarSystem secondSystem = null;
         for (StarSystem node : route.GRAPH.NODES) {
-            if (node.NAME.equalsIgnoreCase(ARGS.get(0))) {
+            if (node.NAME.equalsIgnoreCase(ARGUMENTS.get(0))) {
                 firstSystem = node;
             }
 
-            if (node.NAME.equalsIgnoreCase(ARGS.get(1))) {
+            if (node.NAME.equalsIgnoreCase(ARGUMENTS.get(1))) {
                 secondSystem = node;
             }
         }
 
         if (firstSystem == null) {
-            EVENT.reply(ARGS.get(0) + " isn't in the route.");
+            EVENT.reply(ARGUMENTS.get(0) + " isn't in the route.");
             return;
         }
 
         if (secondSystem == null) {
-            EVENT.reply(ARGS.get(1) + " isn't in the route.");
+            EVENT.reply(ARGUMENTS.get(1) + " isn't in the route.");
             return;
         }
 

@@ -1,9 +1,7 @@
 package com.github.drsmugleaf.commands.eve;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import net.troja.eve.esi.ApiException;
 import net.troja.eve.esi.api.ContractsApi;
 import net.troja.eve.esi.api.UniverseApi;
@@ -31,13 +29,9 @@ public class EveCheapestBlueprints extends Command {
 
     private static final UniverseApi UNIVERSE_API = new UniverseApi();
 
-    protected EveCheapestBlueprints(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        super(event, args);
-    }
-
     @Override
     public void run() {
-        if (ARGS.isEmpty()) {
+        if (ARGUMENTS.isEmpty()) {
             EVENT.reply("You didn't give a blueprint name to search for");
             return;
         }
@@ -51,7 +45,7 @@ public class EveCheapestBlueprints extends Command {
 
         contracts.removeIf(contract -> !isItemExchangeContract(contract));
         contracts.removeIf(contract -> !isSellingBlueprint(contract));
-        String requestedItem = ARGS.toString();
+        String requestedItem = ARGUMENTS.toString();
         contracts.removeIf(contract -> !containsItem(contract, requestedItem));
 
         if (contracts.isEmpty()) {

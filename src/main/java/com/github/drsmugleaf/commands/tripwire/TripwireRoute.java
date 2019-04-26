@@ -1,9 +1,7 @@
 package com.github.drsmugleaf.commands.tripwire;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.tripwire.route.Route;
 import com.github.drsmugleaf.tripwire.route.SystemGraph;
 import sx.blah.discord.handle.obj.IUser;
@@ -20,10 +18,6 @@ public class TripwireRoute extends Command {
     @Nonnull
     static final Map<IUser, Route> ROUTES = new HashMap<>();
 
-    protected TripwireRoute(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        super(event, args);
-    }
-
     @Nonnull
     private static String invalidArgumentsResponse() {
         return "Invalid arguments.\n" +
@@ -35,16 +29,16 @@ public class TripwireRoute extends Command {
 
     @Override
     public void run() {
-        if (ARGS.size() != 4) {
+        if (ARGUMENTS.size() != 4) {
             EVENT.reply(invalidArgumentsResponse());
             return;
         }
 
         Long id = EVENT.getAuthor().getLongID();
-        String username = ARGS.get(0);
-        String password = ARGS.get(1);
-        String from = ARGS.get(2);
-        String to = ARGS.get(3);
+        String username = ARGUMENTS.get(0);
+        String password = ARGUMENTS.get(1);
+        String from = ARGUMENTS.get(2);
+        String to = ARGUMENTS.get(3);
         Route route = SystemGraph.getRoute(id, username, password, from, to);
 
         if (route == null) {

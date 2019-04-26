@@ -1,10 +1,8 @@
 package com.github.drsmugleaf.commands.owner;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 
 import javax.annotation.Nonnull;
@@ -14,10 +12,6 @@ import javax.annotation.Nonnull;
  */
 @CommandInfo(tags = {Tags.OWNER_ONLY})
 public class Name extends Command {
-
-    protected Name(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        super(event, args);
-    }
 
     @Nonnull
     private static String invalidArgumentsResponse() {
@@ -30,13 +24,13 @@ public class Name extends Command {
 
     @Override
     public void run() {
-        String name = String.join(" ", ARGS);
+        String name = String.join(" ", ARGUMENTS);
         if (name.isEmpty()) {
             EVENT.reply(invalidArgumentsResponse());
             return;
         }
 
-        EVENT.getClient().changeUsername(String.join(" ", ARGS));
+        EVENT.getClient().changeUsername(String.join(" ", ARGUMENTS));
         EVENT.reply("Changed the bot's name to " + name);
     }
 

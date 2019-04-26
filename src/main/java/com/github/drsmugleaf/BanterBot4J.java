@@ -5,6 +5,7 @@ import com.github.drsmugleaf.commands.api.Handler;
 import com.github.drsmugleaf.database.api.Database;
 import com.github.drsmugleaf.env.Keys;
 import com.github.drsmugleaf.reflection.Reflection;
+import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.ClientBuilder;
@@ -21,7 +22,6 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -39,13 +39,20 @@ public class BanterBot4J {
     public static final String BOT_PREFIX = Keys.BOT_PREFIX.VALUE;
 
     @Nonnull
-    public static final List<Long> OWNERS = Collections.unmodifiableList(Arrays.asList(109067752286715904L));
+    public static final ImmutableList<Long> OWNERS = ImmutableList.copyOf(
+            Arrays.asList(
+                    109067752286715904L
+            )
+    );
 
     @Nullable
     private static IChannel DISCORD_WARNING_CHANNEL = null;
 
     @Nonnull
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
+
+    @Nonnull
+    private static Handler HANDLER;
 
     @Nonnull
     private static IDiscordClient buildClient() {
@@ -69,6 +76,7 @@ public class BanterBot4J {
         Database.init("com.github.drsmugleaf.database.models");
         registerListeners();
         Handler handler = new Handler("com.github.drsmugleaf.commands");
+        HANDLER = handler;
         CLIENT.getDispatcher().registerListener(handler);
 
         CLIENT.login();
@@ -127,7 +135,7 @@ public class BanterBot4J {
             return;
         }
 
-        Long channelID;
+        long channelID;
         try {
             channelID = Long.parseLong(channelIDString);
         } catch (NumberFormatException e) {
@@ -140,6 +148,11 @@ public class BanterBot4J {
         }
 
         DISCORD_WARNING_CHANNEL = channel;
+    }
+
+    @Nonnull
+    public static Handler getHandler() {
+        return HANDLER;
     }
 
 }

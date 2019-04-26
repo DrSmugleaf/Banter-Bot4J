@@ -1,9 +1,7 @@
 package com.github.drsmugleaf.commands.music;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 import com.github.drsmugleaf.music.GuildMusicManager;
 import com.github.drsmugleaf.music.TrackScheduler;
@@ -11,7 +9,6 @@ import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
 
-import javax.annotation.Nonnull;
 import java.util.AbstractMap;
 
 /**
@@ -19,10 +16,6 @@ import java.util.AbstractMap;
  */
 @CommandInfo(permissions = {Permissions.VOICE_MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
 public class Stop extends MusicCommand {
-
-    protected Stop(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        super(event, args);
-    }
 
     @Override
     public void run() {

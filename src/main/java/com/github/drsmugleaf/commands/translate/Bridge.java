@@ -1,10 +1,8 @@
 package com.github.drsmugleaf.commands.translate;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 import com.github.drsmugleaf.database.models.BridgedChannel;
 import com.github.drsmugleaf.translator.Languages;
@@ -12,7 +10,6 @@ import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.Permissions;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -21,50 +18,46 @@ import java.util.List;
 @CommandInfo(permissions = {Permissions.MANAGE_CHANNELS}, tags = {Tags.GUILD_ONLY})
 public class Bridge extends Command {
 
-    protected Bridge(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        super(event, args);
-    }
-
     @Override
     public void run() {
-        if (ARGS.isEmpty()) {
+        if (ARGUMENTS.isEmpty()) {
             EVENT.reply("You didn't provide any channels or languages.\n" +
                         "Usage: " + BanterBot4J.BOT_PREFIX + "bridge channel1 language1 channel2 language2");
             return;
         }
 
-        if (ARGS.size() < 4) {
+        if (ARGUMENTS.size() < 4) {
             EVENT.reply("You didn't provide enough arguments.\n" +
                         "Usage: " + BanterBot4J.BOT_PREFIX + "bridge channel1 language1 channel2 language2");
             return;
         }
 
         IGuild guild = EVENT.getGuild();
-        List<IChannel> firstChannelList = guild.getChannelsByName(ARGS.get(0));
+        List<IChannel> firstChannelList = guild.getChannelsByName(ARGUMENTS.get(0));
         if (firstChannelList.isEmpty()) {
-            EVENT.reply("Couldn't find any channels with name " + ARGS.get(0));
+            EVENT.reply("Couldn't find any channels with name " + ARGUMENTS.get(0));
             return;
         }
 
         IChannel firstChannel = firstChannelList.get(0);
 
-        Languages firstLanguage = Languages.getLanguage(ARGS.get(1));
+        Languages firstLanguage = Languages.getLanguage(ARGUMENTS.get(1));
         if (firstLanguage == null) {
-            EVENT.reply("Couldn't find any languages with name " + ARGS.get(1));
+            EVENT.reply("Couldn't find any languages with name " + ARGUMENTS.get(1));
             return;
         }
 
-        List<IChannel> secondChannelList = guild.getChannelsByName(ARGS.get(2));
+        List<IChannel> secondChannelList = guild.getChannelsByName(ARGUMENTS.get(2));
         if (secondChannelList.isEmpty()) {
-            EVENT.reply("Couldn't find any channels with name " + ARGS.get(2));
+            EVENT.reply("Couldn't find any channels with name " + ARGUMENTS.get(2));
             return;
         }
 
         IChannel secondChannel = secondChannelList.get(0);
 
-        Languages secondLanguage = Languages.getLanguage(ARGS.get(3));
+        Languages secondLanguage = Languages.getLanguage(ARGUMENTS.get(3));
         if (secondLanguage == null) {
-            EVENT.reply("Couldn't find any languages with name " + ARGS.get(3));
+            EVENT.reply("Couldn't find any languages with name " + ARGUMENTS.get(3));
             return;
         }
 

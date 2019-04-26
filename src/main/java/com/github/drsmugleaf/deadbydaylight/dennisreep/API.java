@@ -38,10 +38,10 @@ public abstract class API {
     public static final String SURVIVOR_ROULETTE_URL = "https://dennisreep.nl/dbd/roulette/survivor/";
 
     @Nonnull
-    private static final String IMAGES_PATH = Objects.requireNonNull(API.class.getClassLoader().getResource("deadbydaylight")).getFile();
+    public static final String IMAGES_PATH = Objects.requireNonNull(API.class.getClassLoader().getResource("deadbydaylight")).getFile();
 
     @Nonnull
-    private static final String PATH = "https://dennisreep.nl/dbd/api/v2/";
+    public static final String PATH = "https://dennisreep.nl/dbd/api/v2/";
 
     @Nonnull
     protected static final Gson GSON = new GsonBuilder().create();
@@ -58,8 +58,8 @@ public abstract class API {
     }
 
     @Nonnull
-    protected static JsonObject getResponse(@Nonnull final String endpoint) {
-        final String URL = PATH + endpoint;
+    protected static JsonObject getResponse(@Nonnull String endpoint) {
+        String URL = PATH + endpoint;
 
         String body;
         try {

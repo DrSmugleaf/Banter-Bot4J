@@ -1,10 +1,8 @@
 package com.github.drsmugleaf.commands.eve;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.database.models.EveTimerModel;
 import sx.blah.discord.handle.obj.IChannel;
 
@@ -25,10 +23,6 @@ import java.util.List;
 )
 public class EveTimerDelete extends Command {
 
-    protected EveTimerDelete(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        super(event, args);
-    }
-
     @Nonnull
     private static String invalidArgumentsResponse() {
         return "Invalid arguments.\n" +
@@ -40,15 +34,15 @@ public class EveTimerDelete extends Command {
 
     @Override
     public void run() {
-        if (ARGS.size() != 2) {
+        if (ARGUMENTS.size() != 2) {
             EVENT.reply(invalidArgumentsResponse());
             return;
         }
 
         IChannel channel = EVENT.getChannel();
         long channelID = channel.getLongID();
-        String structure = ARGS.get(0);
-        String system = ARGS.get(1);
+        String structure = ARGUMENTS.get(0);
+        String system = ARGUMENTS.get(1);
 
         EveTimerModel timer = new EveTimerModel(channelID, structure, system, null, null);
 

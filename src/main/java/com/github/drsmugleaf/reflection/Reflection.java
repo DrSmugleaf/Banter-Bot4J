@@ -137,6 +137,8 @@ public class Reflection {
             }
         }
 
+        classes.remove(supertype);
+
         return classes;
     }
 

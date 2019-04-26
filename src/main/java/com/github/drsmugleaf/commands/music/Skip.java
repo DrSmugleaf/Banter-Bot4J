@@ -1,8 +1,6 @@
 package com.github.drsmugleaf.commands.music;
 
-import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 import com.github.drsmugleaf.music.GuildMusicManager;
 import com.github.drsmugleaf.music.TrackUserData;
@@ -25,10 +23,6 @@ public class Skip extends MusicCommand {
 
     @Nonnull
     private static final Map<IGuild, List<IUser>> SKIP_VOTES = new HashMap<>();
-
-    protected Skip(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        super(event, args);
-    }
 
     @Override
     public void run() {

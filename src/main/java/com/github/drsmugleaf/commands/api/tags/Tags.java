@@ -15,15 +15,17 @@ import javax.annotation.Nonnull;
 public enum Tags implements Tag {
 
     DELETE_COMMAND_MESSAGE {
+
         @Override
         public void execute(@Nonnull CommandReceivedEvent event) {
             try {
                 event.getMessage().delete();
-            } catch (MissingPermissionsException ignored) {
-            }
+            } catch (MissingPermissionsException ignored) {}
         }
+
     },
     GUILD_ONLY {
+
         @Override
         public boolean isValid(@Nonnull CommandReceivedEvent event) {
             return event.getGuild() != null;
@@ -34,8 +36,10 @@ public enum Tags implements Tag {
         public String message() {
             return "That command must be used in a server channel.";
         }
+
     },
     OWNER_ONLY {
+
         @Override
         public boolean isValid(@Nonnull CommandReceivedEvent event) {
             return Command.isOwner(event.getAuthor());
@@ -46,8 +50,10 @@ public enum Tags implements Tag {
         public String message() {
             return "You don't have permission to use that command.";
         }
+
     },
     SAME_VOICE_CHANNEL {
+
         @Override
         public boolean isValid(@Nonnull CommandReceivedEvent event) {
             if (!GUILD_ONLY.isValid(event)) {
@@ -68,8 +74,10 @@ public enum Tags implements Tag {
         public String message() {
             return "You aren't in the same voice channel as me.";
         }
+
     },
     VOICE_ONLY {
+
         @Override
         public boolean isValid(@Nonnull CommandReceivedEvent event) {
             if (!GUILD_ONLY.isValid(event)) {
@@ -88,6 +96,7 @@ public enum Tags implements Tag {
         public String message() {
             return "You must be in a voice channel to use that command.";
         }
+
     };
 
     public boolean isValid(@Nonnull CommandReceivedEvent event) {
@@ -99,7 +108,6 @@ public enum Tags implements Tag {
         return "You can't use that command.";
     }
 
-    public void execute(@Nonnull CommandReceivedEvent event) {
-    }
+    public void execute(@Nonnull CommandReceivedEvent event) {}
 
 }
