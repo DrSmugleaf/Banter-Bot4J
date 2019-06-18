@@ -8,7 +8,6 @@ import net.troja.eve.esi.api.UniverseApi;
 import net.troja.eve.esi.model.PublicContractsItemsResponse;
 import net.troja.eve.esi.model.PublicContractsResponse;
 import net.troja.eve.esi.model.UniverseIdsResponse;
-import sx.blah.discord.handle.obj.IMessage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,44 +31,47 @@ public class EveCheapestBlueprints extends Command {
     @Override
     public void run() {
         if (ARGUMENTS.isEmpty()) {
-            EVENT.reply("You didn't give a blueprint name to search for");
+            reply("You didn't write a blueprint name to search for").subscribe();
             return;
         }
 
-        IMessage reply = EVENT.reply("Contacting the EVE Online API, please wait");
-        List<PublicContractsResponse> contracts = getContracts(THE_FORGE_REGION_ID);
-        if (contracts.isEmpty()) {
-            reply.edit("An Eve Online API error occurred retrieving contracts from The Forge");
-            return;
-        }
+        reply("Contacting the EVE Online API, please wait")
+                .flatMap(message -> message.edit(spec -> {
+                    List<PublicContractsResponse> contracts = getContracts(THE_FORGE_REGION_ID);
+                    if (contracts.isEmpty()) {
+                        spec.setContent("An Eve Online API error occurred retrieving contracts from The Forge");
+                        return;
+                    }
 
-        contracts.removeIf(contract -> !isItemExchangeContract(contract));
-        contracts.removeIf(contract -> !isSellingBlueprint(contract));
-        String requestedItem = ARGUMENTS.toString();
-        contracts.removeIf(contract -> !containsItem(contract, requestedItem));
+                    contracts.removeIf(contract -> !isItemExchangeContract(contract));
+                    contracts.removeIf(contract -> !isSellingBlueprint(contract));
+                    String requestedItem = ARGUMENTS.toString();
+                    contracts.removeIf(contract -> !containsItem(contract, requestedItem));
 
-        if (contracts.isEmpty()) {
-            reply.edit("No contracts found selling a blueprint named " + requestedItem);
-            return;
-        }
+                    if (contracts.isEmpty()) {
+                        spec.setContent("No contracts found selling a blueprint named " + requestedItem);
+                        return;
+                    }
 
-        List<Double> prices = contracts
-                .stream()
-                .map(PublicContractsResponse::getPrice)
-                .sorted(Double::compareTo)
-                .collect(Collectors.toList());
+                    List<Double> prices = contracts
+                            .stream()
+                            .map(PublicContractsResponse::getPrice)
+                            .sorted(Double::compareTo)
+                            .collect(Collectors.toList());
 
-        DecimalFormat format = new DecimalFormat("#,###");
-        StringBuilder response = new StringBuilder("Cheapest prices:");
-        for (int i = 0; i < prices.size() || i >= 5; i++) {
-            Double price = prices.get(i);
-            response
-                    .append("\n")
-                    .append(format.format(price))
-                    .append(" ISK");
-        }
+                    DecimalFormat format = new DecimalFormat("#,###");
+                    StringBuilder response = new StringBuilder("Cheapest prices:");
+                    for (int i = 0; i < prices.size() || i >= 5; i++) {
+                        Double price = prices.get(i);
+                        response
+                                .append("\n")
+                                .append(format.format(price))
+                                .append(" ISK");
+                    }
 
-        reply.edit(response.toString());
+                    spec.setContent(response.toString());
+                }))
+                .subscribe();
     }
 
     @Nullable

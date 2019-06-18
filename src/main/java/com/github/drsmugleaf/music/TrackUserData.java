@@ -1,7 +1,8 @@
 package com.github.drsmugleaf.music;
 
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IUser;
+import discord4j.core.object.entity.Member;
+import discord4j.core.object.entity.TextChannel;
+import discord4j.core.object.entity.VoiceChannel;
 
 import javax.annotation.Nonnull;
 
@@ -11,14 +12,18 @@ import javax.annotation.Nonnull;
 public class TrackUserData {
 
     @Nonnull
-    public final IChannel CHANNEL;
+    public final TextChannel TEXT_CHANNEL;
 
     @Nonnull
-    public final IUser SUBMITTER;
+    public final Member SUBMITTER;
 
-    protected TrackUserData(@Nonnull IChannel channel, @Nonnull IUser submitter) {
-        CHANNEL = channel;
+    @Nonnull
+    public final VoiceChannel VOICE_CHANNEL;
+
+    protected TrackUserData(@Nonnull TextChannel textChannel, @Nonnull Member submitter, @Nonnull VoiceChannel voiceChannel) {
+        TEXT_CHANNEL = textChannel;
         SUBMITTER = submitter;
+        VOICE_CHANNEL = voiceChannel;
     }
 
 }

@@ -1,12 +1,11 @@
 package com.github.drsmugleaf.commands.images;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 
 /**
  * Created by DrSmugleaf on 10/11/2018
  */
-public class InvalidURLException extends IOException {
+public class InvalidURLException extends RuntimeException {
 
     @Nonnull
     public final String URL;

@@ -42,12 +42,12 @@ public enum Decision {
     }
 
     @Nullable
-    public static Decision from(@Nonnull String vote) {
-        vote = vote.toLowerCase();
+    public static Decision from(@Nonnull String string) {
+        string = string.toLowerCase();
 
         for (Decision decision : getDecisions()) {
             for (String alias : decision.ALIASES) {
-                if (vote.contains(alias.toLowerCase())) {
+                if (string.contains(alias.toLowerCase())) {
                     return decision;
                 }
             }

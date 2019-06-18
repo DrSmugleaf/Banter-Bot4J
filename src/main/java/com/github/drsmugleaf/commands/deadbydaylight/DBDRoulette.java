@@ -2,11 +2,10 @@ package com.github.drsmugleaf.commands.deadbydaylight;
 
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.converter.TypeConverters;
 import com.github.drsmugleaf.deadbydaylight.ICharacter;
 import com.github.drsmugleaf.deadbydaylight.dennisreep.*;
-import sx.blah.discord.api.internal.json.objects.EmbedObject;
-import sx.blah.discord.util.EmbedBuilder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,45 +37,48 @@ public class DBDRoulette extends Command {
         String perkRating = String.format("%.2f", randomPerks.getAverageRating());
         Tiers perkTier = randomPerks.getTier();
 
-        EmbedBuilder builder = new EmbedBuilder();
-        String title = character.getName();
-        if (character.getRating() != null) {
-            title += " (" + character.getRating() + " ★)";
-        }
+        EVENT
+                .getMessage()
+                .getChannel()
+                .flatMap(channel -> channel.createMessage(message -> {
+                    message.setEmbed(embed -> {
+                        String title = character.getName();
+                        if (character.getRating() != null) {
+                            title += " (" + character.getRating() + " ★)";
+                        }
 
-        builder
-                .withTitle(title)
-                .withThumbnail("attachment://image.png")
-                .withFooterText(getDate())
-                .withColor(perkTier.COLOR.brighter())
-                .withUrl(API.HOME_URL);
+                        embed
+                                .setTitle(title)
+                                .setThumbnail("attachment://image.png")
+                                .setFooter(getDate(), null)
+                                .setColor(perkTier.COLOR.brighter())
+                                .setUrl(API.HOME_URL);
 
-        EmbedObject embed;
-        InputStream image = character.getImage();
-        if (randomPerks.size() < 4) {
-            builder.appendField("Not enough perks in this rating range", "Perks found: " + randomPerks.size(), true);
-            embed = builder.build();
-            sendFile(embed, image, "image.png");
-            return;
-        }
 
-        builder.withDescription("Average perk rating: " + perkRating + " ★");
+                        if (randomPerks.size() < 4) {
+                            embed.addField("Not enough perks in this rating range", "Perks found: " + randomPerks.size(), true);
+                            return;
+                        }
 
-        for (int i = 0; i < randomPerks.size(); i++) {
-            if (i % 2 == 0) {
-                builder.appendField("\u200b", "\u200b", false);
-            }
+                        embed.setDescription("Average perk rating: " + perkRating + " ★");
 
-            Perk perk = randomPerks.get(i);
-            builder.appendField(
-                    perk.NAME + " (" + perk.TIER.NAME + ")",
-                    perk.RATING + " ★ (" + perk.RATINGS + ")",
-                    true
-            );
-        }
+                        for (int i = 0; i < randomPerks.size(); i++) {
+                            if (i % 2 == 0) {
+                                embed.addField("\u200b", "\u200b", false);
+                            }
 
-        embed = builder.build();
-        sendFile(embed, image, "image.png");
+                            Perk perk = randomPerks.get(i);
+                            embed.addField(
+                                    perk.NAME + " (" + perk.TIER.NAME + ")",
+                                    perk.RATING + " ★ (" + perk.RATINGS + ")",
+                                    true
+                            );
+                        }
+                    });
+
+                    InputStream image = character.getImage();
+                    message.addFile("image.png", image);
+                })).subscribe();
     }
 
     @Override
@@ -120,7 +122,7 @@ public class DBDRoulette extends Command {
 
     @Override
     public void registerConverters(@Nonnull TypeConverters converter) {
-        converter.registerStringTo(RouletteTypes.class, RouletteTypes::from);
+        converter.registerStringTo(CommandReceivedEvent.class, RouletteTypes.class, (s, e) -> RouletteTypes.from(s));
     }
 
 }

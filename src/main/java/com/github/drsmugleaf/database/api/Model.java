@@ -133,7 +133,6 @@ public abstract class Model<T extends Model<T>> {
         return models;
     }
 
-    @SuppressWarnings("unchecked")
     public final void createIfNotExists() {
         QueryBuilder<T> queryBuilder = new QueryBuilder<>(this);
 

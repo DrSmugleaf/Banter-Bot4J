@@ -5,9 +5,12 @@ import com.github.drsmugleaf.commands.api.tags.Tags;
 import com.github.drsmugleaf.music.GuildMusicManager;
 import com.github.drsmugleaf.music.TrackUserData;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IUser;
+import discord4j.core.object.VoiceState;
+import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.Member;
+import discord4j.core.object.entity.User;
+import discord4j.core.object.entity.VoiceChannel;
+import reactor.core.publisher.Mono;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -22,51 +25,57 @@ import java.util.Map;
 public class Skip extends MusicCommand {
 
     @Nonnull
-    private static final Map<IGuild, List<IUser>> SKIP_VOTES = new HashMap<>();
+    private static final Map<Guild, List<User>> SKIP_VOTES = new HashMap<>();
 
     @Override
     public void run() {
-        IGuild guild = EVENT.getGuild();
+        Guild guild = EVENT
+                .getGuild()
+                .blockOptional()
+                .orElseThrow(() -> new IllegalStateException("Couldn't get the message's guild. Message: " + EVENT.getMessage()));
 
-        GuildMusicManager musicManager = Music.getGuildMusicManager(guild);
+        GuildMusicManager musicManager = Music.getGuildMusicManager(guild.getId());
         AudioTrack currentTrack = musicManager.getScheduler().getCurrentTrack();
         if (currentTrack == null) {
-            EVENT.reply("There isn't a track currently playing.");
+            reply("There isn't a track currently playing.").subscribe();
             return;
         }
 
         SKIP_VOTES.computeIfAbsent(guild, k -> new ArrayList<>());
 
-        IUser author = EVENT.getAuthor();
-        if (SKIP_VOTES.get(guild).contains(author)) {
-            EVENT.reply("You have already voted to skip this track.");
-            return;
-        }
-
-        SKIP_VOTES.get(guild).add(author);
-
-        IUser bot = EVENT.getClient().getOurUser();
-        IChannel botVoiceChannel = bot.getVoiceStateForGuild(guild).getChannel();
-        List<IUser> users = botVoiceChannel.getUsersHere();
-        int humanUsers = 0;
-        for (IUser user : users) {
-            if (!user.isBot()) {
-                humanUsers++;
+        EVENT.getMessage().getAuthor().ifPresent(author -> {
+            if (SKIP_VOTES.get(guild).contains(author)) {
+                reply("You have already voted to skip this track.").subscribe();
+                return;
             }
-        }
 
-        int votes = SKIP_VOTES.get(guild).size();
-        double requiredVotes = humanUsers / 2.0;
+            SKIP_VOTES.get(guild).add(author);
 
-        TrackUserData trackUserData = currentTrack.getUserData(TrackUserData.class);
-        if (votes >= requiredVotes || author == trackUserData.SUBMITTER) {
-            SKIP_VOTES.get(guild).clear();
-            musicManager.getScheduler().skip();
-            EVENT.reply("Skipped the current track.");
-        } else {
-            String response = String.format("Votes to skip: %d/%.0f", votes, requiredVotes);
-            EVENT.reply(response);
-        }
+            int votes = SKIP_VOTES.get(guild).size();
+            EVENT
+                    .getClient()
+                    .getSelf()
+                    .zipWith(EVENT.getGuild())
+                    .flatMap(tuple -> tuple.getT1().asMember(tuple.getT2().getId()))
+                    .flatMap(Member::getVoiceState)
+                    .flatMap(VoiceState::getChannel)
+                    .flatMapMany(VoiceChannel::getVoiceStates)
+                    .filterWhen(state -> state.getUser().map(User::isBot).map(b -> !b))
+                    .count()
+                    .zipWith(Mono.just(currentTrack.getUserData(TrackUserData.class)))
+                    .subscribe(tuple -> {
+                        double required = tuple.getT1() / 2.0;
+
+                        if (votes >= required || author == tuple.getT2().SUBMITTER) {
+                            SKIP_VOTES.get(guild).clear();
+                            musicManager.getScheduler().skip();
+                            reply("Skipped the current track.").subscribe();
+                        } else {
+                            String response = String.format("Votes to skip: %d/%.0f", votes, required);
+                            reply(response).subscribe();
+                        }
+                    });
+        });
     }
 
 }

@@ -32,7 +32,7 @@ public class RandomCivilizationVI extends Command {
         List<String> leadersNamesList = leaders.stream().map(Leaders::getName).collect(Collectors.toList());
         String leadersNames = String.join(", ", leadersNamesList);
 
-        EVENT.reply(leadersNames);
+        reply(leadersNames).subscribe();
     }
 
 }

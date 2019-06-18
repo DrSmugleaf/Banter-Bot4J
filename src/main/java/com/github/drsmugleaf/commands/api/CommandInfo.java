@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.commands.api;
 
 import com.github.drsmugleaf.commands.api.tags.Tags;
-import sx.blah.discord.handle.obj.Permissions;
+import discord4j.core.object.util.Permission;
 
 import javax.annotation.Nonnull;
 import java.lang.annotation.ElementType;
@@ -23,7 +23,7 @@ public @interface CommandInfo {
     String[] aliases() default {};
 
     @Nonnull
-    Permissions[] permissions() default {};
+    Permission[] permissions() default {};
 
     @Nonnull
     Tags[] tags() default {};

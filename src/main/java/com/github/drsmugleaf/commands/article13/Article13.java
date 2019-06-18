@@ -1,13 +1,13 @@
 package com.github.drsmugleaf.commands.article13;
 
-import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.article13.entities.Country;
 import com.github.drsmugleaf.article13.entities.Party;
 import com.github.drsmugleaf.article13.vote.Decision;
 import com.github.drsmugleaf.article13.vote.Vote;
-import com.github.drsmugleaf.commands.api.Arguments;
+import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
+import com.github.drsmugleaf.commands.api.converter.TypeConverters;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -19,62 +19,17 @@ import java.util.stream.Collectors;
  */
 public class Article13 extends Command {
 
-    protected Article13(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        super(event, args);
-    }
+    @Argument(position = 1, example = "spain")
+    private Country country;
+
+    @Argument(position = 2, example = "for/against")
+    private Decision decision;
+
+    @Argument(position = 3, example = "final")
+    private Vote vote;
 
     @Override
     public void run() {
-        if (ARGS.size() < 3) {
-            EVENT.reply(
-                    "Invalid arguments.\n" +
-                            "**Valid countries:**\n" +
-                            String.join(", ", Country.getCountryNames()) +
-                            "\n**Valid decisions:**\n" +
-                            String.join(", ", Decision.getDecisionNames()) +
-                            "\n**Valid votes:**\n" +
-                            String.join(", ", Vote.getVoteNames()) +
-                            "\nExample: " + BanterBot4J.BOT_PREFIX + "article13 spain for final"
-            );
-            return;
-        }
-
-        String countryName = ARGS.get(0);
-        Country country = Country.getCountry(countryName);
-        if (country == null) {
-            EVENT.reply(
-                    "Invalid country name.\n" +
-                            "**Valid countries:**\n" +
-                            String.join(", ", Country.getCountryNames()) +
-                            "\nExample: " + BanterBot4J.BOT_PREFIX + "article13 spain for final"
-            );
-            return;
-        }
-
-        String decisionName = ARGS.get(1);
-        Decision decision = Decision.from(decisionName);
-        if (decision == null) {
-            EVENT.reply(
-                    "Invalid decision name.\n" +
-                            "**Valid decisions:**\n" +
-                            String.join(", ", Decision.getDecisionNames()) +
-                            "\nExample: " + BanterBot4J.BOT_PREFIX + "article13 spain for final"
-            );
-            return;
-        }
-
-        String voteName = ARGS.getFrom(2);
-        Vote vote = Vote.getVote(voteName);
-        if (vote == null) {
-            EVENT.reply(
-                    "Invalid vote name\n" +
-                            "**Valid votes:**\n" +
-                            String.join(", ", Vote.getVoteNames()) +
-                            "\nExample: " + BanterBot4J.BOT_PREFIX + "article13 spain for final"
-            );
-            return;
-        }
-
         List<Party> parties = country
                 .getParties()
                 .entrySet()
@@ -97,7 +52,14 @@ public class Article13 extends Command {
                     .append(")\n");
         }
 
-        EVENT.reply(response.toString());
+        reply(response.toString()).subscribe();
+    }
+
+    @Override
+    public void registerConverters(@Nonnull TypeConverters converter) {
+        converter.registerStringTo(CommandReceivedEvent.class, Country.class, (s, e) -> Country.getCountry(s));
+        converter.registerStringTo(CommandReceivedEvent.class, Decision.class, (s, e) -> Decision.from(s));
+        converter.registerStringTo(CommandReceivedEvent.class, Vote.class, (s, e) -> Vote.getVote(s));
     }
 
 }

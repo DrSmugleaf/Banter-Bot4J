@@ -5,6 +5,9 @@ import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.google.common.collect.ImmutableList;
+import discord4j.core.object.entity.Member;
+import discord4j.core.object.entity.User;
+import reactor.core.publisher.Mono;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,16 +34,7 @@ public class Entry {
         COMMAND_FIELDS = ImmutableList.copyOf(CommandField.from(command));
     }
 
-    @Nonnull
-    public static CommandReceivedEvent getEvent(@Nonnull Command command) {
-        try {
-            return (CommandReceivedEvent) Command.class.getField("EVENT").get(command);
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            throw new IllegalStateException("Error getting event field for command " + command, e);
-        }
-    }
-
-    public static void setEventField(@Nonnull Command command, @Nonnull CommandReceivedEvent event) {
+    public static void setEvent(@Nonnull Command command, @Nonnull CommandReceivedEvent event) {
         try {
             Command.class.getDeclaredField("EVENT").set(command, event);
         } catch (IllegalAccessException | NoSuchFieldException e) {
@@ -48,20 +42,41 @@ public class Entry {
         }
     }
 
-    @Nonnull
-    public static Arguments getArgs(@Nonnull Command command) {
-        try {
-            return (Arguments) Command.class.getDeclaredField("ARGUMENTS").get(command);
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            throw new IllegalStateException("Error getting args field for command " + command, e);
-        }
-    }
-
-    public static void setArgsField(@Nonnull Command command, @Nonnull Arguments args) {
+    public static void setArgs(@Nonnull Command command, @Nonnull Arguments args) {
         try {
             Command.class.getDeclaredField("ARGUMENTS").set(command, args);
         } catch (IllegalAccessException | NoSuchFieldException e) {
             throw new IllegalStateException("Error setting args field for command " + command, e);
+        }
+    }
+
+    public static void setSelfUser(@Nonnull Command command, @Nonnull CommandReceivedEvent event) {
+        User selfUser = event
+                .getClient()
+                .getSelf()
+                .blockOptional()
+                .orElseThrow(() -> new IllegalStateException("Unable to get self user"));
+
+        try {
+            Command.class.getDeclaredField("SELF_USER").set(command, selfUser);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            throw new IllegalStateException("Error setting self user field for command " + command, e);
+        }
+    }
+
+    public static void setSelfMember(@Nonnull Command command, @Nonnull CommandReceivedEvent event) {
+        Member selfMember = event
+                .getClient()
+                .getSelf()
+                .zipWith(Mono.justOrEmpty(event.getGuildId()))
+                .flatMap(tuple -> tuple.getT1().asMember(tuple.getT2()))
+                .blockOptional()
+                .orElse(null);
+
+        try {
+            Command.class.getDeclaredField("SELF_MEMBER").set(command, selfMember);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            throw new IllegalStateException("Error setting self member field for command " + command, e);
         }
     }
 

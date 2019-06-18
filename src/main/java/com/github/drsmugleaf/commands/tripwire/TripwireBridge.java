@@ -5,7 +5,7 @@ import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.eve.Systems;
 import com.github.drsmugleaf.tripwire.route.Route;
 import com.github.drsmugleaf.tripwire.route.StarSystem;
-import sx.blah.discord.handle.obj.IUser;
+import discord4j.core.object.entity.User;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -27,14 +27,18 @@ public class TripwireBridge extends Command {
 
     @Override
     public void run() {
-        IUser author = EVENT.getAuthor();
+        User author = EVENT
+                .getMessage()
+                .getAuthor()
+                .orElseThrow(() -> new IllegalStateException("Couldn't get the message's author. Message: " + EVENT.getMessage()));
+
         if (!TripwireRoute.ROUTES.containsKey(author)) {
-            EVENT.reply("Create a route first with " + BanterBot4J.BOT_PREFIX + "tripwireRoute.");
+            reply("Create a route first with " + BanterBot4J.BOT_PREFIX + "tripwireRoute.").subscribe();
             return;
         }
 
         if (ARGUMENTS.size() != 2) {
-            EVENT.reply(invalidArgumentsResponse());
+            reply(invalidArgumentsResponse()).subscribe();
             return;
         }
 
@@ -47,7 +51,7 @@ public class TripwireBridge extends Command {
 
         if (!invalidSystems.isEmpty()) {
             String response = "Invalid system names: " + String.join(", ", invalidSystems + ".");
-            EVENT.reply(response);
+            reply(response).subscribe();
             return;
         }
 
@@ -65,19 +69,19 @@ public class TripwireBridge extends Command {
         }
 
         if (firstSystem == null) {
-            EVENT.reply(ARGUMENTS.get(0) + " isn't in the route.");
+            reply(ARGUMENTS.get(0) + " isn't in the route.").subscribe();
             return;
         }
 
         if (secondSystem == null) {
-            EVENT.reply(ARGUMENTS.get(1) + " isn't in the route.");
+            reply(ARGUMENTS.get(1) + " isn't in the route.").subscribe();
             return;
         }
 
         firstSystem.addDestination(secondSystem, 0);
         route.recalculate();
 
-        EVENT.reply(route.info());
+        reply(route.info()).subscribe();
     }
 
 }

@@ -5,7 +5,6 @@ import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.converter.TypeConverters;
 import com.google.common.collect.ImmutableList;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -85,8 +84,8 @@ public class Registry {
     }
 
     @Nullable
-    public CommandSearchResult findCommand(@Nonnull MessageReceivedEvent event) {
-        String message = event.getMessage().getContent().substring(BanterBot4J.BOT_PREFIX.length()).toLowerCase();
+    public CommandSearchResult findCommand(@Nonnull String message) {
+        message = message.substring(BanterBot4J.BOT_PREFIX.length()).toLowerCase();
         List<CommandSearchResult> matches = new ArrayList<>();
 
         List<String> argsList = Arguments.parseArgs(message);

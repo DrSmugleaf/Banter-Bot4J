@@ -7,22 +7,21 @@ import com.github.drsmugleaf.commands.api.registry.CommandField;
 import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
 import com.github.drsmugleaf.commands.api.registry.Entry;
 import com.github.drsmugleaf.commands.api.tags.Tag;
+import discord4j.core.object.entity.Member;
+import discord4j.core.object.entity.Message;
+import discord4j.core.object.entity.User;
+import discord4j.core.spec.MessageCreateSpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sx.blah.discord.api.internal.json.objects.EmbedObject;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.util.RateLimitException;
-import sx.blah.discord.util.RequestBuffer;
+import reactor.core.publisher.Mono;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.function.Consumer;
 
 /**
  * Created by DrSmugleaf on 09/06/2018
@@ -38,6 +37,12 @@ public class Command implements ICommand {
     public CommandReceivedEvent EVENT;
     public Arguments ARGUMENTS;
 
+    @Nullable
+    public User SELF_USER;
+
+    @Nonnull
+    public Member SELF_MEMBER;
+
     protected Command() {}
 
     protected static void run(@Nonnull CommandSearchResult commandSearch, @Nonnull CommandReceivedEvent event) {
@@ -52,16 +57,22 @@ public class Command implements ICommand {
 
         Command command = entry.newInstance();
         Arguments arguments = new Arguments(commandSearch, event);
-        Entry.setEventField(command, event);
-        Entry.setArgsField(command, arguments);
+        Entry.setEvent(command, event);
+        Entry.setArgs(command, arguments);
+        Entry.setSelfUser(command, event);
+        Entry.setSelfMember(command, event);
 
         if (command.setArguments(entry)) {
             command.run();
         }
     }
 
-    public static boolean isOwner(@Nonnull IUser user) {
-        return BanterBot4J.OWNERS.contains(user.getLongID());
+    public static boolean isOwner(@Nullable User user) {
+        if (user == null) {
+            return false;
+        }
+
+        return BanterBot4J.OWNERS.contains(user.getId().asLong());
     }
 
     @Nonnull
@@ -79,33 +90,6 @@ public class Command implements ICommand {
         return ARGUMENTS;
     }
 
-    @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nullable String content, @Nullable EmbedObject embed) {
-        if (content == null) {
-            content = "";
-        }
-
-        final String finalContent = content;
-        return RequestBuffer.request(() -> {
-            try {
-                return channel.sendMessage(finalContent, embed);
-            } catch (RateLimitException e) {
-                LOGGER.error("Message could not be sent", e);
-                throw e;
-            }
-        }).get();
-    }
-
-    @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull String content) {
-        return sendMessage(channel, content, null);
-    }
-
-    @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull EmbedObject embed) {
-        return sendMessage(channel, null, embed);
-    }
-
     private boolean setArguments(@Nonnull Entry entry) {
         for (CommandField commandField : entry.getCommandFields()) {
             Field field = commandField.getField();
@@ -120,7 +104,7 @@ public class Command implements ICommand {
 
             Result result = ARGUMENTS.getArg(commandField, def);
             if (!result.isValid()) {
-                EVENT.reply(result.getErrorResponse());
+                reply(result.getErrorResponse()).subscribe();
                 return false;
             }
 
@@ -135,57 +119,13 @@ public class Command implements ICommand {
     }
 
     @Nonnull
-    public IMessage sendMessage(@Nonnull String content) {
-        return sendMessage(EVENT.getChannel(), content);
+    public Mono<Message> reply(@Nonnull Consumer<MessageCreateSpec> spec) {
+        return EVENT.reply(spec);
     }
 
     @Nonnull
-    public IMessage sendMessage(@Nonnull EmbedObject embed) {
-        return sendMessage(EVENT.getChannel(), embed);
-    }
-
-    @Nonnull
-    public IMessage sendMessage(@Nonnull String content, @Nonnull EmbedObject embed) {
-        return sendMessage(EVENT.getChannel(), content, embed);
-    }
-
-    @Nonnull
-    public IMessage sendFile(@Nonnull EmbedObject embed, @Nonnull InputStream file, @Nonnull String fileName) {
-        return RequestBuffer.request(() -> {
-            try {
-                return EVENT.getChannel().sendFile(embed, file, fileName);
-            } catch (RateLimitException e) {
-                LOGGER.error("Message could not be sent", e);
-                throw e;
-            }
-        }).get();
-    }
-
-    @Nonnull
-    public IMessage sendFile(@Nonnull String content, @Nonnull InputStream file, @Nonnull String fileName) {
-        return RequestBuffer.request(() -> {
-            try {
-                return EVENT.getChannel().sendFile(content, file, fileName);
-            } catch (RateLimitException e) {
-                LOGGER.error("Message could not be sent", e);
-                throw e;
-            }
-        }).get();
-    }
-
-    @Nonnull
-    public IMessage reply(@Nonnull String content) {
+    public Mono<Message> reply(@Nonnull String content) {
         return EVENT.reply(content);
-    }
-
-    @Nonnull
-    public IMessage reply(@Nonnull EmbedObject embed) {
-        return EVENT.reply(embed);
-    }
-
-    @Nonnull
-    public IMessage reply(@Nonnull String content, @Nonnull EmbedObject embed) {
-        return EVENT.reply(content, embed);
     }
 
     @Override

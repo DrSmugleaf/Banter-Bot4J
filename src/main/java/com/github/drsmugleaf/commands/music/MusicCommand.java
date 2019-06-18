@@ -1,16 +1,16 @@
 package com.github.drsmugleaf.commands.music;
 
 import com.github.drsmugleaf.commands.api.Command;
-import sx.blah.discord.api.internal.json.objects.EmbedObject;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.util.MissingPermissionsException;
+import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.Message;
+import discord4j.core.object.entity.MessageChannel;
+import discord4j.core.spec.MessageCreateSpec;
+import reactor.core.publisher.Mono;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Created by DrSmugleaf on 28/08/2018
@@ -18,53 +18,37 @@ import java.util.Map;
 public class MusicCommand extends Command {
 
     @Nonnull
-    private static final Map<IGuild, IMessage> LAST_MESSAGES = new HashMap<>();
+    private static final Map<Guild, Message> LAST_MESSAGES = new HashMap<>();
 
-    private static void deleteLastMessage(@Nonnull IMessage newMessage) {
-        IGuild guild = newMessage.getGuild();
-        IMessage lastMessage = LAST_MESSAGES.put(guild, newMessage);
-        if (lastMessage == null) {
-            return;
-        }
-
-        try {
-            lastMessage.delete();
-        } catch (MissingPermissionsException ignored) {}
+    private static void deleteLastMessage(@Nonnull Message newMessage) {
+        newMessage
+                .getGuild()
+                .flatMap(guild -> Mono.justOrEmpty(LAST_MESSAGES.put(guild, newMessage)))
+                .flatMap(Message::delete)
+                .subscribe();
     }
 
     @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nullable String content, @Nullable EmbedObject embed) {
-        IMessage message = Command.sendMessage(channel, content, embed);
-        deleteLastMessage(message);
-        return message;
-    }
-
-    @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull String content) {
-        return sendMessage(channel, content, null);
-    }
-
-    @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull EmbedObject embed) {
-        return sendMessage(channel, null, embed);
+    public static Mono<Message> sendMessage(@Nonnull MessageChannel channel, @Nonnull String content) {
+        return channel
+                .createMessage(spec -> spec.setContent(content))
+                .doOnNext(MusicCommand::deleteLastMessage);
     }
 
     @Nonnull
     @Override
-    public IMessage sendMessage(@Nonnull String content) {
-        return MusicCommand.sendMessage(EVENT.getChannel(), content);
+    public Mono<Message> reply(@Nonnull Consumer<MessageCreateSpec> spec) {
+        return super
+                .reply(spec)
+                .doOnNext(MusicCommand::deleteLastMessage);
     }
 
     @Nonnull
     @Override
-    public IMessage sendMessage(@Nonnull EmbedObject embed) {
-        return MusicCommand.sendMessage(EVENT.getChannel(), embed);
-    }
-
-    @Nonnull
-    @Override
-    public IMessage sendMessage(@Nonnull String content, @Nonnull EmbedObject embed) {
-        return MusicCommand.sendMessage(EVENT.getChannel(), content, embed);
+    public Mono<Message> reply(@Nonnull String content) {
+        return super
+                .reply(content)
+                .doOnNext(MusicCommand::deleteLastMessage);
     }
 
 }

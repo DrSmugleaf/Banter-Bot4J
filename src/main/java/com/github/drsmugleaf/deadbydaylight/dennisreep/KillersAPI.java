@@ -41,7 +41,7 @@ public class KillersAPI extends API {
     private static final Cache<Killer, PerkList<KillerPerk>> SPECIFIC_KILLER_PERKS = CacheBuilder
             .newBuilder()
             .expireAfterWrite(12, TimeUnit.HOURS)
-            .build(CacheLoader.from((Killer killer) -> getKillerData(killer)));
+            .build(CacheLoader.from(killer -> getKillerData(killer)));
 
     private KillersAPI() {}
 
@@ -53,7 +53,6 @@ public class KillersAPI extends API {
             Killer killer = Killer.from(element);
             String killerName = killer.NAME;
             killers.put(killerName, killer);
-            NameResolver.registerKiller(killerName);
         }
 
         return killers;
@@ -76,7 +75,6 @@ public class KillersAPI extends API {
         for (JsonElement element : json) {
             KillerPerk perk = KillerPerk.from(element);
             perks.add(perk);
-            NameResolver.registerKiller(perk.KILLER_NAME);
         }
 
         return perks;
@@ -103,8 +101,13 @@ public class KillersAPI extends API {
 
     @Nullable
     public static Killer getKiller(@Nullable String name) {
-        name = NameResolver.resolveKillerName(name);
-        return getKillers().get(name);
+        for (Map.Entry<String, Killer> entry : getKillers().entrySet()) {
+            if (entry.getKey().equalsIgnoreCase(name)) {
+                return entry.getValue();
+            }
+        }
+
+        return null;
     }
 
     @Nonnull

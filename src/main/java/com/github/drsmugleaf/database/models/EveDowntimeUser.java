@@ -1,17 +1,16 @@
 package com.github.drsmugleaf.database.models;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.EventListener;
 import com.github.drsmugleaf.database.api.Model;
 import com.github.drsmugleaf.database.api.annotations.Column;
 import com.github.drsmugleaf.database.api.annotations.Relation;
 import com.github.drsmugleaf.database.api.annotations.RelationTypes;
 import com.github.drsmugleaf.database.api.annotations.Table;
+import discord4j.core.event.domain.lifecycle.ReadyEvent;
+import discord4j.core.object.entity.User;
 import net.troja.eve.esi.ApiException;
 import net.troja.eve.esi.api.StatusApi;
-import sx.blah.discord.api.events.EventSubscriber;
-import sx.blah.discord.handle.impl.events.ReadyEvent;
-import sx.blah.discord.handle.obj.IPrivateChannel;
 
 import javax.annotation.Nonnull;
 import javax.ws.rs.ProcessingException;
@@ -36,10 +35,10 @@ public class EveDowntimeUser extends Model<EveDowntimeUser> {
     @Column(name = "user_id")
     @Column.Id
     @Relation(type = RelationTypes.OneToOne, columnName = "id")
-    public User user;
+    public DiscordUser user;
 
     public EveDowntimeUser(Long userID) {
-        user = new User(userID);
+        user = new DiscordUser(userID);
     }
 
     private EveDowntimeUser() {}
@@ -61,12 +60,16 @@ public class EveDowntimeUser extends Model<EveDowntimeUser> {
     private static void alertAll() {
         List<EveDowntimeUser> users = new EveDowntimeUser().get();
         for (EveDowntimeUser user : users) {
-            IPrivateChannel channel = BanterBot4J.CLIENT.getUserByID(user.user.id).getOrCreatePMChannel();
-            Command.sendMessage(channel, "Eve Online server is back online.");
+            BanterBot4J
+                    .CLIENT
+                    .getUserById(user.user.user().getId())
+                    .flatMap(User::getPrivateChannel)
+                    .flatMap(channel -> channel.createMessage("Eve Online server is back online."))
+                    .subscribe();
         }
     }
 
-    @EventSubscriber
+    @EventListener(ReadyEvent.class)
     public static void handle(ReadyEvent event) {
         DOWNTIME_TIMER.scheduleAtFixedRate(new TimerTask() {
             @Override

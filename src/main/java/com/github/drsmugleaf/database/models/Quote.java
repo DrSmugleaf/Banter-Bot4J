@@ -20,13 +20,13 @@ public class Quote extends Model<Quote> {
     @Column(name = "content")
     public String content;
 
-    @Column(name = "submitter")
-    @Relation(type = RelationTypes.ManyToOne, columnName = "id")
-    public User submitter;
-
     @Column(name = "guild")
     @Relation(type = RelationTypes.ManyToOne, columnName = "id")
-    public Guild guild;
+    public DiscordGuild guild;
+
+    @Column(name = "submitter")
+    @Relation(type = RelationTypes.ManyToOne, columnName = "id")
+    public DiscordUser submitter;
 
     @Column(name = "submitted")
     public Long date;
@@ -35,10 +35,10 @@ public class Quote extends Model<Quote> {
         this.id = id;
     }
 
-    public Quote(String content, Long submitter, Long guild, Long date) {
+    public Quote(String content, Long guild, Long submitter, Long date) {
         this.content = content;
-        this.submitter = new User(submitter);
-        this.guild = new Guild(guild);
+        this.guild = new DiscordGuild(guild);
+        this.submitter = new DiscordUser(submitter);
         this.date = date;
     }
 

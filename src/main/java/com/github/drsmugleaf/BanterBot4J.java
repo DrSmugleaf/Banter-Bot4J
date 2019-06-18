@@ -1,23 +1,27 @@
 package com.github.drsmugleaf;
 
-import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.EventListener;
 import com.github.drsmugleaf.commands.api.Handler;
 import com.github.drsmugleaf.database.api.Database;
 import com.github.drsmugleaf.env.Keys;
 import com.github.drsmugleaf.reflection.Reflection;
 import com.google.common.collect.ImmutableList;
+import discord4j.core.DiscordClient;
+import discord4j.core.DiscordClientBuilder;
+import discord4j.core.event.domain.lifecycle.ReadyEvent;
+import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.object.entity.MessageChannel;
+import discord4j.core.object.entity.TextChannel;
+import discord4j.core.object.util.Snowflake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sx.blah.discord.api.ClientBuilder;
-import sx.blah.discord.api.IDiscordClient;
-import sx.blah.discord.api.events.EventSubscriber;
-import sx.blah.discord.handle.impl.events.ReadyEvent;
-import sx.blah.discord.handle.obj.IChannel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -33,7 +37,7 @@ public class BanterBot4J {
     public static final Logger LOGGER = initLogger();
 
     @Nonnull
-    public static final IDiscordClient CLIENT = buildClient();
+    public static final DiscordClient CLIENT = buildClient();
 
     @Nonnull
     public static final String BOT_PREFIX = Keys.BOT_PREFIX.VALUE;
@@ -46,7 +50,7 @@ public class BanterBot4J {
     );
 
     @Nullable
-    private static IChannel DISCORD_WARNING_CHANNEL = null;
+    private static MessageChannel DISCORD_WARNING_CHANNEL = null;
 
     @Nonnull
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
@@ -55,10 +59,9 @@ public class BanterBot4J {
     private static Handler HANDLER;
 
     @Nonnull
-    private static IDiscordClient buildClient() {
-        ClientBuilder clientBuilder = new ClientBuilder();
-        clientBuilder.withToken(Keys.DISCORD_TOKEN.VALUE).withRecommendedShardCount();
-        return clientBuilder.build();
+    private static DiscordClient buildClient() {
+        DiscordClientBuilder builder = new DiscordClientBuilder(Keys.DISCORD_TOKEN.VALUE);
+        return builder.build();
     }
 
     @Nonnull
@@ -68,18 +71,34 @@ public class BanterBot4J {
 
     private static void registerListeners() {
         Reflection reflection = new Reflection("com.github.drsmugleaf");
-        List<Class<?>> listenerClasses = reflection.findClassesWithMethodAnnotation(EventSubscriber.class);
-        listenerClasses.forEach(clazz -> CLIENT.getDispatcher().registerListener(clazz));
+        List<Method> methods = reflection.findMethodsWithAnnotation(EventListener.class);
+        for (Method listener : methods) {
+            EventListener annotation = listener.getDeclaredAnnotation(EventListener.class);
+            CLIENT
+                    .getEventDispatcher()
+                    .on(annotation.value())
+                    .subscribe(event -> {
+                        try {
+                            listener.invoke(listener.getDeclaringClass(), event);
+                        } catch (IllegalAccessException | InvocationTargetException e) {
+                            warn("Error invoking listener " + listener.getDeclaringClass(), e);
+                        }
+                    });
+        }
     }
 
     public static void main(String[] args) {
         Database.init("com.github.drsmugleaf.database.models");
         registerListeners();
-        Handler handler = new Handler("com.github.drsmugleaf.commands");
-        HANDLER = handler;
-        CLIENT.getDispatcher().registerListener(handler);
+        HANDLER = new Handler("com.github.drsmugleaf.commands");
+        CLIENT
+                .getEventDispatcher()
+                .on(MessageCreateEvent.class)
+                .subscribe(HANDLER::handle);
 
-        CLIENT.login();
+        CLIENT
+                .login()
+                .block();
     }
 
     private static void warnChannel(@Nonnull String message, @Nullable Throwable t) {
@@ -108,7 +127,7 @@ public class BanterBot4J {
                     .append(stackTrace);
         }
 
-        Command.sendMessage(DISCORD_WARNING_CHANNEL, warning.toString());
+        DISCORD_WARNING_CHANNEL.createMessage(spec -> spec.setContent(warning.toString()));
     }
 
     public static void warn(@Nonnull String message, @Nullable Throwable t) {
@@ -127,7 +146,7 @@ public class BanterBot4J {
         warn(message, null);
     }
 
-    @EventSubscriber
+    @EventListener(ReadyEvent.class)
     public static void handle(ReadyEvent event) {
         String channelIDString = Keys.DISCORD_WARNING_CHANNEL.VALUE;
         if (channelIDString.isEmpty()) {
@@ -135,19 +154,18 @@ public class BanterBot4J {
             return;
         }
 
-        long channelID;
+        Snowflake channelID;
         try {
-            channelID = Long.parseLong(channelIDString);
+            channelID = Snowflake.of(Long.parseLong(channelIDString));
         } catch (NumberFormatException e) {
             throw new IllegalStateException(channelIDString + " isn't a correct discord channel id");
         }
 
-        IChannel channel = CLIENT.getChannelByID(channelID);
-        if (channel == null) {
-            throw new IllegalStateException("No discord channel exists with id " + channelID);
-        }
-
-        DISCORD_WARNING_CHANNEL = channel;
+        event
+                .getClient()
+                .getChannelById(channelID)
+                .cast(TextChannel.class)
+                .subscribe(channel -> DISCORD_WARNING_CHANNEL = channel);
     }
 
     @Nonnull

@@ -11,19 +11,19 @@ import javax.annotation.Nonnull;
 public class GuildMusicManager {
 
     private final AudioPlayer PLAYER;
-    private final AudioProvider PROVIDER;
+    private final GuildAudioProvider PROVIDER;
     private final TrackScheduler SCHEDULER;
 
     public GuildMusicManager(@Nonnull AudioPlayerManager manager) {
         PLAYER = manager.createPlayer();
-        PLAYER.setVolume(25);
-        PROVIDER = new AudioProvider(PLAYER);
+        PLAYER.setVolume(15);
+        PROVIDER = new GuildAudioProvider(PLAYER);
         SCHEDULER = new TrackScheduler(PLAYER);
         PLAYER.addListener(SCHEDULER);
     }
 
     @Nonnull
-    public AudioProvider getProvider() {
+    public GuildAudioProvider getProvider() {
         return PROVIDER;
     }
 

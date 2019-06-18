@@ -2,13 +2,14 @@ package com.github.drsmugleaf.commands.deadbydaylight;
 
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.converter.TypeConverters;
 import com.github.drsmugleaf.deadbydaylight.dennisreep.*;
-import sx.blah.discord.api.internal.json.objects.EmbedObject;
+import discord4j.core.spec.EmbedCreateSpec;
 
 import javax.annotation.Nonnull;
 import java.io.InputStream;
-import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Created by DrSmugleaf on 07/11/2018
@@ -16,7 +17,7 @@ import java.util.List;
 public class DBDBest extends Command {
 
     @Argument.Maximum("perks")
-    private static final int MAX_PERK_AMOUNT = Math.max(KillersAPI.getPerks().size(), SurvivorsAPI.getPerks().size());
+    private static final int MAX_PERKS = Math.max(KillersAPI.getPerks().size(), SurvivorsAPI.getPerks().size());
 
     @Argument(position = 1, example = "8")
     private Integer perks = 4;
@@ -25,105 +26,98 @@ public class DBDBest extends Command {
     private Killer killer;
 
     @Nonnull
-    private static LargeEmbedBuilder getBaseEmbed(int perkAmount) {
-        LargeEmbedBuilder builder = new LargeEmbedBuilder();
-        builder
-                .withUrl(API.HOME_URL)
-                .withFooterText(getDate());
+    private static Consumer<EmbedCreateSpec> getBaseEmbed(int perkAmount) {
+        return (spec) -> {
+            spec
+                    .setUrl(API.HOME_URL)
+                    .setFooter(getDate(), null);
 
-        if (perkAmount == 1) {
-            builder
-                    .withTitle("Best Dead by Daylight Perks")
-                    .withDescription(perkAmount + " Perk");
-        } else {
-            builder
-                    .withTitle("Best Dead by Daylight Perks")
-                    .withDescription(perkAmount + " Perks");
-        }
+            if (perkAmount == 1) {
+                spec
+                        .setTitle("Best Dead by Daylight Perk")
+                        .setDescription(perkAmount + " Perk");
+            } else {
+                spec
+                        .setTitle("Best Dead by Daylight Perks")
+                        .setDescription(perkAmount + " Perks");
+            }
 
-        builder.withThumbnail("attachment://image.png");
-
-        return builder;
+            spec.setThumbnail("attachment://image.png");
+        };
     }
 
     @Nonnull
-    private static List<EmbedObject> getBestPerksResponse(int amount) {
-        LargeEmbedBuilder builder = getBaseEmbed(amount);
+    private static Consumer<EmbedCreateSpec> getBestPerksResponse(int amount) {
+        return getBaseEmbed(amount).andThen(embed -> {
+            PerkList<KillerPerk> killerPerks = KillersAPI.getPerks().getBest(amount);
+            String killerRating = String.format("%.2f", killerPerks.getAverageRating());
 
-        PerkList<KillerPerk> killerPerks = KillersAPI.getPerks().getBest(amount);
-        String killerRating = String.format("%.2f", killerPerks.getAverageRating());
+            embed.addField("KILLER PERKS", "Average Rating: " + killerRating + " ★", false);
 
-        builder.appendField("KILLER PERKS", "Average Rating: " + killerRating + " ★", false);
+            for (KillerPerk perk : killerPerks) {
+                embed.addField(
+                        perk.NAME + " (" + perk.TIER.NAME + ")",
+                        perk.RATING + " ★ (" + perk.RATINGS + ")",
+                        true
+                );
+            }
 
-        for (KillerPerk perk : killerPerks) {
-            builder.appendField(
-                    perk.NAME + " (" + perk.TIER.NAME + ")",
-                    perk.RATING + " ★ (" + perk.RATINGS + ")",
-                    true
-            );
-        }
+            PerkList<SurvivorPerk> survivorPerks = SurvivorsAPI.getPerks().getBest(amount);
+            String survivorRating = String.format("%.2f", killerPerks.getAverageRating());
 
-        PerkList<SurvivorPerk> survivorPerks = SurvivorsAPI.getPerks().getBest(amount);
-        String survivorRating = String.format("%.2f", killerPerks.getAverageRating());
+            embed
+                    .addField("\u200b", "\u200b", false)
+                    .addField("SURVIVOR PERKS", "Average Rating: " + survivorRating + " ★", false);
 
-        builder
-                .appendField("\u200b", "\u200b", false)
-                .appendField("SURVIVOR PERKS", "Average Rating: " + survivorRating + " ★", false);
-
-        for (SurvivorPerk perk : survivorPerks) {
-            builder.appendField(
-                    perk.NAME + " (" + perk.TIER.NAME + ")",
-                    perk.RATING + " ★ (" + perk.RATINGS + ")",
-                    true
-            );
-        }
-
-        return builder.buildAll();
+            for (SurvivorPerk perk : survivorPerks) {
+                embed.addField(
+                        perk.NAME + " (" + perk.TIER.NAME + ")",
+                        perk.RATING + " ★ (" + perk.RATINGS + ")",
+                        true
+                );
+            }
+        });
     }
 
     @Nonnull
-    private static List<EmbedObject> getBestKillerPerksResponse(int amount, @Nonnull Killer killer) {
-        LargeEmbedBuilder builder = getBaseEmbed(amount);
+    private static Consumer<EmbedCreateSpec> getBestKillerPerksResponse(int amount, @Nonnull Killer killer) {
+        return getBaseEmbed(amount).andThen(embed -> {
+            PerkList<KillerPerk> killerPerks = KillersAPI.getPerks(killer).getBest(amount);
+            String killerRating = String.format("%.2f", killerPerks.getAverageRating());
 
-        PerkList<KillerPerk> killerPerks = KillersAPI.getPerks(killer).getBest(amount);
-        String killerRating = String.format("%.2f", killerPerks.getAverageRating());
+            embed.addField("KILLER PERKS", "Average Rating: " + killerRating + " ★", false);
 
-        builder.appendField("KILLER PERKS", "Average Rating: " + killerRating + " ★", false);
-
-        for (KillerPerk perk : killerPerks) {
-            builder.appendField(
-                    perk.NAME + " (" + perk.TIER.NAME + ")",
-                    perk.RATING + " ★ (" + perk.RATINGS + ")",
-                    true
-            );
-        }
-
-        return builder.buildAll();
+            for (KillerPerk perk : killerPerks) {
+                embed.addField(
+                        perk.NAME + " (" + perk.TIER.NAME + ")",
+                        perk.RATING + " ★ (" + perk.RATINGS + ")",
+                        true
+                );
+            }
+        });
     }
 
     @Override
     public void run() {
-        List<EmbedObject> embeds;
+        Consumer<EmbedCreateSpec> embed;
         InputStream image;
         if (killer == null) {
-            embeds = getBestPerksResponse(perks);
+            embed = getBestPerksResponse(perks);
             image = API.getDBDLogo();
         } else {
-            embeds = getBestKillerPerksResponse(perks, killer);
+            embed = getBestKillerPerksResponse(perks, killer);
             image = killer.getImage();
         }
 
-        sendFile(embeds.get(0), image, "image.png");
-        if (embeds.size() > 1) {
-            for (EmbedObject embed : embeds) {
-                sendMessage(embed);
-            }
-        }
+        reply(message -> message
+                .setEmbed(embed)
+                .addFile("image.png", image)
+        ).subscribe();
     }
 
     @Override
     public void registerConverters(@Nonnull TypeConverters converter) {
-        converter.registerStringTo(Killer.class, KillersAPI::getKiller);
+        converter.registerStringTo(CommandReceivedEvent.class, Killer.class, (s, e) -> KillersAPI.getKiller(s));
     }
 
 }

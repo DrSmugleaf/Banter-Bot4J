@@ -26,12 +26,15 @@ public class Name extends Command {
     public void run() {
         String name = String.join(" ", ARGUMENTS);
         if (name.isEmpty()) {
-            EVENT.reply(invalidArgumentsResponse());
+            reply(invalidArgumentsResponse()).subscribe();
             return;
         }
 
-        EVENT.getClient().changeUsername(String.join(" ", ARGUMENTS));
-        EVENT.reply("Changed the bot's name to " + name);
+        EVENT
+                .getClient()
+                .edit(self -> self.setUsername(String.join(" ", ARGUMENTS)))
+                .flatMap(newName -> reply("Changed the bot's name to " + name))
+                .subscribe();
     }
 
 }

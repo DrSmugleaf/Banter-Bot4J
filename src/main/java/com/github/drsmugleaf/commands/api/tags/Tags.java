@@ -2,12 +2,14 @@ package com.github.drsmugleaf.commands.api.tags;
 
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.handle.obj.IVoiceChannel;
-import sx.blah.discord.util.MissingPermissionsException;
+import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.object.VoiceState;
+import discord4j.core.object.entity.Member;
+import discord4j.core.object.util.Snowflake;
+import reactor.core.publisher.Mono;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /**
  * Created by DrSmugleaf on 16/01/2018.
@@ -18,17 +20,15 @@ public enum Tags implements Tag {
 
         @Override
         public void execute(@Nonnull CommandReceivedEvent event) {
-            try {
-                event.getMessage().delete();
-            } catch (MissingPermissionsException ignored) {}
+            event.getMessage().delete().subscribe();
         }
 
     },
     GUILD_ONLY {
 
         @Override
-        public boolean isValid(@Nonnull CommandReceivedEvent event) {
-            return event.getGuild() != null;
+        public boolean isValid(@Nonnull MessageCreateEvent event) {
+            return event.getGuild().blockOptional().isPresent();
         }
 
         @Nonnull
@@ -41,8 +41,8 @@ public enum Tags implements Tag {
     OWNER_ONLY {
 
         @Override
-        public boolean isValid(@Nonnull CommandReceivedEvent event) {
-            return Command.isOwner(event.getAuthor());
+        public boolean isValid(@Nonnull MessageCreateEvent event) {
+            return Command.isOwner(event.getMember().orElse(null));
         }
 
         @Nonnull
@@ -55,18 +55,24 @@ public enum Tags implements Tag {
     SAME_VOICE_CHANNEL {
 
         @Override
-        public boolean isValid(@Nonnull CommandReceivedEvent event) {
+        public boolean isValid(@Nonnull MessageCreateEvent event) {
             if (!GUILD_ONLY.isValid(event)) {
                 return false;
             }
 
-            IGuild guild = event.getGuild();
-            IUser author = event.getAuthor();
-            IVoiceChannel authorVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
-            IUser bot = event.getClient().getOurUser();
-            IVoiceChannel botVoiceChannel = bot.getVoiceStateForGuild(guild).getChannel();
+            Optional<Snowflake> authorVoice = event
+                    .getMember()
+                    .flatMap(author -> author.getVoiceState().blockOptional())
+                    .flatMap(VoiceState::getChannelId);
 
-            return botVoiceChannel == authorVoiceChannel;
+            return event
+                    .getGuild()
+                    .zipWith(Mono.justOrEmpty(event.getClient().getSelfId()))
+                    .flatMap(tuple -> tuple.getT1().getMemberById(tuple.getT2()))
+                    .flatMap(Member::getVoiceState)
+                    .map(voice -> voice.getChannelId().equals(authorVoice))
+                    .blockOptional()
+                    .orElse(false);
         }
 
         @Nonnull
@@ -79,16 +85,15 @@ public enum Tags implements Tag {
     VOICE_ONLY {
 
         @Override
-        public boolean isValid(@Nonnull CommandReceivedEvent event) {
+        public boolean isValid(@Nonnull MessageCreateEvent event) {
             if (!GUILD_ONLY.isValid(event)) {
                 return false;
             }
 
-            IGuild guild = event.getGuild();
-            IUser author = event.getAuthor();
-            IVoiceChannel authorVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
-
-            return authorVoiceChannel != null;
+            return event
+                    .getMember()
+                    .flatMap(author -> author.getVoiceState().blockOptional())
+                    .isPresent();
         }
 
         @Nonnull
@@ -99,7 +104,7 @@ public enum Tags implements Tag {
 
     };
 
-    public boolean isValid(@Nonnull CommandReceivedEvent event) {
+    public boolean isValid(@Nonnull MessageCreateEvent event) {
         return true;
     }
 

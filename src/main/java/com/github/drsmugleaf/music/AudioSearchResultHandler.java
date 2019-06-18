@@ -1,7 +1,8 @@
 package com.github.drsmugleaf.music;
 
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IUser;
+import discord4j.core.object.entity.Member;
+import discord4j.core.object.entity.TextChannel;
+import discord4j.core.object.entity.VoiceChannel;
 
 import javax.annotation.Nonnull;
 
@@ -10,8 +11,8 @@ import javax.annotation.Nonnull;
  */
 public class AudioSearchResultHandler extends AudioResultHandler {
 
-    protected AudioSearchResultHandler(@Nonnull IChannel channel, @Nonnull IUser submitter, @Nonnull String searchString) {
-        super(channel, submitter, searchString);
+    protected AudioSearchResultHandler(@Nonnull TextChannel channel, @Nonnull Member submitter, @Nonnull VoiceChannel voiceChannel, @Nonnull String searchString) {
+        super(channel, submitter, voiceChannel, searchString);
     }
 
     @Override
