@@ -1,10 +1,11 @@
 package com.github.drsmugleaf.database.models;
 
 import com.github.drsmugleaf.commands.api.EventListener;
+import com.github.drsmugleaf.database.api.Database;
 import com.github.drsmugleaf.database.api.Model;
 import com.github.drsmugleaf.database.api.annotations.Column;
 import com.github.drsmugleaf.database.api.annotations.Table;
-import discord4j.core.event.domain.channel.TextChannelCreateEvent;
+import discord4j.core.event.domain.channel.PrivateChannelCreateEvent;
 
 /**
  * Created by DrSmugleaf on 18/01/2018.
@@ -22,12 +23,14 @@ public class DiscordChannel extends Model<DiscordChannel> {
 
     private DiscordChannel() {}
 
-    @EventListener(TextChannelCreateEvent.class)
-    public static void handle(TextChannelCreateEvent event) {
+    @EventListener(PrivateChannelCreateEvent.class)
+    public static void handle(PrivateChannelCreateEvent event) {
         Runnable runnable = () -> {
             long id = event.getChannel().getId().asLong();
             DiscordChannel channel = new DiscordChannel(id);
             channel.createIfNotExists();
+
+            Database.LOGGER.info("Created private discord channel with id " + id);
         };
 
         Thread thread = new Thread(runnable);

@@ -2,6 +2,7 @@ package com.github.drsmugleaf.database.models;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.EventListener;
+import com.github.drsmugleaf.database.api.Database;
 import com.github.drsmugleaf.database.api.Model;
 import com.github.drsmugleaf.database.api.annotations.Column;
 import com.github.drsmugleaf.database.api.annotations.Relation;
@@ -71,6 +72,8 @@ public class EveDowntimeUser extends Model<EveDowntimeUser> {
 
     @EventListener(ReadyEvent.class)
     public static void handle(ReadyEvent event) {
+        Database.LOGGER.info("Scheduled EVE Online downtime timer");
+
         DOWNTIME_TIMER.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {

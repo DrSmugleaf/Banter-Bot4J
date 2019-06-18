@@ -165,7 +165,10 @@ public class BanterBot4J {
                 .getClient()
                 .getChannelById(channelID)
                 .cast(TextChannel.class)
-                .subscribe(channel -> DISCORD_WARNING_CHANNEL = channel);
+                .subscribe(channel -> {
+                    DISCORD_WARNING_CHANNEL = channel;
+                    LOGGER.info("Discord warning channel has been set to " + channel.getName());
+                });
     }
 
     @Nonnull

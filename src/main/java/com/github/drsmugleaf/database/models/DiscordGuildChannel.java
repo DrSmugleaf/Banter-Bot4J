@@ -1,12 +1,13 @@
 package com.github.drsmugleaf.database.models;
 
 import com.github.drsmugleaf.commands.api.EventListener;
+import com.github.drsmugleaf.database.api.Database;
 import com.github.drsmugleaf.database.api.Model;
 import com.github.drsmugleaf.database.api.annotations.Column;
 import com.github.drsmugleaf.database.api.annotations.Relation;
 import com.github.drsmugleaf.database.api.annotations.RelationTypes;
 import com.github.drsmugleaf.database.api.annotations.Table;
-import discord4j.core.event.domain.guild.GuildUpdateEvent;
+import discord4j.core.event.domain.guild.GuildCreateEvent;
 import discord4j.core.object.entity.Entity;
 import discord4j.core.object.util.Snowflake;
 
@@ -14,7 +15,7 @@ import discord4j.core.object.util.Snowflake;
  * Created by DrSmugleaf on 18/01/2018.
  */
 @Table(name = "guild_channels")
-public class GuildChannel extends Model<GuildChannel> {
+public class DiscordGuildChannel extends Model<DiscordGuildChannel> {
 
     @Column(name = "channel_id")
     @Column.Id
@@ -26,22 +27,28 @@ public class GuildChannel extends Model<GuildChannel> {
     @Relation(type = RelationTypes.OneToOne, columnName = "id")
     public DiscordGuild guild;
 
-    public GuildChannel(Long channelID, Long guildID) {
+    public DiscordGuildChannel(Long channelID, Long guildID) {
         channel = new DiscordChannel(channelID);
         guild = new DiscordGuild(guildID);
     }
 
-    private GuildChannel() {}
+    private DiscordGuildChannel() {}
 
-    @EventListener(GuildUpdateEvent.class)
-    public static void handle(GuildUpdateEvent event) {
+    @EventListener(GuildCreateEvent.class)
+    public static void handle(GuildCreateEvent event) {
         Runnable runnable = () -> event
-                .getCurrent()
+                .getGuild()
                 .getChannels()
                 .map(Entity::getId)
                 .map(Snowflake::asLong)
-                .map(id -> new GuildChannel(id, event.getCurrent().getId().asLong()))
-                .subscribe(Model::createIfNotExists);
+                .map(id -> new DiscordGuildChannel(id, event.getGuild().getId().asLong()))
+                .subscribe(model -> {
+                    model.createIfNotExists();
+
+                    Database.LOGGER.info(
+                            String.format("Created guild channel with id %s in guild %s", model.channel.id, model.guild.id)
+                    );
+                });
 
         Thread thread = new Thread(runnable);
         thread.start();
