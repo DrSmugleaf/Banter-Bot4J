@@ -1,7 +1,6 @@
 package com.github.drsmugleaf.commands.deadbydaylight;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.github.drsmugleaf.Nullable;
 
 /**
  * Created by DrSmugleaf on 21/04/2019
@@ -13,7 +12,7 @@ public enum RouletteTypes {
     FRIENDS;
 
     @Nullable
-    public static RouletteTypes from(@Nonnull String name) {
+    public static RouletteTypes from(String name) {
         name = name.toLowerCase();
 
         for (RouletteTypes type : values()) {

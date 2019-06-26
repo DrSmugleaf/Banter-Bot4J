@@ -5,7 +5,6 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.playback.MutableAudioFrame;
 import discord4j.voice.AudioProvider;
 
-import javax.annotation.Nonnull;
 import java.nio.ByteBuffer;
 
 /**
@@ -13,13 +12,11 @@ import java.nio.ByteBuffer;
  */
 public class GuildAudioProvider extends AudioProvider {
 
-    @Nonnull
     private final AudioPlayer PLAYER;
 
-    @Nonnull
     private final MutableAudioFrame FRAME = new MutableAudioFrame();
 
-    public GuildAudioProvider(@Nonnull AudioPlayer player) {
+    public GuildAudioProvider(AudioPlayer player) {
         super(ByteBuffer.allocate(StandardAudioDataFormats.DISCORD_OPUS.maximumChunkSize()));
         PLAYER = player;
         FRAME.setBuffer(getBuffer());

@@ -6,26 +6,24 @@ import com.github.drsmugleaf.article13.vote.Vote;
 import com.github.drsmugleaf.article13.vote.Votes;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by DrSmugleaf on 08/04/2019
  */
 public class Party implements Comparable<Party> {
 
-    @Nonnull
     private final String NAME;
 
-    @Nonnull
     private final ImmutableList<Member> MEMBERS;
 
-    @Nonnull
     private final ImmutableMap<Vote, Votes> VOTES;
 
-    public Party(@Nonnull String name, @Nonnull List<Member> members) {
+    public Party(String name, List<Member> members) {
         NAME = name;
 
         List<Member> validMembers = new ArrayList<>();
@@ -39,8 +37,7 @@ public class Party implements Comparable<Party> {
         VOTES = parseVotes(MEMBERS);
     }
 
-    @Nonnull
-    private static ImmutableMap<Vote, Votes> parseVotes(@Nonnull List<Member> members) {
+    private static ImmutableMap<Vote, Votes> parseVotes(List<Member> members) {
         Map<Vote, Map<Decision, Integer>> voteMap = new HashMap<>();
         for (Vote vote : Vote.getVotes().values()) {
             voteMap.put(vote, new HashMap<>());
@@ -70,27 +67,24 @@ public class Party implements Comparable<Party> {
         return ImmutableMap.copyOf(votes);
     }
 
-    @Nonnull
     public String getName() {
         return NAME;
     }
 
-    @Nonnull
     public ImmutableList<Member> getMembers() {
         return MEMBERS;
     }
 
-    @Nonnull
-    public Votes getVotes(@Nonnull Vote vote) {
+    public Votes getVotes(Vote vote) {
         return VOTES.get(vote);
     }
 
     @Override
-    public int compareTo(@NotNull Party o) {
+    public int compareTo(Party o) {
         return getName().compareTo(o.getName());
     }
 
-    public int compareVote(@Nonnull Party o, @Nonnull Vote vote, @Nonnull Decision decision) {
+    public int compareVote(Party o, Vote vote, Decision decision) {
         Result thisResult = getVotes(vote).getResult(decision);
         Result otherResult = o.getVotes(vote).getResult(decision);
         return otherResult.compareTo(thisResult);

@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.commands.eve;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.Command;
 import net.troja.eve.esi.ApiException;
 import net.troja.eve.esi.api.ContractsApi;
@@ -9,8 +10,6 @@ import net.troja.eve.esi.model.PublicContractsItemsResponse;
 import net.troja.eve.esi.model.PublicContractsResponse;
 import net.troja.eve.esi.model.UniverseIdsResponse;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -75,7 +74,7 @@ public class EveCheapestBlueprints extends Command {
     }
 
     @Nullable
-    private Integer getItemID(@Nonnull String name) {
+    private Integer getItemID(String name) {
         UniverseIdsResponse response;
         try {
             response = UNIVERSE_API.postUniverseIds(Collections.singletonList(name), null, null, null);
@@ -87,7 +86,6 @@ public class EveCheapestBlueprints extends Command {
         return response.getInventoryTypes().get(0).getId();
     }
 
-    @Nonnull
     private List<PublicContractsResponse> getContracts(int regionID) {
         List<PublicContractsResponse> contracts;
         try {
@@ -100,11 +98,11 @@ public class EveCheapestBlueprints extends Command {
         return contracts;
     }
 
-    private boolean isItemExchangeContract(@Nonnull PublicContractsResponse contract) {
+    private boolean isItemExchangeContract(PublicContractsResponse contract) {
         return contract.getType() == PublicContractsResponse.TypeEnum.ITEM_EXCHANGE;
     }
 
-    private boolean isSellingBlueprint(@Nonnull PublicContractsResponse contract) {
+    private boolean isSellingBlueprint(PublicContractsResponse contract) {
         if (contract.getVolume() > 1) {
             return false;
         }
@@ -131,7 +129,7 @@ public class EveCheapestBlueprints extends Command {
         return false;
     }
 
-    private boolean containsItem(@Nonnull PublicContractsResponse contract, @Nonnull String itemName) {
+    private boolean containsItem(PublicContractsResponse contract, String itemName) {
         Integer contractID = contract.getContractId();
         List<PublicContractsItemsResponse> contractItems;
         try {

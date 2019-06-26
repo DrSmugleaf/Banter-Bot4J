@@ -15,7 +15,6 @@ import discord4j.core.object.util.Snowflake;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuples;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -25,21 +24,19 @@ import java.util.Optional;
  */
 public class Handler {
 
-    @Nonnull
     private final Registry COMMAND_REGISTRY;
 
-    public Handler(@Nonnull String commandsPackageName) {
+    public Handler(String commandsPackageName) {
         Reflection reflection = new Reflection(commandsPackageName);
         List<Class<Command>> commands = reflection.findSubtypesOf(Command.class);
         COMMAND_REGISTRY = new Registry(commands);
     }
 
-    @Nonnull
     public Registry getRegistry() {
         return COMMAND_REGISTRY;
     }
 
-    public void handle(@Nonnull MessageCreateEvent event) {
+    public void handle(MessageCreateEvent event) {
         Optional<Snowflake> guildId = event.getGuildId();
         Optional<User> author = event.getMessage().getAuthor();
         CommandReceivedEvent commandEvent = new CommandReceivedEvent(event);

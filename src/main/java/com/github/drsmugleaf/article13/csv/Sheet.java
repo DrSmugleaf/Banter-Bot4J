@@ -5,9 +5,7 @@ import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVReaderHeaderAware;
 import com.opencsv.CSVReaderHeaderAwareBuilder;
 import org.apache.commons.io.FilenameUtils;
-import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -20,40 +18,36 @@ import java.util.*;
  */
 public class Sheet extends File {
 
-    @Nonnull
     private static final String SHEETS_PATH = Objects.requireNonNull(Sheet.class.getClassLoader().getResource("article13/votes")).getFile();
 
-    public Sheet(@NotNull String pathname) {
+    public Sheet(String pathname) {
         super(pathname);
     }
 
-    public Sheet(String parent, @NotNull String child) {
+    public Sheet(String parent, String child) {
         super(parent, child);
     }
 
-    public Sheet(File parent, @NotNull String child) {
+    public Sheet(File parent, String child) {
         super(parent, child);
     }
 
-    public Sheet(@NotNull URI uri) {
+    public Sheet(URI uri) {
         super(uri);
     }
 
-    public Sheet(@Nonnull File file) {
+    public Sheet(File file) {
         super(file.toURI());
     }
 
-    @Nonnull
     private static String getSheetsPath() {
         return SHEETS_PATH;
     }
 
-    @Nonnull
     private static File getSheetsFolder() {
         return new File(getSheetsPath());
     }
 
-    @Nonnull
     public static List<Sheet> getVoteSheets() {
         File[] files = getSheetsFolder().listFiles(file -> file.isFile() && file.getName().endsWith(".csv"));
         if (files == null) {
@@ -68,12 +62,10 @@ public class Sheet extends File {
         return sheets;
     }
 
-    @Nonnull
     public String getSheetName() {
         return FilenameUtils.removeExtension(this.getName());
     }
 
-    @Nonnull
     public List<Map<String, String>> read() {
         List<Map<String, String>> lines = new ArrayList<>();
 
@@ -94,7 +86,6 @@ public class Sheet extends File {
         return lines;
     }
 
-    @Nonnull
     public Set<String> getHeaders() {
         Set<String> headers;
 

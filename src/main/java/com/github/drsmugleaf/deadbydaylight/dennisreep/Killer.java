@@ -1,12 +1,11 @@
 package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.deadbydaylight.ICharacter;
 import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -16,15 +15,12 @@ import java.net.URL;
  */
 public class Killer implements ICharacter {
 
-    @Nonnull
     @SerializedName("KillerName")
     public final String NAME;
 
-    @Nonnull
     @SerializedName("Image")
     public final String IMAGE_URL;
 
-    @Nonnull
     @SerializedName("Tier")
     public final Tiers TIER;
 
@@ -34,7 +30,7 @@ public class Killer implements ICharacter {
     @SerializedName("Ratings")
     public final long RATINGS;
 
-    Killer(@Nonnull String name, @Nonnull String imageUrl, @Nonnull Tiers tier, double rating, long ratings) {
+    Killer(String name, String imageUrl, Tiers tier, double rating, long ratings) {
         NAME = name;
         IMAGE_URL = imageUrl;
         TIER = tier;
@@ -42,18 +38,15 @@ public class Killer implements ICharacter {
         RATINGS = ratings;
     }
 
-    @Nonnull
-    public static Killer from(@Nonnull JsonElement json) {
+    public static Killer from(JsonElement json) {
         return API.GSON.fromJson(json, Killer.class);
     }
 
-    @Nonnull
     @Override
     public String getName() {
         return NAME;
     }
 
-    @Nonnull
     @Override
     public InputStream getImage() {
         try {

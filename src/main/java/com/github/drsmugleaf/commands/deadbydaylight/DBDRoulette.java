@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.deadbydaylight;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
@@ -7,8 +8,6 @@ import com.github.drsmugleaf.commands.api.converter.TypeConverters;
 import com.github.drsmugleaf.deadbydaylight.ICharacter;
 import com.github.drsmugleaf.deadbydaylight.dennisreep.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.InputStream;
 
 /**
@@ -26,8 +25,8 @@ public class DBDRoulette extends Command {
     private double maximumRating = 5;
 
     private void sendResponse(
-            @Nonnull ICharacter character,
-            @Nonnull PerkList<? extends Perk> perks,
+            ICharacter character,
+            PerkList<? extends Perk> perks,
             @Nullable Double minimumRating,
             @Nullable Double maximumRating
     ) {
@@ -121,7 +120,7 @@ public class DBDRoulette extends Command {
     }
 
     @Override
-    public void registerConverters(@Nonnull TypeConverters converter) {
+    public void registerConverters(TypeConverters converter) {
         converter.registerStringTo(CommandReceivedEvent.class, RouletteTypes.class, (s, e) -> RouletteTypes.from(s));
     }
 

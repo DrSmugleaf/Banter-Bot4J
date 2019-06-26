@@ -1,12 +1,11 @@
 package com.github.drsmugleaf.tripwire.route;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.dijkstra.Graph;
 import com.github.drsmugleaf.tripwire.API;
 import com.github.drsmugleaf.tripwire.models.Signature;
 import com.github.drsmugleaf.tripwire.models.Wormhole;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +19,7 @@ public class SystemGraph extends Graph<StarSystem> {
         super(systems);
     }
 
-    @Nonnull
-    static SystemGraph fromSignaturesAndWormholes(@Nonnull Map<Integer, Signature> signatures, @Nonnull List<Wormhole> wormholes) {
+    static SystemGraph fromSignaturesAndWormholes(Map<Integer, Signature> signatures, List<Wormhole> wormholes) {
         Map<Integer, StarSystem> systems = StarSystem.fromSignatures(signatures.values());
 
         for (Wormhole wormhole : wormholes) {
@@ -38,7 +36,7 @@ public class SystemGraph extends Graph<StarSystem> {
     }
 
     @Nullable
-    public static Route getRoute(long id, @Nonnull String username, @Nonnull String password, @Nonnull String from, @Nonnull String to) {
+    public static Route getRoute(long id, String username, String password, String from, String to) {
         String response = API.refresh(id, username, password).body();
         Map<Integer, Signature> signatures = Signature.fromJson(response);
         List<Wormhole> wormholes = Wormhole.fromJson(response);

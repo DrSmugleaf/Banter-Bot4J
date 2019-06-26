@@ -8,7 +8,6 @@ import discord4j.core.object.util.Snowflake;
 import discord4j.core.spec.MessageCreateSpec;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.function.Consumer;
 
@@ -17,7 +16,7 @@ import java.util.function.Consumer;
  */
 public class CommandReceivedEvent extends MessageCreateEvent {
 
-    protected CommandReceivedEvent(@Nonnull MessageCreateEvent event) {
+    protected CommandReceivedEvent(MessageCreateEvent event) {
         super(
                 event.getClient(),
                 event.getMessage(),
@@ -26,8 +25,7 @@ public class CommandReceivedEvent extends MessageCreateEvent {
         );
     }
 
-    @Nonnull
-    public Mono<Message> reply(@Nonnull Consumer<? super MessageCreateSpec> message) {
+    public Mono<Message> reply(Consumer<? super MessageCreateSpec> message) {
         String mention = getMember()
                 .map(User::getId)
                 .map(Snowflake::asLong)
@@ -54,8 +52,7 @@ public class CommandReceivedEvent extends MessageCreateEvent {
                 .doOnError(e -> Command.LOGGER.error("Message could not be sent", e));
     }
 
-    @Nonnull
-    public Mono<Message> reply(@Nonnull String content) {
+    public Mono<Message> reply(String content) {
         String mention = getMember()
                 .map(User::getId)
                 .map(Snowflake::asLong)

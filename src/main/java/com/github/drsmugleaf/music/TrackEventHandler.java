@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.music;
 
-import javax.annotation.Nonnull;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -13,7 +12,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface TrackEventHandler {
 
-    @Nonnull
     Class<? extends Event> event() default Event.class;
 
 }

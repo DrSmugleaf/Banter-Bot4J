@@ -5,15 +5,12 @@ import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 
-import javax.annotation.Nonnull;
-
 /**
  * Created by DrSmugleaf on 10/06/2018
  */
 @CommandInfo(tags = {Tags.OWNER_ONLY})
 public class Name extends Command {
 
-    @Nonnull
     private static String invalidArgumentsResponse() {
         return "Invalid arguments.\n" +
                "**Formats:**\n" +

@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.commands.images;
 
-import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -17,9 +16,8 @@ import java.util.stream.Collectors;
 public enum Orientation {
 
     HORIZONTAL {
-        @Nonnull
         @Override
-        public BufferedImage concatenate(@Nonnull List<String> urls) throws InvalidURLException {
+        public BufferedImage concatenate(List<String> urls) throws InvalidURLException {
             List<BufferedImage> images = toImages(urls);
             int height = getMaxHeight(images);
             int width = getTotalWidth(images);
@@ -38,9 +36,8 @@ public enum Orientation {
         }
     },
     VERTICAL {
-        @Nonnull
         @Override
-        public BufferedImage concatenate(@Nonnull List<String> urls) throws InvalidURLException {
+        public BufferedImage concatenate(List<String> urls) throws InvalidURLException {
             List<BufferedImage> images = toImages(urls);
             int height = getTotalHeight(images);
             int width = getMaxWidth(images);
@@ -59,8 +56,7 @@ public enum Orientation {
         }
     };
 
-    @Nonnull
-    private static BufferedImage toImage(@Nonnull String urlString) throws InvalidURLException {
+    private static BufferedImage toImage(String urlString) throws InvalidURLException {
         URL url;
 
         try {
@@ -71,28 +67,26 @@ public enum Orientation {
         }
     }
 
-    @Nonnull
-    private static List<BufferedImage> toImages(@Nonnull List<String> urls) throws InvalidURLException {
+    private static List<BufferedImage> toImages(List<String> urls) throws InvalidURLException {
         return urls.stream().map(Orientation::toImage).collect(Collectors.toList());
     }
 
-    private static int getMaxHeight(@Nonnull List<BufferedImage> images) {
+    private static int getMaxHeight(List<BufferedImage> images) {
         return Collections.max(images, Comparator.comparingInt(BufferedImage::getHeight)).getHeight();
     }
 
-    private static int getTotalHeight(@Nonnull List<BufferedImage> images) {
+    private static int getTotalHeight(List<BufferedImage> images) {
         return images.stream().mapToInt(BufferedImage::getHeight).sum();
     }
 
-    private static int getMaxWidth(@Nonnull List<BufferedImage> images) {
+    private static int getMaxWidth(List<BufferedImage> images) {
         return Collections.max(images, Comparator.comparingInt(BufferedImage::getWidth)).getWidth();
     }
 
-    private static int getTotalWidth(@Nonnull List<BufferedImage> images) {
+    private static int getTotalWidth(List<BufferedImage> images) {
         return images.stream().mapToInt(BufferedImage::getWidth).sum();
     }
 
-    @Nonnull
-    public abstract BufferedImage concatenate(@Nonnull List<String> urls) throws InvalidURLException;
+    public abstract BufferedImage concatenate(List<String> urls) throws InvalidURLException;
 
 }

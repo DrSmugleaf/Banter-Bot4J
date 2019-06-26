@@ -8,10 +8,12 @@ import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.converter.TypeConverters;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 
-import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by DrSmugleaf on 10/11/2018
@@ -55,7 +57,7 @@ public class MergeImages extends Command {
     }
 
     @Override
-    public void registerConverters(@Nonnull TypeConverters converter) {
+    public void registerConverters(TypeConverters converter) {
         converter.registerStringTo(CommandReceivedEvent.class, Orientation.class, (s, e) -> Orientation.valueOf(s.toUpperCase()));
     }
 

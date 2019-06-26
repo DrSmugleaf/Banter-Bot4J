@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.github.drsmugleaf.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +20,6 @@ public class PerkList<E extends Perk> extends ArrayList<E> {
         super();
     }
 
-    @Nonnull
     public PerkList<E> getBest(int amount) {
         if (amount > size()) {
             amount = size();
@@ -32,7 +31,6 @@ public class PerkList<E extends Perk> extends ArrayList<E> {
                 .collect(Collectors.toCollection(PerkList::new));
     }
 
-    @Nonnull
     public PerkList<E> getRandom(int amount) {
         if (amount > size()) {
             amount = size();
@@ -47,8 +45,7 @@ public class PerkList<E extends Perk> extends ArrayList<E> {
                 .collect(Collectors.toCollection(PerkList::new));
     }
 
-    @Nonnull
-    public PerkList<E> getRandom(int amount, @Nonnull Killer killer) {
+    public PerkList<E> getRandom(int amount, Killer killer) {
         PerkList<E> perks = getRandom(amount)
                 .stream()
                 .filter(perk -> !(perk.getCharacter() != null && perk.getCharacter() != killer))
@@ -69,20 +66,17 @@ public class PerkList<E extends Perk> extends ArrayList<E> {
         return ratings;
     }
 
-    @Nonnull
     public List<String> getNames() {
         return stream()
                 .map(Perk::getName)
                 .collect(Collectors.toList());
     }
 
-    @Nonnull
     public Tiers getTier() {
         double rating = getAverageRating();
         return Tiers.from(rating);
     }
 
-    @Nonnull
     public PerkList<E> getWithinRating(@Nullable Double from, @Nullable Double to) {
         final double finalFrom;
         if (from == null) {
@@ -107,8 +101,7 @@ public class PerkList<E extends Perk> extends ArrayList<E> {
         return newPerks;
     }
 
-    @Nonnull
-    public PerkList<E> getWithinRating(@Nonnull Tiers from, @Nonnull Tiers to) {
+    public PerkList<E> getWithinRating(Tiers from, Tiers to) {
         return getWithinRating(from.THRESHOLD, to.THRESHOLD);
     }
 

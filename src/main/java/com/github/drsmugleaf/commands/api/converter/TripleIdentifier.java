@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.commands.api.converter;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
 
 /**
@@ -8,32 +7,26 @@ import java.util.Objects;
  */
 public class TripleIdentifier<T, U, R> {
 
-    @Nonnull
     private final Class<T> FROM1;
 
-    @Nonnull
     private final Class<U> FROM2;
 
-    @Nonnull
     private final Class<R> TO;
 
-    public TripleIdentifier(@Nonnull Class<T> from1, @Nonnull Class<U> from2, @Nonnull Class<R> to) {
+    public TripleIdentifier(Class<T> from1, Class<U> from2, Class<R> to) {
         FROM1 = from1;
         FROM2 = from2;
         TO = to;
     }
 
-    @Nonnull
     public Class<T> getFrom1() {
         return FROM1;
     }
 
-    @Nonnull
     public Class<U> getFrom2() {
         return FROM2;
     }
 
-    @Nonnull
     public Class<R> getTo() {
         return TO;
     }

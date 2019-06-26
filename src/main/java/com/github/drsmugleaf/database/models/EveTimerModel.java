@@ -12,7 +12,6 @@ import discord4j.core.event.domain.lifecycle.ReadyEvent;
 import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.util.Snowflake;
 
-import javax.annotation.Nonnull;
 import java.awt.*;
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -27,13 +26,10 @@ import java.util.*;
 @Table(name = "eve_timers")
 public class EveTimerModel extends Model<EveTimerModel> {
 
-    @Nonnull
     public static final ZoneOffset EVE_TIMEZONE = ZoneOffset.UTC;
 
-    @Nonnull
     private static final Timer TIMER = new Timer("Eve Structure Alert Timer", true);
 
-    @Nonnull
     private static final Map<EveTimerModel, TimerTask> TASKS = new HashMap<>();
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(EVE_TIMEZONE);
@@ -67,7 +63,7 @@ public class EveTimerModel extends Model<EveTimerModel> {
 
     private EveTimerModel() {}
 
-    private static void sendAlert(@Nonnull DiscordClient client, @Nonnull EveTimerModel timer, boolean skipped) {
+    private static void sendAlert(DiscordClient client, EveTimerModel timer, boolean skipped) {
         String structure = timer.structure;
         String system = timer.system;
         Instant date = Instant.ofEpochMilli(timer.date);
@@ -102,11 +98,11 @@ public class EveTimerModel extends Model<EveTimerModel> {
                 .subscribe(message -> deleteTimer(timer));
     }
 
-    private static void sendAlert(@Nonnull DiscordClient client, @Nonnull EveTimerModel timer) {
+    private static void sendAlert(DiscordClient client, EveTimerModel timer) {
         sendAlert(client, timer, false);
     }
 
-    public static void createTimer(@Nonnull DiscordClient client, @Nonnull EveTimerModel timer) {
+    public static void createTimer(DiscordClient client, EveTimerModel timer) {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -118,7 +114,7 @@ public class EveTimerModel extends Model<EveTimerModel> {
         TIMER.schedule(task, timer.date - System.currentTimeMillis());
     }
 
-    public static boolean deleteTimer(@Nonnull EveTimerModel timer) {
+    public static boolean deleteTimer(EveTimerModel timer) {
         for (Map.Entry<EveTimerModel, TimerTask> entry : TASKS.entrySet()) {
             EveTimerModel entryTimer = entry.getKey();
             TimerTask entryTask = entry.getValue();

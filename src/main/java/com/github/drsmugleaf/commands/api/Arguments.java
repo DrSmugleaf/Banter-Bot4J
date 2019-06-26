@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.commands.api;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.converter.ConversionException;
 import com.github.drsmugleaf.commands.api.converter.Converter;
 import com.github.drsmugleaf.commands.api.converter.Result;
@@ -9,8 +10,6 @@ import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
 import com.github.drsmugleaf.commands.api.registry.Entry;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,23 +22,19 @@ import java.util.regex.Pattern;
  */
 public class Arguments extends ArrayList<String> {
 
-    @Nonnull
     private static final Pattern SPLIT_ON_SPACES_EXCEPT_WITHIN_QUOTES = Pattern.compile("\"([^\"]*)\"|'([^']*)'|[^\\s]+");
 
-    @Nonnull
     private final CommandSearchResult RESULT;
 
-    @Nonnull
     private final CommandReceivedEvent EVENT;
 
-    Arguments(@Nonnull CommandSearchResult result, @Nonnull CommandReceivedEvent event) {
+    Arguments(CommandSearchResult result, CommandReceivedEvent event) {
         super(getArgs(result, event));
         RESULT = result;
         EVENT = event;
     }
 
-    @Nonnull
-    private static String getArg(@Nonnull Matcher matcher) {
+    private static String getArg(Matcher matcher) {
         for (int i = 1; i <= matcher.groupCount(); i++) {
             String match = matcher.group(i);
             if (match != null) {
@@ -50,8 +45,7 @@ public class Arguments extends ArrayList<String> {
         return matcher.group();
     }
 
-    @Nonnull
-    private static String extractArgs(@Nonnull CommandSearchResult command, @Nonnull MessageCreateEvent event) {
+    private static String extractArgs(CommandSearchResult command, MessageCreateEvent event) {
         String matchedCommandName = command.getMatchedName();
         return event
                 .getMessage()
@@ -63,8 +57,7 @@ public class Arguments extends ArrayList<String> {
                 }).get();
     }
 
-    @Nonnull
-    public static List<String> parseArgs(@Nonnull String argumentsString) {
+    public static List<String> parseArgs(String argumentsString) {
         List<String> args = new ArrayList<>();
         Matcher matcher = SPLIT_ON_SPACES_EXCEPT_WITHIN_QUOTES.matcher(argumentsString);
 
@@ -76,23 +69,19 @@ public class Arguments extends ArrayList<String> {
         return args;
     }
 
-    @Nonnull
-    public static List<String> getArgs(@Nonnull CommandSearchResult result, @Nonnull MessageCreateEvent event) {
+    public static List<String> getArgs(CommandSearchResult result, MessageCreateEvent event) {
         String argumentsString = extractArgs(result, event);
         return parseArgs(argumentsString);
     }
 
-    @Nonnull
     public String first() {
         return get(0);
     }
 
-    @Nonnull
     public String last() {
         return get(size() - 1);
     }
 
-    @Nonnull
     public String getFrom(int start, int end) {
         StringBuilder builder = new StringBuilder();
         for (int i = start; i < end; i++) {
@@ -102,7 +91,6 @@ public class Arguments extends ArrayList<String> {
         return builder.toString().trim();
     }
 
-    @Nonnull
     public String getFrom(int start) {
         return getFrom(start, size());
     }
@@ -150,7 +138,6 @@ public class Arguments extends ArrayList<String> {
         return true;
     }
 
-    @Nonnull
     public Double getDouble(int index) {
         String argument = get(index).replace(',', '.');
         return Double.parseDouble(argument);
@@ -175,9 +162,8 @@ public class Arguments extends ArrayList<String> {
         return index < size();
     }
 
-    @Nonnull
     @SuppressWarnings("unchecked")
-    public <E> Result<E> getArg(@Nonnull CommandField commandField, @Nullable E def) {
+    public <E> Result<E> getArg(CommandField commandField, @Nullable E def) {
         Field field = commandField.getField();
         Argument argument = commandField.getArgument();
         int position = argument.position() - 1;
@@ -223,18 +209,17 @@ public class Arguments extends ArrayList<String> {
     }
 
     @Nullable
-    public String getStringArg(@Nonnull CommandField field) {
+    public String getStringArg(CommandField field) {
         int position = field.getArgument().position() - 1;
         return get(position);
     }
 
     @Nullable
-    public Integer getIntegerArg(@Nonnull CommandField field) {
+    public Integer getIntegerArg(CommandField field) {
         int position = field.getArgument().position() - 1;
         return getInteger(position);
     }
 
-    @Nonnull
     public String getInvalidArgumentsResponse() {
         Entry entry = RESULT.getEntry();
         StringBuilder response = new StringBuilder();

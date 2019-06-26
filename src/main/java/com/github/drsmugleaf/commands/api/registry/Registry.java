@@ -1,13 +1,12 @@
 package com.github.drsmugleaf.commands.api.registry;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.converter.TypeConverters;
 import com.google.common.collect.ImmutableList;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -18,13 +17,11 @@ import java.util.Set;
  */
 public class Registry {
 
-    @Nonnull
     private final TypeConverters CONVERTERS;
 
-    @Nonnull
     private final ImmutableList<Entry> ENTRIES;
 
-    public Registry(@Nonnull List<Class<Command>> commands) {
+    public Registry(List<Class<Command>> commands) {
         CONVERTERS = new TypeConverters();
 
         List<Entry> entries = new ArrayList<>();
@@ -43,12 +40,10 @@ public class Registry {
         }
     }
 
-    @Nonnull
     public TypeConverters getConverters() {
         return CONVERTERS;
     }
 
-    @Nonnull
     private List<CommandSearchResult> findDuplicates() {
         Set<String> uniqueAliases = new HashSet<>();
         List<CommandSearchResult> duplicateAliases = new ArrayList<>();
@@ -65,8 +60,7 @@ public class Registry {
         return duplicateAliases;
     }
 
-    @Nonnull
-    private String formatDuplicates(@Nonnull List<CommandSearchResult> duplicates) {
+    private String formatDuplicates(List<CommandSearchResult> duplicates) {
         if (duplicates.isEmpty()) {
             return "No duplicate command names found";
         }
@@ -84,7 +78,7 @@ public class Registry {
     }
 
     @Nullable
-    public CommandSearchResult findCommand(@Nonnull String message) {
+    public CommandSearchResult findCommand(String message) {
         message = message.substring(BanterBot4J.BOT_PREFIX.length()).toLowerCase();
         List<CommandSearchResult> matches = new ArrayList<>();
 

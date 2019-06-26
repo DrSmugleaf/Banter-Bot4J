@@ -12,8 +12,6 @@ import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.TextChannel;
 import discord4j.core.object.util.Permission;
 
-import javax.annotation.Nonnull;
-
 /**
  * Created by DrSmugleaf on 10/06/2018
  */
@@ -55,7 +53,7 @@ public class Bridge extends Command {
     }
 
     @Override
-    public void registerConverters(@Nonnull TypeConverters converter) {
+    public void registerConverters(TypeConverters converter) {
         converter.registerStringTo(CommandReceivedEvent.class, TextChannel.class, (s, e) -> e
                 .getGuild()
                 .flatMapMany(Guild::getChannels)

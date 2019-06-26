@@ -1,12 +1,11 @@
 package com.github.drsmugleaf.article13.entities;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.article13.csv.Sheet;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -14,25 +13,20 @@ import java.util.*;
  */
 public class Country {
 
-    @Nonnull
     private static final ImmutableMap<String, Country> COUNTRIES = parseCountries();
 
-    @Nonnull
     private final String NAME;
 
-    @Nonnull
     private final ImmutableList<Member> MEMBERS;
 
-    @Nonnull
     private final ImmutableMap<String, Party> PARTIES;
 
-    private Country(@Nonnull Sheet csv) {
+    private Country(Sheet csv) {
         NAME = csv.getSheetName();
         MEMBERS = parseMembers(csv);
         PARTIES = parseParties(MEMBERS);
     }
 
-    @Nonnull
     private static ImmutableMap<String, Country> parseCountries() {
         Map<String, Country> countries = new HashMap<>();
 
@@ -45,8 +39,7 @@ public class Country {
         return ImmutableMap.copyOf(countries);
     }
 
-    @Nonnull
-    public static ImmutableList<Member> parseMembers(@Nonnull Sheet csv) {
+    public static ImmutableList<Member> parseMembers(Sheet csv) {
         List<Member> members = new ArrayList<>();
         for (Map<String, String> line : csv.read()) {
             members.add(new Member(line));
@@ -55,8 +48,7 @@ public class Country {
         return ImmutableList.copyOf(members);
     }
 
-    @Nonnull
-    public static ImmutableMap<String, Party> parseParties(@Nonnull List<Member> members) {
+    public static ImmutableMap<String, Party> parseParties(List<Member> members) {
         Map<String, Party> parties = new TreeMap<>();
 
         for (Member member : members) {
@@ -72,37 +64,31 @@ public class Country {
         return ImmutableMap.copyOf(parties);
     }
 
-    @Nonnull
     public static ImmutableMap<String, Country> getCountries() {
         return COUNTRIES;
     }
 
-    @Nonnull
     public static ImmutableSet<String> getCountryNames() {
         return getCountries().keySet();
     }
 
     @Nullable
-    public static Country getCountry(@Nonnull String name) {
+    public static Country getCountry(String name) {
         return getCountries().get(name);
     }
 
-    @Nonnull
     public String getName() {
         return NAME;
     }
 
-    @Nonnull
     public ImmutableList<Member> getMembers() {
         return MEMBERS;
     }
 
-    @Nonnull
     public ImmutableMap<String, Party> getParties() {
         return PARTIES;
     }
 
-    @Nonnull
     public ImmutableSet<String> getPartyNames() {
         return getParties().keySet();
     }

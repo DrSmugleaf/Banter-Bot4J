@@ -9,7 +9,6 @@ import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -17,32 +16,23 @@ import java.io.IOException;
  */
 public class API {
 
-    @Nonnull
     public static final Logger LOGGER = LoggerFactory.getLogger(API.class);
 
-    @Nonnull
     public static final String URL = "https://tripwire.eve-apps.com/";
 
-    @Nonnull
     public static final String LOGIN_URL = URL + "login.php";
 
-    @Nonnull
     public static final String CONNECT_URL = URL + "?system=";
 
-    @Nonnull
     public static final String REFRESH_URL = URL + "refresh.php";
 
-    @Nonnull
     public static final String USER_AGENT = "Banter Bot4J";
 
-    @Nonnull
     private static final SessionManager SESSION_MANAGER = new SessionManager();
 
-    @Nonnull
     public static final Gson GSON = new GsonBuilder().setDateFormat("YYYY-MM-DD HH:mm:ss").create();
 
-    @Nonnull
-    public static Connection.Response refresh(long id, @Nonnull String username, @Nonnull String password) {
+    public static Connection.Response refresh(long id, String username, String password) {
         Session session = SESSION_MANAGER.getSession(id, username, password);
 
         try {

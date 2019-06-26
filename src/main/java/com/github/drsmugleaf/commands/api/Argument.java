@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.commands.api;
 
-import javax.annotation.Nonnull;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -19,7 +18,7 @@ public @interface Argument {
 
     long maximum() default Long.MAX_VALUE;
 
-    @Nonnull String example();
+    String example();
 
     boolean optional() default false;
 
@@ -27,7 +26,7 @@ public @interface Argument {
     @Target(ElementType.FIELD)
     @interface Maximum {
 
-        @Nonnull String value();
+        String value();
 
     }
 

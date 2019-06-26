@@ -13,15 +13,12 @@ import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
-import javax.annotation.Nonnull;
-
 /**
  * Created by DrSmugleaf on 14/05/2017.
  */
 @CommandInfo(permissions = {Permission.KICK_MEMBERS})
 public class Blacklist extends Command {
 
-    @Nonnull
     private static String invalidArgumentsResponse() {
         return "Invalid arguments.\n" +
                "**Formats:**\n" +

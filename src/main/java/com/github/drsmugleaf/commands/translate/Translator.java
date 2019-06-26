@@ -9,7 +9,6 @@ import discord4j.core.event.domain.message.MessageUpdateEvent;
 import discord4j.core.object.entity.Message;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -17,14 +16,13 @@ import java.util.concurrent.TimeUnit;
  */
 public class Translator {
 
-    @Nonnull
     private static final Cache<Long, TranslatedMessage> MESSAGES = CacheBuilder
             .newBuilder()
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .build();
 
     @EventListener(MessageCreateEvent.class)
-    public static void handle(@Nonnull MessageCreateEvent event) {
+    public static void handle(MessageCreateEvent event) {
         event
                 .getMessage()
                 .getAuthor()
@@ -37,7 +35,7 @@ public class Translator {
     }
 
     @EventListener(MessageUpdateEvent.class)
-    public static void handle(@Nonnull MessageUpdateEvent event) {
+    public static void handle(MessageUpdateEvent event) {
         event
                 .getMessage()
                 .filter(message -> message.getAuthor().isPresent() && !message.getAuthor().get().isBot())
@@ -46,7 +44,7 @@ public class Translator {
     }
 
     @EventListener(MessageDeleteEvent.class)
-    public static void handle(@Nonnull MessageDeleteEvent event) {
+    public static void handle(MessageDeleteEvent event) {
         Mono
                 .justOrEmpty(event.getMessage())
                 .filter(message -> message.getAuthor().isPresent() && !message.getAuthor().get().isBot())

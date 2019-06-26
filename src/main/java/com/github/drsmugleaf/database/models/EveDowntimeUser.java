@@ -13,7 +13,6 @@ import discord4j.core.object.entity.User;
 import net.troja.eve.esi.ApiException;
 import net.troja.eve.esi.api.StatusApi;
 
-import javax.annotation.Nonnull;
 import javax.ws.rs.ProcessingException;
 import java.util.List;
 import java.util.Timer;
@@ -25,10 +24,8 @@ import java.util.TimerTask;
 @Table(name = "eve_downtime_users")
 public class EveDowntimeUser extends Model<EveDowntimeUser> {
 
-    @Nonnull
     private static final Timer DOWNTIME_TIMER = new Timer("Eve Online Downtime Timer", true);
 
-    @Nonnull
     private static final StatusApi STATUS_API = new StatusApi();
 
     private static boolean wasEveOffline = false;

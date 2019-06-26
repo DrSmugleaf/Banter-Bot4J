@@ -5,7 +5,6 @@ import com.google.common.base.Suppliers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,27 +17,22 @@ import java.util.concurrent.TimeUnit;
  */
 public class SurvivorsAPI extends API {
 
-    @Nonnull
     private static final String SURVIVOR_PERK_DATA_ENDPOINT = "getSurvivorPerkData/";
 
-    @Nonnull
     private static final Supplier<Map<String, Survivor>> SURVIVORS = Suppliers.memoizeWithExpiration(
             SurvivorsAPI::getSurvivorData, 12, TimeUnit.HOURS
     );
 
-    @Nonnull
     private static final Supplier<Map<String, String>> SURVIVOR_NAMES = Suppliers.memoizeWithExpiration(
             SurvivorsAPI::getSurvivorNames, 12, TimeUnit.HOURS
     );
 
-    @Nonnull
     private static final Supplier<PerkList<SurvivorPerk>> PERKS = Suppliers.memoizeWithExpiration(
             SurvivorsAPI::getPerkData, 12, TimeUnit.HOURS
     );
 
     private SurvivorsAPI() {}
 
-    @Nonnull
     private static Map<String, Survivor> getSurvivorData() {
         Map<String, Survivor> survivors = new HashMap<>();
         for (SurvivorPerk perk : getPerks()) {
@@ -54,7 +48,6 @@ public class SurvivorsAPI extends API {
         return survivors;
     }
 
-    @Nonnull
     private static Map<String, String> getSurvivorNames() {
         Map<String, String> names = new HashMap<>();
         for (String originalName : getSurvivors().keySet()) {
@@ -71,7 +64,6 @@ public class SurvivorsAPI extends API {
         return names;
     }
 
-    @Nonnull
     private static PerkList<SurvivorPerk> getPerkData() {
         JsonArray json = getResponse(SURVIVOR_PERK_DATA_ENDPOINT).get("SurvivorPerk").getAsJsonArray();
         PerkList<SurvivorPerk> perks = new PerkList<>();
@@ -83,17 +75,14 @@ public class SurvivorsAPI extends API {
         return perks;
     }
 
-    @Nonnull
     public static Map<String, Survivor> getSurvivors() {
         return SURVIVORS.get();
     }
 
-    @Nonnull
     public static PerkList<SurvivorPerk> getPerks() {
         return PERKS.get();
     }
 
-    @Nonnull
     public static Survivor randomSurvivor() {
         List<Survivor> survivors = new ArrayList<>(getSurvivors().values());
         int index = ThreadLocalRandom.current().nextInt(survivors.size());

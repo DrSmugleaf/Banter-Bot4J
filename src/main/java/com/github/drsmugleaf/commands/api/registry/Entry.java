@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.api.registry;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
@@ -9,8 +10,6 @@ import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.User;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,22 +18,20 @@ import java.util.List;
  */
 public class Entry {
 
-    @Nonnull
     private final Class<? extends Command> COMMAND;
 
     @Nullable
     private final CommandInfo COMMAND_INFO;
 
-    @Nonnull
     private final ImmutableList<CommandField> COMMAND_FIELDS;
 
-    protected Entry(@Nonnull Class<? extends Command> command) {
+    protected Entry(Class<? extends Command> command) {
         COMMAND = command;
         COMMAND_INFO = command.getDeclaredAnnotation(CommandInfo.class);
         COMMAND_FIELDS = ImmutableList.copyOf(CommandField.from(command));
     }
 
-    public static void setEvent(@Nonnull Command command, @Nonnull CommandReceivedEvent event) {
+    public static void setEvent(Command command, CommandReceivedEvent event) {
         try {
             Command.class.getDeclaredField("EVENT").set(command, event);
         } catch (IllegalAccessException | NoSuchFieldException e) {
@@ -42,7 +39,7 @@ public class Entry {
         }
     }
 
-    public static void setArgs(@Nonnull Command command, @Nonnull Arguments args) {
+    public static void setArgs(Command command, Arguments args) {
         try {
             Command.class.getDeclaredField("ARGUMENTS").set(command, args);
         } catch (IllegalAccessException | NoSuchFieldException e) {
@@ -50,7 +47,7 @@ public class Entry {
         }
     }
 
-    public static void setSelfUser(@Nonnull Command command, @Nonnull CommandReceivedEvent event) {
+    public static void setSelfUser(Command command, CommandReceivedEvent event) {
         User selfUser = event
                 .getClient()
                 .getSelf()
@@ -64,7 +61,7 @@ public class Entry {
         }
     }
 
-    public static void setSelfMember(@Nonnull Command command, @Nonnull CommandReceivedEvent event) {
+    public static void setSelfMember(Command command, CommandReceivedEvent event) {
         Member selfMember = event
                 .getClient()
                 .getSelf()
@@ -80,7 +77,6 @@ public class Entry {
         }
     }
 
-    @Nonnull
     public Class<? extends Command> getCommand() {
         return COMMAND;
     }
@@ -90,7 +86,6 @@ public class Entry {
         return COMMAND_INFO;
     }
 
-    @Nonnull
     public String getName() {
         String commandName;
         CommandInfo annotation = getCommandInfo();
@@ -104,7 +99,6 @@ public class Entry {
         return commandName.toLowerCase();
     }
 
-    @Nonnull
     public List<String> getAliases() {
         CommandInfo annotation = getCommandInfo();
 
@@ -120,19 +114,16 @@ public class Entry {
         return commandAliases;
     }
 
-    @Nonnull
     public List<String> getAllAliases() {
         List<String> aliases = getAliases();
         aliases.add(getName());
         return aliases;
     }
 
-    @Nonnull
     public ImmutableList<CommandField> getCommandFields() {
         return COMMAND_FIELDS;
     }
 
-    @Nonnull
     public Command newInstance() {
         try {
             return COMMAND.newInstance();

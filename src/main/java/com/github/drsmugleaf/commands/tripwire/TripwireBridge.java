@@ -7,7 +7,6 @@ import com.github.drsmugleaf.tripwire.route.Route;
 import com.github.drsmugleaf.tripwire.route.StarSystem;
 import discord4j.core.object.entity.User;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,6 @@ import java.util.List;
  */
 public class TripwireBridge extends Command {
 
-    @Nonnull
     private static String invalidArgumentsResponse() {
         return "Invalid arguments.\n" +
                "**Formats:**\n" +

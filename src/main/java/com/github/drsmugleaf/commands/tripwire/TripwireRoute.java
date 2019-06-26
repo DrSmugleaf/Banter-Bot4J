@@ -6,7 +6,6 @@ import com.github.drsmugleaf.tripwire.route.Route;
 import com.github.drsmugleaf.tripwire.route.SystemGraph;
 import discord4j.core.object.entity.User;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,10 +14,8 @@ import java.util.Map;
  */
 public class TripwireRoute extends Command {
 
-    @Nonnull
     static final Map<User, Route> ROUTES = new HashMap<>();
 
-    @Nonnull
     private static String invalidArgumentsResponse() {
         return "Invalid arguments.\n" +
                "**Formats:**\n" +

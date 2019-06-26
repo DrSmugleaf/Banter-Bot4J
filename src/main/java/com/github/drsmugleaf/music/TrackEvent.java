@@ -1,8 +1,7 @@
 package com.github.drsmugleaf.music;
 
+import com.github.drsmugleaf.Nullable;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-
-import javax.annotation.Nullable;
 
 /**
  * Created by DrSmugleaf on 07/09/2017.

@@ -1,9 +1,8 @@
 package com.github.drsmugleaf.commands.api.converter;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.registry.CommandField;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.function.BiFunction;
 
 /**
@@ -11,24 +10,21 @@ import java.util.function.BiFunction;
  */
 public class Validator<E> {
 
-    @Nonnull
     private final Class<E> IDENTIFIER;
 
     @Nullable
     private final BiFunction<CommandField, ? super E, String> VALIDATOR;
 
-    public Validator(@Nonnull Class<E> validates, @Nullable BiFunction<CommandField, ? super E, String> validator) {
+    public Validator(Class<E> validates, @Nullable BiFunction<CommandField, ? super E, String> validator) {
         IDENTIFIER = validates;
         VALIDATOR = validator;
     }
 
-    @Nonnull
     public Class<E> getFor() {
         return IDENTIFIER;
     }
 
-    @Nonnull
-    public String validate(@Nonnull CommandField argument, @Nonnull E value) {
+    public String validate(CommandField argument, E value) {
         if (VALIDATOR == null) {
             return "";
         }

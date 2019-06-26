@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.article13.vote;
 
-import javax.annotation.Nonnull;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -9,26 +8,23 @@ import java.util.Map;
  */
 public class Result implements Comparable<Result> {
 
-    @Nonnull
     private final Decision DECISION;
 
     private final int VOTES;
 
-    public Result(@Nonnull Decision decision, int votes) {
+    public Result(Decision decision, int votes) {
         DECISION = decision;
         VOTES = votes;
     }
 
-    @Nonnull
-    public static Result from(@Nonnull Map.Entry<Decision, Integer> entry) {
+    public static Result from(Map.Entry<Decision, Integer> entry) {
         Decision decision = entry.getKey();
         Integer votes = entry.getValue();
 
         return new Result(decision, votes);
     }
 
-    @Nonnull
-    public static Map<Decision, Result> from(@Nonnull Map<Decision, Integer> map) {
+    public static Map<Decision, Result> from(Map<Decision, Integer> map) {
         Map<Decision, Result> results = new EnumMap<>(Decision.class);
 
         for (Map.Entry<Decision, Integer> entry : map.entrySet()) {
@@ -46,7 +42,6 @@ public class Result implements Comparable<Result> {
         return results;
     }
 
-    @Nonnull
     public Decision getDecision() {
         return DECISION;
     }
@@ -56,7 +51,7 @@ public class Result implements Comparable<Result> {
     }
 
     @Override
-    public int compareTo(@Nonnull Result o) {
+    public int compareTo(Result o) {
         return Integer.compare(getVotes(), o.getVotes());
     }
 

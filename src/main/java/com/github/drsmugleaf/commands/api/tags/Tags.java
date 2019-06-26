@@ -8,7 +8,6 @@ import discord4j.core.object.entity.Member;
 import discord4j.core.object.util.Snowflake;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 
 /**
@@ -19,7 +18,7 @@ public enum Tags implements Tag {
     DELETE_COMMAND_MESSAGE {
 
         @Override
-        public void execute(@Nonnull CommandReceivedEvent event) {
+        public void execute(CommandReceivedEvent event) {
             event.getMessage().delete().subscribe();
         }
 
@@ -27,11 +26,10 @@ public enum Tags implements Tag {
     GUILD_ONLY {
 
         @Override
-        public boolean isValid(@Nonnull MessageCreateEvent event) {
+        public boolean isValid(MessageCreateEvent event) {
             return event.getGuild().blockOptional().isPresent();
         }
 
-        @Nonnull
         @Override
         public String message() {
             return "That command must be used in a server channel.";
@@ -41,11 +39,10 @@ public enum Tags implements Tag {
     OWNER_ONLY {
 
         @Override
-        public boolean isValid(@Nonnull MessageCreateEvent event) {
+        public boolean isValid(MessageCreateEvent event) {
             return Command.isOwner(event.getMember().orElse(null));
         }
 
-        @Nonnull
         @Override
         public String message() {
             return "You don't have permission to use that command.";
@@ -55,7 +52,7 @@ public enum Tags implements Tag {
     SAME_VOICE_CHANNEL {
 
         @Override
-        public boolean isValid(@Nonnull MessageCreateEvent event) {
+        public boolean isValid(MessageCreateEvent event) {
             if (!GUILD_ONLY.isValid(event)) {
                 return false;
             }
@@ -75,7 +72,6 @@ public enum Tags implements Tag {
                     .orElse(false);
         }
 
-        @Nonnull
         @Override
         public String message() {
             return "You aren't in the same voice channel as me.";
@@ -85,7 +81,7 @@ public enum Tags implements Tag {
     VOICE_ONLY {
 
         @Override
-        public boolean isValid(@Nonnull MessageCreateEvent event) {
+        public boolean isValid(MessageCreateEvent event) {
             if (!GUILD_ONLY.isValid(event)) {
                 return false;
             }
@@ -96,7 +92,6 @@ public enum Tags implements Tag {
                     .isPresent();
         }
 
-        @Nonnull
         @Override
         public String message() {
             return "You must be in a voice channel to use that command.";
@@ -104,15 +99,14 @@ public enum Tags implements Tag {
 
     };
 
-    public boolean isValid(@Nonnull MessageCreateEvent event) {
+    public boolean isValid(MessageCreateEvent event) {
         return true;
     }
 
-    @Nonnull
     public String message() {
         return "You can't use that command.";
     }
 
-    public void execute(@Nonnull CommandReceivedEvent event) {}
+    public void execute(CommandReceivedEvent event) {}
 
 }

@@ -1,13 +1,12 @@
 package com.github.drsmugleaf.commands.api.converter;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.registry.CommandField;
 import com.github.drsmugleaf.commands.api.registry.Entry;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,10 +17,8 @@ import java.util.function.BiFunction;
  */
 public class TypeConverters {
 
-    @Nonnull
     private final Map<TripleIdentifier, Converter> CONVERTERS = new HashMap<>();
 
-    @Nonnull
     private final BiFunction<CommandField, Number, String> NUMBER_VALIDATOR = (field, n) -> {
         Argument argument = field.getArgument();
         long value = n.longValue();
@@ -85,15 +82,15 @@ public class TypeConverters {
         });
     }
 
-    public void register(@Nonnull Converter converter) {
+    public void register(Converter converter) {
         CONVERTERS.put(converter.getIdentifier(), converter);
     }
 
     public <T, U, R> void register(
-            @Nonnull Class<T> from1,
-            @Nonnull Class<U> from2,
-            @Nonnull Class<R> to,
-            @Nonnull BiFunction<T, U, R> converterFunction,
+            Class<T> from1,
+            Class<U> from2,
+            Class<R> to,
+            BiFunction<T, U, R> converterFunction,
             @Nullable BiFunction<CommandField, ? super R, String> validatorFunction
     ) {
         TripleIdentifier<T, U, R> identifier = new TripleIdentifier<>(from1, from2, to);
@@ -103,32 +100,32 @@ public class TypeConverters {
     }
 
     public <T, U, R> void register(
-            @Nonnull Class<T> from1,
-            @Nonnull Class<U> from2,
-            @Nonnull Class<R> to,
-            @Nonnull BiFunction<T, U, R> converterFunction
+            Class<T> from1,
+            Class<U> from2,
+            Class<R> to,
+            BiFunction<T, U, R> converterFunction
     ) {
         register(from1, from2, to, converterFunction, null);
     }
 
     public <U, R> void registerStringTo(
-            @Nonnull Class<U> from,
-            @Nonnull Class<R> to,
-            @Nonnull BiFunction<String, U, R> converterFunction,
+            Class<U> from,
+            Class<R> to,
+            BiFunction<String, U, R> converterFunction,
             @Nullable BiFunction<CommandField, ? super R, String> validatorFunction
     ) {
         register(String.class, from, to, converterFunction, validatorFunction);
     }
 
     public <U, R> void registerStringTo(
-            @Nonnull Class<U> from,
-            @Nonnull Class<R> to,
-            @Nonnull BiFunction<String, U, R> converterFunction
+            Class<U> from,
+            Class<R> to,
+            BiFunction<String, U, R> converterFunction
     ) {
         registerStringTo(from, to, converterFunction, null);
     }
 
-    public void registerConverters(@Nonnull List<Entry> commands) {
+    public void registerConverters(List<Entry> commands) {
         for (Entry entry : commands) {
             Command command = entry.newInstance();
             command.registerConverters(this);

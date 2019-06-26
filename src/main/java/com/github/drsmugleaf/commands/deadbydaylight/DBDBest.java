@@ -7,7 +7,6 @@ import com.github.drsmugleaf.commands.api.converter.TypeConverters;
 import com.github.drsmugleaf.deadbydaylight.dennisreep.*;
 import discord4j.core.spec.EmbedCreateSpec;
 
-import javax.annotation.Nonnull;
 import java.io.InputStream;
 import java.util.function.Consumer;
 
@@ -25,7 +24,6 @@ public class DBDBest extends Command {
     @Argument(position = 2, example = "trapper", optional = true)
     private Killer killer;
 
-    @Nonnull
     private static Consumer<EmbedCreateSpec> getBaseEmbed(int perkAmount) {
         return (spec) -> {
             spec
@@ -46,7 +44,6 @@ public class DBDBest extends Command {
         };
     }
 
-    @Nonnull
     private static Consumer<EmbedCreateSpec> getBestPerksResponse(int amount) {
         return getBaseEmbed(amount).andThen(embed -> {
             PerkList<KillerPerk> killerPerks = KillersAPI.getPerks().getBest(amount);
@@ -79,8 +76,7 @@ public class DBDBest extends Command {
         });
     }
 
-    @Nonnull
-    private static Consumer<EmbedCreateSpec> getBestKillerPerksResponse(int amount, @Nonnull Killer killer) {
+    private static Consumer<EmbedCreateSpec> getBestKillerPerksResponse(int amount, Killer killer) {
         return getBaseEmbed(amount).andThen(embed -> {
             PerkList<KillerPerk> killerPerks = KillersAPI.getPerks(killer).getBest(amount);
             String killerRating = String.format("%.2f", killerPerks.getAverageRating());
@@ -116,7 +112,7 @@ public class DBDBest extends Command {
     }
 
     @Override
-    public void registerConverters(@Nonnull TypeConverters converter) {
+    public void registerConverters(TypeConverters converter) {
         converter.registerStringTo(CommandReceivedEvent.class, Killer.class, (s, e) -> KillersAPI.getKiller(s));
     }
 

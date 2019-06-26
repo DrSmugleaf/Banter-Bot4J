@@ -16,8 +16,6 @@ import discord4j.core.object.util.Snowflake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
@@ -33,16 +31,12 @@ import java.util.List;
  */
 public class BanterBot4J {
 
-    @Nonnull
     public static final Logger LOGGER = initLogger();
 
-    @Nonnull
     public static final DiscordClient CLIENT = buildClient();
 
-    @Nonnull
     public static final String BOT_PREFIX = Keys.BOT_PREFIX.VALUE;
 
-    @Nonnull
     public static final ImmutableList<Long> OWNERS = ImmutableList.copyOf(
             Arrays.asList(
                     109067752286715904L
@@ -52,19 +46,15 @@ public class BanterBot4J {
     @Nullable
     private static MessageChannel DISCORD_WARNING_CHANNEL = null;
 
-    @Nonnull
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
 
-    @Nonnull
     private static Handler HANDLER;
 
-    @Nonnull
     private static DiscordClient buildClient() {
         DiscordClientBuilder builder = new DiscordClientBuilder(Keys.DISCORD_TOKEN.VALUE);
         return builder.build();
     }
 
-    @Nonnull
     private static Logger initLogger() {
         return LoggerFactory.getLogger(BanterBot4J.class);
     }
@@ -101,7 +91,7 @@ public class BanterBot4J {
                 .block();
     }
 
-    private static void warnChannel(@Nonnull String message, @Nullable Throwable t) {
+    private static void warnChannel(String message, @Nullable Throwable t) {
         if (DISCORD_WARNING_CHANNEL == null) {
             throw new IllegalStateException("No Discord warning channel has been set");
         }
@@ -130,7 +120,7 @@ public class BanterBot4J {
         DISCORD_WARNING_CHANNEL.createMessage(spec -> spec.setContent(warning.toString()));
     }
 
-    public static void warn(@Nonnull String message, @Nullable Throwable t) {
+    public static void warn(String message, @Nullable Throwable t) {
         if (t != null) {
             LOGGER.warn(message, t);
         } else {
@@ -142,7 +132,7 @@ public class BanterBot4J {
         }
     }
 
-    public static void warn(@Nonnull String message) {
+    public static void warn(String message) {
         warn(message, null);
     }
 
@@ -171,7 +161,6 @@ public class BanterBot4J {
                 });
     }
 
-    @Nonnull
     public static Handler getHandler() {
         return HANDLER;
     }

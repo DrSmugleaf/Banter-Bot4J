@@ -9,7 +9,6 @@ import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.converter.TypeConverters;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -56,7 +55,7 @@ public class Article13 extends Command {
     }
 
     @Override
-    public void registerConverters(@Nonnull TypeConverters converter) {
+    public void registerConverters(TypeConverters converter) {
         converter.registerStringTo(CommandReceivedEvent.class, Country.class, (s, e) -> Country.getCountry(s));
         converter.registerStringTo(CommandReceivedEvent.class, Decision.class, (s, e) -> Decision.from(s));
         converter.registerStringTo(CommandReceivedEvent.class, Vote.class, (s, e) -> Vote.getVote(s));

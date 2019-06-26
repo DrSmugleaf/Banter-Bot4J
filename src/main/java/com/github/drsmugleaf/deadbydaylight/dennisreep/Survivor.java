@@ -1,10 +1,9 @@
 package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.deadbydaylight.ICharacter;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -15,28 +14,23 @@ import java.io.InputStream;
  */
 public class Survivor implements ICharacter {
 
-    @Nonnull
     private final String NAME;
 
-    @Nonnull
     private final String IMAGE_URL;
 
-    public Survivor(@Nonnull String name, @Nonnull String imageURL) {
+    public Survivor(String name, String imageURL) {
         NAME = name;
         IMAGE_URL = imageURL;
     }
 
-    @Nonnull
     public String getName() {
         return NAME;
     }
 
-    @Nonnull
     public String getImageURL() {
         return IMAGE_URL;
     }
 
-    @Nonnull
     public InputStream getImage() {
         File file = new File(IMAGE_URL);
 

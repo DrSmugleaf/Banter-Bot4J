@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.eve;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
@@ -11,8 +12,6 @@ import discord4j.core.object.entity.User;
 import discord4j.core.object.util.Snowflake;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.time.ZonedDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,7 +37,7 @@ public class EveTimer extends Command {
     private ZonedDateTime date;
 
     @Nullable
-    private static Long parseDatePortion(@Nonnull String input, @Nonnull Pattern regex) {
+    private static Long parseDatePortion(String input, Pattern regex) {
         Matcher matcher = regex.matcher(input);
         if (matcher.find()) {
             return Long.parseLong(matcher.group(1));
@@ -47,7 +46,7 @@ public class EveTimer extends Command {
         return null;
     }
 
-    private static boolean exists(@Nonnull String structure, @Nonnull String system) {
+    private static boolean exists(String structure, String system) {
         EveTimerModel timer = new EveTimerModel(null, structure, system, null, null);
         return !timer.get().isEmpty();
     }
@@ -91,7 +90,7 @@ public class EveTimer extends Command {
     }
 
     @Override
-    public void registerConverters(@Nonnull TypeConverters converter) {
+    public void registerConverters(TypeConverters converter) {
         converter.registerStringTo(CommandReceivedEvent.class, ZonedDateTime.class, (s, e) -> {
             Long days = parseDatePortion(s, Pattern.compile("(\\d+)d"));
             Long hours = parseDatePortion(s, Pattern.compile("(\\d+)h"));

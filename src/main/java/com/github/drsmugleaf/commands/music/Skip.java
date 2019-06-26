@@ -12,7 +12,6 @@ import discord4j.core.object.entity.User;
 import discord4j.core.object.entity.VoiceChannel;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +23,6 @@ import java.util.Map;
 @CommandInfo(tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL, Tags.DELETE_COMMAND_MESSAGE})
 public class Skip extends MusicCommand {
 
-    @Nonnull
     private static final Map<Guild, List<User>> SKIP_VOTES = new HashMap<>();
 
     @Override

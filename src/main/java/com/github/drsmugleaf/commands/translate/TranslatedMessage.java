@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.translate;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.database.models.BridgedChannel;
 import com.github.drsmugleaf.translator.API;
 import com.github.drsmugleaf.translator.Languages;
@@ -9,8 +10,6 @@ import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
 import reactor.core.publisher.Flux;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,17 +19,14 @@ import java.util.Map;
  */
 public class TranslatedMessage {
 
-    @Nonnull
     private final Message MESSAGE;
 
-    @Nonnull
     private final Map<BridgedChannel, Message> MESSAGES_SENT = new HashMap<>();
 
-    public TranslatedMessage(@Nonnull MessageCreateEvent event) {
+    public TranslatedMessage(MessageCreateEvent event) {
         MESSAGE = event.getMessage();
     }
 
-    @Nonnull
     private Map<BridgedChannel, String> getTranslations() {
         Map<BridgedChannel, String> translations = new HashMap<>();
         List<BridgedChannel> bridgedChannels = new BridgedChannel(MESSAGE.getChannelId().asLong()).get();
@@ -55,7 +51,7 @@ public class TranslatedMessage {
         return translations;
     }
 
-    private void sendTranslation(@Nonnull BridgedChannel bridgedChannel, @Nonnull String translation) {
+    private void sendTranslation(BridgedChannel bridgedChannel, String translation) {
         bridgedChannel
                 .bridged()
                 .createMessage(translation)
@@ -71,7 +67,7 @@ public class TranslatedMessage {
         }
     }
 
-    void updateTranslations(@Nonnull Message editedMessage) {
+    void updateTranslations(Message editedMessage) {
         for (Map.Entry<BridgedChannel, Message> entry : MESSAGES_SENT.entrySet()) {
             BridgedChannel bridgedChannel = entry.getKey();
             Message message = entry.getValue();
@@ -92,7 +88,6 @@ public class TranslatedMessage {
         }
     }
 
-    @Nonnull
     Flux<Void> delete() {
         return Flux
                 .fromIterable(MESSAGES_SENT.entrySet())
@@ -100,7 +95,6 @@ public class TranslatedMessage {
                 .flatMap(Message::delete);
     }
 
-    @Nonnull
     private String formatMessage(@Nullable final String translation) {
         return MESSAGE
                 .getAuthorAsMember()

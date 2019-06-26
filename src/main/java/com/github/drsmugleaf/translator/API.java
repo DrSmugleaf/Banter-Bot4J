@@ -1,9 +1,9 @@
 package com.github.drsmugleaf.translator;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.env.Keys;
 import org.json.XML;
 
-import javax.annotation.Nullable;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;

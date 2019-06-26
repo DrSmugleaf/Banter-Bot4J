@@ -1,12 +1,11 @@
 package com.github.drsmugleaf.music;
 
+import com.github.drsmugleaf.Nullable;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,16 +16,14 @@ import java.util.Queue;
  */
 public class TrackScheduler extends AudioEventAdapter {
 
-    @Nonnull
     private final AudioPlayer PLAYER;
 
-    @Nonnull
     private final Queue<AudioTrack> QUEUE = new LinkedList<>();
 
     @Nullable
     private AudioTrack currentTrack = null;
 
-    public TrackScheduler(@Nonnull AudioPlayer player) {
+    public TrackScheduler(AudioPlayer player) {
         PLAYER = player;
     }
 
@@ -53,7 +50,6 @@ public class TrackScheduler extends AudioEventAdapter {
         }
     }
 
-    @Nonnull
     public List<AudioTrack> cloneTracks() {
         List<AudioTrack> tracks = new ArrayList<>();
 
@@ -68,7 +64,6 @@ public class TrackScheduler extends AudioEventAdapter {
         return tracks;
     }
 
-    @Nonnull
     public List<AudioTrack> getQueue() {
         return new ArrayList<>(QUEUE);
     }
@@ -101,7 +96,7 @@ public class TrackScheduler extends AudioEventAdapter {
         return PLAYER.startTrack(track, noInterrupt);
     }
 
-    public void queue(@Nonnull AudioTrack track) {
+    public void queue(AudioTrack track) {
         if (!play(track, true)) {
             Event event = new TrackQueueEvent(track);
             EventDispatcher.dispatch(event);
@@ -109,7 +104,7 @@ public class TrackScheduler extends AudioEventAdapter {
         }
     }
 
-    public void queue(@Nonnull List<AudioTrack> tracks) {
+    public void queue(List<AudioTrack> tracks) {
         if (tracks.size() == 1) {
             queue(tracks.get(0));
             return;

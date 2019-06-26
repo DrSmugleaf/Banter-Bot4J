@@ -1,7 +1,6 @@
 package com.github.drsmugleaf.commands.api.converter;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.github.drsmugleaf.Nullable;
 
 /**
  * Created by DrSmugleaf on 21/04/2019
@@ -11,10 +10,9 @@ public class Result<E> {
     @Nullable
     private final E ELEMENT;
 
-    @Nonnull
     private final String ERROR_RESPONSE;
 
-    public Result(@Nullable E element, @Nonnull String errorResponse) {
+    public Result(@Nullable E element, String errorResponse) {
         ELEMENT = element;
         ERROR_RESPONSE = errorResponse;
     }
@@ -28,7 +26,6 @@ public class Result<E> {
         return ERROR_RESPONSE.isEmpty();
     }
 
-    @Nonnull
     public String getErrorResponse() {
         return ERROR_RESPONSE;
     }

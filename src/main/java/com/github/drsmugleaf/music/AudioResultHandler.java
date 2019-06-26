@@ -12,7 +12,6 @@ import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.TextChannel;
 import discord4j.core.object.entity.VoiceChannel;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -26,7 +25,7 @@ public class AudioResultHandler implements AudioLoadResultHandler {
     private final VoiceChannel VOICE_CHANNEL;
     private final String SEARCH_STRING;
 
-    public AudioResultHandler(@Nonnull TextChannel textChannel, @Nonnull Member submitter, @Nonnull VoiceChannel voiceChannel, @Nonnull String searchString) {
+    public AudioResultHandler(TextChannel textChannel, Member submitter, VoiceChannel voiceChannel, String searchString) {
         MUSIC_MANAGER = Music.getGuildMusicManager(textChannel.getGuildId());
         TEXT_CHANNEL = textChannel;
         VOICE_CHANNEL = voiceChannel;

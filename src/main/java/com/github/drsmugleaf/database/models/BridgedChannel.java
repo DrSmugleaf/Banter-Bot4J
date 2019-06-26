@@ -10,8 +10,6 @@ import com.github.drsmugleaf.translator.Languages;
 import discord4j.core.object.entity.TextChannel;
 import discord4j.core.object.util.Snowflake;
 
-import javax.annotation.Nonnull;
-
 /**
  * Created by DrSmugleaf on 19/01/2018.
  */
@@ -45,8 +43,7 @@ public class BridgedChannel extends Model<BridgedChannel> {
 
     private BridgedChannel() {}
 
-    @Nonnull
-    private static TextChannel from(@Nonnull DiscordChannel channel) {
+    private static TextChannel from(DiscordChannel channel) {
         return BanterBot4J
                 .CLIENT
                 .getChannelById(Snowflake.of(channel.id))
@@ -55,12 +52,10 @@ public class BridgedChannel extends Model<BridgedChannel> {
                 .orElseThrow(() -> new IllegalStateException("No text channel found with id " + channel.id));
     }
 
-    @Nonnull
     public TextChannel channel() {
         return from(channel);
     }
 
-    @Nonnull
     public TextChannel bridged() {
         return from(bridged);
     }

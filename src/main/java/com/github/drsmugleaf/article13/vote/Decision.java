@@ -1,9 +1,8 @@
 package com.github.drsmugleaf.article13.vote;
 
+import com.github.drsmugleaf.Nullable;
 import com.google.common.collect.ImmutableSet;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,32 +16,27 @@ public enum Decision {
     ABSTAINED("ABSTAINED"),
     ABSENT("ABSENT", "NOT PRESENT", "-");
 
-    @Nonnull
     private static final ImmutableSet<Decision> DECISIONS = ImmutableSet.copyOf(values());
 
-    @Nonnull
     private final String NAME;
 
-    @Nonnull
     private final String[] ALIASES;
 
-    Decision(@Nonnull String... name) {
+    Decision(String... name) {
         NAME = name[0];
         ALIASES = name;
     }
 
-    @Nonnull
     public static ImmutableSet<Decision> getDecisions() {
         return DECISIONS;
     }
 
-    @Nonnull
     public static Set<String> getDecisionNames() {
         return getDecisions().stream().map(Decision::getName).collect(Collectors.toSet());
     }
 
     @Nullable
-    public static Decision from(@Nonnull String string) {
+    public static Decision from(String string) {
         string = string.toLowerCase();
 
         for (Decision decision : getDecisions()) {
@@ -56,12 +50,10 @@ public enum Decision {
         return null;
     }
 
-    @Nonnull
     public String getName() {
         return NAME;
     }
 
-    @Nonnull
     public String[] getAliases() {
         return ALIASES.clone();
     }
