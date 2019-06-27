@@ -4,8 +4,6 @@ import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.status.Status;
 import com.github.drsmugleaf.pokemon.types.Type;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * Created by DrSmugleaf on 07/06/2017.
  */
@@ -15,12 +13,12 @@ public enum Weather implements IModifier {
     SUNSHINE("Sunshine"),
     HARSH_SUNSHINE("Harsh Sunshine") {
         @Override
-        public boolean canApplyStatus(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Status status) {
+        public boolean canApplyStatus(Pokemon attacker, Pokemon defender, Status status) {
             return status != Status.FREEZE;
         }
 
         @Override
-        public double damageMultiplier(@NotNull Action action) {
+        public double damageMultiplier(Action action) {
             Type type = action.getType();
 
             if (type == Type.FIRE) {
@@ -34,7 +32,7 @@ public enum Weather implements IModifier {
     },
     RAIN("Rain") {
         @Override
-        public double damageMultiplier(@NotNull Action action) {
+        public double damageMultiplier(Action action) {
             Type type = action.getType();
 
             if (type == Type.FIRE) {
@@ -53,14 +51,12 @@ public enum Weather implements IModifier {
     FOG("Fog"),
     SHADOW_SKY("Shadow Sky");
 
-    @NotNull
     public final String NAME;
 
-    Weather(@NotNull String name) {
+    Weather(String name) {
         NAME = name;
     }
 
-    @NotNull
     public String getName() {
         return NAME;
     }

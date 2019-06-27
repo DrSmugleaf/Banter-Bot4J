@@ -1,11 +1,10 @@
 package com.github.drsmugleaf.pokemon.trainer;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon.battle.Battle;
-import com.github.drsmugleaf.pokemon.pokemon.PokemonBuilder;
 import com.github.drsmugleaf.pokemon.external.SmogonImporter;
+import com.github.drsmugleaf.pokemon.pokemon.PokemonBuilder;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,14 +17,12 @@ public class TrainerBuilder {
     private long id;
     private String name;
 
-    @NotNull
     private List<String> pokemonExportStrings = new ArrayList<>();
 
     private Battle battle;
 
     public TrainerBuilder() {}
 
-    @NotNull
     public Trainer build() throws UserException {
         PokemonBuilder[] pokemons = new PokemonBuilder[pokemonExportStrings.size()];
 
@@ -41,7 +38,6 @@ public class TrainerBuilder {
         return id;
     }
 
-    @NotNull
     public TrainerBuilder setID(long id) {
         this.id = id;
         return this;
@@ -52,26 +48,22 @@ public class TrainerBuilder {
         return name;
     }
 
-    @NotNull
-    public TrainerBuilder setName(@NotNull String name) {
+    public TrainerBuilder setName(String name) {
         this.name = name;
         return this;
     }
 
-    @NotNull
-    public TrainerBuilder addPokemon(@NotNull String exportString) {
+    public TrainerBuilder addPokemon(String exportString) {
         pokemonExportStrings.add(exportString);
         return this;
     }
 
-    @NotNull
-    public TrainerBuilder addPokemons(@NotNull String exportStrings) {
+    public TrainerBuilder addPokemons(String exportStrings) {
         pokemonExportStrings.addAll(Arrays.asList(exportStrings.split("\n\n")));
         return this;
     }
 
-    @NotNull
-    public TrainerBuilder setBattle(@NotNull Battle battle) {
+    public TrainerBuilder setBattle(Battle battle) {
         this.battle = battle;
         return this;
     }

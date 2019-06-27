@@ -1,7 +1,5 @@
 package com.github.drsmugleaf.pokemon.moves;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * Created by DrSmugleaf on 18/06/2017.
  */
@@ -23,7 +21,7 @@ public class IllegalZMoveException extends IllegalArgumentException {
         super(cause);
     }
 
-    public IllegalZMoveException(@NotNull BaseMove original, @NotNull BaseMove zMove) {
+    public IllegalZMoveException(BaseMove original, BaseMove zMove) {
         super("Move " + original.NAME + " can't become Z-Move " + zMove.NAME);
     }
 

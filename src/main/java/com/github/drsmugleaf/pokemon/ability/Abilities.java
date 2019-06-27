@@ -1,11 +1,10 @@
 package com.github.drsmugleaf.pokemon.ability;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon.battle.IModifier;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import org.json.JSONArray;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -255,15 +254,13 @@ public enum Abilities implements IModifier {
     WATER_COMPACTION("Water Compaction"),
     POWER_CONSTRUCT("Power Construct");
 
-    @NotNull
     public final String NAME;
 
-    Abilities(@NotNull String name) {
+    Abilities(String name) {
         Holder.MAP.put(name.toLowerCase(), this);
         NAME = name;
     }
 
-    @NotNull
     public static Abilities getAbility(@Nullable String abilityName) {
         if (abilityName == null) {
             return NONE;
@@ -278,8 +275,7 @@ public enum Abilities implements IModifier {
         return Holder.MAP.get(abilityNameLowerCase);
     }
 
-    @NotNull
-    public static List<Abilities> getAbilities(@NotNull JSONArray abilities) {
+    public static List<Abilities> getAbilities(JSONArray abilities) {
         List<Abilities> abilityList = new ArrayList<>();
 
         for (int i = 0; i < abilities.length(); i++) {
@@ -292,12 +288,11 @@ public enum Abilities implements IModifier {
 
     @Override
     @OverridingMethodsMustInvokeSuper
-    public void onOwnSendOut(@NotNull Pokemon pokemon) {
+    public void onOwnSendOut(Pokemon pokemon) {
         pokemon.ABILITY.setSuppressed(false);
     }
 
     private static class Holder {
-        @NotNull
         static Map<String, Abilities> MAP = new HashMap<>();
     }
 

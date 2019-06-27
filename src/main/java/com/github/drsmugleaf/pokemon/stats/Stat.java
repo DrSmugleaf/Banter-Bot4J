@@ -3,41 +3,34 @@ package com.github.drsmugleaf.pokemon.stats;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.pokemon.Species;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * Created by DrSmugleaf on 08/10/2017.
  */
 public class Stat implements IStat {
 
-    @NotNull
     public final IStat STAT;
 
     public final int IV;
 
     public final int EV;
 
-    @NotNull
     private Stage STAGE = Stage.ZERO;
 
-    protected Stat(@NotNull IStat stat, int iv, int ev) {
+    protected Stat(IStat stat, int iv, int ev) {
         STAT = stat;
         IV = iv;
         EV = ev;
     }
 
-    @NotNull
     public IStat getStat() {
         return STAT;
     }
 
-    @NotNull
     @Override
     public String getName() {
         return STAT.getName();
     }
 
-    @NotNull
     public String getAbbreviation() {
         return STAT.getAbbreviation();
     }
@@ -50,12 +43,11 @@ public class Stat implements IStat {
         return EV;
     }
 
-    @NotNull
     public Stage getStage() {
         return STAGE;
     }
 
-    public void setStage(@NotNull Stage stage) {
+    public void setStage(Stage stage) {
         STAGE = stage;
     }
 
@@ -79,7 +71,7 @@ public class Stat implements IStat {
         }
     }
 
-    public int getBase(@NotNull Species species) {
+    public int getBase(Species species) {
         if (STAT instanceof PermanentStat) {
             return species.getStats().get(STAT);
         }
@@ -87,11 +79,11 @@ public class Stat implements IStat {
         return 1;
     }
 
-    public double calculate(@NotNull Pokemon pokemon) {
+    public double calculate(Pokemon pokemon) {
         return STAT.calculate(pokemon);
     }
 
-    public double calculateWithoutStages(@NotNull Pokemon pokemon) {
+    public double calculateWithoutStages(Pokemon pokemon) {
         return STAT.calculateWithoutStages(pokemon);
     }
 

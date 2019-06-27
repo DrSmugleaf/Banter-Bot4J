@@ -2,7 +2,6 @@ package com.github.drsmugleaf.pokemon.stats;
 
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -11,19 +10,16 @@ import java.util.Map;
  */
 public class Stats {
 
-    @NotNull
     private final Map<IStat, Stat> STATS = new LinkedHashMap<>();
 
-    public Stats(@NotNull StatBuilder builder) {
+    public Stats(StatBuilder builder) {
         STATS.putAll(builder.build());
     }
 
-    @NotNull
-    public Stat get(@NotNull IStat stat) {
+    public Stat get(IStat stat) {
         return STATS.get(stat);
     }
 
-    @NotNull
     public Map<IStat, Stage> getStages() {
         Map<IStat, Stage> stages = new LinkedHashMap<>();
 
@@ -34,21 +30,21 @@ public class Stats {
         return stages;
     }
 
-    public void setStages(@NotNull Map<IStat, Stage> stages) {
+    public void setStages(Map<IStat, Stage> stages) {
         stages.forEach(((iStat, stage) -> STATS.get(iStat).setStage(stage)));
     }
 
-    public void setStages(@NotNull Pokemon pokemon) {
+    public void setStages(Pokemon pokemon) {
         setStages(pokemon.STATS.getStages());
     }
 
-    public void raiseStages(int amount, @NotNull IStat... stats) {
+    public void raiseStages(int amount, IStat... stats) {
         for (IStat stat : stats) {
             STATS.get(stat).raiseStage(amount);
         }
     }
 
-    public void lowerStages(int amount, @NotNull IStat... stats) {
+    public void lowerStages(int amount, IStat... stats) {
         raiseStages(-amount, stats);
     }
 

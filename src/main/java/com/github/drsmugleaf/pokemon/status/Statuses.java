@@ -1,11 +1,10 @@
 package com.github.drsmugleaf.pokemon.status;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon.battle.IModifier;
 import com.github.drsmugleaf.pokemon.stats.IStat;
 import com.github.drsmugleaf.pokemon.stats.StatBuilder;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -16,12 +15,10 @@ public class Statuses {
     @Nullable
     private Status status = null;
 
-    @NotNull
     private final Map<BaseVolatileStatus, VolatileStatus> VOLATILE_STATUSES = new LinkedHashMap<>();
 
     public Statuses() {}
 
-    @NotNull
     private static Map<IStat, Map<IModifier, Double>> defaultModifiers() {
         Map<IStat, Map<IModifier, Double>> statModifiers = new HashMap<>();
 
@@ -41,36 +38,35 @@ public class Statuses {
         status = null;
     }
 
-    public void setStatus(@NotNull Status status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
-    public void addVolatileStatus(@NotNull Collection<VolatileStatus> statuses) {
+    public void addVolatileStatus(Collection<VolatileStatus> statuses) {
         for (VolatileStatus status : statuses) {
             BaseVolatileStatus baseStatus = status.BASE_VOLATILE_STATUS;
             VOLATILE_STATUSES.put(baseStatus, status);
         }
     }
 
-    public void addVolatileStatus(@NotNull VolatileStatus... statuses) {
+    public void addVolatileStatus(VolatileStatus... statuses) {
         addVolatileStatus(Arrays.asList(statuses));
     }
 
     @Nullable
-    public VolatileStatus getVolatileStatus(@NotNull BaseVolatileStatus status) {
+    public VolatileStatus getVolatileStatus(BaseVolatileStatus status) {
         return VOLATILE_STATUSES.get(status);
     }
 
-    @NotNull
     public Map<BaseVolatileStatus, VolatileStatus> getVolatileStatuses() {
         return new LinkedHashMap<>(VOLATILE_STATUSES);
     }
 
-    public boolean hasVolatileStatus(@NotNull BaseVolatileStatus status) {
+    public boolean hasVolatileStatus(BaseVolatileStatus status) {
         return VOLATILE_STATUSES.containsKey(status);
     }
 
-    public void removeVolatileStatus(@NotNull BaseVolatileStatus... statuses) {
+    public void removeVolatileStatus(BaseVolatileStatus... statuses) {
         for (BaseVolatileStatus status : statuses) {
             VOLATILE_STATUSES.remove(status);
         }

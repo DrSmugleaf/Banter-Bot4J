@@ -6,7 +6,6 @@ import com.github.drsmugleaf.pokemon.trainer.TrainerBuilder;
 import com.github.drsmugleaf.pokemon.trainer.UserException;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.User;
-import org.jetbrains.annotations.NotNull;
 import reactor.core.publisher.Mono;
 
 import java.util.LinkedHashMap;
@@ -18,7 +17,6 @@ import java.util.Map.Entry;
  */
 public class PokemonBattle extends Command {
 
-    @NotNull
     private static final Map<User, TrainerBuilder> awaitingTrainer = new LinkedHashMap<>();
 
     @Override

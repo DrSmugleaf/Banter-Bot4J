@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.pokemon.stats;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +35,6 @@ public enum Stage {
         EVASION_MULTIPLIER = evasionMultiplier;
     }
 
-    @NotNull
     public static Stage getStage(int stage) {
         if (!Holder.MAP.containsKey(stage)) {
             throw new NullPointerException("Stage " + stage + " doesn't exist");
@@ -76,7 +74,6 @@ public enum Stage {
     }
 
     private static class Holder {
-        @NotNull
         static Map<Integer, Stage> MAP = new HashMap<>();
     }
     

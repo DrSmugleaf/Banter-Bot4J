@@ -6,7 +6,6 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 
 /**
@@ -14,10 +13,8 @@ import java.io.IOException;
  */
 public class SmogonParser {
 
-    @NotNull
     private static final String SMOGON_URL = "http://www.smogon.com/dex/sm/pokemon/";
 
-    @NotNull
     public static JSONArray getPokemons() throws IOException {
         Document doc;
         try {
@@ -85,7 +82,7 @@ public class SmogonParser {
         }
     }
 
-    public static void printAbilitiesAsEnums(@NotNull JSONArray abilities) {
+    public static void printAbilitiesAsEnums(JSONArray abilities) {
         for (int i = 0; i < abilities.length(); i++) {
             String name = abilities.getJSONObject(i).getString("name");
 
@@ -100,7 +97,7 @@ public class SmogonParser {
         }
     }
 
-    public static void printItemsAsEnums(@NotNull JSONArray items) {
+    public static void printItemsAsEnums(JSONArray items) {
         for (int i = 0; i < items.length(); i++) {
             String name = items.getJSONObject(i).getString("name");
 

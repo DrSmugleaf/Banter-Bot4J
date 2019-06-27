@@ -15,7 +15,6 @@ import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.util.Snowflake;
 import discord4j.core.spec.EmbedCreateSpec;
-import org.jetbrains.annotations.NotNull;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
@@ -32,14 +31,13 @@ import java.util.stream.Collectors;
  */
 public class PokemonEvents {
 
-    @NotNull
     static final Map<User, Battle> BATTLES = new HashMap<>();
 
     static {
         EventDispatcher.registerListener(new PokemonEvents());
     }
 
-    private static Consumer<EmbedCreateSpec> sendOutPokemonEmbed(@NotNull Trainer trainer) {
+    private static Consumer<EmbedCreateSpec> sendOutPokemonEmbed(Trainer trainer) {
         return spec -> {
             spec.setTitle("Which Pokemon do you want to send out? (Reply with the number of the Pokemon)");
 
@@ -60,8 +58,7 @@ public class PokemonEvents {
         };
     }
 
-    @NotNull
-    private static Consumer<EmbedCreateSpec> chooseMoveEmbed(@NotNull Trainer trainer) {
+    private static Consumer<EmbedCreateSpec> chooseMoveEmbed(Trainer trainer) {
         return spec -> {
             spec.setTitle("Which move do you want to use?");
 
@@ -75,8 +72,7 @@ public class PokemonEvents {
         };
     }
 
-    @NotNull
-    private static Consumer<EmbedCreateSpec> chooseTargetEmbed(@NotNull Trainer trainer) {
+    private static Consumer<EmbedCreateSpec> chooseTargetEmbed(Trainer trainer) {
         return spec -> {
             spec.setTitle("Who do you want to target?");
 
@@ -97,7 +93,7 @@ public class PokemonEvents {
     }
 
     @EventListener(MessageCreateEvent.class)
-    public static void handle(@NotNull MessageCreateEvent event) {
+    public static void handle(MessageCreateEvent event) {
         event.getMessage().getContent().ifPresent(message -> Mono
                 .justOrEmpty(message)
                 .filter(content -> !content.startsWith(BanterBot4J.BOT_PREFIX + "pokemon"))
@@ -165,7 +161,7 @@ public class PokemonEvents {
     }
 
     @PokemonEventHandler(event = BattleStartedEvent.class)
-    public static void handle(@NotNull BattleStartedEvent event) {
+    public static void handle(BattleStartedEvent event) {
         Battle battle = event.BATTLE;
         StringBuilder response = new StringBuilder();
 
@@ -188,7 +184,7 @@ public class PokemonEvents {
     }
 
     @PokemonEventHandler(event = PokemonDamagedEvent.class)
-    public static void handle(@NotNull PokemonDamagedEvent event) {
+    public static void handle(PokemonDamagedEvent event) {
         Pokemon defender = event.POKEMON;
         StringBuilder response = new StringBuilder();
         DecimalFormat decimalFormat = new DecimalFormat("#.#");
@@ -219,7 +215,7 @@ public class PokemonEvents {
     }
 
     @PokemonEventHandler(event = PokemonMoveEvent.class)
-    public static void handle(@NotNull PokemonMoveEvent event) {
+    public static void handle(PokemonMoveEvent event) {
         Pokemon attacker = event.POKEMON;
         StringBuilder response = new StringBuilder();
 
@@ -247,7 +243,7 @@ public class PokemonEvents {
     }
 
     @PokemonEventHandler(event = TrainerSendOutPokemonEvent.class)
-    public static void handle(@NotNull TrainerSendOutPokemonEvent event) {
+    public static void handle(TrainerSendOutPokemonEvent event) {
         Trainer trainer = event.TRAINER;
         Pokemon pokemon = event.POKEMON;
         StringBuilder response = new StringBuilder();
@@ -285,7 +281,7 @@ public class PokemonEvents {
     }
 
     @PokemonEventHandler(event = TrainerSendBackPokemonEvent.class)
-    public static void handle(@NotNull TrainerSendBackPokemonEvent event) {
+    public static void handle(TrainerSendBackPokemonEvent event) {
         Trainer trainer = event.TRAINER;
         Pokemon pokemon = event.POKEMON;
         StringBuilder response = new StringBuilder();
@@ -324,7 +320,7 @@ public class PokemonEvents {
     }
 
     @PokemonEventHandler(event = PokemonDeathEvent.class)
-    public static void handle(@NotNull PokemonDeathEvent event) {
+    public static void handle(PokemonDeathEvent event) {
         Pokemon pokemon = event.POKEMON;
         Trainer trainer = event.POKEMON.getTrainer();
         StringBuilder response = new StringBuilder();
@@ -351,7 +347,7 @@ public class PokemonEvents {
     }
 
     @PokemonEventHandler(event = BattleTurnStartEvent.class)
-    public static void handle(@NotNull BattleTurnStartEvent event) {
+    public static void handle(BattleTurnStartEvent event) {
         for (Trainer trainer : event.BATTLE.getTrainers().values()) {
             Mono
                     .just(trainer.getID())
@@ -369,7 +365,7 @@ public class PokemonEvents {
     }
 
     @PokemonEventHandler(event = TrainerChooseMoveEvent.class)
-    public static void handle(@NotNull TrainerChooseMoveEvent event) {
+    public static void handle(TrainerChooseMoveEvent event) {
         Mono
                 .just(event)
                 .map(TrainerEvent::getTrainer)
@@ -382,7 +378,7 @@ public class PokemonEvents {
     }
 
     @PokemonEventHandler(event = PokemonDodgeEvent.class)
-    public static void handle(@NotNull PokemonDodgeEvent event) {
+    public static void handle(PokemonDodgeEvent event) {
         Pokemon target = event.POKEMON;
         Trainer trainer = event.POKEMON.getTrainer();
         StringBuilder response = new StringBuilder();
@@ -409,7 +405,7 @@ public class PokemonEvents {
     }
 
     @PokemonEventHandler(event = TrainerChoosingPokemonEvent.class)
-    public static void handle(@NotNull TrainerChoosingPokemonEvent event) {
+    public static void handle(TrainerChoosingPokemonEvent event) {
         for (Trainer trainer : event.getTrainers()) {
             Mono
                     .just(trainer)

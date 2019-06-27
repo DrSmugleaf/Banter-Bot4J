@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.pokemon.battle;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,15 +33,13 @@ public enum Game {
     SUN_AND_MOON("Sun and Moon"),
     ULTRA_SUN_AND_ULTRA_MOON("Ultra Sun and Ultra Moon");
 
-    @NotNull
     public final String NAME;
 
-    Game(@NotNull String name) {
+    Game(String name) {
         NAME = name;
     }
 
-    @NotNull
-    public static Game getGame(@NotNull String game) {
+    public static Game getGame(String game) {
         game = game.toLowerCase();
 
         if (!Holder.MAP.containsKey(game)) {
@@ -52,13 +49,11 @@ public enum Game {
         return Holder.MAP.get(game);
     }
 
-    @NotNull
     public String getName() {
         return NAME;
     }
 
     private static class Holder {
-        @NotNull
         static Map<String, Game> MAP = new HashMap<>();
     }
 

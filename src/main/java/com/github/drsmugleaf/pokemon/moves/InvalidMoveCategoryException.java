@@ -1,7 +1,5 @@
 package com.github.drsmugleaf.pokemon.moves;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * Created by DrSmugleaf on 14/07/2017.
  */
@@ -23,11 +21,11 @@ public class InvalidMoveCategoryException extends IllegalArgumentException {
         super(cause);
     }
 
-    public InvalidMoveCategoryException(@NotNull MoveCategory category, @NotNull String message) {
+    public InvalidMoveCategoryException(MoveCategory category, String message) {
         super("Invalid category: " + category.NAME + ". " + message);
     }
 
-    public InvalidMoveCategoryException(@NotNull MoveCategory category) {
+    public InvalidMoveCategoryException(MoveCategory category) {
         this(category, "");
     }
 

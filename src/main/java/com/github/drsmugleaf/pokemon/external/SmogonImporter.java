@@ -1,17 +1,16 @@
 package com.github.drsmugleaf.pokemon.external;
 
-import com.github.drsmugleaf.pokemon.pokemon.Nature;
 import com.github.drsmugleaf.pokemon.ability.Abilities;
 import com.github.drsmugleaf.pokemon.item.Items;
 import com.github.drsmugleaf.pokemon.moves.BaseMove;
 import com.github.drsmugleaf.pokemon.moves.Move;
 import com.github.drsmugleaf.pokemon.pokemon.Gender;
+import com.github.drsmugleaf.pokemon.pokemon.Nature;
 import com.github.drsmugleaf.pokemon.pokemon.PokemonBuilder;
 import com.github.drsmugleaf.pokemon.pokemon.Species;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon.trainer.UserException;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,8 +23,7 @@ import java.util.regex.Pattern;
  */
 public class SmogonImporter {
 
-    @NotNull
-    public static PokemonBuilder importPokemon(@NotNull String export) throws UserException {
+    public static PokemonBuilder importPokemon(String export) throws UserException {
         export = export.trim();
         String[] exportArray = export.split("\n");
 
@@ -148,8 +146,7 @@ public class SmogonImporter {
         return pokemonBuilder;
     }
 
-    @NotNull
-    public static List<PokemonBuilder> importPokemons(@NotNull String export) throws UserException {
+    public static List<PokemonBuilder> importPokemons(String export) throws UserException {
         String[] exportArray = export.split("\n\n");
         List<PokemonBuilder> pokemons = new ArrayList<>();
 

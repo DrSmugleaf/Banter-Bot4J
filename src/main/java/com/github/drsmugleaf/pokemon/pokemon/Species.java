@@ -7,7 +7,6 @@ import com.github.drsmugleaf.pokemon.battle.Tier;
 import com.github.drsmugleaf.pokemon.external.SmogonParser;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon.types.Type;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -1111,35 +1110,27 @@ public enum Species {
         }
     }
 
-    @NotNull
     public final String NAME;
 
-    @NotNull
     private final List<Generation> GENERATIONS = new ArrayList<>();
 
-    @NotNull
     private final List<Abilities> ABILITIES = new ArrayList<>();
 
-    @NotNull
     private final List<Type> TYPES = new ArrayList<>();
 
-    @NotNull
     private final List<Tier> TIERS = new ArrayList<>();
 
-    @NotNull
     private final Map<PermanentStat, Integer> STATS = new HashMap<>();
 
-    @NotNull
     private final List<Species> EVOLUTIONS = new ArrayList<>();
 
     private Double WEIGHT = null;
     private Double HEIGHT = null;
     private String SUFFIX = null;
 
-    @NotNull
     private final List<Gender> VALID_GENDERS = new ArrayList<>();
 
-    Species(@NotNull String name, @NotNull Gender... genders) {
+    Species(String name, Gender... genders) {
         Holder.MAP.put(name.toLowerCase(), this);
         NAME = name;
 
@@ -1150,12 +1141,11 @@ public enum Species {
         Collections.addAll(VALID_GENDERS, genders);
     }
 
-    Species(@NotNull String name) {
+    Species(String name) {
         this(name, Gender.MALE, Gender.FEMALE);
     }
 
-    @NotNull
-    public static Species getPokemon(@NotNull String pokemon) {
+    public static Species getPokemon(String pokemon) {
         String pokemonLowerCase = pokemon.toLowerCase();
 
         if (!Holder.MAP.containsKey(pokemonLowerCase)) {
@@ -1165,159 +1155,133 @@ public enum Species {
         return Holder.MAP.get(pokemonLowerCase);
     }
 
-    public static boolean isArceus(@NotNull Pokemon pokemon) {
+    public static boolean isArceus(Pokemon pokemon) {
         return pokemon.getName().contains("Arceus");
     }
 
-    public static boolean isSilvally(@NotNull Pokemon pokemon) {
+    public static boolean isSilvally(Pokemon pokemon) {
         return pokemon.getName().contains("Silvally");
     }
 
-    @NotNull
     public String getName() {
         return NAME;
     }
 
-    @NotNull
     public List<Generation> getGenerations() {
         return new ArrayList<>(GENERATIONS);
     }
 
-    @NotNull
-    private Species addGenerations(@NotNull Generation... generations) {
+    private Species addGenerations(Generation... generations) {
         Collections.addAll(GENERATIONS, generations);
         return this;
     }
 
-    @NotNull
-    private Species addGenerations(@NotNull Collection<Generation> generations) {
+    private Species addGenerations(Collection<Generation> generations) {
         GENERATIONS.addAll(generations);
         return this;
     }
 
-    @NotNull
-    private Species setGenerations(@NotNull Generation... generations) {
+    private Species setGenerations(Generation... generations) {
         GENERATIONS.clear();
         return addGenerations(generations);
     }
 
-    @NotNull
     public List<Abilities> getAbilities() {
         return new ArrayList<>(ABILITIES);
     }
 
-    @NotNull
-    private Species addAbilities(@NotNull Abilities... abilities) {
+    private Species addAbilities(Abilities... abilities) {
         Collections.addAll(ABILITIES, abilities);
         return this;
     }
 
-    @NotNull
-    private Species setAbilities(@NotNull Abilities... abilities) {
+    private Species setAbilities(Abilities... abilities) {
         ABILITIES.clear();
         return addAbilities(abilities);
     }
 
-    @NotNull
     public List<Type> getTypes() {
         return new ArrayList<>(TYPES);
     }
 
-    @NotNull
-    private Species addTypes(@NotNull Type... types) {
+    private Species addTypes(Type... types) {
         Collections.addAll(TYPES, types);
         return this;
     }
 
-    @NotNull
-    private Species setTypes(@NotNull Type... types) {
+    private Species setTypes(Type... types) {
         TYPES.clear();
         return this;
     }
 
-    @NotNull
     public List<Tier> getTiers() {
         return TIERS;
     }
 
-    @NotNull
-    private Species addTiers(@NotNull Tier... tiers) {
+    private Species addTiers(Tier... tiers) {
         Collections.addAll(TIERS, tiers);
         return this;
     }
 
-    @NotNull
-    private Species setTiers(@NotNull Tier... tiers) {
+    private Species setTiers(Tier... tiers) {
         TIERS.clear();
         return this;
     }
 
-    @NotNull
     public Map<PermanentStat, Integer> getStats() {
         return STATS;
     }
 
-    @NotNull
-    private Species addStats(@NotNull PermanentStat stat, int amount) {
+    private Species addStats(PermanentStat stat, int amount) {
         STATS.put(stat, amount);
         return this;
     }
 
-    @NotNull
     public List<Species> getEvolutions() {
         return EVOLUTIONS;
     }
 
-    @NotNull
-    private Species addEvolutions(@NotNull Species... evolutions) {
+    private Species addEvolutions(Species... evolutions) {
         Collections.addAll(EVOLUTIONS, evolutions);
         return this;
     }
 
-    @NotNull
-    private Species setEvolutions(@NotNull Species... evolutions) {
+    private Species setEvolutions(Species... evolutions) {
         EVOLUTIONS.clear();
         return addEvolutions(evolutions);
     }
 
-    @NotNull
     public Double getWeight() {
         return WEIGHT;
     }
 
-    @NotNull
     private Species setWeight(double weight) {
         WEIGHT = weight;
         return this;
     }
 
-    @NotNull
     public Double getHeight() {
         return HEIGHT;
     }
 
-    @NotNull
     private Species setHeight(double height) {
         HEIGHT = height;
         return this;
     }
 
-    @NotNull
     public String getSuffix() {
         return SUFFIX;
     }
 
-    private void setSuffix(@NotNull String suffix) {
+    private void setSuffix(String suffix) {
         SUFFIX = suffix;
     }
 
-    @NotNull
     public List<Gender> getValidGenders() {
         return new ArrayList<>(VALID_GENDERS);
     }
 
     private static class Holder {
-        @NotNull
         static Map<String, Species> MAP = new HashMap<>();
     }
 

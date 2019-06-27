@@ -9,7 +9,6 @@ import com.github.drsmugleaf.pokemon.moves.MoveEffect;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
 import com.github.drsmugleaf.pokemon.types.Type;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -19,9 +18,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public enum BaseVolatileStatus implements IStatus, IModifier {
 
     BOUND("Bound") {
-        @NotNull
         @Override
-        public Integer getDuration(@NotNull Action action) {
+        public Integer getDuration(Action action) {
             double random = Math.random();
             Integer duration;
 
@@ -60,12 +58,12 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
         }
 
         @Override
-        public void onTrainerTurnStart(@NotNull Trainer trainer, @NotNull Pokemon pokemon) {
+        public void onTrainerTurnStart(Trainer trainer, Pokemon pokemon) {
             pokemon.STATUSES.getVolatileStatus(this).ACTION.getAttacker().MOVES.setValid(BaseMove.BIND);
         }
 
         @Override
-        public void onEnemySendBack(@NotNull Pokemon user, @NotNull Pokemon enemy) {
+        public void onEnemySendBack(Pokemon user, Pokemon enemy) {
             Generation generation = user.getBattle().GENERATION;
 
             if (generation != Generation.I) {
@@ -78,7 +76,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
         }
 
         @Override
-        public boolean onOwnAttemptAttack(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {
+        public boolean onOwnAttemptAttack(Pokemon attacker, Pokemon defender, Action action) {
             Generation generation = attacker.getBattle().GENERATION;
 
             switch (generation) {
@@ -97,7 +95,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
         }
 
         @Override
-        public boolean canSwitch(@NotNull Pokemon pokemon) {
+        public boolean canSwitch(Pokemon pokemon) {
             Generation generation = pokemon.getBattle().GENERATION;
 
             switch (generation) {
@@ -117,15 +115,14 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     },
     CANT_ESCAPE("Can't escape"),
     CONFUSION("Confusion") {
-        @NotNull
         @Override
-        public Integer getDuration(@NotNull Action action) {
+        public Integer getDuration(Action action) {
             return ThreadLocalRandom.current().nextInt(1, 4 + 1);
         }
     },
     CURSE("Curse") {
         @Override
-        public void onTurnEnd(@NotNull Battle battle, @NotNull Pokemon pokemon) {
+        public void onTurnEnd(Battle battle, Pokemon pokemon) {
             pokemon.damage(25.0);
         }
     },
@@ -150,7 +147,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     ROOTING("Rooting"),
     MAGIC_COAT("Magic Coat") {
         @Override
-        public boolean onOwnReceiveAttack(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {
+        public boolean onOwnReceiveAttack(Pokemon attacker, Pokemon defender, Action action) {
             Generation generation = attacker.getBattle().GENERATION;
 
             switch (generation) {
@@ -183,7 +180,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     RECHARGING("Recharging"),
     SEMI_INVULNERABLE("Semi-invulnerable", 1) {
         @Override
-        public void onTrainerTurnStart(@NotNull Trainer trainer, @NotNull Pokemon pokemon) {
+        public void onTrainerTurnStart(Trainer trainer, Pokemon pokemon) {
             VolatileStatus status = pokemon.STATUSES.getVolatileStatus(this);
             if (status == null) {
                 throw new IllegalStateException("Semi-invulnerable status not found on defending pokemon");
@@ -195,7 +192,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
         }
 
         @Override
-        public boolean onOwnReceiveAttack(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {
+        public boolean onOwnReceiveAttack(Pokemon attacker, Pokemon defender, Action action) {
             VolatileStatus status = defender.STATUSES.getVolatileStatus(this);
             if (status == null) {
                 throw new IllegalStateException("Semi-invulnerable status not found on defending pokemon");
@@ -269,7 +266,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     WHIPPING_UP_A_WHIRLWIND("Whipping up a whirlwind"),
     AURORA_VEIL("Aurora Veil", 5) {
         @Override
-        public void apply(@NotNull Pokemon user, @NotNull Action action) {
+        public void apply(Pokemon user, Action action) {
             if (user.getBattle().getWeather() != Weather.HAIL) {
                 fail();
                 return;
@@ -279,7 +276,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
         }
 
         @Override
-        public double enemyDamageMultiplier(@NotNull Pokemon pokemon, @NotNull Action action) {
+        public double enemyDamageMultiplier(Pokemon pokemon, Action action) {
             if (action.getCategory() == MoveCategory.PHYSICAL || action.getCategory() == MoveCategory.SPECIAL) {
                 if (action.getBattle().VARIATION == Variation.SINGLE_BATTLE) {
                     return 0.5;
@@ -293,7 +290,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     },
     BANEFUL_BUNKER("Baneful Bunker", 1) {
         @Override
-        public boolean onEnemyAttemptAttack(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {
+        public boolean onEnemyAttemptAttack(Pokemon attacker, Pokemon defender, Action action) {
             BaseMove baseMove = action.BASE_MOVE;
 
             switch (baseMove) {
@@ -343,7 +340,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
         }
 
         @Override
-        public double damageMultiplier(@NotNull Action action) {
+        public double damageMultiplier(Action action) {
             if (action.BASE_MOVE.IS_Z_MOVE) {
                 return 0.25;
             }
@@ -353,7 +350,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     },
     BEAK_BLAST("Beak Blast", 1) {
         @Override
-        public boolean onOwnReceiveAttack(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {
+        public boolean onOwnReceiveAttack(Pokemon attacker, Pokemon defender, Action action) {
             if (action.BASE_MOVE.PHYSICAL_CONTACT) {
                 attacker.STATUSES.setStatus(Status.BURN);
             }
@@ -363,7 +360,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     },
     BIDE("Bide", 2) {
         @Override
-        public boolean onOwnReceiveAttack(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {
+        public boolean onOwnReceiveAttack(Pokemon attacker, Pokemon defender, Action action) {
 //            defender.addBideDamageTaken(action.DAMAGE);
 //            defender.setBideTarget(attacker);
             // TODO: Bide damage taken processing
@@ -380,12 +377,12 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     UPROAR("Uproar"),
     BOUNCE("Bounce", 1) {
         @Override
-        public void onTrainerTurnStart(@NotNull Trainer trainer, @NotNull Pokemon pokemon) {
+        public void onTrainerTurnStart(Trainer trainer, Pokemon pokemon) {
             pokemon.MOVES.setValid(BaseMove.BOUNCE);
         }
 
         @Override
-        public void remove(@NotNull Pokemon user) {
+        public void remove(Pokemon user) {
             super.remove(user);
         }
     },
@@ -393,7 +390,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     REFLECT("Reflect"),
     CHARGE("Charge", 2) {
         @Override
-        public double damageMultiplier(@NotNull Action action) {
+        public double damageMultiplier(Action action) {
             Generation generation = action.getGeneration();
 
             switch (generation) {
@@ -415,7 +412,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
         }
 
         @Override
-        public double powerMultiplier(@NotNull Pokemon attacker, @NotNull Action action) {
+        public double powerMultiplier(Pokemon attacker, Action action) {
             Generation generation = attacker.getBattle().GENERATION;
 
             switch (generation) {
@@ -438,7 +435,7 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     },
     CRAFTY_SHIELD("Crafty Shield", 0) {
         @Override
-        public boolean onOwnReceiveAttack(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {
+        public boolean onOwnReceiveAttack(Pokemon attacker, Pokemon defender, Action action) {
             return action.getCategory() != MoveCategory.OTHER
                    || attacker == defender
                    || action.BASE_MOVE == BaseMove.PERISH_SONG
@@ -448,46 +445,42 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     MIST("Mist", Integer.MAX_VALUE),
     SAFEGUARD("Safeguard", 5);
 
-    @NotNull
     public final String NAME;
 
-    @NotNull
     private final Integer DURATION;
 
-    BaseVolatileStatus(@NotNull String name, @NotNull Integer duration) {
+    BaseVolatileStatus(String name, Integer duration) {
         NAME = name;
         DURATION = duration;
     }
 
-    BaseVolatileStatus(@NotNull String name) {
+    BaseVolatileStatus(String name) {
         this(name, 1); // TODO: Volatile statuses durations
     }
 
-    @NotNull
     public String getName() {
         return NAME;
     }
 
-    @NotNull
-    public Integer getDuration(@NotNull Action action) {
+    public Integer getDuration(Action action) {
         return DURATION;
     }
 
     @Override
-    public void apply(@NotNull Pokemon pokemon, @NotNull Action action) {
+    public void apply(Pokemon pokemon, Action action) {
         int duration = getDuration(action);
         VolatileStatus status = new VolatileStatus(this, action, duration);
         pokemon.STATUSES.addVolatileStatus(status);
     }
 
     @Override
-    public void remove(@NotNull Pokemon pokemon) {
+    public void remove(Pokemon pokemon) {
         pokemon.STATUSES.removeVolatileStatus(this);
     }
 
     protected void fail() {}
 
-    protected void breakStatus(@NotNull Pokemon target) {
+    protected void breakStatus(Pokemon target) {
         target.STATUSES.removeVolatileStatus(this);
     }
 

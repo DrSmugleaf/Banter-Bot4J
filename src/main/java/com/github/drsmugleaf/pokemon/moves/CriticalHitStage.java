@@ -6,7 +6,6 @@ import com.github.drsmugleaf.pokemon.battle.InvalidGenerationException;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
@@ -29,7 +28,6 @@ public enum CriticalHitStage {
         INDEX = index;
     }
 
-    @NotNull
     public static CriticalHitStage getStage(int index) {
         if (index <= 0) {
             return Holder.MAP.get(0);
@@ -47,8 +45,7 @@ public enum CriticalHitStage {
     }
 
     // Parser usage only
-    @NotNull
-    public static CriticalHitStage getStage(@NotNull Generation generation, double percentage) {
+    public static CriticalHitStage getStage(Generation generation, double percentage) {
         for (CriticalHitStage stage : CriticalHitStage.values()) {
             double generationPercentage = generation.getCriticalPercentage(stage);
             if (generationPercentage == percentage) {
@@ -59,12 +56,12 @@ public enum CriticalHitStage {
         throw new NullPointerException("CriticalHitStage with percentage " + percentage + " doesn't exist");
     }
 
-    public double getPercentage(@NotNull Action action) {
+    public double getPercentage(Action action) {
         Generation generation = action.getGeneration();
         return generation.getCriticalPercentage(this);
     }
 
-    public static double getProbability(@NotNull Action action) {
+    public static double getProbability(Action action) {
         Generation generation = action.getGeneration();
         Pokemon attacker = action.getAttacker();
         BaseMove move = action.BASE_MOVE;
@@ -110,7 +107,7 @@ public enum CriticalHitStage {
         }
     }
 
-    public static boolean isCritical(@NotNull Action action) {
+    public static boolean isCritical(Action action) {
         if (action.hasTags(DamageTags.NO_CRITICAL)) {
             return false;
         }
@@ -122,7 +119,6 @@ public enum CriticalHitStage {
     }
 
     private static class Holder {
-        @NotNull
         static Map<Integer, CriticalHitStage> MAP = new HashMap<>();
     }
 

@@ -2,7 +2,6 @@ package com.github.drsmugleaf.pokemon.types;
 
 import org.json.JSONArray;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 /**
@@ -111,34 +110,26 @@ public enum Type {
                 .setImmuneTo(DRAGON);
     }
 
-    @NotNull
     private String NAME;
 
-    @NotNull
     private List<Type> WEAK_TO = new ArrayList<>();
 
-    @NotNull
     private List<Type> RESISTANT_TO = new ArrayList<>();
 
-    @NotNull
     private List<Type> IMMUNE_TO = new ArrayList<>();
 
-    @NotNull
     private List<Type> WEAK_BY = new ArrayList<>();
 
-    @NotNull
     private List<Type> RESISTED_BY = new ArrayList<>();
 
-    @NotNull
     private List<Type> IGNORED_BY = new ArrayList<>();
 
-    Type(@NotNull String name) {
+    Type(String name) {
         Holder.MAP.put(name.toLowerCase(), this);
         NAME = name;
     }
 
-    @NotNull
-    public static Type getType(@NotNull String type) {
+    public static Type getType(String type) {
         type = type.toLowerCase();
 
         if (!Holder.MAP.containsKey(type)) {
@@ -148,8 +139,7 @@ public enum Type {
         return Holder.MAP.get(type);
     }
 
-    @NotNull
-    public static Type[] getTypes(@NotNull String type) {
+    public static Type[] getTypes(String type) {
         type = type.toLowerCase();
         if (!Holder.MAP.containsKey(type)) {
             throw new NullPointerException("Type " + type + " doesn't exist");
@@ -158,16 +148,14 @@ public enum Type {
         return new Type[]{Holder.MAP.get(type)};
     }
 
-    @NotNull
-    public static Type[] getTypes(@NotNull String firstType, @NotNull String secondType) {
+    public static Type[] getTypes(String firstType, String secondType) {
         Type type1 = Type.getType(firstType);
         Type type2 = Type.getType(secondType);
         
         return new Type[]{type1, type2};
     }
 
-    @NotNull
-    public static Type[] getTypes(@NotNull JSONArray jsonArray) {
+    public static Type[] getTypes(JSONArray jsonArray) {
         if (jsonArray.length() == 2) {
             return Type.getTypes(jsonArray.getString(0), jsonArray.getString(1));
         } else if (jsonArray.length() == 1) {
@@ -177,8 +165,7 @@ public enum Type {
         }
     }
 
-    @NotNull
-    private Type setWeakTo(@NotNull Type... weakTo) {
+    private Type setWeakTo(Type... weakTo) {
         WEAK_TO.addAll(Arrays.asList(weakTo));
 
         for (Type type : weakTo) {
@@ -188,8 +175,7 @@ public enum Type {
         return this;
     }
 
-    @NotNull
-    private Type setResistantTo(@NotNull Type... resistantTo) {
+    private Type setResistantTo(Type... resistantTo) {
         RESISTANT_TO.addAll(Arrays.asList(resistantTo));
 
         for (Type type : resistantTo) {
@@ -199,8 +185,7 @@ public enum Type {
         return this;
     }
 
-    @NotNull
-    private Type setImmuneTo(@NotNull Type... immuneTo) {
+    private Type setImmuneTo(Type... immuneTo) {
         IMMUNE_TO.addAll(Arrays.asList(immuneTo));
 
         for (Type type : immuneTo) {
@@ -210,28 +195,23 @@ public enum Type {
         return this;
     }
 
-    @NotNull
     public String getName() {
         return NAME;
     }
 
-    @NotNull
     public List<Type> getWeaknesses() {
         return WEAK_TO;
     }
 
-    @NotNull
     public List<Type> getResistances() {
         return RESISTANT_TO;
     }
 
-    @NotNull
     public List<Type> getImmunities() {
         return IMMUNE_TO;
     }
 
     private static class Holder {
-        @NotNull
         static Map<String, Type> MAP = new HashMap<>();
     }
 

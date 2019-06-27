@@ -1,7 +1,5 @@
 package com.github.drsmugleaf.pokemon.moves;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * Created by DrSmugleaf on 08/09/2018
  */
@@ -23,11 +21,11 @@ public class InvalidCriticalStageException extends IllegalArgumentException {
         super(cause);
     }
 
-    public InvalidCriticalStageException(@NotNull CriticalHitStage stage, @NotNull String message) {
+    public InvalidCriticalStageException(CriticalHitStage stage, String message) {
         super("Invalid critical hit stage: " + stage + ". " + message);
     }
 
-    public InvalidCriticalStageException(@NotNull CriticalHitStage stage) {
+    public InvalidCriticalStageException(CriticalHitStage stage) {
         this(stage, "");
     }
 

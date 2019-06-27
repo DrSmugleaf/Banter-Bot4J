@@ -7,20 +7,15 @@ import com.github.drsmugleaf.pokemon.events.PokemonMoveEvent;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.types.Type;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * Created by DrSmugleaf on 22/06/2017.
  */
 public class Move {
 
-    @NotNull
     public final BaseMove BASE_MOVE;
 
-    @NotNull
     private Type type;
 
-    @NotNull
     private MoveCategory category;
 
     private int pp;
@@ -28,7 +23,7 @@ public class Move {
     private int priority;
     private double damageMultiplier = 1.0;
 
-    public Move(@NotNull BaseMove baseMove) {
+    public Move(BaseMove baseMove) {
         BASE_MOVE = baseMove;
         type = baseMove.TYPE;
         category = baseMove.CATEGORY;
@@ -37,7 +32,7 @@ public class Move {
         priority = baseMove.PRIORITY;
     }
 
-    private Move(@NotNull Move move) {
+    private Move(Move move) {
         BASE_MOVE = move.BASE_MOVE;
         type = move.type;
         category = move.category;
@@ -47,26 +42,23 @@ public class Move {
         damageMultiplier = move.damageMultiplier;
     }
 
-    @NotNull
     public BaseMove getBaseMove() {
         return BASE_MOVE;
     }
 
-    @NotNull
     public Type getType() {
         return type;
     }
 
-    protected void setType(@NotNull Type type) {
+    protected void setType(Type type) {
         this.type = type;
     }
 
-    @NotNull
     public MoveCategory getCategory() {
         return category;
     }
 
-    protected void setCategory(@NotNull MoveCategory category) {
+    protected void setCategory(MoveCategory category) {
         this.category = category;
     }
 
@@ -94,7 +86,6 @@ public class Move {
         this.power = power;
     }
 
-    @NotNull
     public Integer getPriority() {
         return priority;
     }
@@ -123,29 +114,29 @@ public class Move {
         damageMultiplier = 1.0;
     }
 
-    protected int use(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {
+    protected int use(Pokemon attacker, Pokemon defender, Action action) {
         PokemonMoveEvent event = new PokemonMoveEvent(attacker, this);
         EventDispatcher.dispatch(event);
         action.setHit(defender, true);
         return BASE_MOVE.use(attacker, defender, attacker.getBattle(), action);
     }
 
-    protected int useAsZMove(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {
+    protected int useAsZMove(Pokemon attacker, Pokemon defender, Action action) {
         attacker.ITEM.remove();
         return BASE_MOVE.useAsZMove(attacker, defender, attacker.getBattle(), action);
     }
 
-    protected int replaceAsZMove(@NotNull Action oldAction, @NotNull Pokemon attacker, @NotNull Pokemon defender) {
+    protected int replaceAsZMove(Action oldAction, Pokemon attacker, Pokemon defender) {
         Action action = attacker.getBattle().replaceAction(oldAction, this, attacker, defender);
         return useAsZMove(attacker, defender, action);
     }
 
-    protected int miss(@NotNull Pokemon defender, @NotNull Action action) {
+    protected int miss(Pokemon defender, Action action) {
         action.setHit(defender, false);
         return BASE_MOVE.miss(defender);
     }
 
-    protected int tryUse(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Action action) {
+    protected int tryUse(Pokemon attacker, Pokemon defender, Action action) {
         if (BASE_MOVE.hits(defender, action)) {
             decreasePP(1);
             return use(attacker, defender, action);
@@ -154,7 +145,7 @@ public class Move {
         }
     }
 
-    protected int tryUse(@NotNull Pokemon target, @NotNull Action action) {
+    protected int tryUse(Pokemon target, Action action) {
         if (BASE_MOVE.hits(target, action)) {
             return use(action.getAttacker(), target, action);
         } else {
@@ -162,7 +153,7 @@ public class Move {
         }
     }
 
-    public void useAsReflect(@NotNull Pokemon attacker, @NotNull Pokemon defender, @NotNull Battle battle, @NotNull Action action) {
+    public void useAsReflect(Pokemon attacker, Pokemon defender, Battle battle, Action action) {
         BASE_MOVE.use(attacker, defender, battle, action);
     }
 

@@ -1,13 +1,11 @@
 package com.github.drsmugleaf.pokemon.pokemon;
 
-import com.github.drsmugleaf.pokemon.battle.IModifier;
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon.battle.Action;
+import com.github.drsmugleaf.pokemon.battle.IModifier;
 import com.github.drsmugleaf.pokemon.battle.InvalidGenerationException;
 import com.github.drsmugleaf.pokemon.moves.BaseMove;
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by DrSmugleaf on 01/10/2017.
@@ -17,20 +15,20 @@ public enum Tags implements IModifier {
     BERRY_USED("Berry Used"),
     DESTINY_BOND("Destiny Bond") {
         @Override
-        public void onOwnFaint(@Nullable Pokemon attacker, @NotNull Pokemon defender) {
+        public void onOwnFaint(@Nullable Pokemon attacker, Pokemon defender) {
             if (attacker != null && !defender.isAlly(attacker)) {
                 attacker.kill();
             }
         }
 
         @Override
-        public void onOwnTurnStart(@NotNull Pokemon pokemon) {
+        public void onOwnTurnStart(Pokemon pokemon) {
             remove(pokemon);
         }
     },
     DOOM_DESIRE("Doom Desire", 2) {
         @Override
-        protected void remove(@NotNull Pokemon pokemon, @NotNull Action action) {
+        protected void remove(Pokemon pokemon, Action action) {
             Action tagAction = get(pokemon).getAction();
 
             Pokemon tagTargetPokemon = tagAction.getTargetPokemon();
@@ -67,21 +65,19 @@ public enum Tags implements IModifier {
     },
     DOOM_DESIRE_VICTIM("Doom Desire Victim", 0);
 
-    @NotNull
     public final String NAME;
 
     private final int DURATION;
 
-    Tags(@NotNull String name, int duration) {
+    Tags(String name, int duration) {
         NAME = name;
         DURATION = duration;
     }
 
-    Tags(@NotNull String name) {
+    Tags(String name) {
         this(name, Integer.MAX_VALUE);
     }
 
-    @NotNull
     public String getName() {
         return NAME;
     }
@@ -90,13 +86,13 @@ public enum Tags implements IModifier {
         return DURATION;
     }
 
-    public void apply(@NotNull Pokemon pokemon, @Nullable Action action) {
+    public void apply(Pokemon pokemon, @Nullable Action action) {
         Tag tag = new Tag(this, action);
         pokemon.TAGS.add(tag);
     }
 
     @Nullable
-    public Tag get(@NotNull Pokemon pokemon) {
+    public Tag get(Pokemon pokemon) {
         for (Tag tag : pokemon.TAGS) {
             if (tag.getBaseTag() == this) {
                 return tag;
@@ -105,7 +101,7 @@ public enum Tags implements IModifier {
         return null;
     }
 
-    public boolean has(@NotNull Pokemon pokemon) {
+    public boolean has(Pokemon pokemon) {
         for (Tag tag : pokemon.TAGS) {
             if (tag.getBaseTag() == this) {
                 return true;
@@ -114,7 +110,7 @@ public enum Tags implements IModifier {
         return false;
     }
 
-    protected void remove(@NotNull Pokemon pokemon) {
+    protected void remove(Pokemon pokemon) {
         for (Tag tag1 : pokemon.TAGS) {
             if (tag1.getBaseTag() == this) {
                 pokemon.TAGS.remove(tag1);
@@ -122,7 +118,7 @@ public enum Tags implements IModifier {
         }
     }
 
-    protected void remove(@NotNull Pokemon pokemon, @NotNull Action action) {
+    protected void remove(Pokemon pokemon, Action action) {
         for (Tag tag : pokemon.TAGS) {
             if (tag.getBaseTag() == this && tag.getAction() == action) {
                 pokemon.TAGS.remove(tag);

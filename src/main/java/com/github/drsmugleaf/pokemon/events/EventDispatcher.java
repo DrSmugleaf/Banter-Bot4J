@@ -2,7 +2,6 @@ package com.github.drsmugleaf.pokemon.events;
 
 import com.github.drsmugleaf.BanterBot4J;
 
-import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -16,15 +15,14 @@ import java.util.stream.Stream;
  */
 public class EventDispatcher {
 
-    @NotNull
     private static final Set<Method> LISTENERS = new HashSet<>();
 
-    public static void registerListener(@NotNull Object listener) {
+    public static void registerListener(Object listener) {
         Stream<Method> methods = Arrays.stream(listener.getClass().getMethods()).filter(method -> method.isAnnotationPresent(PokemonEventHandler.class));
         EventDispatcher.LISTENERS.addAll(methods.collect(Collectors.toSet()));
     }
 
-    public static void dispatch(@NotNull Event event) {
+    public static void dispatch(Event event) {
         for (Method listener : EventDispatcher.LISTENERS) {
             if (listener.getAnnotation(PokemonEventHandler.class).event() == event.getClass()) {
                 try {

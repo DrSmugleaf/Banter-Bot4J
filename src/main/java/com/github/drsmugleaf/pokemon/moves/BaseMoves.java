@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.pokemon.moves;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,14 +8,12 @@ import java.util.List;
  */
 public class BaseMoves {
 
-    @NotNull
     private final List<String> MOVE_NAMES = new ArrayList<>();
 
-    BaseMoves(@NotNull List<String> moveNames) {
+    BaseMoves(List<String> moveNames) {
         MOVE_NAMES.addAll(moveNames);
     }
 
-    @NotNull
     public List<BaseMove> get() {
         List<BaseMove> moves = new ArrayList<>();
 
@@ -30,14 +27,12 @@ public class BaseMoves {
 
     static class Single {
 
-        @NotNull
         private final String MOVE_NAME;
 
-        Single(@NotNull String moveName) {
+        Single(String moveName) {
             MOVE_NAME = moveName;
         }
 
-        @NotNull
         public BaseMove get() {
             return BaseMove.getMove(MOVE_NAME);
         }
