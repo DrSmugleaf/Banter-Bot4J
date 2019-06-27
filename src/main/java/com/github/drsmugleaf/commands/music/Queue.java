@@ -1,17 +1,14 @@
 package com.github.drsmugleaf.commands.music;
 
-import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.tags.Tags;
+import com.github.drsmugleaf.music.GuildMusicManager;
 import com.github.drsmugleaf.music.TrackScheduler;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.util.EmbedBuilder;
+import discord4j.core.object.entity.Member;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -20,73 +17,71 @@ import java.util.concurrent.TimeUnit;
 @CommandInfo(tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
 public class Queue extends MusicCommand {
 
-    protected Queue(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
-        super(event, args);
-    }
-
     @Override
     public void run() {
-        IGuild guild = EVENT.getGuild();
-        IUser author = EVENT.getAuthor();
+        Optional<TrackScheduler> schedulerOptional = EVENT
+                .getGuildId()
+                .map(Music::getGuildMusicManager)
+                .map(GuildMusicManager::getScheduler);
 
-        TrackScheduler scheduler = Music.getGuildMusicManager(guild).getScheduler();
-        AudioTrack currentTrack = scheduler.getCurrentTrack();
-        if (currentTrack == null) {
-            EVENT.reply("There are no tracks currently playing or in the queue.");
-            return;
-        }
+        Optional<Member> memberOptional = EVENT.getMember();
 
-        TimeUnit msUnit = TimeUnit.MILLISECONDS;
-        long trackDuration = currentTrack.getDuration();
-        String trackDurationString = String.format(
-                "%02d:%02d:%02d",
-                msUnit.toHours(trackDuration) % 24,
-                msUnit.toMinutes(trackDuration) % 60,
-                msUnit.toSeconds(trackDuration) % 60
-        );
-
-        long trackTimeLeft = trackDuration - currentTrack.getPosition();
-        String trackTimeLeftString = String.format(
-                "%02d:%02d:%02d",
-                msUnit.toHours(trackTimeLeft) % 24,
-                msUnit.toMinutes(trackTimeLeft) % 60,
-                msUnit.toSeconds(trackTimeLeft) % 60
-        );
-
-        String trackStatus = "Playing";
-        if (scheduler.isPaused()) {
-            trackStatus = "Paused";
-        }
-
-        List<AudioTrack> queue = scheduler.getQueue();
-        EmbedBuilder builder = new EmbedBuilder();
-        builder.withAuthorName(author.getDisplayName(guild))
-                .withAuthorIcon(author.getAvatarURL())
-                .withTitle("Currently playing: " + currentTrack.getInfo().title)
-                .appendDescription("\n")
-                .appendDescription("Track status: " + trackStatus)
-                .appendDescription("\n")
-                .appendDescription("Track duration: " + trackDurationString)
-                .appendDescription("\n")
-                .appendDescription("Time remaining: " + trackTimeLeftString)
-                .appendField("Tracks in queue", String.valueOf(queue.size()), false);
-
-        if (scheduler.hasNextTrack()) {
-            long queueDuration = 0;
-            for (AudioTrack track : queue) {
-                queueDuration += track.getDuration();
+        if (schedulerOptional.isPresent() && memberOptional.isPresent()) {
+            TrackScheduler scheduler = schedulerOptional.get();
+            Member author = memberOptional.get();
+            AudioTrack track = scheduler.getCurrentTrack();
+            if (track == null) {
+                reply("There are no tracks currently playing or in the queue.").subscribe();
+                return;
             }
-            String queueDurationString = String.format(
+
+            TimeUnit msUnit = TimeUnit.MILLISECONDS;
+            long trackDuration = track.getDuration();
+            String trackDurationString = String.format(
                     "%02d:%02d:%02d",
-                    msUnit.toHours(queueDuration) % 24,
-                    msUnit.toMinutes(queueDuration) % 60,
-                    msUnit.toSeconds(queueDuration) % 60
+                    msUnit.toHours(trackDuration) % 24,
+                    msUnit.toMinutes(trackDuration) % 60,
+                    msUnit.toSeconds(trackDuration) % 60
             );
 
-            builder.appendField("Queue duration", queueDurationString, false);
-        }
+            long trackTimeLeft = trackDuration - track.getPosition();
+            String trackTimeLeftString = String.format(
+                    "%02d:%02d:%02d",
+                    msUnit.toHours(trackTimeLeft) % 24,
+                    msUnit.toMinutes(trackTimeLeft) % 60,
+                    msUnit.toSeconds(trackTimeLeft) % 60
+            );
 
-        EVENT.reply(builder.build());
+            String trackStatus = scheduler.isPaused() ? "Paused" : "Playing";
+
+            List<AudioTrack> queue = scheduler.getQueue();
+            reply(message -> message.setEmbed(embed -> {
+                embed
+                        .setAuthor(author.getDisplayName(), null, author.getAvatarUrl())
+                        .setTitle("Currently playing: " + track.getInfo().title)
+                        .setDescription("\n" +
+                                "Track status: " + trackStatus + "\n" +
+                                "Track duration: " + trackDurationString + "\n" +
+                                "Time remaining: " + trackTimeLeftString
+                        )
+                        .addField("Tracks in queue", String.valueOf(queue.size()), false);
+
+                if (scheduler.hasNextTrack()) {
+                    long queueDuration = 0;
+                    for (AudioTrack queuedTrack : queue) {
+                        queueDuration += queuedTrack.getDuration();
+                    }
+                    String queueDurationString = String.format(
+                            "%02d:%02d:%02d",
+                            msUnit.toHours(queueDuration) % 24,
+                            msUnit.toMinutes(queueDuration) % 60,
+                            msUnit.toSeconds(queueDuration) % 60
+                    );
+
+                    embed.addField("Queue duration", queueDurationString, false);
+                }
+            })).subscribe();
+        }
     }
 
 }

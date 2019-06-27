@@ -3,84 +3,109 @@ package com.github.drsmugleaf.commands.api;
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
 import com.github.drsmugleaf.commands.api.registry.Registry;
-import com.github.drsmugleaf.commands.api.tags.Tag;
-import com.github.drsmugleaf.database.models.Member;
+import com.github.drsmugleaf.commands.api.tags.Tags;
+import com.github.drsmugleaf.database.models.DiscordMember;
 import com.github.drsmugleaf.reflection.Reflection;
-import sx.blah.discord.api.events.EventSubscriber;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.Permissions;
+import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.object.entity.Member;
+import discord4j.core.object.entity.User;
+import discord4j.core.object.util.Permission;
+import discord4j.core.object.util.PermissionSet;
+import discord4j.core.object.util.Snowflake;
+import reactor.core.publisher.Mono;
+import reactor.util.function.Tuples;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by DrSmugleaf on 10/01/2018.
  */
 public class Handler {
 
-    @NotNull
     private final Registry COMMAND_REGISTRY;
 
-    public Handler(@NotNull String commandsPackageName) {
+    public Handler(String commandsPackageName) {
         Reflection reflection = new Reflection(commandsPackageName);
         List<Class<Command>> commands = reflection.findSubtypesOf(Command.class);
         COMMAND_REGISTRY = new Registry(commands);
     }
 
-    @EventSubscriber
-    public void handle(@NotNull MessageReceivedEvent event) {
-        String message = event.getMessage().getContent();
-        if (message.isEmpty()) {
-            return;
-        }
+    public Registry getRegistry() {
+        return COMMAND_REGISTRY;
+    }
 
-        if (!message.startsWith(BanterBot4J.BOT_PREFIX)) {
-            return;
-        }
-
-        if (event.getGuild() != null) {
-            long userID = event.getAuthor().getLongID();
-            long guildID = event.getGuild().getLongID();
-            Member member = new Member(userID, guildID);
-            member.createIfNotExists();
-            member = member.get().get(0);
-            if (member.isBlacklisted) {
-                return;
-            }
-        }
-
-        CommandSearchResult command = COMMAND_REGISTRY.findCommand(event);
-        if (command == null) {
-            return;
-        }
-
+    public void handle(MessageCreateEvent event) {
+        Optional<Snowflake> guildId = event.getGuildId();
+        Optional<User> author = event.getMessage().getAuthor();
         CommandReceivedEvent commandEvent = new CommandReceivedEvent(event);
-        CommandInfo annotation = command.COMMAND.getDeclaredAnnotation(CommandInfo.class);
-        if (annotation != null) {
-            if (commandEvent.getGuild() != null) {
-                if (commandEvent.getGuild() != null) {
-                    List<Permissions> annotationPermissions = Arrays.asList(annotation.permissions());
-                    EnumSet<Permissions> authorPermissions = commandEvent.getAuthor().getPermissionsForGuild(commandEvent.getGuild());
 
-                    if (!annotationPermissions.isEmpty() && Collections.disjoint(authorPermissions, Arrays.asList(annotation.permissions()))) {
-                        commandEvent.reply("You don't have permission to use that command.");
-                        return;
+        commandEvent
+                .getMessage()
+                .getContent()
+                .filter(content -> !content.isEmpty())
+                .filter(content -> content.startsWith(BanterBot4J.BOT_PREFIX))
+                .filter(content -> author.isPresent())
+                .map(content -> Tuples.of(content, author.get().getId()))
+                .filter(tuple -> {
+                    if (!guildId.isPresent()) {
+                        return true;
                     }
-                }
 
-                for (Tag tags : annotation.tags()) {
-                    if (!tags.isValid(commandEvent)) {
-                        commandEvent.reply(tags.message());
-                        return;
+                    Long authorId = tuple.getT2().asLong();
+                    DiscordMember member = new DiscordMember(authorId, guildId.get().asLong());
+                    member.createIfNotExists();
+                    member = member.get().get(0);
+
+                    return !member.isBlacklisted;
+                })
+                .flatMap(tuple -> {
+                    CommandSearchResult result = COMMAND_REGISTRY.findCommand(tuple.getT1());
+                    if (result == null) {
+                        return Optional.empty();
                     }
-                }
-            }
-        }
 
-        Command.run(command, commandEvent);
+                    CommandInfo info = result.getEntry().getCommandInfo();
+                    if (info == null) {
+                        return Optional.of(result);
+                    }
+
+                    if (guildId.isPresent()) {
+                        List<Permission> commandPermissions = Arrays.asList(info.permissions());
+
+                        return event
+                                .getGuild()
+                                .flatMap(guild -> guild.getMemberById(tuple.getT2()))
+                                .flatMap(Member::getBasePermissions)
+                                .zipWith(event.getMessage().getChannel())
+                                .flatMap(tuple2 -> {
+                                    PermissionSet authorPermissions = tuple2.getT1();
+                                    if (!commandPermissions.isEmpty() && !authorPermissions.containsAll(commandPermissions)) {
+                                        commandEvent.reply("You don't have permission to use that command.").subscribe();
+                                        return Mono.empty();
+                                    }
+
+                                    return Mono.just(result);
+                                }).blockOptional();
+                    } else {
+                        return Optional.of(result);
+                    }
+                })
+                .ifPresent(result -> {
+                    CommandInfo commandInfo = result.getEntry().getCommandInfo();
+
+                    if (commandInfo != null) {
+                        for (Tags tag : commandInfo.tags()) {
+                            if (!tag.isValid(event)) {
+                                commandEvent.reply(tag.message()).subscribe();
+                                return;
+                            }
+                        }
+                    }
+
+                    Command.run(result, commandEvent);
+                });
     }
 
 }

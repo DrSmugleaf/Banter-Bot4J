@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.dijkstra;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.github.drsmugleaf.Nullable;
+
 import java.util.*;
 
 /**
@@ -9,23 +9,22 @@ import java.util.*;
  */
 public abstract class Graph<T extends Node<T>> {
 
-    @NotNull
     public final Set<T> NODES = new HashSet<>();
 
-    protected Graph(@NotNull Collection<T> nodes) {
+    protected Graph(Collection<T> nodes) {
         NODES.addAll(nodes);
     }
 
-    public void addNode(@NotNull T nodeA) {
+    public void addNode(T nodeA) {
         NODES.add(nodeA);
     }
 
-    public void addNode(@NotNull Collection<T> nodes) {
+    public void addNode(Collection<T> nodes) {
         NODES.addAll(nodes);
     }
 
     @Nullable
-    private T getLowestDistanceNode(@NotNull Set<T> unsettledNodes) {
+    private T getLowestDistanceNode(Set<T> unsettledNodes) {
         T lowestDistanceNode = null;
         int lowestDistance = Integer.MAX_VALUE;
 
@@ -39,7 +38,7 @@ public abstract class Graph<T extends Node<T>> {
         return lowestDistanceNode;
     }
 
-    private void calculateMinimumDistance(@NotNull T evaluationNode, @NotNull Integer edgeWeigh, @NotNull T sourceNode) {
+    private void calculateMinimumDistance(T evaluationNode, Integer edgeWeigh, T sourceNode) {
         if (sourceNode.distance + edgeWeigh < evaluationNode.distance) {
             evaluationNode.distance = sourceNode.distance + edgeWeigh;
             LinkedList<T> shortestPath = new LinkedList<>(sourceNode.SHORTEST_PATH);
@@ -49,8 +48,7 @@ public abstract class Graph<T extends Node<T>> {
         }
     }
 
-    @NotNull
-    public Graph<T> calculateShortestPathFromSource(@NotNull T source) {
+    public Graph<T> calculateShortestPathFromSource(T source) {
         source.distance = 0;
         Set<T> settledNodes = new HashSet<>();
         Set<T> unsettledNodes = new HashSet<>();

@@ -1,26 +1,24 @@
 package com.github.drsmugleaf.database.models;
 
-import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.EventListener;
+import com.github.drsmugleaf.database.api.Database;
 import com.github.drsmugleaf.database.api.Model;
 import com.github.drsmugleaf.database.api.annotations.Column;
 import com.github.drsmugleaf.database.api.annotations.Relation;
 import com.github.drsmugleaf.database.api.annotations.RelationTypes;
 import com.github.drsmugleaf.database.api.annotations.Table;
-import sx.blah.discord.api.IDiscordClient;
-import sx.blah.discord.api.events.EventSubscriber;
-import sx.blah.discord.handle.impl.events.ReadyEvent;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.util.EmbedBuilder;
+import discord4j.core.DiscordClient;
+import discord4j.core.event.domain.lifecycle.ReadyEvent;
+import discord4j.core.object.entity.MessageChannel;
+import discord4j.core.object.util.Snowflake;
 
-import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 02/05/2018.
@@ -28,20 +26,17 @@ import java.util.List;
 @Table(name = "eve_timers")
 public class EveTimerModel extends Model<EveTimerModel> {
 
-    @NotNull
     public static final ZoneOffset EVE_TIMEZONE = ZoneOffset.UTC;
 
-    @NotNull
     private static final Timer TIMER = new Timer("Eve Structure Alert Timer", true);
 
-    @NotNull
     private static final Map<EveTimerModel, TimerTask> TASKS = new HashMap<>();
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(EVE_TIMEZONE);
 
     @Column(name = "channel")
     @Relation(type = RelationTypes.ManyToOne, columnName = "id")
-    public Channel channel;
+    public DiscordChannel channel;
 
     @Column(name = "structure")
     @Column.Id
@@ -56,47 +51,58 @@ public class EveTimerModel extends Model<EveTimerModel> {
 
     @Column(name = "submitter")
     @Relation(type = RelationTypes.ManyToOne, columnName = "id")
-    public User submitter;
+    public DiscordUser submitter;
 
     public EveTimerModel(Long channel, String structure, String system, Long date, Long submitter) {
-        this.channel = new Channel(channel);
+        this.channel = new DiscordChannel(channel);
         this.structure = structure;
         this.system = system;
         this.date = date;
-        this.submitter = new User(submitter);
+        this.submitter = new DiscordUser(submitter);
     }
 
-    private EveTimerModel() {
-    }
+    private EveTimerModel() {}
 
-    private static void sendAlert(@NotNull IDiscordClient client, @NotNull EveTimerModel timer, boolean skipped) {
+    private static void sendAlert(DiscordClient client, EveTimerModel timer, boolean skipped) {
         String structure = timer.structure;
         String system = timer.system;
         Instant date = Instant.ofEpochMilli(timer.date);
         String formattedDate = DATE_FORMAT.format(date);
-        IUser submitter = client.fetchUser(timer.submitter.id);
-        IChannel channel = client.getChannelByID(timer.channel.id);
-        String submitterName = submitter.getDisplayName(channel.getGuild());
-        EmbedBuilder builder = new EmbedBuilder();
 
-        builder
-                .withTitle(skipped ? "SKIPPED STRUCTURE ALERT" : "Structure alert")
-                .appendField("Structure", structure, true)
-                .appendField("System", system, true)
-                .appendField("Submitted by", submitterName, true)
-                .withFooterText(formattedDate)
-                .withColor(skipped ? Color.RED : Color.GREEN);
+        client
+                .getChannelById(Snowflake.of(timer.channel.id))
+                .cast(MessageChannel.class)
+                .zipWith(
+                        client
+                                .getUserById(Snowflake.of(timer.submitter.id))
+                                .map(user -> user.getUsername() + "#" + user.getDiscriminator())
+                )
+                .map(tuple -> {
+                    MessageChannel channel = tuple.getT1();
+                    String submitterName = tuple.getT2();
 
-        Command.sendMessage(channel, "@everyone Structure timer", builder.build());
+                    return channel.createMessage(message -> {
+                        message.setContent("@everyone Structure timer");
 
-        deleteTimer(timer);
+                        message.setEmbed(embed -> {
+                            embed
+                                    .setTitle(skipped ? "SKIPPED STRUCTURE ALERT" : "Structure alert")
+                                    .addField("Structure", structure, true)
+                                    .addField("System", system, true)
+                                    .addField("Submitted by", submitterName, true)
+                                    .setFooter(formattedDate, null)
+                                    .setColor(skipped ? Color.RED : Color.GREEN);
+                        });
+                    });
+                })
+                .subscribe(message -> deleteTimer(timer));
     }
 
-    private static void sendAlert(@NotNull IDiscordClient client, @NotNull EveTimerModel timer) {
+    private static void sendAlert(DiscordClient client, EveTimerModel timer) {
         sendAlert(client, timer, false);
     }
 
-    public static void createTimer(@NotNull IDiscordClient client, @NotNull EveTimerModel timer) {
+    public static void createTimer(DiscordClient client, EveTimerModel timer) {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -108,7 +114,7 @@ public class EveTimerModel extends Model<EveTimerModel> {
         TIMER.schedule(task, timer.date - System.currentTimeMillis());
     }
 
-    public static boolean deleteTimer(@NotNull EveTimerModel timer) {
+    public static boolean deleteTimer(EveTimerModel timer) {
         for (Map.Entry<EveTimerModel, TimerTask> entry : TASKS.entrySet()) {
             EveTimerModel entryTimer = entry.getKey();
             TimerTask entryTask = entry.getValue();
@@ -128,7 +134,7 @@ public class EveTimerModel extends Model<EveTimerModel> {
         return false;
     }
 
-    @EventSubscriber
+    @EventListener(ReadyEvent.class)
     public static void handle(ReadyEvent event) {
         Runnable runnable = () -> {
             List<EveTimerModel> timers = new EveTimerModel(null, null, null, null, null).get();
@@ -136,13 +142,18 @@ public class EveTimerModel extends Model<EveTimerModel> {
             for (EveTimerModel timer : timers) {
                 ZonedDateTime timerDate = Instant.ofEpochMilli(timer.date).atZone(EVE_TIMEZONE);
                 ZonedDateTime now = ZonedDateTime.now(EVE_TIMEZONE);
-                IDiscordClient client = event.getClient();
+                DiscordClient client = event.getClient();
 
                 if (timerDate.isBefore(now)) {
                     sendAlert(client, timer, true);
                 } else {
                     createTimer(client, timer);
                 }
+
+                Database.LOGGER.info(
+                        "Scheduled eve structure alert for structure %s in system %s in %s seconds",
+                        timer.structure, timer.system, timer.date / 1000
+                );
             }
         };
 

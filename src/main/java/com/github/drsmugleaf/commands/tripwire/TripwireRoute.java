@@ -1,14 +1,11 @@
 package com.github.drsmugleaf.commands.tripwire;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.tripwire.route.Route;
 import com.github.drsmugleaf.tripwire.route.SystemGraph;
-import sx.blah.discord.handle.obj.IUser;
+import discord4j.core.object.entity.User;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,14 +14,8 @@ import java.util.Map;
  */
 public class TripwireRoute extends Command {
 
-    @NotNull
-    static final Map<IUser, Route> ROUTES = new HashMap<>();
+    static final Map<User, Route> ROUTES = new HashMap<>();
 
-    protected TripwireRoute(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
-        super(event, args);
-    }
-
-    @NotNull
     private static String invalidArgumentsResponse() {
         return "Invalid arguments.\n" +
                "**Formats:**\n" +
@@ -35,25 +26,28 @@ public class TripwireRoute extends Command {
 
     @Override
     public void run() {
-        if (ARGS.size() != 4) {
-            EVENT.reply(invalidArgumentsResponse());
+        if (ARGUMENTS.size() != 4) {
+            reply(invalidArgumentsResponse()).subscribe();
             return;
         }
 
-        Long id = EVENT.getAuthor().getLongID();
-        String username = ARGS.get(0);
-        String password = ARGS.get(1);
-        String from = ARGS.get(2);
-        String to = ARGS.get(3);
-        Route route = SystemGraph.getRoute(id, username, password, from, to);
+        User author = EVENT
+                .getMessage()
+                .getAuthor()
+                .orElseThrow(() -> new IllegalStateException("Couldn't get the message's author. Message: " + EVENT.getMessage()));
+        String username = ARGUMENTS.get(0);
+        String password = ARGUMENTS.get(1);
+        String from = ARGUMENTS.get(2);
+        String to = ARGUMENTS.get(3);
+        Route route = SystemGraph.getRoute(author.getId().asLong(), username, password, from, to);
 
         if (route == null) {
-            EVENT.reply("No route found from system " + from + " to system " + to + ".");
+            reply("No route found from system " + from  + " to system " + to + ".").subscribe();
             return;
         }
 
-        ROUTES.put(EVENT.getAuthor(), route);
-        EVENT.reply(route.info());
+        ROUTES.put(author, route);
+        reply(route.info()).subscribe();
     }
 
 }

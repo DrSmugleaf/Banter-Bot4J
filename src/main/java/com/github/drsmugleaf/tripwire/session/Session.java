@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.tripwire.session;
 
-import org.jetbrains.annotations.NotNull;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
@@ -12,22 +11,17 @@ import java.util.Map;
  */
 public class Session {
 
-    @NotNull
     public final long ID;
 
-    @NotNull
     public final String NAME;
 
-    @NotNull
     public final Map<String, String> COOKIES = new HashMap<>();
 
-    @NotNull
     public final String VERSION;
 
-    @NotNull
     public final String INSTANCE = getInstance();
 
-    Session(long id, @NotNull String name, @NotNull Map<String, String> cookies, @NotNull String version) {
+    Session(long id, String name, Map<String, String> cookies, String version) {
         ID = id;
         NAME = name;
         COOKIES.putAll(cookies);

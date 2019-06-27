@@ -1,15 +1,17 @@
 package com.github.drsmugleaf.commands.eve;
 
-import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
+import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
+import com.github.drsmugleaf.commands.api.converter.TypeConverters;
 import com.github.drsmugleaf.database.models.EveTimerModel;
-import sx.blah.discord.handle.obj.IChannel;
+import discord4j.core.object.entity.MessageChannel;
+import discord4j.core.object.entity.User;
+import discord4j.core.object.util.Snowflake;
+import reactor.core.publisher.Mono;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import java.time.ZonedDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,28 +27,17 @@ import java.util.regex.Pattern;
 )
 public class EveTimer extends Command {
 
-    protected EveTimer(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
-        super(event, args);
-    }
+    @Argument(position = 1, example = "Fortizar")
+    private String structure;
 
-    @NotNull
-    private static Long parseDate(@NotNull String date) {
-        Long days = parseDatePortion(date, Pattern.compile("(\\d+)d"));
-        Long hours = parseDatePortion(date, Pattern.compile("(\\d+)h"));
-        Long minutes = parseDatePortion(date, Pattern.compile("(\\d+)m"));
-        Long seconds = parseDatePortion(date, Pattern.compile("(\\d+)s"));
+    @Argument(position = 2, example = "Jita")
+    private String system;
 
-        ZonedDateTime time = ZonedDateTime.now(EveTimerModel.EVE_TIMEZONE);
-        if (days != null) time = time.plusDays(days);
-        if (hours != null) time = time.plusHours(hours);
-        if (minutes != null) time = time.plusMinutes(minutes);
-        if (seconds != null) time = time.plusSeconds(seconds);
-
-        return time.toInstant().toEpochMilli();
-    }
+    @Argument(position = 3, example = "4d15h30m")
+    private ZonedDateTime date;
 
     @Nullable
-    private static Long parseDatePortion(@NotNull String input, @NotNull Pattern regex) {
+    private static Long parseDatePortion(String input, Pattern regex) {
         Matcher matcher = regex.matcher(input);
         if (matcher.find()) {
             return Long.parseLong(matcher.group(1));
@@ -55,43 +46,65 @@ public class EveTimer extends Command {
         return null;
     }
 
-    @NotNull
-    private static String invalidArgumentsResponse() {
-        return "Invalid arguments.\n" +
-               "**Formats:**\n" +
-               BanterBot4J.BOT_PREFIX + "evetimer \"structure\" \"system\" \"date\"\n\n" +
-               "**Examples:**\n" +
-               BanterBot4J.BOT_PREFIX + "evetimer \"Fortizar\" \"Jita\" \"4d15h30m\"";
-    }
-
-    private static boolean exists(@NotNull String structure, @NotNull String system) {
+    private static boolean exists(String structure, String system) {
         EveTimerModel timer = new EveTimerModel(null, structure, system, null, null);
         return !timer.get().isEmpty();
     }
 
     @Override
     public void run() {
-        if (ARGS.size() != 3) {
-            EVENT.reply(invalidArgumentsResponse());
-            return;
-        }
-
-        IChannel channel = EVENT.getChannel();
-        String structure = ARGS.get(0);
-        String system = ARGS.get(1);
-        if (exists(structure, system)) {
+        EveTimerModel timer = new EveTimerModel(null, structure, system, null, null);
+        if (!timer.get().isEmpty()) {
             String response = "Timer for structure %s in system %s already exists";
             response = String.format(response, structure, system);
-            EVENT.reply(response);
+            reply(response).subscribe();
             return;
         }
 
-        Long date = parseDate(ARGS.get(2));
-        Long submitter = EVENT.getAuthor().getLongID();
-        EveTimerModel eveTimerModel = new EveTimerModel(channel.getLongID(), structure, system, date, submitter);
-        eveTimerModel.save();
+        EVENT
+                .getMessage()
+                .getChannel()
+                .map(MessageChannel::getId)
+                .map(Snowflake::asLong)
+                .zipWith(
+                        Mono.justOrEmpty(
+                                EVENT
+                                        .getMessage()
+                                        .getAuthor()
+                                        .map(User::getId)
+                                        .map(Snowflake::asLong)
+                        )
+                )
+                .flatMap(tuple -> {
+                    Long channelId = tuple.getT1();
+                    Long authorId = tuple.getT2();
+                    long dateMillis = date.toInstant().toEpochMilli();
 
-        EveTimerModel.createTimer(EVENT.getClient(), eveTimerModel);
+                    EveTimerModel eveTimerModel = new EveTimerModel(channelId, structure, system, dateMillis, authorId);
+                    eveTimerModel.save();
+                    EveTimerModel.createTimer(EVENT.getClient(), eveTimerModel);
+
+                    return reply("Created timer for structure " + structure + " in system " + system + " in " + ARGUMENTS.get(2));
+                })
+                .subscribe();
+    }
+
+    @Override
+    public void registerConverters(TypeConverters converter) {
+        converter.registerStringTo(CommandReceivedEvent.class, ZonedDateTime.class, (s, e) -> {
+            Long days = parseDatePortion(s, Pattern.compile("(\\d+)d"));
+            Long hours = parseDatePortion(s, Pattern.compile("(\\d+)h"));
+            Long minutes = parseDatePortion(s, Pattern.compile("(\\d+)m"));
+            Long seconds = parseDatePortion(s, Pattern.compile("(\\d+)s"));
+
+            ZonedDateTime time = ZonedDateTime.now(EveTimerModel.EVE_TIMEZONE);
+            if (days != null) time = time.plusDays(days);
+            if (hours != null) time = time.plusHours(hours);
+            if (minutes != null) time = time.plusMinutes(minutes);
+            if (seconds != null) time = time.plusSeconds(seconds);
+
+            return time;
+        });
     }
 
 }

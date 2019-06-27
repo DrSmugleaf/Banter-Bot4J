@@ -7,10 +7,10 @@ import com.github.drsmugleaf.pokemon.battle.Tier;
 import com.github.drsmugleaf.pokemon.external.SmogonParser;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon.types.Type;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.*;
 
@@ -66,6 +66,8 @@ public enum Species {
     ARCEUS_WATER("Arceus-Water", Gender.GENDERLESS),
     ARCHEN("Archen"),
     ARCHEOPS("Archeops"),
+    ARGALIS("Argalis"),
+    ARGHONAUT("Arghonaut"),
     ARIADOS("Ariados"),
     ARMALDO("Armaldo"),
     AROMATISSE("Aromatisse"),
@@ -74,6 +76,7 @@ public enum Species {
     AUDINO("Audino"),
     AUDINO_MEGA("Audino-Mega"),
     AURORUS("Aurorus"),
+    AURUMOTH("Aurumoth"),
     AVALUGG("Avalugg"),
     AXEW("Axew"),
     AZELF("Azelf", Gender.GENDERLESS),
@@ -114,7 +117,9 @@ public enum Species {
     BOUFFALANT("Bouffalant"),
     BOUNSWEET("Bounsweet", Gender.FEMALE),
     BRAIXEN("Braixen"),
+    BRATTLER("Brattler"),
     BRAVIARY("Braviary", Gender.MALE),
+    BREEZI("Breezi"),
     BRELOOM("Breloom"),
     BRIONNE("Brionne"),
     BRONZONG("Bronzong", Gender.GENDERLESS),
@@ -130,15 +135,19 @@ public enum Species {
     BUZZWOLE("Buzzwole", Gender.GENDERLESS),
     CACNEA("Cacnea"),
     CACTURNE("Cacturne"),
+    CAIMANOE("Caimanoe"),
     CAMERUPT("Camerupt"),
     CAMERUPT_MEGA("Camerupt-Mega"),
     CARBINK("Carbink", Gender.GENDERLESS),
+    CARIBOLT("Caribolt"),
     CARNIVINE("Carnivine"),
     CARRACOSTA("Carracosta"),
     CARVANHA("Carvanha"),
     CASCOON("Cascoon"),
     CASTFORM("Castform"),
     CATERPIE("Caterpie"),
+    CAWDET("Cawdet"),
+    CAWMODORE("Cawmodore"),
     CELEBI("Celebi", Gender.GENDERLESS),
     CELESTEELA("Celesteela", Gender.GENDERLESS),
     CHANDELURE("Chandelure"),
@@ -170,6 +179,7 @@ public enum Species {
     CLOYSTER("Cloyster"),
     COBALION("Cobalion", Gender.GENDERLESS),
     COFAGRIGUS("Cofagrigus"),
+    COLOSSOIL("Colossoil"),
     COMBEE("Combee"),
     COMBUSKEN("Combusken"),
     COMFEY("Comfey"),
@@ -188,11 +198,15 @@ public enum Species {
     CROAGUNK("Croagunk"),
     CROBAT("Crobat"),
     CROCONAW("Croconaw"),
+    CRUCIBELLE("Crucibelle"),
+    CRUCIBELLE_MEGA("Crucibelle-Mega"),
     CRUSTLE("Crustle"),
     CRYOGONAL("Cryogonal", Gender.GENDERLESS),
     CUBCHOO("Cubchoo"),
     CUBONE("Cubone"),
+    CUPRA("Cupra"),
     CUTIEFLY("Cutiefly"),
+    CYCLOHM("Cyclohm"),
     CYNDAQUIL("Cyndaquil"),
     DARKRAI("Darkrai", Gender.GENDERLESS),
     DARMANITAN("Darmanitan"),
@@ -250,6 +264,7 @@ public enum Species {
     EELEKTRIK("Eelektrik"),
     EELEKTROSS("Eelektross"),
     EEVEE("Eevee"),
+    EEVEE_STARTER("Eevee-Starter"),
     EKANS("Ekans"),
     ELECTABUZZ("Electabuzz"),
     ELECTIVIRE("Electivire"),
@@ -257,10 +272,12 @@ public enum Species {
     ELECTRODE("Electrode", Gender.GENDERLESS),
     ELEKID("Elekid"),
     ELGYEM("Elgyem"),
+    EMBIRCH("Embirch"),
     EMBOAR("Emboar"),
     EMOLGA("Emolga"),
     EMPOLEON("Empoleon"),
     ENTEI("Entei", Gender.GENDERLESS),
+    EQUILIBRA("Equilibra", Gender.GENDERLESS),
     ESCAVALIER("Escavalier"),
     ESPEON("Espeon"),
     ESPURR("Espurr"),
@@ -276,12 +293,15 @@ public enum Species {
     FERALIGATR("Feraligatr"),
     FERROSEED("Ferroseed"),
     FERROTHORN("Ferrothorn"),
+    FIDGIT("Fidgit"),
     FINNEON("Finneon"),
     FLAAFFY("Flaaffy"),
     FLABEBE("Flabebe", Gender.FEMALE),
+    FLARELM("Flarelm"),
     FLAREON("Flareon"),
     FLETCHINDER("Fletchinder"),
     FLETCHLING("Fletchling"),
+    FLOATOY("Floatoy"),
     FLOATZEL("Floatzel"),
     FLOETTE("Floette", Gender.FEMALE),
     FLOETTE_ETERNAL("Floette-Eternal", Gender.FEMALE),
@@ -382,7 +402,6 @@ public enum Species {
     HITMONCHAN("Hitmonchan", Gender.MALE),
     HITMONLEE("Hitmonlee", Gender.MALE),
     HITMONTOP("Hitmontop", Gender.MALE),
-    HO_OH("Ho-Oh", Gender.GENDERLESS),
     HONCHKROW("Honchkrow"),
     HONEDGE("Honedge"),
     HOOPA("Hoopa", Gender.GENDERLESS),
@@ -393,6 +412,7 @@ public enum Species {
     HOUNDOOM("Houndoom"),
     HOUNDOOM_MEGA("Houndoom-Mega"),
     HOUNDOUR("Houndour"),
+    HO_OH("Ho-Oh", Gender.GENDERLESS),
     HUNTAIL("Huntail"),
     HYDREIGON("Hydreigon"),
     HYPNO("Hypno"),
@@ -408,6 +428,7 @@ public enum Species {
     JIRACHI("Jirachi", Gender.GENDERLESS),
     JOLTEON("Jolteon"),
     JOLTIK("Joltik"),
+    JUMBAO("Jumbao"),
     JUMPLUFF("Jumpluff"),
     JYNX("Jynx", Gender.FEMALE),
     KABUTO("Kabuto"),
@@ -420,9 +441,11 @@ public enum Species {
     KARTANA("Kartana", Gender.GENDERLESS),
     KECLEON("Kecleon"),
     KELDEO("Keldeo", Gender.GENDERLESS),
+    KERFLUFFLE("Kerfluffle"),
     KINGDRA("Kingdra"),
     KINGLER("Kingler"),
     KIRLIA("Kirlia"),
+    KITSUNOH("Kitsunoh"),
     KLANG("Klang", Gender.GENDERLESS),
     KLEFKI("Klefki"),
     KLINK("Klink", Gender.GENDERLESS),
@@ -433,6 +456,7 @@ public enum Species {
     KRABBY("Krabby"),
     KRICKETOT("Kricketot"),
     KRICKETUNE("Kricketune"),
+    KRILOWATT("Krilowatt"),
     KROKOROK("Krokorok"),
     KROOKODILE("Krookodile"),
     KYOGRE("Kyogre", Gender.GENDERLESS),
@@ -498,6 +522,7 @@ public enum Species {
     MAGNETON("Magneton", Gender.GENDERLESS),
     MAGNEZONE("Magnezone", Gender.GENDERLESS),
     MAKUHITA("Makuhita"),
+    MALACONDA("Malaconda"),
     MALAMAR("Malamar"),
     MAMOSWINE("Mamoswine"),
     MANAPHY("Manaphy", Gender.GENDERLESS),
@@ -522,8 +547,10 @@ public enum Species {
     MEDICHAM_MEGA("Medicham-Mega"),
     MEDITITE("Meditite"),
     MEGANIUM("Meganium"),
+    MELMETAL("Melmetal", Gender.GENDERLESS),
     MELOETTA("Meloetta", Gender.GENDERLESS),
     MELOETTA_PIROUETTE("Meloetta-Pirouette"),
+    MELTAN("Meltan", Gender.GENDERLESS),
     MEOWSTIC_F("Meowstic-F", Gender.FEMALE),
     MEOWSTIC_M("Meowstic-M", Gender.MALE),
     MEOWTH("Meowth"),
@@ -550,6 +577,7 @@ public enum Species {
     MINUN("Minun"),
     MISDREAVUS("Misdreavus"),
     MISMAGIUS("Mismagius"),
+    MOLLUX("Mollux"),
     MOLTRES("Moltres", Gender.GENDERLESS),
     MONFERNO("Monferno"),
     MORELULL("Morelull"),
@@ -560,17 +588,21 @@ public enum Species {
     MUDSDALE("Mudsdale"),
     MUK("Muk"),
     MUK_ALOLA("Muk-Alola"),
+    MUMBAO("Mumbao"),
     MUNCHLAX("Munchlax"),
     MUNNA("Munna"),
     MURKROW("Murkrow"),
     MUSHARNA("Musharna"),
     NAGANADEL("Naganadel", Gender.GENDERLESS),
     NATU("Natu"),
+    NAVIATHAN("Naviathan"),
     NECROZMA("Necrozma", Gender.GENDERLESS),
     NECROZMA_DAWN_WINGS("Necrozma-Dawn Wings", Gender.GENDERLESS),
     NECROZMA_DAWN_WINGS_ULTRA("Necrozma-Dawn Wings-Ultra", Gender.GENDERLESS),
     NECROZMA_DUSK_MANE("Necrozma-Dusk Mane", Gender.GENDERLESS),
     NECROZMA_DUSK_MANE_ULTRA("Necrozma-Dusk Mane-Ultra", Gender.GENDERLESS),
+    NECTURINE("Necturine", Gender.GENDERLESS),
+    NECTURNA("Necturna", Gender.FEMALE),
     NIDOKING("Nidoking", Gender.MALE),
     NIDOQUEEN("Nidoqueen", Gender.FEMALE),
     NIDORAN_F("Nidoran-F", Gender.FEMALE),
@@ -600,6 +632,7 @@ public enum Species {
     ORICORIO_SENSU("Oricorio-Sensu"),
     OSHAWOTT("Oshawott"),
     PACHIRISU("Pachirisu"),
+    PAJANTOM("Pajantom"),
     PALKIA("Palkia", Gender.GENDERLESS),
     PALOSSAND("Palossand"),
     PALPITOAD("Palpitoad"),
@@ -623,18 +656,21 @@ public enum Species {
     PHIONE("Phione", Gender.GENDERLESS),
     PICHU("Pichu"),
     PIDGEOT("Pidgeot"),
-    PIDGEOT_MEGA("Pidgeot-Mega"),
     PIDGEOTTO("Pidgeotto"),
+    PIDGEOT_MEGA("Pidgeot-Mega"),
     PIDGEY("Pidgey"),
     PIDOVE("Pidove"),
     PIGNITE("Pignite"),
     PIKACHU("Pikachu"),
+    PIKACHU_STARTER("Pikachu-Starter"),
     PIKIPEK("Pikipek"),
     PILOSWINE("Piloswine"),
     PINECO("Pineco"),
     PINSIR("Pinsir"),
     PINSIR_MEGA("Pinsir-Mega"),
     PIPLUP("Piplup"),
+    PLASMANTA("Plasmanta"),
+    PLUFFLE("Pluffle"),
     PLUSLE("Plusle"),
     POIPOLE("Poipole", Gender.GENDERLESS),
     POLITOED("Politoed"),
@@ -644,12 +680,13 @@ public enum Species {
     PONYTA("Ponyta"),
     POOCHYENA("Poochyena"),
     POPPLIO("Popplio"),
-    PORYGON2("Porygon2", Gender.GENDERLESS),
     PORYGON("Porygon", Gender.GENDERLESS),
+    PORYGON2("Porygon2", Gender.GENDERLESS),
     PORYGON_Z("Porygon-Z", Gender.GENDERLESS),
     PRIMARINA("Primarina"),
     PRIMEAPE("Primeape"),
     PRINPLUP("Prinplup"),
+    PRIVATYKE("Privatyke"),
     PROBOPASS("Probopass"),
     PSYDUCK("Psyduck"),
     PUMPKABOO("Pumpkaboo"),
@@ -659,6 +696,7 @@ public enum Species {
     PUPITAR("Pupitar"),
     PURRLOIN("Purrloin"),
     PURUGLY("Purugly"),
+    PYROAK("Pyroak"),
     PYROAR("Pyroar"),
     PYUKUMUKU("Pyukumuku"),
     QUAGSIRE("Quagsire"),
@@ -677,6 +715,7 @@ public enum Species {
     RATTATA_ALOLA("Rattata-Alola"),
     RAYQUAZA("Rayquaza", Gender.GENDERLESS),
     RAYQUAZA_MEGA("Rayquaza-Mega", Gender.GENDERLESS),
+    REBBLE("Rebble", Gender.GENDERLESS),
     REGICE("Regice", Gender.GENDERLESS),
     REGIGIGAS("Regigigas", Gender.GENDERLESS),
     REGIROCK("Regirock", Gender.GENDERLESS),
@@ -685,6 +724,7 @@ public enum Species {
     REMORAID("Remoraid"),
     RESHIRAM("Reshiram", Gender.GENDERLESS),
     REUNICLUS("Reuniclus"),
+    REVENANKH("Revenankh"),
     RHYDON("Rhydon"),
     RHYHORN("Rhyhorn"),
     RHYPERIOR("Rhyperior"),
@@ -725,6 +765,7 @@ public enum Species {
     SCOLIPEDE("Scolipede"),
     SCRAFTY("Scrafty"),
     SCRAGGY("Scraggy"),
+    SCRATCHET("Scratchet"),
     SCYTHER("Scyther"),
     SEADRA("Seadra"),
     SEAKING("Seaking"),
@@ -793,13 +834,16 @@ public enum Species {
     SLUGMA("Slugma"),
     SLURPUFF("Slurpuff"),
     SMEARGLE("Smeargle"),
+    SMOKOMODO("Smokomodo"),
     SMOOCHUM("Smoochum", Gender.FEMALE),
+    SNAELSTROM("Snaelstrom"),
     SNEASEL("Sneasel"),
     SNIVY("Snivy"),
     SNORLAX("Snorlax"),
     SNORUNT("Snorunt"),
     SNOVER("Snover"),
     SNUBBULL("Snubbull"),
+    SNUGGLOW("Snugglow"),
     SOLGALEO("Solgaleo", Gender.GENDERLESS),
     SOLOSIS("Solosis"),
     SOLROCK("Solrock", Gender.GENDERLESS),
@@ -823,6 +867,7 @@ public enum Species {
     STEELIX_MEGA("Steelix-Mega"),
     STEENEE("Steenee", Gender.FEMALE),
     STOUTLAND("Stoutland"),
+    STRATAGEM("Stratagem", Gender.GENDERLESS),
     STUFFUL("Stufful"),
     STUNFISK("Stunfisk"),
     STUNKY("Stunky"),
@@ -841,7 +886,10 @@ public enum Species {
     SWINUB("Swinub"),
     SWIRLIX("Swirlix"),
     SWOOBAT("Swoobat"),
+    SYCLANT("Syclant"),
+    SYCLAR("Syclar"),
     SYLVEON("Sylveon"),
+    TACTITE("Tactite", Gender.GENDERLESS),
     TAILLOW("Taillow"),
     TALONFLAME("Talonflame"),
     TANGELA("Tangela"),
@@ -865,6 +913,7 @@ public enum Species {
     TOGEKISS("Togekiss"),
     TOGEPI("Togepi"),
     TOGETIC("Togetic"),
+    TOMOHAWK("Tomohawk"),
     TORCHIC("Torchic"),
     TORKOAL("Torkoal"),
     TORNADUS("Tornadus", Gender.MALE),
@@ -920,7 +969,11 @@ public enum Species {
     VOLBEAT("Volbeat", Gender.MALE),
     VOLCANION("Volcanion", Gender.GENDERLESS),
     VOLCARONA("Volcarona"),
+    VOLKRAKEN("Volkraken"),
+    VOLKRITTER("Volkritter"),
     VOLTORB("Voltorb", Gender.GENDERLESS),
+    VOODOLL("Voodoll"),
+    VOODOOM("Voodoom"),
     VULLABY("Vullaby", Gender.FEMALE),
     VULPIX("Vulpix"),
     VULPIX_ALOLA("Vulpix-Alola"),
@@ -970,6 +1023,7 @@ public enum Species {
     ZWEILOUS("Zweilous"),
     ZYGARDE("Zygarde", Gender.GENDERLESS),
     ZYGARDE_10("Zygarde-10%", Gender.GENDERLESS),
+    ZYGARDE_10_COMPLETE("Zygarde-10%-Complete", Gender.GENDERLESS),
     ZYGARDE_COMPLETE("Zygarde-Complete", Gender.GENDERLESS);
 
     static {
@@ -1000,7 +1054,14 @@ public enum Species {
                 if (!suffix.isEmpty()) {
                     pokemonName = pokemonName.concat("-" + suffix);
                 }
-                Species pokemon = getPokemon(pokemonName);
+
+                Species pokemon;
+                try {
+                    pokemon = getPokemon(pokemonName);
+                } catch (NullPointerException e) {
+                    System.err.println(e.getMessage());
+                    continue;
+                }
 
                 int hp = alt.getInt("hp");
                 int attack = alt.getInt("atk");
@@ -1013,7 +1074,14 @@ public enum Species {
 
                 JSONArray jsonAbilities = alt.getJSONArray("abilities");
                 for (int k = 0; k < jsonAbilities.length(); k++) {
-                    Abilities ability = Abilities.getAbility(jsonAbilities.getString(k));
+                    Abilities ability;
+                    try {
+                        ability = Abilities.getAbility(jsonAbilities.getString(k));
+                    } catch (NullPointerException e) {
+                        System.err.println(e.getMessage());
+                        continue;
+                    }
+
                     pokemon.addAbilities(ability);
                 }
 
@@ -1088,13 +1156,13 @@ public enum Species {
 
     @NotNull
     public static Species getPokemon(@NotNull String pokemon) {
-        pokemon = pokemon.toLowerCase();
+        String pokemonLowerCase = pokemon.toLowerCase();
 
-        if (!Holder.MAP.containsKey(pokemon)) {
+        if (!Holder.MAP.containsKey(pokemonLowerCase)) {
             throw new NullPointerException("Pokemon " + pokemon + " doesn't exist");
         }
 
-        return Holder.MAP.get(pokemon);
+        return Holder.MAP.get(pokemonLowerCase);
     }
 
     public static boolean isArceus(@NotNull Pokemon pokemon) {

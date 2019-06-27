@@ -1,23 +1,25 @@
 package com.github.drsmugleaf.commands.api.registry;
 
-import com.github.drsmugleaf.commands.api.Command;
-
-import org.jetbrains.annotations.NotNull;
-
 /**
  * Created by DrSmugleaf on 01/09/2018
  */
 public class CommandSearchResult {
 
-    @NotNull
-    public final Class<? extends Command> COMMAND;
+    private final Entry ENTRY;
 
-    @NotNull
-    public final String MATCHED_NAME;
+    private final String MATCHED_NAME;
 
-    CommandSearchResult(@NotNull Class<? extends Command> command, @NotNull String matchedName) {
-        COMMAND = command;
+    CommandSearchResult(Entry entry, String matchedName) {
+        ENTRY = entry;
         MATCHED_NAME = matchedName;
+    }
+
+    public Entry getEntry() {
+        return ENTRY;
+    }
+
+    public String getMatchedName() {
+        return MATCHED_NAME;
     }
 
 }

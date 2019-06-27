@@ -1,33 +1,39 @@
 package com.github.drsmugleaf.commands.music;
 
-import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 import com.github.drsmugleaf.music.AudioResultHandler;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IUser;
-
-import org.jetbrains.annotations.NotNull;
+import discord4j.core.object.VoiceState;
+import discord4j.core.object.entity.Member;
+import discord4j.core.object.entity.TextChannel;
+import discord4j.core.object.entity.VoiceChannel;
+import reactor.core.publisher.Mono;
+import reactor.util.function.Tuples;
 
 /**
  * Created by DrSmugleaf on 09/06/2018
  */
-@CommandInfo(tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.DELETE_COMMAND_MESSAGE})
+@CommandInfo(aliases = {"e"}, tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.DELETE_COMMAND_MESSAGE})
 public class Play extends MusicCommand {
-
-    protected Play(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
-        super(event, args);
-    }
 
     @Override
     public void run() {
-        IChannel channel = EVENT.getChannel();
+        EVENT
+                .getMessage()
+                .getChannel()
+                .cast(TextChannel.class)
+                .zipWith(Mono.justOrEmpty(EVENT.getMember()))
+                .zipWhen(tuple -> tuple.getT2().getVoiceState().flatMap(VoiceState::getChannel))
+                .map(tuple -> Tuples.of(tuple.getT1().getT1(), tuple.getT1().getT2(), tuple.getT2()))
+                .subscribe(tuple -> {
+                    TextChannel textChannel = tuple.getT1();
+                    Member author = tuple.getT2();
+                    VoiceChannel voiceChannel = tuple.getT3();
 
-        IUser author = EVENT.getAuthor();
-        String searchString = String.join(" ", ARGS);
+                    String searchString = String.join(" ", ARGUMENTS);
 
-        Music.PLAYER_MANAGER.loadItem(searchString, new AudioResultHandler(channel, author, searchString));
+                    Music.PLAYER_MANAGER.loadItem(searchString, new AudioResultHandler(textChannel, author, voiceChannel, searchString));
+                });
     }
 
 }

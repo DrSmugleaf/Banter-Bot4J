@@ -1,9 +1,8 @@
 package com.github.drsmugleaf.translator;
 
+import com.github.drsmugleaf.Nullable;
 import org.jetbrains.annotations.Contract;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,13 +74,11 @@ public enum Languages {
     WELSH("Welsh", "cy"),
     YUCATEC_MAYA("Yucatec Maya", "yua");
 
-    @NotNull
     private final String NAME;
 
-    @NotNull
     private final String CODE;
 
-    Languages(@NotNull String name, @NotNull String code) {
+    Languages(String name, String code) {
         NAME = name;
         CODE = code;
         Holder.MAP.put(NAME.toLowerCase(), this);
@@ -89,18 +86,18 @@ public enum Languages {
     }
 
     @Nullable
-    public static Languages getLanguage(@NotNull String name) {
+    public static Languages getLanguage(String name) {
         return Holder.MAP.get(name.toLowerCase());
     }
 
     @Contract(pure = true)
-    @NotNull
+
     public String getName() {
         return NAME;
     }
 
     @Contract(pure = true)
-    @NotNull
+
     public String getCode() {
         return CODE;
     }

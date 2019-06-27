@@ -1,13 +1,12 @@
 package com.github.drsmugleaf.tripwire.models;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tripwire.API;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,11 +33,9 @@ public class Wormhole {
     @SerializedName("parent")
     public final String PARENT;
 
-    @NotNull
     @SerializedName("life")
     public final String LIFE;
 
-    @NotNull
     @SerializedName("mass")
     public final String MASS;
 
@@ -51,8 +48,8 @@ public class Wormhole {
             int secondaryID,
             @Nullable String type,
             @Nullable String parent,
-            @NotNull String life,
-            @NotNull String mass,
+            String life,
+            String mass,
             double maskID
     ) {
         ID = id;
@@ -65,13 +62,11 @@ public class Wormhole {
         MASK_ID = maskID;
     }
 
-    @NotNull
-    public static Wormhole fromJson(@NotNull JsonElement json) {
+    public static Wormhole fromJson(JsonElement json) {
         return API.GSON.fromJson(json, Wormhole.class);
     }
 
-    @NotNull
-    public static List<Wormhole> fromJson(@NotNull String json) {
+    public static List<Wormhole> fromJson(String json) {
         JsonObject wormholes = new JsonParser().parse(json).getAsJsonObject().getAsJsonObject("wormholes");
         List<Wormhole> wormholeList = new ArrayList<>();
 

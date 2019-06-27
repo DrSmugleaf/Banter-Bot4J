@@ -2,6 +2,7 @@ package com.github.drsmugleaf.pokemon.item;
 
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,6 +28,7 @@ public class Item {
         return item.CATEGORY;
     }
 
+    @Contract(pure = true)
     @Nullable
     public Items get() {
         return item;

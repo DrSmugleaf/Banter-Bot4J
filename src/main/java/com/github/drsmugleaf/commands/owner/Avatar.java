@@ -1,17 +1,16 @@
 package com.github.drsmugleaf.commands.owner;
 
-import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.tags.Tags;
-import sx.blah.discord.util.Image;
+import discord4j.core.object.util.Image;
 
-import org.jetbrains.annotations.NotNull;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.spi.ImageReaderSpi;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Iterator;
@@ -22,39 +21,51 @@ import java.util.Iterator;
 @CommandInfo(tags = {Tags.OWNER_ONLY})
 public class Avatar extends Command {
 
-    protected Avatar(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
-        super(event, args);
-    }
-
     @Override
     public void run() {
-        if (ARGS.isEmpty()) {
-            EVENT.reply("You didn't provide a link to change the bot's image to.");
+        if (ARGUMENTS.isEmpty()) {
+            reply("You didn't provide a link to change the bot's image to.").subscribe();
             return;
         }
 
         try {
-            URL url = new URL(ARGS.get(0));
+            URL url = new URL(ARGUMENTS.get(0));
             URLConnection connection = url.openConnection();
             String contentType = connection.getContentType();
+
+            byte[] data = new byte[]{};
+            try (InputStream stream = connection.getInputStream()) {
+                ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
+                int n;
+
+                while ((n = stream.read(data)) > 0) {
+                    byteOutput.write(data, 0, n);
+                }
+            }
 
             String suffix = null;
             Iterator<ImageReader> readers = ImageIO.getImageReadersByMIMEType(contentType);
 
-            while (suffix == null && readers.hasNext()) {
+            while(suffix == null && readers.hasNext()) {
                 ImageReaderSpi provider = readers.next().getOriginatingProvider();
-                if (provider != null) {
+                if(provider != null) {
                     String[] suffixes = provider.getFileSuffixes();
-                    if (suffixes != null) {
+                    if(suffixes != null) {
                         suffix = suffixes[0];
                     }
                 }
             }
 
-            EVENT.getClient().changeAvatar(Image.forUrl(suffix, ARGS.get(0)));
-        } catch (IOException e) {
+            if (suffix == null) {
+                reply("Unable to get the image's extension").subscribe();
+                return;
+            }
+
+            Image image = Image.ofRaw(data, Image.Format.valueOf(suffix));
+            EVENT.getClient().edit(edit -> edit.setAvatar(image));
+        } catch(IOException e) {
             LOGGER.error("Malformed URL or error opening connection", e);
-            EVENT.reply("Invalid image URL");
+            reply("Invalid image URL").subscribe();
         }
     }
 

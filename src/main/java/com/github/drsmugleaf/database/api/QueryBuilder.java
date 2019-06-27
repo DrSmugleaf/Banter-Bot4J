@@ -3,7 +3,6 @@ package com.github.drsmugleaf.database.api;
 import com.github.drsmugleaf.database.api.annotations.Column;
 import com.github.drsmugleaf.database.api.annotations.Table;
 
-import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,13 +14,11 @@ import java.util.*;
  */
 class QueryBuilder<T extends Model<T>> {
 
-    @NotNull
     private final Class<T> MODEL;
 
-    @NotNull
     private final List<TypeResolver> COLUMNS = new ArrayList<>();
 
-    QueryBuilder(@NotNull Class<T> model) {
+    QueryBuilder(Class<T> model) {
         MODEL = model;
         for (Field field : MODEL.getDeclaredFields()) {
             if (field.isAnnotationPresent(Column.class)) {
@@ -31,7 +28,7 @@ class QueryBuilder<T extends Model<T>> {
     }
 
     @SuppressWarnings("unchecked")
-    QueryBuilder(@NotNull Model<T> model) {
+    QueryBuilder(Model<T> model) {
         MODEL = (Class<T>) model.getClass();
         for (Field field : MODEL.getDeclaredFields()) {
             if (field.isAnnotationPresent(Column.class)) {
@@ -40,8 +37,7 @@ class QueryBuilder<T extends Model<T>> {
         }
     }
 
-    @NotNull
-    Query createIfNotExists(@NotNull Model<T> model) {
+    Query createIfNotExists(Model<T> model) {
         StringBuilder query = new StringBuilder();
         StringBuilder queryInsert = new StringBuilder();
         StringBuilder queryValues = new StringBuilder();
@@ -107,7 +103,6 @@ class QueryBuilder<T extends Model<T>> {
         }
     }
 
-    @NotNull
     Query createTable() {
         StringBuilder query = new StringBuilder();
         StringBuilder queryConstraint = new StringBuilder();
@@ -173,8 +168,7 @@ class QueryBuilder<T extends Model<T>> {
         }
     }
 
-    @NotNull
-    Query get(@NotNull Model<T> model) {
+    Query get(Model<T> model) {
         StringBuilder query = new StringBuilder();
         Table tableAnnotation = MODEL.getDeclaredAnnotation(Table.class);
         String tableName = tableAnnotation.name();
@@ -226,8 +220,7 @@ class QueryBuilder<T extends Model<T>> {
         }
     }
 
-    @NotNull
-    Query save(@NotNull Model<T> model) {
+    Query save(Model<T> model) {
         StringBuilder query = new StringBuilder();
         StringBuilder queryInsert = new StringBuilder();
         StringBuilder queryValues = new StringBuilder();
@@ -314,8 +307,7 @@ class QueryBuilder<T extends Model<T>> {
         }
     }
 
-    @NotNull
-    Query delete(@NotNull Model<T> model) {
+    Query delete(Model<T> model) {
         StringBuilder query = new StringBuilder();
         Table tableAnnotation = MODEL.getDeclaredAnnotation(Table.class);
         String tableName = tableAnnotation.name();

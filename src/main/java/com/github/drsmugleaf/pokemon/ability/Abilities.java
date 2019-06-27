@@ -112,6 +112,7 @@ public enum Abilities implements IModifier {
     MOLD_BREAKER("Mold Breaker"),
     MOODY("Moody"),
     MOTOR_DRIVE("Motor Drive"),
+    MOUNTAINEER("Mountaineer"),
     MOXIE("Moxie"),
     MULTISCALE("Multiscale"),
     MULTITYPE("Multitype"),
@@ -125,6 +126,7 @@ public enum Abilities implements IModifier {
     OVERGROW("Overgrow"),
     OWN_TEMPO("Own Tempo"),
     PARENTAL_BOND("Parental Bond"),
+    PERSISTENT("Persistent"),
     PICKPOCKET("Pickpocket"),
     PICKUP("Pickup"),
     PIXILATE("Pixilate"),
@@ -140,6 +142,7 @@ public enum Abilities implements IModifier {
     QUICK_FEET("Quick Feet"),
     RAIN_DISH("Rain Dish"),
     RATTLED("Rattled"),
+    REBOUND("Rebound"),
     RECKLESS("Reckless"),
     REFRIGERATE("Refrigerate"),
     REGENERATOR("Regenerator"),
@@ -266,13 +269,13 @@ public enum Abilities implements IModifier {
             return NONE;
         }
 
-        abilityName = abilityName.toLowerCase();
+        String abilityNameLowerCase = abilityName.toLowerCase();
 
-        if(!Holder.MAP.containsKey(abilityName)) {
+        if(!Holder.MAP.containsKey(abilityNameLowerCase)) {
             throw new NullPointerException("Ability " + abilityName + " doesn't exist");
         }
 
-        return Holder.MAP.get(abilityName);
+        return Holder.MAP.get(abilityNameLowerCase);
     }
 
     @NotNull

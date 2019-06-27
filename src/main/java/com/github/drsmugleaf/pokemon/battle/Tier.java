@@ -16,6 +16,8 @@ public enum Tier {
 
     ANYTHING_GOES("Anything Goes", "AG"),
     UBER("Uber", "Uber"),
+    LGPE_OU("Let's Go! Pikachu and Eevee", "LGPE OU"),
+    CREATE_A_POKEMON("Create-a-Pokemon", "CAP"),
     OVERUSED("OverUsed", "OU"),
     UNDERUSED_BANLIST("UnderUsed Banlist", "UUBL"),
     UNDERUSED("UnderUsed", "UU"),

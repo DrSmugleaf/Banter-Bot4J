@@ -1,25 +1,37 @@
 package com.github.drsmugleaf.commands.api.registry;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.CommandInfo;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import com.github.drsmugleaf.commands.api.converter.TypeConverters;
+import com.google.common.collect.ImmutableList;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by DrSmugleaf on 21/06/2018
  */
 public class Registry {
 
-    @NotNull
-    private final List<Class<Command>> COMMANDS;
+    private final TypeConverters CONVERTERS;
 
-    public Registry(@NotNull List<Class<Command>> commands) {
-        COMMANDS = Collections.unmodifiableList(commands);
+    private final ImmutableList<Entry> ENTRIES;
+
+    public Registry(List<Class<Command>> commands) {
+        CONVERTERS = new TypeConverters();
+
+        List<Entry> entries = new ArrayList<>();
+        for (Class<Command> command : commands) {
+            Entry entry = new Entry(command);
+            entries.add(entry);
+        }
+
+        ENTRIES = ImmutableList.copyOf(entries);
+        CONVERTERS.registerConverters(entries);
 
         List<CommandSearchResult> duplicates = findDuplicates();
         if (!duplicates.isEmpty()) {
@@ -28,25 +40,19 @@ public class Registry {
         }
     }
 
-    @NotNull
+    public TypeConverters getConverters() {
+        return CONVERTERS;
+    }
+
     private List<CommandSearchResult> findDuplicates() {
         Set<String> uniqueAliases = new HashSet<>();
         List<CommandSearchResult> duplicateAliases = new ArrayList<>();
 
-        for (Class<Command> command : COMMANDS) {
-            String commandName = Command.getName(command);
-            if (!uniqueAliases.add(commandName)) {
-                duplicateAliases.add(new CommandSearchResult(command, commandName));
-            }
-
-            CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
-            if (annotation != null) {
-                for (String alias : annotation.aliases()) {
-                    alias = alias.toLowerCase();
-
-                    if (!uniqueAliases.add(alias)) {
-                        duplicateAliases.add(new CommandSearchResult(command, alias));
-                    }
+        for (Entry entry : ENTRIES) {
+            for (String alias : entry.getAllAliases()) {
+                if (!uniqueAliases.add(alias)) {
+                    CommandSearchResult result = new CommandSearchResult(entry, alias);
+                    duplicateAliases.add(result);
                 }
             }
         }
@@ -54,43 +60,37 @@ public class Registry {
         return duplicateAliases;
     }
 
-    @NotNull
-    private String formatDuplicates(@NotNull List<CommandSearchResult> duplicates) {
+    private String formatDuplicates(List<CommandSearchResult> duplicates) {
         if (duplicates.isEmpty()) {
-            return "";
+            return "No duplicate command names found";
         }
 
         StringBuilder builder = new StringBuilder("Duplicate command names found:");
         for (CommandSearchResult duplicate : duplicates) {
             builder
                     .append("\n")
-                    .append(duplicate.COMMAND)
+                    .append(duplicate.getEntry())
                     .append(": ")
-                    .append(duplicate.MATCHED_NAME);
+                    .append(duplicate.getMatchedName());
         }
 
         return builder.toString();
     }
 
     @Nullable
-    public CommandSearchResult findCommand(@NotNull MessageReceivedEvent event) {
-        String message = event.getMessage().getContent().substring(BanterBot4J.BOT_PREFIX.length()).toLowerCase();
+    public CommandSearchResult findCommand(String message) {
+        message = message.substring(BanterBot4J.BOT_PREFIX.length()).toLowerCase();
         List<CommandSearchResult> matches = new ArrayList<>();
 
         List<String> argsList = Arguments.parseArgs(message);
         while (argsList.size() > 0) {
             String args = String.join(" ", argsList);
 
-            for (Class<Command> command : COMMANDS) {
-                String commandName = Command.getName(command);
-                if (commandName.equalsIgnoreCase(args)) {
-                    matches.add(new CommandSearchResult(command, commandName));
-                }
-
-                List<String> aliases = Command.getAliases(command);
-                for (String alias : aliases) {
+            for (Entry entry : ENTRIES) {
+                for (String alias : entry.getAllAliases()) {
                     if (alias.equalsIgnoreCase(args)) {
-                        matches.add(new CommandSearchResult(command, alias));
+                        CommandSearchResult result = new CommandSearchResult(entry, alias);
+                        matches.add(result);
                     }
                 }
             }

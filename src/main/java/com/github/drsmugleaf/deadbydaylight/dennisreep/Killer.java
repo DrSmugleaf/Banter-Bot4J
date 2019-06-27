@@ -1,53 +1,66 @@
 package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
-import com.github.drsmugleaf.deadbydaylight.Killers;
+import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.deadbydaylight.ICharacter;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
-import org.jetbrains.annotations.NotNull;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 /**
  * Created by DrSmugleaf on 06/11/2018
  */
-public class Killer {
+public class Killer implements ICharacter {
 
-    @NotNull
+    @SerializedName("KillerName")
+    public final String NAME;
+
     @SerializedName("Image")
     public final String IMAGE_URL;
 
-    @NotNull
-    @SerializedName("KillerName")
-    public final Killers KILLER;
-
-    @NotNull
     @SerializedName("Tier")
     public final Tiers TIER;
 
-    @NotNull
     @SerializedName("Rating")
     public final double RATING;
 
-    @NotNull
     @SerializedName("Ratings")
     public final long RATINGS;
 
-    Killer(@NotNull String imageUrl, @NotNull Killers killer, @NotNull Tiers tier, double rating, long ratings) {
+    Killer(String name, String imageUrl, Tiers tier, double rating, long ratings) {
+        NAME = name;
         IMAGE_URL = imageUrl;
-        KILLER = killer;
         TIER = tier;
         RATING = rating;
         RATINGS = ratings;
     }
 
-    @NotNull
-    public static Killer from(@NotNull JsonElement json) {
-        JsonObject object = json.getAsJsonObject();
-        String killerName = object.get("KillerName").getAsString();
-        killerName = NameResolver.resolveKillerName(killerName);
-        object.addProperty("KillerName", killerName);
-
+    public static Killer from(JsonElement json) {
         return API.GSON.fromJson(json, Killer.class);
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
+    @Override
+    public InputStream getImage() {
+        try {
+            return new URL(IMAGE_URL).openStream();
+        } catch (IOException e) {
+            BanterBot4J.warn("Error getting image from url " + IMAGE_URL);
+            return API.getDBDLogo();
+        }
+    }
+
+    @Nullable
+    @Override
+    public Double getRating() {
+        return RATING;
     }
 
 }

@@ -1,11 +1,10 @@
 package com.github.drsmugleaf.database.api;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.env.Keys;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -18,10 +17,8 @@ import java.util.regex.Pattern;
  */
 class DatabaseConnection {
 
-    @NotNull
     private static final String DRIVER = "org.postgresql.Driver";
 
-    @NotNull
     static HikariDataSource initialize() {
         HikariDataSource connection = getDataSource();
 
@@ -63,8 +60,7 @@ class DatabaseConnection {
         }
     }
 
-    @NotNull
-    private static Map<String, String> getCredentials(@NotNull String uri) {
+    private static Map<String, String> getCredentials(String uri) {
         Pattern pattern = Pattern.compile("^postgres://(.*):(.*)@(.*):(.*)/(.*)");
         Matcher matcher = pattern.matcher(uri);
 

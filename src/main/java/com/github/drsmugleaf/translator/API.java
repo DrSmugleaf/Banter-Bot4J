@@ -1,9 +1,9 @@
 package com.github.drsmugleaf.translator;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.env.Keys;
 import org.json.XML;
 
-import org.jetbrains.annotations.Nullable;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class API {
 
         try {
             text = URLEncoder.encode(text, "UTF8");
-            URL url = new URL(PATH + "?from=" + from.getCode() + "&to=" + to.getCode() + "&text=" + text);
+            URL url = new URL(PATH + "?from=" + from.getCode()+ "&to=" + to.getCode() + "&text=" + text);
 
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
             connection.setRequestMethod("GET");

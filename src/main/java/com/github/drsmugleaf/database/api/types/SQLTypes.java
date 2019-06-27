@@ -1,10 +1,8 @@
 package com.github.drsmugleaf.database.api.types;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.database.api.InvalidColumnException;
 import com.github.drsmugleaf.database.api.TypeResolver;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by DrSmugleaf on 06/04/2018.
@@ -12,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 public interface SQLTypes {
 
     @Nullable
-    static <T extends Enum<T> & SQLTypes> String getType(Class<T> types, @NotNull TypeResolver column) {
+    static <T extends Enum<T> & SQLTypes> String getType(Class<T> types, TypeResolver column) {
         Class<?> columnType = column.FIELD.getType();
         if (column.isAutoIncremented()) {
             if (columnType == Integer.class) {
@@ -23,7 +21,7 @@ public interface SQLTypes {
                 throw new InvalidColumnException("Auto incremented column " + column.FIELD + " is neither an Integer nor a Long");
             }
         }
-
+        
         for (T type : types.getEnumConstants()) {
             if (type.getJavaType() == String.class && columnType.isEnum()) {
                 return type.getName();
@@ -35,10 +33,8 @@ public interface SQLTypes {
         return null;
     }
 
-    @NotNull
     String getName();
 
-    @NotNull
     Class<?> getJavaType();
 
 }

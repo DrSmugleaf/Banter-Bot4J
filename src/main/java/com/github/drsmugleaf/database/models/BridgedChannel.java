@@ -7,9 +7,8 @@ import com.github.drsmugleaf.database.api.annotations.Relation;
 import com.github.drsmugleaf.database.api.annotations.RelationTypes;
 import com.github.drsmugleaf.database.api.annotations.Table;
 import com.github.drsmugleaf.translator.Languages;
-import sx.blah.discord.handle.obj.IChannel;
-
-import org.jetbrains.annotations.NotNull;
+import discord4j.core.object.entity.TextChannel;
+import discord4j.core.object.util.Snowflake;
 
 /**
  * Created by DrSmugleaf on 19/01/2018.
@@ -20,7 +19,7 @@ public class BridgedChannel extends Model<BridgedChannel> {
     @Column(name = "channel")
     @Column.Id
     @Relation(type = RelationTypes.ManyToOne, columnName = "id")
-    public Channel channel;
+    public DiscordChannel channel;
 
     @Column(name = "channel_language")
     public Languages channelLanguage;
@@ -28,31 +27,37 @@ public class BridgedChannel extends Model<BridgedChannel> {
     @Column(name = "bridged_channel")
     @Column.Id
     @Relation(type = RelationTypes.ManyToOne, columnName = "id")
-    public Channel bridged;
+    public DiscordChannel bridged;
 
     @Column(name = "bridged_language")
     public Languages bridgedLanguage;
 
     public BridgedChannel(Long channelID, Long bridgedID) {
-        channel = new Channel(channelID);
-        bridged = new Channel(bridgedID);
+        channel = new DiscordChannel(channelID);
+        bridged = new DiscordChannel(bridgedID);
     }
 
     public BridgedChannel(Long channelID) {
-        channel = new Channel(channelID);
+        channel = new DiscordChannel(channelID);
     }
 
-    private BridgedChannel() {
+    private BridgedChannel() {}
+
+    private static TextChannel from(DiscordChannel channel) {
+        return BanterBot4J
+                .CLIENT
+                .getChannelById(Snowflake.of(channel.id))
+                .cast(TextChannel.class)
+                .blockOptional()
+                .orElseThrow(() -> new IllegalStateException("No text channel found with id " + channel.id));
     }
 
-    @NotNull
-    public IChannel channel() {
-        return BanterBot4J.CLIENT.getChannelByID(channel.id);
+    public TextChannel channel() {
+        return from(channel);
     }
 
-    @NotNull
-    public IChannel bridged() {
-        return BanterBot4J.CLIENT.getChannelByID(bridged.id);
+    public TextChannel bridged() {
+        return from(bridged);
     }
 
 }

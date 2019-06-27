@@ -1,13 +1,12 @@
 package com.github.drsmugleaf.database.api;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.database.api.annotations.Column;
 import com.github.drsmugleaf.database.api.annotations.Relation;
 import com.github.drsmugleaf.database.api.annotations.Table;
 import com.github.drsmugleaf.database.api.types.PostgresTypes;
 import com.github.drsmugleaf.database.api.types.SQLTypes;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -19,15 +18,13 @@ import java.util.Map;
  */
 public class TypeResolver {
 
-    @NotNull
     public final Field FIELD;
 
-    TypeResolver(@NotNull Field type) {
+    TypeResolver(Field type) {
         FIELD = type;
     }
 
-    @NotNull
-    private static TypeResolver getDeepRelatedField(@NotNull Field field) {
+    private static TypeResolver getDeepRelatedField(Field field) {
         Relation relation = field.getDeclaredAnnotation(Relation.class);
         String relatedColumnName = relation.columnName();
 
@@ -48,7 +45,6 @@ public class TypeResolver {
         return new TypeResolver(relatedField);
     }
 
-    @NotNull
     private <T extends Annotation> T getAnnotation(Class<T> annotation) {
         if (!FIELD.isAnnotationPresent(annotation)) {
             throw new NullPointerException("Field " + FIELD + " doesn't have a " + annotation.getName() + " annotation");
@@ -65,7 +61,6 @@ public class TypeResolver {
         return FIELD.getDeclaredAnnotation(Column.AutoIncrement.class) != null;
     }
 
-    @NotNull
     String getDataType() {
         Column columnAnnotation = getColumnAnnotation();
 
@@ -90,7 +85,6 @@ public class TypeResolver {
         }
     }
 
-    @NotNull
     Table getTableAnnotation() {
         Class<?> type = FIELD.getDeclaringClass();
         if (!type.isAnnotationPresent(Table.class)) {
@@ -100,17 +94,14 @@ public class TypeResolver {
         return type.getDeclaredAnnotation(Table.class);
     }
 
-    @NotNull
     Column getColumnAnnotation() {
         return getAnnotation(Column.class);
     }
 
-    @NotNull
     Relation getRelationAnnotation() {
         return getAnnotation(Relation.class);
     }
 
-    @NotNull
     TypeResolver getRelatedField() {
         Relation relation = getRelationAnnotation();
         String relatedColumnName = relation.columnName();
@@ -125,7 +116,6 @@ public class TypeResolver {
         return new TypeResolver(field);
     }
 
-    @NotNull
     String getExternalColumnName() {
         Column columnAnnotation = getColumnAnnotation();
         Table tableAnnotation = FIELD.getDeclaredAnnotation(Table.class);
@@ -167,14 +157,12 @@ public class TypeResolver {
         }
     }
 
-    @NotNull
     @SuppressWarnings("unchecked")
-    private <T extends Enum<T>> Enum<T> toEnum(@NotNull Class<?> type, @NotNull Object object) {
+    private <T extends Enum<T>> Enum<T> toEnum(Class<?> type, Object object) {
         return Enum.valueOf((Class<T>) type, object.toString());
     }
 
-    @NotNull
-    private Collection<?> toCollection(@NotNull Class<?> type) {
+    private Collection<?> toCollection(Class<?> type) {
         try {
             return (Collection<?>) type.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
@@ -182,8 +170,7 @@ public class TypeResolver {
         }
     }
 
-    @NotNull
-    private Map<?, ?> toMap(@NotNull Class<?> type) {
+    private Map<?, ?> toMap(Class<?> type) {
         try {
             return (Map<?, ?>) type.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
@@ -228,7 +215,6 @@ public class TypeResolver {
         }
     }
 
-    @NotNull
     String getColumnDefinition() {
         StringBuilder definition = new StringBuilder();
         Column column = getColumnAnnotation();

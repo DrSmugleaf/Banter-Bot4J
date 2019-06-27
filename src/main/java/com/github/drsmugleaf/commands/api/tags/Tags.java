@@ -2,12 +2,13 @@ package com.github.drsmugleaf.commands.api.tags;
 
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.handle.obj.IVoiceChannel;
-import sx.blah.discord.util.MissingPermissionsException;
+import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.object.VoiceState;
+import discord4j.core.object.entity.Member;
+import discord4j.core.object.util.Snowflake;
+import reactor.core.publisher.Mono;
 
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
 /**
  * Created by DrSmugleaf on 16/01/2018.
@@ -15,91 +16,97 @@ import org.jetbrains.annotations.NotNull;
 public enum Tags implements Tag {
 
     DELETE_COMMAND_MESSAGE {
+
         @Override
-        public void execute(@NotNull CommandReceivedEvent event) {
-            try {
-                event.getMessage().delete();
-            } catch (MissingPermissionsException ignored) {
-            }
-        }
-    },
-    GUILD_ONLY {
-        @Override
-        public boolean isValid(@NotNull CommandReceivedEvent event) {
-            return event.getGuild() != null;
+        public void execute(CommandReceivedEvent event) {
+            event.getMessage().delete().subscribe();
         }
 
-        @NotNull
+    },
+    GUILD_ONLY {
+
+        @Override
+        public boolean isValid(MessageCreateEvent event) {
+            return event.getGuild().blockOptional().isPresent();
+        }
+
         @Override
         public String message() {
             return "That command must be used in a server channel.";
         }
+
     },
     OWNER_ONLY {
+
         @Override
-        public boolean isValid(@NotNull CommandReceivedEvent event) {
-            return Command.isOwner(event.getAuthor());
+        public boolean isValid(MessageCreateEvent event) {
+            return Command.isOwner(event.getMember().orElse(null));
         }
 
-        @NotNull
         @Override
         public String message() {
             return "You don't have permission to use that command.";
         }
+
     },
     SAME_VOICE_CHANNEL {
+
         @Override
-        public boolean isValid(@NotNull CommandReceivedEvent event) {
+        public boolean isValid(MessageCreateEvent event) {
             if (!GUILD_ONLY.isValid(event)) {
                 return false;
             }
 
-            IGuild guild = event.getGuild();
-            IUser author = event.getAuthor();
-            IVoiceChannel authorVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
-            IUser bot = event.getClient().getOurUser();
-            IVoiceChannel botVoiceChannel = bot.getVoiceStateForGuild(guild).getChannel();
+            Optional<Snowflake> authorVoice = event
+                    .getMember()
+                    .flatMap(author -> author.getVoiceState().blockOptional())
+                    .flatMap(VoiceState::getChannelId);
 
-            return botVoiceChannel == authorVoiceChannel;
+            return event
+                    .getGuild()
+                    .zipWith(Mono.justOrEmpty(event.getClient().getSelfId()))
+                    .flatMap(tuple -> tuple.getT1().getMemberById(tuple.getT2()))
+                    .flatMap(Member::getVoiceState)
+                    .map(voice -> voice.getChannelId().equals(authorVoice))
+                    .blockOptional()
+                    .orElse(false);
         }
 
-        @NotNull
         @Override
         public String message() {
             return "You aren't in the same voice channel as me.";
         }
+
     },
     VOICE_ONLY {
+
         @Override
-        public boolean isValid(@NotNull CommandReceivedEvent event) {
+        public boolean isValid(MessageCreateEvent event) {
             if (!GUILD_ONLY.isValid(event)) {
                 return false;
             }
 
-            IGuild guild = event.getGuild();
-            IUser author = event.getAuthor();
-            IVoiceChannel authorVoiceChannel = author.getVoiceStateForGuild(guild).getChannel();
-
-            return authorVoiceChannel != null;
+            return event
+                    .getMember()
+                    .flatMap(author -> author.getVoiceState().blockOptional())
+                    .isPresent();
         }
 
-        @NotNull
         @Override
         public String message() {
             return "You must be in a voice channel to use that command.";
         }
+
     };
 
-    public boolean isValid(@NotNull CommandReceivedEvent event) {
+    public boolean isValid(MessageCreateEvent event) {
         return true;
     }
 
-    @NotNull
     public String message() {
         return "You can't use that command.";
     }
 
-    public void execute(@NotNull CommandReceivedEvent event) {
-    }
+    public void execute(CommandReceivedEvent event) {}
 
 }

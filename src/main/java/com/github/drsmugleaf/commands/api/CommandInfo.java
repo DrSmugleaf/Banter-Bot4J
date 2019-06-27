@@ -1,9 +1,8 @@
 package com.github.drsmugleaf.commands.api;
 
 import com.github.drsmugleaf.commands.api.tags.Tags;
-import sx.blah.discord.handle.obj.Permissions;
+import discord4j.core.object.util.Permission;
 
-import org.jetbrains.annotations.NotNull;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -16,16 +15,12 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface CommandInfo {
 
-    @NotNull
     String name() default "";
 
-    @NotNull
     String[] aliases() default {};
 
-    @NotNull
-    Permissions[] permissions() default {};
+    Permission[] permissions() default {};
 
-    @NotNull
     Tags[] tags() default {};
 
 }

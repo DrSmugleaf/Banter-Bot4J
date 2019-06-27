@@ -1,15 +1,11 @@
 package com.github.drsmugleaf.commands.quotes;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.database.models.Quote;
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IUser;
+import discord4j.core.object.entity.User;
 
-import org.jetbrains.annotations.NotNull;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -23,17 +19,13 @@ public class QuoteGet extends Command {
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
 
-    protected QuoteGet(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
-        super(event, args);
-    }
-
     @Override
     public void run() {
         long id;
         try {
-            id = Long.parseLong(ARGS.toString());
+            id = Long.parseLong(ARGUMENTS.toString());
         } catch (NumberFormatException e) {
-            EVENT.reply("Invalid command format. Example: `" + BanterBot4J.BOT_PREFIX + "quote 1`");
+            reply("Invalid command format. Example: `" + BanterBot4J.BOT_PREFIX + "quote 1`").subscribe();
             return;
         }
 
@@ -41,28 +33,23 @@ public class QuoteGet extends Command {
         List<Quote> quotes = quote.get();
 
         if (quotes.isEmpty()) {
-            EVENT.reply("No quote was found with id " + id);
+            reply("No quote was found with id " + id).subscribe();
             return;
         }
 
         quote = quotes.get(0);
-        IUser quoteAuthor = quote.submitter.user();
-        IGuild quoteGuild = quote.guild.guild();
-        String quoteAuthorName = quoteAuthor.getDisplayName(quoteGuild);
-        String quoteAuthorDiscriminator = quoteAuthor.getDiscriminator();
-        quoteAuthorName += "#" + quoteAuthorDiscriminator;
+        User submitter = quote.submitter.user();
+        String submitterName = submitter.getUsername() + "#" + submitter.getDiscriminator();
         if (quote.content.isEmpty()) {
-            EVENT.reply("Quote #" + quote.id + " was deleted by " + quoteAuthorName + " or one of the bot owners.");
+            reply("Quote #" + quote.id + " was deleted by " + submitterName + " or one of the bot owners.").subscribe();
             return;
         }
 
         Long quoteDate = quote.date;
         Instant date = Instant.ofEpochMilli(quoteDate);
         String formattedDate = DATE_FORMAT.format(date);
-        sendMessage(
-                EVENT.getChannel(),
-                "**Quote #" + quote.id + ", submitted by " + quoteAuthorName + " on " + formattedDate + "**\n" + quote.content
-        );
+        Quote finalQuote = quote;
+        reply("**Quote #" + finalQuote.id + ", submitted by " + submitterName + " on " + formattedDate + "**\n" + finalQuote.content).subscribe();
     }
 
 }

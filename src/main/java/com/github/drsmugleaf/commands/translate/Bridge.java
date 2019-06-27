@@ -1,75 +1,39 @@
 package com.github.drsmugleaf.commands.translate;
 
-import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
+import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
+import com.github.drsmugleaf.commands.api.converter.TypeConverters;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 import com.github.drsmugleaf.database.models.BridgedChannel;
 import com.github.drsmugleaf.translator.Languages;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.Permissions;
-
-import org.jetbrains.annotations.NotNull;
-import java.util.List;
+import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.TextChannel;
+import discord4j.core.object.util.Permission;
 
 /**
  * Created by DrSmugleaf on 10/06/2018
  */
-@CommandInfo(permissions = {Permissions.MANAGE_CHANNELS}, tags = {Tags.GUILD_ONLY})
+@CommandInfo(permissions = {Permission.MANAGE_CHANNELS}, tags = {Tags.GUILD_ONLY})
 public class Bridge extends Command {
 
-    protected Bridge(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
-        super(event, args);
-    }
+    @Argument(position = 1, example = "general")
+    private TextChannel firstChannel;
+
+    @Argument(position = 2, example = "en")
+    private Languages firstLanguage;
+
+    @Argument(position = 3, example = "spanish_channel")
+    private TextChannel secondChannel;
+
+    @Argument(position = 4, example = "es")
+    private Languages secondLanguage;
 
     @Override
     public void run() {
-        if (ARGS.isEmpty()) {
-            EVENT.reply("You didn't provide any channels or languages.\n" +
-                        "Usage: " + BanterBot4J.BOT_PREFIX + "bridge channel1 language1 channel2 language2");
-            return;
-        }
-
-        if (ARGS.size() < 4) {
-            EVENT.reply("You didn't provide enough arguments.\n" +
-                        "Usage: " + BanterBot4J.BOT_PREFIX + "bridge channel1 language1 channel2 language2");
-            return;
-        }
-
-        IGuild guild = EVENT.getGuild();
-        List<IChannel> firstChannelList = guild.getChannelsByName(ARGS.get(0));
-        if (firstChannelList.isEmpty()) {
-            EVENT.reply("Couldn't find any channels with name " + ARGS.get(0));
-            return;
-        }
-
-        IChannel firstChannel = firstChannelList.get(0);
-
-        Languages firstLanguage = Languages.getLanguage(ARGS.get(1));
-        if (firstLanguage == null) {
-            EVENT.reply("Couldn't find any languages with name " + ARGS.get(1));
-            return;
-        }
-
-        List<IChannel> secondChannelList = guild.getChannelsByName(ARGS.get(2));
-        if (secondChannelList.isEmpty()) {
-            EVENT.reply("Couldn't find any channels with name " + ARGS.get(2));
-            return;
-        }
-
-        IChannel secondChannel = secondChannelList.get(0);
-
-        Languages secondLanguage = Languages.getLanguage(ARGS.get(3));
-        if (secondLanguage == null) {
-            EVENT.reply("Couldn't find any languages with name " + ARGS.get(3));
-            return;
-        }
-
-        BridgedChannel firstBridgedChannel = new BridgedChannel(firstChannel.getLongID(), secondChannel.getLongID());
-        BridgedChannel secondBridgedChannel = new BridgedChannel(secondChannel.getLongID(), firstChannel.getLongID());
+        BridgedChannel firstBridgedChannel = new BridgedChannel(firstChannel.getId().asLong(), secondChannel.getId().asLong());
+        BridgedChannel secondBridgedChannel = new BridgedChannel(secondChannel.getId().asLong(), firstChannel.getId().asLong());
 
         firstBridgedChannel.channelLanguage = firstLanguage;
         firstBridgedChannel.bridgedLanguage = secondLanguage;
@@ -80,12 +44,25 @@ public class Bridge extends Command {
         firstBridgedChannel.save();
         secondBridgedChannel.save();
 
-        EVENT.reply(
+        reply(
                 "Bridged together channels " + firstChannel.getName() +
                 " with language " + firstLanguage.getName() +
                 " and " + secondChannel.getName() +
                 " with language " + secondLanguage.getName()
+        ).subscribe();
+    }
+
+    @Override
+    public void registerConverters(TypeConverters converter) {
+        converter.registerStringTo(CommandReceivedEvent.class, TextChannel.class, (s, e) -> e
+                .getGuild()
+                .flatMapMany(Guild::getChannels)
+                .filter(channel -> channel.getName().equalsIgnoreCase(s) && channel instanceof TextChannel)
+                .cast(TextChannel.class)
+                .blockFirst()
         );
+
+        converter.registerStringTo(CommandReceivedEvent.class, Languages.class, (s, e) -> Languages.getLanguage(s));
     }
 
 }

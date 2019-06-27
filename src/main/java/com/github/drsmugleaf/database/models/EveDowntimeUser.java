@@ -1,19 +1,18 @@
 package com.github.drsmugleaf.database.models;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.EventListener;
+import com.github.drsmugleaf.database.api.Database;
 import com.github.drsmugleaf.database.api.Model;
 import com.github.drsmugleaf.database.api.annotations.Column;
 import com.github.drsmugleaf.database.api.annotations.Relation;
 import com.github.drsmugleaf.database.api.annotations.RelationTypes;
 import com.github.drsmugleaf.database.api.annotations.Table;
+import discord4j.core.event.domain.lifecycle.ReadyEvent;
+import discord4j.core.object.entity.User;
 import net.troja.eve.esi.ApiException;
 import net.troja.eve.esi.api.StatusApi;
-import sx.blah.discord.api.events.EventSubscriber;
-import sx.blah.discord.handle.impl.events.ReadyEvent;
-import sx.blah.discord.handle.obj.IPrivateChannel;
 
-import org.jetbrains.annotations.NotNull;
 import javax.ws.rs.ProcessingException;
 import java.util.List;
 import java.util.Timer;
@@ -25,10 +24,8 @@ import java.util.TimerTask;
 @Table(name = "eve_downtime_users")
 public class EveDowntimeUser extends Model<EveDowntimeUser> {
 
-    @NotNull
     private static final Timer DOWNTIME_TIMER = new Timer("Eve Online Downtime Timer", true);
 
-    @NotNull
     private static final StatusApi STATUS_API = new StatusApi();
 
     private static boolean wasEveOffline = false;
@@ -36,14 +33,13 @@ public class EveDowntimeUser extends Model<EveDowntimeUser> {
     @Column(name = "user_id")
     @Column.Id
     @Relation(type = RelationTypes.OneToOne, columnName = "id")
-    public User user;
+    public DiscordUser user;
 
     public EveDowntimeUser(Long userID) {
-        user = new User(userID);
+        user = new DiscordUser(userID);
     }
 
-    private EveDowntimeUser() {
-    }
+    private EveDowntimeUser() {}
 
     private static boolean isOffline() {
         try {
@@ -62,13 +58,19 @@ public class EveDowntimeUser extends Model<EveDowntimeUser> {
     private static void alertAll() {
         List<EveDowntimeUser> users = new EveDowntimeUser().get();
         for (EveDowntimeUser user : users) {
-            IPrivateChannel channel = BanterBot4J.CLIENT.getUserByID(user.user.id).getOrCreatePMChannel();
-            Command.sendMessage(channel, "Eve Online server is back online.");
+            BanterBot4J
+                    .CLIENT
+                    .getUserById(user.user.user().getId())
+                    .flatMap(User::getPrivateChannel)
+                    .flatMap(channel -> channel.createMessage("Eve Online server is back online."))
+                    .subscribe();
         }
     }
 
-    @EventSubscriber
+    @EventListener(ReadyEvent.class)
     public static void handle(ReadyEvent event) {
+        Database.LOGGER.info("Scheduled EVE Online downtime timer");
+
         DOWNTIME_TIMER.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {

@@ -1,14 +1,15 @@
 package com.github.drsmugleaf.commands.translate;
 
-import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.database.models.BridgedChannel;
 import com.github.drsmugleaf.translator.API;
 import com.github.drsmugleaf.translator.Languages;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IMessage;
+import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.object.entity.Attachment;
+import discord4j.core.object.entity.Member;
+import discord4j.core.object.entity.Message;
+import reactor.core.publisher.Flux;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,38 +19,43 @@ import java.util.Map;
  */
 public class TranslatedMessage {
 
-    @NotNull
-    final IMessage MESSAGE;
+    private final Message MESSAGE;
 
-    @NotNull
-    final Map<BridgedChannel, IMessage> MESSAGES_SENT = new HashMap<>();
+    private final Map<BridgedChannel, Message> MESSAGES_SENT = new HashMap<>();
 
-    public TranslatedMessage(@NotNull MessageReceivedEvent event) {
+    public TranslatedMessage(MessageCreateEvent event) {
         MESSAGE = event.getMessage();
     }
 
     private Map<BridgedChannel, String> getTranslations() {
         Map<BridgedChannel, String> translations = new HashMap<>();
-        List<BridgedChannel> bridgedChannels = new BridgedChannel(MESSAGE.getChannel().getLongID()).get();
+        List<BridgedChannel> bridgedChannels = new BridgedChannel(MESSAGE.getChannelId().asLong()).get();
 
         for (BridgedChannel bridgedChannel : bridgedChannels) {
             Languages channelLanguage = bridgedChannel.channelLanguage;
             Languages bridgedLanguage = bridgedChannel.bridgedLanguage;
-            String translation = API.translate(channelLanguage, bridgedLanguage, MESSAGE.getFormattedContent());
-            if (translation == null) {
-                continue;
-            }
 
-            translation = formatMessage(translation);
-            translations.put(bridgedChannel, translation);
+            MESSAGE
+                    .getContent()
+                    .ifPresent(message -> {
+                        String translation = API.translate(channelLanguage, bridgedLanguage, message);
+                        if (translation == null) {
+                            return;
+                        }
+
+                        translation = formatMessage(translation);
+                        translations.put(bridgedChannel, translation);
+                    });
         }
 
         return translations;
     }
 
-    private void sendTranslation(@NotNull BridgedChannel bridgedChannel, @NotNull String translation) {
-        IMessage message = Command.sendMessage(bridgedChannel.bridged(), translation);
-        MESSAGES_SENT.put(bridgedChannel, message);
+    private void sendTranslation(BridgedChannel bridgedChannel, String translation) {
+        bridgedChannel
+                .bridged()
+                .createMessage(translation)
+                .subscribe(message -> MESSAGES_SENT.put(bridgedChannel, message));
     }
 
     void sendTranslations() {
@@ -61,48 +67,55 @@ public class TranslatedMessage {
         }
     }
 
-    void updateTranslations(@NotNull IMessage editedMessage) {
-        for (Map.Entry<BridgedChannel, IMessage> entry : MESSAGES_SENT.entrySet()) {
+    void updateTranslations(Message editedMessage) {
+        for (Map.Entry<BridgedChannel, Message> entry : MESSAGES_SENT.entrySet()) {
             BridgedChannel bridgedChannel = entry.getKey();
-            IMessage message = entry.getValue();
+            Message message = entry.getValue();
 
             Languages channelLanguage = bridgedChannel.channelLanguage;
             Languages bridgedLanguage = bridgedChannel.bridgedLanguage;
 
-            String translation = API.translate(channelLanguage, bridgedLanguage, editedMessage.getFormattedContent());
-            if (translation == null) {
-                continue;
-            }
+            editedMessage.getContent().ifPresent(content -> {
+                String translation = API.translate(channelLanguage, bridgedLanguage, content);
+                if (translation == null) {
+                    return;
+                }
 
-            translation = formatMessage(translation);
-            message.edit(translation);
+                translation = formatMessage(translation);
+                String finalTranslation = translation;
+                message.edit(spec -> spec.setContent(finalTranslation));
+            });
         }
     }
 
-    void delete() {
-        for (Map.Entry<BridgedChannel, IMessage> entry : MESSAGES_SENT.entrySet()) {
-            entry.getValue().delete();
-        }
+    Flux<Void> delete() {
+        return Flux
+                .fromIterable(MESSAGES_SENT.entrySet())
+                .map(Map.Entry::getValue)
+                .flatMap(Message::delete);
     }
 
-    @NotNull
-    String formatMessage(@NotNull String translation) {
-        IGuild guild = MESSAGE.getGuild();
-        String authorName = MESSAGE.getAuthor().getDisplayName(guild);
+    private String formatMessage(@Nullable final String translation) {
+        return MESSAGE
+                .getAuthorAsMember()
+                .map(Member::getDisplayName)
+                .map(name -> "**" + name + "**: " + (translation == null ? "" : translation))
+                .map(content -> {
+                    StringBuilder message = new StringBuilder(content);
+                    for (Attachment attachment : MESSAGE.getAttachments()) {
+                        message
+                                .append("\n")
+                                .append(attachment.getUrl());
+                    }
 
-        StringBuilder message = new StringBuilder("**" + authorName + "**: " + translation);
-        for (IMessage.Attachment attachment : MESSAGE.getAttachments()) {
-            message
-                    .append("\n")
-                    .append(attachment.getUrl());
-        }
-
-        translation = message.toString();
-        translation = translation
-                .replace("@everyone", "@ everyone")
-                .replace("@here", "@ here");
-
-        return translation;
+                    return message.toString();
+                })
+                .map(content -> content
+                        .replace("@everyone", "@ everyone")
+                        .replace("@here", "@ here")
+                )
+                .blockOptional()
+                .orElseThrow(() -> new IllegalStateException("Error formatting translation " + translation));
     }
 
 }

@@ -1,24 +1,24 @@
 package com.github.drsmugleaf.music;
 
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IUser;
-
-import org.jetbrains.annotations.NotNull;
+import discord4j.core.object.entity.Member;
+import discord4j.core.object.entity.TextChannel;
+import discord4j.core.object.entity.VoiceChannel;
 
 /**
  * Created by DrSmugleaf on 02/03/2018.
  */
 public class TrackUserData {
 
-    @NotNull
-    public final IChannel CHANNEL;
+    public final TextChannel TEXT_CHANNEL;
 
-    @NotNull
-    public final IUser SUBMITTER;
+    public final Member SUBMITTER;
 
-    protected TrackUserData(@NotNull IChannel channel, @NotNull IUser submitter) {
-        CHANNEL = channel;
+    public final VoiceChannel VOICE_CHANNEL;
+
+    protected TrackUserData(TextChannel textChannel, Member submitter, VoiceChannel voiceChannel) {
+        TEXT_CHANNEL = textChannel;
         SUBMITTER = submitter;
+        VOICE_CHANNEL = voiceChannel;
     }
 
 }

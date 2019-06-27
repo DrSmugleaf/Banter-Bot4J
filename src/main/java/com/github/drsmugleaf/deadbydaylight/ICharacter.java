@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.deadbydaylight;
 
-import org.jetbrains.annotations.NotNull;
+import com.github.drsmugleaf.Nullable;
+
 import java.io.InputStream;
 
 /**
@@ -8,10 +9,11 @@ import java.io.InputStream;
  */
 public interface ICharacter {
 
-    @NotNull
     String getName();
 
-    @NotNull
     InputStream getImage();
+
+    @Nullable
+    Double getRating();
 
 }

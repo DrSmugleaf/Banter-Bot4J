@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.tripwire.route;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.dijkstra.Node;
 import com.github.drsmugleaf.eve.Systems;
 import com.github.drsmugleaf.tripwire.models.Signature;
@@ -7,8 +8,6 @@ import net.troja.eve.esi.ApiException;
 import net.troja.eve.esi.api.UniverseApi;
 import net.troja.eve.esi.model.UniverseNamesResponse;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,7 +18,7 @@ public class StarSystem extends Node<StarSystem> {
 
     final int ID;
 
-    StarSystem(int id, @NotNull String name) {
+    StarSystem(int id, String name) {
         super(name);
         ID = id;
     }
@@ -28,8 +27,7 @@ public class StarSystem extends Node<StarSystem> {
         return id != null && id > 30000001;
     }
 
-    @NotNull
-    static Map<Integer, StarSystem> fromIDs(@NotNull Collection<Integer> IDs) {
+    static Map<Integer, StarSystem> fromIDs(Collection<Integer> IDs) {
         Map<Integer, StarSystem> starSystems = new HashMap<>();
         IDs.removeIf(id -> !StarSystem.isValid(id));
 
@@ -77,8 +75,7 @@ public class StarSystem extends Node<StarSystem> {
         return starSystems;
     }
 
-    @NotNull
-    static Map<Integer, StarSystem> fromSignatures(@NotNull Collection<Signature> signatures) {
+    static Map<Integer, StarSystem> fromSignatures(Collection<Signature> signatures) {
         Set<Integer> ids = signatures.stream().map(signature -> signature.SYSTEM_ID).collect(Collectors.toSet());
         return fromIDs(ids);
     }

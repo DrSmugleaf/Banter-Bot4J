@@ -1,67 +1,38 @@
 package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.deadbydaylight.ICharacter;
-import com.github.drsmugleaf.deadbydaylight.KillerPerks;
-import com.github.drsmugleaf.deadbydaylight.Killers;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
-
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 06/11/2018
  */
 public class KillerPerk extends Perk {
 
-    @NotNull
     @SerializedName(value = "Killer", alternate = {"PerkKiller"})
-    public final Killers KILLER;
+    public final String KILLER_NAME;
 
-    KillerPerk(@NotNull String imageUrl, @NotNull String name, @NotNull Tiers tier, double rating, long ratings, @NotNull Killers killer) {
+    private final Killer KILLER;
+
+    KillerPerk(String imageUrl, String name, Tiers tier, double rating, long ratings, String killerName) {
         super(name, tier, rating, ratings);
-        KILLER = killer;
+        KILLER_NAME = killerName;
+        KILLER = KillersAPI.getKiller(killerName);
     }
 
-    @NotNull
-    public static KillerPerk from(@NotNull JsonElement json) {
-        JsonObject object = json.getAsJsonObject();
-
-        if (object.get("PerkName").getAsString().toLowerCase().equalsIgnoreCase("Barbecue & Chili")) {
-            object.addProperty("PerkName", KillerPerks.BARBECUE_AND_CHILLI.NAME);
-        }
-
-        String killerName;
-        if (object.has("Killer")) {
-            killerName = object.get("Killer").getAsString();
-        } else if (object.has("PerkKiller")) {
-            killerName = object.get("PerkKiller").getAsString();
-            object.remove("PerkKiller");
-        } else {
-            throw new IllegalArgumentException("No Killer or PerkKiller member found in json " + json);
-        }
-
-        killerName = NameResolver.resolveKillerName(killerName);
-        object.addProperty("Killer", killerName);
-
-        return API.GSON.fromJson(object, KillerPerk.class);
+    public static KillerPerk from(JsonElement json) {
+        return API.GSON.fromJson(json.getAsJsonObject(), KillerPerk.class);
     }
 
-    @NotNull
-    public static KillerPerk from(@NotNull KillerPerks perk) {
-        return PerksAPI.KILLER_PERKS.get().get(perk);
+    public String getKillerName() {
+        return KILLER_NAME;
     }
 
-    @NotNull
+    @Nullable
     @Override
     public ICharacter getCharacter() {
         return KILLER;
-    }
-
-    @NotNull
-    @Override
-    public KillerPerks toPerk() {
-        return KillerPerks.from(NAME);
     }
 
 }

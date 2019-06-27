@@ -1,15 +1,12 @@
 package com.github.drsmugleaf.commands.tripwire;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.eve.Systems;
 import com.github.drsmugleaf.tripwire.route.Route;
 import com.github.drsmugleaf.tripwire.route.StarSystem;
-import sx.blah.discord.handle.obj.IUser;
+import discord4j.core.object.entity.User;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,11 +15,6 @@ import java.util.List;
  */
 public class TripwireBridge extends Command {
 
-    protected TripwireBridge(@NotNull CommandReceivedEvent event, @NotNull Arguments args) {
-        super(event, args);
-    }
-
-    @NotNull
     private static String invalidArgumentsResponse() {
         return "Invalid arguments.\n" +
                "**Formats:**\n" +
@@ -33,19 +25,23 @@ public class TripwireBridge extends Command {
 
     @Override
     public void run() {
-        IUser author = EVENT.getAuthor();
+        User author = EVENT
+                .getMessage()
+                .getAuthor()
+                .orElseThrow(() -> new IllegalStateException("Couldn't get the message's author. Message: " + EVENT.getMessage()));
+
         if (!TripwireRoute.ROUTES.containsKey(author)) {
-            EVENT.reply("Create a route first with " + BanterBot4J.BOT_PREFIX + "tripwireRoute.");
+            reply("Create a route first with " + BanterBot4J.BOT_PREFIX + "tripwireRoute.").subscribe();
             return;
         }
 
-        if (ARGS.size() != 2) {
-            EVENT.reply(invalidArgumentsResponse());
+        if (ARGUMENTS.size() != 2) {
+            reply(invalidArgumentsResponse()).subscribe();
             return;
         }
 
         List<String> invalidSystems = new ArrayList<>();
-        for (String system : ARGS) {
+        for (String system : ARGUMENTS) {
             if (!Systems.NAMES.containsValue(system)) {
                 invalidSystems.add(system);
             }
@@ -53,7 +49,7 @@ public class TripwireBridge extends Command {
 
         if (!invalidSystems.isEmpty()) {
             String response = "Invalid system names: " + String.join(", ", invalidSystems + ".");
-            EVENT.reply(response);
+            reply(response).subscribe();
             return;
         }
 
@@ -61,29 +57,29 @@ public class TripwireBridge extends Command {
         StarSystem firstSystem = null;
         StarSystem secondSystem = null;
         for (StarSystem node : route.GRAPH.NODES) {
-            if (node.NAME.equalsIgnoreCase(ARGS.get(0))) {
+            if (node.NAME.equalsIgnoreCase(ARGUMENTS.get(0))) {
                 firstSystem = node;
             }
 
-            if (node.NAME.equalsIgnoreCase(ARGS.get(1))) {
+            if (node.NAME.equalsIgnoreCase(ARGUMENTS.get(1))) {
                 secondSystem = node;
             }
         }
 
         if (firstSystem == null) {
-            EVENT.reply(ARGS.get(0) + " isn't in the route.");
+            reply(ARGUMENTS.get(0) + " isn't in the route.").subscribe();
             return;
         }
 
         if (secondSystem == null) {
-            EVENT.reply(ARGS.get(1) + " isn't in the route.");
+            reply(ARGUMENTS.get(1) + " isn't in the route.").subscribe();
             return;
         }
 
         firstSystem.addDestination(secondSystem, 0);
         route.recalculate();
 
-        EVENT.reply(route.info());
+        reply(route.info()).subscribe();
     }
 
 }

@@ -2,7 +2,6 @@ package com.github.drsmugleaf.music;
 
 import com.github.drsmugleaf.BanterBot4J;
 
-import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -18,7 +17,7 @@ public class EventDispatcher {
 
     private static final Set<Method> LISTENERS = new HashSet<>();
 
-    public static void registerListener(@NotNull Object listener) {
+    public static void registerListener(Object listener) {
         Stream<Method> methods = Arrays.stream(listener.getClass().getMethods()).filter(
                 method -> method.isAnnotationPresent(TrackEventHandler.class)
         );
@@ -26,7 +25,7 @@ public class EventDispatcher {
         EventDispatcher.LISTENERS.addAll(methods.collect(Collectors.toSet()));
     }
 
-    protected static void dispatch(@NotNull Event event) {
+    protected static void dispatch(Event event) {
         for (Method listener : EventDispatcher.LISTENERS) {
             if (listener.getAnnotation(TrackEventHandler.class).event() == event.getClass()) {
                 try {
