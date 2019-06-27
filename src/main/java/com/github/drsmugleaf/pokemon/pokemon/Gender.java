@@ -2,6 +2,7 @@ package com.github.drsmugleaf.pokemon.pokemon;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon.ability.Abilities;
+import org.jetbrains.annotations.Contract;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +20,6 @@ public enum Gender { // TODO: Add list of Genderless Pokemon / Pokemon gender ra
     GENDERLESS("Genderless", null);
 
     public final String NAME;
-
     @Nullable
     public final String ABBREVIATION;
 
@@ -72,10 +72,12 @@ public enum Gender { // TODO: Add list of Genderless Pokemon / Pokemon gender ra
         return Gender.isOppositeGender(attacker, defender);
     }
 
+    @Contract(pure = true)
     public String getName() {
         return NAME;
     }
 
+    @Contract(pure = true)
     @Nullable
     public String getAbbreviation() {
         return ABBREVIATION;

@@ -2,6 +2,7 @@ package com.github.drsmugleaf.pokemon.stats;
 
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.pokemon.Species;
+import org.jetbrains.annotations.Contract;
 
 /**
  * Created by DrSmugleaf on 08/10/2017.
@@ -9,11 +10,8 @@ import com.github.drsmugleaf.pokemon.pokemon.Species;
 public class Stat implements IStat {
 
     public final IStat STAT;
-
     public final int IV;
-
     public final int EV;
-
     private Stage STAGE = Stage.ZERO;
 
     protected Stat(IStat stat, int iv, int ev) {
@@ -22,27 +20,33 @@ public class Stat implements IStat {
         EV = ev;
     }
 
+    @Contract(pure = true)
     public IStat getStat() {
         return STAT;
     }
 
+    @Contract(pure = true)
     @Override
     public String getName() {
         return STAT.getName();
     }
 
+    @Contract(pure = true)
     public String getAbbreviation() {
         return STAT.getAbbreviation();
     }
 
+    @Contract(pure = true)
     public int getIV() {
         return IV;
     }
 
+    @Contract(pure = true)
     public int getEV() {
         return EV;
     }
 
+    @Contract(pure = true)
     public Stage getStage() {
         return STAGE;
     }

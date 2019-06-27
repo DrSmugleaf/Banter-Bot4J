@@ -6,6 +6,7 @@ import com.github.drsmugleaf.pokemon.events.EventDispatcher;
 import com.github.drsmugleaf.pokemon.events.PokemonMoveEvent;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.types.Type;
+import org.jetbrains.annotations.Contract;
 
 /**
  * Created by DrSmugleaf on 22/06/2017.
@@ -13,11 +14,8 @@ import com.github.drsmugleaf.pokemon.types.Type;
 public class Move {
 
     public final BaseMove BASE_MOVE;
-
     private Type type;
-
     private MoveCategory category;
-
     private int pp;
     private int power;
     private int priority;
@@ -42,10 +40,12 @@ public class Move {
         damageMultiplier = move.damageMultiplier;
     }
 
+    @Contract(pure = true)
     public BaseMove getBaseMove() {
         return BASE_MOVE;
     }
 
+    @Contract(pure = true)
     public Type getType() {
         return type;
     }
@@ -54,6 +54,7 @@ public class Move {
         this.type = type;
     }
 
+    @Contract(pure = true)
     public MoveCategory getCategory() {
         return category;
     }
@@ -62,6 +63,7 @@ public class Move {
         this.category = category;
     }
 
+    @Contract(pure = true)
     public int getPP() {
         return pp;
     }
@@ -78,6 +80,7 @@ public class Move {
         increasePP(-amount);
     }
 
+    @Contract(pure = true)
     public int getPower() {
         return power;
     }
@@ -86,6 +89,7 @@ public class Move {
         this.power = power;
     }
 
+    @Contract(pure = true)
     public Integer getPriority() {
         return priority;
     }
@@ -94,6 +98,7 @@ public class Move {
         this.priority = priority;
     }
 
+    @Contract(pure = true)
     public double getDamageMultiplier() {
         return damageMultiplier;
     }

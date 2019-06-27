@@ -3,6 +3,7 @@ package com.github.drsmugleaf.pokemon.types;
 import com.github.drsmugleaf.pokemon.battle.Action;
 import com.github.drsmugleaf.pokemon.battle.IModifier;
 import com.github.drsmugleaf.pokemon.moves.Move;
+import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +21,7 @@ public class Types implements IModifier {
         TYPES.addAll(types);
     }
 
+    @Contract(" -> new")
     public List<Type> getTypes() {
         return new ArrayList<>(TYPES);
     }

@@ -2,6 +2,7 @@ package com.github.drsmugleaf.pokemon.pokemon;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
+import org.jetbrains.annotations.Contract;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,12 +40,9 @@ public enum Nature {
     QUIRKY(24, "Quirky", null, null);
 
     public final Integer ID;
-
     public final String NAME;
-
     @Nullable
     public final PermanentStat INCREASED_STAT;
-
     @Nullable
     public final PermanentStat DECREASED_STAT;
 
@@ -70,19 +68,23 @@ public enum Nature {
         return Holder.MAP.get(name);
     }
 
+    @Contract(pure = true)
     public Integer getID() {
         return ID;
     }
 
+    @Contract(pure = true)
     public String getName() {
         return NAME;
     }
 
+    @Contract(pure = true)
     @Nullable
     public PermanentStat getIncreasedStat() {
         return INCREASED_STAT;
     }
 
+    @Contract(pure = true)
     @Nullable
     public PermanentStat getDecreasedStat() {
         return DECREASED_STAT;

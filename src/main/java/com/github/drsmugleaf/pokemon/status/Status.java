@@ -10,6 +10,7 @@ import com.github.drsmugleaf.pokemon.stats.IStat;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
 import com.github.drsmugleaf.pokemon.types.Type;
+import org.jetbrains.annotations.Contract;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -332,6 +333,7 @@ public enum Status implements IStatus, IModifier {
         NAME = name;
     }
 
+    @Contract(pure = true)
     public String getName() {
         return NAME;
     }

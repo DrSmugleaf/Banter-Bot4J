@@ -11,11 +11,8 @@ import java.util.*;
 public class Turn {
 
     public final int ID;
-
     private final Map<Trainer, Pokemon> POKEMONS_SENT_OUT = new HashMap<>();
-
     private final List<Action> ACTIONS = new ArrayList<>();
-
     private boolean executed = false;
 
     protected Turn(Battle battle) {
@@ -66,7 +63,7 @@ public class Turn {
         finish();
     }
 
-    protected void finish() {
+    private void finish() {
         ACTIONS.clear();
         POKEMONS_SENT_OUT.clear();
     }

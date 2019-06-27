@@ -294,19 +294,12 @@ public enum Tier {
     }
 
     public final String NAME;
-
     public final String ABBREVIATION;
-
     private final List<Clause> CLAUSES = new ArrayList<>();
-
     private final List<Species> BANNED_POKEMONS = new ArrayList<>();
-
     private final List<BaseMove> BANNED_MOVES = new ArrayList<>();
-
     private final List<Tier> BANNED_TIERS = new ArrayList<>();
-
     private final List<Items> BANNED_ITEMS = new ArrayList<>();
-
     private final List<Abilities> BANNED_ABILITIES = new ArrayList<>();
 
     Tier(String name, String abbreviation, Clause... clauses) {
@@ -330,10 +323,12 @@ public enum Tier {
         return Holder.MAP.get(abbreviation);
     }
 
+    @Contract(pure = true)
     public String getName() {
         return NAME;
     }
 
+    @Contract(pure = true)
     public String getAbbreviation() {
         return ABBREVIATION;
     }
@@ -348,16 +343,18 @@ public enum Tier {
         return true;
     }
 
-    @Contract(pure = true)
+    @Contract(" -> new")
     public List<Clause> getClauses() {
-        return CLAUSES;
+        return new ArrayList<>(CLAUSES);
     }
 
+    @Contract("_ -> this")
     private Tier addClauses(Clause... clauses) {
         Collections.addAll(CLAUSES, clauses);
         return this;
     }
 
+    @Contract("_ -> this")
     private Tier setClauses(Clause... clauses) {
         CLAUSES.clear();
         return addClauses(clauses);
@@ -365,73 +362,84 @@ public enum Tier {
 
     @Contract(pure = true)
     public List<Species> getBannedPokemons() {
-        return BANNED_POKEMONS;
+        return new ArrayList<>(BANNED_POKEMONS);
     }
 
+    @Contract("_ -> this")
     private Tier addBannedPokemons(Species... pokemons) {
         Collections.addAll(BANNED_POKEMONS, pokemons);
         return this;
     }
 
+    @Contract("_ -> this")
     private Tier setBannedPokemons(Species... pokemons) {
         BANNED_POKEMONS.clear();
         return addBannedPokemons(pokemons);
     }
 
+    @Contract(" -> new")
     public List<BaseMove> getBannedMoves() {
-        return BANNED_MOVES;
+        return new ArrayList<>(BANNED_MOVES);
     }
 
+    @Contract("_ -> this")
     private Tier addBannedMoves(BaseMove... moves) {
         Collections.addAll(BANNED_MOVES, moves);
         return this;
     }
 
+    @Contract("_ -> this")
     private Tier setBannedMoves(BaseMove... moves) {
         BANNED_MOVES.clear();
         return addBannedMoves(moves);
     }
 
-    @Contract(pure = true)
+    @Contract(" -> new")
     public List<Tier> getBannedTiers() {
-        return BANNED_TIERS;
+        return new ArrayList<>(BANNED_TIERS);
     }
 
+    @Contract("_ -> this")
     private Tier addBannedTiers(Tier... tiers) {
         Collections.addAll(BANNED_TIERS, tiers);
         return this;
     }
 
+    @Contract("_ -> this")
     private Tier setBannedTiers(Tier... tiers) {
         BANNED_TIERS.clear();
         return addBannedTiers(tiers);
     }
 
-    @Contract(pure = true)
+    @Contract(" -> new")
     public List<Items> getBannedItems() {
-        return BANNED_ITEMS;
+        return new ArrayList<>(BANNED_ITEMS);
     }
 
+    @Contract("_ -> this")
     private Tier addBannedItems(Items... items) {
         Collections.addAll(BANNED_ITEMS, items);
         return this;
     }
 
+    @Contract("_ -> this")
     private Tier setBannedItems(Items... items) {
         BANNED_ITEMS.clear();
         return addBannedItems(items);
     }
 
-    @Contract(pure = true)
+    @Contract(" -> new")
     public List<Abilities> getBannedAbilities() {
-        return BANNED_ABILITIES;
+        return new ArrayList<>(BANNED_ABILITIES);
     }
 
+    @Contract("_ -> this")
     private Tier addBannedAbilities(Abilities... abilities) {
         Collections.addAll(BANNED_ABILITIES, abilities);
         return this;
     }
 
+    @Contract("_ -> this")
     private Tier setBannedAbilities(Abilities... abilities) {
         BANNED_ABILITIES.clear();
         return addBannedAbilities(abilities);

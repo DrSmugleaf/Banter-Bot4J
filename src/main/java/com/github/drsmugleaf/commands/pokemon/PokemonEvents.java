@@ -50,7 +50,7 @@ public class PokemonEvents {
                 spec.addField(
                         i+1 + ": " + pokemon.getName() + " (" + String.join(" ", pokemon.TYPES.getTypesString()) + ")",
                         "HP: " + percentageHP + "% (" + currentHP + "/" + maxHP + ")\n" +
-                                "Ability: " + pokemon.ABILITY.get().NAME + " / Item: " + (pokemon.ITEM.get() != null ? pokemon.ITEM.get().NAME : "None") + "\n" +
+                                "Ability: " + pokemon.ABILITY.get().getName() + " / Item: " + (pokemon.ITEM.get() != null ? pokemon.ITEM.get().NAME : "None") + "\n" +
                                 "Stats: " + pokemon.getStatsStringWithoutHP(),
                         true
                 );

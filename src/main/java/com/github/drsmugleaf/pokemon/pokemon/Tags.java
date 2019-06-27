@@ -6,6 +6,7 @@ import com.github.drsmugleaf.pokemon.battle.IModifier;
 import com.github.drsmugleaf.pokemon.battle.InvalidGenerationException;
 import com.github.drsmugleaf.pokemon.moves.BaseMove;
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
+import org.jetbrains.annotations.Contract;
 
 /**
  * Created by DrSmugleaf on 01/10/2017.
@@ -66,7 +67,6 @@ public enum Tags implements IModifier {
     DOOM_DESIRE_VICTIM("Doom Desire Victim", 0);
 
     public final String NAME;
-
     private final int DURATION;
 
     Tags(String name, int duration) {
@@ -78,10 +78,12 @@ public enum Tags implements IModifier {
         this(name, Integer.MAX_VALUE);
     }
 
+    @Contract(pure = true)
     public String getName() {
         return NAME;
     }
 
+    @Contract(pure = true)
     public int getDuration() {
         return DURATION;
     }
@@ -98,6 +100,7 @@ public enum Tags implements IModifier {
                 return tag;
             }
         }
+
         return null;
     }
 
@@ -107,6 +110,7 @@ public enum Tags implements IModifier {
                 return true;
             }
         }
+
         return false;
     }
 

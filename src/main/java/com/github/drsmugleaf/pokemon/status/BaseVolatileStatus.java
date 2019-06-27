@@ -9,6 +9,7 @@ import com.github.drsmugleaf.pokemon.moves.MoveEffect;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
 import com.github.drsmugleaf.pokemon.types.Type;
+import org.jetbrains.annotations.Contract;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -446,7 +447,6 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
     SAFEGUARD("Safeguard", 5);
 
     public final String NAME;
-
     private final Integer DURATION;
 
     BaseVolatileStatus(String name, Integer duration) {
@@ -458,10 +458,12 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
         this(name, 1); // TODO: Volatile statuses durations
     }
 
+    @Contract(pure = true)
     public String getName() {
         return NAME;
     }
 
+    @Contract(pure = true)
     public Integer getDuration(Action action) {
         return DURATION;
     }

@@ -2,6 +2,7 @@ package com.github.drsmugleaf.pokemon.moves;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
+import org.jetbrains.annotations.Contract;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +18,6 @@ public enum MoveCategory {
     OTHER("Other", null);
 
     public final String NAME;
-
     @Nullable
     public final PermanentStat STAT;
 
@@ -41,10 +41,12 @@ public enum MoveCategory {
         return Holder.MAP.get(category);
     }
 
+    @Contract(pure = true)
     public String getName() {
         return NAME;
     }
 
+    @Contract(pure = true)
     @Nullable
     public PermanentStat getStat() {
         return STAT;

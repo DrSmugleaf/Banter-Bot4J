@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.pokemon.types;
 
+import org.jetbrains.annotations.Contract;
 import org.json.JSONArray;
 
 import java.util.*;
@@ -111,17 +112,11 @@ public enum Type {
     }
 
     private String NAME;
-
     private List<Type> WEAK_TO = new ArrayList<>();
-
     private List<Type> RESISTANT_TO = new ArrayList<>();
-
     private List<Type> IMMUNE_TO = new ArrayList<>();
-
     private List<Type> WEAK_BY = new ArrayList<>();
-
     private List<Type> RESISTED_BY = new ArrayList<>();
-
     private List<Type> IGNORED_BY = new ArrayList<>();
 
     Type(String name) {
@@ -165,6 +160,7 @@ public enum Type {
         }
     }
 
+    @Contract("_ -> this")
     private Type setWeakTo(Type... weakTo) {
         WEAK_TO.addAll(Arrays.asList(weakTo));
 
@@ -175,6 +171,7 @@ public enum Type {
         return this;
     }
 
+    @Contract("_ -> this")
     private Type setResistantTo(Type... resistantTo) {
         RESISTANT_TO.addAll(Arrays.asList(resistantTo));
 
@@ -185,6 +182,7 @@ public enum Type {
         return this;
     }
 
+    @Contract("_ -> this")
     private Type setImmuneTo(Type... immuneTo) {
         IMMUNE_TO.addAll(Arrays.asList(immuneTo));
 
@@ -195,18 +193,22 @@ public enum Type {
         return this;
     }
 
+    @Contract(pure = true)
     public String getName() {
         return NAME;
     }
 
+    @Contract(pure = true)
     public List<Type> getWeaknesses() {
         return WEAK_TO;
     }
 
+    @Contract(pure = true)
     public List<Type> getResistances() {
         return RESISTANT_TO;
     }
 
+    @Contract(pure = true)
     public List<Type> getImmunities() {
         return IMMUNE_TO;
     }

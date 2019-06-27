@@ -11,6 +11,7 @@ import com.github.drsmugleaf.pokemon.status.Status;
 import com.github.drsmugleaf.pokemon.status.VolatileStatus;
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
 import com.github.drsmugleaf.pokemon.types.Type;
+import org.jetbrains.annotations.Contract;
 
 /**
  * Created by DrSmugleaf on 21/07/2017.
@@ -448,7 +449,7 @@ public enum Messages {
                     case NATURAL_CURE:
                         return String.format("(%s's Natural Cure activated!)", user.getNickname());
                     default:
-                        return String.format("%s's %s heals its status!", user.getNickname(), ability.NAME);
+                        return String.format("%s's %s heals its status!", user.getNickname(), ability.getName());
                 }
             }
 
@@ -615,8 +616,8 @@ public enum Messages {
         public String getMessage(Pokemon user, Pokemon target, Battle battle, Trainer trainer, Move move, Items item, Abilities ability, boolean suppressed, Status status, VolatileStatus volatileStatus, boolean self, Integer hitCount, PermanentStat[] stat, Type newType, Move targetMove, boolean zMove, boolean failed) {
             String userName = user.getNickname();
             String targetName = target.getNickname();
-            String targetAbilityName = target.ABILITY.get().NAME;
-            String abilityName = ability.NAME;
+            String targetAbilityName = target.ABILITY.get().getName();
+            String abilityName = ability.getName();
 
             if (ability != null) {
                 switch (move.BASE_MOVE) {
@@ -684,7 +685,7 @@ public enum Messages {
             if (suppressed) {
                 return String.format("%s's Ability was supressed!", target.getNickname());
             } else {
-                return String.format("%s's %s was removed!", target.getNickname(), ability.NAME);
+                return String.format("%s's %s was removed!", target.getNickname(), ability.getName());
             }
         }
     },
@@ -896,7 +897,6 @@ public enum Messages {
     };
 
     private final String NAME;
-
     @Nullable
     protected final String MESSAGE;
 
@@ -909,6 +909,7 @@ public enum Messages {
         this(name, null);
     }
 
+    @Contract(pure = true)
     public String getName() {
         return NAME;
     }

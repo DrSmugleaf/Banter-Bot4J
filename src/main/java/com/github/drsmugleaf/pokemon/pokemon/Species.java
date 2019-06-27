@@ -7,6 +7,7 @@ import com.github.drsmugleaf.pokemon.battle.Tier;
 import com.github.drsmugleaf.pokemon.external.SmogonParser;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon.types.Type;
+import org.jetbrains.annotations.Contract;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -1072,17 +1073,8 @@ public enum Species {
                 double height = alt.getDouble("height");
 
                 JSONArray jsonAbilities = alt.getJSONArray("abilities");
-                for (int k = 0; k < jsonAbilities.length(); k++) {
-                    Abilities ability;
-                    try {
-                        ability = Abilities.getAbility(jsonAbilities.getString(k));
-                    } catch (NullPointerException e) {
-                        System.err.println(e.getMessage());
-                        continue;
-                    }
-
-                    pokemon.addAbilities(ability);
-                }
+                List<Abilities> abilities = Abilities.getAbilities(jsonAbilities);
+                pokemon.addAbilities(abilities);
 
                 JSONArray jsonTypes = alt.getJSONArray("types");
                 for (int k = 0; k < jsonTypes.length(); k++) {
@@ -1111,23 +1103,15 @@ public enum Species {
     }
 
     public final String NAME;
-
     private final List<Generation> GENERATIONS = new ArrayList<>();
-
     private final List<Abilities> ABILITIES = new ArrayList<>();
-
     private final List<Type> TYPES = new ArrayList<>();
-
     private final List<Tier> TIERS = new ArrayList<>();
-
     private final Map<PermanentStat, Integer> STATS = new HashMap<>();
-
     private final List<Species> EVOLUTIONS = new ArrayList<>();
-
-    private Double WEIGHT = null;
-    private Double HEIGHT = null;
-    private String SUFFIX = null;
-
+    private Double WEIGHT;
+    private Double HEIGHT;
+    private String SUFFIX;
     private final List<Gender> VALID_GENDERS = new ArrayList<>();
 
     Species(String name, Gender... genders) {
@@ -1163,120 +1147,153 @@ public enum Species {
         return pokemon.getName().contains("Silvally");
     }
 
+    @Contract(pure = true)
     public String getName() {
         return NAME;
     }
 
+    @Contract(" -> new")
     public List<Generation> getGenerations() {
         return new ArrayList<>(GENERATIONS);
     }
 
+    @Contract("_ -> this")
     private Species addGenerations(Generation... generations) {
         Collections.addAll(GENERATIONS, generations);
         return this;
     }
 
+    @Contract("_ -> this")
     private Species addGenerations(Collection<Generation> generations) {
         GENERATIONS.addAll(generations);
         return this;
     }
 
+    @Contract("_ -> this")
     private Species setGenerations(Generation... generations) {
         GENERATIONS.clear();
         return addGenerations(generations);
     }
 
+    @Contract(" -> new")
     public List<Abilities> getAbilities() {
         return new ArrayList<>(ABILITIES);
     }
 
+    @Contract("_ -> this")
     private Species addAbilities(Abilities... abilities) {
         Collections.addAll(ABILITIES, abilities);
         return this;
     }
 
+    @Contract("_ -> this")
+    private Species addAbilities(Collection<Abilities> abilities) {
+        ABILITIES.addAll(abilities);
+        return this;
+    }
+
+    @Contract("_ -> this")
     private Species setAbilities(Abilities... abilities) {
         ABILITIES.clear();
         return addAbilities(abilities);
     }
 
+    @Contract(" -> new")
     public List<Type> getTypes() {
         return new ArrayList<>(TYPES);
     }
 
+    @Contract("_ -> this")
     private Species addTypes(Type... types) {
         Collections.addAll(TYPES, types);
         return this;
     }
 
+    @Contract("_ -> this")
     private Species setTypes(Type... types) {
         TYPES.clear();
         return this;
     }
 
+    @Contract(pure = true)
     public List<Tier> getTiers() {
         return TIERS;
     }
 
+    @Contract("_ -> this")
     private Species addTiers(Tier... tiers) {
         Collections.addAll(TIERS, tiers);
         return this;
     }
 
+    @Contract("_ -> this")
     private Species setTiers(Tier... tiers) {
         TIERS.clear();
         return this;
     }
 
+    @Contract(pure = true)
     public Map<PermanentStat, Integer> getStats() {
         return STATS;
     }
 
+    @Contract("_, _ -> this")
     private Species addStats(PermanentStat stat, int amount) {
         STATS.put(stat, amount);
         return this;
     }
 
+    @Contract(pure = true)
     public List<Species> getEvolutions() {
         return EVOLUTIONS;
     }
 
+    @Contract("_ -> this")
     private Species addEvolutions(Species... evolutions) {
         Collections.addAll(EVOLUTIONS, evolutions);
         return this;
     }
 
+    @Contract("_ -> this")
     private Species setEvolutions(Species... evolutions) {
         EVOLUTIONS.clear();
         return addEvolutions(evolutions);
     }
 
+    @Contract(pure = true)
     public Double getWeight() {
         return WEIGHT;
     }
 
+    @Contract("_ -> this")
     private Species setWeight(double weight) {
         WEIGHT = weight;
         return this;
     }
 
+    @Contract(pure = true)
     public Double getHeight() {
         return HEIGHT;
     }
 
+    @Contract("_ -> this")
     private Species setHeight(double height) {
         HEIGHT = height;
         return this;
     }
 
+    @Contract(pure = true)
     public String getSuffix() {
         return SUFFIX;
     }
 
-    private void setSuffix(String suffix) {
+    @Contract("_ -> this")
+    private Species setSuffix(String suffix) {
         SUFFIX = suffix;
+        return this;
     }
 
+    @Contract(" -> new")
     public List<Gender> getValidGenders() {
         return new ArrayList<>(VALID_GENDERS);
     }

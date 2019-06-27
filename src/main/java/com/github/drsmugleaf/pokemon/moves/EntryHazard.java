@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.pokemon.moves;
 
+import org.jetbrains.annotations.Contract;
+
 /**
  * Created by DrSmugleaf on 04/10/2017.
  */
@@ -16,6 +18,7 @@ public enum EntryHazard {
         NAME = name;
     }
 
+    @Contract(pure = true)
     public String getName() {
         return NAME;
     }

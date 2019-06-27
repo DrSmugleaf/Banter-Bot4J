@@ -18,9 +18,7 @@ import java.util.*;
 public class Battle extends Setup {
 
     private final Map<Long, Trainer> TRAINERS = new LinkedHashMap<>();
-
     private Weather weather = Weather.NONE;
-
     private final List<Turn> TURNS = new ArrayList<>();
 
     protected Battle(Setup setup, List<TrainerBuilder> trainers) throws UserException {

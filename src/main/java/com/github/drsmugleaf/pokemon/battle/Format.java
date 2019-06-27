@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.pokemon.battle;
 
 import com.github.drsmugleaf.Nullable;
+import org.jetbrains.annotations.Contract;
 
 import java.util.*;
 
@@ -179,12 +180,9 @@ public enum Format {
     }
 
     public final String NAME;
-
     @Nullable
     public final String ABBREVIATION;
-
     private final List<Clause> CLAUSES = new ArrayList<>();
-
     @Nullable
     private Tier TIER = null;
 
@@ -208,10 +206,12 @@ public enum Format {
         return Holder.MAP.get(name);
     }
 
+    @Contract(pure = true)
     public String getName() {
         return NAME;
     }
 
+    @Contract(pure = true)
     @Nullable
     public String getAbbreviation() {
         return ABBREVIATION;
@@ -231,25 +231,30 @@ public enum Format {
         return true;
     }
 
+    @Contract(" -> new")
     public List<Clause> getClauses() {
-        return CLAUSES;
+        return new ArrayList<>(CLAUSES);
     }
 
+    @Contract("_ -> this")
     private Format addClauses(Clause... clauses) {
         Collections.addAll(CLAUSES, clauses);
         return this;
     }
 
+    @Contract("_ -> this")
     private Format setClauses(Clause... clauses) {
         CLAUSES.clear();
         return addClauses(clauses);
     }
 
+    @Contract(pure = true)
     @Nullable
     public Tier getTier() {
         return TIER;
     }
 
+    @Contract("_ -> this")
     public Format setTier(Tier tier) {
         TIER = tier;
         return this;

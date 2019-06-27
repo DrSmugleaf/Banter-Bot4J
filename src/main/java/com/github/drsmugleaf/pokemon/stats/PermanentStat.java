@@ -3,6 +3,7 @@ package com.github.drsmugleaf.pokemon.stats;
 import com.github.drsmugleaf.pokemon.battle.Generation;
 import com.github.drsmugleaf.pokemon.battle.InvalidGenerationException;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
+import org.jetbrains.annotations.Contract;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +51,6 @@ public enum PermanentStat implements IStat {
     SPEED("Speed", "Spe");
 
     public final String NAME;
-
     public final String ABBREVIATION;
 
     PermanentStat(String name, String abbreviation) {
@@ -68,11 +68,13 @@ public enum PermanentStat implements IStat {
         return Holder.MAP.get(name);
     }
 
+    @Contract(pure = true)
     @Override
     public String getName() {
         return NAME;
     }
 
+    @Contract(pure = true)
     @Override
     public String getAbbreviation() {
         return ABBREVIATION;

@@ -6,6 +6,7 @@ import com.github.drsmugleaf.pokemon.moves.BaseMove;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
 import com.github.drsmugleaf.pokemon.types.Type;
+import org.jetbrains.annotations.Contract;
 
 import java.util.*;
 
@@ -283,7 +284,6 @@ public enum Clause {
     SKETCH_CLAUSE("Sketch Clause", "You can't sketch two of the same moves in a team with non-native users.");
 
     public final String NAME;
-
     public final String DESCRIPTION;
 
     Clause(String name, String description) {
@@ -292,10 +292,12 @@ public enum Clause {
         DESCRIPTION = description;
     }
 
+    @Contract(pure = true)
     public String getName() {
         return NAME;
     }
 
+    @Contract(pure = true)
     public String getDescription() {
         return DESCRIPTION;
     }

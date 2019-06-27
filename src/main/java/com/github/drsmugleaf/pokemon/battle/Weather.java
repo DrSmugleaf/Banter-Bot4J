@@ -3,6 +3,7 @@ package com.github.drsmugleaf.pokemon.battle;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.status.Status;
 import com.github.drsmugleaf.pokemon.types.Type;
+import org.jetbrains.annotations.Contract;
 
 /**
  * Created by DrSmugleaf on 07/06/2017.
@@ -57,6 +58,7 @@ public enum Weather implements IModifier {
         NAME = name;
     }
 
+    @Contract(pure = true)
     public String getName() {
         return NAME;
     }

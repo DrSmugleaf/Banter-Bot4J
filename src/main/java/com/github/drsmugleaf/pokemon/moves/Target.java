@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.pokemon.moves;
 
+import org.jetbrains.annotations.Contract;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,11 +38,13 @@ public enum Target {
         return Holder.MAP.get(target);
     }
 
+    @Contract(pure = true)
     @Override
     public String toString() {
         return NAME;
     }
 
+    @Contract(pure = true)
     public String getName() {
         return NAME;
     }

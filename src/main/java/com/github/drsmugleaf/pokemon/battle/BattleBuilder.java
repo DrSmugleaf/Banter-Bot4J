@@ -13,7 +13,6 @@ import java.util.List;
 public class BattleBuilder {
 
     private Setup SETUP = Setup.getDefault();
-
     private final List<TrainerBuilder> TRAINERS = new ArrayList<>();
 
     public BattleBuilder() {}

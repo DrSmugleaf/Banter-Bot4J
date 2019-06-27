@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.pokemon.battle;
 
+import org.jetbrains.annotations.Contract;
+
 /**
  * Created by DrSmugleaf on 26/09/2017.
  */
@@ -15,6 +17,7 @@ public enum Variation {
         NAME = name;
     }
 
+    @Contract(pure = true)
     public String getName() {
         return NAME;
     }

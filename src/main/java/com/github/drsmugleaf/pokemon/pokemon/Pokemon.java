@@ -12,12 +12,13 @@ import com.github.drsmugleaf.pokemon.item.Item;
 import com.github.drsmugleaf.pokemon.item.Items;
 import com.github.drsmugleaf.pokemon.moves.CriticalHitStage;
 import com.github.drsmugleaf.pokemon.moves.Move;
-import com.github.drsmugleaf.pokemon.moves.Moves;
+import com.github.drsmugleaf.pokemon.moves.Moveset;
 import com.github.drsmugleaf.pokemon.stats.*;
 import com.github.drsmugleaf.pokemon.status.Statuses;
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
 import com.github.drsmugleaf.pokemon.trainer.UserException;
 import com.github.drsmugleaf.pokemon.types.Types;
+import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,46 +31,26 @@ import java.util.Map;
 public class Pokemon {
 
     public final Trainer TRAINER;
-
     public final Species SPECIES;
-
     public final Types TYPES;
-
     public final String NICKNAME;
-
     public final Ability ABILITY;
-
     public final Nature NATURE;
-
     public final Item ITEM;
-
     public final Gender GENDER;
-
     private int LEVEL;
-
     public final Stats STATS;
-
     private final Map<IStat, Map<IModifier, Double>> STAT_MODIFIERS = getDefaultStatModifiers();
-
     private CriticalHitStage criticalHitStage = CriticalHitStage.ZERO;
-
     private int hp;
-
     public final Statuses STATUSES = new Statuses();
-
-    public final Moves MOVES;
-
+    public final Moveset MOVES;
     @Nullable
     private Action action = null;
-
     @Nullable
     private Pokemon damagedThisTurn = null;
-
-    // Kilograms
-    private double weight;
-
+    private double weight; // Kilograms
     protected final List<Tag> TAGS = new ArrayList<>();
-
     private int toxicN = 1;
 
     protected Pokemon(
@@ -127,7 +108,7 @@ public class Pokemon {
 
         hp = (int) PermanentStat.HP.calculate(this);
 
-        MOVES = new Moves(moves);
+        MOVES = new Moveset(moves);
         weight = species.getWeight();
     }
 
@@ -173,34 +154,42 @@ public class Pokemon {
         return string;
     }
 
+    @Contract(pure = true)
     public Trainer getTrainer() {
         return TRAINER;
     }
 
+    @Contract(pure = true)
     public Battle getBattle() {
         return TRAINER.BATTLE;
     }
 
+    @Contract(pure = true)
     public Species getSpecies() {
         return SPECIES;
     }
 
+    @Contract(pure = true)
     public String getName() {
         return SPECIES.NAME;
     }
 
+    @Contract(pure = true)
     public String getNickname() {
         return NICKNAME;
     }
 
+    @Contract(pure = true)
     public Nature getNature() {
         return NATURE;
     }
 
+    @Contract(pure = true)
     public Gender getGender() {
         return GENDER;
     }
 
+    @Contract(pure = true)
     public Integer getLevel() {
         return LEVEL;
     }
@@ -240,6 +229,7 @@ public class Pokemon {
         return builder.toString();
     }
 
+    @Contract(pure = true)
     public CriticalHitStage getCriticalHitStage() {
         return criticalHitStage;
     }
@@ -250,6 +240,7 @@ public class Pokemon {
         return criticalHitStage;
     }
 
+    @Contract(pure = true)
     @Nullable
     public Action getAction() {
         return action;
@@ -259,6 +250,7 @@ public class Pokemon {
         this.action = action;
     }
 
+    @Contract(pure = true)
     public int getHP() {
         return hp;
     }
@@ -346,6 +338,7 @@ public class Pokemon {
         return damagedThisTurn == pokemon;
     }
 
+    @Contract(pure = true)
     public double getWeight() {
         return weight;
     }
@@ -356,7 +349,7 @@ public class Pokemon {
 
     public double getStabMultiplier(Move move) {
         return 1.0;
-    }
+    } // TODO: 28-Jun-19 Stab multiplier
 
     @Nullable
     public Action getLastAction() {
@@ -423,6 +416,7 @@ public class Pokemon {
         }
     }
 
+    @Contract(pure = true)
     public int getToxicN() {
         return toxicN;
     }
@@ -439,7 +433,7 @@ public class Pokemon {
         return TRAINER.getActivePokemon(pokemon) > -1;
     }
 
-    public boolean affectedBy(Action action) {
+    public boolean isAffectedBy(Action action) {
         return !TYPES.isImmune(action);
     }
 

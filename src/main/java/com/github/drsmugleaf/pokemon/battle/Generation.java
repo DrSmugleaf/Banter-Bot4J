@@ -154,13 +154,9 @@ public enum Generation {
     }
 
     public final String NAME;
-
     public final String SHORTHAND;
-
     private final List<Game> CORE_GAMES = new ArrayList<>();
-
     private int NEW_POKEMONS;
-
     private int TOTAL_POKEMONS;
 
     Generation(String name, String shorthand) {
@@ -194,6 +190,7 @@ public enum Generation {
         return NEW_POKEMONS;
     }
 
+    @Contract("_ -> this")
     private Generation setNewPokemons(int amount) {
         NEW_POKEMONS = amount;
         return this;
@@ -204,15 +201,18 @@ public enum Generation {
         return TOTAL_POKEMONS;
     }
 
+    @Contract("_ -> this")
     private Generation setTotalPokemons(int amount) {
         TOTAL_POKEMONS = amount;
         return this;
     }
 
+    @Contract(" -> new")
     public List<Game> getCoreGames() {
         return new ArrayList<>(CORE_GAMES);
     }
 
+    @Contract("_ -> this")
     private Generation setCoreGames(Game... games) {
         Collections.addAll(CORE_GAMES, games);
         return this;

@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.pokemon.item;
 
+import org.jetbrains.annotations.Contract;
+
 /**
  * Created by DrSmugleaf on 18/09/2017.
  */
@@ -20,6 +22,7 @@ public enum ItemCategory {
         NAME = name;
     }
 
+    @Contract(pure = true)
     public String getName() {
         return NAME;
     }

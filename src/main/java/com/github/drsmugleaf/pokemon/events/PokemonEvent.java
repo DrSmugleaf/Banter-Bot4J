@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.pokemon.events;
 
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
+import org.jetbrains.annotations.Contract;
 
 /**
  * Created by DrSmugleaf on 17/07/2017.
@@ -14,6 +15,7 @@ public abstract class PokemonEvent extends Event {
         POKEMON = pokemon;
     }
 
+    @Contract(pure = true)
     public Pokemon getPokemon() {
         return POKEMON;
     }

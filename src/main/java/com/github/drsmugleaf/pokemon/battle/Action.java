@@ -15,29 +15,17 @@ import java.util.*;
 public class Action extends Move {
 
     private final Move MOVE;
-
     private final Pokemon ATTACKER;
-
     private final List<Pokemon> DEFENDERS = new ArrayList<>();
-
     private int TARGET_POSITION;
-
     private Pokemon TARGET_POKEMON;
-
     private Trainer TARGET_TEAM;
-
     private Map<Pokemon, Integer> DAMAGE = new LinkedHashMap<>();
-
     private Map<Pokemon, Boolean> CRITICAL = new LinkedHashMap<>();
-
     private Map<Pokemon, Boolean> HIT = new LinkedHashMap<>();
-
     private final List<BaseVolatileStatus> ATTACKER_VOLATILE_STATUSES = new ArrayList<>();
-
     private final List<BaseVolatileStatus> TARGET_VOLATILE_STATUSES = new ArrayList<>();
-
     private final int TURN;
-
     private final List<DamageTags> TAGS = new ArrayList<>();
 
     protected Action(Move move, Pokemon attacker, Pokemon target, int turn) {

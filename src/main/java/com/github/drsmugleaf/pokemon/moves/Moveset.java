@@ -2,27 +2,27 @@ package com.github.drsmugleaf.pokemon.moves;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon.battle.Action;
+import org.jetbrains.annotations.Contract;
 
 import java.util.*;
 
 /**
  * Created by DrSmugleaf on 19/10/2017.
  */
-public class Moves {
+public class Moveset {
 
     private final List<Move> MOVES;
-
     private final List<BaseMove> VALID_MOVES = new ArrayList<>();
-
     private final Map<BaseMove, Integer> DISABLED_MOVES = new HashMap<>();
 
-    public Moves(List<Move> moves) {
+    public Moveset(List<Move> moves) {
         MOVES = new ArrayList<>(moves);
         for (Move move : MOVES) {
             VALID_MOVES.add(move.BASE_MOVE);
         }
     }
 
+    @Contract(" -> new")
     public List<Move> get() {
         return new ArrayList<>(MOVES);
     }
@@ -40,6 +40,7 @@ public class Moves {
         return null;
     }
 
+    @Contract(" -> new")
     public List<BaseMove> getValid() {
         return new ArrayList<>(VALID_MOVES);
     }
@@ -56,6 +57,7 @@ public class Moves {
         VALID_MOVES.addAll(Arrays.asList(moves));
     }
 
+    @Contract(" -> new")
     public Map<BaseMove, Integer> getDisabled() {
         return new HashMap<>(DISABLED_MOVES);
     }

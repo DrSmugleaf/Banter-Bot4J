@@ -43,7 +43,17 @@ public class SerebiiParser {
             if (element.text().startsWith("AttackDex: ")) {
                 continue;
             }
-            System.out.println(element.text().toUpperCase().replaceAll(",|\\.|'", "").replaceAll(" ", "_").replaceAll("-", "_").trim() + "(\"" + element.text() + "\"),");
+
+            String move = element
+                    .text()
+                    .toUpperCase()
+                    .replaceAll(",|\\.|'", "")
+                    .replaceAll(" ", "_")
+                    .replaceAll("-", "_")
+                    .trim() +
+                    "(\"" + element.text() + "\"),";
+
+            System.out.println(move);
         }
     }
 
@@ -147,6 +157,7 @@ public class SerebiiParser {
             for (int i = 0; i < 2; i++) {
                 Element table = tables.get(i);
                 Elements tableRows = table.child(0).children();
+
                 for (int j = 0; j < tableRows.size(); j = j + 2) {
                     Element propertyNameRow;
                     Element propertyValueRow;
@@ -165,9 +176,9 @@ public class SerebiiParser {
                         throw new ParsingException("Null property name or value group for move " + element.attr("value") + ", skipping");
                     }
 
-                    for (int i2 = 0; i2 < propertyNameGroup.size(); i2++) {
-                        String propertyName = propertyNameGroup.get(i2).text();
-                        Element propertyValue = propertyValueGroup.get(i2);
+                    for (int k = 0; k < propertyNameGroup.size(); k++) {
+                        String propertyName = propertyNameGroup.get(k).text();
+                        Element propertyValue = propertyValueGroup.get(k);
                         if (Objects.equals(propertyName, "Z-" + name)) {
                             isSelfZMove = true;
                             continue;
@@ -516,6 +527,7 @@ public class SerebiiParser {
 
             writer.writeNext(move);
         }
+
         writer.close();
     }
 

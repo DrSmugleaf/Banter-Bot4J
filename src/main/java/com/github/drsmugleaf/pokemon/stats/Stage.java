@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.pokemon.stats;
 
+import org.jetbrains.annotations.Contract;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +45,7 @@ public enum Stage {
         return Holder.MAP.get(stage);
     }
 
+    @Contract(pure = true)
     public int getStage() {
         return STAGE;
     }
@@ -61,14 +64,17 @@ public enum Stage {
         throw new IllegalArgumentException("Invalid stat: " + stat);
     }
 
+    @Contract(pure = true)
     public double getMainStatMultiplier() {
         return MAIN_STAT_MULTIPLIER;
     }
 
+    @Contract(pure = true)
     public double getAccuracyMultiplier() {
         return ACCURACY_MULTIPLIER;
     }
 
+    @Contract(pure = true)
     public double getEvasionMultiplier() {
         return EVASION_MULTIPLIER;
     }

@@ -4,6 +4,7 @@ import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon.battle.Battle;
 import com.github.drsmugleaf.pokemon.battle.IModifier;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
+import org.jetbrains.annotations.Contract;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -319,7 +320,6 @@ public enum Items implements IModifier {
     FAIRY_MEMORY("Fairy Memory", ItemCategory.SILVALLY_MEMORY);
 
     public final String NAME;
-
     public final ItemCategory CATEGORY;
 
     Items(String name, ItemCategory category) {
@@ -346,15 +346,17 @@ public enum Items implements IModifier {
         return Holder.MAP.get(item);
     }
 
+    @Contract(pure = true)
     public String getName() {
         return NAME;
     }
 
+    @Contract(pure = true)
     public ItemCategory getCategory() {
         return CATEGORY;
     }
 
-    public void use(Pokemon user, Battle battle) {}
+    public void use(Pokemon user, Battle battle) {} // TODO: 27-Jun-19 Make abstract after all items are done
 
     private static class Holder {
         static Map<String, Items> MAP = new HashMap<>();

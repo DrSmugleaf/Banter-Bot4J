@@ -4,6 +4,7 @@ import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon.battle.IModifier;
 import com.github.drsmugleaf.pokemon.stats.IStat;
 import com.github.drsmugleaf.pokemon.stats.StatBuilder;
+import org.jetbrains.annotations.Contract;
 
 import java.util.*;
 
@@ -29,6 +30,7 @@ public class Statuses {
         return statModifiers;
     }
 
+    @Contract(pure = true)
     @Nullable
     public Status getStatus() {
         return status;

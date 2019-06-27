@@ -10,6 +10,7 @@ import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.pokemon.PokemonBuilder;
 import com.github.drsmugleaf.pokemon.status.BaseVolatileStatus;
 import com.google.common.collect.Lists;
+import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,23 +24,15 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Trainer extends Player {
 
     public final Battle BATTLE;
-
     private final List<Pokemon> POKEMONS = new ArrayList<>();
-
     private final List<Pokemon> ACTIVE_POKEMONS = new ArrayList<>();
-
     private final List<Action> ACTIONS = new ArrayList<>();
-
     @Nullable
     private Pokemon pokemonInFocus = null;
-
     @Nullable
     private Move chosenMove = null;
-
     private boolean ready = false;
-
     private TrainerStatus status = TrainerStatus.NONE;
-
     private final List<EntryHazard> HAZARDS = new ArrayList<>();
 
     protected Trainer(Long id, String name, Battle battle, PokemonBuilder... pokemonBuilders) throws UserException {
@@ -92,8 +85,9 @@ public class Trainer extends Player {
         return alivePokemons.get(0);
     }
 
+    @Contract(" -> new")
     public List<Pokemon> getActivePokemons() {
-        return ACTIVE_POKEMONS;
+        return new ArrayList<>(ACTIVE_POKEMONS);
     }
 
     @Nullable
@@ -193,6 +187,7 @@ public class Trainer extends Player {
         return false;
     }
 
+    @Contract(" -> new")
     public List<Action> getActions() {
         return new ArrayList<>(ACTIONS);
     }
@@ -223,6 +218,7 @@ public class Trainer extends Player {
         if (ACTIVE_POKEMONS.size() >= 3) {
             return Lists.reverse(ACTIVE_POKEMONS).get(index);
         }
+
         return null;
     }
 
@@ -242,6 +238,7 @@ public class Trainer extends Player {
         return POKEMONS.contains(pokemon);
     }
 
+    @Contract(pure = true)
     @Nullable
     public Pokemon getPokemonInFocus() {
         return pokemonInFocus;
@@ -255,6 +252,7 @@ public class Trainer extends Player {
         pokemonInFocus = null;
     }
 
+    @Contract(pure = true)
     @Nullable
     public Move getChosenMove() {
         return chosenMove;
@@ -271,10 +269,12 @@ public class Trainer extends Player {
         chosenMove = null;
     }
 
+    @Contract(pure = true)
     public Battle getBattle() {
         return BATTLE;
     }
 
+    @Contract(pure = true)
     public boolean isReady() {
         return ready;
     }
@@ -283,6 +283,7 @@ public class Trainer extends Player {
         ready = bool;
     }
 
+    @Contract(pure = true)
     public TrainerStatus getStatus() {
         return status;
     }

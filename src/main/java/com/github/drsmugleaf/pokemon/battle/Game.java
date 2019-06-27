@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.pokemon.battle;
 
+import org.jetbrains.annotations.Contract;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,6 +51,7 @@ public enum Game {
         return Holder.MAP.get(game);
     }
 
+    @Contract(pure = true)
     public String getName() {
         return NAME;
     }

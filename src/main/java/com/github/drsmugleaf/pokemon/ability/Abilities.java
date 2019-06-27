@@ -3,6 +3,7 @@ package com.github.drsmugleaf.pokemon.ability;
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon.battle.IModifier;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
+import org.jetbrains.annotations.Contract;
 import org.json.JSONArray;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
@@ -254,7 +255,7 @@ public enum Abilities implements IModifier {
     WATER_COMPACTION("Water Compaction"),
     POWER_CONSTRUCT("Power Construct");
 
-    public final String NAME;
+    private final String NAME;
 
     Abilities(String name) {
         Holder.MAP.put(name.toLowerCase(), this);
@@ -279,11 +280,23 @@ public enum Abilities implements IModifier {
         List<Abilities> abilityList = new ArrayList<>();
 
         for (int i = 0; i < abilities.length(); i++) {
-            Abilities ability = Abilities.getAbility(abilities.getString(i));
+            Abilities ability;
+            try {
+                ability = Abilities.getAbility(abilities.getString(i));
+            } catch (NullPointerException e) {
+                System.err.println(e.getMessage());
+                continue;
+            }
+
             abilityList.add(ability);
         }
 
         return abilityList;
+    }
+
+    @Contract(pure = true)
+    public String getName() {
+        return NAME;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.pokemon.item;
 
-import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import org.jetbrains.annotations.Contract;
 
@@ -24,7 +23,6 @@ public class Item {
     }
 
     @Contract(pure = true)
-    @Nullable
     public Items get() {
         return item;
     }
@@ -48,6 +46,7 @@ public class Item {
     public Items set(Items item) {
         Items oldItem = this.item;
         this.item = item;
+
         return oldItem;
     }
 

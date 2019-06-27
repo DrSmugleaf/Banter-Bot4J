@@ -8,7 +8,6 @@ import java.util.*;
 public class StatBuilder {
 
     public static final List<IStat> STAT_LIST = new ArrayList<>();
-
     private final Map<IStat, Stat> STATS = new LinkedHashMap<>();
 
     static {

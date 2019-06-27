@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.pokemon.moves;
 
+import org.jetbrains.annotations.Contract;
+
 /**
  * Created by DrSmugleaf on 24/09/2017.
  */
@@ -13,6 +15,7 @@ public enum MoveEffect {
         NAME = name;
     }
 
+    @Contract(pure = true)
     public String getName() {
         return NAME;
     }

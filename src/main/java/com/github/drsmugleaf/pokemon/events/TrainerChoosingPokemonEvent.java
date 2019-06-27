@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.pokemon.events;
 
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
+import org.jetbrains.annotations.Contract;
 
 import java.util.*;
 
@@ -21,8 +22,9 @@ public class TrainerChoosingPokemonEvent extends Event {
         TRAINERS = Collections.unmodifiableList(new ArrayList<>(trainers));
     }
 
+    @Contract(" -> new")
     public List<Trainer> getTrainers() {
-        return TRAINERS;
+        return new ArrayList<>(TRAINERS);
     }
 
 }

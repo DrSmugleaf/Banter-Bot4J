@@ -2,6 +2,7 @@ package com.github.drsmugleaf.pokemon.events;
 
 import com.github.drsmugleaf.pokemon.moves.Move;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
+import org.jetbrains.annotations.Contract;
 
 /**
  * Created by DrSmugleaf on 19/07/2017.
@@ -15,6 +16,7 @@ public class TrainerChooseTargetEvent extends TrainerChooseMoveEvent {
         TARGET = target;
     }
 
+    @Contract(pure = true)
     public Pokemon getTarget() {
         return TARGET;
     }

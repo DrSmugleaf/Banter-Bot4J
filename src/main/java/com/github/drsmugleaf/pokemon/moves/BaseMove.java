@@ -25,6 +25,7 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import org.jetbrains.annotations.Contract;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -2931,79 +2932,46 @@ public enum BaseMove implements IModifier, IMoves {
     ZEN_HEADBUTT("Zen Headbutt"),
     ZING_ZAP("Zing Zap");
 
-    private static List<String[]> csv;
-
+    @Nullable
+    private static List<String[]> csv = null;
     public final String NAME;
-
     public final int POWER;
-
     @Nullable
     public final Integer EFFECT_RATE;
-
     public final Type TYPE;
-
     public final MoveCategory CATEGORY;
-
-    public final MoveEffect EFFECT = null;
-
+    public final MoveEffect EFFECT = null; // TODO: 28-Jun-19 Add move effects
     public final int PP;
-
     public final int ACCURACY;
-
     public final boolean IS_Z_MOVE;
-
     public final List<Species> Z_MOVE_REQUIRED_POKEMON;
-
-    public final BaseMoves.Single Z_MOVE_REQUIRED_MOVES;
-
-    public final BaseMoves Z_PRECURSOR_MOVES;
-
+    public final BaseMoveset.Single Z_MOVE_REQUIRED_MOVES;
+    public final BaseMoveset Z_PRECURSOR_MOVES;
     public final boolean IS_SELF_Z_MOVE;
-
     @Nullable
     public final Items Z_MOVE_ITEM;
-
     public final String BATTLE_EFFECT;
-
     @Nullable
     public final String IN_DEPTH_EFFECT;
-
     public final String SECONDARY_EFFECT;
-
-    public final BaseMoves.Single CORRESPONDING_Z_MOVE;
-
+    public final BaseMoveset.Single CORRESPONDING_Z_MOVE;
     @Nullable
     public final Integer Z_MOVE_POWER;
-
     @Nullable
     public final String DETAILED_EFFECT;
-
     public final CriticalHitStage BASE_CRITICAL_HIT_RATE;
-
     public final int PRIORITY;
-
     public final Target TARGET;
-
     public final Hit POKEMON_HIT;
-
     public final boolean PHYSICAL_CONTACT;
-
     public final boolean SOUND_TYPE;
-
     public final boolean PUNCH_MOVE;
-
     public final boolean SNATCHABLE;
-
     public final boolean Z_MOVE;
-
     public final boolean DEFROSTS_WHEN_USED;
-
     public final boolean HITS_OPPOSITE_SIDE_IN_TRIPLES;
-
     public final boolean REFLECTED;
-
     public final boolean BLOCKED;
-
     public final boolean COPYABLE;
 
     BaseMove(String name) {
@@ -3027,7 +2995,7 @@ public enum BaseMove implements IModifier, IMoves {
         DETAILED_EFFECT = line[9].isEmpty() ? null : line[9];
         EFFECT_RATE = line[10].isEmpty() ? null : Integer.valueOf(line[10]);
         IS_SELF_Z_MOVE = Boolean.parseBoolean(line[11]);
-        CORRESPONDING_Z_MOVE = new BaseMoves.Single(line[12]);
+        CORRESPONDING_Z_MOVE = new BaseMoveset.Single(line[12]);
         Z_MOVE_ITEM = line[13].isEmpty() ? null : Items.getItem(line[13]);
         Z_MOVE_POWER = line[14].isEmpty() ? null : Integer.valueOf(line[14]);
         IS_Z_MOVE = Boolean.parseBoolean(line[15]);
@@ -3040,8 +3008,8 @@ public enum BaseMove implements IModifier, IMoves {
         }
         Z_MOVE_REQUIRED_POKEMON = Collections.unmodifiableList(species);
 
-        Z_MOVE_REQUIRED_MOVES = new BaseMoves.Single(line[17]);
-        Z_PRECURSOR_MOVES = new BaseMoves(Arrays.asList(line[18].split(",")));
+        Z_MOVE_REQUIRED_MOVES = new BaseMoveset.Single(line[17]);
+        Z_PRECURSOR_MOVES = new BaseMoveset(Arrays.asList(line[18].split(",")));
         // TODO: Move data by generation
         BASE_CRITICAL_HIT_RATE = line[19].isEmpty() ? CriticalHitStage.getStage(0) : CriticalHitStage.getStage(Generation.VI, Double.parseDouble(line[19]));
         PRIORITY = Integer.parseInt(line[20]);
@@ -3111,6 +3079,12 @@ public enum BaseMove implements IModifier, IMoves {
         }
 
         return Holder.MAP.get(move);
+    }
+
+    @Contract(pure = true)
+    @Override
+    public String getName() {
+        return NAME;
     }
 
     public int getPower(Pokemon user, Pokemon target, Battle battle, Trainer trainer) {

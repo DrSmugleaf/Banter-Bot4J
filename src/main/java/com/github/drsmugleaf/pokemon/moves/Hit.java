@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.pokemon.moves;
 
+import org.jetbrains.annotations.Contract;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +25,6 @@ public enum Hit {
     SPECIAL("Special", false);
 
     public final String NAME;
-
     public final boolean MULTIPLE;
 
     Hit(String name, boolean multiple) {
@@ -42,15 +43,18 @@ public enum Hit {
         return Holder.MAP.get(hit);
     }
 
+    @Contract(pure = true)
     @Override
     public String toString() {
         return NAME;
     }
 
+    @Contract(pure = true)
     public String getName() {
         return NAME;
     }
 
+    @Contract(pure = true)
     public boolean hitsMultiple() {
         return MULTIPLE;
     }

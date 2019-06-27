@@ -6,7 +6,6 @@ package com.github.drsmugleaf.pokemon.ability;
 public class Ability {
 
     private final Abilities ABILITY;
-
     private boolean suppressed = false;
 
     public Ability(Abilities ability) {
@@ -14,7 +13,7 @@ public class Ability {
     }
 
     public String getName() {
-        return ABILITY.NAME;
+        return ABILITY.getName();
     }
 
     public Abilities get() {
