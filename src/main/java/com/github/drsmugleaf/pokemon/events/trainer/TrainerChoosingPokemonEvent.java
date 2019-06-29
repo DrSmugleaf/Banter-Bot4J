@@ -1,5 +1,6 @@
-package com.github.drsmugleaf.pokemon.events;
+package com.github.drsmugleaf.pokemon.events.trainer;
 
+import com.github.drsmugleaf.pokemon.events.Event;
 import com.github.drsmugleaf.pokemon.trainer.Trainer;
 import org.jetbrains.annotations.Contract;
 

@@ -1,5 +1,6 @@
-package com.github.drsmugleaf.pokemon.external;
+package com.github.drsmugleaf.pokemon.external.serebii;
 
+import com.github.drsmugleaf.pokemon.external.ParsingException;
 import com.github.drsmugleaf.pokemon.item.Items;
 import com.github.drsmugleaf.pokemon.moves.BaseMove;
 import com.github.drsmugleaf.pokemon.moves.MoveCategory;

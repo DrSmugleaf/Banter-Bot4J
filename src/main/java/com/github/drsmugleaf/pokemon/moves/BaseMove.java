@@ -5,7 +5,7 @@ import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon.ability.Abilities;
 import com.github.drsmugleaf.pokemon.battle.*;
 import com.github.drsmugleaf.pokemon.events.EventDispatcher;
-import com.github.drsmugleaf.pokemon.events.PokemonDodgeEvent;
+import com.github.drsmugleaf.pokemon.events.pokemon.PokemonDodgeEvent;
 import com.github.drsmugleaf.pokemon.external.ParsingException;
 import com.github.drsmugleaf.pokemon.item.Item;
 import com.github.drsmugleaf.pokemon.item.ItemCategory;

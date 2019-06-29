@@ -2,7 +2,7 @@ package com.github.drsmugleaf.pokemon.trainer;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon.battle.Battle;
-import com.github.drsmugleaf.pokemon.external.SmogonImporter;
+import com.github.drsmugleaf.pokemon.external.smogon.SmogonImporter;
 import com.github.drsmugleaf.pokemon.pokemon.PokemonBuilder;
 import org.jetbrains.annotations.Contract;
 

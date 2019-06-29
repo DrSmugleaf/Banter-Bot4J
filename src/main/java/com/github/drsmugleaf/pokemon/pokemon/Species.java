@@ -4,7 +4,7 @@ import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.pokemon.ability.Abilities;
 import com.github.drsmugleaf.pokemon.battle.Generation;
 import com.github.drsmugleaf.pokemon.battle.Tier;
-import com.github.drsmugleaf.pokemon.external.SmogonParser;
+import com.github.drsmugleaf.pokemon.external.smogon.SmogonParser;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon.types.Type;
 import org.jetbrains.annotations.Contract;

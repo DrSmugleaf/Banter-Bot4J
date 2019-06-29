@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.pokemon.external;
+package com.github.drsmugleaf.pokemon.external.smogon;
 
 import com.github.drsmugleaf.pokemon.ability.Abilities;
 import com.github.drsmugleaf.pokemon.item.Items;

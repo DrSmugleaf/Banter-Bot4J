@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.pokemon.events;
+package com.github.drsmugleaf.pokemon.events.pokemon;
 
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 

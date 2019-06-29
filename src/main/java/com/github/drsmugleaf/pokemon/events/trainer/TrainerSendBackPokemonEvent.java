@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.pokemon.events;
+package com.github.drsmugleaf.pokemon.events.trainer;
 
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import org.jetbrains.annotations.Contract;
@@ -6,11 +6,11 @@ import org.jetbrains.annotations.Contract;
 /**
  * Created by DrSmugleaf on 19/07/2017.
  */
-public class TrainerChoosePokemonEvent extends TrainerEvent {
+public class TrainerSendBackPokemonEvent extends TrainerEvent {
 
     public final Pokemon POKEMON;
 
-    public TrainerChoosePokemonEvent(Pokemon pokemon) {
+    public TrainerSendBackPokemonEvent(Pokemon pokemon) {
         super(pokemon.getTrainer());
         POKEMON = pokemon;
     }

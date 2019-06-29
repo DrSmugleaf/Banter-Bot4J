@@ -3,7 +3,7 @@ package com.github.drsmugleaf.pokemon.moves;
 import com.github.drsmugleaf.pokemon.battle.Action;
 import com.github.drsmugleaf.pokemon.battle.Battle;
 import com.github.drsmugleaf.pokemon.events.EventDispatcher;
-import com.github.drsmugleaf.pokemon.events.PokemonMoveEvent;
+import com.github.drsmugleaf.pokemon.events.pokemon.PokemonMoveEvent;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.types.Type;
 import org.jetbrains.annotations.Contract;

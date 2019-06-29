@@ -1,6 +1,7 @@
-package com.github.drsmugleaf.pokemon.external;
+package com.github.drsmugleaf.pokemon.external.smogon;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.pokemon.external.ParsingException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
