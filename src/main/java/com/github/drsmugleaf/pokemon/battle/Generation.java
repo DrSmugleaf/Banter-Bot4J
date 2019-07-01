@@ -26,7 +26,8 @@ public enum Generation {
                         Game.BLUE,
                         Game.RED_AND_BLUE,
                         Game.YELLOW
-                );
+                )
+                .setSideGames(Game.STADIUM);
 
         II
                 .setNewPokemons(100)
@@ -82,6 +83,7 @@ public enum Generation {
     public final String NAME;
     public final String SHORTHAND;
     private final List<Game> CORE_GAMES = new ArrayList<>();
+    private final List<Game> SIDE_GAMES = new ArrayList<>();
     private int NEW_POKEMONS;
     private int TOTAL_POKEMONS;
 
@@ -145,6 +147,17 @@ public enum Generation {
     @Contract("_ -> this")
     private Generation setCoreGames(Game... games) {
         Collections.addAll(CORE_GAMES, games);
+        return this;
+    }
+
+    @Contract(" -> new")
+    public List<Game> getSideGames() {
+        return new ArrayList<>(SIDE_GAMES);
+    }
+
+    @Contract("_ -> this")
+    private Generation setSideGames(Game... games) {
+        Collections.addAll(SIDE_GAMES, games);
         return this;
     }
 
