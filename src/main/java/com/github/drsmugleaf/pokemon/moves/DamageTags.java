@@ -12,6 +12,7 @@ public enum DamageTags {
     PHYSICAL,
     SPECIAL,
     IGNORE_TYPES,
-    NO_DEFENDER_STAGES
+    NO_DEFENDER_STAGES,
+    HIGH_CRITICAL_RATIO
 
 }

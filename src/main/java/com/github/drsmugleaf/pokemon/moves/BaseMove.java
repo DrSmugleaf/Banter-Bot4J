@@ -10,6 +10,7 @@ import com.github.drsmugleaf.pokemon.external.ParsingException;
 import com.github.drsmugleaf.pokemon.item.Item;
 import com.github.drsmugleaf.pokemon.item.ItemCategory;
 import com.github.drsmugleaf.pokemon.item.Items;
+import com.github.drsmugleaf.pokemon.moves.critical.CriticalHitStage;
 import com.github.drsmugleaf.pokemon.pokemon.Gender;
 import com.github.drsmugleaf.pokemon.pokemon.Pokemon;
 import com.github.drsmugleaf.pokemon.pokemon.Species;
@@ -1472,7 +1473,16 @@ public enum BaseMove implements IModifier, IMoves {
             return damage;
         }
     },
-    CRABHAMMER("Crabhammer"),
+    CRABHAMMER("Crabhammer") {
+        @Override
+        public List<DamageTags> getTags(Generation generation) {
+            if (generation == Generation.I) {
+                return Collections.singletonList(DamageTags.HIGH_CRITICAL_RATIO);
+            }
+
+            return new ArrayList<>();
+        }
+    },
     CRAFTY_SHIELD("Crafty Shield") {
         @Override
         protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
@@ -2305,7 +2315,30 @@ public enum BaseMove implements IModifier, IMoves {
     FLY("Fly"),
     FLYING_PRESS("Flying Press"),
     FOCUS_BLAST("Focus Blast"),
-    FOCUS_ENERGY("Focus Energy"),
+    FOCUS_ENERGY("Focus Energy") {
+        @Override
+        protected int use(Pokemon user, Pokemon target, Battle battle, Action action) {
+            switch (battle.getGeneration()) {
+                case I:
+                    BaseVolatileStatus.FOCUS_ENERGY.apply(user, action);
+                    break;
+                case II:
+                    user.changeCriticalHitStage(1);
+                    break;
+                case III:
+                case IV:
+                case V:
+                case VI:
+                case VII:
+                    user.changeCriticalHitStage(2);
+                    break;
+                default:
+                    throw new InvalidGenerationException(battle.getGeneration());
+            }
+
+            return super.use(user, target, battle, action);
+        }
+    },
     FOCUS_PUNCH("Focus Punch"),
     FOLLOW_ME("Follow Me"),
     FORCE_PALM("Force Palm"),
@@ -2480,7 +2513,12 @@ public enum BaseMove implements IModifier, IMoves {
     IRON_TAIL("Iron Tail"),
     JUDGMENT("Judgment"),
     JUMP_KICK("Jump Kick"),
-    KARATE_CHOP("Karate Chop"),
+    KARATE_CHOP("Karate Chop") {
+        @Override
+        public List<DamageTags> getTags(Generation generation) {
+            return CRABHAMMER.getTags(generation);
+        }
+    },
     KINESIS("Kinesis"),
     KINGS_SHIELD("King's Shield"),
     KNOCK_OFF("Knock Off"),
@@ -2631,7 +2669,12 @@ public enum BaseMove implements IModifier, IMoves {
     RAGE_POWDER("Rage Powder"),
     RAIN_DANCE("Rain Dance"),
     RAPID_SPIN("Rapid Spin"),
-    RAZOR_LEAF("Razor Leaf"),
+    RAZOR_LEAF("Razor Leaf") {
+        @Override
+        public List<DamageTags> getTags(Generation generation) {
+            return CRABHAMMER.getTags(generation);
+        }
+    },
     RAZOR_SHELL("Razor Shell"),
     RAZOR_WIND("Razor Wind"),
     RECOVER("Recover"),
@@ -2747,7 +2790,12 @@ public enum BaseMove implements IModifier, IMoves {
     SKY_UPPERCUT("Sky Uppercut"),
     SLACK_OFF("Slack Off"),
     SLAM("Slam"),
-    SLASH("Slash"),
+    SLASH("Slash") {
+        @Override
+        public List<DamageTags> getTags(Generation generation) {
+            return CRABHAMMER.getTags(generation);
+        }
+    },
     SLEEP_POWDER("Sleep Powder"),
     SLEEP_TALK("Sleep Talk"),
     SLUDGE("Sludge"),
@@ -3079,6 +3127,10 @@ public enum BaseMove implements IModifier, IMoves {
         }
 
         return Holder.MAP.get(move);
+    }
+
+    public List<DamageTags> getTags(Generation generation) {
+        return new ArrayList<>();
     }
 
     @Contract(pure = true)

@@ -1,7 +1,5 @@
 package com.github.drsmugleaf.pokemon.battle;
 
-import com.github.drsmugleaf.pokemon.moves.CriticalHitStage;
-import com.github.drsmugleaf.pokemon.moves.InvalidCriticalStageException;
 import org.jetbrains.annotations.Contract;
 
 import java.util.*;
@@ -11,85 +9,13 @@ import java.util.*;
  */
 public enum Generation {
 
-    I("Generation I", "RB") {
-        @Override
-        public double getCriticalPercentage(CriticalHitStage stage) {
-            throw new InvalidGenerationException(this, "Generation I doesn't have critical hit percentages");
-        }
-    },
-    II("Generation II", "GS") {
-        @Override
-        public double getCriticalPercentage(CriticalHitStage stage) {
-            switch (stage) {
-                case ZERO:
-                    return 6.25;
-                case ONE:
-                    return 12.5;
-                case TWO:
-                    return 25.0;
-                case THREE:
-                    return 33.3333333333;
-                case FOUR:
-                    return 50.0;
-                default:
-                    throw new InvalidCriticalStageException(stage);
-            }
-        }
-    },
-    III("Generation III", "RS") {
-        @Override
-        public double getCriticalPercentage(CriticalHitStage stage) {
-            return II.getCriticalPercentage(stage);
-        }
-    },
-    IV("Generation IV", "DP") {
-        @Override
-        public double getCriticalPercentage(CriticalHitStage stage) {
-            return II.getCriticalPercentage(stage);
-        }
-    },
-    V("Generation V", "BW") {
-        @Override
-        public double getCriticalPercentage(CriticalHitStage stage) {
-            return II.getCriticalPercentage(stage);
-        }
-    },
-    VI("Generation VI", "XY") {
-        @Override
-        public double getCriticalPercentage(CriticalHitStage stage) {
-            switch (stage) {
-                case ZERO:
-                    return 6.25;
-                case ONE:
-                    return 12.5;
-                case TWO:
-                    return 50.0;
-                case THREE:
-                case FOUR:
-                    return 100.0;
-                default:
-                    throw new InvalidCriticalStageException(stage);
-            }
-        }
-    },
-    VII("Generation VII", "SM") {
-        @Override
-        public double getCriticalPercentage(CriticalHitStage stage) {
-            switch (stage) {
-                case ZERO:
-                    return 4.1666666667;
-                case ONE:
-                    return 12.5;
-                case TWO:
-                    return 50.0;
-                case THREE:
-                case FOUR:
-                    return 100.0;
-                default:
-                    throw new InvalidCriticalStageException(stage);
-            }
-        }
-    };
+    I("Generation I", "RB"),
+    II("Generation II", "GS"),
+    III("Generation III", "RS"),
+    IV("Generation IV", "DP"),
+    V("Generation V", "BW"),
+    VI("Generation VI", "XY"),
+    VII("Generation VII", "SM");
 
     static {
         I
@@ -175,6 +101,10 @@ public enum Generation {
         return Holder.MAP.get(shorthand);
     }
 
+    public static Generation getLatest() {
+        return Holder.MAP.lastEntry().getValue();
+    }
+
     @Contract(pure = true)
     public String getName() {
         return NAME;
@@ -218,14 +148,16 @@ public enum Generation {
         return this;
     }
 
-    public abstract double getCriticalPercentage(CriticalHitStage stage);
+    public boolean isBefore(Generation generation) {
+        return ordinal() < generation.ordinal();
+    }
 
-    public boolean isAbove(Generation generation) {
+    public boolean isAfter(Generation generation) {
         return ordinal() > generation.ordinal();
     }
 
     private static class Holder {
-        static Map<String, Generation> MAP = new HashMap<>();
+        static NavigableMap<String, Generation> MAP = new TreeMap<>();
     }
 
 }

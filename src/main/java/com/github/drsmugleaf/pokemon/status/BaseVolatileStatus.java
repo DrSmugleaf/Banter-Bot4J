@@ -444,7 +444,17 @@ public enum BaseVolatileStatus implements IStatus, IModifier {
         }
     },
     MIST("Mist", Integer.MAX_VALUE),
-    SAFEGUARD("Safeguard", 5);
+    SAFEGUARD("Safeguard", 5),
+    FOCUS_ENERGY("Focus Energy", Integer.MAX_VALUE) {
+        @Override
+        public double criticalRatioMultiplier(Action action) {
+            if (action.getGeneration() == Generation.I) {
+                return action.getBattle().getGame() == Game.STADIUM ? 2 : 0.25;
+            }
+
+            throw new InvalidGenerationException(action.getGeneration());
+        }
+    };
 
     public final String NAME;
     private final Integer DURATION;

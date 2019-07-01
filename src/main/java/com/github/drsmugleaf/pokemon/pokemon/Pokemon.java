@@ -13,7 +13,7 @@ import com.github.drsmugleaf.pokemon.events.pokemon.PokemonDeathEvent;
 import com.github.drsmugleaf.pokemon.events.pokemon.PokemonHealedEvent;
 import com.github.drsmugleaf.pokemon.item.Item;
 import com.github.drsmugleaf.pokemon.item.Items;
-import com.github.drsmugleaf.pokemon.moves.CriticalHitStage;
+import com.github.drsmugleaf.pokemon.moves.critical.CriticalHitStage;
 import com.github.drsmugleaf.pokemon.moves.Move;
 import com.github.drsmugleaf.pokemon.moves.Moveset;
 import com.github.drsmugleaf.pokemon.stats.*;

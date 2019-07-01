@@ -44,12 +44,7 @@ public class PokemonBattle extends Command {
                     User user2 = userTrainerEntry.getKey();
                     TrainerBuilder trainerBuilder2 = userTrainerEntry.getValue();
 
-                    BattleBuilder battleBuilder = new BattleBuilder();
-                    Setup setup = new Setup(Generation.VII, Variation.SINGLE_BATTLE);
-
-                    battleBuilder
-                            .setSetup(setup)
-                            .addTrainer(trainerBuilder1, trainerBuilder2);
+                    BattleBuilder battleBuilder = new BattleBuilder().addTrainer(trainerBuilder1, trainerBuilder2);
 
                     Battle battle;
                     try {

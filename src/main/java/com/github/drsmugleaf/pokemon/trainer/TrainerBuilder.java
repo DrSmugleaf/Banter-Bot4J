@@ -2,7 +2,6 @@ package com.github.drsmugleaf.pokemon.trainer;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon.battle.Battle;
-import com.github.drsmugleaf.pokemon.external.smogon.SmogonImporter;
 import com.github.drsmugleaf.pokemon.pokemon.PokemonBuilder;
 import org.jetbrains.annotations.Contract;
 
@@ -26,7 +25,7 @@ public class TrainerBuilder {
         PokemonBuilder[] pokemons = new PokemonBuilder[pokemonExportStrings.size()];
 
         for (int i = 0; i < pokemonExportStrings.size(); i++) {
-            PokemonBuilder pokemon = SmogonImporter.importPokemon(pokemonExportStrings.get(i));
+            PokemonBuilder pokemon = PokemonBuilder.fromSmogon(pokemonExportStrings.get(i));
             pokemons[i] = pokemon;
         }
 

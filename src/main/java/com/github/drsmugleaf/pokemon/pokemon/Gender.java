@@ -60,7 +60,7 @@ public enum Gender { // TODO: Add list of Genderless Pokemon / Pokemon gender ra
             case GENDERLESS:
                 return false;
             default:
-                throw new IllegalArgumentException("Invalid Gender for pokemon 1: " + pokemon1.getGender());
+                throw new IllegalArgumentException("Unrecognized gender for pokemon 1: " + pokemon1.getGender());
         }
     }
 

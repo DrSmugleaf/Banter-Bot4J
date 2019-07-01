@@ -99,4 +99,12 @@ public interface IModifier {
         return true;
     }
 
+    default double criticalRatioMultiplier(Action action) {
+        return 1.0;
+    }
+
+    default double criticalDamageMultiplier(Action action) {
+        return 1.0;
+    }
+
 }

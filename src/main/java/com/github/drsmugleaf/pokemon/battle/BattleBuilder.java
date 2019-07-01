@@ -2,6 +2,7 @@ package com.github.drsmugleaf.pokemon.battle;
 
 import com.github.drsmugleaf.pokemon.trainer.TrainerBuilder;
 import com.github.drsmugleaf.pokemon.trainer.UserException;
+import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,15 +30,17 @@ public class BattleBuilder {
         return SETUP;
     }
 
+    @Contract("_ -> this")
     public BattleBuilder setSetup(Setup setup) {
         SETUP = setup;
         return this;
     }
 
     public List<TrainerBuilder> getTrainers() {
-        return TRAINERS;
+        return new ArrayList<>(TRAINERS);
     }
 
+    @Contract("_ -> this")
     public BattleBuilder addTrainer(TrainerBuilder... trainerBuilders) {
         TRAINERS.addAll(Arrays.asList(trainerBuilders));
         return this;

@@ -415,7 +415,7 @@ public class SerebiiParser {
                                 copyable = propertyValue.text().equals("Yes");
                                 break;
                             default:
-                                throw new ParsingException("Missing case for Serebii move property " + propertyName);
+                                throw new ParsingException("Missing case for Serebii move property: " + propertyName);
                         }
                     }
                 }

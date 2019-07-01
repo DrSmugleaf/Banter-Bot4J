@@ -2,8 +2,10 @@ package com.github.drsmugleaf.pokemon.battle;
 
 import org.jetbrains.annotations.Contract;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 /**
  * Created by DrSmugleaf on 27/06/2017.
@@ -14,6 +16,7 @@ public enum Game {
     BLUE("Blue"),
     RED_AND_BLUE("Red and Blue"),
     YELLOW("Yellow"),
+    STADIUM("Stadium"),
 
     GOLD_AND_SILVER("Gold and Silver"),
     CRYSTAL("Crystal"),
@@ -51,13 +54,24 @@ public enum Game {
         return Holder.MAP.get(game);
     }
 
+    public static Game getLatest() {
+        return Holder.MAP.lastEntry().getValue();
+    }
+
+    public static Game getLatest(Collection<Game> games) {
+        return games
+                .stream()
+                .max(Comparator.comparingInt(Enum::ordinal))
+                .orElseGet(Game::getLatest);
+    }
+
     @Contract(pure = true)
     public String getName() {
         return NAME;
     }
 
     private static class Holder {
-        static Map<String, Game> MAP = new HashMap<>();
+        static NavigableMap<String, Game> MAP = new TreeMap<>();
     }
 
 }

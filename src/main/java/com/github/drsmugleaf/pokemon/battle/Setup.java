@@ -9,14 +9,24 @@ public class Setup {
 
     public final Generation GENERATION;
     public final Variation VARIATION;
+    public final Game GAME;
 
-    public Setup(Generation generation, Variation variation) {
+    public Setup(Generation generation, Variation variation, Game game) {
         GENERATION = generation;
         VARIATION = variation;
+        GAME = game;
     }
 
     public Setup(Setup setup) {
-        this(setup.GENERATION, setup.VARIATION);
+        this(setup.GENERATION, setup.VARIATION, setup.GAME);
+    }
+
+    public static Setup getDefault() {
+        Generation generation = Generation.getLatest();
+        Variation variation = Variation.SINGLE_BATTLE;
+        Game game = Game.getLatest(generation.getCoreGames());
+
+        return new Setup(generation, variation, game);
     }
 
     @Contract(pure = true)
@@ -29,9 +39,9 @@ public class Setup {
         return VARIATION;
     }
 
-    @Contract(" -> new")
-    public static Setup getDefault() {
-        return new Setup(Generation.VII, Variation.SINGLE_BATTLE);
+    @Contract(pure = true)
+    public Game getGame() {
+        return GAME;
     }
 
 }
