@@ -8,7 +8,7 @@ import com.github.drsmugleaf.pokemon2.base.species.SpeciesBuilder;
  */
 public class SpeciesI extends Species {
 
-    protected SpeciesI(SpeciesBuilder builder) {
+    public SpeciesI(SpeciesBuilder builder) {
         super(builder);
     }
 

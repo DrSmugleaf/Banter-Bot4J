@@ -9,13 +9,15 @@ import com.github.drsmugleaf.pokemon2.base.generation.IGeneration;
 import com.github.drsmugleaf.pokemon2.base.type.IType;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import javafx.util.Builder;
 
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * Created by DrSmugleaf on 03/07/2019
  */
-public class SpeciesBuilder {
+public class SpeciesBuilder<T extends ISpecies> implements Builder<T> {
 
     @Nullable
     private String name;
@@ -28,22 +30,25 @@ public class SpeciesBuilder {
     @Nullable
     private Set<Tier> tiers;
     private Map<PermanentStat, Integer> stats = new HashMap<>();
-    private Set<ISpecies> evolutions = new HashSet<>(); // TODO: 06-Jul-19 Add valid evolutions
+    private Set<T> evolutions = new HashSet<>(); // TODO: 06-Jul-19 Add valid evolutions
     @Nullable
     private Double weight;
     @Nullable
     private Double height;
     private String suffix = "";
     private Set<Gender> genders = new HashSet<>(); // TODO: 06-Jul-19 Add valid genders
+    private final Function<SpeciesBuilder<T>, T> CONSTRUCTOR;
 
-    public SpeciesBuilder() {}
+    public SpeciesBuilder(Function<SpeciesBuilder<T>, T> constructor) {
+        CONSTRUCTOR = constructor;
+    }
 
     @Nullable
     public String getName() {
         return name;
     }
 
-    public SpeciesBuilder setName(String name) {
+    public SpeciesBuilder<T> setName(String name) {
         this.name = name;
         return this;
     }
@@ -52,7 +57,7 @@ public class SpeciesBuilder {
         return ImmutableSet.copyOf(generations);
     }
 
-    public SpeciesBuilder setGenerations(Collection<IGeneration> generations) {
+    public SpeciesBuilder<T> setGenerations(Collection<IGeneration> generations) {
         this.generations = new HashSet<>(generations);
         return this;
     }
@@ -61,7 +66,7 @@ public class SpeciesBuilder {
         return ImmutableSet.copyOf(abilities);
     }
 
-    public SpeciesBuilder setAbilities(Collection<? extends IAbility> abilities) {
+    public SpeciesBuilder<T> setAbilities(Collection<? extends IAbility> abilities) {
         this.abilities = new HashSet<>(abilities);
         return this;
     }
@@ -70,7 +75,7 @@ public class SpeciesBuilder {
         return ImmutableSet.copyOf(types);
     }
 
-    public SpeciesBuilder setTypes(Collection<? extends IType> types) {
+    public SpeciesBuilder<T> setTypes(Collection<? extends IType> types) {
         this.types = new HashSet<>(types);
         return this;
     }
@@ -79,7 +84,7 @@ public class SpeciesBuilder {
         return ImmutableSet.copyOf(tiers);
     }
 
-    public SpeciesBuilder setTiers(Collection<Tier> tiers) {
+    public SpeciesBuilder<T> setTiers(Collection<Tier> tiers) {
         this.tiers = new HashSet<>(tiers);
         return this;
     }
@@ -88,21 +93,21 @@ public class SpeciesBuilder {
         return ImmutableMap.copyOf(stats);
     }
 
-    public SpeciesBuilder addStat(PermanentStat stat, Integer amount) {
+    public SpeciesBuilder<T> addStat(PermanentStat stat, Integer amount) {
         this.stats.put(stat, amount);
         return this;
     }
 
-    public SpeciesBuilder setStats(Map<PermanentStat, Integer> stats) {
+    public SpeciesBuilder<T> setStats(Map<PermanentStat, Integer> stats) {
         this.stats = stats;
         return this;
     }
 
-    public ImmutableSet<ISpecies> getEvolutions() {
+    public ImmutableSet<T> getEvolutions() {
         return ImmutableSet.copyOf(evolutions);
     }
 
-    public SpeciesBuilder setEvolutions(Collection<ISpecies> evolutions) {
+    public SpeciesBuilder<T> setEvolutions(Collection<T> evolutions) {
         this.evolutions = new HashSet<>(evolutions);
         return this;
     }
@@ -112,7 +117,7 @@ public class SpeciesBuilder {
         return weight;
     }
 
-    public SpeciesBuilder setWeight(double weight) {
+    public SpeciesBuilder<T> setWeight(double weight) {
         this.weight = weight;
         return this;
     }
@@ -122,7 +127,7 @@ public class SpeciesBuilder {
         return height;
     }
 
-    public SpeciesBuilder setHeight(double height) {
+    public SpeciesBuilder<T> setHeight(double height) {
         this.height = height;
         return this;
     }
@@ -131,7 +136,7 @@ public class SpeciesBuilder {
         return suffix;
     }
 
-    public SpeciesBuilder setSuffix(String suffix) {
+    public SpeciesBuilder<T> setSuffix(String suffix) {
         this.suffix = suffix;
         return this;
     }
@@ -140,9 +145,14 @@ public class SpeciesBuilder {
         return ImmutableSet.copyOf(genders);
     }
 
-    public SpeciesBuilder setGenders(Collection<Gender> genders) {
+    public SpeciesBuilder<T> setGenders(Collection<Gender> genders) {
         this.genders = new HashSet<>(genders);
         return this;
+    }
+
+    @Override
+    public T build() {
+        return CONSTRUCTOR.apply(this);
     }
 
 }

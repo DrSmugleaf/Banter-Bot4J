@@ -67,8 +67,8 @@ public class Smogon {
         return GENERATION;
     }
 
-    public Map<String, ISpecies> getSpecies(Function<SpeciesBuilder, ISpecies> constructor) {
-        Map<String, ISpecies> species = new HashMap<>();
+    public <T extends ISpecies> Map<String, T> getSpecies(Function<SpeciesBuilder<T>, T> constructor) {
+        Map<String, T> species = new HashMap<>();
         JSONArray pokemons;
         pokemons = SmogonParser.getPokemons(GENERATION);
 
@@ -113,7 +113,7 @@ public class Smogon {
                 }
 
                 // TODO: 05-Jul-19 Add evolutions
-                SpeciesBuilder builder = new SpeciesBuilder()
+                SpeciesBuilder<T> builder = new SpeciesBuilder<>(constructor)
                         .setName(name)
                         .setGenerations(genFamilies)
                         .addStat(PermanentStat.HP, hp)
@@ -166,7 +166,7 @@ public class Smogon {
         return builder;
     }
 
-    public void printPokemonsAsEnums(Function<SpeciesBuilder, ISpecies> constructor, IGeneration gen, IGeneration... minus) {
+    public void printPokemonsAsEnums(Function<SpeciesBuilder<ISpecies>, ISpecies> constructor, IGeneration gen, IGeneration... minus) {
         Map<String, ISpecies> species = new TreeMap<>(getSpecies(constructor));
 
         for (IGeneration minusGen : minus) {

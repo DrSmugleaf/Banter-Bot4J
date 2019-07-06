@@ -1,11 +1,13 @@
 package com.github.drsmugleaf.pokemon2.base.type;
 
+import javafx.util.Builder;
+
 import java.util.*;
 
 /**
  * Created by DrSmugleaf on 05/07/2019
  */
-public class TypeBuilder {
+public class TypeBuilder implements Builder<Map<String, IType>> {
 
     private final Map<String, HashSet<String>> weakTo = new HashMap<>();
     private final Map<String, HashSet<String>> resistantTo = new HashMap<>();
@@ -19,6 +21,11 @@ public class TypeBuilder {
         Collections.addAll(types, to);
     }
 
+    public SpecificTypeBuilder get(String type) {
+        return new SpecificTypeBuilder(this, type);
+    }
+
+    @Override
     public Map<String, IType> build() {
         Map<String, IType> types = new HashMap<>();
         Set<String> names = new HashSet<>();
@@ -38,11 +45,7 @@ public class TypeBuilder {
         return types;
     }
 
-    public SpecificTypeBuilder get(String type) {
-        return new SpecificTypeBuilder(this, type);
-    }
-
-    public class SpecificTypeBuilder {
+    public class SpecificTypeBuilder implements Builder<IType> {
 
         private final TypeBuilder BUILDER;
         private final String TYPE;
@@ -65,6 +68,14 @@ public class TypeBuilder {
         public SpecificTypeBuilder addImmunity(String... to) {
             set(BUILDER.immuneTo, TYPE, to);
             return this;
+        }
+
+        @Override
+        public IType build() {
+            HashSet<String> weaknesses = BUILDER.weakTo.computeIfAbsent(TYPE, (n) -> new HashSet<>());
+            HashSet<String> resistances = BUILDER.resistantTo.computeIfAbsent(TYPE, (n) -> new HashSet<>());
+            HashSet<String> immunities = BUILDER.immuneTo.computeIfAbsent(TYPE, (n) -> new HashSet<>());
+            return new Type(TYPE, weaknesses, resistances, immunities);
         }
 
     }
