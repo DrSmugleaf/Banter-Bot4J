@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.pokemon2.generations.ii.species;
 
-import com.github.drsmugleaf.pokemon.external.smogon.SmogonParser;
 import com.github.drsmugleaf.pokemon2.base.species.ISpecies;
 import com.github.drsmugleaf.pokemon2.base.species.SpeciesBuilder;
 import com.github.drsmugleaf.pokemon2.generations.i.species.SpeciesI;
@@ -22,7 +21,7 @@ public class SpeciesII extends SpeciesI {
     }
 
     protected static Map<String, ISpecies> getAll() {
-        return SmogonParser.getSpecies(GenerationII.get(), SpeciesII::new);
+        return GenerationII.get().getSmogon().getSpecies(SpeciesII::new);
     }
 
     @Contract(pure = true)

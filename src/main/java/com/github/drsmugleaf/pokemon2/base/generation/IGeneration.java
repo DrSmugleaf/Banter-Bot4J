@@ -2,6 +2,7 @@ package com.github.drsmugleaf.pokemon2.base.generation;
 
 import com.github.drsmugleaf.pokemon.battle.Game;
 import com.github.drsmugleaf.pokemon2.base.Nameable;
+import com.github.drsmugleaf.pokemon2.base.external.Smogon;
 import com.github.drsmugleaf.pokemon2.base.type.TypeRegistry;
 import com.github.drsmugleaf.pokemon2.generations.i.GenerationI;
 import com.github.drsmugleaf.pokemon2.generations.ii.GenerationII;
@@ -37,6 +38,7 @@ public interface IGeneration extends Nameable {
         throw new IllegalArgumentException("No generation found with abbreviation " + abbreviation);
     }
 
+    Smogon getSmogon();
     String getAbbreviation();
     ImmutableSet<Game> getCoreGames();
     ImmutableSet<Game> getSideGames();

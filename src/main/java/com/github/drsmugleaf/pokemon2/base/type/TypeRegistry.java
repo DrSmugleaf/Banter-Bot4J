@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.pokemon2.base.type;
 
-import com.github.drsmugleaf.pokemon.external.smogon.SmogonParser;
 import com.github.drsmugleaf.pokemon2.base.generation.IGeneration;
 import com.github.drsmugleaf.pokemon2.base.registry.Registry;
 import org.json.JSONArray;
@@ -20,8 +19,7 @@ public class TypeRegistry extends Registry<IType> {
     }
 
     private static Map<String, IType> getAll(IGeneration generation) {
-        TypeBuilder builder = new TypeBuilder(Type::new);
-        return SmogonParser.getTypes(generation, builder);
+        return generation.getSmogon().getTypes().build();
     }
 
     public List<IType> fromAlt(JSONObject alt) {

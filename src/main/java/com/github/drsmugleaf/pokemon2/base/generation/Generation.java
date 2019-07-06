@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.pokemon2.base.generation;
 
+import com.github.drsmugleaf.pokemon2.base.external.Smogon;
 import com.github.drsmugleaf.pokemon2.base.type.TypeRegistry;
 
 /**
@@ -7,9 +8,17 @@ import com.github.drsmugleaf.pokemon2.base.type.TypeRegistry;
  */
 public abstract class Generation implements IGeneration {
 
+    private final Smogon SMOGON;
     private final TypeRegistry TYPES = new TypeRegistry(this);
 
-    protected Generation() {}
+    protected Generation() {
+        SMOGON = new Smogon(this);
+    }
+
+    @Override
+    public Smogon getSmogon() {
+        return SMOGON;
+    }
 
     @Override
     public TypeRegistry getTypes() {

@@ -10,11 +10,8 @@ public class TypeBuilder {
     private final Map<String, HashSet<String>> weakTo = new HashMap<>();
     private final Map<String, HashSet<String>> resistantTo = new HashMap<>();
     private final Map<String, HashSet<String>> immuneTo = new HashMap<>();
-    private final TypeConstructor<String, HashSet<String>, HashSet<String>, HashSet<String>, IType> CONSTRUCTOR;
 
-    public TypeBuilder(TypeConstructor<String, HashSet<String>, HashSet<String>, HashSet<String>, IType> constructor) {
-        CONSTRUCTOR = constructor;
-    }
+    public TypeBuilder() {}
 
     private static void set(Map<String, HashSet<String>> map, String type, String... to) {
         map.computeIfAbsent(type, t -> new HashSet<>());
@@ -33,7 +30,7 @@ public class TypeBuilder {
             HashSet<String> weaknesses = weakTo.computeIfAbsent(name, (n) -> new HashSet<>());
             HashSet<String> resistances = resistantTo.computeIfAbsent(name, (n) -> new HashSet<>());
             HashSet<String> immunities = immuneTo.computeIfAbsent(name, (n) -> new HashSet<>());
-            IType type = CONSTRUCTOR.apply(name, weaknesses, resistances, immunities);
+            IType type = new Type(name, weaknesses, resistances, immunities);
 
             types.put(name, type);
         }
@@ -43,12 +40,6 @@ public class TypeBuilder {
 
     public SpecificTypeBuilder get(String type) {
         return new SpecificTypeBuilder(this, type);
-    }
-
-    public interface TypeConstructor<T1, T2, T3, T4, R> {
-
-        R apply(T1 t1, T2 t2, T3 t3, T4 t4);
-
     }
 
     public class SpecificTypeBuilder {

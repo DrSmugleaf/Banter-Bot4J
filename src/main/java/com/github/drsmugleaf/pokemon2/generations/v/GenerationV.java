@@ -1,8 +1,7 @@
 package com.github.drsmugleaf.pokemon2.generations.v;
 
 import com.github.drsmugleaf.pokemon.battle.Game;
-import com.github.drsmugleaf.pokemon2.base.generation.IGeneration;
-import com.github.drsmugleaf.pokemon2.base.type.TypeRegistry;
+import com.github.drsmugleaf.pokemon2.base.generation.Generation;
 import com.github.drsmugleaf.pokemon2.generations.iv.GenerationIV;
 import com.google.common.collect.ImmutableSet;
 import org.jetbrains.annotations.Contract;
@@ -10,7 +9,7 @@ import org.jetbrains.annotations.Contract;
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public class GenerationV implements IGeneration {
+public class GenerationV extends Generation {
 
     private static final ImmutableSet<Game> CORE_GAMES = ImmutableSet.of(
             Game.BLACK_AND_WHITE,
@@ -49,11 +48,6 @@ public class GenerationV implements IGeneration {
     @Override
     public int getTotalPokemons() {
         return getNewPokemons() + GenerationIV.get().getTotalPokemons();
-    }
-
-    @Override
-    public TypeRegistry getTypes() {
-        return null;
     }
 
     @Override

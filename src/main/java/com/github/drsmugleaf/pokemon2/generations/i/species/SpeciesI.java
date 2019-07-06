@@ -1,7 +1,6 @@
 package com.github.drsmugleaf.pokemon2.generations.i.species;
 
 import com.github.drsmugleaf.pokemon.battle.Tier;
-import com.github.drsmugleaf.pokemon.external.smogon.SmogonParser;
 import com.github.drsmugleaf.pokemon.pokemon.Gender;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon2.base.ability.IAbility;
@@ -50,7 +49,7 @@ public class SpeciesI implements ISpecies {
     }
 
     protected static Map<String, ISpecies> getAll() {
-        return SmogonParser.getSpecies(GenerationI.get(), SpeciesI::new);
+        return GenerationI.get().getSmogon().getSpecies(SpeciesI::new);
     }
 
     @Contract(pure = true)
