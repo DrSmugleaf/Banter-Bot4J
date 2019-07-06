@@ -2,7 +2,6 @@ package com.github.drsmugleaf.pokemon2.generations.i;
 
 import com.github.drsmugleaf.pokemon.battle.Game;
 import com.github.drsmugleaf.pokemon2.base.generation.Generation;
-import com.github.drsmugleaf.pokemon2.generations.i.species.SpeciesI;
 import com.google.common.collect.ImmutableSet;
 import org.jetbrains.annotations.Contract;
 
@@ -44,7 +43,7 @@ public class GenerationI extends Generation {
 
     @Override
     public int getNewPokemons() {
-        return SpeciesI.all().size();
+        return 151;
     }
 
     @Override

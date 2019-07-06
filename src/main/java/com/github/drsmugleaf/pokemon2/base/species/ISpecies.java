@@ -15,7 +15,6 @@ import com.google.common.collect.ImmutableSet;
  */
 public interface ISpecies extends Nameable {
 
-    ImmutableMap<String, ? extends ISpecies> getSpecies();
     ImmutableSet<IGeneration> getGenerations();
     ImmutableSet<IAbility> getAbilities();
     ImmutableSet<IType> getTypes();
