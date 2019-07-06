@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.pokemon2.generations.i;
+package com.github.drsmugleaf.pokemon2.generations.i.item;
 
 import com.github.drsmugleaf.pokemon.item.ItemCategory;
 import com.github.drsmugleaf.pokemon2.base.item.IItems;
@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Contract;
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public enum Items implements IItems {
+public enum Items implements IItems<Items> {
 
     NONE("None");
 

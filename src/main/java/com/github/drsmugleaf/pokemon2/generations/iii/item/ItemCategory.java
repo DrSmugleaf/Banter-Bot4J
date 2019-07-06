@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.pokemon2.generations.iii;
+package com.github.drsmugleaf.pokemon2.generations.iii.item;
 
 import com.github.drsmugleaf.pokemon2.base.item.IItemCategory;
 import org.jetbrains.annotations.Contract;

@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.pokemon2.generations.iv;
+package com.github.drsmugleaf.pokemon2.generations.v.item;
 
 import com.github.drsmugleaf.pokemon2.base.item.IItemCategory;
 import org.jetbrains.annotations.Contract;
@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Contract;
  */
 public enum ItemCategory implements IItemCategory {
 
-    ARCEUS_PLATE("Arceus Plate");
+    GENESECT_DRIVE("Genesect Drive");
 
     private final String NAME;
 

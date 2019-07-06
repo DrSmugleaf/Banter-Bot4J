@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.pokemon2.generations.vi;
+package com.github.drsmugleaf.pokemon2.generations.vii.item;
 
 import com.github.drsmugleaf.pokemon2.base.item.IItemCategory;
 import org.jetbrains.annotations.Contract;
@@ -8,8 +8,8 @@ import org.jetbrains.annotations.Contract;
  */
 public enum ItemCategory implements IItemCategory {
 
-    MEGA_STONE("Mega Stone"),
-    PRIMAL_ORB("Primal Orb");
+    SILVALLY_MEMORY("Silvally Memory"),
+    Z_CRYSTAL("Z-Crystal");
 
     private final String NAME;
 

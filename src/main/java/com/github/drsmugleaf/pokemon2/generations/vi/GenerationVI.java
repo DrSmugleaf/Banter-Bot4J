@@ -1,19 +1,30 @@
 package com.github.drsmugleaf.pokemon2.generations.vi;
 
 import com.github.drsmugleaf.pokemon.battle.Game;
+import com.github.drsmugleaf.pokemon2.base.generation.IGeneration;
+import com.github.drsmugleaf.pokemon2.base.type.TypeRegistry;
 import com.github.drsmugleaf.pokemon2.generations.v.GenerationV;
 import com.google.common.collect.ImmutableSet;
+import org.jetbrains.annotations.Contract;
 
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public class GenerationVI extends GenerationV {
+public class GenerationVI implements IGeneration {
 
     private static final ImmutableSet<Game> CORE_GAMES = ImmutableSet.of(
             Game.X_AND_Y,
             Game.OMEGA_RUBY_AND_ALPHA_SAPPHIRE
     );
     private static final ImmutableSet<Game> SIDE_GAMES = ImmutableSet.of();
+    private static final GenerationVI INSTANCE = new GenerationVI();
+
+    private GenerationVI() {}
+
+    @Contract(pure = true)
+    public static GenerationVI get() {
+        return INSTANCE;
+    }
 
     @Override
     public String getAbbreviation() {
@@ -37,7 +48,12 @@ public class GenerationVI extends GenerationV {
 
     @Override
     public int getTotalPokemons() {
-        return getNewPokemons() + super.getTotalPokemons();
+        return getNewPokemons() + GenerationV.get().getTotalPokemons();
+    }
+
+    @Override
+    public TypeRegistry getTypes() {
+        return null;
     }
 
     @Override

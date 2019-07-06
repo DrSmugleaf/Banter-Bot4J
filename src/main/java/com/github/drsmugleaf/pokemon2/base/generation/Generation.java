@@ -1,18 +1,19 @@
 package com.github.drsmugleaf.pokemon2.base.generation;
 
-import com.github.drsmugleaf.pokemon.battle.Game;
-import com.github.drsmugleaf.pokemon2.base.Nameable;
-import com.google.common.collect.ImmutableSet;
+import com.github.drsmugleaf.pokemon2.base.type.TypeRegistry;
 
 /**
- * Created by DrSmugleaf on 01/07/2019
+ * Created by DrSmugleaf on 06/07/2019
  */
-public interface Generation extends Nameable {
+public abstract class Generation implements IGeneration {
 
-    String getAbbreviation();
-    ImmutableSet<Game> getCoreGames();
-    ImmutableSet<Game> getSideGames();
-    int getNewPokemons();
-    int getTotalPokemons();
+    private final TypeRegistry TYPES = new TypeRegistry(this);
+
+    protected Generation() {}
+
+    @Override
+    public TypeRegistry getTypes() {
+        return TYPES;
+    }
 
 }

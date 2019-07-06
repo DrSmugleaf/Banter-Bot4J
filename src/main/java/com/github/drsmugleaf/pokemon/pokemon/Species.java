@@ -1,17 +1,16 @@
 package com.github.drsmugleaf.pokemon.pokemon;
 
-import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.pokemon.ability.Abilities;
 import com.github.drsmugleaf.pokemon.battle.Generation;
 import com.github.drsmugleaf.pokemon.battle.Tier;
 import com.github.drsmugleaf.pokemon.external.smogon.SmogonParser;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon.types.Type;
+import com.github.drsmugleaf.pokemon2.generations.vii.GenerationVII;
 import org.jetbrains.annotations.Contract;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -1027,13 +1026,7 @@ public enum Species {
     ZYGARDE_COMPLETE("Zygarde-Complete", Gender.GENDERLESS);
 
     static {
-        JSONArray pokemons = null;
-        try {
-            pokemons = SmogonParser.getPokemons();
-        } catch (IOException e) {
-            BanterBot4J.LOGGER.error("Error parsing pokemons", e);
-            System.exit(1);
-        }
+        JSONArray pokemons = SmogonParser.getPokemons(GenerationVII.get());
 
         for (int i = 0; i < pokemons.length(); i++) {
             JSONObject jsonPokemon = pokemons.getJSONObject(i);

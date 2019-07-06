@@ -2,12 +2,14 @@ package com.github.drsmugleaf.pokemon2.generations.i;
 
 import com.github.drsmugleaf.pokemon.battle.Game;
 import com.github.drsmugleaf.pokemon2.base.generation.Generation;
+import com.github.drsmugleaf.pokemon2.generations.i.species.SpeciesI;
 import com.google.common.collect.ImmutableSet;
+import org.jetbrains.annotations.Contract;
 
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public class GenerationI implements Generation {
+public class GenerationI extends Generation {
 
     private static final ImmutableSet<Game> CORE_GAMES = ImmutableSet.of(
             Game.RED_AND_GREEN,
@@ -16,6 +18,14 @@ public class GenerationI implements Generation {
             Game.YELLOW
     );
     private static final ImmutableSet<Game> SIDE_GAMES = ImmutableSet.of(Game.STADIUM);
+    private static final GenerationI INSTANCE = new GenerationI();
+
+    private GenerationI() {}
+
+    @Contract(pure = true)
+    public static GenerationI get() {
+        return INSTANCE;
+    }
 
     @Override
     public String getAbbreviation() {
@@ -34,7 +44,7 @@ public class GenerationI implements Generation {
 
     @Override
     public int getNewPokemons() {
-        return 151;
+        return SpeciesI.all().size();
     }
 
     @Override

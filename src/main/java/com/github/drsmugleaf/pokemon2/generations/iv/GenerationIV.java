@@ -1,13 +1,15 @@
 package com.github.drsmugleaf.pokemon2.generations.iv;
 
 import com.github.drsmugleaf.pokemon.battle.Game;
+import com.github.drsmugleaf.pokemon2.base.generation.Generation;
 import com.github.drsmugleaf.pokemon2.generations.iii.GenerationIII;
 import com.google.common.collect.ImmutableSet;
+import org.jetbrains.annotations.Contract;
 
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public class GenerationIV extends GenerationIII {
+public class GenerationIV extends Generation {
 
     private static final ImmutableSet<Game> CORE_GAMES = ImmutableSet.of(
             Game.DIAMOND_AND_PEARL,
@@ -15,6 +17,14 @@ public class GenerationIV extends GenerationIII {
             Game.HEARTGOLD_AND_SOULSILVER
     );
     private static final ImmutableSet<Game> SIDE_GAMES = ImmutableSet.of();
+    private static final GenerationIV INSTANCE = new GenerationIV();
+
+    private GenerationIV() {}
+
+    @Contract(pure = true)
+    public static GenerationIV get() {
+        return INSTANCE;
+    }
 
     @Override
     public String getAbbreviation() {
@@ -38,7 +48,7 @@ public class GenerationIV extends GenerationIII {
 
     @Override
     public int getTotalPokemons() {
-        return getNewPokemons() + super.getTotalPokemons();
+        return getNewPokemons() + GenerationIII.get().getTotalPokemons();
     }
 
     @Override
