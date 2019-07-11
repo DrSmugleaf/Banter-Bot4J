@@ -5,6 +5,7 @@ import com.github.drsmugleaf.charactersheets.stat.Stats;
 import com.github.drsmugleaf.charactersheets.state.State;
 import com.google.common.collect.ImmutableMap;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -18,6 +19,10 @@ public class Sheet {
     public Sheet(Map<State, Stats> stats, Map<State, Abilities> abilities) {
         STATS = ImmutableMap.copyOf(stats);
         ABILITIES = ImmutableMap.copyOf(abilities);
+    }
+
+    public Sheet() {
+        this(new HashMap<>(), new HashMap<>());
     }
 
     public ImmutableMap<State, Stats> getStats() {

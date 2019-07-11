@@ -13,8 +13,7 @@ public class CharacterBuilder implements Builder<Character> {
 
     @Nullable
     private String name;
-    @Nullable
-    private Sheet sheet;
+    private Sheet sheet = new Sheet();
     @Nullable
     private State state;
     @Nullable
@@ -32,7 +31,6 @@ public class CharacterBuilder implements Builder<Character> {
         return this;
     }
 
-    @Nullable
     public Sheet getSheet() {
         return sheet;
     }

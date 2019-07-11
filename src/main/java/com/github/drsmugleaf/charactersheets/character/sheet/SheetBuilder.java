@@ -18,12 +18,17 @@ public class SheetBuilder implements Builder<Sheet> {
 
     public SheetBuilder() {}
 
+    public SheetBuilder(Sheet sheet) {
+        stats.putAll(sheet.getStats());
+        abilities.putAll(sheet.getAbilities());
+    }
+
     public Map<State, Stats> getStats() {
         return stats;
     }
 
-    public SheetBuilder addStats(Map.Entry<State, Stats> entry) {
-        this.stats.put(entry.getKey(), entry.getValue());
+    public SheetBuilder addStats(State state, Stats stats) {
+        this.stats.put(state, stats);
         return this;
     }
 

@@ -17,6 +17,7 @@ public class Ability implements Nameable {
     @Nullable
     private final State VALID_STATE;
     private final Effect EFFECT;
+    private long COOLDOWN;
 
     public Ability(String name, String description, @Nullable State validState, Effect effect) {
         NAME = name;
@@ -40,6 +41,10 @@ public class Ability implements Nameable {
 
     public void use(Game game, Character user, Character on) {
         EFFECT.use(game, on, user);
+    }
+
+    public void onTurnEnd() {
+        COOLDOWN--;
     }
 
 }
