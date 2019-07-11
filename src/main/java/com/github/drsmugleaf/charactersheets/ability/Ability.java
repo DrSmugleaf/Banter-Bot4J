@@ -1,6 +1,8 @@
 package com.github.drsmugleaf.charactersheets.ability;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.charactersheets.Nameable;
+import com.github.drsmugleaf.charactersheets.state.State;
 
 /**
  * Created by DrSmugleaf on 11/07/2019
@@ -9,10 +11,13 @@ public class Ability implements Nameable {
 
     private final String NAME;
     private final String DESCRIPTION;
+    @Nullable
+    private final State VALID_STATE;
 
-    public Ability(String name, String description) {
+    public Ability(String name, String description, @Nullable State validState) {
         NAME = name;
         DESCRIPTION = description;
+        VALID_STATE = validState;
     }
 
     @Override
@@ -22,6 +27,10 @@ public class Ability implements Nameable {
 
     public String getDescription() {
         return DESCRIPTION;
+    }
+
+    public boolean isValid(State state) {
+        return state.equals(VALID_STATE);
     }
 
 }
