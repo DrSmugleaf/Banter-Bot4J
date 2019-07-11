@@ -34,7 +34,7 @@ public class GenerationI extends Generation {
     }
 
     @Override
-    public Pokedex getPokedex() {
+    public Pokedex<SpeciesI> getPokedex() {
         return POKEDEX;
     }
 

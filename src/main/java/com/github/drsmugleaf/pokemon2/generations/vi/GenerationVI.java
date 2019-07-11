@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.pokemon2.generations.vi;
 
 import com.github.drsmugleaf.pokemon.battle.Game;
+import com.github.drsmugleaf.pokemon2.base.generation.Generation;
 import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
 import com.github.drsmugleaf.pokemon2.generations.iii.species.PokedexIII;
 import com.github.drsmugleaf.pokemon2.generations.v.GenerationV;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.Contract;
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public class GenerationVI extends GenerationV {
+public class GenerationVI extends Generation {
 
     private static final GenerationVI INSTANCE = new GenerationVI();
 
@@ -32,7 +33,7 @@ public class GenerationVI extends GenerationV {
     }
 
     @Override
-    public Pokedex getPokedex() {
+    public Pokedex<SpeciesVI> getPokedex() {
         return POKEDEX;
     }
 

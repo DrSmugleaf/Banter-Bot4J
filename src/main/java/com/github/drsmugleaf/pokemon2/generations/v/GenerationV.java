@@ -1,17 +1,18 @@
 package com.github.drsmugleaf.pokemon2.generations.v;
 
 import com.github.drsmugleaf.pokemon.battle.Game;
+import com.github.drsmugleaf.pokemon2.base.generation.Generation;
 import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
 import com.github.drsmugleaf.pokemon2.generations.iii.species.PokedexIII;
 import com.github.drsmugleaf.pokemon2.generations.iv.GenerationIV;
-import com.github.drsmugleaf.pokemon2.generations.iv.species.SpeciesIV;
+import com.github.drsmugleaf.pokemon2.generations.v.species.SpeciesV;
 import com.google.common.collect.ImmutableSet;
 import org.jetbrains.annotations.Contract;
 
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public class GenerationV extends GenerationIV {
+public class GenerationV extends Generation {
 
     private static final GenerationV INSTANCE = new GenerationV();
 
@@ -20,7 +21,7 @@ public class GenerationV extends GenerationIV {
             Game.BLACK_2_AND_WHITE_2
     );
     private final ImmutableSet<Game> SIDE_GAMES = ImmutableSet.of();
-    private final Pokedex<SpeciesIV> POKEDEX = new PokedexIII<>(this, SpeciesIV::new);
+    private final Pokedex<SpeciesV> POKEDEX = new PokedexIII<>(this, SpeciesV::new);
 
     protected GenerationV() {
         super();
@@ -32,7 +33,7 @@ public class GenerationV extends GenerationIV {
     }
 
     @Override
-    public Pokedex getPokedex() {
+    public Pokedex<SpeciesV> getPokedex() {
         return POKEDEX;
     }
 

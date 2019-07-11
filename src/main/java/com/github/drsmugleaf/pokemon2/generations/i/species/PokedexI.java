@@ -4,8 +4,8 @@ import com.github.drsmugleaf.pokemon.battle.Tier;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon2.base.external.Smogon;
 import com.github.drsmugleaf.pokemon2.base.generation.IGeneration;
-import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
 import com.github.drsmugleaf.pokemon2.base.species.ISpecies;
+import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
 import com.github.drsmugleaf.pokemon2.base.species.SpeciesBuilder;
 import com.github.drsmugleaf.pokemon2.base.type.IType;
 import org.json.JSONArray;
@@ -26,7 +26,7 @@ public class PokedexI<T extends ISpecies> extends Pokedex<T> {
         super(getAll(generation, constructor));
     }
 
-    private static <T extends ISpecies> Map<String, T> getAll(
+    public static <T extends ISpecies> Map<String, T> getAll(
             IGeneration gen,
             Function<SpeciesBuilder<T>, T> constructor
     ) {

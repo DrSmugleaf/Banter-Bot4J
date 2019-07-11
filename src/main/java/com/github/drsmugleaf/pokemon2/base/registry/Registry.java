@@ -19,4 +19,8 @@ public abstract class Registry<T> {
         return MAP;
     }
 
+    public T get(String name) {
+        return MAP.get(name);
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.pokemon2.generations.iv;
 
 import com.github.drsmugleaf.pokemon.battle.Game;
+import com.github.drsmugleaf.pokemon2.base.generation.Generation;
 import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
 import com.github.drsmugleaf.pokemon2.generations.iii.GenerationIII;
 import com.github.drsmugleaf.pokemon2.generations.iii.species.PokedexIII;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.Contract;
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public class GenerationIV extends GenerationIII {
+public class GenerationIV extends Generation {
 
     private static final GenerationIV INSTANCE = new GenerationIV();
 
@@ -33,7 +34,7 @@ public class GenerationIV extends GenerationIII {
     }
 
     @Override
-    public Pokedex getPokedex() {
+    public Pokedex<SpeciesIV> getPokedex() {
         return POKEDEX;
     }
 

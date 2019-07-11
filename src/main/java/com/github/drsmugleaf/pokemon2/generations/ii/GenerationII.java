@@ -1,9 +1,10 @@
 package com.github.drsmugleaf.pokemon2.generations.ii;
 
 import com.github.drsmugleaf.pokemon.battle.Game;
+import com.github.drsmugleaf.pokemon2.base.generation.Generation;
 import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
-import com.github.drsmugleaf.pokemon2.generations.i.species.PokedexI;
 import com.github.drsmugleaf.pokemon2.generations.i.GenerationI;
+import com.github.drsmugleaf.pokemon2.generations.i.species.PokedexI;
 import com.github.drsmugleaf.pokemon2.generations.ii.species.SpeciesII;
 import com.google.common.collect.ImmutableSet;
 import org.jetbrains.annotations.Contract;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.Contract;
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public class GenerationII extends GenerationI {
+public class GenerationII extends Generation {
 
     private static final GenerationII INSTANCE = new GenerationII();
 
@@ -32,7 +33,7 @@ public class GenerationII extends GenerationI {
     }
 
     @Override
-    public Pokedex getPokedex() {
+    public Pokedex<SpeciesII> getPokedex() {
         return POKEDEX;
     }
 
