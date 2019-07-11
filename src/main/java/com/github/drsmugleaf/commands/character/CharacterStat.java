@@ -8,12 +8,14 @@ import com.github.drsmugleaf.charactersheets.stat.StatsBuilder;
 import com.github.drsmugleaf.charactersheets.state.State;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.CommandInfo;
 
 import java.util.Map;
 
 /**
  * Created by DrSmugleaf on 12/07/2019
  */
+@CommandInfo(aliases = {"cs"})
 public class CharacterStat extends Command {
 
     @Argument(position = 1, example = "Combat")

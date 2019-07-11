@@ -4,6 +4,7 @@ import com.github.drsmugleaf.charactersheets.location.Location;
 import com.github.drsmugleaf.charactersheets.location.World;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.CommandInfo;
 import discord4j.core.object.entity.User;
 
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import java.util.Map;
 /**
  * Created by DrSmugleaf on 12/07/2019
  */
+@CommandInfo(aliases = {"cw"})
 public class CreateWorld extends Command {
 
     private static final Map<User, World> WORLDS = new HashMap<>();

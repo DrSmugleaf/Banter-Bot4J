@@ -2,7 +2,9 @@ package com.github.drsmugleaf.charactersheets.character.sheet;
 
 import com.github.drsmugleaf.charactersheets.Builder;
 import com.github.drsmugleaf.charactersheets.ability.Abilities;
+import com.github.drsmugleaf.charactersheets.stat.Stat;
 import com.github.drsmugleaf.charactersheets.stat.Stats;
+import com.github.drsmugleaf.charactersheets.stat.StatsBuilder;
 import com.github.drsmugleaf.charactersheets.state.State;
 
 import java.util.Map;
@@ -28,7 +30,16 @@ public class SheetBuilder implements Builder<Sheet> {
     }
 
     public SheetBuilder addStats(State state, Stats stats) {
-        this.stats.put(state, stats);
+        this.stats.computeIfAbsent(state, (state1) -> new StatsBuilder().setName(state1.getName()).build());
+        Stats originalStats = this.stats.get(state);
+        StatsBuilder builder = new StatsBuilder(originalStats);
+
+        for (Stat stat : stats.get().values()) {
+            builder.addStat(stat);
+        }
+
+        this.stats.put(state, builder.build());
+
         return this;
     }
 

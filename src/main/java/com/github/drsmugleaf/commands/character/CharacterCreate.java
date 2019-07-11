@@ -3,6 +3,7 @@ package com.github.drsmugleaf.commands.character;
 import com.github.drsmugleaf.charactersheets.character.CharacterBuilder;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.CommandInfo;
 import discord4j.core.object.entity.User;
 import org.jetbrains.annotations.Contract;
 
@@ -12,6 +13,7 @@ import java.util.Map;
 /**
  * Created by DrSmugleaf on 11/07/2019
  */
+@CommandInfo(aliases = {"cc"})
 public class CharacterCreate extends Command {
 
     private static final Map<User, CharacterBuilder> CHARACTERS = new HashMap<>();
