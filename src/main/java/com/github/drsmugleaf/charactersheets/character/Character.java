@@ -1,8 +1,9 @@
 package com.github.drsmugleaf.charactersheets.character;
 
 import com.github.drsmugleaf.charactersheets.Nameable;
-import com.github.drsmugleaf.charactersheets.ability.Abilities;
-import com.github.drsmugleaf.charactersheets.stat.Stats;
+import com.github.drsmugleaf.charactersheets.character.sheet.Sheet;
+import com.github.drsmugleaf.charactersheets.location.Location;
+import com.github.drsmugleaf.charactersheets.state.State;
 
 /**
  * Created by DrSmugleaf on 11/07/2019
@@ -10,13 +11,15 @@ import com.github.drsmugleaf.charactersheets.stat.Stats;
 public class Character implements Nameable {
 
     private final String NAME;
-    private final Stats STATS;
-    private final Abilities ABILITIES;
+    private final Sheet SHEET;
+    private State STATE;
+    private Location LOCATION;
 
-    public Character(String name, Stats stats, Abilities abilities) {
+    public Character(String name, Sheet sheet, State state, Location location) {
         NAME = name;
-        STATS = stats;
-        ABILITIES = abilities;
+        SHEET = sheet;
+        STATE = state;
+        LOCATION = location;
     }
 
     @Override
@@ -24,12 +27,26 @@ public class Character implements Nameable {
         return NAME;
     }
 
-    public Stats getStats() {
-        return STATS;
+    public Sheet getSheet() {
+        return SHEET;
     }
 
-    public Abilities getAbilities() {
-        return ABILITIES;
+    public State getState() {
+        return STATE;
+    }
+
+    public Character setState(State state) {
+        STATE = state;
+        return this;
+    }
+
+    public Location getLocation() {
+        return LOCATION;
+    }
+
+    public Character setLocation(Location location) {
+        LOCATION = location;
+        return this;
     }
 
 }

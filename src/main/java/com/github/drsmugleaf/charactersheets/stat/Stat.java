@@ -24,4 +24,9 @@ public class Stat implements Nameable {
         return VALUE;
     }
 
+    public Stat changeValue(long amount) {
+        VALUE += amount;
+        return this;
+    }
+
 }

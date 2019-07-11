@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.charactersheets.character;
+package com.github.drsmugleaf.charactersheets;
 
 /**
  * Created by DrSmugleaf on 11/07/2019

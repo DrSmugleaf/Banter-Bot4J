@@ -1,13 +1,14 @@
 package com.github.drsmugleaf.charactersheets.state;
 
 import com.github.drsmugleaf.charactersheets.Nameable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 /**
  * Created by DrSmugleaf on 11/07/2019
  */
-public class State implements Nameable {
+public class State implements Nameable, Comparable<State> {
 
     private final String NAME;
 
@@ -26,6 +27,11 @@ public class State implements Nameable {
         if (o == null || getClass() != o.getClass()) return false;
         State state = (State) o;
         return Objects.equals(NAME, state.NAME);
+    }
+
+    @Override
+    public int compareTo(@NotNull State o) {
+        return NAME.compareTo(o.NAME);
     }
 
 }
