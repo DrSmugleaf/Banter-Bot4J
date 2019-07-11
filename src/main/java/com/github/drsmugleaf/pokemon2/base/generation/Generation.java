@@ -1,35 +1,32 @@
 package com.github.drsmugleaf.pokemon2.base.generation;
 
 import com.github.drsmugleaf.pokemon2.base.external.Smogon;
-import com.github.drsmugleaf.pokemon2.base.species.ISpecies;
-import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
-import com.github.drsmugleaf.pokemon2.base.species.SpeciesBuilder;
 import com.github.drsmugleaf.pokemon2.base.type.TypeRegistry;
-
-import java.util.function.Function;
+import org.jetbrains.annotations.Contract;
 
 /**
  * Created by DrSmugleaf on 06/07/2019
  */
-public abstract class Generation<T extends ISpecies> implements IGeneration {
+public abstract class Generation implements IGeneration {
+
+    private static final GenerationRegistry GENERATIONS = new GenerationRegistry();
 
     private final Smogon SMOGON;
-    private final Pokedex<T> POKEDEX;
-    private final TypeRegistry TYPES = new TypeRegistry(this);
+    private final TypeRegistry TYPES;
 
-    protected Generation(Function<SpeciesBuilder<T>, T> constructor) {
+    protected Generation() {
         SMOGON = new Smogon(this);
-        POKEDEX = new Pokedex<>(this, constructor);
+        TYPES = new TypeRegistry(this);
+    }
+
+    @Contract(pure = true)
+    public static GenerationRegistry getGenerations() {
+        return GENERATIONS;
     }
 
     @Override
     public Smogon getSmogon() {
         return SMOGON;
-    }
-
-    @Override
-    public Pokedex<T> getPokedex() {
-        return POKEDEX;
     }
 
     @Override

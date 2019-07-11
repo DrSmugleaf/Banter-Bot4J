@@ -4,12 +4,9 @@ import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon.battle.Tier;
 import com.github.drsmugleaf.pokemon.pokemon.Gender;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
-import com.github.drsmugleaf.pokemon2.base.ability.IAbility;
-import com.github.drsmugleaf.pokemon2.base.generation.IGeneration;
 import com.github.drsmugleaf.pokemon2.base.type.IType;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import javafx.util.Builder;
 
 import java.util.*;
 import java.util.function.Function;
@@ -17,14 +14,12 @@ import java.util.function.Function;
 /**
  * Created by DrSmugleaf on 03/07/2019
  */
-public class SpeciesBuilder<T extends ISpecies> implements Builder<T> {
+public class SpeciesBuilder<T extends ISpecies> implements ISpeciesBuilder<T> {
 
     @Nullable
     private String name;
     @Nullable
-    private Set<IGeneration> generations;
-    @Nullable
-    private Set<IAbility> abilities;
+    private Set<String> generations;
     @Nullable
     private Set<IType> types;
     @Nullable
@@ -37,12 +32,28 @@ public class SpeciesBuilder<T extends ISpecies> implements Builder<T> {
     private Double height;
     private String suffix = "";
     private Set<Gender> genders = new HashSet<>(); // TODO: 06-Jul-19 Add valid genders
-    private final Function<SpeciesBuilder<T>, T> CONSTRUCTOR;
+    private Function<SpeciesBuilder<T>, T> CONSTRUCTOR;
+
+    public SpeciesBuilder() {}
 
     public SpeciesBuilder(Function<SpeciesBuilder<T>, T> constructor) {
         CONSTRUCTOR = constructor;
     }
 
+    public SpeciesBuilder(SpeciesBuilder<T> builder) {
+        name = builder.name;
+        generations = builder.generations;
+        types = builder.types;
+        tiers = builder.tiers;
+        stats = builder.stats;
+        evolutions = builder.evolutions;
+        weight = builder.weight;
+        height = builder.height;
+        suffix = builder.suffix;
+        genders = builder.genders;
+        CONSTRUCTOR = builder.CONSTRUCTOR;
+    }
+    
     @Nullable
     public String getName() {
         return name;
@@ -53,21 +64,12 @@ public class SpeciesBuilder<T extends ISpecies> implements Builder<T> {
         return this;
     }
 
-    public ImmutableSet<IGeneration> getGenerations() {
+    public ImmutableSet<String> getGenerations() {
         return ImmutableSet.copyOf(generations);
     }
 
-    public SpeciesBuilder<T> setGenerations(Collection<IGeneration> generations) {
+    public SpeciesBuilder<T> setGenerations(Collection<String> generations) {
         this.generations = new HashSet<>(generations);
-        return this;
-    }
-
-    public ImmutableSet<IAbility> getAbilities() {
-        return ImmutableSet.copyOf(abilities);
-    }
-
-    public SpeciesBuilder<T> setAbilities(Collection<? extends IAbility> abilities) {
-        this.abilities = new HashSet<>(abilities);
         return this;
     }
 

@@ -2,6 +2,6 @@
  * Created by DrSmugleaf on 25/06/2019
  */
 @NonnullApi
-package com.github.drsmugleaf.pokemon2.generations.i.item;
+package com.github.drsmugleaf.pokemon2.generations.iii.nature;
 
 import com.github.drsmugleaf.NonnullApi;

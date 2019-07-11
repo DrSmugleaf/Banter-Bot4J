@@ -3,8 +3,6 @@ package com.github.drsmugleaf.pokemon2.base.species;
 import com.github.drsmugleaf.pokemon.battle.Tier;
 import com.github.drsmugleaf.pokemon.pokemon.Gender;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
-import com.github.drsmugleaf.pokemon2.base.ability.IAbility;
-import com.github.drsmugleaf.pokemon2.base.generation.IGeneration;
 import com.github.drsmugleaf.pokemon2.base.type.IType;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -13,23 +11,21 @@ import org.jetbrains.annotations.Contract;
 /**
  * Created by DrSmugleaf on 06/07/2019
  */
-public abstract class Species implements ISpecies {
+public abstract class Species<T extends ISpecies<T>> implements ISpecies<T> {
 
-    private final ImmutableSet<IGeneration> GENERATIONS;
-    private final ImmutableSet<IAbility> ABILITIES;
+    private final ImmutableSet<String> GENERATIONS;
     private final ImmutableSet<IType> TYPES;
     private final ImmutableSet<Tier> TIERS;
     private final ImmutableMap<PermanentStat, Integer> STATS;
-    private final ImmutableSet<ISpecies> EVOLUTIONS;
+    private final ImmutableSet<T> EVOLUTIONS;
     private final double HEIGHT;
     private final double WEIGHT;
     private final String SUFFIX;
     private final ImmutableSet<Gender> GENDERS;
     private final String NAME;
 
-    protected Species(SpeciesBuilder builder) {
+    protected Species(SpeciesBuilder<T> builder) {
         GENERATIONS = builder.getGenerations();
-        ABILITIES = builder.getAbilities();
         TYPES = builder.getTypes();
         TIERS = builder.getTiers();
         STATS = builder.getStats();
@@ -42,13 +38,8 @@ public abstract class Species implements ISpecies {
     }
 
     @Override
-    public ImmutableSet<IGeneration> getGenerations() {
+    public ImmutableSet<String> getGenerations() {
         return GENERATIONS;
-    }
-
-    @Override
-    public ImmutableSet<IAbility> getAbilities() {
-        return ABILITIES;
     }
 
     @Override
@@ -67,7 +58,7 @@ public abstract class Species implements ISpecies {
     }
 
     @Override
-    public ImmutableSet<ISpecies> getEvolutions() {
+    public ImmutableSet<T> getEvolutions() {
         return EVOLUTIONS;
     }
 

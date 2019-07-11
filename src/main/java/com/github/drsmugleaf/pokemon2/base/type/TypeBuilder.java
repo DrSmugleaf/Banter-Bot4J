@@ -1,13 +1,13 @@
 package com.github.drsmugleaf.pokemon2.base.type;
 
-import javafx.util.Builder;
+import com.github.drsmugleaf.pokemon2.base.builder.IBuilder;
 
 import java.util.*;
 
 /**
  * Created by DrSmugleaf on 05/07/2019
  */
-public class TypeBuilder implements Builder<Map<String, IType>> {
+public class TypeBuilder implements IBuilder<Map<String, IType>> {
 
     private final Map<String, HashSet<String>> weakTo = new HashMap<>();
     private final Map<String, HashSet<String>> resistantTo = new HashMap<>();
@@ -45,7 +45,7 @@ public class TypeBuilder implements Builder<Map<String, IType>> {
         return types;
     }
 
-    public class SpecificTypeBuilder implements Builder<IType> {
+    public class SpecificTypeBuilder implements IBuilder<IType> {
 
         private final TypeBuilder BUILDER;
         private final String TYPE;

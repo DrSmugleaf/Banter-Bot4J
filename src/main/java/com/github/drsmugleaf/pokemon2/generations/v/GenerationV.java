@@ -1,35 +1,39 @@
 package com.github.drsmugleaf.pokemon2.generations.v;
 
 import com.github.drsmugleaf.pokemon.battle.Game;
-import com.github.drsmugleaf.pokemon2.base.generation.Generation;
-import com.github.drsmugleaf.pokemon2.base.species.SpeciesBuilder;
+import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
+import com.github.drsmugleaf.pokemon2.generations.iii.species.PokedexIII;
 import com.github.drsmugleaf.pokemon2.generations.iv.GenerationIV;
-import com.github.drsmugleaf.pokemon2.generations.v.species.SpeciesV;
+import com.github.drsmugleaf.pokemon2.generations.iv.species.SpeciesIV;
 import com.google.common.collect.ImmutableSet;
 import org.jetbrains.annotations.Contract;
-
-import java.util.function.Function;
 
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public class GenerationV extends Generation<SpeciesV> {
+public class GenerationV extends GenerationIV {
 
-    private static final GenerationV INSTANCE = new GenerationV(SpeciesV::new);
+    private static final GenerationV INSTANCE = new GenerationV();
 
     private final ImmutableSet<Game> CORE_GAMES = ImmutableSet.of(
             Game.BLACK_AND_WHITE,
             Game.BLACK_2_AND_WHITE_2
     );
     private final ImmutableSet<Game> SIDE_GAMES = ImmutableSet.of();
+    private final Pokedex<SpeciesIV> POKEDEX = new PokedexIII<>(this, SpeciesIV::new);
 
-    protected GenerationV(Function<SpeciesBuilder<SpeciesV>, SpeciesV> constructor) {
-        super(constructor);
+    protected GenerationV() {
+        super();
     }
 
     @Contract(pure = true)
     public static GenerationV get() {
         return INSTANCE;
+    }
+
+    @Override
+    public Pokedex getPokedex() {
+        return POKEDEX;
     }
 
     @Override

@@ -1,18 +1,17 @@
 package com.github.drsmugleaf.pokemon2.base;
 
 import org.jetbrains.annotations.Contract;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public class Util {
+public class Logger {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Util.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Logger.class);
 
     @Contract(pure = true)
-    public static Logger getLogger() {
+    public static org.slf4j.Logger get() {
         return LOGGER;
     }
 

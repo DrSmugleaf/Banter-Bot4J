@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.pokemon2.base.item;
+package com.github.drsmugleaf.pokemon2.generations.ii.item;
 
 import com.github.drsmugleaf.pokemon2.base.Nameable;
 

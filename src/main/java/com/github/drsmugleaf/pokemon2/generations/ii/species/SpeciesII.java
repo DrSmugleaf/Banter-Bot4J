@@ -6,9 +6,9 @@ import com.github.drsmugleaf.pokemon2.generations.i.species.SpeciesI;
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public class SpeciesII extends SpeciesI {
+public class SpeciesII<T extends SpeciesII<T>> extends SpeciesI<T> {
 
-    public SpeciesII(SpeciesBuilder builder) {
+    public SpeciesII(SpeciesBuilder<T> builder) {
         super(builder);
     }
 

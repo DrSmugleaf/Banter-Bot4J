@@ -1,21 +1,21 @@
 package com.github.drsmugleaf.pokemon2.generations.iii;
 
 import com.github.drsmugleaf.pokemon.battle.Game;
-import com.github.drsmugleaf.pokemon2.base.generation.Generation;
-import com.github.drsmugleaf.pokemon2.base.species.SpeciesBuilder;
+import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
 import com.github.drsmugleaf.pokemon2.generations.ii.GenerationII;
+import com.github.drsmugleaf.pokemon2.generations.iii.ability.AbilityRegistry;
+import com.github.drsmugleaf.pokemon2.generations.iii.nature.NatureRegistry;
+import com.github.drsmugleaf.pokemon2.generations.iii.species.PokedexIII;
 import com.github.drsmugleaf.pokemon2.generations.iii.species.SpeciesIII;
 import com.google.common.collect.ImmutableSet;
 import org.jetbrains.annotations.Contract;
 
-import java.util.function.Function;
-
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public class GenerationIII extends Generation<SpeciesIII> {
+public class GenerationIII extends GenerationII {
 
-    private static final GenerationIII INSTANCE = new GenerationIII(SpeciesIII::new);
+    private static final GenerationIII INSTANCE = new GenerationIII();
 
     private final ImmutableSet<Game> CORE_GAMES = ImmutableSet.of(
             Game.RUBY_AND_SAPPHIRE,
@@ -23,14 +23,22 @@ public class GenerationIII extends Generation<SpeciesIII> {
             Game.EMERALD
     );
     private final ImmutableSet<Game> SIDE_GAMES = ImmutableSet.of();
+    private final Pokedex<SpeciesIII> POKEDEX = new PokedexIII<>(this, SpeciesIII::new);
+    private final NatureRegistry NATURES = new NatureRegistry(this);
+    private final AbilityRegistry ABILITIES = new AbilityRegistry(this);
 
-    protected GenerationIII(Function<SpeciesBuilder<SpeciesIII>, SpeciesIII> constructor) {
-        super(constructor);
+    protected GenerationIII() {
+        super();
     }
 
     @Contract(pure = true)
     public static GenerationIII get() {
         return INSTANCE;
+    }
+
+    @Override
+    public Pokedex getPokedex() {
+        return POKEDEX;
     }
 
     @Override

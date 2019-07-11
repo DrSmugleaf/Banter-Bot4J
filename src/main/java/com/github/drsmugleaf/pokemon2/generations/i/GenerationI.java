@@ -2,19 +2,18 @@ package com.github.drsmugleaf.pokemon2.generations.i;
 
 import com.github.drsmugleaf.pokemon.battle.Game;
 import com.github.drsmugleaf.pokemon2.base.generation.Generation;
-import com.github.drsmugleaf.pokemon2.base.species.SpeciesBuilder;
+import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
+import com.github.drsmugleaf.pokemon2.generations.i.species.PokedexI;
 import com.github.drsmugleaf.pokemon2.generations.i.species.SpeciesI;
 import com.google.common.collect.ImmutableSet;
 import org.jetbrains.annotations.Contract;
 
-import java.util.function.Function;
-
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public class GenerationI extends Generation<SpeciesI> {
+public class GenerationI extends Generation {
 
-    private static final GenerationI INSTANCE = new GenerationI(SpeciesI::new);
+    private static final GenerationI INSTANCE = new GenerationI();
 
     private final ImmutableSet<Game> CORE_GAMES = ImmutableSet.of(
             Game.RED_AND_GREEN,
@@ -23,14 +22,20 @@ public class GenerationI extends Generation<SpeciesI> {
             Game.YELLOW
     );
     private final ImmutableSet<Game> SIDE_GAMES = ImmutableSet.of(Game.STADIUM);
+    private final Pokedex<SpeciesI> POKEDEX = new PokedexI<>(this, SpeciesI::new);
 
-    protected GenerationI(Function<SpeciesBuilder<SpeciesI>, SpeciesI> constructor) {
-        super(constructor);
+    protected GenerationI() {
+        super();
     }
 
     @Contract(pure = true)
     public static GenerationI get() {
         return INSTANCE;
+    }
+
+    @Override
+    public Pokedex getPokedex() {
+        return POKEDEX;
     }
 
     @Override

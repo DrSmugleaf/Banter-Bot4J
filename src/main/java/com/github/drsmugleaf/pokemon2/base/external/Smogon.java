@@ -1,15 +1,16 @@
 package com.github.drsmugleaf.pokemon2.base.external;
 
-import com.github.drsmugleaf.pokemon.battle.Tier;
 import com.github.drsmugleaf.pokemon.external.ParsingException;
-import com.github.drsmugleaf.pokemon.external.smogon.SmogonParser;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon2.base.generation.IGeneration;
 import com.github.drsmugleaf.pokemon2.base.species.ISpecies;
+import com.github.drsmugleaf.pokemon2.generations.i.species.PokedexI;
 import com.github.drsmugleaf.pokemon2.base.species.SpeciesBuilder;
-import com.github.drsmugleaf.pokemon2.base.type.IType;
 import com.github.drsmugleaf.pokemon2.base.type.TypeBuilder;
-import com.github.drsmugleaf.pokemon2.generations.i.ability.Ability;
+import com.github.drsmugleaf.pokemon2.generations.iii.ability.Ability;
+import com.github.drsmugleaf.pokemon2.generations.iii.ability.IAbility;
+import com.github.drsmugleaf.pokemon2.generations.iii.nature.INature;
+import com.github.drsmugleaf.pokemon2.generations.iii.nature.Nature;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Connection;
@@ -17,7 +18,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -63,84 +65,23 @@ public class Smogon {
         return new JSONObject(json).getJSONArray("injectRpcs");
     }
 
+    private JSONArray get(String array) {
+        return getRpcs()
+                .getJSONArray(1)
+                .getJSONObject(1)
+                .getJSONArray(array);
+    }
+
     public IGeneration getGeneration() {
         return GENERATION;
     }
 
-    public <T extends ISpecies> Map<String, T> getSpecies(Function<SpeciesBuilder<T>, T> constructor) {
-        Map<String, T> species = new HashMap<>();
-        JSONArray pokemons;
-        pokemons = SmogonParser.getPokemons(GENERATION);
-
-        for (int i = 0; i < pokemons.length(); i++) {
-            JSONObject jsonPokemon = pokemons.getJSONObject(i);
-            String name = jsonPokemon.getString("name");
-
-            JSONArray jsonGenerations = jsonPokemon.getJSONArray("genfamily");
-            List<IGeneration> genFamilies = new ArrayList<>();
-            for (int j = 0; j < jsonGenerations.length(); j++) {
-                String generationName = jsonGenerations.getString(j);
-                IGeneration genFamily = IGeneration.from(generationName);
-                genFamilies.add(genFamily);
-            }
-
-            JSONArray alts = jsonPokemon.getJSONArray("alts");
-            for (int j = 0; j < alts.length(); j++) {
-                JSONObject alt = alts.getJSONObject(j);
-                String suffix = alt.getString("suffix");
-                if (!suffix.isEmpty()) {
-                    name = name.concat("-" + suffix);
-                }
-
-                int hp = alt.getInt("hp");
-                int attack = alt.getInt("atk");
-                int defense = alt.getInt("def");
-                int specialAttack = alt.getInt("spa");
-                int specialDefense = alt.getInt("spd");
-                int speed = alt.getInt("spe");
-                double weight = alt.getDouble("weight");
-                double height = alt.getDouble("height");
-
-                Collection<Ability> abilities = Ability.fromAlt(alt).values();
-
-                List<? extends IType> types = GENERATION.getTypes().fromAlt(alt);
-
-                JSONArray jsonTiers = alt.getJSONArray("formats");
-                List<Tier> tiers = new ArrayList<>();
-                for (int k = 0; k < jsonTiers.length(); k++) {
-                    Tier tier = Tier.getTier(jsonTiers.getString(k));
-                    tiers.add(tier);
-                }
-
-                // TODO: 05-Jul-19 Add evolutions
-                SpeciesBuilder<T> builder = new SpeciesBuilder<>(constructor)
-                        .setName(name)
-                        .setGenerations(genFamilies)
-                        .addStat(PermanentStat.HP, hp)
-                        .addStat(PermanentStat.ATTACK, attack)
-                        .addStat(PermanentStat.DEFENSE, defense)
-                        .addStat(PermanentStat.SPECIAL_ATTACK, specialAttack)
-                        .addStat(PermanentStat.SPECIAL_DEFENSE, specialDefense)
-                        .addStat(PermanentStat.SPEED, speed)
-                        .setWeight(weight)
-                        .setHeight(height)
-                        .setAbilities(abilities)
-                        .setTypes(types)
-                        .setTiers(tiers);
-
-                species.put(name, constructor.apply(builder));
-            }
-        }
-
-        return species;
+    public JSONArray getSpecies() {
+        return get("pokemon");
     }
 
     public TypeBuilder getTypes() {
-        JSONArray jsonTypes = getRpcs()
-                .getJSONArray(1)
-                .getJSONObject(1)
-                .getJSONArray("types");
-
+        JSONArray jsonTypes = get("types");
         TypeBuilder builder = new TypeBuilder();
         for (int i = 0; i < jsonTypes.length(); i++) {
             JSONObject jsonType = jsonTypes.getJSONObject(i);
@@ -166,12 +107,57 @@ public class Smogon {
         return builder;
     }
 
-    public void printPokemonsAsEnums(Function<SpeciesBuilder<ISpecies>, ISpecies> constructor, IGeneration gen, IGeneration... minus) {
-        Map<String, ISpecies> species = new TreeMap<>(getSpecies(constructor));
+    public Map<String, INature> getNatures() {
+        Map<String, INature> natures = new HashMap<>();
+        JSONArray naturesArray = get("natures");
+
+        for (int i = 0; i < naturesArray.length(); i++) {
+            JSONObject natureObject = naturesArray.getJSONObject(i);
+            String name = natureObject.getString("name");
+            double def = natureObject.getDouble("def");
+            double spa = natureObject.getDouble("spa");
+            double spd = natureObject.getDouble("spd");
+            double hp = natureObject.getDouble("hp");
+            double atk = natureObject.getDouble("atk");
+            double spe = natureObject.getDouble("spe");
+
+            Map<PermanentStat, Double> multipliers = new HashMap<>();
+            multipliers.put(PermanentStat.DEFENSE, def);
+            multipliers.put(PermanentStat.SPECIAL_ATTACK, spa);
+            multipliers.put(PermanentStat.SPECIAL_DEFENSE, spd);
+            multipliers.put(PermanentStat.HP, hp);
+            multipliers.put(PermanentStat.ATTACK, atk);
+            multipliers.put(PermanentStat.SPEED, spe);
+
+            INature nature = new Nature(name, multipliers);
+            natures.put(name, nature);
+        }
+
+        return natures;
+    }
+
+    public Map<String, IAbility> getAbilities() {
+        Map<String, IAbility> abilities = new HashMap<>();
+        JSONArray abilitiesArray = get("abilities");
+
+        for (int i = 0; i < abilitiesArray.length(); i++) {
+            JSONObject natureObject = abilitiesArray.getJSONObject(i);
+            String name = natureObject.getString("name");
+            IAbility ability = new Ability(name);
+
+            abilities.put(name, ability);
+        }
+
+        return abilities;
+    }
+
+    public <T extends ISpecies<T>> void printPokemonsAsEnums(Function<SpeciesBuilder<T>, T> constructor, IGeneration gen, IGeneration... minus) {
+        PokedexI<T> dex = new PokedexI<>(gen, constructor);
+        HashMap<String, T> species = new HashMap<>(dex.get());
 
         for (IGeneration minusGen : minus) {
-            Map<String, ISpecies> minusMap = new Smogon(minusGen).getSpecies(constructor);
-            species.keySet().removeAll(minusMap.keySet());
+            PokedexI<T> minusDex = new PokedexI<>(minusGen, constructor);
+            species.keySet().removeAll(minusDex.get().keySet());
         }
 
         for (ISpecies pokemon : species.values()) {
