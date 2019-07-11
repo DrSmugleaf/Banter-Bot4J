@@ -4,6 +4,7 @@ import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.charactersheets.Nameable;
 import com.github.drsmugleaf.charactersheets.ability.effect.Effect;
 import com.github.drsmugleaf.charactersheets.character.Character;
+import com.github.drsmugleaf.charactersheets.game.Game;
 import com.github.drsmugleaf.charactersheets.state.State;
 
 /**
@@ -37,8 +38,8 @@ public class Ability implements Nameable {
         return state.equals(VALID_STATE);
     }
 
-    public void use(Character user, Character on) {
-        EFFECT.use(user, on);
+    public void use(Game game, Character user, Character on) {
+        EFFECT.use(game, on, user);
     }
 
 }

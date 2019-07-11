@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.charactersheets.ability.effect;
 
 import com.github.drsmugleaf.charactersheets.character.Character;
+import com.github.drsmugleaf.charactersheets.game.Game;
 import com.github.drsmugleaf.charactersheets.state.State;
 
 /**
@@ -24,7 +25,7 @@ public class StatChange extends Effect {
     }
 
     @Override
-    public void use(Character user, Character on) {
+    public void use(Game game, Character on, Character user) {
         State userState = user.getState();
         on.getSheet().getStats(userState).get(CHANGED_STAT).changeValue(AMOUNT);
     }

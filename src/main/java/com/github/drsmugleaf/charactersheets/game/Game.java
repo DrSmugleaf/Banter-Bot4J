@@ -12,11 +12,13 @@ public class Game implements Nameable {
     private final String NAME;
     private final World WORLD;
     private final Roster ROSTER;
+    private final Turn TURN;
 
-    public Game(String name, World world, Roster roster) {
+    public Game(String name, World world, Roster roster, Turn turn) {
         NAME = name;
         WORLD = world;
         ROSTER = roster;
+        TURN = turn;
     }
 
     @Override
@@ -30,6 +32,10 @@ public class Game implements Nameable {
 
     public Roster getRoster() {
         return ROSTER;
+    }
+
+    public Turn getTurn() {
+        return TURN;
     }
 
 }
