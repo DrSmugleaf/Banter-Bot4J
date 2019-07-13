@@ -4,7 +4,7 @@ import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.converter.TypeConverters;
+import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
@@ -15,14 +15,14 @@ import java.util.Set;
 /**
  * Created by DrSmugleaf on 21/06/2018
  */
-public class Registry {
+public class CommandRegistry {
 
-    private final TypeConverters CONVERTERS;
+    private final ConverterRegistry CONVERTERS;
 
     private final ImmutableList<Entry> ENTRIES;
 
-    public Registry(List<Class<Command>> commands) {
-        CONVERTERS = new TypeConverters();
+    public CommandRegistry(List<Class<Command>> commands) {
+        CONVERTERS = new ConverterRegistry();
 
         List<Entry> entries = new ArrayList<>();
         for (Class<Command> command : commands) {
@@ -40,7 +40,7 @@ public class Registry {
         }
     }
 
-    public TypeConverters getConverters() {
+    public ConverterRegistry getConverters() {
         return CONVERTERS;
     }
 

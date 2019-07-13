@@ -214,12 +214,6 @@ public class Arguments extends ArrayList<String> {
         return get(position);
     }
 
-    @Nullable
-    public Integer getIntegerArg(CommandField field) {
-        int position = field.getArgument().position() - 1;
-        return getInteger(position);
-    }
-
     public String getInvalidArgumentsResponse() {
         Entry entry = RESULT.getEntry();
         StringBuilder response = new StringBuilder();

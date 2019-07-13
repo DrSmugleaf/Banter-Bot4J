@@ -3,7 +3,7 @@ package com.github.drsmugleaf.commands.api;
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.converter.Result;
-import com.github.drsmugleaf.commands.api.converter.TypeConverters;
+import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
 import com.github.drsmugleaf.commands.api.registry.CommandField;
 import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
 import com.github.drsmugleaf.commands.api.registry.Entry;
@@ -122,6 +122,6 @@ public class Command implements ICommand {
     @Override
     public void run() {}
 
-    public void registerConverters(TypeConverters converter) {}
+    public void registerConverters(ConverterRegistry converter) {}
 
 }

@@ -4,8 +4,7 @@ import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
-import com.github.drsmugleaf.commands.api.converter.TypeConverters;
+import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
 import com.github.drsmugleaf.database.models.EveTimerModel;
 import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
@@ -90,8 +89,8 @@ public class EveTimer extends Command {
     }
 
     @Override
-    public void registerConverters(TypeConverters converter) {
-        converter.registerStringTo(CommandReceivedEvent.class, ZonedDateTime.class, (s, e) -> {
+    public void registerConverters(ConverterRegistry converter) {
+        converter.registerCommandTo(ZonedDateTime.class, (s, e) -> {
             Long days = parseDatePortion(s, Pattern.compile("(\\d+)d"));
             Long hours = parseDatePortion(s, Pattern.compile("(\\d+)h"));
             Long minutes = parseDatePortion(s, Pattern.compile("(\\d+)m"));
