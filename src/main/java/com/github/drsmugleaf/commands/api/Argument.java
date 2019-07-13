@@ -14,6 +14,8 @@ public @interface Argument {
 
     int position();
 
+    int words() default 1;
+
     long minimum() default 1;
 
     long maximum() default Long.MAX_VALUE;

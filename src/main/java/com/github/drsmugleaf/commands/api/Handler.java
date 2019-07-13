@@ -2,7 +2,7 @@ package com.github.drsmugleaf.commands.api;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
-import com.github.drsmugleaf.commands.api.registry.Registry;
+import com.github.drsmugleaf.commands.api.registry.CommandRegistry;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 import com.github.drsmugleaf.database.models.DiscordMember;
 import com.github.drsmugleaf.reflection.Reflection;
@@ -24,15 +24,15 @@ import java.util.Optional;
  */
 public class Handler {
 
-    private final Registry COMMAND_REGISTRY;
+    private final CommandRegistry COMMAND_REGISTRY;
 
     public Handler(String commandsPackageName) {
         Reflection reflection = new Reflection(commandsPackageName);
         List<Class<Command>> commands = reflection.findSubtypesOf(Command.class);
-        COMMAND_REGISTRY = new Registry(commands);
+        COMMAND_REGISTRY = new CommandRegistry(commands);
     }
 
-    public Registry getRegistry() {
+    public CommandRegistry getRegistry() {
         return COMMAND_REGISTRY;
     }
 

@@ -2,8 +2,7 @@ package com.github.drsmugleaf.commands.deadbydaylight;
 
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
-import com.github.drsmugleaf.commands.api.converter.TypeConverters;
+import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
 import com.github.drsmugleaf.deadbydaylight.dennisreep.*;
 import discord4j.core.spec.EmbedCreateSpec;
 
@@ -112,8 +111,8 @@ public class DBDBest extends Command {
     }
 
     @Override
-    public void registerConverters(TypeConverters converter) {
-        converter.registerStringTo(CommandReceivedEvent.class, Killer.class, (s, e) -> KillersAPI.getKiller(s));
+    public void registerConverters(ConverterRegistry converter) {
+        converter.registerCommandTo(Killer.class, (s, e) -> KillersAPI.getKiller(s));
     }
 
 }

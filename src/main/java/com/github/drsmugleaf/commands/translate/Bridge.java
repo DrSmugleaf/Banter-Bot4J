@@ -3,8 +3,7 @@ package com.github.drsmugleaf.commands.translate;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
-import com.github.drsmugleaf.commands.api.converter.TypeConverters;
+import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 import com.github.drsmugleaf.database.models.BridgedChannel;
 import com.github.drsmugleaf.translator.Languages;
@@ -53,8 +52,8 @@ public class Bridge extends Command {
     }
 
     @Override
-    public void registerConverters(TypeConverters converter) {
-        converter.registerStringTo(CommandReceivedEvent.class, TextChannel.class, (s, e) -> e
+    public void registerConverters(ConverterRegistry converter) {
+        converter.registerCommandTo(TextChannel.class, (s, e) -> e
                 .getGuild()
                 .flatMapMany(Guild::getChannels)
                 .filter(channel -> channel.getName().equalsIgnoreCase(s) && channel instanceof TextChannel)
@@ -62,7 +61,7 @@ public class Bridge extends Command {
                 .blockFirst()
         );
 
-        converter.registerStringTo(CommandReceivedEvent.class, Languages.class, (s, e) -> Languages.getLanguage(s));
+        converter.registerCommandTo(Languages.class, (s, e) -> Languages.getLanguage(s));
     }
 
 }

@@ -5,7 +5,7 @@ import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
-import com.github.drsmugleaf.commands.api.converter.TypeConverters;
+import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 
 import javax.imageio.ImageIO;
@@ -57,8 +57,8 @@ public class MergeImages extends Command {
     }
 
     @Override
-    public void registerConverters(TypeConverters converter) {
-        converter.registerStringTo(CommandReceivedEvent.class, Orientation.class, (s, e) -> Orientation.valueOf(s.toUpperCase()));
+    public void registerConverters(ConverterRegistry converter) {
+        converter.registerCommandTo(Orientation.class, (s, e) -> Orientation.valueOf(s.toUpperCase()));
     }
 
 }

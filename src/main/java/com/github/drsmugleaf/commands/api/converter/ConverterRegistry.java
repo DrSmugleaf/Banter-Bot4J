@@ -15,7 +15,7 @@ import java.util.function.BiFunction;
 /**
  * Created by DrSmugleaf on 19/04/2019
  */
-public class TypeConverters {
+public class ConverterRegistry {
 
     private final Map<TripleIdentifier, Converter> CONVERTERS = new HashMap<>();
 
@@ -33,26 +33,26 @@ public class TypeConverters {
         return "";
     };
 
-    public TypeConverters() {
-        registerStringTo(CommandReceivedEvent.class, String.class, (s, e) -> s);
+    public ConverterRegistry() {
+        registerCommandTo(String.class, (s, e) -> s);
 
-        registerStringTo(CommandReceivedEvent.class, Integer.class, (s, e) -> Integer.parseInt(s), NUMBER_VALIDATOR);
-        registerStringTo(CommandReceivedEvent.class, int.class, (s, e) -> Integer.parseInt(s), NUMBER_VALIDATOR);
+        registerCommandTo(Integer.class, (s, e) -> Integer.parseInt(s), NUMBER_VALIDATOR);
+        registerCommandTo(int.class, (s, e) -> Integer.parseInt(s), NUMBER_VALIDATOR);
 
-        registerStringTo(CommandReceivedEvent.class, Long.class, (s, e) -> Long.valueOf(s), NUMBER_VALIDATOR);
-        registerStringTo(CommandReceivedEvent.class, long.class, (s, e) -> Long.parseLong(s), NUMBER_VALIDATOR);
+        registerCommandTo(Long.class, (s, e) -> Long.valueOf(s), NUMBER_VALIDATOR);
+        registerCommandTo(long.class, (s, e) -> Long.parseLong(s), NUMBER_VALIDATOR);
 
-        registerStringTo(CommandReceivedEvent.class, Float.class, (s, e) -> Float.valueOf(s), NUMBER_VALIDATOR);
-        registerStringTo(CommandReceivedEvent.class, float.class, (s, e) -> Float.parseFloat(s), NUMBER_VALIDATOR);
+        registerCommandTo(Float.class, (s, e) -> Float.valueOf(s), NUMBER_VALIDATOR);
+        registerCommandTo(float.class, (s, e) -> Float.parseFloat(s), NUMBER_VALIDATOR);
 
-        registerStringTo(CommandReceivedEvent.class, Double.class, (s, e) -> Double.valueOf(s), NUMBER_VALIDATOR);
-        registerStringTo(CommandReceivedEvent.class, double.class, (s, e) -> Double.parseDouble(s), NUMBER_VALIDATOR);
+        registerCommandTo(Double.class, (s, e) -> Double.valueOf(s), NUMBER_VALIDATOR);
+        registerCommandTo(double.class, (s, e) -> Double.parseDouble(s), NUMBER_VALIDATOR);
 
-        registerStringTo(CommandReceivedEvent.class, Character.class, (s, e) -> s.charAt(0));
-        registerStringTo(CommandReceivedEvent.class, char.class, (s, e) -> s.charAt(0));
-        registerStringTo(CommandReceivedEvent.class, char[].class, (s, e) -> s.toCharArray());
+        registerCommandTo(Character.class, (s, e) -> s.charAt(0));
+        registerCommandTo(char.class, (s, e) -> s.charAt(0));
+        registerCommandTo(char[].class, (s, e) -> s.toCharArray());
 
-        registerStringTo(CommandReceivedEvent.class, Boolean.class, (s, e) -> {
+        registerCommandTo(Boolean.class, (s, e) -> {
             switch (s.toLowerCase()) {
                 case "true":
                 case "yes":
@@ -66,7 +66,7 @@ public class TypeConverters {
                     return null;
             }
         });
-        registerStringTo(CommandReceivedEvent.class, boolean.class, (s, e) -> {
+        registerCommandTo(boolean.class, (s, e) -> {
             switch (s.toLowerCase()) {
                 case "true":
                 case "yes":
@@ -82,11 +82,12 @@ public class TypeConverters {
         });
     }
 
-    public void register(Converter converter) {
+    public ConverterRegistry register(Converter converter) {
         CONVERTERS.put(converter.getIdentifier(), converter);
+        return this;
     }
 
-    public <T, U, R> void register(
+    public <T, U, R> ConverterRegistry register(
             Class<T> from1,
             Class<U> from2,
             Class<R> to,
@@ -97,39 +98,62 @@ public class TypeConverters {
         Validator<R> validator = new Validator<>(to, validatorFunction);
         Converter<T, U, R> converter = new Converter<>(identifier, converterFunction, validator);
         register(converter);
+        return this;
     }
 
-    public <T, U, R> void register(
+    public <T, U, R> ConverterRegistry register(
             Class<T> from1,
             Class<U> from2,
             Class<R> to,
             BiFunction<T, U, R> converterFunction
     ) {
         register(from1, from2, to, converterFunction, null);
+        return this;
     }
 
-    public <U, R> void registerStringTo(
+    public <U, R> ConverterRegistry registerStringTo(
             Class<U> from,
             Class<R> to,
             BiFunction<String, U, R> converterFunction,
             @Nullable BiFunction<CommandField, ? super R, String> validatorFunction
     ) {
         register(String.class, from, to, converterFunction, validatorFunction);
+        return this;
     }
 
-    public <U, R> void registerStringTo(
+    public <U, R> ConverterRegistry registerStringTo(
             Class<U> from,
             Class<R> to,
             BiFunction<String, U, R> converterFunction
     ) {
         registerStringTo(from, to, converterFunction, null);
+        return this;
     }
 
-    public void registerConverters(List<Entry> commands) {
+    public <R> ConverterRegistry registerCommandTo(
+            Class<R> to,
+            BiFunction<String, CommandReceivedEvent, R> converterFunction,
+            @Nullable BiFunction<CommandField, ? super R, String> validatorFunction
+    ) {
+        registerStringTo(CommandReceivedEvent.class, to, converterFunction, validatorFunction);
+        return this;
+    }
+
+    public <R> ConverterRegistry registerCommandTo(
+            Class<R> to,
+            BiFunction<String, CommandReceivedEvent, R> converterFunction
+    ) {
+        registerCommandTo(to, converterFunction, null);
+        return this;
+    }
+
+    public ConverterRegistry registerConverters(List<Entry> commands) {
         for (Entry entry : commands) {
             Command command = entry.newInstance();
             command.registerConverters(this);
         }
+
+        return this;
     }
 
     @Nullable

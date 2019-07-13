@@ -6,8 +6,7 @@ import com.github.drsmugleaf.article13.vote.Decision;
 import com.github.drsmugleaf.article13.vote.Vote;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
-import com.github.drsmugleaf.commands.api.converter.TypeConverters;
+import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
 
 import java.util.List;
 import java.util.Map;
@@ -55,10 +54,11 @@ public class Article13 extends Command {
     }
 
     @Override
-    public void registerConverters(TypeConverters converter) {
-        converter.registerStringTo(CommandReceivedEvent.class, Country.class, (s, e) -> Country.getCountry(s));
-        converter.registerStringTo(CommandReceivedEvent.class, Decision.class, (s, e) -> Decision.from(s));
-        converter.registerStringTo(CommandReceivedEvent.class, Vote.class, (s, e) -> Vote.getVote(s));
+    public void registerConverters(ConverterRegistry converter) {
+        converter
+                .registerCommandTo(Country.class, (s, e) -> Country.getCountry(s))
+                .registerCommandTo(Decision.class, (s, e) -> Decision.from(s))
+                .registerCommandTo(Vote.class, (s, e) -> Vote.getVote(s));
     }
 
 }

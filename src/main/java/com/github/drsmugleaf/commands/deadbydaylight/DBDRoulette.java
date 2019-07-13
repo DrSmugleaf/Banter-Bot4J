@@ -3,8 +3,7 @@ package com.github.drsmugleaf.commands.deadbydaylight;
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
-import com.github.drsmugleaf.commands.api.converter.TypeConverters;
+import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
 import com.github.drsmugleaf.deadbydaylight.ICharacter;
 import com.github.drsmugleaf.deadbydaylight.dennisreep.*;
 
@@ -120,8 +119,8 @@ public class DBDRoulette extends Command {
     }
 
     @Override
-    public void registerConverters(TypeConverters converter) {
-        converter.registerStringTo(CommandReceivedEvent.class, RouletteTypes.class, (s, e) -> RouletteTypes.from(s));
+    public void registerConverters(ConverterRegistry converter) {
+        converter.registerCommandTo(RouletteTypes.class, (s, e) -> RouletteTypes.from(s));
     }
 
 }
