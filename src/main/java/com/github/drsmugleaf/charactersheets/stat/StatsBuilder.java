@@ -9,7 +9,7 @@ import java.util.TreeMap;
 /**
  * Created by DrSmugleaf on 12/07/2019
  */
-public class StatsBuilder implements Builder<Stats> {
+public class StatsBuilder implements Builder<StatGroup> {
 
     @Nullable
     private String NAME;
@@ -17,9 +17,9 @@ public class StatsBuilder implements Builder<Stats> {
 
     public StatsBuilder() {}
 
-    public StatsBuilder(Stats stats) {
-        NAME = stats.getName();
-        STATS.putAll(stats.get());
+    public StatsBuilder(StatGroup statGroup) {
+        NAME = statGroup.getName();
+        STATS.putAll(statGroup.get());
     }
 
     @Nullable
@@ -47,8 +47,8 @@ public class StatsBuilder implements Builder<Stats> {
     }
 
     @Override
-    public Stats build() {
-        return new Stats(NAME, STATS);
+    public StatGroup build() {
+        return new StatGroup(NAME, STATS);
     }
 
 }

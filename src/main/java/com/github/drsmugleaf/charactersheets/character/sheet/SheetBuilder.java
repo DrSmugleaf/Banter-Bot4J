@@ -3,10 +3,11 @@ package com.github.drsmugleaf.charactersheets.character.sheet;
 import com.github.drsmugleaf.charactersheets.Builder;
 import com.github.drsmugleaf.charactersheets.ability.Abilities;
 import com.github.drsmugleaf.charactersheets.stat.Stat;
-import com.github.drsmugleaf.charactersheets.stat.Stats;
+import com.github.drsmugleaf.charactersheets.stat.StatGroup;
 import com.github.drsmugleaf.charactersheets.stat.StatsBuilder;
 import com.github.drsmugleaf.charactersheets.state.State;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -15,7 +16,7 @@ import java.util.TreeMap;
  */
 public class SheetBuilder implements Builder<Sheet> {
 
-    private Map<State, Stats> stats = new TreeMap<>();
+    private Map<State, StatGroup> stats = new HashMap<>();
     private Map<State, Abilities> abilities = new TreeMap<>();
 
     public SheetBuilder() {}
@@ -25,16 +26,16 @@ public class SheetBuilder implements Builder<Sheet> {
         abilities.putAll(sheet.getAbilities());
     }
 
-    public Map<State, Stats> getStats() {
+    public Map<State, StatGroup> getStats() {
         return stats;
     }
 
-    public SheetBuilder addStats(State state, Stats stats) {
+    public SheetBuilder addStats(State state, StatGroup statGroup) {
         this.stats.computeIfAbsent(state, (state1) -> new StatsBuilder().setName(state1.getName()).build());
-        Stats originalStats = this.stats.get(state);
-        StatsBuilder builder = new StatsBuilder(originalStats);
+        StatGroup originalStatGroup = this.stats.get(state);
+        StatsBuilder builder = new StatsBuilder(originalStatGroup);
 
-        for (Stat stat : stats.get().values()) {
+        for (Stat stat : statGroup.get().values()) {
             builder.addStat(stat);
         }
 
@@ -43,12 +44,12 @@ public class SheetBuilder implements Builder<Sheet> {
         return this;
     }
 
-    public SheetBuilder setStats(Map<State, Stats> stats) {
+    public SheetBuilder setStats(Map<State, StatGroup> stats) {
         this.stats = stats;
         return this;
     }
 
-    public SheetBuilder addAbilities(Map.Entry<State, Stats> entry) {
+    public SheetBuilder addAbilities(Map.Entry<State, StatGroup> entry) {
         this.stats.put(entry.getKey(), entry.getValue());
         return this;
     }

@@ -13,7 +13,7 @@ public class State implements Nameable, Comparable<State> {
     private final String NAME;
 
     public State(String name) {
-        this.NAME = name;
+        NAME = name;
     }
 
     @Override
@@ -27,6 +27,11 @@ public class State implements Nameable, Comparable<State> {
         if (o == null || getClass() != o.getClass()) return false;
         State state = (State) o;
         return Objects.equals(NAME, state.NAME);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(NAME);
     }
 
     @Override

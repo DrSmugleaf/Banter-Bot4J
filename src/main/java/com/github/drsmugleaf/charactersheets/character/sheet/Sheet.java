@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.charactersheets.character.sheet;
 
 import com.github.drsmugleaf.charactersheets.ability.Abilities;
-import com.github.drsmugleaf.charactersheets.stat.Stats;
+import com.github.drsmugleaf.charactersheets.stat.StatGroup;
 import com.github.drsmugleaf.charactersheets.state.State;
 import com.google.common.collect.ImmutableMap;
 
@@ -13,10 +13,10 @@ import java.util.Map;
  */
 public class Sheet {
 
-    private final ImmutableMap<State, Stats> STATS;
+    private final ImmutableMap<State, StatGroup> STATS;
     private final ImmutableMap<State, Abilities> ABILITIES;
 
-    public Sheet(Map<State, Stats> stats, Map<State, Abilities> abilities) {
+    public Sheet(Map<State, StatGroup> stats, Map<State, Abilities> abilities) {
         STATS = ImmutableMap.copyOf(stats);
         ABILITIES = ImmutableMap.copyOf(abilities);
     }
@@ -25,11 +25,11 @@ public class Sheet {
         this(new HashMap<>(), new HashMap<>());
     }
 
-    public ImmutableMap<State, Stats> getStats() {
+    public ImmutableMap<State, StatGroup> getStats() {
         return STATS;
     }
 
-    public Stats getStats(State state) {
+    public StatGroup getStats(State state) {
         return STATS.get(state);
     }
 

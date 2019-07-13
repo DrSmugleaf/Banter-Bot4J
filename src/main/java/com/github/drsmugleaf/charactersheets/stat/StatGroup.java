@@ -9,12 +9,12 @@ import java.util.Map;
 /**
  * Created by DrSmugleaf on 11/07/2019
  */
-public class Stats implements Nameable {
+public class StatGroup implements Nameable {
 
     private final String NAME;
     private final ImmutableMap<String, Stat> STATS;
 
-    public Stats(String name, Map<String, Stat> stats) {
+    public StatGroup(String name, Map<String, Stat> stats) {
         NAME = name;
         STATS = ImmutableMap.copyOf(stats);
     }

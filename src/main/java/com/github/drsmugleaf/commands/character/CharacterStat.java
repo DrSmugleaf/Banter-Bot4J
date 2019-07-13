@@ -3,7 +3,7 @@ package com.github.drsmugleaf.commands.character;
 import com.github.drsmugleaf.charactersheets.character.CharacterBuilder;
 import com.github.drsmugleaf.charactersheets.character.sheet.SheetBuilder;
 import com.github.drsmugleaf.charactersheets.stat.Stat;
-import com.github.drsmugleaf.charactersheets.stat.Stats;
+import com.github.drsmugleaf.charactersheets.stat.StatGroup;
 import com.github.drsmugleaf.charactersheets.stat.StatsBuilder;
 import com.github.drsmugleaf.charactersheets.state.State;
 import com.github.drsmugleaf.commands.api.Argument;
@@ -24,7 +24,7 @@ public class CharacterStat extends Command {
     @Argument(position = 2, example = "Strength")
     private String name;
 
-    @Argument(position = 3, example = "5")
+    @Argument(position = 3, example = "5", minimum = Long.MIN_VALUE)
     private long value;
 
     @Override
@@ -37,9 +37,9 @@ public class CharacterStat extends Command {
                     SheetBuilder sheet = new SheetBuilder(character.getSheet());
                     State state = new State(stateName);
                     StatsBuilder stats = new StatsBuilder();
-                    Map<State, Stats> originalStats = sheet.getStats();
+                    Map<State, StatGroup> originalStats = sheet.getStats();
                     if (originalStats.containsKey(state)) {
-                        Stats statSheet = originalStats.get(state);
+                        StatGroup statSheet = originalStats.get(state);
                         sheet.addStats(state, statSheet);
                     }
 
