@@ -181,7 +181,11 @@ public class Arguments extends ArrayList<String> {
         }
 
         Class<?> fieldType = field.getType();
-        Converter<String, CommandReceivedEvent, ?> converter = BanterBot4J.getHandler().getRegistry().getConverters().find(String.class, CommandReceivedEvent.class, fieldType);
+        Converter<String, CommandReceivedEvent, ?> converter = BanterBot4J
+                .getHandler()
+                .getRegistry()
+                .getConverters()
+                .find(String.class, CommandReceivedEvent.class, fieldType);
         if (converter == null) {
             throw new IllegalStateException("No converter found for type" + fieldType);
         }
@@ -211,6 +215,17 @@ public class Arguments extends ArrayList<String> {
     @Nullable
     public String getStringArg(CommandField field) {
         int position = field.getArgument().position() - 1;
+        long words = field.getArgument().words();
+
+        if (field.getField().getType() == String.class) {
+            List<String> strings = new ArrayList<>();
+            for (int i = position; i < position + words && i < size(); i++) {
+                strings.add(get(i));
+            }
+
+            return String.join(" ", strings);
+        }
+
         return get(position);
     }
 
