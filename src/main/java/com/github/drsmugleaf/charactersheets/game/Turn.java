@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.charactersheets.game;
 
-import com.github.drsmugleaf.charactersheets.ability.Abilities;
+import com.github.drsmugleaf.charactersheets.ability.AbilitySet;
 import com.github.drsmugleaf.charactersheets.ability.Ability;
 import com.github.drsmugleaf.charactersheets.character.Character;
 
@@ -27,7 +27,7 @@ public class Turn {
         }
 
         for (Character character : game.getRoster().getCharacters().values()) {
-            for (Abilities abilities : character.getSheet().getAbilities().values()) {
+            for (AbilitySet abilities : character.getSheet().getAbilities().values()) {
                 for (Ability ability : abilities.get().values()) {
                     ability.onTurnEnd();
                 }

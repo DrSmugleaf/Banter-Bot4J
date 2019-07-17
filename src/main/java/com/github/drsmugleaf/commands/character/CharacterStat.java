@@ -3,14 +3,10 @@ package com.github.drsmugleaf.commands.character;
 import com.github.drsmugleaf.charactersheets.character.CharacterBuilder;
 import com.github.drsmugleaf.charactersheets.character.sheet.SheetBuilder;
 import com.github.drsmugleaf.charactersheets.stat.Stat;
-import com.github.drsmugleaf.charactersheets.stat.StatGroup;
-import com.github.drsmugleaf.charactersheets.stat.StatsBuilder;
 import com.github.drsmugleaf.charactersheets.state.State;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-
-import java.util.Map;
 
 /**
  * Created by DrSmugleaf on 12/07/2019
@@ -34,21 +30,10 @@ public class CharacterStat extends Command {
                 .getAuthor()
                 .ifPresent(author -> {
                     CharacterBuilder character = CharacterCreate.getCharacters().get(author);
-                    SheetBuilder sheet = new SheetBuilder(character.getSheet());
+                    SheetBuilder sheet = character.getSheet();
                     State state = new State(stateName);
-                    StatsBuilder stats = new StatsBuilder();
-                    Map<State, StatGroup> originalStats = sheet.getStats();
-                    if (originalStats.containsKey(state)) {
-                        StatGroup statSheet = originalStats.get(state);
-                        sheet.addStats(state, statSheet);
-                    }
-
                     Stat stat = new Stat(name, value);
-                    stats
-                            .setName(stateName)
-                            .addStat(stat);
-                    sheet.addStats(state, stats.build());
-                    character.setSheet(sheet.build());
+                    sheet.getStats(state).addStat(stat);
                 });
     }
 

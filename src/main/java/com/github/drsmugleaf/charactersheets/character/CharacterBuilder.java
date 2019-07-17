@@ -2,7 +2,7 @@ package com.github.drsmugleaf.charactersheets.character;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.charactersheets.Builder;
-import com.github.drsmugleaf.charactersheets.character.sheet.Sheet;
+import com.github.drsmugleaf.charactersheets.character.sheet.SheetBuilder;
 import com.github.drsmugleaf.charactersheets.location.Location;
 import com.github.drsmugleaf.charactersheets.state.State;
 
@@ -13,7 +13,7 @@ public class CharacterBuilder implements Builder<Character> {
 
     @Nullable
     private String name;
-    private Sheet sheet = new Sheet();
+    private SheetBuilder sheet = new SheetBuilder();
     @Nullable
     private State state;
     @Nullable
@@ -31,13 +31,8 @@ public class CharacterBuilder implements Builder<Character> {
         return this;
     }
 
-    public Sheet getSheet() {
+    public SheetBuilder getSheet() {
         return sheet;
-    }
-
-    public CharacterBuilder setSheet(Sheet sheet) {
-        this.sheet = sheet;
-        return this;
     }
 
     @Nullable
@@ -62,7 +57,7 @@ public class CharacterBuilder implements Builder<Character> {
 
     @Override
     public Character build() {
-        return new Character(name, sheet, state, location);
+        return new Character(name, sheet.build(), state, location);
     }
 
 }

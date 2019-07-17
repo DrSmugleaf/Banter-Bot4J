@@ -1,70 +1,63 @@
 package com.github.drsmugleaf.charactersheets.character.sheet;
 
 import com.github.drsmugleaf.charactersheets.Builder;
-import com.github.drsmugleaf.charactersheets.ability.Abilities;
-import com.github.drsmugleaf.charactersheets.stat.Stat;
+import com.github.drsmugleaf.charactersheets.ability.AbilitiesBuilder;
+import com.github.drsmugleaf.charactersheets.ability.Ability;
+import com.github.drsmugleaf.charactersheets.ability.AbilitySet;
 import com.github.drsmugleaf.charactersheets.stat.StatGroup;
 import com.github.drsmugleaf.charactersheets.stat.StatsBuilder;
 import com.github.drsmugleaf.charactersheets.state.State;
+import com.google.common.collect.ImmutableMap;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Created by DrSmugleaf on 12/07/2019
  */
 public class SheetBuilder implements Builder<Sheet> {
 
-    private Map<State, StatGroup> stats = new HashMap<>();
-    private Map<State, Abilities> abilities = new TreeMap<>();
+    private Map<State, StatsBuilder> statBuilders = new HashMap<>();
+    private Map<State, AbilitiesBuilder> abilityBuilders = new HashMap<>();
 
     public SheetBuilder() {}
 
-    public SheetBuilder(Sheet sheet) {
-        stats.putAll(sheet.getStats());
-        abilities.putAll(sheet.getAbilities());
+    public ImmutableMap<State, StatsBuilder> getStats() {
+        return ImmutableMap.copyOf(statBuilders);
     }
 
-    public Map<State, StatGroup> getStats() {
-        return stats;
+    public StatsBuilder getStats(State state) {
+        return statBuilders.computeIfAbsent(state, (state1) -> new StatsBuilder(state.getName()));
     }
 
-    public SheetBuilder addStats(State state, StatGroup statGroup) {
-        this.stats.computeIfAbsent(state, (state1) -> new StatsBuilder().setName(state1.getName()).build());
-        StatGroup originalStatGroup = this.stats.get(state);
-        StatsBuilder builder = new StatsBuilder(originalStatGroup);
-
-        for (Stat stat : statGroup.get().values()) {
-            builder.addStat(stat);
-        }
-
-        this.stats.put(state, builder.build());
-
+    public SheetBuilder addAbilities(Ability ability) {
+        State state = ability.getValidState();
+        abilityBuilders.computeIfAbsent(state, (state1) -> new AbilitiesBuilder(state1.getName()));
+        abilityBuilders.get(state).addAbility(ability);
         return this;
     }
 
-    public SheetBuilder setStats(Map<State, StatGroup> stats) {
-        this.stats = stats;
-        return this;
+    public ImmutableMap<State, AbilitiesBuilder> getAbilities() {
+        return ImmutableMap.copyOf(abilityBuilders);
     }
 
-    public SheetBuilder addAbilities(Map.Entry<State, StatGroup> entry) {
-        this.stats.put(entry.getKey(), entry.getValue());
-        return this;
-    }
-
-    public Map<State, Abilities> getAbilities() {
-        return abilities;
-    }
-
-    public SheetBuilder setAbilities(Map<State, Abilities> abilities) {
-        this.abilities = abilities;
+    public SheetBuilder setAbilities(Map<State, AbilitiesBuilder> abilities) {
+        this.abilityBuilders = abilities;
         return this;
     }
 
     @Override
     public Sheet build() {
+        Map<State, StatGroup> stats = new HashMap<>();
+        for (Map.Entry<State, StatsBuilder> entry : statBuilders.entrySet()) {
+            stats.put(entry.getKey(), entry.getValue().build());
+        }
+
+        Map<State, AbilitySet> abilities = new HashMap<>();
+        for (Map.Entry<State, AbilitiesBuilder> entry : abilityBuilders.entrySet()) {
+            abilities.put(entry.getKey(), entry.getValue().build());
+        }
+
         return new Sheet(stats, abilities);
     }
 

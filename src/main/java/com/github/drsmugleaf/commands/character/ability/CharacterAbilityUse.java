@@ -1,12 +1,14 @@
-package com.github.drsmugleaf.commands.character;
+package com.github.drsmugleaf.commands.character.ability;
 
+import com.github.drsmugleaf.charactersheets.ability.Ability;
 import com.github.drsmugleaf.charactersheets.ability.AbilitySet;
 import com.github.drsmugleaf.charactersheets.character.Character;
 import com.github.drsmugleaf.charactersheets.character.CharacterBuilder;
 import com.github.drsmugleaf.charactersheets.character.sheet.Sheet;
 import com.github.drsmugleaf.charactersheets.stat.StatGroup;
+import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.CommandInfo;
+import com.github.drsmugleaf.commands.character.CharacterCreate;
 import discord4j.core.object.entity.User;
 import reactor.core.publisher.Mono;
 
@@ -14,10 +16,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by DrSmugleaf on 12/07/2019
+ * Created by DrSmugleaf on 13/07/2019
  */
-@CommandInfo(aliases = {"cf"})
-public class CharacterFinish extends Command {
+public class CharacterAbilityUse extends Command {
+
+    @Argument(position = 1, example = "Swords Dance")
+    private String abilityName;
+
+    @Argument(position = 2, example = "Ash")
+    private String targetName;
 
     @Override
     public void run() {
@@ -27,8 +34,17 @@ public class CharacterFinish extends Command {
                 .zipWith(Mono.justOrEmpty(EVENT.getMessage().getAuthor()))
                 .flatMap(tuple -> tuple.getT1().createMessage(message -> message.setEmbed(embed -> {
                     User author = tuple.getT2();
-                    CharacterBuilder builder = CharacterCreate.getCharacters().get(author);
-                    Character character = builder.build();
+                    CharacterBuilder characterBuilder = CharacterCreate.getCharacters().get(author);
+                    Character character = characterBuilder.build();
+                    for (AbilitySet abilitySet : character.getSheet().getAbilities().values()) {
+                        Ability ability = abilitySet.get(abilityName);
+                        if (ability != null) {
+                            ability.use(character, character);
+                        }
+
+                        break;
+                    }
+
                     Sheet sheet = character.getSheet();
 
                     embed.setTitle(character.getName());
@@ -62,7 +78,8 @@ public class CharacterFinish extends Command {
                                 false
                         );
                     }
-                }))).subscribe();
+                })))
+                .subscribe();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.charactersheets.ability;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.charactersheets.Nameable;
 import com.google.common.collect.ImmutableMap;
 
@@ -8,12 +9,12 @@ import java.util.Map;
 /**
  * Created by DrSmugleaf on 11/07/2019
  */
-public class Abilities implements Nameable {
+public class AbilitySet implements Nameable {
 
     private final String NAME;
     private final ImmutableMap<String, Ability> ABILITIES;
 
-    public Abilities(String name, Map<String, Ability> abilities) {
+    public AbilitySet(String name, Map<String, Ability> abilities) {
         NAME = name;
         ABILITIES = ImmutableMap.copyOf(abilities);
     }
@@ -27,6 +28,7 @@ public class Abilities implements Nameable {
         return ABILITIES;
     }
 
+    @Nullable
     public Ability get(String name) {
         return ABILITIES.get(name);
     }

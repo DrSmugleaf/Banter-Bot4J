@@ -1,19 +1,19 @@
 package com.github.drsmugleaf.charactersheets.ability.effect;
 
 import com.github.drsmugleaf.charactersheets.character.Character;
-import com.github.drsmugleaf.charactersheets.game.Game;
 import com.github.drsmugleaf.charactersheets.state.State;
+import com.github.drsmugleaf.commands.api.CommandInfo;
 
 /**
  * Created by DrSmugleaf on 11/07/2019
  */
-public class StatChange extends Effect {
+@CommandInfo(aliases = {"cau"})
+public class StatChange implements IEffect {
 
     private final String CHANGED_STAT;
     private final long AMOUNT;
 
-    public StatChange(String name, String changedStat, long amount) {
-        super(name);
+    public StatChange(String changedStat, long amount) {
         CHANGED_STAT = changedStat;
         AMOUNT = amount;
     }
@@ -25,7 +25,7 @@ public class StatChange extends Effect {
     }
 
     @Override
-    public void use(Game game, Character on, Character user) {
+    public void use(Character on, Character user) {
         State userState = user.getState();
         on.getSheet().getStats(userState).get(CHANGED_STAT).changeValue(AMOUNT);
     }

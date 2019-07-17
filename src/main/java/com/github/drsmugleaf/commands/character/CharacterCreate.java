@@ -29,7 +29,7 @@ public class CharacterCreate extends Command {
     @Override
     public void run() {
         CharacterBuilder character = new CharacterBuilder();
-        character.setName(name);
+        character.setName(this.name);
         EVENT
                 .getMessage()
                 .getAuthor()

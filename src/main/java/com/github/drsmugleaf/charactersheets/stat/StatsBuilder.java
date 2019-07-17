@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.charactersheets.stat;
 
-import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.charactersheets.Builder;
+import com.google.common.collect.ImmutableMap;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -11,29 +11,19 @@ import java.util.TreeMap;
  */
 public class StatsBuilder implements Builder<StatGroup> {
 
-    @Nullable
-    private String NAME;
+    private final String NAME;
     private Map<String, Stat> STATS = new TreeMap<>();
 
-    public StatsBuilder() {}
-
-    public StatsBuilder(StatGroup statGroup) {
-        NAME = statGroup.getName();
-        STATS.putAll(statGroup.get());
+    public StatsBuilder(String name) {
+        NAME = name;
     }
 
-    @Nullable
     public String getName() {
         return NAME;
     }
 
-    public StatsBuilder setName(String name) {
-        NAME = name;
-        return this;
-    }
-
-    public Map<String, Stat> getStats() {
-        return STATS;
+    public ImmutableMap<String, Stat> getStats() {
+        return ImmutableMap.copyOf(STATS);
     }
 
     public StatsBuilder addStat(Stat stat) {
