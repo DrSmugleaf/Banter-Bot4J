@@ -44,6 +44,10 @@ public class CommandRegistry {
         return CONVERTERS;
     }
 
+    public ImmutableList<Entry> getEntries() {
+        return ENTRIES;
+    }
+
     private List<CommandSearchResult> findDuplicates() {
         Set<String> uniqueAliases = new HashSet<>();
         List<CommandSearchResult> duplicateAliases = new ArrayList<>();
