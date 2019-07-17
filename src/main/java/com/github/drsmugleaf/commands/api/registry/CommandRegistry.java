@@ -7,6 +7,7 @@ import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
 import com.google.common.collect.ImmutableList;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,6 +27,10 @@ public class CommandRegistry {
 
         List<Entry> entries = new ArrayList<>();
         for (Class<Command> command : commands) {
+            if (Modifier.isAbstract(command.getModifiers())) {
+                continue;
+            }
+
             Entry entry = new Entry(command);
             entries.add(entry);
         }

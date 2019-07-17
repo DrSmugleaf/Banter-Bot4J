@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 /**
  * Created by DrSmugleaf on 09/06/2018
  */
-public class Command implements ICommand {
+public abstract class Command implements ICommand {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(Command.class);
 
@@ -118,9 +118,6 @@ public class Command implements ICommand {
     public Mono<Message> reply(String content) {
         return EVENT.reply(content);
     }
-
-    @Override
-    public void run() {}
 
     public void registerConverters(ConverterRegistry converter) {}
 
