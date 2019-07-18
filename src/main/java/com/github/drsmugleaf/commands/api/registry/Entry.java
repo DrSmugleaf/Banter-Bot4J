@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.api.registry;
 
+import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
@@ -130,6 +131,46 @@ public class Entry {
         } catch (InstantiationException | IllegalAccessException e) {
             throw new IllegalStateException("Error creating instance of command " + getName(), e);
         }
+    }
+
+    public String getFormats() {
+        StringBuilder formats = new StringBuilder();
+        formats
+                .append("**Formats:**\n")
+                .append(BanterBot4J.BOT_PREFIX)
+                .append(getName());
+
+        for (CommandField field : getCommandFields()) {
+            String fieldName = field.getField().getName();
+            formats
+                    .append(" ")
+                    .append(fieldName);
+        }
+
+        return formats.toString();
+    }
+
+    public String getExamples() {
+        StringBuilder examples = new StringBuilder();
+        examples
+                .append(BanterBot4J.BOT_PREFIX)
+                .append(getName());
+
+        for (CommandField field : getCommandFields()) {
+            String example = field.getArgument().example();
+            examples.append(" ");
+
+            if (example.contains(" ")) {
+                examples
+                        .append("\"")
+                        .append(example)
+                        .append("\"");
+            } else {
+                examples.append(example);
+            }
+        }
+
+        return examples.toString();
     }
 
 }

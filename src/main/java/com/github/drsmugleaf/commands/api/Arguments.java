@@ -231,39 +231,7 @@ public class Arguments extends ArrayList<String> {
 
     public String getInvalidArgumentsResponse() {
         Entry entry = RESULT.getEntry();
-        StringBuilder response = new StringBuilder();
-        response
-                .append("**Formats:**\n")
-                .append(BanterBot4J.BOT_PREFIX)
-                .append(entry.getName());
-
-        for (CommandField field : entry.getCommandFields()) {
-            String fieldName = field.getField().getName();
-            response
-                    .append(" ")
-                    .append(fieldName);
-        }
-
-        response
-                .append("\n**Example:**\n")
-                .append(BanterBot4J.BOT_PREFIX)
-                .append(entry.getName());
-
-        for (CommandField field : entry.getCommandFields()) {
-            String example = field.getArgument().example();
-            response.append(" ");
-
-            if (example.contains(" ")) {
-                response
-                        .append("\"")
-                        .append(example)
-                        .append("\"");
-            } else {
-                response.append(example);
-            }
-        }
-
-        return response.toString();
+        return entry.getFormats() + "\n**Example:**\n" + entry.getExamples();
     }
 
 }

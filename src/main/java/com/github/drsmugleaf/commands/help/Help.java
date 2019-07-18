@@ -15,9 +15,8 @@ public class Help extends Command {
         ImmutableList<Entry> commands = BanterBot4J.getHandler().getRegistry().getEntries();
         StringBuilder response = new StringBuilder();
         for (Entry command : commands) {
-            String name = command.getName();
             response
-                    .append(name)
+                    .append(command.getExamples())
                     .append("\n");
         }
 
