@@ -29,7 +29,7 @@ public class TranslatedMessage {
 
     private Map<BridgedChannel, String> getTranslations() {
         Map<BridgedChannel, String> translations = new HashMap<>();
-        List<BridgedChannel> bridgedChannels = new BridgedChannel(MESSAGE.getChannelId().asLong()).get();
+        List<BridgedChannel> bridgedChannels = new BridgedChannel(MESSAGE.getChannelId().asLong(), null).get();
 
         for (BridgedChannel bridgedChannel : bridgedChannels) {
             Languages channelLanguage = bridgedChannel.channelLanguage;

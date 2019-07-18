@@ -86,7 +86,7 @@ public class Blacklist extends Command {
 
                     sink.next(mentionMember);
                 }).cast(Member.class)
-                .map(member -> Tuples.of(member, new DiscordMember(member.getId().asLong(), member.getGuildId().asLong())))
+                .map(member -> Tuples.of(member, new DiscordMember(member.getId().asLong(), member.getGuildId().asLong(), null)))
                 .subscribe(tuple -> {
                     Member mention = tuple.getT1();
                     DiscordMember member = tuple.getT2();

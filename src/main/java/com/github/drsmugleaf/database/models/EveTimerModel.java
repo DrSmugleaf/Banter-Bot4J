@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.database.models;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.EventListener;
 import com.github.drsmugleaf.database.api.Database;
 import com.github.drsmugleaf.database.api.Model;
@@ -27,33 +28,40 @@ import java.util.*;
 public class EveTimerModel extends Model<EveTimerModel> {
 
     public static final ZoneOffset EVE_TIMEZONE = ZoneOffset.UTC;
-
     private static final Timer TIMER = new Timer("Eve Structure Alert Timer", true);
-
     private static final Map<EveTimerModel, TimerTask> TASKS = new HashMap<>();
-
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(EVE_TIMEZONE);
 
     @Column(name = "channel")
     @Relation(type = RelationTypes.ManyToOne, columnName = "id")
+    @Nullable
     public DiscordChannel channel;
 
     @Column(name = "structure")
     @Column.Id
+    @Nullable
     public String structure;
 
     @Column(name = "system")
     @Column.Id
+    @Nullable
     public String system;
 
     @Column(name = "date")
+    @Nullable
     public Long date;
 
     @Column(name = "submitter")
     @Relation(type = RelationTypes.ManyToOne, columnName = "id")
+    @Nullable
     public DiscordUser submitter;
 
-    public EveTimerModel(Long channel, String structure, String system, Long date, Long submitter) {
+    public EveTimerModel(
+            @Nullable Long channel,
+            @Nullable String structure,
+            @Nullable String system,
+            @Nullable Long date,
+            @Nullable Long submitter) {
         this.channel = new DiscordChannel(channel);
         this.structure = structure;
         this.system = system;

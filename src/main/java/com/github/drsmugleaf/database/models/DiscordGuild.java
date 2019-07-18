@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.database.models;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.EventListener;
 import com.github.drsmugleaf.database.api.Database;
 import com.github.drsmugleaf.database.api.Model;
@@ -10,6 +11,7 @@ import discord4j.core.event.domain.guild.GuildCreateEvent;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.util.Snowflake;
+import reactor.core.publisher.Mono;
 
 /**
  * Created by DrSmugleaf on 16/05/2017.
@@ -19,18 +21,20 @@ public class DiscordGuild extends Model<DiscordGuild> {
 
     @Column(name = "id")
     @Column.Id
+    @Nullable
     public Long id;
 
-    public DiscordGuild(Long id) {
+    public DiscordGuild(@Nullable Long id) {
         this.id = id;
     }
 
     private DiscordGuild() {}
 
     public Guild guild() {
-        return BanterBot4J
-                .CLIENT
-                .getGuildById(Snowflake.of(id))
+        return Mono
+                .justOrEmpty(id)
+                .map(Snowflake::of)
+                .flatMap(BanterBot4J.CLIENT::getGuildById)
                 .blockOptional()
                 .orElseThrow(() -> new IllegalStateException("No Discord guild found with id " + id));
     }

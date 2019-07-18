@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.database.models;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.EventListener;
 import com.github.drsmugleaf.database.api.Database;
 import com.github.drsmugleaf.database.api.Model;
@@ -20,14 +21,16 @@ public class DiscordGuildChannel extends Model<DiscordGuildChannel> {
     @Column(name = "channel_id")
     @Column.Id
     @Relation(type = RelationTypes.OneToOne, columnName = "id")
+    @Nullable
     public DiscordChannel channel;
 
     @Column(name = "guild_id")
     @Column.Id
     @Relation(type = RelationTypes.OneToOne, columnName = "id")
+    @Nullable
     public DiscordGuild guild;
 
-    public DiscordGuildChannel(Long channelID, Long guildID) {
+    public DiscordGuildChannel(@Nullable Long channelID, @Nullable Long guildID) {
         channel = new DiscordChannel(channelID);
         guild = new DiscordGuild(guildID);
     }

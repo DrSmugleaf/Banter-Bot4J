@@ -55,7 +55,7 @@ public class Handler {
                     }
 
                     Long authorId = tuple.getT2().asLong();
-                    DiscordMember member = new DiscordMember(authorId, guildId.get().asLong());
+                    DiscordMember member = new DiscordMember(authorId, guildId.get().asLong(), null);
                     member.createIfNotExists();
                     member = member.get().get(0);
 

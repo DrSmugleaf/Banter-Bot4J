@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.database.models;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.EventListener;
 import com.github.drsmugleaf.database.api.Database;
 import com.github.drsmugleaf.database.api.Model;
@@ -25,23 +26,22 @@ import java.util.TimerTask;
 public class EveDowntimeUser extends Model<EveDowntimeUser> {
 
     private static final Timer DOWNTIME_TIMER = new Timer("Eve Online Downtime Timer", true);
-
     private static final StatusApi STATUS_API = new StatusApi();
-
     private static boolean wasEveOffline = false;
 
     @Column(name = "user_id")
     @Column.Id
     @Relation(type = RelationTypes.OneToOne, columnName = "id")
-    public DiscordUser user;
+    @Nullable
+    public DiscordUser discordUser;
 
-    public EveDowntimeUser(Long userID) {
-        user = new DiscordUser(userID);
+    public EveDowntimeUser(@Nullable Long userID) {
+        discordUser = new DiscordUser(userID);
     }
 
     private EveDowntimeUser() {}
 
-    private static boolean isOffline() {
+    private static boolean isEveOffline() {
         try {
             STATUS_API.getStatus("tranquility", null);
         } catch (ApiException e) {
@@ -56,11 +56,11 @@ public class EveDowntimeUser extends Model<EveDowntimeUser> {
     }
 
     private static void alertAll() {
-        List<EveDowntimeUser> users = new EveDowntimeUser().get();
-        for (EveDowntimeUser user : users) {
+        List<EveDowntimeUser> eveUsers = new EveDowntimeUser().get();
+        for (EveDowntimeUser eveUser : eveUsers) {
             BanterBot4J
                     .CLIENT
-                    .getUserById(user.user.user().getId())
+                    .getUserById(eveUser.discordUser.user().getId())
                     .flatMap(User::getPrivateChannel)
                     .flatMap(channel -> channel.createMessage("Eve Online server is back online."))
                     .subscribe();
@@ -74,7 +74,7 @@ public class EveDowntimeUser extends Model<EveDowntimeUser> {
         DOWNTIME_TIMER.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if (isOffline()) {
+                if (isEveOffline()) {
                     wasEveOffline = true;
                 } else if (wasEveOffline) {
                     wasEveOffline = false;

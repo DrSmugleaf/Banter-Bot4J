@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.database.models;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.EventListener;
 import com.github.drsmugleaf.database.api.Database;
 import com.github.drsmugleaf.database.api.Model;
@@ -15,9 +16,10 @@ public class DiscordChannel extends Model<DiscordChannel> {
 
     @Column(name = "id")
     @Column.Id
+    @Nullable
     public Long id;
 
-    public DiscordChannel(Long id) {
+    public DiscordChannel(@Nullable Long id) {
         this.id = id;
     }
 
@@ -35,6 +37,11 @@ public class DiscordChannel extends Model<DiscordChannel> {
 
         Thread thread = new Thread(runnable);
         thread.start();
+    }
+
+    @Nullable
+    public Long getId() {
+        return id;
     }
 
 }
