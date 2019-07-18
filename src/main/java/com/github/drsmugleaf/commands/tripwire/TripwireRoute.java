@@ -3,6 +3,7 @@ package com.github.drsmugleaf.commands.tripwire;
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
+import com.github.drsmugleaf.commands.api.tags.Tags;
 import com.github.drsmugleaf.tripwire.route.Route;
 import com.github.drsmugleaf.tripwire.route.SystemGraph;
 import discord4j.core.object.entity.User;
@@ -14,6 +15,7 @@ import java.util.Map;
  * Created by DrSmugleaf on 10/06/2018
  */
 @CommandInfo(
+        tags = {Tags.DELETE_COMMAND_MESSAGE},
         description = "Find the fastest route between two systems using Tripwire"
 )
 public class TripwireRoute extends Command {
