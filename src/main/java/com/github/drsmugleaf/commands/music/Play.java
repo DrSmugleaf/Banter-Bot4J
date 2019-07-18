@@ -13,7 +13,11 @@ import reactor.util.function.Tuples;
 /**
  * Created by DrSmugleaf on 09/06/2018
  */
-@CommandInfo(aliases = {"e"}, tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.DELETE_COMMAND_MESSAGE})
+@CommandInfo(
+        aliases = {"e"},
+        tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.DELETE_COMMAND_MESSAGE},
+        description = "Add a track to the queue"
+)
 public class Play extends MusicCommand {
 
     @Override

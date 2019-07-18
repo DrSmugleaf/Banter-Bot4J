@@ -11,13 +11,17 @@ import java.util.stream.Collectors;
 /**
  * Created by DrSmugleaf on 31/08/2018
  */
-@CommandInfo(name = "rciv6", aliases = {
-        "random civilization vi", "random civilizationvi", "r civilization vi", "r civilizationvi",
-        "randomcivvi", "random civ vi", "random civvi",
-        "randomcivilization6", "rcivilization6",
-        "random civilization 6", "random civilization6", "r civilization 6", "r civilization6",
-        "randomciv6", "random civ 6", "random civ6", "r civ 6", "r civ6"
-})
+@CommandInfo(
+        name = "rciv6",
+        aliases = {
+                "random civilization vi", "random civilizationvi", "r civilization vi",
+                "r civilizationvi", "randomcivvi", "random civ vi", "random civvi",
+                "randomcivilization6", "rcivilization6", "random civilization 6",
+                "random civilization6", "r civilization 6", "r civilization6",
+                "randomciv6", "random civ 6", "random civ6", "r civ 6", "r civ6"
+        },
+        description = "Get a set of random Civilization VI leaders"
+)
 public class RandomCivilizationVI extends Command {
 
     @Argument.Maximum("leaders")

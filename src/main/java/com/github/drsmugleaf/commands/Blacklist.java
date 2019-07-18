@@ -16,7 +16,10 @@ import reactor.util.function.Tuples;
 /**
  * Created by DrSmugleaf on 14/05/2017.
  */
-@CommandInfo(permissions = {Permission.KICK_MEMBERS})
+@CommandInfo(
+        permissions = {Permission.KICK_MEMBERS},
+        description = "Blacklist an user from using the bot"
+)
 public class Blacklist extends Command {
 
     private static String invalidArgumentsResponse() {

@@ -13,7 +13,10 @@ import java.util.Map;
 /**
  * Created by DrSmugleaf on 11/07/2019
  */
-@CommandInfo(aliases = {"cc"})
+@CommandInfo(
+        aliases = {"cc"},
+        description = "Create a character"
+)
 public class CharacterCreate extends Command {
 
     private static final Map<User, CharacterBuilder> CHARACTERS = new HashMap<>();

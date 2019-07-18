@@ -8,7 +8,16 @@ import discord4j.core.object.util.Permission;
 /**
  * Created by DrSmugleaf on 09/06/2018
  */
-@CommandInfo(permissions = {Permission.MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL, Tags.DELETE_COMMAND_MESSAGE})
+@CommandInfo(
+        permissions = {Permission.MUTE_MEMBERS},
+        tags = {
+                Tags.GUILD_ONLY,
+                Tags.VOICE_ONLY,
+                Tags.SAME_VOICE_CHANNEL,
+                Tags.DELETE_COMMAND_MESSAGE
+        },
+        description = "Resume the currently paused track"
+)
 public class Resume extends MusicCommand {
 
     @Override

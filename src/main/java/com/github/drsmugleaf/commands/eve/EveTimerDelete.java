@@ -17,7 +17,8 @@ import java.util.List;
                 "evetimerdel", "evetimer del",
                 "evetimerremove", "evetimer remove",
                 "evetimerrem", "evetimer rem"
-        }
+        },
+        description = "Delete a structure timer for Eve Online"
 )
 public class EveTimerDelete extends Command {
 

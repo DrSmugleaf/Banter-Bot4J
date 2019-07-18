@@ -14,7 +14,11 @@ import discord4j.core.object.util.Permission;
 /**
  * Created by DrSmugleaf on 10/06/2018
  */
-@CommandInfo(permissions = {Permission.MANAGE_CHANNELS}, tags = {Tags.GUILD_ONLY})
+@CommandInfo(
+        permissions = {Permission.MANAGE_CHANNELS},
+        tags = {Tags.GUILD_ONLY},
+        description = "Bridge two Discord channels to send and translate messages between them"
+)
 public class Bridge extends Command {
 
     @Argument(position = 1, example = "general")

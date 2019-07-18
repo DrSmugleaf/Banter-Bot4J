@@ -23,4 +23,6 @@ public @interface CommandInfo {
 
     Tags[] tags() default {};
 
+    String description();
+
 }

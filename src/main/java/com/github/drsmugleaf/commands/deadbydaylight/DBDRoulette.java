@@ -3,6 +3,7 @@ package com.github.drsmugleaf.commands.deadbydaylight;
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
 import com.github.drsmugleaf.deadbydaylight.ICharacter;
 import com.github.drsmugleaf.deadbydaylight.dennisreep.*;
@@ -12,6 +13,9 @@ import java.io.InputStream;
 /**
  * Created by DrSmugleaf on 09/11/2018
  */
+@CommandInfo(
+        description = "Random perks for Dead by Daylight"
+)
 public class DBDRoulette extends Command {
 
     @Argument(position = 1, example = "(killer/survivor/friends)")

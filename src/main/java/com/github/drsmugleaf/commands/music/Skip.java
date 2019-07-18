@@ -20,7 +20,15 @@ import java.util.Map;
 /**
  * Created by DrSmugleaf on 09/06/2018
  */
-@CommandInfo(tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.SAME_VOICE_CHANNEL, Tags.DELETE_COMMAND_MESSAGE})
+@CommandInfo(
+        tags = {
+                Tags.GUILD_ONLY,
+                Tags.VOICE_ONLY,
+                Tags.SAME_VOICE_CHANNEL,
+                Tags.DELETE_COMMAND_MESSAGE
+        },
+        description = "Vote to skip the current track"
+)
 public class Skip extends MusicCommand {
 
     private static final Map<Guild, List<User>> SKIP_VOTES = new HashMap<>();

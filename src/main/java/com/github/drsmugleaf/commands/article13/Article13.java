@@ -6,6 +6,7 @@ import com.github.drsmugleaf.article13.vote.Decision;
 import com.github.drsmugleaf.article13.vote.Vote;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 /**
  * Created by DrSmugleaf on 07/04/2019
  */
+@CommandInfo(description = "Results from the EU Article 13 vote, sorted by country, party and vote")
 public class Article13 extends Command {
 
     @Argument(position = 1, example = "spain")

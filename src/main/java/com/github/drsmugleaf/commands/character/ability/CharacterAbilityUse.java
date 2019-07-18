@@ -8,6 +8,7 @@ import com.github.drsmugleaf.charactersheets.character.sheet.Sheet;
 import com.github.drsmugleaf.charactersheets.stat.StatGroup;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.character.CharacterCreate;
 import discord4j.core.object.entity.User;
 import reactor.core.publisher.Mono;
@@ -18,6 +19,10 @@ import java.util.stream.Collectors;
 /**
  * Created by DrSmugleaf on 13/07/2019
  */
+@CommandInfo(
+        aliases = "cau",
+        description = "Use a character ability"
+)
 public class CharacterAbilityUse extends Command {
 
     @Argument(position = 1, example = "Swords Dance")

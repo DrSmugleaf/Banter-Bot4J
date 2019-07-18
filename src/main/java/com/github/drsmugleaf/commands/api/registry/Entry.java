@@ -1,7 +1,6 @@
 package com.github.drsmugleaf.commands.api.registry;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
@@ -20,10 +19,7 @@ import java.util.List;
 public class Entry {
 
     private final Class<? extends Command> COMMAND;
-
-    @Nullable
     private final CommandInfo COMMAND_INFO;
-
     private final ImmutableList<CommandField> COMMAND_FIELDS;
 
     protected Entry(Class<? extends Command> command) {
@@ -82,7 +78,6 @@ public class Entry {
         return COMMAND;
     }
 
-    @Nullable
     public CommandInfo getCommandInfo() {
         return COMMAND_INFO;
     }
@@ -91,7 +86,7 @@ public class Entry {
         String commandName;
         CommandInfo annotation = getCommandInfo();
 
-        if (annotation == null || annotation.name().isEmpty()) {
+        if (annotation.name().isEmpty()) {
             commandName = getCommand().getSimpleName();
         } else {
             commandName = annotation.name();
@@ -104,7 +99,7 @@ public class Entry {
         CommandInfo annotation = getCommandInfo();
 
         List<String> commandAliases = new ArrayList<>();
-        if (annotation == null || annotation.aliases().length == 0) {
+        if (annotation.aliases().length == 0) {
             return commandAliases;
         }
 

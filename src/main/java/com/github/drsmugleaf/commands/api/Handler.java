@@ -67,41 +67,35 @@ public class Handler {
                         return Optional.empty();
                     }
 
-                    CommandInfo info = result.getEntry().getCommandInfo();
-                    if (info == null) {
+                    if (!guildId.isPresent()) {
                         return Optional.of(result);
                     }
 
-                    if (guildId.isPresent()) {
-                        List<Permission> commandPermissions = Arrays.asList(info.permissions());
+                    return event
+                            .getGuild()
+                            .flatMap(guild -> guild.getMemberById(tuple.getT2()))
+                            .flatMap(Member::getBasePermissions)
+                            .zipWith(event.getMessage().getChannel())
+                            .flatMap(tuple2 -> {
+                                Permission[] permissions = result.getEntry().getCommandInfo().permissions();
+                                List<Permission> commandPermissions = Arrays.asList(permissions);
+                                PermissionSet authorPermissions = tuple2.getT1();
 
-                        return event
-                                .getGuild()
-                                .flatMap(guild -> guild.getMemberById(tuple.getT2()))
-                                .flatMap(Member::getBasePermissions)
-                                .zipWith(event.getMessage().getChannel())
-                                .flatMap(tuple2 -> {
-                                    PermissionSet authorPermissions = tuple2.getT1();
-                                    if (!commandPermissions.isEmpty() && !authorPermissions.containsAll(commandPermissions)) {
-                                        commandEvent.reply("You don't have permission to use that command.").subscribe();
-                                        return Mono.empty();
-                                    }
+                                if (!commandPermissions.isEmpty() && !authorPermissions.containsAll(commandPermissions)) {
+                                    commandEvent.reply("You don't have permission to use that command.").subscribe();
+                                    return Mono.empty();
+                                }
 
-                                    return Mono.just(result);
-                                }).blockOptional();
-                    } else {
-                        return Optional.of(result);
-                    }
+                                return Mono.just(result);
+                            }).blockOptional();
                 })
                 .ifPresent(result -> {
-                    CommandInfo commandInfo = result.getEntry().getCommandInfo();
+                    Tags[] tags = result.getEntry().getCommandInfo().tags();
 
-                    if (commandInfo != null) {
-                        for (Tags tag : commandInfo.tags()) {
-                            if (!tag.isValid(event)) {
-                                commandEvent.reply(tag.message()).subscribe();
-                                return;
-                            }
+                    for (Tags tag : tags) {
+                        if (!tag.isValid(event)) {
+                            commandEvent.reply(tag.message()).subscribe();
+                            return;
                         }
                     }
 

@@ -12,7 +12,11 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 09/06/2018
  */
-@CommandInfo(aliases = {"undostop"}, tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
+@CommandInfo(
+        aliases = {"undostop"},
+        tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE},
+        description = "Restore the stopped tracks back to the queue"
+)
 public class Restore extends MusicCommand {
 
     @Override

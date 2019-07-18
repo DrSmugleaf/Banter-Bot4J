@@ -9,7 +9,10 @@ import discord4j.core.object.presence.Presence;
 /**
  * Created by DrSmugleaf on 10/06/2018
  */
-@CommandInfo(tags = {Tags.OWNER_ONLY})
+@CommandInfo(
+        tags = {Tags.OWNER_ONLY},
+        description = "Change the bot's playing status"
+)
 public class Playing extends Command {
 
     @Override

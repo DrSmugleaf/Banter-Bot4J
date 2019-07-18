@@ -22,7 +22,8 @@ import java.util.regex.Pattern;
         aliases = {
                 "evetimercreate", "evetimer create",
                 "evetimernew", "evetimer new"
-        }
+        },
+        description = "Create a structure timer for Eve Online"
 )
 public class EveTimer extends Command {
 

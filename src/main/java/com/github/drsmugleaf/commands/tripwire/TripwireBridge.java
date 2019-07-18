@@ -2,6 +2,7 @@ package com.github.drsmugleaf.commands.tripwire;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.eve.Systems;
 import com.github.drsmugleaf.tripwire.route.Route;
 import com.github.drsmugleaf.tripwire.route.StarSystem;
@@ -13,6 +14,9 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 10/06/2018
  */
+@CommandInfo(
+        description = "Join two Tripwire systems together with a jump bridge for the pathfinding algorithm"
+)
 public class TripwireBridge extends Command {
 
     private static String invalidArgumentsResponse() {

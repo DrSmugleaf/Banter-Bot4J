@@ -2,6 +2,7 @@ package com.github.drsmugleaf.commands.deadbydaylight;
 
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
 import com.github.drsmugleaf.deadbydaylight.dennisreep.*;
 import discord4j.core.spec.EmbedCreateSpec;
@@ -12,6 +13,9 @@ import java.util.function.Consumer;
 /**
  * Created by DrSmugleaf on 07/11/2018
  */
+@CommandInfo(
+        description = "The best perks for each character in Dead by Daylight"
+)
 public class DBDBest extends Command {
 
     @Argument.Maximum("perks")

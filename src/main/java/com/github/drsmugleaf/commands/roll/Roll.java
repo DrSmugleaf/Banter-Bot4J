@@ -2,6 +2,7 @@ package com.github.drsmugleaf.commands.roll;
 
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
 
 import java.text.DecimalFormat;
@@ -10,6 +11,9 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Created by DrSmugleaf on 17/07/2019
  */
+@CommandInfo(
+        description = "Roll any amount of dice with any amount of sides"
+)
 public class Roll extends Command {
 
     private static final DecimalFormat FORMAT = new DecimalFormat("#,###");

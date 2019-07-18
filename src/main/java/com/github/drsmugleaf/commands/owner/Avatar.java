@@ -18,7 +18,10 @@ import java.util.Iterator;
 /**
  * Created by DrSmugleaf on 10/06/2018
  */
-@CommandInfo(tags = {Tags.OWNER_ONLY})
+@CommandInfo(
+        tags = {Tags.OWNER_ONLY},
+        description = "Change the bot's image"
+)
 public class Avatar extends Command {
 
     @Override

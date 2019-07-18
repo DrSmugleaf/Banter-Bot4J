@@ -16,7 +16,10 @@ import java.util.stream.Collectors;
 /**
  * Created by DrSmugleaf on 12/07/2019
  */
-@CommandInfo(aliases = {"cf"})
+@CommandInfo(
+        aliases = {"cf"},
+        description = "Finish a character"
+)
 public class CharacterFinish extends Command {
 
     @Override

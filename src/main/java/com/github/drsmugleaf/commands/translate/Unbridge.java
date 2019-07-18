@@ -14,7 +14,11 @@ import reactor.util.function.Tuples;
 /**
  * Created by DrSmugleaf on 10/06/2018
  */
-@CommandInfo(permissions = {Permission.MANAGE_CHANNELS}, tags = {Tags.GUILD_ONLY})
+@CommandInfo(
+        permissions = {Permission.MANAGE_CHANNELS},
+        tags = {Tags.GUILD_ONLY},
+        description = "Unbridge two Discord channels to stop sending and translating messages between them"
+)
 public class Unbridge extends Command {
 
     @Override

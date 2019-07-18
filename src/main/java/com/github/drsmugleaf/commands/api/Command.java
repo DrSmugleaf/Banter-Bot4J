@@ -8,10 +8,12 @@ import com.github.drsmugleaf.commands.api.registry.CommandField;
 import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
 import com.github.drsmugleaf.commands.api.registry.Entry;
 import com.github.drsmugleaf.commands.api.tags.Tag;
+import com.github.drsmugleaf.commands.api.tags.Tags;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.User;
 import discord4j.core.spec.MessageCreateSpec;
+import org.jetbrains.annotations.Contract;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
@@ -43,12 +45,9 @@ public abstract class Command implements ICommand {
 
     protected static void run(CommandSearchResult commandSearch, CommandReceivedEvent event) {
         Entry entry = commandSearch.getEntry();
-        CommandInfo annotation = entry.getCommandInfo();
-
-        if (annotation != null) {
-            for (Tag tags : annotation.tags()) {
-                tags.execute(event);
-            }
+        Tags[] tags = entry.getCommandInfo().tags();
+        for (Tag tag : tags) {
+            tag.execute(event);
         }
 
         Command command = entry.newInstance();
@@ -63,6 +62,7 @@ public abstract class Command implements ICommand {
         }
     }
 
+    @Contract("null -> false")
     public static boolean isOwner(@Nullable User user) {
         if (user == null) {
             return false;

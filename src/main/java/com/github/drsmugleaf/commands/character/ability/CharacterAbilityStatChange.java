@@ -12,7 +12,10 @@ import com.github.drsmugleaf.commands.character.CharacterCreate;
 /**
  * Created by DrSmugleaf on 13/07/2019
  */
-@CommandInfo(aliases = "casc")
+@CommandInfo(
+        aliases = "casc",
+        description = "Create a character ability that changes stats"
+)
 public class CharacterAbilityStatChange extends Command {
 
     @Argument(position = 1, example = "Combat")

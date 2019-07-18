@@ -13,7 +13,10 @@ import java.util.Map;
 /**
  * Created by DrSmugleaf on 12/07/2019
  */
-@CommandInfo(aliases = {"cw"})
+@CommandInfo(
+        aliases = {"cw"},
+        description = "Create a world"
+)
 public class CreateWorld extends Command {
 
     private static final Map<User, World> WORLDS = new HashMap<>();

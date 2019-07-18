@@ -20,7 +20,10 @@ import java.util.stream.Collectors;
 /**
  * Created by DrSmugleaf on 23/01/2018.
  */
-@CommandInfo(tags = {Tags.GUILD_ONLY})
+@CommandInfo(
+        tags = {Tags.GUILD_ONLY},
+        description = "Change your name color"
+)
 public class Color extends Command {
 
     @Nullable

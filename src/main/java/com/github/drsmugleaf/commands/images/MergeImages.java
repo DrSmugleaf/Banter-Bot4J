@@ -4,7 +4,6 @@ import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 
@@ -18,7 +17,10 @@ import java.io.InputStream;
 /**
  * Created by DrSmugleaf on 10/11/2018
  */
-@CommandInfo(tags = {Tags.DELETE_COMMAND_MESSAGE})
+@CommandInfo(
+        tags = {Tags.DELETE_COMMAND_MESSAGE},
+        description = "Merge any amount of images into one single image"
+)
 public class MergeImages extends Command {
 
     @Argument(position = 1, example = "horizontal/vertical")

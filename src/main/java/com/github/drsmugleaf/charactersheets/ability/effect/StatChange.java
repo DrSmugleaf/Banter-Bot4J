@@ -2,12 +2,10 @@ package com.github.drsmugleaf.charactersheets.ability.effect;
 
 import com.github.drsmugleaf.charactersheets.character.Character;
 import com.github.drsmugleaf.charactersheets.state.State;
-import com.github.drsmugleaf.commands.api.CommandInfo;
 
 /**
  * Created by DrSmugleaf on 11/07/2019
  */
-@CommandInfo(aliases = {"cau"})
 public class StatChange implements IEffect {
 
     private final String CHANGED_STAT;

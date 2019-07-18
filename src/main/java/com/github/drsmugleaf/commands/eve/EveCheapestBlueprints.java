@@ -3,6 +3,7 @@ package com.github.drsmugleaf.commands.eve;
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.CommandInfo;
 import net.troja.eve.esi.ApiException;
 import net.troja.eve.esi.api.ContractsApi;
 import net.troja.eve.esi.api.UniverseApi;
@@ -19,6 +20,9 @@ import java.util.stream.Collectors;
 /**
  * Created by DrSmugleaf on 26/08/2018
  */
+@CommandInfo(
+        description = "Get a list of the cheapest blueprints in Eve Online"
+)
 public class EveCheapestBlueprints extends Command {
 
     private static final ContractsApi CONTRACTS_API = new ContractsApi();

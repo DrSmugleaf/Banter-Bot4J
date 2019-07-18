@@ -13,7 +13,11 @@ import reactor.util.function.Tuples;
 /**
  * Created by DrSmugleaf on 21/06/2018
  */
-@CommandInfo(name = "quoteadd", aliases = "quote add")
+@CommandInfo(
+        name = "quoteadd",
+        aliases = "quote add",
+        description = "Create a quote"
+)
 public class QuoteAdd extends Command {
 
     @Override

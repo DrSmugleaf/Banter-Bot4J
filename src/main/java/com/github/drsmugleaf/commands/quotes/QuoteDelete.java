@@ -18,7 +18,8 @@ import java.util.List;
                 "quotedel", "quote del",
                 "quoteremove", "quote remove",
                 "quoterem", "quote rem"
-        }
+        },
+        description = "Delete a quote"
 )
 public class QuoteDelete extends Command {
 

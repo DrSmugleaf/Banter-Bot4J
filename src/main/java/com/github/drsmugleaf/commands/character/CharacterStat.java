@@ -11,7 +11,10 @@ import com.github.drsmugleaf.commands.api.CommandInfo;
 /**
  * Created by DrSmugleaf on 12/07/2019
  */
-@CommandInfo(aliases = {"cs"})
+@CommandInfo(
+        aliases = {"cs"},
+        description = "Create a stat for your character"
+)
 public class CharacterStat extends Command {
 
     @Argument(position = 1, example = "Combat")

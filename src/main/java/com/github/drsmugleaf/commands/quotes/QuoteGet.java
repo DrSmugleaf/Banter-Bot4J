@@ -14,7 +14,11 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 21/06/2018
  */
-@CommandInfo(name = "quote", aliases = {"quote get", "quoteget"})
+@CommandInfo(
+        name = "quote",
+        aliases = {"quote get", "quoteget"},
+        description = "Get a quote"
+)
 public class QuoteGet extends Command {
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);

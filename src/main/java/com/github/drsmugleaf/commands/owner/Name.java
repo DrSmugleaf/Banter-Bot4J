@@ -8,7 +8,10 @@ import com.github.drsmugleaf.commands.api.tags.Tags;
 /**
  * Created by DrSmugleaf on 10/06/2018
  */
-@CommandInfo(tags = {Tags.OWNER_ONLY})
+@CommandInfo(
+        tags = {Tags.OWNER_ONLY},
+        description = "Change the bot's name"
+)
 public class Name extends Command {
 
     private static String invalidArgumentsResponse() {
