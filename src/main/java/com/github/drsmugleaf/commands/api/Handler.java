@@ -47,6 +47,7 @@ public class Handler {
                 .filter(content -> !content.isEmpty())
                 .filter(content -> content.startsWith(BanterBot4J.BOT_PREFIX))
                 .filter(content -> author.isPresent())
+                .filter(content -> !author.map(User::isBot).get())
                 .map(content -> Tuples.of(content, author.get().getId()))
                 .filter(tuple -> {
                     if (!guildId.isPresent()) {
