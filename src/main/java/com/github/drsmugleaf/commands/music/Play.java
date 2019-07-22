@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.music;
 
+import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 import com.github.drsmugleaf.music.AudioResultHandler;
@@ -20,6 +21,9 @@ import reactor.util.function.Tuples;
 )
 public class Play extends MusicCommand {
 
+    @Argument(position = 1, example = "<https://www.youtube.com/watch?v=dQw4w9WgXcQ>", maxWords = Integer.MAX_VALUE)
+    private String search;
+
     @Override
     public void run() {
         EVENT
@@ -33,10 +37,7 @@ public class Play extends MusicCommand {
                     TextChannel textChannel = tuple.getT1();
                     Member author = tuple.getT2();
                     VoiceChannel voiceChannel = tuple.getT3();
-
-                    String searchString = String.join(" ", ARGUMENTS);
-
-                    Music.PLAYER_MANAGER.loadItem(searchString, new AudioResultHandler(textChannel, author, voiceChannel, searchString));
+                    Music.PLAYER_MANAGER.loadItem(search, new AudioResultHandler(textChannel, author, voiceChannel, search));
                 });
     }
 

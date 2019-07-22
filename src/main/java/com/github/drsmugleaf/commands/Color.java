@@ -2,6 +2,7 @@ package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.tags.Tags;
@@ -46,6 +47,9 @@ public class Color extends Command {
         return color;
     }
 
+    @Argument(position = 1, example = "#FF0000", maxWords = Integer.MAX_VALUE, optional = true)
+    private String color;
+
     @Override
     public void run() {
         Mono<Guild> guildMono = EVENT.getGuild();
@@ -61,7 +65,7 @@ public class Color extends Command {
                     List<Role> roles = tuple.getT1();
                     Guild guild = tuple.getT2();
 
-                    if (ARGUMENTS.isEmpty()) {
+                    if (color == null) {
                         if (roles.isEmpty()) {
                             reply("You don't have a name color. Use " + BanterBot4J.BOT_PREFIX + "color name OR hexadecimal code to assign one.").subscribe();
                             return;
@@ -108,9 +112,8 @@ public class Color extends Command {
                                 .flatMap(hex -> reply("Removed your name color. It was " + hex))
                                 .subscribe();
                     } else {
-                        String requestedColor = ARGUMENTS.get(0);
-                        java.awt.Color color = resolve(requestedColor);
-                        if (color == null) {
+                        java.awt.Color colorObject = resolve(color);
+                        if (colorObject == null) {
                             reply("Invalid color. Make sure it is a hexadecimal string (0000FF) or a simple color like red.").subscribe();
                             return;
                         }
@@ -128,11 +131,11 @@ public class Color extends Command {
                                     .doOnDiscard(Member.class, (author) -> reply("I don't have permission to manage roles.").subscribe())
                                     .zipWhen(author -> guild.createRole(role -> role
                                             .setName("color-" + author.getId().asString())
-                                            .setColor(color)
+                                            .setColor(colorObject)
                                             .setPermissions(PermissionSet.none())
                                     ).map(Role::getId))
                                     .flatMap(tuple2 -> tuple2.getT1().addRole(tuple2.getT2()))
-                                    .then(reply("Changed your name color to " + requestedColor))
+                                    .then(reply("Changed your name color to " + color))
                                     .subscribe();
                         } else {
                             Role role = roles.get(0);
@@ -140,10 +143,10 @@ public class Color extends Command {
                             EVENT
                                     .getMessage()
                                     .getAuthorAsMember()
-                                    .zipWith(role.edit(spec -> spec.setColor(color)).map(Role::getId))
+                                    .zipWith(role.edit(spec -> spec.setColor(colorObject)).map(Role::getId))
                                     .flatMap(tuple2 -> tuple2.getT1().addRole(tuple2.getT2()))
                                     .doOnError(e -> reply("I can't modify your name color. Check my highest role with permission to manage roles.").subscribe())
-                                    .then(reply("Changed your name color to " + requestedColor + ". Your old name color's hex code was " + oldHex))
+                                    .then(reply("Changed your name color to " + color + ". Your old name color's hex code was " + oldHex))
                                     .subscribe();
                         }
                     }

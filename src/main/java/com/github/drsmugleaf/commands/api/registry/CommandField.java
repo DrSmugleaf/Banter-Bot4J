@@ -13,9 +13,7 @@ import java.util.List;
 public class CommandField {
 
     private final Field FIELD;
-
     private final Argument ARGUMENT;
-
     private final long MAXIMUM;
 
     private CommandField(Field field) {

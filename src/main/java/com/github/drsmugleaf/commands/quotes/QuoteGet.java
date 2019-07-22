@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.commands.quotes;
 
-import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.database.models.Quote;
@@ -23,16 +23,11 @@ public class QuoteGet extends Command {
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
 
+    @Argument(position = 1, example = "1", optional = true)
+    private long id;
+
     @Override
     public void run() {
-        long id;
-        try {
-            id = Long.parseLong(ARGUMENTS.toString());
-        } catch (NumberFormatException e) {
-            reply("Invalid command format. Example: `" + BanterBot4J.BOT_PREFIX + "quote 1`").subscribe();
-            return;
-        }
-
         Quote quote = new Quote(id);
         List<Quote> quotes = quote.get();
 

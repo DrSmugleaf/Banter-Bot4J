@@ -17,19 +17,12 @@ import java.io.IOException;
 public class API {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(API.class);
-
     public static final String URL = "https://tripwire.eve-apps.com/";
-
     public static final String LOGIN_URL = URL + "login.php";
-
     public static final String CONNECT_URL = URL + "?system=";
-
     public static final String REFRESH_URL = URL + "refresh.php";
-
     public static final String USER_AGENT = "Banter Bot4J";
-
     private static final SessionManager SESSION_MANAGER = new SessionManager();
-
     public static final Gson GSON = new GsonBuilder().setDateFormat("YYYY-MM-DD HH:mm:ss").create();
 
     public static Connection.Response refresh(long id, String username, String password) {
@@ -49,7 +42,7 @@ public class API {
                     .ignoreContentType(true)
                     .execute();
         } catch (IOException e) {
-            throw new RefreshException("Error getting signatures in " + REFRESH_URL + " with username " + username);
+            throw new RefreshException("Error getting signatures in " + REFRESH_URL + " with username " + username, e);
         }
     }
 

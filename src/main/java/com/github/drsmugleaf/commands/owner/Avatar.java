@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.owner;
 
+import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.tags.Tags;
@@ -11,6 +12,7 @@ import javax.imageio.spi.ImageReaderSpi;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Iterator;
@@ -24,15 +26,13 @@ import java.util.Iterator;
 )
 public class Avatar extends Command {
 
+    @Argument(position = 1, example = "<https://cdn.discordapp.com/avatars/403896467766378496/106cdfc7de7e0ee5b4cac0b187218801.png>")
+    private String link;
+
     @Override
     public void run() {
-        if (ARGUMENTS.isEmpty()) {
-            reply("You didn't provide a link to change the bot's image to.").subscribe();
-            return;
-        }
-
         try {
-            URL url = new URL(ARGUMENTS.get(0));
+            URL url = new URL(link);
             URLConnection connection = url.openConnection();
             String contentType = connection.getContentType();
 
@@ -49,11 +49,11 @@ public class Avatar extends Command {
             String suffix = null;
             Iterator<ImageReader> readers = ImageIO.getImageReadersByMIMEType(contentType);
 
-            while(suffix == null && readers.hasNext()) {
+            while (suffix == null && readers.hasNext()) {
                 ImageReaderSpi provider = readers.next().getOriginatingProvider();
-                if(provider != null) {
+                if (provider != null) {
                     String[] suffixes = provider.getFileSuffixes();
-                    if(suffixes != null) {
+                    if (suffixes != null) {
                         suffix = suffixes[0];
                     }
                 }
@@ -66,8 +66,10 @@ public class Avatar extends Command {
 
             Image image = Image.ofRaw(data, Image.Format.valueOf(suffix));
             EVENT.getClient().edit(edit -> edit.setAvatar(image));
-        } catch(IOException e) {
-            LOGGER.error("Malformed URL or error opening connection", e);
+        } catch (MalformedURLException e) {
+            reply("Malformed url: <" + link + ">");
+        } catch (IOException e) {
+            LOGGER.error("Error opening connection", e);
             reply("Invalid image URL").subscribe();
         }
     }

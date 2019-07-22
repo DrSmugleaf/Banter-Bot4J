@@ -23,9 +23,7 @@ import java.util.regex.Pattern;
 public class Arguments extends ArrayList<String> {
 
     private static final Pattern SPLIT_ON_SPACES_EXCEPT_WITHIN_QUOTES = Pattern.compile("\"([^\"]*)\"|'([^']*)'|[^\\s]+");
-
     private final CommandSearchResult RESULT;
-
     private final CommandReceivedEvent EVENT;
 
     Arguments(CommandSearchResult result, CommandReceivedEvent event) {
@@ -215,7 +213,7 @@ public class Arguments extends ArrayList<String> {
     @Nullable
     public String getStringArg(CommandField field) {
         int position = field.getArgument().position() - 1;
-        long words = field.getArgument().words();
+        long words = field.getArgument().maxWords();
 
         if (field.getField().getType() == String.class) {
             List<String> strings = new ArrayList<>();

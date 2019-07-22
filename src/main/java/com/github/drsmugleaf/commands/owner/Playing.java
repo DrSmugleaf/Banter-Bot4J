@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.commands.owner;
 
+import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.tags.Tags;
@@ -15,9 +17,13 @@ import discord4j.core.object.presence.Presence;
 )
 public class Playing extends Command {
 
+    @Argument(position = 1, example = "!help", maxWords = Integer.MAX_VALUE, optional = true)
+    @Nullable
+    private String name;
+
     @Override
     public void run() {
-        if(ARGUMENTS.isEmpty()) {
+        if(name == null) {
             EVENT
                     .getClient()
                     .updatePresence(Presence.online())
@@ -26,11 +32,10 @@ public class Playing extends Command {
             return;
         }
 
-        String game = String.join(" ", ARGUMENTS);
         EVENT
                 .getClient()
-                .updatePresence(Presence.online(Activity.playing(game)))
-                .then(reply("Changed the bot's playing status to " + game))
+                .updatePresence(Presence.online(Activity.playing(name)))
+                .then(reply("Changed the bot's playing status to " + name))
                 .subscribe();
     }
 

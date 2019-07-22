@@ -19,7 +19,6 @@ import java.util.Set;
 public class CommandRegistry {
 
     private final ConverterRegistry CONVERTERS;
-
     private final ImmutableList<Entry> ENTRIES;
 
     public CommandRegistry(List<Class<Command>> commands) {

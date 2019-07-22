@@ -30,15 +30,11 @@ import java.util.function.Consumer;
 public abstract class Command implements ICommand {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(Command.class);
-
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
-
     public CommandReceivedEvent EVENT;
     public Arguments ARGUMENTS;
-
-    @Nullable
     public User SELF_USER;
-
+    @Nullable
     public Member SELF_MEMBER;
 
     protected Command() {}

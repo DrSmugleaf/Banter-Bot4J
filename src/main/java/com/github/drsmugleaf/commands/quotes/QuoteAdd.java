@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.commands.quotes;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.database.models.Quote;
@@ -20,14 +21,16 @@ import reactor.util.function.Tuples;
 )
 public class QuoteAdd extends Command {
 
+    @Argument(
+            position = 1,
+            example = "Did you ever hear the tragedy of Darth Plagueis The Wise? " +
+                    "I thought not. It's not a story the Jedi would tell you.",
+            maxWords = Integer.MAX_VALUE
+    )
+    private String text;
+
     @Override
     public void run() {
-        if (ARGUMENTS.isEmpty()) {
-            reply("You didn't write anything to add as a quote. Example: `" + BanterBot4J.BOT_PREFIX + "quote add test`").subscribe();
-            return;
-        }
-
-        String content = ARGUMENTS.toString();
         EVENT
                 .getGuild()
                 .map(Guild::getId)
@@ -50,7 +53,7 @@ public class QuoteAdd extends Command {
                         )
                 )
                 .map(tuple -> Tuples.of(tuple.getT1().getT1(), tuple.getT1().getT2(), tuple.getT2()))
-                .map(tuple -> new Quote(content, tuple.getT1(), tuple.getT2(), tuple.getT3()))
+                .map(tuple -> new Quote(text, tuple.getT1(), tuple.getT2(), tuple.getT3()))
                 .doOnNext(Quote::createIfNotExists)
                 .flatMap(quote -> reply("Created quote #" + quote.id + ". Type `" + BanterBot4J.BOT_PREFIX + "quote " + quote.id + "` to see it."))
                 .subscribe();

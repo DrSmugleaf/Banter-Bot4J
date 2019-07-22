@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.commands.tripwire;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.eve.Systems;
@@ -8,8 +9,8 @@ import com.github.drsmugleaf.tripwire.route.Route;
 import com.github.drsmugleaf.tripwire.route.StarSystem;
 import discord4j.core.object.entity.User;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by DrSmugleaf on 10/06/2018
@@ -19,13 +20,8 @@ import java.util.List;
 )
 public class TripwireBridge extends Command {
 
-    private static String invalidArgumentsResponse() {
-        return "Invalid arguments.\n" +
-               "**Formats:**\n" +
-               BanterBot4J.BOT_PREFIX + "tripwireBridge system1 system2\n" +
-               "**Examples:**\n" +
-               BanterBot4J.BOT_PREFIX + "tripwireRoute O-VWPB Jita";
-    }
+    @Argument(position = 1, example = "O-VWPB Jita G-ME2K", maxWords = Integer.MAX_VALUE)
+    private String systems;
 
     @Override
     public void run() {
@@ -39,51 +35,74 @@ public class TripwireBridge extends Command {
             return;
         }
 
-        if (ARGUMENTS.size() != 2) {
-            reply(invalidArgumentsResponse()).subscribe();
-            return;
-        }
-
-        List<String> invalidSystems = new ArrayList<>();
-        for (String system : ARGUMENTS) {
-            if (!Systems.NAMES.containsValue(system)) {
-                invalidSystems.add(system);
-            }
-        }
-
-        if (!invalidSystems.isEmpty()) {
-            String response = "Invalid system names: " + String.join(", ", invalidSystems + ".");
-            reply(response).subscribe();
-            return;
-        }
-
+        Set<String> invalidSystems = new HashSet<>();
+        Set<String> systemsNotInRoute = new HashSet<>();
+        String[] systemNames = systems.split(" ");
         Route route = TripwireRoute.ROUTES.get(author);
-        StarSystem firstSystem = null;
-        StarSystem secondSystem = null;
-        for (StarSystem node : route.GRAPH.NODES) {
-            if (node.NAME.equalsIgnoreCase(ARGUMENTS.get(0))) {
-                firstSystem = node;
+        for (String systemName1 : systemNames) {
+            if (!Systems.NAMES.containsValue(systemName1)) {
+                invalidSystems.add(systemName1);
+                continue;
             }
 
-            if (node.NAME.equalsIgnoreCase(ARGUMENTS.get(1))) {
-                secondSystem = node;
+            StarSystem system1 = null;
+            for (StarSystem node : route.GRAPH.NODES) {
+                if (node.NAME.equalsIgnoreCase(systemName1)) {
+                    system1 = node;
+                    break;
+                }
             }
+
+            if (system1 == null) {
+                systemsNotInRoute.add(systemName1);
+                continue;
+            }
+
+            for (String systemName2 : systemNames) {
+                if (!Systems.NAMES.containsValue(systemName2)) {
+                    invalidSystems.add(systemName2);
+                    continue;
+                }
+
+                StarSystem system2 = null;
+                for (StarSystem node : route.GRAPH.NODES) {
+                    if (node.NAME.equalsIgnoreCase(systemName2)) {
+                        system2 = node;
+                        break;
+                    }
+                }
+
+                if (system2 == null) {
+                    systemsNotInRoute.add(systemName2);
+                    continue;
+                }
+
+                system1.addDestination(system2, 0);
+            }
+
+            route.recalculate();
         }
 
-        if (firstSystem == null) {
-            reply(ARGUMENTS.get(0) + " isn't in the route.").subscribe();
-            return;
+        StringBuilder response = new StringBuilder();
+        if (!invalidSystems.isEmpty()) {
+            response
+                    .append("Invalid system names: ")
+                    .append(String.join(", ", invalidSystems))
+                    .append(".");
         }
 
-        if (secondSystem == null) {
-            reply(ARGUMENTS.get(1) + " isn't in the route.").subscribe();
-            return;
+        if (!systemsNotInRoute.isEmpty()) {
+            response
+                    .append("Systems not in route: ")
+                    .append(String.join(", ", systemsNotInRoute))
+                    .append(".");
         }
 
-        firstSystem.addDestination(secondSystem, 0);
-        route.recalculate();
+        if (response.length() == 0) {
+            response.append(route.info());
+        }
 
-        reply(route.info()).subscribe();
+        reply(response.toString()).subscribe();
     }
 
 }

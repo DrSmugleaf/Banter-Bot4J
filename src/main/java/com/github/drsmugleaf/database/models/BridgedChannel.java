@@ -22,7 +22,7 @@ public class BridgedChannel extends Model<BridgedChannel> {
     @Column.Id
     @Relation(type = RelationTypes.ManyToOne, columnName = "id")
     @Nullable
-    public DiscordChannel channel;
+    public DiscordChannel discordChannel;
 
     @Column(name = "channel_language")
     @Nullable
@@ -32,15 +32,15 @@ public class BridgedChannel extends Model<BridgedChannel> {
     @Column.Id
     @Relation(type = RelationTypes.ManyToOne, columnName = "id")
     @Nullable
-    public DiscordChannel bridged;
+    public DiscordChannel bridgedChannel;
 
     @Column(name = "bridged_language")
     @Nullable
     public Languages bridgedLanguage;
 
     public BridgedChannel(@Nullable Long channelID, @Nullable Long bridgedID) {
-        channel = new DiscordChannel(channelID);
-        bridged = new DiscordChannel(bridgedID);
+        discordChannel = new DiscordChannel(channelID);
+        bridgedChannel = new DiscordChannel(bridgedID);
     }
 
     private BridgedChannel() {}
@@ -57,12 +57,12 @@ public class BridgedChannel extends Model<BridgedChannel> {
     }
 
     @Nullable
-    public DiscordChannel getChannel() {
-        return channel;
+    public DiscordChannel getDiscordChannel() {
+        return discordChannel;
     }
 
-    public BridgedChannel setChannel(@Nullable DiscordChannel channel) {
-        this.channel = channel;
+    public BridgedChannel setDiscordChannel(@Nullable DiscordChannel discordChannel) {
+        this.discordChannel = discordChannel;
         return this;
     }
 
@@ -77,12 +77,12 @@ public class BridgedChannel extends Model<BridgedChannel> {
     }
 
     @Nullable
-    public DiscordChannel getBridged() {
-        return bridged;
+    public DiscordChannel getBridgedChannel() {
+        return bridgedChannel;
     }
 
-    public BridgedChannel setBridged(@Nullable DiscordChannel bridged) {
-        this.bridged = bridged;
+    public BridgedChannel setBridgedChannel(@Nullable DiscordChannel bridgedChannel) {
+        this.bridgedChannel = bridgedChannel;
         return this;
     }
 
@@ -97,11 +97,11 @@ public class BridgedChannel extends Model<BridgedChannel> {
     }
 
     public TextChannel channel() {
-        return from(channel);
+        return from(discordChannel);
     }
 
     public TextChannel bridged() {
-        return from(bridged);
+        return from(bridgedChannel);
     }
 
 }

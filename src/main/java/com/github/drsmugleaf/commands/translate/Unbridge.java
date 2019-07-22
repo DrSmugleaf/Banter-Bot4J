@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.translate;
 
+import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.tags.Tags;
@@ -21,30 +22,29 @@ import reactor.util.function.Tuples;
 )
 public class Unbridge extends Command {
 
+    @Argument(position = 1, example = "general")
+    private String channelName;
+
     @Override
     public void run() {
-        if (ARGUMENTS.isEmpty()) {
-            reply("You didn't provide a channel name.").subscribe();
-            return;
-        }
 
         Flux<GuildChannel> channels = EVENT
                 .getGuild()
                 .flatMapMany(Guild::getChannels)
-                .filter(channel -> channel.getName().equalsIgnoreCase(ARGUMENTS.get(0)))
+                .filter(channel -> channel.getName().equalsIgnoreCase(channelName))
                 .filter(channel -> channel instanceof TextChannel);
 
         Boolean hasChannels = channels.hasElements().blockOptional().orElse(false);
 
         if (!hasChannels) {
-            reply("No channels found with name " + ARGUMENTS.get(0)).subscribe();
+            reply("No channels found with name " + channelName).subscribe();
             return;
         }
 
         channels
                 .take(1)
                 .map(channel -> new BridgedChannel(channel.getId().asLong(), null))
-                .map(channel -> Tuples.of(channel, new BridgedChannel(null, channel.channel.id)))
+                .map(channel -> Tuples.of(channel, new BridgedChannel(null, channel.discordChannel.id)))
                 .map(tuple -> {
                     tuple.getT1().delete();
                     return tuple;
@@ -53,7 +53,7 @@ public class Unbridge extends Command {
                     tuple.getT2().delete();
                     return tuple;
                 })
-                .flatMap(tuple -> reply("Unbridged all channels bridged with " + ARGUMENTS.get(0)))
+                .flatMap(tuple -> reply("Unbridged all channels bridged with " + channelName))
                 .subscribe();
     }
 

@@ -11,7 +11,6 @@ import java.util.function.BiFunction;
 public class Validator<E> {
 
     private final Class<E> IDENTIFIER;
-
     @Nullable
     private final BiFunction<CommandField, ? super E, String> VALIDATOR;
 

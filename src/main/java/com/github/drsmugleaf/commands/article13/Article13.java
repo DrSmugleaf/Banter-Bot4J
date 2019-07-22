@@ -22,7 +22,7 @@ public class Article13 extends Command {
     @Argument(position = 1, example = "spain")
     private Country country;
 
-    @Argument(position = 2, example = "for/against")
+    @Argument(position = 2, example = "for")
     private Decision decision;
 
     @Argument(position = 3, example = "final")

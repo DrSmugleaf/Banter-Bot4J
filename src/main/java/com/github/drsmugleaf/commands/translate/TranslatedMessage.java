@@ -20,7 +20,6 @@ import java.util.Map;
 public class TranslatedMessage {
 
     private final Message MESSAGE;
-
     private final Map<BridgedChannel, Message> MESSAGES_SENT = new HashMap<>();
 
     public TranslatedMessage(MessageCreateEvent event) {

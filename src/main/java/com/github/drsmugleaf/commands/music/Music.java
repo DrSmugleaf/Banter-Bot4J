@@ -26,9 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class Music {
 
     public static final AudioPlayerManager PLAYER_MANAGER = new DefaultAudioPlayerManager();
-
     private static final Map<Snowflake, GuildMusicManager> MUSIC_MANAGERS = new HashMap<>();
-
     static final Cache<AbstractMap.SimpleEntry<Guild, Member>, List<AudioTrack>> UNDO_STOP_CACHE = CacheBuilder
             .newBuilder()
             .expireAfterWrite(1, TimeUnit.MINUTES)

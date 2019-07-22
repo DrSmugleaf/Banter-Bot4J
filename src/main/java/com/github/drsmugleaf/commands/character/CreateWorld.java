@@ -21,7 +21,7 @@ public class CreateWorld extends Command {
 
     private static final Map<User, World> WORLDS = new HashMap<>();
 
-    @Argument(position = 1, example = "Hoenn")
+    @Argument(position = 1, example = "Hoenn", maxWords = Integer.MAX_VALUE)
     private String name;
 
     @Override

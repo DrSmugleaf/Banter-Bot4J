@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.commands.owner;
 
-import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.tags.Tags;
@@ -14,22 +14,11 @@ import com.github.drsmugleaf.commands.api.tags.Tags;
 )
 public class Name extends Command {
 
-    private static String invalidArgumentsResponse() {
-        return "Invalid arguments.\n" +
-               "**Formats:**\n" +
-               BanterBot4J.BOT_PREFIX + "name username\n" +
-               "**Examples:**\n" +
-               BanterBot4J.BOT_PREFIX + "name Banter Bot4J";
-    }
+    @Argument(position = 1, example = "Banter Bot4J", maxWords = Integer.MAX_VALUE, minimum = 2, maximum = 32)
+    private String name;
 
     @Override
     public void run() {
-        String name = String.join(" ", ARGUMENTS);
-        if (name.isEmpty()) {
-            reply(invalidArgumentsResponse()).subscribe();
-            return;
-        }
-
         EVENT
                 .getClient()
                 .edit(self -> self.setUsername(String.join(" ", ARGUMENTS)))

@@ -17,9 +17,7 @@ import java.util.function.BiFunction;
  */
 public class ConverterRegistry {
 
-    private final Map<TripleIdentifier, Converter> CONVERTERS = new HashMap<>();
-
-    private final BiFunction<CommandField, Number, String> NUMBER_VALIDATOR = (field, n) -> {
+    private static final BiFunction<CommandField, Number, String> NUMBER_VALIDATOR = (field, n) -> {
         Argument argument = field.getArgument();
         long value = n.longValue();
         long minimum = argument.minimum();
@@ -32,6 +30,7 @@ public class ConverterRegistry {
 
         return "";
     };
+    private final Map<TripleIdentifier, Converter> CONVERTERS = new HashMap<>();
 
     public ConverterRegistry() {
         registerCommandTo(String.class, (s, e) -> s);

@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.commands.tripwire;
 
-import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.tags.Tags;
@@ -22,29 +22,24 @@ public class TripwireRoute extends Command {
 
     static final Map<User, Route> ROUTES = new HashMap<>();
 
-    private static String invalidArgumentsResponse() {
-        return "Invalid arguments.\n" +
-               "**Formats:**\n" +
-               BanterBot4J.BOT_PREFIX + "tripwireRoute \"username\" \"password\" \"system1\" \"system2\"\n" +
-               "**Examples:**\n" +
-               BanterBot4J.BOT_PREFIX + "tripwireRoute \"DrSmugleaf Aulmais\" \"pAsSwOrD\" \"O-VWPB\" \"Jita\"";
-    }
+    @Argument(position = 1, example = "DrSmugleaf Aulmais", maxWords = Integer.MAX_VALUE)
+    private String username;
+
+    @Argument(position = 2, example = "hunter2", maxWords = Integer.MAX_VALUE)
+    private String password;
+
+    @Argument(position = 3, example = "O-VWPB", maxWords = Integer.MAX_VALUE)
+    private String from;
+
+    @Argument(position = 4, example = "Jita", maxWords = Integer.MAX_VALUE)
+    private String to;
 
     @Override
     public void run() {
-        if (ARGUMENTS.size() != 4) {
-            reply(invalidArgumentsResponse()).subscribe();
-            return;
-        }
-
         User author = EVENT
                 .getMessage()
                 .getAuthor()
                 .orElseThrow(() -> new IllegalStateException("Couldn't get the message's author. Message: " + EVENT.getMessage()));
-        String username = ARGUMENTS.get(0);
-        String password = ARGUMENTS.get(1);
-        String from = ARGUMENTS.get(2);
-        String to = ARGUMENTS.get(3);
         Route route = SystemGraph.getRoute(author.getId().asLong(), username, password, from, to);
 
         if (route == null) {
