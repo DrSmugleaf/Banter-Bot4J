@@ -148,6 +148,7 @@ public class Entry {
     public String getExamples() {
         StringBuilder examples = new StringBuilder();
         examples
+                .append("**Example:**\n")
                 .append(BanterBot4J.BOT_PREFIX)
                 .append(getName());
 
@@ -166,6 +167,10 @@ public class Entry {
         }
 
         return examples.toString();
+    }
+
+    public String getFormatsExamples() {
+        return getFormats() + "\n" + getExamples();
     }
 
 }

@@ -62,13 +62,13 @@ public class Handler {
                     return !member.isBlacklisted;
                 })
                 .flatMap(tuple -> {
-                    CommandSearchResult result = COMMAND_REGISTRY.findCommand(tuple.getT1());
-                    if (result == null) {
+                    CommandSearchResult search = COMMAND_REGISTRY.findCommand(tuple.getT1());
+                    if (search == null) {
                         return Optional.empty();
                     }
 
                     if (!guildId.isPresent()) {
-                        return Optional.of(result);
+                        return Optional.of(search);
                     }
 
                     return event
@@ -77,7 +77,7 @@ public class Handler {
                             .flatMap(Member::getBasePermissions)
                             .zipWith(event.getMessage().getChannel())
                             .flatMap(tuple2 -> {
-                                Permission[] permissions = result.getEntry().getCommandInfo().permissions();
+                                Permission[] permissions = search.getEntry().getCommandInfo().permissions();
                                 List<Permission> commandPermissions = Arrays.asList(permissions);
                                 PermissionSet authorPermissions = tuple2.getT1();
 
@@ -86,7 +86,7 @@ public class Handler {
                                     return Mono.empty();
                                 }
 
-                                return Mono.just(result);
+                                return Mono.just(search);
                             }).blockOptional();
                 })
                 .ifPresent(result -> {

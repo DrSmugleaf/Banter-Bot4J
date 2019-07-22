@@ -39,15 +39,15 @@ public abstract class Command implements ICommand {
 
     protected Command() {}
 
-    protected static void run(CommandSearchResult commandSearch, CommandReceivedEvent event) {
-        Entry entry = commandSearch.getEntry();
+    protected static void run(CommandSearchResult search, CommandReceivedEvent event) {
+        Entry entry = search.getEntry();
         Tags[] tags = entry.getCommandInfo().tags();
         for (Tag tag : tags) {
             tag.execute(event);
         }
 
         Command command = entry.newInstance();
-        Arguments arguments = new Arguments(commandSearch, event);
+        Arguments arguments = new Arguments(search, event);
         Entry.setEvent(command, event);
         Entry.setArgs(command, arguments);
         Entry.setSelfUser(command, event);

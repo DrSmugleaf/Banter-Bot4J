@@ -59,8 +59,8 @@ public class CommandRegistry {
         for (Entry entry : ENTRIES) {
             for (String alias : entry.getAllAliases()) {
                 if (!uniqueAliases.add(alias)) {
-                    CommandSearchResult result = new CommandSearchResult(entry, alias);
-                    duplicateAliases.add(result);
+                    CommandSearchResult search = new CommandSearchResult(entry, alias);
+                    duplicateAliases.add(search);
                 }
             }
         }
@@ -87,9 +87,11 @@ public class CommandRegistry {
 
     @Nullable
     public CommandSearchResult findCommand(String message) {
-        message = message.substring(BanterBot4J.BOT_PREFIX.length()).toLowerCase();
-        List<CommandSearchResult> matches = new ArrayList<>();
+        if (message.startsWith(BanterBot4J.BOT_PREFIX)) {
+            message = message.substring(BanterBot4J.BOT_PREFIX.length()).toLowerCase();
+        }
 
+        List<CommandSearchResult> matches = new ArrayList<>();
         List<String> argsList = Arguments.parseArgs(message);
         while (argsList.size() > 0) {
             String args = String.join(" ", argsList);
@@ -97,8 +99,8 @@ public class CommandRegistry {
             for (Entry entry : ENTRIES) {
                 for (String alias : entry.getAllAliases()) {
                     if (alias.equalsIgnoreCase(args)) {
-                        CommandSearchResult result = new CommandSearchResult(entry, alias);
-                        matches.add(result);
+                        CommandSearchResult search = new CommandSearchResult(entry, alias);
+                        matches.add(search);
                     }
                 }
             }
