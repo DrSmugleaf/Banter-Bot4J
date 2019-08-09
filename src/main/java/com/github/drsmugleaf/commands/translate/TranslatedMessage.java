@@ -82,7 +82,9 @@ public class TranslatedMessage {
 
                 translation = formatMessage(translation);
                 String finalTranslation = translation;
-                message.edit(spec -> spec.setContent(finalTranslation));
+                message
+                        .edit(spec -> spec.setContent(finalTranslation))
+                        .subscribe();
             });
         }
     }
