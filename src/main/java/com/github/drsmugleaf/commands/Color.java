@@ -99,8 +99,6 @@ public class Color extends Command {
                                 .zipWith(
                                         guild
                                                 .getMembers()
-                                                .groupBy(User::getId)
-                                                .flatMap(member -> member.reduce((a, b) -> a.getId().compareTo(b.getId()) > 0 ? a : b)) // Remove once Discord4J#543 is fixed
                                                 .filterWhen(member -> member.getRoles().hasElement(colorRole))
                                                 .count()
                                 )
