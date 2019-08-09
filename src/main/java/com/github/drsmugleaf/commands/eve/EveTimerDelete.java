@@ -22,10 +22,10 @@ import java.util.List;
 )
 public class EveTimerDelete extends Command {
 
-    @Argument(position = 1, example = "Fortizar")
+    @Argument(position = 1, examples = "Fortizar")
     private String structure;
 
-    @Argument(position = 2, example = "Jita")
+    @Argument(position = 2, examples = "Jita")
     private String system;
 
     @Override

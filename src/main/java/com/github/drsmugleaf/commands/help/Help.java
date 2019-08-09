@@ -18,7 +18,7 @@ import com.google.common.collect.ImmutableList;
 )
 public class Help extends Command {
 
-    @Argument(position = 1, example = "help", maxWords = Integer.MAX_VALUE, optional = true)
+    @Argument(position = 1, examples = "play", maxWords = Integer.MAX_VALUE, optional = true)
     @Nullable
     private Entry command;
 

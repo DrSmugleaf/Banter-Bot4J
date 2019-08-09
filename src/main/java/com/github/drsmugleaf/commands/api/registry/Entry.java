@@ -136,37 +136,68 @@ public class Entry {
                 .append(getName());
 
         for (CommandField field : getCommandFields()) {
+            formats.append(" ");
             String fieldName = field.getField().getName();
-            formats
-                    .append(" ")
-                    .append(fieldName);
+            if (field.getArgument().optional()) {
+                formats
+                        .append("[")
+                        .append(fieldName)
+                        .append("]");
+            } else {
+                formats.append(fieldName);
+            }
         }
 
         return formats.toString();
     }
 
-    public String getExamples() {
-        StringBuilder examples = new StringBuilder();
-        examples
-                .append("**Example:**\n")
-                .append(BanterBot4J.BOT_PREFIX)
-                .append(getName());
+    private String getAllExampleCombinations(String from, String[] argumentExamples) {
+        List<String> examples = new ArrayList<>();
 
-        for (CommandField field : getCommandFields()) {
-            String example = field.getArgument().example();
-            examples.append(" ");
-
+        for (String example : argumentExamples) {
             if (example.contains(" ")) {
-                examples
-                        .append("\"")
-                        .append(example)
-                        .append("\"");
+                examples.add(from + " \"" + example + "\"");
             } else {
-                examples.append(example);
+                examples.add(from + " " + example);
             }
         }
 
-        return examples.toString();
+        return String.join("\n", examples);
+    }
+
+    private String getMandatoryExamples() {
+        List<String> examples = new ArrayList<>();
+
+        for (CommandField field : getCommandFields()) {
+            if (field.getArgument().optional()) {
+                continue;
+            }
+
+            String example = getAllExampleCombinations(BanterBot4J.BOT_PREFIX + getName(), field.getArgument().examples());
+            examples.add(example);
+        }
+
+        return String.join("\n", examples);
+    }
+
+    private String getOptionalExamples() {
+        List<String> examples = new ArrayList<>();
+
+        for (CommandField field1 : getCommandFields()) {
+            if (!field1.getArgument().optional()) {
+                continue;
+            }
+
+            String example = getAllExampleCombinations(BanterBot4J.BOT_PREFIX + getName(), field1.getArgument().examples());
+            examples.add(example);
+        }
+
+        String text = String.join("\n", examples);
+        return text.isEmpty() ? text : text + "\n";
+    }
+
+    public String getExamples() {
+        return "**Examples:**\n" + getOptionalExamples() + getMandatoryExamples();
     }
 
     public String getFormatsExamples() {

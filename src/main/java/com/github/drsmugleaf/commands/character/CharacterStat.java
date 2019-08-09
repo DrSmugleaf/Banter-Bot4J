@@ -17,13 +17,13 @@ import com.github.drsmugleaf.commands.api.CommandInfo;
 )
 public class CharacterStat extends Command {
 
-    @Argument(position = 1, example = "Combat")
+    @Argument(position = 1, examples = "Combat")
     private String stateName;
 
-    @Argument(position = 2, example = "Strength")
+    @Argument(position = 2, examples = "Strength")
     private String name;
 
-    @Argument(position = 3, example = "5", minimum = Long.MIN_VALUE)
+    @Argument(position = 3, examples = "5", minimum = Long.MIN_VALUE)
     private long value;
 
     @Override

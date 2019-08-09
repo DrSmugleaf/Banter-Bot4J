@@ -25,10 +25,10 @@ import java.util.stream.Collectors;
 )
 public class CharacterAbilityUse extends Command {
 
-    @Argument(position = 1, example = "Swords Dance")
+    @Argument(position = 1, examples = "Swords Dance")
     private String abilityName;
 
-    @Argument(position = 2, example = "Ash")
+    @Argument(position = 2, examples = "Ash")
     private String targetName;
 
     @Override

@@ -19,13 +19,13 @@ import java.util.stream.Collectors;
 @CommandInfo(description = "Results from the EU Article 13 vote, sorted by country, party and vote")
 public class Article13 extends Command {
 
-    @Argument(position = 1, example = "spain")
+    @Argument(position = 1, examples = "spain")
     private Country country;
 
-    @Argument(position = 2, example = "for")
+    @Argument(position = 2, examples = "for")
     private Decision decision;
 
-    @Argument(position = 3, example = "final")
+    @Argument(position = 3, examples = "final")
     private Vote vote;
 
     @Override

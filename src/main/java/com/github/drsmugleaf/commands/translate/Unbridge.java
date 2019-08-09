@@ -22,7 +22,7 @@ import reactor.util.function.Tuples;
 )
 public class Unbridge extends Command {
 
-    @Argument(position = 1, example = "general")
+    @Argument(position = 1, examples = "general")
     private String channelName;
 
     @Override

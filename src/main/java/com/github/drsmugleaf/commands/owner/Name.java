@@ -14,7 +14,7 @@ import com.github.drsmugleaf.commands.api.tags.Tags;
 )
 public class Name extends Command {
 
-    @Argument(position = 1, example = "Banter Bot4J", maxWords = Integer.MAX_VALUE, minimum = 2, maximum = 32)
+    @Argument(position = 1, examples = "Banter Bot4J", maxWords = Integer.MAX_VALUE, minimum = 2, maximum = 32)
     private String name;
 
     @Override

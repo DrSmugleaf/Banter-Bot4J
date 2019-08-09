@@ -30,7 +30,7 @@ public class EveCheapestBlueprints extends Command {
     private static final int THE_FORGE_REGION_ID = 10000002;
     private static final UniverseApi UNIVERSE_API = new UniverseApi();
 
-    @Argument(position = 1, example = "Erebus", maxWords = Integer.MAX_VALUE)
+    @Argument(position = 1, examples = "Erebus", maxWords = Integer.MAX_VALUE)
     private String blueprint;
 
     @Override

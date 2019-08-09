@@ -18,7 +18,7 @@ public class Roll extends Command {
 
     private static final DecimalFormat FORMAT = new DecimalFormat("#,###");
 
-    @Argument(position = 1, example = "1d6")
+    @Argument(position = 1, examples = "1d6")
     private RollString dice;
 
     @Override

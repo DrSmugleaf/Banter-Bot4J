@@ -21,10 +21,10 @@ public class DBDBest extends Command {
     @Argument.Maximum("perks")
     private static final int MAX_PERKS = Math.max(KillersAPI.getPerks().size(), SurvivorsAPI.getPerks().size());
 
-    @Argument(position = 1, example = "8")
+    @Argument(position = 1, examples = "8")
     private Integer perks = 4;
 
-    @Argument(position = 2, example = "trapper", optional = true)
+    @Argument(position = 2, examples = "trapper", optional = true)
     private Killer killer;
 
     private static Consumer<EmbedCreateSpec> getBaseEmbed(int perkAmount) {

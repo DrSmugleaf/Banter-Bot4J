@@ -18,13 +18,13 @@ import java.io.InputStream;
 )
 public class DBDRoulette extends Command {
 
-    @Argument(position = 1, example = "(killer/survivor/friends)")
+    @Argument(position = 1, examples = {"killer", "survivor", "friends"})
     private RouletteTypes type;
 
-    @Argument(position = 2, example = "2.50", minimum = 0, optional = true)
+    @Argument(position = 2, examples = "2.50", minimum = 0, optional = true)
     private double minimumRating = 0;
 
-    @Argument(position = 3, example = "4,32", maximum = 5, optional = true)
+    @Argument(position = 3, examples = "4,32", maximum = 5, optional = true)
     private double maximumRating = 5;
 
     private void sendResponse(

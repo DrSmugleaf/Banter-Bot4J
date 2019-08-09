@@ -209,7 +209,6 @@ public class Arguments extends ArrayList<String> {
         }
     }
 
-    @Nullable
     public String getStringArg(CommandField field) {
         int position = field.getArgument().position() - 1;
         long words = field.getArgument().maxWords();

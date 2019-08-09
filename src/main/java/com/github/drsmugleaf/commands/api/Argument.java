@@ -20,7 +20,7 @@ public @interface Argument {
 
     long maximum() default Long.MAX_VALUE;
 
-    String example();
+    String[] examples();
 
     boolean optional() default false;
 

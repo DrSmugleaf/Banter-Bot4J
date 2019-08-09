@@ -23,7 +23,7 @@ public class QuoteAdd extends Command {
 
     @Argument(
             position = 1,
-            example = "Did you ever hear the tragedy of Darth Plagueis The Wise? " +
+            examples = "Did you ever hear the tragedy of Darth Plagueis The Wise? " +
                     "I thought not. It's not a story the Jedi would tell you.",
             maxWords = Integer.MAX_VALUE
     )

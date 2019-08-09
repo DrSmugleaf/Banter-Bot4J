@@ -23,7 +23,7 @@ public class QuoteGet extends Command {
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
 
-    @Argument(position = 1, example = "1", optional = true)
+    @Argument(position = 1, examples = "1", optional = true)
     private long id;
 
     @Override

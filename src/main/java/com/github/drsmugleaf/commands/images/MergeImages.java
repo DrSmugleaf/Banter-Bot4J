@@ -23,7 +23,7 @@ import java.io.InputStream;
 )
 public class MergeImages extends Command {
 
-    @Argument(position = 1, example = "horizontal")
+    @Argument(position = 1, examples = "horizontal")
     private Orientation orientation;
 
     @Override

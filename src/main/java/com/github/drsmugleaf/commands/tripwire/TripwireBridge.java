@@ -20,7 +20,7 @@ import java.util.Set;
 )
 public class TripwireBridge extends Command {
 
-    @Argument(position = 1, example = "O-VWPB Jita G-ME2K", maxWords = Integer.MAX_VALUE)
+    @Argument(position = 1, examples = "O-VWPB Jita G-ME2K", maxWords = Integer.MAX_VALUE)
     private String systems;
 
     @Override

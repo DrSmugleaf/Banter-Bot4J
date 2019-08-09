@@ -18,22 +18,22 @@ import com.github.drsmugleaf.commands.character.CharacterCreate;
 )
 public class CharacterAbilityStatChange extends Command {
 
-    @Argument(position = 1, example = "Combat")
+    @Argument(position = 1, examples = "Combat")
     private String state;
 
-    @Argument(position = 2, example = "Strength")
+    @Argument(position = 2, examples = "Strength")
     private String stat;
 
-    @Argument(position = 3, example = "3", minimum = Long.MIN_VALUE)
+    @Argument(position = 3, examples = "3", minimum = Long.MIN_VALUE)
     private long amount;
 
-    @Argument(position = 4, example = "7")
+    @Argument(position = 4, examples = "7")
     private long cooldown;
 
-    @Argument(position = 5, example = "Swords Dance")
+    @Argument(position = 5, examples = "Swords Dance")
     private String name;
 
-    @Argument(position = 6, example = "Raises attack by 1")
+    @Argument(position = 6, examples = "Raises attack by 1")
     private String description;
 
     @Override

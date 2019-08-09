@@ -27,7 +27,7 @@ public class RandomCivilizationVI extends Command {
     @Argument.Maximum("leaders")
     private static final int MAXIMUM_LEADERS = Leaders.AMOUNT;
 
-    @Argument(position = 1, example = "3")
+    @Argument(position = 1, examples = "3")
     private Integer leaders;
 
     @Override

@@ -27,13 +27,13 @@ import java.util.regex.Pattern;
 )
 public class EveTimer extends Command {
 
-    @Argument(position = 1, example = "Fortizar")
+    @Argument(position = 1, examples = "Fortizar")
     private String structure;
 
-    @Argument(position = 2, example = "Jita")
+    @Argument(position = 2, examples = "Jita")
     private String system;
 
-    @Argument(position = 3, example = "4d15h30m")
+    @Argument(position = 3, examples = "4d15h30m")
     private ZonedDateTime date;
 
     @Nullable

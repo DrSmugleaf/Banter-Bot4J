@@ -21,16 +21,16 @@ import discord4j.core.object.util.Permission;
 )
 public class Bridge extends Command {
 
-    @Argument(position = 1, example = "general")
+    @Argument(position = 1, examples = "general")
     private TextChannel firstChannel;
 
-    @Argument(position = 2, example = "en")
+    @Argument(position = 2, examples = "en")
     private Languages firstLanguage;
 
-    @Argument(position = 3, example = "spanish_channel")
+    @Argument(position = 3, examples = "spanish_channel")
     private TextChannel secondChannel;
 
-    @Argument(position = 4, example = "es")
+    @Argument(position = 4, examples = "es")
     private Languages secondLanguage;
 
     @Override

@@ -17,7 +17,7 @@ import discord4j.core.object.presence.Presence;
 )
 public class Playing extends Command {
 
-    @Argument(position = 1, example = "!help", maxWords = Integer.MAX_VALUE, optional = true)
+    @Argument(position = 1, examples = "!help", maxWords = Integer.MAX_VALUE, optional = true)
     @Nullable
     private String name;
 

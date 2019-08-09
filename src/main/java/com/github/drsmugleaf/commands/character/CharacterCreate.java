@@ -21,7 +21,7 @@ public class CharacterCreate extends Command {
 
     private static final Map<User, CharacterBuilder> CHARACTERS = new HashMap<>();
 
-    @Argument(position = 1, maxWords = Integer.MAX_VALUE, example = "Ash")
+    @Argument(position = 1, maxWords = Integer.MAX_VALUE, examples = "Ash")
     private String name;
 
     @Contract(pure = true)

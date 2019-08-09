@@ -21,7 +21,7 @@ import reactor.util.function.Tuples;
 )
 public class Play extends MusicCommand {
 
-    @Argument(position = 1, example = "<https://www.youtube.com/watch?v=dQw4w9WgXcQ>", maxWords = Integer.MAX_VALUE)
+    @Argument(position = 1, examples = "<https://www.youtube.com/watch?v=dQw4w9WgXcQ>", maxWords = Integer.MAX_VALUE)
     private String search;
 
     @Override

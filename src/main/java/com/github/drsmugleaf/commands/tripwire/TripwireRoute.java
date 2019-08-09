@@ -22,16 +22,16 @@ public class TripwireRoute extends Command {
 
     static final Map<User, Route> ROUTES = new HashMap<>();
 
-    @Argument(position = 1, example = "DrSmugleaf Aulmais", maxWords = Integer.MAX_VALUE)
+    @Argument(position = 1, examples = "DrSmugleaf Aulmais", maxWords = Integer.MAX_VALUE)
     private String username;
 
-    @Argument(position = 2, example = "hunter2", maxWords = Integer.MAX_VALUE)
+    @Argument(position = 2, examples = "hunter2", maxWords = Integer.MAX_VALUE)
     private String password;
 
-    @Argument(position = 3, example = "O-VWPB", maxWords = Integer.MAX_VALUE)
+    @Argument(position = 3, examples = "O-VWPB", maxWords = Integer.MAX_VALUE)
     private String from;
 
-    @Argument(position = 4, example = "Jita", maxWords = Integer.MAX_VALUE)
+    @Argument(position = 4, examples = "Jita", maxWords = Integer.MAX_VALUE)
     private String to;
 
     @Override

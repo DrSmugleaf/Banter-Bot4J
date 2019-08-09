@@ -48,7 +48,7 @@ public class Color extends Command {
         return color;
     }
 
-    @Argument(position = 1, example = "#FF0000", maxWords = Integer.MAX_VALUE, optional = true)
+    @Argument(position = 1, examples = "#FF0000", maxWords = Integer.MAX_VALUE, optional = true)
     @Nullable
     private java.awt.Color color;
 

@@ -26,7 +26,7 @@ import java.util.Iterator;
 )
 public class Avatar extends Command {
 
-    @Argument(position = 1, example = "<https://cdn.discordapp.com/avatars/403896467766378496/106cdfc7de7e0ee5b4cac0b187218801.png>")
+    @Argument(position = 1, examples = "<https://cdn.discordapp.com/avatars/403896467766378496/106cdfc7de7e0ee5b4cac0b187218801.png>")
     private String link;
 
     @Override

@@ -23,7 +23,7 @@ import java.util.List;
 )
 public class QuoteDelete extends Command {
 
-    @Argument(position = 1, example = "1")
+    @Argument(position = 1, examples = "1")
     private long id;
 
     @Override
