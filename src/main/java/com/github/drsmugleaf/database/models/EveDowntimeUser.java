@@ -14,7 +14,6 @@ import discord4j.core.object.entity.User;
 import net.troja.eve.esi.ApiException;
 import net.troja.eve.esi.api.StatusApi;
 
-import javax.ws.rs.ProcessingException;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -48,7 +47,7 @@ public class EveDowntimeUser extends Model<EveDowntimeUser> {
             if (e.getCode() == 503) {
                 return true;
             }
-        } catch (ProcessingException e) {
+
             BanterBot4J.LOGGER.error("Error contacting Eve Online API", e);
         }
 
