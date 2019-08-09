@@ -28,6 +28,16 @@ public class QuoteGet extends Command {
 
     @Override
     public void run() {
+        if (id == 0) {
+            Quote quote = new Quote(null);
+            id = quote.get().stream().mapToLong(Quote::getId).max().orElse(0);
+
+            if (id == 0) {
+                reply("No quotes have been added yet").subscribe();
+                return;
+            }
+        }
+
         Quote quote = new Quote(id);
         List<Quote> quotes = quote.get();
 

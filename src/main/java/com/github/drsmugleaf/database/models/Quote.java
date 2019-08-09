@@ -50,4 +50,9 @@ public class Quote extends Model<Quote> {
 
     private Quote() {}
 
+    @Nullable
+    public Long getId() {
+        return id;
+    }
+
 }
