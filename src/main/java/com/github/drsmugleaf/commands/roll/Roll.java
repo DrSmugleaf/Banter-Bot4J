@@ -6,6 +6,8 @@ import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -40,12 +42,22 @@ public class Roll extends Command {
             return;
         }
 
-        long roll = 0;
-        for (int i = 0; i < amount; i++) {
-            roll += ThreadLocalRandom.current().nextLong(sides) + 1;
-        }
+        if (amount < 10) {
+            List<String> rolls = new ArrayList<>();
+            for (long i = 0; i < amount; i++) {
+                long roll = ThreadLocalRandom.current().nextLong(sides) + 1;
+                rolls.add(Long.toString(roll));
+            }
 
-        reply("Roll: " + FORMAT.format(roll)).subscribe();
+            reply("Rolls: " + String.join(", ", rolls)).subscribe();
+        } else {
+            long roll = 0;
+            for (int i = 0; i < amount; i++) {
+                roll += ThreadLocalRandom.current().nextLong(sides) + 1;
+            }
+
+            reply("Roll: " + FORMAT.format(roll)).subscribe();
+        }
     }
 
     @Override
