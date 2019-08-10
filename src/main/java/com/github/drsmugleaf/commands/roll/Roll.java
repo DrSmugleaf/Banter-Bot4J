@@ -32,10 +32,12 @@ public class Roll extends Command {
         long amount = dice.getAmount();
         if (amount > 1000000) {
             reply("The amount of dice must be below 1000000. Amount: " + amount).subscribe();
+            return;
         }
 
         if (sides > 1000000000) {
             reply("The amount of sides must be below 1000000000. Sides: " + sides).subscribe();
+            return;
         }
 
         long roll = 0;
