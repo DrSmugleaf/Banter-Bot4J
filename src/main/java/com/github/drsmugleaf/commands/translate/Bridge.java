@@ -27,7 +27,7 @@ public class Bridge extends Command {
     @Argument(position = 2, examples = "en")
     private Languages firstLanguage;
 
-    @Argument(position = 3, examples = "spanish_channel")
+    @Argument(position = 3, examples = "spanish-channel")
     private TextChannel secondChannel;
 
     @Argument(position = 4, examples = "es")
