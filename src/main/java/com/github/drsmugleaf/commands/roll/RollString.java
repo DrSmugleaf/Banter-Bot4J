@@ -10,8 +10,13 @@ public class RollString {
 
     public RollString(String roll) {
         String[] dice = roll.split("d");
-        amount = Long.parseLong(dice[0]);
-        sides = Long.parseLong(dice[1]);
+        if (dice.length == 2) {
+            amount = Long.parseLong(dice[0]);
+            sides = Long.parseLong(dice[1]);
+        } else {
+            amount = 1;
+            sides = Long.parseLong(roll);
+        }
     }
 
     public long getAmount() {
