@@ -1,29 +1,27 @@
 package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
-import com.github.drsmugleaf.database.models.Member;
-import sx.blah.discord.handle.obj.IRole;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.handle.obj.Permissions;
-
-import javax.annotation.Nonnull;
-import java.util.List;
+import com.github.drsmugleaf.database.model.DiscordMember;
+import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.Member;
+import discord4j.core.object.entity.Role;
+import discord4j.core.object.util.Permission;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
+import reactor.util.function.Tuples;
 
 /**
  * Created by DrSmugleaf on 14/05/2017.
  */
-@CommandInfo(permissions = {Permissions.KICK, Permissions.BAN})
+@CommandInfo(
+        permissions = {Permission.KICK_MEMBERS},
+        description = "Blacklist an user from using the bot"
+)
 public class Blacklist extends Command {
 
-    protected Blacklist(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        super(event, args);
-    }
-
-    @Nonnull
     private static String invalidArgumentsResponse() {
         return "Invalid arguments.\n" +
                "**Formats:**\n" +
@@ -34,49 +32,70 @@ public class Blacklist extends Command {
 
     @Override
     public void run() {
-        if (ARGS.isEmpty()) {
-            EVENT.reply(invalidArgumentsResponse());
+        if (ARGUMENTS.isEmpty()) {
+            reply(invalidArgumentsResponse()).subscribe();
             return;
         }
 
-        IUser author = EVENT.getAuthor();
+        Flux<Member> mentions = EVENT
+                .getMessage()
+                .getUserMentions()
+                .zipWith(EVENT.getGuild().repeat())
+                .flatMap(tuple -> tuple.getT1().asMember(tuple.getT2().getId()))
+                .zipWith(Mono.justOrEmpty(EVENT.getMember()).repeat())
+                .handle((tuple, sink) -> {
+                    Member mention = tuple.getT1();
+                    Member author = tuple.getT2();
+                    if (mention.equals(author)) {
+                        reply("You can't blacklist yourself!").subscribe();
+                        return;
+                    }
 
-        Long guildID = EVENT.getGuild().getLongID();
-        List<IUser> mentions = EVENT.getMessage().getMentions();
+                    sink.next(mention);
+                }).cast(Member.class)
+                .zipWith(EVENT.getGuild().flatMap(Guild::getOwner).repeat())
+                .handle((tuple, sink) -> {
+                    Member mention = tuple.getT1();
+                    Member guildOwner = tuple.getT2();
+                    if (mention.equals(guildOwner)) {
+                        reply("You can't blacklist the server owner!").subscribe();
+                        return;
+                    }
 
-        IRole highestAuthorRole = EVENT.getHighestAuthorRole();
+                    sink.next(mention);
+                });
 
-        mentions.forEach(mention -> {
-            Member member = new Member(mention.getLongID(), guildID).get().get(0);
-            String nickname = mention.getDisplayName(EVENT.getGuild());
+        mentions
+                .zipWith(mentions.flatMapSequential(Member::getHighestRole))
+                .zipWith(EVENT.getMember().map(Member::getHighestRole).orElse(Mono.empty()).repeat())
+                .handle((tuple, sink) -> {
+                    Tuple2<Member, Role> mention = tuple.getT1();
+                    Member mentionMember = mention.getT1();
+                    Role mentionRole = mention.getT2();
 
-            if(member == null) {
-                EVENT.reply("User " + nickname + " doesn't exist");
-                return;
-            }
+                    Role authorRole = tuple.getT2();
 
-            if(author.getLongID() == mention.getLongID()) {
-                EVENT.reply("You can't blacklist yourself!");
-                return;
-            }
+                    if (authorRole.getRawPosition() < mentionRole.getRawPosition()) {
+                        reply(
+                                "You can't blacklist " + mentionMember.getDisplayName() + ".\n" +
+                                "Your highest role has a lower position in the role manager than their highest role."
+                        ).subscribe();
 
-            if(mention.getLongID() == EVENT.getGuild().getOwner().getLongID()) {
-                EVENT.reply("You can't blacklist the server owner!");
-                return;
-            }
+                        return;
+                    }
 
-            IRole highestMentionRole = CommandReceivedEvent.getHighestRole(mention, EVENT.getGuild());
+                    sink.next(mentionMember);
+                }).cast(Member.class)
+                .map(member -> Tuples.of(member, new DiscordMember(member.getId().asLong(), member.getGuildId().asLong(), null)))
+                .subscribe(tuple -> {
+                    Member mention = tuple.getT1();
+                    DiscordMember member = tuple.getT2();
 
-            if(highestAuthorRole != null && highestMentionRole != null && highestAuthorRole.getPosition() < highestMentionRole.getPosition()) {
-                EVENT.reply("You can't blacklist " + nickname + ".\n" +
-                            "Your highest role has a lower position in the role manager than their highest role.");
-                return;
-            }
+                    member.isBlacklisted = !member.isBlacklisted;
+                    member.save();
 
-            member.isBlacklisted = !member.isBlacklisted;
-            member.save();
-            EVENT.reply((member.isBlacklisted ? "Whitelisted user " : "Blacklisted user ") + nickname);
-        });
+                    reply((member.isBlacklisted ? "Blacklisted " : "Whitelisted ") + mention.getDisplayName()).subscribe();
+                });
     }
 
 }

@@ -1,7 +1,6 @@
 package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
-import com.github.drsmugleaf.deadbydaylight.KillerPerks;
-import com.github.drsmugleaf.deadbydaylight.Killers;
+import com.github.drsmugleaf.Nullable;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.cache.Cache;
@@ -9,11 +8,11 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
-import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -21,45 +20,88 @@ import java.util.concurrent.TimeUnit;
  */
 public class KillersAPI extends API {
 
-    @Nonnull
     private static final String KILLER_DATA_ENDPOINT = "getKillerData/";
 
-    @Nonnull
-    public static final Supplier<Map<Killers, Killer>> KILLERS = Suppliers.memoizeWithExpiration(
+    private static final String KILLER_PERK_DATA_ENDPOINT = "getKillerPerkData/";
+
+    private static final Supplier<Map<String, Killer>> KILLERS = Suppliers.memoizeWithExpiration(
             KillersAPI::getKillerData, 12, TimeUnit.HOURS
     );
 
-    @Nonnull
-    private static final Cache<Killers, Perks<KillerPerks, KillerPerk>> KILLER_PERKS = CacheBuilder
+    private static final Supplier<PerkList<KillerPerk>> GLOBAL_KILLER_PERKS = Suppliers.memoizeWithExpiration(
+            KillersAPI::getKillerPerkData, 12, TimeUnit.HOURS
+    );
+
+    private static final Cache<Killer, PerkList<KillerPerk>> SPECIFIC_KILLER_PERKS = CacheBuilder
             .newBuilder()
             .expireAfterWrite(12, TimeUnit.HOURS)
-            .build(CacheLoader.from((Killers killer) -> getKillerData(killer)));
+            .build(CacheLoader.from(killer -> getKillerData(killer)));
 
     private KillersAPI() {}
 
-    @Nonnull
-    private static Map<Killers, Killer> getKillerData() {
+    private static Map<String, Killer> getKillerData() {
         JsonArray json = getResponse(KILLER_DATA_ENDPOINT).get("Killers").getAsJsonArray();
-        Map<Killers, Killer> killers = new LinkedHashMap<>();
+        Map<String, Killer> killers = new LinkedHashMap<>();
         for (JsonElement element : json) {
             Killer killer = Killer.from(element);
-            killers.put(killer.KILLER, killer);
+            String killerName = killer.NAME;
+            killers.put(killerName, killer);
         }
 
         return killers;
     }
 
-    @Nonnull
-    public static Perks<KillerPerks, KillerPerk> getKillerData(@Nonnull Killers killer) {
-        String endpoint = KILLER_DATA_ENDPOINT + "?killer=" + killer.NAME;
-        JsonArray json = getResponse(endpoint).get("Killers").getAsJsonArray();
-        Map<KillerPerks, KillerPerk> perks = new HashMap<>();
+    private static PerkList<KillerPerk> getKillerPerkData() {
+        JsonElement json = getResponse(KILLER_PERK_DATA_ENDPOINT).getAsJsonArray("KillerPerk");
+        KillerPerk[] perkArray = GSON.fromJson(json, KillerPerk[].class);
+        List<KillerPerk> perks = Arrays.asList(perkArray);
+        return new PerkList<>(perks);
+    }
+
+    private static PerkList<KillerPerk> getKillerData(Killer killer) {
+        String endpoint = KILLER_DATA_ENDPOINT + "?killer=" + killer.getName();
+        JsonObject response = getResponse(endpoint);
+        JsonArray json = response.get("Killers").getAsJsonArray();
+        PerkList<KillerPerk> perks = new PerkList<>();
         for (JsonElement element : json) {
             KillerPerk perk = KillerPerk.from(element);
-            perks.put(perk.toPerk(), perk);
+            perks.add(perk);
         }
 
-        return new Perks<>(perks);
+        return perks;
+    }
+
+    public static Map<String, Killer> getKillers() {
+        return KILLERS.get();
+    }
+
+    public static PerkList<KillerPerk> getPerks() {
+        return GLOBAL_KILLER_PERKS.get();
+    }
+
+    public static PerkList<KillerPerk> getPerks(Killer killer) {
+        try {
+            return SPECIFIC_KILLER_PERKS.get(killer, () -> getKillerData(killer));
+        } catch (ExecutionException e) {
+            throw new IllegalStateException("Error getting perks for killer " + killer.getName());
+        }
+    }
+
+    @Nullable
+    public static Killer getKiller(@Nullable String name) {
+        for (Map.Entry<String, Killer> entry : getKillers().entrySet()) {
+            if (entry.getKey().equalsIgnoreCase(name)) {
+                return entry.getValue();
+            }
+        }
+
+        return null;
+    }
+
+    public static Killer randomKiller() {
+        List<Killer> killers = new ArrayList<>(KILLERS.get().values());
+        int index = ThreadLocalRandom.current().nextInt(1, KILLERS.get().size());
+        return killers.get(index);
     }
 
 }

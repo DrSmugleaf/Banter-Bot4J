@@ -1,47 +1,46 @@
 package com.github.drsmugleaf.commands.music;
 
-import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 import com.github.drsmugleaf.music.TrackScheduler;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IUser;
+import reactor.core.publisher.Mono;
 
-import javax.annotation.Nonnull;
 import java.util.AbstractMap;
 import java.util.List;
 
 /**
  * Created by DrSmugleaf on 09/06/2018
  */
-@CommandInfo(aliases = {"undostop"}, tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
+@CommandInfo(
+        aliases = {"undostop"},
+        tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE},
+        description = "Restore the stopped tracks back to the queue"
+)
 public class Restore extends MusicCommand {
-
-    protected Restore(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        super(event, args);
-    }
 
     @Override
     public void run() {
-        IGuild guild = EVENT.getGuild();
-        IUser author = EVENT.getAuthor();
-        AbstractMap.SimpleEntry<IGuild, IUser> pair = new AbstractMap.SimpleEntry<>(guild, author);
-        List<AudioTrack> tracks = Music.UNDO_STOP_CACHE.getIfPresent(pair);
+        EVENT
+                .getGuild()
+                .zipWith(Mono.justOrEmpty(EVENT.getMessage().getAuthor()))
+                .map(tuple -> new AbstractMap.SimpleEntry<>(tuple.getT1(), tuple.getT2()))
+                .subscribe(entry -> {
+                    List<AudioTrack> tracks = Music.UNDO_STOP_CACHE.getIfPresent(entry);
 
-        if (tracks == null) {
-            EVENT.reply("You haven't stopped any tracks in the last minute.");
-            return;
-        }
+                    if (tracks == null) {
+                        reply("You haven't stopped any tracks in the last minute.").subscribe();
+                        return;
+                    }
 
-        Music.UNDO_STOP_CACHE.invalidate(pair);
-        TrackScheduler scheduler = Music.getGuildMusicManager(guild).getScheduler();
-        tracks.addAll(scheduler.cloneTracks());
-        scheduler.stop();
-        scheduler.queue(tracks);
+                    Music.UNDO_STOP_CACHE.invalidate(entry);
+                    TrackScheduler scheduler = Music.getGuildMusicManager(entry.getKey().getId()).getScheduler();
+                    tracks.addAll(scheduler.cloneTracks());
+                    scheduler.stop();
+                    scheduler.queue(tracks);
 
-        EVENT.reply("Restored all stopped tracks.");
+                    reply("Restored all stopped tracks.").subscribe();
+                });
     }
 
 }

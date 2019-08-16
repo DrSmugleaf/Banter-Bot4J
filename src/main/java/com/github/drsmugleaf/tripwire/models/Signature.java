@@ -1,14 +1,15 @@
 package com.github.drsmugleaf.tripwire.models;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tripwire.API;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by DrSmugleaf on 19/05/2018.
@@ -38,11 +39,9 @@ public class Signature {
     @SerializedName("bookmark")
     public final String BOOKMARK;
 
-    @Nonnull
     @SerializedName("lifeTime")
     public final Date LIFE_TIME;
 
-    @Nonnull
     @SerializedName("lifeLeft")
     public final Date LIFE_LEFT;
 
@@ -52,18 +51,15 @@ public class Signature {
     @SerializedName("createdByID")
     public final int CREATED_BY_ID;
 
-    @Nonnull
     @SerializedName("createdByName")
     public final String CREATED_BY_NAME;
 
     @SerializedName("modifiedByID")
     public final int MODIFIED_BY_ID;
 
-    @Nonnull
     @SerializedName("modifiedByName")
     public final String MODIFIED_BY_NAME;
 
-    @Nonnull
     @SerializedName("modifiedTime")
     public final Date MODIFIED_TIME;
 
@@ -77,14 +73,14 @@ public class Signature {
             @Nullable String type,
             @Nullable String name,
             @Nullable String bookmark,
-            @Nonnull Date lifeTime,
-            @Nonnull Date lifeLeft,
+            Date lifeTime,
+            Date lifeLeft,
             int lifeLength,
             int createdByID,
-            @Nonnull String createdByName,
+            String createdByName,
             int modifiedByID,
-            @Nonnull String modifiedByName,
-            @Nonnull Date modifiedTime,
+            String modifiedByName,
+            Date modifiedTime,
             double maskID
     ) {
         ID = id;
@@ -104,13 +100,11 @@ public class Signature {
         MASK_ID = maskID;
     }
 
-    @Nonnull
-    public static Signature fromJson(@Nonnull JsonElement json) {
+    public static Signature fromJson(JsonElement json) {
         return API.GSON.fromJson(json, Signature.class);
     }
 
-    @Nonnull
-    public static Map<Integer, Signature> fromJson(@Nonnull String json) {
+    public static Map<Integer, Signature> fromJson(String json) {
         JsonObject signatures = new JsonParser().parse(json).getAsJsonObject().getAsJsonObject("signatures");
         Map<Integer, Signature> signatureList = new HashMap<>();
 

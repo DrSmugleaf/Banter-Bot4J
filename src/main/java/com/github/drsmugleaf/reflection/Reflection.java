@@ -3,7 +3,6 @@ package com.github.drsmugleaf.reflection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -22,17 +21,14 @@ import java.util.stream.Collectors;
  */
 public class Reflection {
 
-    @Nonnull
     private static final Logger LOGGER = LoggerFactory.getLogger(Reflection.class);
 
-    @Nonnull
     private final String PACKAGE_NAME;
 
-    public Reflection(@Nonnull String packageName) {
+    public Reflection(String packageName) {
         PACKAGE_NAME = packageName;
     }
 
-    @Nonnull
     public List<Class<?>> getClasses() {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         String path = PACKAGE_NAME.replace('.', '/');
@@ -64,8 +60,7 @@ public class Reflection {
         return classes;
     }
 
-    @Nonnull
-    private List<Class<?>> findClasses(@Nonnull File directory, @Nonnull String packageName) {
+    private List<Class<?>> findClasses(File directory, String packageName) {
         List<Class<?>> classes = new ArrayList<>();
         if (!directory.exists()) {
             return classes;
@@ -96,8 +91,7 @@ public class Reflection {
         return classes;
     }
 
-    @Nonnull
-    public List<Method> findMethodsWithAnnotation(@Nonnull Class<? extends Annotation> annotation) {
+    public List<Method> findMethodsWithAnnotation(Class<? extends Annotation> annotation) {
         Iterable<Class<?>> classes = getClasses();
         List<Method> methodList = new ArrayList<>();
 
@@ -112,30 +106,29 @@ public class Reflection {
         return methodList;
     }
 
-    @Nonnull
-    public List<Class<?>> findClassesWithAnnotation(@Nonnull Class<? extends Annotation> annotation) {
+    public List<Class<?>> findClassesWithAnnotation(Class<? extends Annotation> annotation) {
         List<Class<?>> classes = getClasses();
         classes.removeIf(cls -> !cls.isAnnotationPresent(annotation));
         return classes;
     }
 
-    @Nonnull
-    public List<Class<?>> findClassesWithMethodAnnotation(@Nonnull Class<? extends Annotation> annotation) {
+    public List<Class<?>> findClassesWithMethodAnnotation(Class<? extends Annotation> annotation) {
         List<Class<?>> classes = getClasses();
         return classes.stream().filter(clazz -> {
             return Arrays.stream(clazz.getDeclaredMethods()).anyMatch(method -> method.isAnnotationPresent(annotation));
         }).collect(Collectors.toList());
     }
 
-    @Nonnull
     @SuppressWarnings("unchecked")
-    public <T> List<Class<T>> findSubtypesOf(@Nonnull Class<T> supertype) {
+    public <T> List<Class<T>> findSubtypesOf(Class<T> supertype) {
         List<Class<T>> classes = new ArrayList<>();
         for (Class<?> clazz : getClasses()) {
             if (supertype.isAssignableFrom(clazz)) {
                 classes.add((Class<T>) clazz);
             }
         }
+
+        classes.remove(supertype);
 
         return classes;
     }

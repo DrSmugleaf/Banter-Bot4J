@@ -1,17 +1,16 @@
 package com.github.drsmugleaf.music;
 
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IUser;
-
-import javax.annotation.Nonnull;
+import discord4j.core.object.entity.Member;
+import discord4j.core.object.entity.TextChannel;
+import discord4j.core.object.entity.VoiceChannel;
 
 /**
  * Created by DrSmugleaf on 15/01/2018.
  */
 public class AudioSearchResultHandler extends AudioResultHandler {
 
-    protected AudioSearchResultHandler(@Nonnull IChannel channel, @Nonnull IUser submitter, @Nonnull String searchString) {
-        super(channel, submitter, searchString);
+    protected AudioSearchResultHandler(TextChannel channel, Member submitter, VoiceChannel voiceChannel, String searchString) {
+        super(channel, submitter, voiceChannel, searchString);
     }
 
     @Override

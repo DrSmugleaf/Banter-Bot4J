@@ -1,32 +1,32 @@
 package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
+import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
+import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
 import com.github.drsmugleaf.commands.api.tags.Tags;
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IRole;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.handle.obj.Permissions;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RoleBuilder;
+import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.Member;
+import discord4j.core.object.entity.Role;
+import discord4j.core.object.entity.User;
+import discord4j.core.object.util.Permission;
+import discord4j.core.object.util.PermissionSet;
+import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * Created by DrSmugleaf on 23/01/2018.
  */
-@CommandInfo(tags = {Tags.GUILD_ONLY})
+@CommandInfo(
+        tags = {Tags.GUILD_ONLY},
+        description = "Change your name color"
+)
 public class Color extends Command {
-
-    protected Color(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        super(event, args);
-    }
 
     @Nullable
     private static java.awt.Color resolve(String string) {
@@ -48,86 +48,108 @@ public class Color extends Command {
         return color;
     }
 
+    @Argument(position = 1, examples = "#FF0000", maxWords = Integer.MAX_VALUE, optional = true)
+    @Nullable
+    private java.awt.Color color;
+
     @Override
     public void run() {
-        IGuild guild = EVENT.getGuild();
-        IUser author = EVENT.getAuthor();
+        Mono<Guild> guildMono = EVENT.getGuild();
 
-        List<IRole> roles = guild.getRolesByName("color-" + author.getStringID());
-        if (ARGS.isEmpty()) {
-            if (roles.isEmpty()) {
-                EVENT.reply("You don't have a name color. Use " + BanterBot4J.BOT_PREFIX + "color name OR hexadecimal code to assign one.");
-                return;
-            }
+        guildMono
+                .flatMapMany(Guild::getRoles)
+                .zipWith(Mono.justOrEmpty(EVENT.getMessage().getAuthor().map(User::getId)).repeat())
+                .filter(tuple -> tuple.getT1().getName().contains("color-" + tuple.getT2().asLong()))
+                .map(Tuple2::getT1)
+                .collect(Collectors.toList())
+                .zipWith(guildMono)
+                .subscribe(tuple -> {
+                    List<Role> roles = tuple.getT1();
+                    Guild guild = tuple.getT2();
 
-            IRole role = roles.get(0);
-            List<IUser> usersByRole = guild.getUsersByRole(role);
-            try {
-                author.removeRole(role);
-            } catch (MissingPermissionsException e) {
-                if (e.getMissingPermissions() == null) {
-                    EVENT.reply("I can't remove your name color.\n" +
-                                "My highest role with the permission to modify roles has a lower position in the role list than your color role.");
-                    return;
-                }
-                String missingPermissions = e.getMissingPermissions().stream().map(Permissions::name).collect(Collectors.joining(", "));
-                EVENT.reply("I don't have permission to change your name color.\n" +
-                            "Missing permissions: " + missingPermissions);
-                return;
-            }
-            usersByRole.remove(author);
-            if (usersByRole.isEmpty()) {
-                role.delete();
-            }
-            String hexCode = String.format("#%06x", role.getColor().getRGB() & 0x00FFFFFF).toUpperCase();
-            EVENT.reply("Removed your name color. It was " + hexCode);
-            return;
-        }
+                    if (color == null) {
+                        if (roles.isEmpty()) {
+                            reply("You don't have a name color. Use " + BanterBot4J.BOT_PREFIX + "color name OR hexadecimal code to assign one.").subscribe();
+                            return;
+                        }
 
-        String requestedColor = ARGS.get(0);
-        java.awt.Color color = resolve(requestedColor);
-        if (color == null) {
-            EVENT.reply("Invalid color. Make sure it is a hexadecimal string (0000FF) or a simple color like red.");
-            return;
-        }
+                        Role colorRole = roles.get(0);
+                        colorRole
+                                .getPosition()
+                                .filterWhen(colorPosition -> SELF_MEMBER
+                                        .getRoles()
+                                        .filter(botRole -> botRole.getPermissions().contains(Permission.MANAGE_ROLES))
+                                        .single()
+                                        .hasElement()
+                                )
+                                .doOnDiscard(Integer.class, (position) -> reply("I don't have permission to manage roles.").subscribe())
+                                .filterWhen(colorPosition -> SELF_MEMBER
+                                        .getRoles()
+                                        .filter(botRole -> botRole.getPermissions().contains(Permission.MANAGE_ROLES))
+                                        .flatMap(Role::getPosition)
+                                        .filter(botRolePosition -> botRolePosition > colorPosition)
+                                        .single()
+                                        .hasElement()
+                                )
+                                .doOnDiscard(Integer.class, (position) -> reply(
+                                        "I can't remove your name color.\n" +
+                                                "My highest role with the permission to modify roles has a lower position in the role list than your colored role."
+                                ).subscribe())
+                                .flatMap(position -> EVENT.getMessage().getAuthorAsMember())
+                                .zipWith(
+                                        guild
+                                                .getMembers()
+                                                .filterWhen(member -> member.getRoles().hasElement(colorRole))
+                                                .count()
+                                )
+                                .doOnNext(tuple2 -> tuple2.getT1().removeRole(colorRole.getId()).subscribe())
+                                .doOnNext(tuple2 -> {
+                                    if (tuple2.getT2() <= 1) {
+                                        colorRole.delete().subscribe();
+                                    }
+                                })
+                                .map(tuple2 -> String.format("#%06x", colorRole.getColor().getRGB() & 0x00FFFFFF).toUpperCase())
+                                .flatMap(hex -> reply("Removed your name color. It was " + hex))
+                                .subscribe();
+                    } else {
+                        if (roles.isEmpty()) {
+                            EVENT
+                                    .getMessage()
+                                    .getAuthorAsMember()
+                                    .filterWhen(author -> SELF_MEMBER
+                                            .getRoles()
+                                            .filter(botRole -> botRole.getPermissions().contains(Permission.MANAGE_ROLES))
+                                            .single()
+                                            .hasElement()
+                                    )
+                                    .doOnDiscard(Member.class, (author) -> reply("I don't have permission to manage roles.").subscribe())
+                                    .zipWhen(author -> guild.createRole(role -> role
+                                            .setName("color-" + author.getId().asString())
+                                            .setColor(color)
+                                            .setPermissions(PermissionSet.none())
+                                    ).map(Role::getId))
+                                    .flatMap(tuple2 -> tuple2.getT1().addRole(tuple2.getT2()))
+                                    .then(reply("Changed your name color to " + String.join(" ", ARGUMENTS)))
+                                    .subscribe();
+                        } else {
+                            Role role = roles.get(0);
+                            String oldHex = String.format("#%06x", role.getColor().getRGB() & 0x00FFFFFF).toUpperCase();
+                            EVENT
+                                    .getMessage()
+                                    .getAuthorAsMember()
+                                    .zipWith(role.edit(spec -> spec.setColor(color)).map(Role::getId))
+                                    .flatMap(tuple2 -> tuple2.getT1().addRole(tuple2.getT2()))
+                                    .doOnError(e -> reply("I can't modify your name color. Check my highest role with permission to manage roles.").subscribe())
+                                    .then(reply("Changed your name color to " + String.join(" ", ARGUMENTS) + ". Your old name color's hex code was " + oldHex))
+                                    .subscribe();
+                        }
+                    }
+                });
+    }
 
-        if (roles.isEmpty()) {
-            try {
-                IRole newRole = new RoleBuilder(guild)
-                        .withName("color-" + author.getStringID())
-                        .withColor(color)
-                        .build();
-                author.addRole(newRole);
-            } catch (MissingPermissionsException e) {
-                String missingPermissions = e.getMissingPermissions().stream().map(Permissions::name).collect(Collectors.joining(", "));
-                EVENT.reply("I don't have permission to change your name color.\n" +
-                            "Missing permissions: " + missingPermissions);
-                return;
-            }
-
-            EVENT.reply("Changed your name color to " + requestedColor);
-            return;
-        } else {
-            IRole role = roles.get(0);
-            String oldHexCode = String.format("#%06x", role.getColor().getRGB() & 0x00FFFFFF).toUpperCase();
-
-            try {
-                role.changeColor(color);
-            } catch (MissingPermissionsException e) {
-                if (e.getMissingPermissions() == null) {
-                    EVENT.reply("I can't modify your name color.\n" +
-                                "My highest role with the permission to modify roles has a lower position in the role list than your color role.");
-                    return;
-                }
-                String missingPermissions = e.getMissingPermissions().stream().map(Permissions::name).collect(Collectors.joining(", "));
-                EVENT.reply("I don't have permission to change your name color.\n" +
-                            "Missing permissions: " + missingPermissions);
-                return;
-            }
-
-            EVENT.reply("Changed your name color to " + requestedColor + ". Your old name color's hex code was " + oldHexCode);
-            return;
-        }
+    @Override
+    public void registerConverters(ConverterRegistry converter) {
+        converter.registerCommandTo(java.awt.Color.class, (s, e) -> resolve(s));
     }
 
 }

@@ -5,7 +5,6 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,13 +14,11 @@ import java.util.Map;
  */
 public class SessionManager {
 
-    @Nonnull
     private final Map<String, Session> SESSIONS = new HashMap<>();
 
     public SessionManager() {}
 
-    @Nonnull
-    private static Session login(long id, @Nonnull String username, @Nonnull String password) {
+    private static Session login(long id, String username, String password) {
         try {
             Connection.Response loginResponse = Jsoup.connect(API.LOGIN_URL)
                     .method(Connection.Method.POST)
@@ -49,8 +46,7 @@ public class SessionManager {
         }
     }
 
-    @Nonnull
-    public Session getSession(long id, @Nonnull String username, @Nonnull String password) {
+    public Session getSession(long id, String username, String password) {
         if (SESSIONS.containsKey(username)) {
             return SESSIONS.get(username);
         } else {

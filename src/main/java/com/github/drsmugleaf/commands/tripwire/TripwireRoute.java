@@ -1,59 +1,54 @@
 package com.github.drsmugleaf.commands.tripwire;
 
-import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
+import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
+import com.github.drsmugleaf.commands.api.CommandInfo;
+import com.github.drsmugleaf.commands.api.tags.Tags;
 import com.github.drsmugleaf.tripwire.route.Route;
 import com.github.drsmugleaf.tripwire.route.SystemGraph;
-import sx.blah.discord.handle.obj.IUser;
+import discord4j.core.object.entity.User;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by DrSmugleaf on 10/06/2018
  */
+@CommandInfo(
+        tags = {Tags.DELETE_COMMAND_MESSAGE},
+        description = "Find the fastest route between two systems using Tripwire"
+)
 public class TripwireRoute extends Command {
 
-    @Nonnull
-    static final Map<IUser, Route> ROUTES = new HashMap<>();
+    static final Map<User, Route> ROUTES = new HashMap<>();
 
-    protected TripwireRoute(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        super(event, args);
-    }
+    @Argument(position = 1, examples = "DrSmugleaf Aulmais", maxWords = Integer.MAX_VALUE)
+    private String username;
 
-    @Nonnull
-    private static String invalidArgumentsResponse() {
-        return "Invalid arguments.\n" +
-               "**Formats:**\n" +
-               BanterBot4J.BOT_PREFIX + "tripwireRoute \"username\" \"password\" \"system1\" \"system2\"\n" +
-               "**Examples:**\n" +
-               BanterBot4J.BOT_PREFIX + "tripwireRoute \"DrSmugleaf Aulmais\" \"pAsSwOrD\" \"O-VWPB\" \"Jita\"";
-    }
+    @Argument(position = 2, examples = "hunter2", maxWords = Integer.MAX_VALUE)
+    private String password;
+
+    @Argument(position = 3, examples = "O-VWPB", maxWords = Integer.MAX_VALUE)
+    private String from;
+
+    @Argument(position = 4, examples = "Jita", maxWords = Integer.MAX_VALUE)
+    private String to;
 
     @Override
     public void run() {
-        if (ARGS.size() != 4) {
-            EVENT.reply(invalidArgumentsResponse());
-            return;
-        }
-
-        Long id = EVENT.getAuthor().getLongID();
-        String username = ARGS.get(0);
-        String password = ARGS.get(1);
-        String from = ARGS.get(2);
-        String to = ARGS.get(3);
-        Route route = SystemGraph.getRoute(id, username, password, from, to);
+        User author = EVENT
+                .getMessage()
+                .getAuthor()
+                .orElseThrow(() -> new IllegalStateException("Couldn't get the message's author. Message: " + EVENT.getMessage()));
+        Route route = SystemGraph.getRoute(author.getId().asLong(), username, password, from, to);
 
         if (route == null) {
-            EVENT.reply("No route found from system " + from  + " to system " + to + ".");
+            reply("No route found from system " + from  + " to system " + to + ".").subscribe();
             return;
         }
 
-        ROUTES.put(EVENT.getAuthor(), route);
-        EVENT.reply(route.info());
+        ROUTES.put(author, route);
+        reply(route.info()).subscribe();
     }
 
 }

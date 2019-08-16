@@ -1,17 +1,17 @@
 package com.github.drsmugleaf.music;
 
-import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.music.Music;
+import com.github.drsmugleaf.commands.music.MusicCommand;
 import com.github.drsmugleaf.music.youtube.API;
 import com.google.api.services.youtube.model.SearchResult;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IUser;
+import discord4j.core.object.entity.Member;
+import discord4j.core.object.entity.TextChannel;
+import discord4j.core.object.entity.VoiceChannel;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -20,23 +20,29 @@ import java.util.List;
 public class AudioResultHandler implements AudioLoadResultHandler {
 
     private final GuildMusicManager MUSIC_MANAGER;
-    private final IChannel CHANNEL;
-    private final IUser SUBMITTER;
+    private final TextChannel TEXT_CHANNEL;
+    private final Member SUBMITTER;
+    private final VoiceChannel VOICE_CHANNEL;
     private final String SEARCH_STRING;
 
-    public AudioResultHandler(@Nonnull IChannel channel, @Nonnull IUser submitter, @Nonnull String searchString) {
-        MUSIC_MANAGER = Music.getGuildMusicManager(channel.getGuild());
-        CHANNEL = channel;
+    public AudioResultHandler(TextChannel textChannel, Member submitter, VoiceChannel voiceChannel, String searchString) {
+        MUSIC_MANAGER = Music.getGuildMusicManager(textChannel.getGuildId());
+        TEXT_CHANNEL = textChannel;
+        VOICE_CHANNEL = voiceChannel;
         SUBMITTER = submitter;
         SEARCH_STRING = searchString;
     }
 
-    public IChannel getChannel() {
-        return CHANNEL;
+    public TextChannel getTextChannel() {
+        return TEXT_CHANNEL;
     }
 
-    public IUser getSubmitter() {
+    public Member getSubmitter() {
         return SUBMITTER;
+    }
+
+    public VoiceChannel getVoiceChannel() {
+        return VOICE_CHANNEL;
     }
 
     public String getSearchString() {
@@ -45,7 +51,7 @@ public class AudioResultHandler implements AudioLoadResultHandler {
 
     @Override
     public void trackLoaded(AudioTrack track) {
-        TrackUserData trackUserData = new TrackUserData(CHANNEL, SUBMITTER);
+        TrackUserData trackUserData = new TrackUserData(TEXT_CHANNEL, SUBMITTER, VOICE_CHANNEL);
         track.setUserData(trackUserData);
         MUSIC_MANAGER.getScheduler().queue(track);
     }
@@ -62,17 +68,17 @@ public class AudioResultHandler implements AudioLoadResultHandler {
         try {
             search = API.search(SEARCH_STRING);
         } catch (SearchErrorException e) {
-            Command.sendMessage(CHANNEL, "Error searching for `" + SEARCH_STRING + "`.");
+            MusicCommand.sendMessage(TEXT_CHANNEL, "Error searching for `" + SEARCH_STRING + "`.").subscribe();
             return;
         }
 
         if (search == null) {
-            Command.sendMessage(CHANNEL, "No results found for `" + SEARCH_STRING + "`.");
+            MusicCommand.sendMessage(TEXT_CHANNEL, "No results found for `" + SEARCH_STRING + "`.").subscribe();
             return;
         }
 
         String videoID = search.getId().getVideoId();
-        Music.PLAYER_MANAGER.loadItem(videoID, new AudioSearchResultHandler(CHANNEL, SUBMITTER, SEARCH_STRING));
+        Music.PLAYER_MANAGER.loadItem(videoID, new AudioSearchResultHandler(TEXT_CHANNEL, SUBMITTER, VOICE_CHANNEL, SEARCH_STRING));
     }
 
     @Override

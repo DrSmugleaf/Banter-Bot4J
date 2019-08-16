@@ -7,7 +7,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.jsoup.Jsoup;
 
-import javax.annotation.Nonnull;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -19,34 +18,24 @@ import java.util.Objects;
  */
 public abstract class API {
 
-    @Nonnull
     public static final String HOME_URL = "https://dennisreep.nl/dbd/";
 
-    @Nonnull
     public static final String KILLER_PERKS_URL = "https://dennisreep.nl/dbd/perks/killer/";
 
-    @Nonnull
     public static final String SURVIVOR_PERKS_URL = "https://dennisreep.nl/dbd/perks/survivor/";
 
-    @Nonnull
     public static final String KILLERS_URL = "https://dennisreep.nl/dbd/killers/";
 
-    @Nonnull
     public static final String KILLER_ROULETTE_URL = "https://dennisreep.nl/dbd/roulette/killer/";
 
-    @Nonnull
     public static final String SURVIVOR_ROULETTE_URL = "https://dennisreep.nl/dbd/roulette/survivor/";
 
-    @Nonnull
-    private static final String IMAGES_PATH = Objects.requireNonNull(API.class.getClassLoader().getResource("deadbydaylight")).getFile();
+    public static final String IMAGES_PATH = Objects.requireNonNull(API.class.getClassLoader().getResource("deadbydaylight")).getFile();
 
-    @Nonnull
-    private static final String PATH = "https://dennisreep.nl/dbd/api/v2/";
+    public static final String PATH = "https://dennisreep.nl/dbd/api/v2/";
 
-    @Nonnull
     protected static final Gson GSON = new GsonBuilder().create();
 
-    @Nonnull
     public static InputStream getDBDLogo() {
         String fileName = "/logo.png";
         try {
@@ -57,9 +46,8 @@ public abstract class API {
         }
     }
 
-    @Nonnull
-    protected static JsonObject getResponse(@Nonnull final String endpoint) {
-        final String URL = PATH + endpoint;
+    protected static JsonObject getResponse(String endpoint) {
+        String URL = PATH + endpoint;
 
         String body;
         try {

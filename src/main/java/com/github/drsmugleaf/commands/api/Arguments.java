@@ -1,12 +1,18 @@
 package com.github.drsmugleaf.commands.api;
 
+import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.commands.api.converter.ConversionException;
+import com.github.drsmugleaf.commands.api.converter.Converter;
+import com.github.drsmugleaf.commands.api.converter.Result;
+import com.github.drsmugleaf.commands.api.registry.CommandField;
 import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import discord4j.core.event.domain.message.MessageCreateEvent;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,15 +21,17 @@ import java.util.regex.Pattern;
  */
 public class Arguments extends ArrayList<String> {
 
-    @Nonnull
     private static final Pattern SPLIT_ON_SPACES_EXCEPT_WITHIN_QUOTES = Pattern.compile("\"([^\"]*)\"|'([^']*)'|[^\\s]+");
+    private final CommandSearchResult SEARCH;
+    private final CommandReceivedEvent EVENT;
 
-    Arguments(@Nonnull CommandSearchResult command, @Nonnull CommandReceivedEvent event) {
-        super(getArgs(command, event));
+    Arguments(CommandSearchResult search, CommandReceivedEvent event) {
+        super(getArgs(search, event));
+        SEARCH = search;
+        EVENT = event;
     }
 
-    @Nonnull
-    private static String getArg(@Nonnull Matcher matcher) {
+    private static String getArg(Matcher matcher) {
         for (int i = 1; i <= matcher.groupCount(); i++) {
             String match = matcher.group(i);
             if (match != null) {
@@ -34,17 +42,19 @@ public class Arguments extends ArrayList<String> {
         return matcher.group();
     }
 
-    @Nonnull
-    private static String extractArgs(@Nonnull CommandSearchResult command, @Nonnull MessageReceivedEvent event) {
-        String matchedCommandName = command.MATCHED_NAME;
-        String argumentsString = event.getMessage().getFormattedContent();
-        int index = argumentsString.toLowerCase().indexOf(matchedCommandName.toLowerCase());
-        argumentsString = argumentsString.substring(index + matchedCommandName.length()).trim();
-        return argumentsString;
+    private static String extractArgs(CommandSearchResult command, MessageCreateEvent event) {
+        String matchedCommandName = command.getMatchedName();
+        return event
+                .getMessage()
+                .getContent()
+                .flatMap(content -> {
+                    int index = content.toLowerCase().indexOf(matchedCommandName.toLowerCase());
+                    content = content.substring(index + matchedCommandName.length()).trim();
+                    return Optional.of(content);
+                }).get();
     }
 
-    @Nonnull
-    public static List<String> parseArgs(@Nonnull String argumentsString) {
+    public static List<String> parseArgs(String argumentsString) {
         List<String> args = new ArrayList<>();
         Matcher matcher = SPLIT_ON_SPACES_EXCEPT_WITHIN_QUOTES.matcher(argumentsString);
 
@@ -56,23 +66,19 @@ public class Arguments extends ArrayList<String> {
         return args;
     }
 
-    @Nonnull
-    public static List<String> getArgs(@Nonnull CommandSearchResult command, @Nonnull MessageReceivedEvent event) {
-        String argumentsString = extractArgs(command, event);
+    public static List<String> getArgs(CommandSearchResult search, MessageCreateEvent event) {
+        String argumentsString = extractArgs(search, event);
         return parseArgs(argumentsString);
     }
 
-    @Nonnull
     public String first() {
         return get(0);
     }
 
-    @Nonnull
     public String last() {
         return get(size() - 1);
     }
 
-    @Nonnull
     public String getFrom(int start, int end) {
         StringBuilder builder = new StringBuilder();
         for (int i = start; i < end; i++) {
@@ -82,7 +88,6 @@ public class Arguments extends ArrayList<String> {
         return builder.toString().trim();
     }
 
-    @Nonnull
     public String getFrom(int start) {
         return getFrom(start, size());
     }
@@ -130,19 +135,94 @@ public class Arguments extends ArrayList<String> {
         return true;
     }
 
-    public double getDouble(int index) {
+    public Double getDouble(int index) {
         String argument = get(index).replace(',', '.');
         return Double.parseDouble(argument);
     }
 
-    public int getInteger(int index) {
+    @Nullable
+    public Integer getInteger(int index) {
         String argument = get(index);
-        return Integer.parseInt(argument);
+        try {
+            return Integer.parseInt(argument);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     @Override
     public String toString() {
         return String.join(" ", this);
+    }
+
+    public boolean has(int index) {
+        return index < size();
+    }
+
+    @SuppressWarnings("unchecked")
+    public <E> Result<E> getArg(CommandField commandField, @Nullable E def) {
+        Field field = commandField.getField();
+        Argument argument = commandField.getArgument();
+        int position = argument.position() - 1;
+
+        if (!has(position)) {
+            if (def != null) {
+                return new Result<>(def, "");
+            }
+
+            if (!argument.optional()) {
+                return new Result<>(null, "Invalid arguments.\n" + SEARCH.getEntry().getFormatsExamples());
+            }
+
+            return new Result<>(null, "");
+        }
+
+        Class<?> fieldType = field.getType();
+        Converter<String, CommandReceivedEvent, ?> converter = BanterBot4J
+                .getHandler()
+                .getRegistry()
+                .getConverters()
+                .find(String.class, CommandReceivedEvent.class, fieldType);
+        if (converter == null) {
+            throw new IllegalStateException("No converter found for type" + fieldType);
+        }
+
+        Object arg;
+        String stringArg = getStringArg(commandField);
+        Result<?> result;
+        try {
+            result = converter.convert(commandField, stringArg, EVENT);
+        } catch (ConversionException e) {
+            return new Result<>(null, "Invalid " + field.getName() + ".\n" + SEARCH.getEntry().getFormatsExamples());
+        }
+
+        if (!result.isValid()) {
+            return new Result<>(null, result.getErrorResponse());
+        }
+
+        arg = result.getElement();
+
+        if (arg == null) {
+            return new Result<>(null, "Invalid arguments.\n" + SEARCH.getEntry().getFormatsExamples());
+        } else {
+            return new Result<>((E) arg, "");
+        }
+    }
+
+    public String getStringArg(CommandField field) {
+        int position = field.getArgument().position() - 1;
+        long words = field.getArgument().maxWords();
+
+        if (field.getField().getType() == String.class) {
+            List<String> strings = new ArrayList<>();
+            for (int i = position; i < position + words && i < size(); i++) {
+                strings.add(get(i));
+            }
+
+            return String.join(" ", strings);
+        }
+
+        return get(position);
     }
 
 }

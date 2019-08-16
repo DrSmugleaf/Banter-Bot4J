@@ -1,86 +1,108 @@
 package com.github.drsmugleaf.commands.api;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.commands.api.registry.CommandRegistry;
 import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
-import com.github.drsmugleaf.commands.api.registry.Registry;
-import com.github.drsmugleaf.commands.api.tags.Tag;
-import com.github.drsmugleaf.database.models.Member;
+import com.github.drsmugleaf.commands.api.tags.Tags;
+import com.github.drsmugleaf.database.model.DiscordMember;
 import com.github.drsmugleaf.reflection.Reflection;
-import sx.blah.discord.api.events.EventSubscriber;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.Permissions;
+import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.object.entity.Member;
+import discord4j.core.object.entity.User;
+import discord4j.core.object.util.Permission;
+import discord4j.core.object.util.PermissionSet;
+import discord4j.core.object.util.Snowflake;
+import reactor.core.publisher.Mono;
+import reactor.util.function.Tuples;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by DrSmugleaf on 10/01/2018.
  */
 public class Handler {
 
-    @Nonnull
-    private final Registry COMMAND_REGISTRY;
+    private final CommandRegistry COMMAND_REGISTRY;
 
-    public Handler(@Nonnull String commandsPackageName) {
+    public Handler(String commandsPackageName) {
         Reflection reflection = new Reflection(commandsPackageName);
         List<Class<Command>> commands = reflection.findSubtypesOf(Command.class);
-        COMMAND_REGISTRY = new Registry(commands);
+        COMMAND_REGISTRY = new CommandRegistry(commands);
     }
 
-    @EventSubscriber
-    public void handle(@Nonnull MessageReceivedEvent event) {
-        String message = event.getMessage().getContent();
-        if (message.isEmpty()) {
-            return;
-        }
+    public CommandRegistry getRegistry() {
+        return COMMAND_REGISTRY;
+    }
 
-        if (!message.startsWith(BanterBot4J.BOT_PREFIX)) {
-            return;
-        }
-
-        if (event.getGuild() != null) {
-            long userID = event.getAuthor().getLongID();
-            long guildID = event.getGuild().getLongID();
-            Member member = new Member(userID, guildID);
-            member.createIfNotExists();
-            member = member.get().get(0);
-            if (member.isBlacklisted) {
-                return;
-            }
-        }
-
-        CommandSearchResult command = COMMAND_REGISTRY.findCommand(event);
-        if (command == null) {
-            return;
-        }
-
+    public Mono<Void> handle(MessageCreateEvent event) {
+        Optional<Snowflake> guildId = event.getGuildId();
+        Optional<User> author = event.getMessage().getAuthor();
         CommandReceivedEvent commandEvent = new CommandReceivedEvent(event);
-        CommandInfo annotation = command.COMMAND.getDeclaredAnnotation(CommandInfo.class);
-        if (annotation != null) {
-            if (commandEvent.getGuild() != null) {
-                if (commandEvent.getGuild() != null) {
-                    List<Permissions> annotationPermissions = Arrays.asList(annotation.permissions());
-                    EnumSet<Permissions> authorPermissions = commandEvent.getAuthor().getPermissionsForGuild(commandEvent.getGuild());
 
-                    if (!annotationPermissions.isEmpty() && Collections.disjoint(authorPermissions, Arrays.asList(annotation.permissions()))) {
-                        commandEvent.reply("You don't have permission to use that command.");
-                        return;
+        return Mono
+                .just(commandEvent)
+                .map(CommandReceivedEvent::getMessage)
+                .flatMap(m -> Mono.justOrEmpty(m.getContent()))
+                .filter(content -> !content.isEmpty())
+                .filter(content -> content.startsWith(BanterBot4J.BOT_PREFIX))
+                .filter(content -> author.isPresent())
+                .filter(content -> !author.map(User::isBot).get())
+                .map(content -> Tuples.of(content, author.get().getId()))
+                .filter(tuple -> {
+                    if (!guildId.isPresent()) {
+                        return true;
                     }
-                }
 
-                for (Tag tags : annotation.tags()) {
-                    if (!tags.isValid(commandEvent)) {
-                        commandEvent.reply(tags.message());
-                        return;
+                    Long authorId = tuple.getT2().asLong();
+                    DiscordMember member = new DiscordMember(authorId, guildId.get().asLong(), null);
+                    member.createIfNotExists();
+                    member = member.get().get(0);
+
+                    return !member.isBlacklisted;
+                })
+                .flatMap(tuple -> {
+                    CommandSearchResult search = COMMAND_REGISTRY.findCommand(tuple.getT1());
+                    if (search == null) {
+                        return Mono.empty();
                     }
-                }
-            }
-        }
 
-        Command.run(command, commandEvent);
+                    if (!guildId.isPresent()) {
+                        return Mono.just(search);
+                    }
+
+                    return event
+                            .getGuild()
+                            .flatMap(guild -> guild.getMemberById(tuple.getT2()))
+                            .flatMap(Member::getBasePermissions)
+                            .zipWith(event.getMessage().getChannel())
+                            .flatMap(tuple2 -> {
+                                Permission[] permissions = search.getEntry().getCommandInfo().permissions();
+                                List<Permission> commandPermissions = Arrays.asList(permissions);
+                                PermissionSet authorPermissions = tuple2.getT1();
+
+                                if (!commandPermissions.isEmpty() && !authorPermissions.containsAll(commandPermissions)) {
+                                    commandEvent.reply("You don't have permission to use that command.").subscribe();
+                                    return Mono.empty();
+                                }
+
+                                return Mono.just(search);
+                            });
+                })
+                .doOnNext(result -> {
+                    Tags[] tags = result.getEntry().getCommandInfo().tags();
+
+                    for (Tags tag : tags) {
+                        if (!tag.isValid(event)) {
+                            commandEvent.reply(tag.message()).subscribe();
+                            return;
+                        }
+                    }
+
+                    Command.run(result, commandEvent);
+                })
+                .then();
     }
 
 }

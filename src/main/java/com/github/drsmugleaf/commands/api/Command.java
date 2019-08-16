@@ -1,158 +1,120 @@
 package com.github.drsmugleaf.commands.api;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.commands.api.converter.Result;
+import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
+import com.github.drsmugleaf.commands.api.registry.CommandField;
 import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
+import com.github.drsmugleaf.commands.api.registry.Entry;
 import com.github.drsmugleaf.commands.api.tags.Tag;
+import com.github.drsmugleaf.commands.api.tags.Tags;
+import discord4j.core.object.entity.Member;
+import discord4j.core.object.entity.Message;
+import discord4j.core.object.entity.User;
+import discord4j.core.spec.MessageCreateSpec;
+import org.jetbrains.annotations.Contract;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sx.blah.discord.api.internal.json.objects.EmbedObject;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.util.RateLimitException;
-import sx.blah.discord.util.RequestBuffer;
+import reactor.core.publisher.Mono;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Field;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Created by DrSmugleaf on 09/06/2018
  */
 public abstract class Command implements ICommand {
 
-    @Nonnull
-    protected static final Logger LOGGER = LoggerFactory.getLogger(Handler.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(Command.class);
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
+    public CommandReceivedEvent EVENT;
+    public Arguments ARGUMENTS;
+    public User SELF_USER;
+    @Nullable
+    public Member SELF_MEMBER;
 
-    @Nonnull
-    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
+    protected Command() {}
 
-    @Nonnull
-    public final CommandReceivedEvent EVENT;
-
-    @Nonnull
-    public final Arguments ARGS;
-
-    protected Command(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        EVENT = event;
-        ARGS = args;
-    }
-
-    protected static void run(@Nonnull CommandSearchResult commandSearch, @Nonnull CommandReceivedEvent event) {
-        Class<? extends Command> commandClass = commandSearch.COMMAND;
-        CommandInfo annotation = commandClass.getDeclaredAnnotation(CommandInfo.class);
-
-        if (annotation != null) {
-            for (Tag tags : annotation.tags()) {
-                tags.execute(event);
-            }
+    protected static void run(CommandSearchResult search, CommandReceivedEvent event) {
+        Entry entry = search.getEntry();
+        Tags[] tags = entry.getCommandInfo().tags();
+        for (Tag tag : tags) {
+            tag.execute(event);
         }
 
-        ICommand command;
-        try {
-            Constructor<? extends Command> constructor = commandClass.getDeclaredConstructor(CommandReceivedEvent.class, Arguments.class);
-            constructor.setAccessible(true);
-            Arguments arguments = new Arguments(commandSearch, event);
-            command = constructor.newInstance(event, arguments);
-        } catch (InstantiationException | IllegalAccessException e) {
-            LOGGER.error("Error running command " + commandClass.getName(), e);
-            return;
-        } catch (NoSuchMethodException e) {
-            LOGGER.error("No constructor found for command " + commandClass.getName(), e);
-            return;
-        } catch (InvocationTargetException e) {
-            LOGGER.error("Error creating command instance for command " + commandClass.getName(), e);
-            return;
-        }
+        Command command = entry.newInstance();
+        Arguments arguments = new Arguments(search, event);
+        Entry.setEvent(command, event);
+        Entry.setArgs(command, arguments);
+        Entry.setSelfUser(command, event);
+        Entry.setSelfMember(command, event);
 
-        command.run();
+        if (command.setArguments(entry)) {
+            command.run();
+        }
     }
 
-    public static boolean isOwner(@Nonnull IUser user) {
-        return BanterBot4J.OWNERS.contains(user.getLongID());
-    }
-
-    @Nonnull
-    public static List<String> getAliases(@Nonnull Class<? extends Command> command) {
-        CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
-
-        List<String> commandAliases = new ArrayList<>();
-        if (annotation == null || annotation.aliases().length == 0) {
-            return commandAliases;
+    @Contract("null -> false")
+    public static boolean isOwner(@Nullable User user) {
+        if (user == null) {
+            return false;
         }
 
-        for (String alias : annotation.aliases()) {
-            commandAliases.add(alias.toLowerCase());
-        }
-
-        return commandAliases;
+        return BanterBot4J.OWNERS.contains(user.getId().asLong());
     }
 
-    @Nonnull
     public static String getDate() {
         return DATE_FORMAT.format(Instant.now());
     }
 
-    @Nonnull
-    public static String getName(@Nonnull Class<? extends Command> command) {
-        String commandName;
-        CommandInfo annotation = command.getDeclaredAnnotation(CommandInfo.class);
-
-        if (annotation == null || annotation.name().isEmpty()) {
-            commandName = command.getSimpleName();
-        } else {
-            commandName = annotation.name();
-        }
-
-        return commandName.toLowerCase();
+    public CommandReceivedEvent getEvent() {
+        return EVENT;
     }
 
-    @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nullable String content, @Nullable EmbedObject embed) {
-        if (content == null) {
-            content = "";
-        }
+    public Arguments getArguments() {
+        return ARGUMENTS;
+    }
 
-        String finalContent = content;
-        return RequestBuffer.request(() -> {
+    private boolean setArguments(Entry entry) {
+        for (CommandField commandField : entry.getCommandFields()) {
+            Field field = commandField.getField();
+            field.setAccessible(true);
+
+            Object def;
             try {
-                return channel.sendMessage(finalContent, embed);
-            } catch (RateLimitException e) {
-                LOGGER.error("Message could not be sent", e);
-                throw e;
+                def = field.get(this);
+            } catch (IllegalAccessException e) {
+                throw new IllegalStateException("Error getting command argument " + field, e);
             }
-        }).get();
+
+            Result result = ARGUMENTS.getArg(commandField, def);
+            if (!result.isValid()) {
+                reply(result.getErrorResponse()).subscribe();
+                return false;
+            }
+
+            try {
+                field.set(this, result.getElement());
+            } catch (IllegalAccessException e) {
+                throw new IllegalStateException("Error setting command argument " + field, e);
+            }
+        }
+
+        return true;
     }
 
-    @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull String content) {
-        return sendMessage(channel, content, null);
+    public Mono<Message> reply(Consumer<MessageCreateSpec> spec) {
+        return EVENT.reply(spec);
     }
 
-    @Nonnull
-    public static IMessage sendMessage(@Nonnull IChannel channel, @Nonnull EmbedObject embed) {
-        return sendMessage(channel, null, embed);
+    public Mono<Message> reply(String content) {
+        return EVENT.reply(content);
     }
 
-    @Nonnull
-    public IMessage sendMessage(@Nonnull String content) {
-        return sendMessage(EVENT.getChannel(), content);
-    }
-
-    @Nonnull
-    public IMessage sendMessage(@Nonnull EmbedObject embed) {
-        return sendMessage(EVENT.getChannel(), embed);
-    }
-
-    @Nonnull
-    public IMessage sendMessage(@Nonnull String content, @Nonnull EmbedObject embed) {
-        return sendMessage(EVENT.getChannel(), content, embed);
-    }
+    public void registerConverters(ConverterRegistry converter) {}
 
 }

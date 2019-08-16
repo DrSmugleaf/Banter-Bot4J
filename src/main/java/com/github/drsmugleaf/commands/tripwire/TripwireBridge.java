@@ -1,89 +1,108 @@
 package com.github.drsmugleaf.commands.tripwire;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
+import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
+import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.eve.Systems;
 import com.github.drsmugleaf.tripwire.route.Route;
 import com.github.drsmugleaf.tripwire.route.StarSystem;
-import sx.blah.discord.handle.obj.IUser;
+import discord4j.core.object.entity.User;
 
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by DrSmugleaf on 10/06/2018
  */
+@CommandInfo(
+        description = "Join two Tripwire systems together with a jump bridge for the pathfinding algorithm"
+)
 public class TripwireBridge extends Command {
 
-    protected TripwireBridge(@Nonnull CommandReceivedEvent event, @Nonnull Arguments args) {
-        super(event, args);
-    }
-
-    @Nonnull
-    private static String invalidArgumentsResponse() {
-        return "Invalid arguments.\n" +
-               "**Formats:**\n" +
-               BanterBot4J.BOT_PREFIX + "tripwireBridge system1 system2\n" +
-               "**Examples:**\n" +
-               BanterBot4J.BOT_PREFIX + "tripwireRoute O-VWPB Jita";
-    }
+    @Argument(position = 1, examples = "O-VWPB Jita G-ME2K", maxWords = Integer.MAX_VALUE)
+    private String systems;
 
     @Override
     public void run() {
-        IUser author = EVENT.getAuthor();
+        User author = EVENT
+                .getMessage()
+                .getAuthor()
+                .orElseThrow(() -> new IllegalStateException("Couldn't get the message's author. Message: " + EVENT.getMessage()));
+
         if (!TripwireRoute.ROUTES.containsKey(author)) {
-            EVENT.reply("Create a route first with " + BanterBot4J.BOT_PREFIX + "tripwireRoute.");
+            reply("Create a route first with " + BanterBot4J.BOT_PREFIX + "tripwireRoute.").subscribe();
             return;
         }
 
-        if (ARGS.size() != 2) {
-            EVENT.reply(invalidArgumentsResponse());
-            return;
-        }
-
-        List<String> invalidSystems = new ArrayList<>();
-        for (String system : ARGS) {
-            if (!Systems.NAMES.containsValue(system)) {
-                invalidSystems.add(system);
-            }
-        }
-
-        if (!invalidSystems.isEmpty()) {
-            String response = "Invalid system names: " + String.join(", ", invalidSystems + ".");
-            EVENT.reply(response);
-            return;
-        }
-
+        Set<String> invalidSystems = new HashSet<>();
+        Set<String> systemsNotInRoute = new HashSet<>();
+        String[] systemNames = systems.split(" ");
         Route route = TripwireRoute.ROUTES.get(author);
-        StarSystem firstSystem = null;
-        StarSystem secondSystem = null;
-        for (StarSystem node : route.GRAPH.getNodes()) {
-            if (node.NAME.equalsIgnoreCase(ARGS.get(0))) {
-                firstSystem = node;
+        for (String systemName1 : systemNames) {
+            if (!Systems.NAMES.containsValue(systemName1)) {
+                invalidSystems.add(systemName1);
+                continue;
             }
 
-            if (node.NAME.equalsIgnoreCase(ARGS.get(1))) {
-                secondSystem = node;
+            StarSystem system1 = null;
+            for (StarSystem node : route.GRAPH.NODES) {
+                if (node.NAME.equalsIgnoreCase(systemName1)) {
+                    system1 = node;
+                    break;
+                }
             }
+
+            if (system1 == null) {
+                systemsNotInRoute.add(systemName1);
+                continue;
+            }
+
+            for (String systemName2 : systemNames) {
+                if (!Systems.NAMES.containsValue(systemName2)) {
+                    invalidSystems.add(systemName2);
+                    continue;
+                }
+
+                StarSystem system2 = null;
+                for (StarSystem node : route.GRAPH.NODES) {
+                    if (node.NAME.equalsIgnoreCase(systemName2)) {
+                        system2 = node;
+                        break;
+                    }
+                }
+
+                if (system2 == null) {
+                    systemsNotInRoute.add(systemName2);
+                    continue;
+                }
+
+                system1.addDestination(system2, 0);
+            }
+
+            route.recalculate();
         }
 
-        if (firstSystem == null) {
-            EVENT.reply(ARGS.get(0) + " isn't in the route.");
-            return;
+        StringBuilder response = new StringBuilder();
+        if (!invalidSystems.isEmpty()) {
+            response
+                    .append("Invalid system names: ")
+                    .append(String.join(", ", invalidSystems))
+                    .append(".");
         }
 
-        if (secondSystem == null) {
-            EVENT.reply(ARGS.get(1) + " isn't in the route.");
-            return;
+        if (!systemsNotInRoute.isEmpty()) {
+            response
+                    .append("Systems not in route: ")
+                    .append(String.join(", ", systemsNotInRoute))
+                    .append(".");
         }
 
-        firstSystem.addDestination(secondSystem, 0);
-        route.recalculate();
+        if (response.length() == 0) {
+            response.append(route.info());
+        }
 
-        EVENT.reply(route.info());
+        reply(response.toString()).subscribe();
     }
 
 }
