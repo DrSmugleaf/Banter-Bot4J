@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.database.models;
+package com.github.drsmugleaf.database.model;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;

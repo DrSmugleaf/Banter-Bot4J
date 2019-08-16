@@ -3,7 +3,7 @@ package com.github.drsmugleaf.commands.eve;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.database.models.EveTimerModel;
+import com.github.drsmugleaf.database.model.EveTimerModel;
 
 import java.util.List;
 

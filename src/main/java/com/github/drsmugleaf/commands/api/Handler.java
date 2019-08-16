@@ -1,10 +1,10 @@
 package com.github.drsmugleaf.commands.api;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
 import com.github.drsmugleaf.commands.api.registry.CommandRegistry;
+import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
 import com.github.drsmugleaf.commands.api.tags.Tags;
-import com.github.drsmugleaf.database.models.DiscordMember;
+import com.github.drsmugleaf.database.model.DiscordMember;
 import com.github.drsmugleaf.reflection.Reflection;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.Member;
@@ -36,14 +36,15 @@ public class Handler {
         return COMMAND_REGISTRY;
     }
 
-    public void handle(MessageCreateEvent event) {
+    public Mono<Void> handle(MessageCreateEvent event) {
         Optional<Snowflake> guildId = event.getGuildId();
         Optional<User> author = event.getMessage().getAuthor();
         CommandReceivedEvent commandEvent = new CommandReceivedEvent(event);
 
-        commandEvent
-                .getMessage()
-                .getContent()
+        return Mono
+                .just(commandEvent)
+                .map(CommandReceivedEvent::getMessage)
+                .flatMap(m -> Mono.justOrEmpty(m.getContent()))
                 .filter(content -> !content.isEmpty())
                 .filter(content -> content.startsWith(BanterBot4J.BOT_PREFIX))
                 .filter(content -> author.isPresent())
@@ -64,11 +65,11 @@ public class Handler {
                 .flatMap(tuple -> {
                     CommandSearchResult search = COMMAND_REGISTRY.findCommand(tuple.getT1());
                     if (search == null) {
-                        return Optional.empty();
+                        return Mono.empty();
                     }
 
                     if (!guildId.isPresent()) {
-                        return Optional.of(search);
+                        return Mono.just(search);
                     }
 
                     return event
@@ -87,9 +88,9 @@ public class Handler {
                                 }
 
                                 return Mono.just(search);
-                            }).blockOptional();
+                            });
                 })
-                .ifPresent(result -> {
+                .doOnNext(result -> {
                     Tags[] tags = result.getEntry().getCommandInfo().tags();
 
                     for (Tags tag : tags) {
@@ -100,7 +101,8 @@ public class Handler {
                     }
 
                     Command.run(result, commandEvent);
-                });
+                })
+                .then();
     }
 
 }

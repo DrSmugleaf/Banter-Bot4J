@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.commands.images;
+package com.github.drsmugleaf.commands.image;
 
 /**
  * Created by DrSmugleaf on 10/11/2018

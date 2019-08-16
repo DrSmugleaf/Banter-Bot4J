@@ -1,9 +1,9 @@
-package com.github.drsmugleaf.commands.quotes;
+package com.github.drsmugleaf.commands.quote;
 
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.database.models.Quote;
+import com.github.drsmugleaf.database.model.Quote;
 import discord4j.core.object.entity.User;
 
 import java.util.List;

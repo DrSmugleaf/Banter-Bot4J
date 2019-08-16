@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.commands.images;
+package com.github.drsmugleaf.commands.image;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Argument;

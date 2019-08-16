@@ -4,7 +4,7 @@ import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.tags.Tags;
-import com.github.drsmugleaf.database.models.BridgedChannel;
+import com.github.drsmugleaf.database.model.BridgedChannel;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.GuildChannel;
 import discord4j.core.object.entity.TextChannel;

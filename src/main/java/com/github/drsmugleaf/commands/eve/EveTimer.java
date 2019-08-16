@@ -5,7 +5,7 @@ import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
-import com.github.drsmugleaf.database.models.EveTimerModel;
+import com.github.drsmugleaf.database.model.EveTimerModel;
 import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.util.Snowflake;

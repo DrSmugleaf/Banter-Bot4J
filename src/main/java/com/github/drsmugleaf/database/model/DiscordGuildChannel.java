@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.database.models;
+package com.github.drsmugleaf.database.model;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.EventListener;

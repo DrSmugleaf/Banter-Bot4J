@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.commands.images;
+package com.github.drsmugleaf.commands.image;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

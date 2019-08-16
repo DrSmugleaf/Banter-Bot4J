@@ -5,7 +5,7 @@ import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
 import com.github.drsmugleaf.commands.api.tags.Tags;
-import com.github.drsmugleaf.database.models.BridgedChannel;
+import com.github.drsmugleaf.database.model.BridgedChannel;
 import com.github.drsmugleaf.translator.Languages;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.TextChannel;

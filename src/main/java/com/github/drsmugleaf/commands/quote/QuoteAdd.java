@@ -1,10 +1,10 @@
-package com.github.drsmugleaf.commands.quotes;
+package com.github.drsmugleaf.commands.quote;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.database.models.Quote;
+import com.github.drsmugleaf.database.model.Quote;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.util.Snowflake;

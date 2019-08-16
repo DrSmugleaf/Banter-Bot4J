@@ -2,7 +2,7 @@ package com.github.drsmugleaf.commands.eve;
 
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.database.models.EveDowntimeUser;
+import com.github.drsmugleaf.database.model.EveDowntimeUser;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.util.Snowflake;
 

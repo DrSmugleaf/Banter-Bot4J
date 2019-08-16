@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.commands.translate;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.database.models.BridgedChannel;
+import com.github.drsmugleaf.database.model.BridgedChannel;
 import com.github.drsmugleaf.translator.API;
 import com.github.drsmugleaf.translator.Languages;
 import discord4j.core.event.domain.message.MessageCreateEvent;
