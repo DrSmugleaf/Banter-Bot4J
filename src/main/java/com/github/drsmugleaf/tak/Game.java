@@ -8,7 +8,6 @@ import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -20,27 +19,20 @@ import java.util.function.Function;
  */
 public class Game {
 
-    @NotNull
     private final Board BOARD;
-
-    @NotNull
     private final Map<Color, Player> PLAYERS = new HashMap<>();
-
-    @NotNull
     private Player nextPlayer;
-
     @Nullable
     private Player winner = null;
-
     private boolean active = true;
 
     public Game(
-            @NotNull Board board,
-            @NotNull Preset preset,
-            @NotNull String playerName1,
-            @NotNull String playerName2,
-            @NotNull Function<PlayerInformation, Player> playerMaker1,
-            @NotNull Function<PlayerInformation, Player> playerMaker2
+            Board board,
+            Preset preset,
+            String playerName1,
+            String playerName2,
+            Function<PlayerInformation, Player> playerMaker1,
+            Function<PlayerInformation, Player> playerMaker2
     ) {
         BOARD = board;
         Player player1 = playerMaker1.apply(new PlayerInformation<>(playerName1, this, Color.BLACK, preset));
@@ -51,36 +43,32 @@ public class Game {
     }
 
     public Game(
-            @NotNull Preset preset,
-            @NotNull String playerName1,
-            @NotNull String playerName2,
-            @NotNull Function<PlayerInformation, Player> playerMaker1,
-            @NotNull Function<PlayerInformation, Player> playerMaker2
+            Preset preset,
+            String playerName1,
+            String playerName2,
+            Function<PlayerInformation, Player> playerMaker1,
+            Function<PlayerInformation, Player> playerMaker2
     ) {
         this(new Board(preset), preset, playerName1, playerName2, playerMaker1, playerMaker2);
     }
 
-    @NotNull
     public Board getBoard() {
         return BOARD;
     }
 
-    @NotNull
-    public Player getPlayer(@NotNull Color color) {
+    public Player getPlayer(Color color) {
         return PLAYERS.get(color);
     }
 
-    @NotNull
     public Map<Color, Player> getPlayers() {
         return new HashMap<>(PLAYERS);
     }
 
-    public boolean canMove(@NotNull Player player, @NotNull Square origin, @NotNull Square destination, int pieces) {
+    public boolean canMove(Player player, Square origin, Square destination, int pieces) {
         return isActive() && nextPlayer == player && BOARD.canMove(origin, destination, pieces);
     }
 
-    @NotNull
-    public Square move(Player player, @NotNull Square origin, @NotNull Square destination, int pieces) {
+    public Square move(Player player, Square origin, Square destination, int pieces) {
         if (!canMove(player, origin, destination, pieces)) {
             throw new IllegalGameCall(this, "Illegal move call, origin " + origin + ", destination " + destination + " and pieces " + pieces);
         }
@@ -90,12 +78,11 @@ public class Game {
         return square;
     }
 
-    public boolean canPlace(@NotNull Player player, int column, int row) {
+    public boolean canPlace(Player player, int column, int row) {
         return isActive() && nextPlayer == player && BOARD.canPlace(column, row);
     }
 
-    @NotNull
-    public Square place(@NotNull Player player, @NotNull Type type, int column, int row) {
+    public Square place(Player player, Type type, int column, int row) {
         if (!canPlace(player, column, row)) {
             throw new IllegalGameCall(this, "Illegal place call, piece type " + type + " at row " + row + " and column " + column);
         }
@@ -142,13 +129,11 @@ public class Game {
         }
     }
 
-    @NotNull
     public Player getNextPlayer() {
         return nextPlayer;
     }
 
-    @NotNull
-    public Player getOtherPlayer(@NotNull Player player) {
+    public Player getOtherPlayer(Player player) {
         return PLAYERS.get(player.getColor().getOpposite());
     }
 
@@ -169,7 +154,7 @@ public class Game {
         this.winner = winner;
     }
 
-    public void surrender(@NotNull Player loser) {
+    public void surrender(Player loser) {
         if (!isActive()) {
             throw new IllegalGameCall(this, "Game already ended");
         }
@@ -204,17 +189,17 @@ public class Game {
         onTurnEnd(getOtherPlayer(nextPlayer));
     }
 
-    protected void onPieceMove(@NotNull Player player, @NotNull Square origin, @NotNull Square destination, int pieces) {
+    protected void onPieceMove(Player player, Square origin, Square destination, int pieces) {
         player.onOwnPieceMove(origin, destination, pieces);
         getOtherPlayer(player).onEnemyPieceMove(player, origin, destination, pieces);
     }
 
-    protected void onPiecePlace(@NotNull Player player, @NotNull Type type, @NotNull Square square) {
+    protected void onPiecePlace(Player player, Type type, Square square) {
         player.onOwnPiecePlace(type, square);
         getOtherPlayer(player).onEnemyPiecePlace(player, type, square);
     }
 
-    protected void onTurnEnd(@NotNull Player player) {
+    protected void onTurnEnd(Player player) {
         player.onOwnTurnEnd();
         getOtherPlayer(player).onEnemyTurnEnd(player);
     }

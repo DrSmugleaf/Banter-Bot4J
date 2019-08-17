@@ -2,8 +2,8 @@ package com.github.drsmugleaf.tak.gui;
 
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.board.Square;
+import com.github.drsmugleaf.tak.Images;
 import com.github.drsmugleaf.tak.pieces.Piece;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,16 +16,11 @@ import java.util.List;
 public class SquareButton extends Square {
 
     private static final int SINGLE_SQUARE_SIZE = 800;
-
-    @NotNull
     private static final Insets margin = new Insets(0, 0, 0, 0);
-
     private final int SIZE;
-
-    @NotNull
     private final JButton BUTTON;
 
-    protected SquareButton(int column, int row, @NotNull Preset preset) {
+    protected SquareButton(int column, int row, Preset preset) {
         super(column, row);
         SIZE = SINGLE_SQUARE_SIZE / preset.getSize();
 
@@ -37,21 +32,12 @@ public class SquareButton extends Square {
         BUTTON = button;
     }
 
-    @NotNull
     protected JButton getButton() {
         return BUTTON;
     }
 
-    @NotNull
     private Image getDefaultImage() {
-        String file;
-        if ((getColumn() + getRow()) % 2 == 0) {
-            file = "squares/white square.jpg";
-        } else {
-            file = "squares/orange square.jpg";
-        }
-
-        Image image = Images.get(file).getScaledInstance(SIZE, SIZE, Image.SCALE_SMOOTH);
+        Image image = Images.getSquare(getColumn(), getRow()).getScaledInstance(SIZE, SIZE, Image.SCALE_SMOOTH);
         BufferedImage background = new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics = background.createGraphics();
         graphics.drawImage(image, 0, 0, null);

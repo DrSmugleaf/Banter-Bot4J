@@ -1,11 +1,11 @@
 package com.github.drsmugleaf.tak.gui;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tak.board.Coordinates;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
@@ -14,13 +14,11 @@ import javax.swing.*;
  */
 public class GuiPlayer extends Player {
 
-    @NotNull
     private final GuiGame GAME;
-
-    @NotNull
+    @Nullable
     private Coordinates NEXT_MOVE;
 
-    public GuiPlayer(@NotNull String name, @NotNull GuiGame game, @NotNull Color color, @NotNull Preset preset) {
+    public GuiPlayer(String name, GuiGame game, Color color, Preset preset) {
         super(name, game, color, preset);
 
         GAME = game;
@@ -34,8 +32,7 @@ public class GuiPlayer extends Player {
         }
     }
 
-    @NotNull
-    public static Player from(@NotNull PlayerInformation<GuiGame> information) {
+    public static Player from(PlayerInformation<GuiGame> information) {
         return new GuiPlayer(information.NAME, information.GAME, information.COLOR, information.PRESET);
     }
 
@@ -51,10 +48,15 @@ public class GuiPlayer extends Player {
             return;
         }
 
+        if (NEXT_MOVE == null) {
+            surrender();
+            return;
+        }
+
         NEXT_MOVE.place(this);
     }
 
-    protected void setNextMove(@NotNull Coordinates nextMove) {
+    protected void setNextMove(Coordinates nextMove) {
         NEXT_MOVE = nextMove;
 
         synchronized (this) {

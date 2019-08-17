@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tak.pieces;
 
-import org.jetbrains.annotations.NotNull;
+import com.github.drsmugleaf.tak.Images;
 
 import java.awt.*;
 
@@ -9,32 +9,26 @@ import java.awt.*;
  */
 public class Piece {
 
-    @NotNull
     private final Color COLOR;
-
-    @NotNull
     private Type TYPE;
 
-    public Piece(@NotNull Color color, @NotNull Type type) {
+    public Piece(Color color, Type type) {
         COLOR = color;
         TYPE = type;
     }
 
-    private Piece(@NotNull Piece piece) {
+    private Piece(Piece piece) {
         this(piece.COLOR, piece.TYPE);
     }
 
-    @NotNull
     public Piece copy() {
         return new Piece(this);
     }
 
-    @NotNull
     public Color getColor() {
         return COLOR;
     }
 
-    @NotNull
     public Type getType() {
         return TYPE;
     }
@@ -52,9 +46,8 @@ public class Piece {
         return COLOR.toString();
     }
 
-    @NotNull
     public Image toImage(int height, int width) {
-        return Images.getImage(this, height, width);
+        return Images.getPiece(this, height, width);
     }
 
 }

@@ -3,7 +3,6 @@ package com.github.drsmugleaf.tak.board;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -15,9 +14,7 @@ import java.util.List;
  */
 public class Square {
 
-    @NotNull
     private final List<Piece> PIECES = new ArrayList<>();
-
     private final int COLUMN;
     private final int ROW;
 
@@ -26,7 +23,7 @@ public class Square {
         ROW = row;
     }
 
-    private Square(@NotNull Square square) {
+    private Square(Square square) {
         this(square.getColumn(), square.getRow());
 
         for (Piece piece : square.getPieces()) {
@@ -34,14 +31,12 @@ public class Square {
         }
     }
 
-    @NotNull
-    public static Square createCustom(int column, int row, @NotNull Piece... pieces) {
+    public static Square createCustom(int column, int row, Piece... pieces) {
         Square square = new Square(column, row);
         Collections.addAll(square.PIECES, pieces);
         return square;
     }
 
-    @NotNull
     public Square copy() {
         return new Square(this);
     }
@@ -54,7 +49,6 @@ public class Square {
         return ROW;
     }
 
-    @NotNull
     public List<Piece> getPieces() {
         return new ArrayList<>(PIECES);
     }
@@ -86,7 +80,7 @@ public class Square {
         return PIECES.get(PIECES.size() - 1);
     }
 
-    public boolean canMove(@NotNull Square other, int pieces) {
+    public boolean canMove(Square other, int pieces) {
         if (pieces <= 0 || pieces > PIECES.size()) {
             return false;
         }
@@ -108,8 +102,7 @@ public class Square {
         return pieces == 1 && thisTopPiece.getType().canMoveTo(otherTopPiece);
     }
 
-    @NotNull
-    public Square move(@NotNull Square destination, int pieces, boolean silent) {
+    public Square move(Square destination, int pieces, boolean silent) {
         for (int i = pieces - 1; i >= 0; i--) {
             Piece piece = PIECES.remove(i);
             destination.PIECES.add(piece);
@@ -127,8 +120,7 @@ public class Square {
         return getTopPiece() == null;
     }
 
-    @NotNull
-    public Square place(@NotNull Piece piece, boolean silent) {
+    public Square place(Piece piece, boolean silent) {
         piece.getType().place(this, PIECES, piece);
 
         if (!silent) {
@@ -138,8 +130,7 @@ public class Square {
         return this;
     }
 
-    @NotNull
-    public Square remove(@NotNull Piece piece, boolean silent) {
+    public Square remove(Piece piece, boolean silent) {
         PIECES.remove(piece);
 
         if (!silent) {
@@ -166,7 +157,6 @@ public class Square {
         return connectsTo(square.getTopPiece());
     }
 
-    @NotNull
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

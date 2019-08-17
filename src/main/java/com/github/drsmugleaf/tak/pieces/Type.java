@@ -1,10 +1,8 @@
 package com.github.drsmugleaf.tak.pieces;
 
 import com.github.drsmugleaf.tak.board.Square;
-import org.jetbrains.annotations.NotNull;
+import com.google.common.collect.ImmutableList;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,12 +12,12 @@ public enum Type {
 
     CAPSTONE("capstone.png", true, true, true) {
         @Override
-        public boolean canMoveTo(@NotNull Piece topPiece) {
+        public boolean canMoveTo(Piece topPiece) {
             return topPiece.getType() != CAPSTONE;
         }
 
         @Override
-        public void place(@NotNull Square square, List<Piece> pieces, @NotNull Piece piece) {
+        public void place(Square square, List<Piece> pieces, Piece piece) {
             Piece topPiece = square.getTopPiece();
             if (topPiece != null && topPiece.getType() == STANDING_STONE) {
                 topPiece.flatten();
@@ -31,29 +29,24 @@ public enum Type {
     FLAT_STONE("flat.png", false, false, true),
     STANDING_STONE("wall.png", true, false, false);
 
-    @NotNull
-    private static final List<Type> TYPES = Collections.unmodifiableList(Arrays.asList(values()));
-
-    @NotNull
+    private static final ImmutableList<Type> TYPES = ImmutableList.copyOf(values());
     private final String FILE_NAME;
     private final boolean BLOCKS;
     private final boolean IGNORES_BLOCK;
     private final boolean FORMS_ROAD;
 
-    Type(@NotNull String fileName, boolean blocks, boolean ignoresBlock, boolean formsRoad) {
+    Type(String fileName, boolean blocks, boolean ignoresBlock, boolean formsRoad) {
         FILE_NAME = fileName;
         BLOCKS = blocks;
         IGNORES_BLOCK = ignoresBlock;
         FORMS_ROAD = formsRoad;
     }
 
-    @NotNull
-    public static List<Type> getTypes() {
+    public static ImmutableList<Type> getTypes() {
         return TYPES;
     }
 
-    @NotNull
-    protected String getFileName() {
+    public String getFileName() {
         return FILE_NAME;
     }
 
@@ -69,11 +62,11 @@ public enum Type {
         return FORMS_ROAD;
     }
 
-    public boolean canMoveTo(@NotNull Piece topPiece) {
+    public boolean canMoveTo(Piece topPiece) {
         return ignoresBlock() || !topPiece.getType().blocks();
     }
 
-    public void place(@NotNull Square square, List<Piece> pieces, @NotNull Piece piece) {
+    public void place(Square square, List<Piece> pieces, Piece piece) {
         pieces.add(piece);
     }
 

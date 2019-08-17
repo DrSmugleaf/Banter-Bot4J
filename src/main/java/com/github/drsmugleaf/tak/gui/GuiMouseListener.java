@@ -2,7 +2,6 @@ package com.github.drsmugleaf.tak.gui;
 
 import com.github.drsmugleaf.tak.board.Coordinates;
 import com.github.drsmugleaf.tak.pieces.Type;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -13,13 +12,10 @@ import java.awt.event.MouseListener;
  */
 public class GuiMouseListener implements MouseListener {
 
-    @NotNull
     private final GuiPlayer PLAYER;
-
-    @NotNull
     private final SquareButton SQUARE;
 
-    GuiMouseListener(@NotNull GuiPlayer player, @NotNull SquareButton button) {
+    GuiMouseListener(GuiPlayer player, SquareButton button) {
         PLAYER = player;
         SQUARE = button;
     }

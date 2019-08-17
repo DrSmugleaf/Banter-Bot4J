@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.tak.board;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -15,14 +14,10 @@ public class AdjacentSquares {
     private static final int RIGHT = 1;
     private static final int DOWN = 2;
     private static final int LEFT = 3;
-
-    @NotNull
     private final Square CENTER;
-
-    @NotNull
     private final List<Square> ADJACENT = new ArrayList<>();
 
-    protected AdjacentSquares(@NotNull Square center, @Nullable Square up, @Nullable Square right, @Nullable Square down, @Nullable Square left) {
+    protected AdjacentSquares(Square center, @Nullable Square up, @Nullable Square right, @Nullable Square down, @Nullable Square left) {
         CENTER = center;
         ADJACENT.add(UP, up);
         ADJACENT.add(RIGHT, right);
@@ -30,23 +25,20 @@ public class AdjacentSquares {
         ADJACENT.add(LEFT, left);
     }
 
-    public boolean contains(@NotNull Square square) {
+    public boolean contains(Square square) {
         return ADJACENT.contains(square);
     }
 
-    @NotNull
     public List<Square> getAll() {
         return ADJACENT;
     }
 
-    @NotNull
     public List<Square> getConnections() {
         List<Square> squares = new ArrayList<>(getAll());
         squares.removeIf(square -> !getCenter().connectsTo(square));
         return squares;
     }
 
-    @NotNull
     public Square getCenter() {
         return CENTER;
     }

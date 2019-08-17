@@ -4,27 +4,22 @@ import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by DrSmugleaf on 01/12/2018
  */
 public class Hand {
 
-    @NotNull
     private final Color COLOR;
-
     private int PIECES;
-
     private int CAPSTONES;
 
-    Hand(@NotNull Color color, @NotNull Preset preset) {
+    Hand(Color color, Preset preset) {
         COLOR = color;
         PIECES = preset.getStones();
         CAPSTONES = preset.getCapstones();
     }
 
-    @NotNull
     public Color getColor() {
         return COLOR;
     }
@@ -37,7 +32,7 @@ public class Hand {
         return CAPSTONES;
     }
 
-    public int getAmount(@NotNull Type type) {
+    public int getAmount(Type type) {
         switch (type) {
             case FLAT_STONE:
             case STANDING_STONE:
@@ -49,7 +44,7 @@ public class Hand {
         }
     }
 
-    public boolean has(@NotNull Type type) {
+    public boolean has(Type type) {
         return getAmount(type) > 0;
     }
 
@@ -57,8 +52,7 @@ public class Hand {
         return has(Type.FLAT_STONE) || has(Type.STANDING_STONE) || has(Type.CAPSTONE);
     }
 
-    @NotNull
-    public Piece takePiece(@NotNull Type type) {
+    public Piece takePiece(Type type) {
         if (!has(type)) {
             throw new IllegalArgumentException("No pieces left in this hand of type " + type);
         }

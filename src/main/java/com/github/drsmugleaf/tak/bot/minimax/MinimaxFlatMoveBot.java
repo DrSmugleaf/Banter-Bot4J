@@ -8,7 +8,6 @@ import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.function.Function;
@@ -18,28 +17,24 @@ import java.util.function.Function;
  */
 public class MinimaxFlatMoveBot extends MinimaxBot {
 
-    protected MinimaxFlatMoveBot(@NotNull String name, @NotNull Game game, @NotNull Color color, @NotNull Preset preset, int depth) {
+    protected MinimaxFlatMoveBot(String name, Game game, Color color, Preset preset, int depth) {
         super(name, game, color, preset, depth);
     }
 
-    @NotNull
-    public static Player from(@NotNull PlayerInformation information, int depth) {
+    public static Player from(PlayerInformation information, int depth) {
         return new MinimaxFlatMoveBot(information.NAME, information.GAME, information.COLOR, information.PRESET, depth);
     }
 
-    @NotNull
     public static Function<PlayerInformation, Player> from(int depth) {
         return information -> from(information, depth);
     }
 
-    @NotNull
-    public static Player from(@NotNull PlayerInformation information) {
+    public static Player from(PlayerInformation information) {
         return from(information, 3);
     }
 
-    @NotNull
     @Override
-    public List<Coordinates> getAvailableActions(@NotNull Board board) {
+    public List<Coordinates> getAvailableActions(Board board) {
         return getAvailableActions(board, Type.FLAT_STONE);
     }
 

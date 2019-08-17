@@ -4,7 +4,6 @@ import com.github.drsmugleaf.tak.Game;
 import com.github.drsmugleaf.tak.board.*;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Type;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -15,23 +14,17 @@ import java.util.List;
  */
 public abstract class Player {
 
-    @NotNull
     private final String NAME;
-
-    @NotNull
     private final Game GAME;
-
-    @NotNull
     private final Hand HAND;
 
-    public Player(@NotNull String name, @NotNull Game game, @NotNull Color color, @NotNull Preset preset) {
+    public Player(String name, Game game, Color color, Preset preset) {
         NAME = name;
         HAND = new Hand(color, preset);
         GAME = game;
     }
 
-    @NotNull
-    public final List<Coordinates> getAvailableActions(@NotNull Board board, @NotNull Type type) {
+    public final List<Coordinates> getAvailableActions(Board board, Type type) {
         List<MovingCoordinates> moves = getAvailableMoves();
         List<Coordinates> places = getAvailablePlaces(board, type);
         places.addAll(moves);
@@ -39,8 +32,7 @@ public abstract class Player {
         return places;
     }
 
-    @NotNull
-    public List<Coordinates> getAvailableActions(@NotNull Board board) {
+    public List<Coordinates> getAvailableActions(Board board) {
         List<MovingCoordinates> moves = getAvailableMoves(board);
         List<Coordinates> places = getAvailablePlaces(board);
         places.addAll(moves);
@@ -48,13 +40,11 @@ public abstract class Player {
         return places;
     }
 
-    @NotNull
     public final List<Coordinates> getAvailableActions() {
         return getAvailableActions(getGame().getBoard());
     }
 
-    @NotNull
-    public final List<MovingCoordinates> getAvailableMoves(@NotNull Board board) {
+    public final List<MovingCoordinates> getAvailableMoves(Board board) {
         List<MovingCoordinates> moves = new ArrayList<>();
 
         Line[] rows = board.getRows();
@@ -79,13 +69,11 @@ public abstract class Player {
         return moves;
     }
 
-    @NotNull
     public final List<MovingCoordinates> getAvailableMoves() {
         return getAvailableMoves(getGame().getBoard());
     }
 
-    @NotNull
-    public final List<Coordinates> getAvailablePlaces(@NotNull Board board, @NotNull Type type) {
+    public final List<Coordinates> getAvailablePlaces(Board board, Type type) {
         List<Coordinates> places = new ArrayList<>();
 
         Line[] rows = board.getRows();
@@ -101,8 +89,7 @@ public abstract class Player {
         return places;
     }
 
-    @NotNull
-    public final List<Coordinates> getAvailablePlaces(@NotNull Board board, @NotNull List<Type> types) {
+    public final List<Coordinates> getAvailablePlaces(Board board, List<Type> types) {
         List<Coordinates> places = new ArrayList<>();
 
         for (Type type : types) {
@@ -112,56 +99,47 @@ public abstract class Player {
         return places;
     }
 
-    @NotNull
-    public final List<Coordinates> getAvailablePlaces(@NotNull Board board) {
+    public final List<Coordinates> getAvailablePlaces(Board board) {
         return getAvailablePlaces(board, Type.getTypes());
     }
 
-    @NotNull
-    public final List<Coordinates> getAvailablePlaces(@NotNull Type type) {
+    public final List<Coordinates> getAvailablePlaces(Type type) {
         return getAvailablePlaces(getGame().getBoard(), type);
     }
 
-    @NotNull
     public final List<Coordinates> getAvailablePlaces() {
         return getAvailablePlaces(getGame().getBoard(), Type.getTypes());
     }
 
-    @NotNull
     public final String getName() {
         return NAME;
     }
 
-    @NotNull
     public final Game getGame() {
         return GAME;
     }
 
-    @NotNull
     public final Hand getHand() {
         return HAND;
     }
 
-    @NotNull
     public final Color getColor() {
         return getHand().getColor();
     }
 
-    public final boolean canMove(@NotNull Square origin, @NotNull Square destination, int pieces) {
+    public final boolean canMove(Square origin, Square destination, int pieces) {
         return origin.getColor() == getColor() && GAME.canMove(this, origin, destination, pieces);
     }
 
-    @NotNull
-    public final Square move(@NotNull Square origin, @NotNull Square destination, int pieces) {
+    public final Square move(Square origin, Square destination, int pieces) {
         return GAME.move(this, origin, destination, pieces);
     }
 
-    public final boolean canPlace(@NotNull Type type, int column, int row) {
+    public final boolean canPlace(Type type, int column, int row) {
         return getHand().has(type) && GAME.canPlace(this, column, row);
     }
 
-    @NotNull
-    public final Square place(@NotNull Type type, int column, int row) {
+    public final Square place(Type type, int column, int row) {
         return GAME.place(this, type, column, row);
     }
 
@@ -171,15 +149,15 @@ public abstract class Player {
 
     public abstract void nextTurn();
 
-    public void onEnemyPieceMove(@NotNull Player player, @NotNull Square origin, @NotNull Square destination, int pieces) {}
+    public void onEnemyPieceMove(Player player, Square origin, Square destination, int pieces) {}
 
-    public void onOwnPieceMove(@NotNull Square origin, @NotNull Square destination, int pieces) {}
+    public void onOwnPieceMove(Square origin, Square destination, int pieces) {}
 
-    public void onEnemyPiecePlace(@NotNull Player player, @NotNull Type type, @NotNull Square square) {}
+    public void onEnemyPiecePlace(Player player, Type type, Square square) {}
 
-    public void onOwnPiecePlace(@NotNull Type type, @NotNull Square square) {}
+    public void onOwnPiecePlace(Type type, Square square) {}
 
-    public void onEnemyTurnEnd(@NotNull Player player) {}
+    public void onEnemyTurnEnd(Player player) {}
 
     public void onOwnTurnEnd() {}
 

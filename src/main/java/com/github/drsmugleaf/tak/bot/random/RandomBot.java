@@ -5,7 +5,6 @@ import com.github.drsmugleaf.tak.board.Coordinates;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.bot.Bot;
 import com.github.drsmugleaf.tak.pieces.Color;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -16,12 +15,13 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public abstract class RandomBot extends Bot {
 
-    protected RandomBot(@NotNull String name, @NotNull Game game, @NotNull Color color, @NotNull Preset preset) {
+    protected RandomBot(String name, Game game, Color color, Preset preset) {
         super(name, game, color, preset);
     }
 
+    @Nullable
     @Override
-    public @Nullable Coordinates getNextMove() {
+    public Coordinates getNextMove() {
         List<Coordinates> availableActions = getAvailableActions();
         if (availableActions.isEmpty()) {
             return null;

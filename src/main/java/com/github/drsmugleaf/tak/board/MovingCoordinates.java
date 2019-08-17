@@ -2,7 +2,6 @@ package com.github.drsmugleaf.tak.board;
 
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.player.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
@@ -11,15 +10,11 @@ import java.util.function.Function;
  */
 public class MovingCoordinates extends Coordinates {
 
-    @NotNull
     private final Square ORIGIN;
-
-    @NotNull
     private final Square DESTINATION;
-
     private final int PIECES;
 
-    public MovingCoordinates(@NotNull Square origin, @NotNull Square destination, int pieces) {
+    public MovingCoordinates(Square origin, Square destination, int pieces) {
         super(origin.getColumn(), destination.getRow(), origin.getTopPiece().getType());
         ORIGIN = origin;
         DESTINATION = destination;
@@ -27,17 +22,17 @@ public class MovingCoordinates extends Coordinates {
     }
 
     @Override
-    public boolean canPlace(@NotNull Player player) {
+    public boolean canPlace(Player player) {
         return player.canMove(ORIGIN, DESTINATION, PIECES);
     }
 
     @Override
-    public void place(@NotNull Player player) {
+    public void place(Player player) {
         player.move(ORIGIN, DESTINATION, PIECES);
     }
 
     @Override
-    public int with(@NotNull Board board, @NotNull Color nextPlayer, @NotNull Function<Board, Integer> function) {
+    public int with(Board board, Color nextPlayer, Function<Board, Integer> function) {
         board.moveSilent(ORIGIN, DESTINATION, PIECES);
         Integer result = function.apply(board);
         board.moveSilent(DESTINATION, ORIGIN, PIECES);

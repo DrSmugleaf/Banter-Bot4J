@@ -2,7 +2,6 @@ package com.github.drsmugleaf.tak.board;
 
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -13,16 +12,11 @@ import java.util.List;
  */
 public class Board {
 
-    @NotNull
     private final Preset PRESET;
-
-    @NotNull
     private final Line[] COLUMNS;
-
-    @NotNull
     private final Line[] ROWS;
 
-    public Board(@NotNull Preset preset) {
+    public Board(Preset preset) {
         PRESET = preset;
         int boardSize = PRESET.getSize();
 
@@ -46,7 +40,7 @@ public class Board {
         ROWS = rows;
     }
 
-    public Board(@NotNull Square[][] squares) {
+    public Board(Square[][] squares) {
         Preset preset = Preset.getPreset(squares.length);
         if (preset == null) {
             throw new IllegalArgumentException("No preset found for array length " + squares.length);
@@ -80,16 +74,14 @@ public class Board {
         ROWS = rows;
     }
 
-    private Board(@NotNull Board board) {
+    private Board(Board board) {
         this(board.toArray());
     }
 
-    @NotNull
     public Board copy() {
         return new Board(this);
     }
 
-    @NotNull
     public Square[][] toArray() {
         int boardSize = PRESET.getSize();
         Square[][] squares = new Square[boardSize][boardSize];
@@ -126,27 +118,23 @@ public class Board {
         return builder.toString();
     }
 
-    @NotNull
     public Board getDefault() {
         return new Board(Preset.getDefault());
     }
 
-    @NotNull
     public Line[] getColumns() {
         return COLUMNS;
     }
 
-    @NotNull
     public Line[] getRows() {
         return ROWS;
     }
 
-    @NotNull
     public Preset getPreset() {
         return PRESET;
     }
 
-    public boolean canMove(@NotNull Square origin, @NotNull Square destination, int pieces) {
+    public boolean canMove(Square origin, Square destination, int pieces) {
         int column = origin.getColumn();
         int row = origin.getRow();
         AdjacentSquares adjacent = getAdjacent(origin);
@@ -157,20 +145,17 @@ public class Board {
                COLUMNS[column].canMove(row, destination, pieces);
     }
 
-    @NotNull
-    private Square move(@NotNull Square origin, @NotNull Square destination, int pieces, boolean silent) {
+    private Square move(Square origin, Square destination, int pieces, boolean silent) {
         int column = origin.getColumn();
         int row = origin.getRow();
         return COLUMNS[column].move(row, destination, pieces, silent);
     }
 
-    @NotNull
-    public Square move(@NotNull Square origin, @NotNull Square destination, int pieces) {
+    public Square move(Square origin, Square destination, int pieces) {
         return move(origin, destination, pieces, false);
     }
 
-    @NotNull
-    public Square moveSilent(@NotNull Square origin, @NotNull Square destination, int pieces) {
+    public Square moveSilent(Square origin, Square destination, int pieces) {
         return move(origin, destination, pieces, true);
     }
 
@@ -178,57 +163,47 @@ public class Board {
         return column < COLUMNS.length && COLUMNS[column].canPlace(row);
     }
 
-    @NotNull
-    public Square place(@NotNull Piece piece, int column, int row, boolean silent) {
+    public Square place(Piece piece, int column, int row, boolean silent) {
         return COLUMNS[column].place(piece, row, silent);
     }
 
-    @NotNull
-    public Square place(@NotNull Piece piece, int column, int row) {
+    public Square place(Piece piece, int column, int row) {
         return COLUMNS[column].place(piece, row, false);
     }
 
-    @NotNull
-    public Square placeSilent(@NotNull Piece piece, int column, int row) {
+    public Square placeSilent(Piece piece, int column, int row) {
         return COLUMNS[column].place(piece, row, true);
     }
 
-    @NotNull
-    protected Square remove(@NotNull Piece piece, int column, int row, boolean silent) {
+    protected Square remove(Piece piece, int column, int row, boolean silent) {
         return COLUMNS[column].remove(piece, row, silent);
     }
 
-    @NotNull
-    protected Square remove(@NotNull Piece piece, int column, int row) {
+    protected Square remove(Piece piece, int column, int row) {
         return COLUMNS[column].remove(piece, row, false);
     }
 
-    @NotNull
-    protected Square removeSilent(@NotNull Piece piece, int column, int row) {
+    protected Square removeSilent(Piece piece, int column, int row) {
         return COLUMNS[column].remove(piece, row, true);
     }
 
-    @NotNull
     public Line getFirstRow() {
         return ROWS[0];
     }
 
-    @NotNull
     public Line getLastRow() {
         return ROWS[ROWS.length - 1];
     }
 
-    @NotNull
     public Line getFirstColumn() {
         return COLUMNS[0];
     }
 
-    @NotNull
     public Line getLastColumn() {
         return COLUMNS[COLUMNS.length - 1];
     }
 
-    public int countAdjacent(@NotNull Color color) {
+    public int countAdjacent(Color color) {
         int amount = 0;
 
         for (Line column : getColumns()) {
@@ -245,8 +220,7 @@ public class Board {
         return amount;
     }
 
-    @NotNull
-    public AdjacentSquares getAdjacent(@NotNull Square square) {
+    public AdjacentSquares getAdjacent(Square square) {
         Line[] rows = getRows();
         int rowIndex = square.getRow();
         int columnIndex = square.getColumn();
@@ -285,7 +259,7 @@ public class Board {
         return new AdjacentSquares(centerSquare, upSquare, rightSquare, downSquare, leftSquare);
     }
 
-    private boolean isConnected(@NotNull Square origin, @NotNull Square destination) {
+    private boolean isConnected(Square origin, Square destination) {
         if (origin.getColor() == null || origin.getColor() != destination.getColor()) {
             return false;
         }
@@ -301,7 +275,7 @@ public class Board {
         return visited.contains(destination);
     }
 
-    private void getAllConnections(@NotNull Square squareOne, @NotNull List<Square> visited) {
+    private void getAllConnections(Square squareOne, List<Square> visited) {
         List<Square> connections = getAdjacent(squareOne).getConnections();
         visited.add(squareOne);
 
@@ -314,7 +288,7 @@ public class Board {
         }
     }
 
-    public boolean hasRoad(@NotNull Color color, @NotNull Line line1, @NotNull Line line2) {
+    public boolean hasRoad(Color color, Line line1, Line line2) {
         for (Square origin : line1.getSquares()) {
             if (origin.getColor() != color) {
                 continue;
@@ -338,7 +312,7 @@ public class Board {
         return false;
     }
 
-    public boolean hasRoad(@NotNull Color color) {
+    public boolean hasRoad(Color color) {
         if (hasPieceInEveryRow(color)) {
             if (hasRoad(color, getFirstRow(), getLastRow())) {
                 return true;
@@ -363,7 +337,7 @@ public class Board {
         }
     }
 
-    public boolean hasPieceInEveryColumn(@NotNull Color color) {
+    public boolean hasPieceInEveryColumn(Color color) {
         for (Line column : COLUMNS) {
             if (!column.hasSquare(color)) {
                 return false;
@@ -373,7 +347,7 @@ public class Board {
         return true;
     }
 
-    public boolean hasPieceInEveryRow(@NotNull Color color) {
+    public boolean hasPieceInEveryRow(Color color) {
         for (Line row : ROWS) {
             if (!row.hasSquare(color)) {
                 return false;
@@ -395,7 +369,7 @@ public class Board {
         return true;
     }
 
-    public int countFlat(@NotNull Color color) {
+    public int countFlat(Color color) {
         int amount = 0;
 
         for (Line column : getColumns()) {

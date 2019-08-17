@@ -6,7 +6,6 @@ import com.github.drsmugleaf.tak.bot.Bot;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import javafx.util.Pair;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -18,17 +17,17 @@ public abstract class MinimaxBot extends Bot {
 
     protected final int DEPTH;
 
-    protected MinimaxBot(@NotNull String name, @NotNull Game game, @NotNull Color color, @NotNull Preset preset, int depth) {
+    protected MinimaxBot(String name, Game game, Color color, Preset preset, int depth) {
         super(name, game, color, preset);
         DEPTH = depth;
     }
 
+    @Nullable
     @Override
-    public @Nullable Coordinates getNextMove() {
+    public Coordinates getNextMove() {
         return getBestPlace().getKey();
     }
 
-    @NotNull
     protected Pair<Coordinates, Integer> getBestPlace() {
         Board board = getGame().getBoard();
         Color nextColor = getGame().getNextPlayer().getColor();
@@ -36,11 +35,11 @@ public abstract class MinimaxBot extends Bot {
         return getMax(getAvailableActions(), board, nextColor, Integer.MIN_VALUE, Integer.MAX_VALUE, DEPTH);
     }
 
-    private boolean isTerminal(@NotNull Board board) {
+    private boolean isTerminal(Board board) {
         return board.hasRoad() != null;
     }
 
-    private int getScore(@NotNull Board board) {
+    private int getScore(Board board) {
         Color winner = board.hasRoad();
         if (winner != null) {
             if (winner == getColor()) {
@@ -79,8 +78,7 @@ public abstract class MinimaxBot extends Bot {
         return score;
     }
 
-    @NotNull
-    protected final Pair<Coordinates, Integer> getMax(@NotNull List<? extends Coordinates> moves, @NotNull Board board, @NotNull Color nextPlayer, int alpha, int beta, final int depth) {
+    protected final Pair<Coordinates, Integer> getMax(List<? extends Coordinates> moves, Board board, Color nextPlayer, int alpha, int beta, final int depth) {
         Coordinates bestMove = null;
         int score = 0;
 

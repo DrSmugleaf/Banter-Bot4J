@@ -3,9 +3,9 @@ package com.github.drsmugleaf.tak.gui;
 import com.github.drsmugleaf.tak.Game;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.bot.minimax.MinimaxFlatMoveBot;
+import com.github.drsmugleaf.tak.Images;
 import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,22 +16,17 @@ import java.util.function.Function;
  */
 public class GuiGame extends Game {
 
-    @NotNull
-    private static final Image APPLICATION_ICON = Images.get("logo.jpg");
-
-    @NotNull
+    private static final Image APPLICATION_ICON = Images.getLogo();
     private final BoardPanel BOARD_PANEL;
-
-    @NotNull
     private JFrame FRAME;
 
-    private GuiGame(@NotNull BoardPanel board, @NotNull Preset preset, @NotNull String playerName1, @NotNull String playerName2, @NotNull Function<PlayerInformation, Player> playerMaker1, @NotNull Function<PlayerInformation, Player> playerMaker2) {
+    private GuiGame(BoardPanel board, Preset preset, String playerName1, String playerName2, Function<PlayerInformation, Player> playerMaker1, Function<PlayerInformation, Player> playerMaker2) {
         super(board, preset, playerName1, playerName2, playerMaker1, playerMaker2);
         BOARD_PANEL = board;
         FRAME = setupFrame();
     }
 
-    public GuiGame(@NotNull Preset preset, @NotNull String playerName1, @NotNull String playerName2, @NotNull Function<PlayerInformation, Player> playerMaker1, @NotNull Function<PlayerInformation, Player> playerMaker2) {
+    public GuiGame(Preset preset, String playerName1, String playerName2, Function<PlayerInformation, Player> playerMaker1, Function<PlayerInformation, Player> playerMaker2) {
         this(BoardPanel.from(preset), preset, playerName1, playerName2, playerMaker1, playerMaker2);
     }
 
@@ -40,7 +35,6 @@ public class GuiGame extends Game {
         game.start();
     }
 
-    @NotNull
     private JFrame setupFrame() {
         JFrame frame = new JFrame("Tak");
 
@@ -59,12 +53,10 @@ public class GuiGame extends Game {
         return frame;
     }
 
-    @NotNull
     protected BoardPanel getBoardPanel() {
         return BOARD_PANEL;
     }
 
-    @NotNull
     protected JFrame getFrame() {
         return FRAME;
     }

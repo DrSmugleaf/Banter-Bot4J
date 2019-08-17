@@ -5,7 +5,6 @@ import com.github.drsmugleaf.tak.board.Coordinates;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.player.Player;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -13,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class Bot extends Player {
 
-    protected Bot(@NotNull String name, @NotNull Game game, @NotNull Color color, @NotNull Preset preset) {
+    protected Bot(String name, Game game, Color color, Preset preset) {
         super(name, game, color, preset);
     }
 
