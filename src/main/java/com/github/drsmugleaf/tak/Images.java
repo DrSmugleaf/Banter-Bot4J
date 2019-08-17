@@ -48,7 +48,7 @@ public class Images {
             images.put(color, new EnumMap<>(Type.class));
 
             for (Type type : Type.getTypes()) {
-                String filePath = IMAGES_PATH + "/pieces" + color.getFolderName() + type.getFileName();
+                String filePath = IMAGES_PATH + "/pieces/" + color.getFolderName() + type.getFileName();
                 try (FileInputStream stream = new FileInputStream(filePath)) {
                     BufferedImage image = ImageIO.read(stream);
                     images.get(color).put(type, image);
