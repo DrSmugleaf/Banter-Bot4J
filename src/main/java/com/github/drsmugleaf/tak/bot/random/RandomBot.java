@@ -1,11 +1,11 @@
 package com.github.drsmugleaf.tak.bot.random;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tak.Game;
-import com.github.drsmugleaf.tak.board.Coordinates;
+import com.github.drsmugleaf.tak.board.ICoordinates;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.bot.Bot;
 import com.github.drsmugleaf.tak.pieces.Color;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -21,8 +21,8 @@ public abstract class RandomBot extends Bot {
 
     @Nullable
     @Override
-    public Coordinates getNextMove() {
-        List<Coordinates> availableActions = getAvailableActions();
+    public ICoordinates getNextAction() {
+        List<ICoordinates> availableActions = getAvailableActions();
         if (availableActions.isEmpty()) {
             return null;
         }

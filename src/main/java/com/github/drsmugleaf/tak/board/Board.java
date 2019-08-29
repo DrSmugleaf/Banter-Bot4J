@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.tak.board;
 
+import com.github.drsmugleaf.tak.IllegalGameCall;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import org.jetbrains.annotations.Nullable;
@@ -18,18 +19,18 @@ public class Board {
 
     public Board(Preset preset) {
         PRESET = preset;
-        int boardSize = PRESET.getSize();
+        int size = PRESET.getSize();
 
-        Line[] rows = new Line[boardSize];
-        Line[] columns = new Line[boardSize];
+        Line[] rows = new Line[size];
+        Line[] columns = new Line[size];
 
-        for (int i = 0; i < boardSize; i++) {
-            columns[i] = new Line(boardSize);
-            rows[i] = new Line(boardSize);
+        for (int i = 0; i < size; i++) {
+            columns[i] = new Line(size);
+            rows[i] = new Line(size);
         }
 
-        for (int row = 0; row < boardSize; row++) {
-            for (int column = 0; column < boardSize; column++) {
+        for (int row = 0; row < size; row++) {
+            for (int column = 0; column < size; column++) {
                 Square square = new Square(column, row);
                 rows[row].SQUARES[column] = square;
                 columns[column].SQUARES[row] = square;
@@ -75,14 +76,14 @@ public class Board {
     }
 
     private Board(Board board) {
-        this(board.toArray());
+        this(board.toSquareArray());
     }
 
     public Board copy() {
         return new Board(this);
     }
 
-    public Square[][] toArray() {
+    public Square[][] toSquareArray() {
         int boardSize = PRESET.getSize();
         Square[][] squares = new Square[boardSize][boardSize];
 
@@ -99,7 +100,7 @@ public class Board {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        Square[][] board = toArray();
+        Square[][] board = toSquareArray();
 
         for (int rowIndex = 0; rowIndex < board.length; rowIndex++) {
             Square[] row = board[rowIndex];
@@ -301,7 +302,7 @@ public class Board {
 
                 if (isConnected(origin, destination)) {
                     if (origin.getTopPiece() == null) {
-                        throw new IllegalStateException("Valid road found but the last top piece doesn't exist");
+                        throw new IllegalGameCall("Valid road found but the last top piece doesn't exist");
                     }
 
                     return true;
@@ -327,14 +328,14 @@ public class Board {
     }
 
     @Nullable
-    public Color hasRoad() {
-        if (hasRoad(Color.BLACK)) {
-            return Color.BLACK;
-        } else if (hasRoad(Color.WHITE)) {
-            return Color.WHITE;
-        } else {
-            return null;
+    public Color getRoad() {
+        for (Color color : Color.values()) {
+            if (hasRoad(color)) {
+                return color;
+            }
         }
+
+        return null;
     }
 
     public boolean hasPieceInEveryColumn(Color color) {
@@ -358,7 +359,7 @@ public class Board {
     }
 
     public boolean isFull() {
-        for (Square[] row : toArray()) {
+        for (Square[] row : toSquareArray()) {
             for (Square square : row) {
                 if (square.getTopPiece() == null) {
                     return false;
@@ -377,6 +378,33 @@ public class Board {
         }
 
         return amount;
+    }
+
+    public double[][][] toDoubleArray() {
+        Preset preset = getPreset();
+        int size = preset.getSize();
+        int totalPieces = preset.getCapstones() + preset.getStones();
+        double[][][] array = new double[size][size][totalPieces];
+
+        Line[] rows = getRows();
+        for (int r = 0; r < rows.length; r++) {
+            Square[] columns = rows[r].getSquares();
+            for (int c = 0; c < columns.length; c++) {
+                double[] pieces = columns[c].toDoubleArray(totalPieces);
+                array[r][c] = pieces;
+            }
+        }
+
+        return array;
+    }
+
+    public void reset() {
+        int size = getPreset().getSize();
+
+        for (int i = 0; i < size; i++) {
+            COLUMNS[i].reset();
+            ROWS[i].reset();
+        }
     }
 
 }

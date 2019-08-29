@@ -10,11 +10,31 @@ public enum Color {
         public Color getOpposite() {
             return WHITE;
         }
+
+        @Override
+        public double toDouble() {
+            return 1;
+        }
+
+        @Override
+        public String toString() {
+            return "B";
+        }
     },
     WHITE("white/") {
         @Override
         public Color getOpposite() {
             return BLACK;
+        }
+
+        @Override
+        public double toDouble() {
+            return -1;
+        }
+
+        @Override
+        public String toString() {
+            return "W";
         }
     };
 
@@ -29,5 +49,7 @@ public enum Color {
     }
 
     public abstract Color getOpposite();
+
+    public abstract double toDouble();
 
 }

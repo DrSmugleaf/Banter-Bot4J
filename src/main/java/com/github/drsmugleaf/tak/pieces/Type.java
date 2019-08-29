@@ -25,9 +25,39 @@ public enum Type {
 
             pieces.add(piece);
         }
+
+        @Override
+        public double toDouble() {
+            return 1;
+        }
+
+        @Override
+        public String toString() {
+            return "C";
+        }
     },
-    FLAT_STONE("flat.png", false, false, true),
-    STANDING_STONE("wall.png", true, false, false);
+    FLAT_STONE("flat.png", false, false, true) {
+        @Override
+        public double toDouble() {
+            return 2;
+        }
+
+        @Override
+        public String toString() {
+            return "F";
+        }
+    },
+    STANDING_STONE("wall.png", true, false, false) {
+        @Override
+        public double toDouble() {
+            return 3;
+        }
+
+        @Override
+        public String toString() {
+            return "S";
+        }
+    };
 
     private static final ImmutableList<Type> TYPES = ImmutableList.copyOf(values());
     private final String FILE_NAME;
@@ -69,5 +99,7 @@ public enum Type {
     public void place(Square square, List<Piece> pieces, Piece piece) {
         pieces.add(piece);
     }
+
+    public abstract double toDouble();
 
 }

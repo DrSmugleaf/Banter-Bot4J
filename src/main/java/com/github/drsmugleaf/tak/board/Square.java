@@ -53,6 +53,15 @@ public class Square {
         return new ArrayList<>(PIECES);
     }
 
+    public double[] toDoubleArray(int totalPieces) {
+        double[] array = new double[totalPieces];
+        for (int i = 0; i < PIECES.size(); i++) {
+            array[i] = PIECES.get(i).toDouble();
+        }
+
+        return array;
+    }
+
     @Nullable
     public Color getColor() {
         if (getTopPiece() == null) {
@@ -164,7 +173,7 @@ public class Square {
 
         for (int i = 0; i < pieces.size(); i++) {
             Piece piece = pieces.get(i);
-            builder.append(piece.getColor());
+            builder.append(piece);
 
             if (i < pieces.size() - 1) {
                 builder.append(" ");
@@ -175,5 +184,9 @@ public class Square {
     }
 
     protected void onUpdate() {}
+
+    public void reset() {
+        PIECES.clear();
+    }
 
 }

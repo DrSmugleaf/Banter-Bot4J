@@ -6,7 +6,7 @@ import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.EnumMap;
@@ -21,7 +21,7 @@ public class Images {
 
     private static final String IMAGES_PATH = Objects.requireNonNull(Images.class.getClassLoader().getResource("tak")).getFile();
     private static final Image LOGO = registerLogo();
-    private static final Map<com.github.drsmugleaf.tak.pieces.Color, Map<Type, Image>> PIECES = registerPieces();
+    private static final Map<Color, Map<Type, Image>> PIECES = registerPieces();
     private static final Map<String, Image> SQUARES = registerSquares();
 
     private Images() {}
@@ -41,10 +41,10 @@ public class Images {
         }
     }
 
-    private static Map<com.github.drsmugleaf.tak.pieces.Color, Map<Type, Image>> registerPieces() {
-        Map<com.github.drsmugleaf.tak.pieces.Color, Map<Type, Image>> images = new EnumMap<>(com.github.drsmugleaf.tak.pieces.Color.class);
+    private static Map<Color, Map<Type, Image>> registerPieces() {
+        Map<Color, Map<Type, Image>> images = new EnumMap<>(Color.class);
 
-        for (com.github.drsmugleaf.tak.pieces.Color color : Color.values()) {
+        for (Color color : Color.values()) {
             images.put(color, new EnumMap<>(Type.class));
 
             for (Type type : Type.getTypes()) {

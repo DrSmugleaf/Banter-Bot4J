@@ -5,24 +5,24 @@ package com.github.drsmugleaf.tak;
  */
 public class IllegalGameCall extends GameException {
 
-    public IllegalGameCall(Game game) {
-        super(game);
+    public IllegalGameCall() {
+        super();
     }
 
-    public IllegalGameCall(Game game, String message) {
-        super(game, message);
+    public IllegalGameCall(String message) {
+        super(message);
     }
 
-    public IllegalGameCall(Game game, String message, Throwable cause) {
-        super(game, message, cause);
+    public IllegalGameCall(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public IllegalGameCall(Game game, Throwable cause) {
-        super(game, cause);
+    public IllegalGameCall(Throwable cause) {
+        super(cause);
     }
 
-    protected IllegalGameCall(Game game, String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(game, message, cause, enableSuppression, writableStackTrace);
+    protected IllegalGameCall(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 
 }

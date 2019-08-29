@@ -21,7 +21,7 @@ public class Game {
 
     private final Board BOARD;
     private final Map<Color, Player> PLAYERS = new HashMap<>();
-    private Player nextPlayer;
+    public Player nextPlayer;
     @Nullable
     private Player winner = null;
     private boolean active = true;
@@ -65,38 +65,38 @@ public class Game {
     }
 
     public boolean canMove(Player player, Square origin, Square destination, int pieces) {
-        return isActive() && nextPlayer == player && BOARD.canMove(origin, destination, pieces);
+        return isActive() && nextPlayer == player && getBoard().canMove(origin, destination, pieces);
     }
 
     public Square move(Player player, Square origin, Square destination, int pieces) {
         if (!canMove(player, origin, destination, pieces)) {
-            throw new IllegalGameCall(this, "Illegal move call, origin " + origin + ", destination " + destination + " and pieces " + pieces);
+            throw new IllegalGameCall("Illegal move call, origin " + origin + ", destination " + destination + " and pieces " + pieces);
         }
 
-        Square square = BOARD.move(origin, destination, pieces);
+        Square square = getBoard().move(origin, destination, pieces);
         onPieceMove(player, origin, destination, pieces);
         return square;
     }
 
     public boolean canPlace(Player player, int column, int row) {
-        return isActive() && nextPlayer == player && BOARD.canPlace(column, row);
+        return isActive() && nextPlayer == player && getBoard().canPlace(column, row);
     }
 
     public Square place(Player player, Type type, int column, int row) {
         if (!canPlace(player, column, row)) {
-            throw new IllegalGameCall(this, "Illegal place call, piece type " + type + " at row " + row + " and column " + column);
+            throw new IllegalGameCall("Illegal place call, piece type " + type + " at row " + row + " and column " + column);
         }
 
         Piece piece = player.getHand().takePiece(type);
-        Square square = BOARD.place(piece, column, row);
+        Square square = getBoard().place(piece, column, row);
         onPiecePlace(player, type, square);
         return square;
     }
 
     @Nullable
-    private Player checkVictory() {
-        boolean blackWins = BOARD.hasRoad(Color.BLACK);
-        boolean whiteWins = BOARD.hasRoad(Color.WHITE);
+    protected Player checkVictory() {
+        boolean blackWins = getBoard().hasRoad(Color.BLACK);
+        boolean whiteWins = getBoard().hasRoad(Color.WHITE);
         if (blackWins && whiteWins) {
             return nextPlayer;
         }
@@ -116,7 +116,7 @@ public class Game {
     }
 
     @Nullable
-    private Player forceVictory() {
+    protected Player forceVictory() {
         int blackFlat = getBoard().countFlat(Color.BLACK);
         int whiteFlat = getBoard().countFlat(Color.WHITE);
 
@@ -143,6 +143,7 @@ public class Game {
 
     public void end() {
         active = false;
+        onGameEnd(getWinner());
     }
 
     @Nullable
@@ -150,13 +151,13 @@ public class Game {
         return winner;
     }
 
-    private void setWinner(@Nullable Player winner) {
+    protected void setWinner(@Nullable Player winner) {
         this.winner = winner;
     }
 
     public void surrender(Player loser) {
         if (!isActive()) {
-            throw new IllegalGameCall(this, "Game already ended");
+            throw new IllegalGameCall("Game already ended");
         }
 
         setWinner(getOtherPlayer(loser));
@@ -169,12 +170,10 @@ public class Game {
             nextTurn();
         }
 
-        onGameEnd(getWinner());
-
         return getWinner();
     }
 
-    protected void nextTurn() {
+    public void nextTurn() {
         nextPlayer.nextTurn();
 
         setWinner(checkVictory());
@@ -187,6 +186,17 @@ public class Game {
 
         nextPlayer = getOtherPlayer(nextPlayer);
         onTurnEnd(getOtherPlayer(nextPlayer));
+    }
+
+    public void resetGame() {
+        for (Player player : PLAYERS.values()) {
+            player.resetPlayer();
+        }
+
+        getBoard().reset();
+        nextPlayer = getPlayer(Color.BLACK);
+        winner = null;
+        active = true;
     }
 
     protected void onPieceMove(Player player, Square origin, Square destination, int pieces) {

@@ -2,7 +2,7 @@ package com.github.drsmugleaf.tak.bot.random;
 
 import com.github.drsmugleaf.tak.Game;
 import com.github.drsmugleaf.tak.board.Board;
-import com.github.drsmugleaf.tak.board.Coordinates;
+import com.github.drsmugleaf.tak.board.ICoordinates;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Type;
@@ -25,7 +25,7 @@ public class RandomFlatBot extends RandomBot {
     }
 
     @Override
-    public List<Coordinates> getAvailableActions(Board board) {
+    public List<ICoordinates> getAvailableActions(Board board) {
         return getAvailablePlaces(board, Type.FLAT_STONE);
     }
 

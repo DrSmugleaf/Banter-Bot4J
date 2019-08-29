@@ -24,31 +24,30 @@ public abstract class Player {
         GAME = game;
     }
 
-    public final List<Coordinates> getAvailableActions(Board board, Type type) {
-        List<MovingCoordinates> moves = getAvailableMoves();
-        List<Coordinates> places = getAvailablePlaces(board, type);
-        places.addAll(moves);
+    public final List<ICoordinates> getAvailableActions(Board board, Type type) {
+        List<ICoordinates> moves = getAvailableMoves(board);
+        List<ICoordinates> places = getAvailablePlaces(board, type);
+        moves.addAll(places);
 
-        return places;
+        return moves;
     }
 
-    public List<Coordinates> getAvailableActions(Board board) {
-        List<MovingCoordinates> moves = getAvailableMoves(board);
-        List<Coordinates> places = getAvailablePlaces(board);
-        places.addAll(moves);
+    public List<ICoordinates> getAvailableActions(Board board) {
+        List<ICoordinates> moves = getAvailableMoves(board);
+        List<ICoordinates> places = getAvailablePlaces(board);
+        moves.addAll(places);
 
-        return places;
+        return moves;
     }
 
-    public final List<Coordinates> getAvailableActions() {
+    public final List<ICoordinates> getAvailableActions() {
         return getAvailableActions(getGame().getBoard());
     }
 
-    public final List<MovingCoordinates> getAvailableMoves(Board board) {
-        List<MovingCoordinates> moves = new ArrayList<>();
+    public final List<ICoordinates> getAvailableMoves(Board board) {
+        List<ICoordinates> moves = new ArrayList<>();
 
-        Line[] rows = board.getRows();
-        for (Line row : rows) {
+        for (Line row : board.getRows()) {
             for (Square origin : row.getSquares()) {
                 AdjacentSquares adjacent = GAME.getBoard().getAdjacent(origin);
 
@@ -69,19 +68,21 @@ public abstract class Player {
         return moves;
     }
 
-    public final List<MovingCoordinates> getAvailableMoves() {
+    public final List<ICoordinates> getAvailableMoves() {
         return getAvailableMoves(getGame().getBoard());
     }
 
-    public final List<Coordinates> getAvailablePlaces(Board board, Type type) {
-        List<Coordinates> places = new ArrayList<>();
+    public final List<ICoordinates> getAvailablePlaces(Board board, Type... types) {
+        List<ICoordinates> places = new ArrayList<>();
 
         Line[] rows = board.getRows();
         for (int i = 0; i < rows.length; i++) {
             Square[] row = rows[i].getSquares();
             for (int j = 0; j < row.length; j++) {
-                if (canPlace(type, j, i)) {
-                    places.add(new Coordinates(j, i, type));
+                for (Type type : types) {
+                    if (canPlace(type, j, i)) {
+                        places.add(new Coordinates(j, i, type));
+                    }
                 }
             }
         }
@@ -89,25 +90,19 @@ public abstract class Player {
         return places;
     }
 
-    public final List<Coordinates> getAvailablePlaces(Board board, List<Type> types) {
-        List<Coordinates> places = new ArrayList<>();
-
-        for (Type type : types) {
-            places.addAll(getAvailablePlaces(board, type));
-        }
-
-        return places;
+    public final List<ICoordinates> getAvailablePlaces(Board board, List<Type> types) {
+        return getAvailablePlaces(board, types.toArray(new Type[0]));
     }
 
-    public final List<Coordinates> getAvailablePlaces(Board board) {
+    public final List<ICoordinates> getAvailablePlaces(Board board) {
         return getAvailablePlaces(board, Type.getTypes());
     }
 
-    public final List<Coordinates> getAvailablePlaces(Type type) {
+    public final List<ICoordinates> getAvailablePlaces(Type type) {
         return getAvailablePlaces(getGame().getBoard(), type);
     }
 
-    public final List<Coordinates> getAvailablePlaces() {
+    public final List<ICoordinates> getAvailablePlaces() {
         return getAvailablePlaces(getGame().getBoard(), Type.getTypes());
     }
 
@@ -128,7 +123,7 @@ public abstract class Player {
     }
 
     public final boolean canMove(Square origin, Square destination, int pieces) {
-        return origin.getColor() == getColor() && GAME.canMove(this, origin, destination, pieces);
+        return getColor() == origin.getColor() && GAME.canMove(this, origin, destination, pieces);
     }
 
     public final Square move(Square origin, Square destination, int pieces) {
@@ -144,7 +139,13 @@ public abstract class Player {
     }
 
     public final void surrender() {
-        GAME.surrender(this);
+        if (GAME.isActive()) {
+            GAME.surrender(this);
+        }
+    }
+
+    public final void resetPlayer() {
+        HAND.reset();
     }
 
     public abstract void nextTurn();

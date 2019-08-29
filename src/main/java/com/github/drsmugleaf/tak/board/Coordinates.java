@@ -10,7 +10,7 @@ import java.util.function.Function;
 /**
  * Created by DrSmugleaf on 26/12/2018
  */
-public class Coordinates {
+public class Coordinates implements ICoordinates {
 
     private int ROW;
     private int COLUMN;
@@ -22,36 +22,19 @@ public class Coordinates {
         PIECE = piece;
     }
 
-    public int getRow() {
-        return ROW;
-    }
-
-    public void setRow(int row) {
-        ROW = row;
-    }
-
-    public int getColumn() {
-        return COLUMN;
-    }
-
-    public void setColumn(int column) {
-        COLUMN = column;
-    }
-
-    public Type getPiece() {
-        return PIECE;
-    }
-
+    @Override
     public boolean canPlace(Player player) {
         return player.canPlace(PIECE, COLUMN, ROW);
     }
 
+    @Override
     public void place(Player player) {
         player.place(PIECE, COLUMN, ROW);
     }
 
-    public int with(Board board, Color nextPlayer, Function<Board, Integer> function) {
-        Piece piece = new Piece(nextPlayer, PIECE);
+    @Override
+    public int with(Board board, Color nextColor, Function<Board, Integer> function) {
+        Piece piece = new Piece(nextColor, PIECE);
         board.placeSilent(piece, COLUMN, ROW);
         Integer result = function.apply(board);
         board.removeSilent(piece, COLUMN, ROW);

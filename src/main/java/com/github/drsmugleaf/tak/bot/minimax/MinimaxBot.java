@@ -1,12 +1,12 @@
 package com.github.drsmugleaf.tak.bot.minimax;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tak.Game;
 import com.github.drsmugleaf.tak.board.*;
 import com.github.drsmugleaf.tak.bot.Bot;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import javafx.util.Pair;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -24,11 +24,11 @@ public abstract class MinimaxBot extends Bot {
 
     @Nullable
     @Override
-    public Coordinates getNextMove() {
+    public ICoordinates getNextAction() {
         return getBestPlace().getKey();
     }
 
-    protected Pair<Coordinates, Integer> getBestPlace() {
+    protected Pair<ICoordinates, Integer> getBestPlace() {
         Board board = getGame().getBoard();
         Color nextColor = getGame().getNextPlayer().getColor();
 
@@ -36,11 +36,11 @@ public abstract class MinimaxBot extends Bot {
     }
 
     private boolean isTerminal(Board board) {
-        return board.hasRoad() != null;
+        return board.getRoad() != null;
     }
 
     private int getScore(Board board) {
-        Color winner = board.hasRoad();
+        Color winner = board.getRoad();
         if (winner != null) {
             if (winner == getColor()) {
                 return Integer.MAX_VALUE;
@@ -78,16 +78,16 @@ public abstract class MinimaxBot extends Bot {
         return score;
     }
 
-    protected final Pair<Coordinates, Integer> getMax(List<? extends Coordinates> moves, Board board, Color nextPlayer, int alpha, int beta, final int depth) {
-        Coordinates bestMove = null;
+    protected final Pair<ICoordinates, Integer> getMax(List<ICoordinates> moves, Board board, Color nextPlayer, int alpha, int beta, final int depth) {
+        ICoordinates bestMove = null;
         int score = 0;
 
-        for (Coordinates coordinates : moves) {
+        for (ICoordinates coordinates : moves) {
             int finalAlpha = alpha;
             int finalBeta = beta;
             score = coordinates.with(board, nextPlayer, copy -> {
                 if (depth > 1 && !isTerminal(copy)) {
-                    List<Coordinates> availableActions = getGame().getPlayer(nextPlayer.getOpposite()).getAvailableActions(copy);
+                    List<ICoordinates> availableActions = getGame().getPlayer(nextPlayer.getOpposite()).getAvailableActions(copy);
                     return getMax(availableActions, copy, nextPlayer.getOpposite(), finalAlpha, finalBeta, depth - 1).getValue();
                 } else {
                     return getScore(copy);

@@ -66,4 +66,10 @@ public class Line {
         return amount;
     }
 
+    public void reset() {
+        for (Square square : SQUARES) {
+            square.reset();
+        }
+    }
+
 }

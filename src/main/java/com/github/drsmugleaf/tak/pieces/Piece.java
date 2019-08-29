@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.tak.pieces;
 
+import com.github.drsmugleaf.tak.IllegalGameCall;
 import com.github.drsmugleaf.tak.Images;
 
 import java.awt.*;
@@ -35,7 +36,7 @@ public class Piece {
 
     public void flatten() {
         if (getType() != Type.STANDING_STONE) {
-            throw new IllegalStateException("Piece isn't a standing stone");
+            throw new IllegalGameCall("Piece isn't a standing stone");
         }
 
         TYPE = Type.FLAT_STONE;
@@ -43,11 +44,15 @@ public class Piece {
 
     @Override
     public String toString() {
-        return COLOR.toString();
+        return COLOR.toString() + TYPE.toString();
     }
 
     public Image toImage(int height, int width) {
         return Images.getPiece(this, height, width);
+    }
+
+    public double toDouble() {
+        return getColor().toDouble() * getType().toDouble();
     }
 
 }

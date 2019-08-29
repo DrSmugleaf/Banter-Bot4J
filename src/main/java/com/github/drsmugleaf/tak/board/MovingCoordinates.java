@@ -8,14 +8,13 @@ import java.util.function.Function;
 /**
  * Created by DrSmugleaf on 01/01/2019
  */
-public class MovingCoordinates extends Coordinates {
+public class MovingCoordinates implements ICoordinates {
 
     private final Square ORIGIN;
     private final Square DESTINATION;
     private final int PIECES;
 
     public MovingCoordinates(Square origin, Square destination, int pieces) {
-        super(origin.getColumn(), destination.getRow(), origin.getTopPiece().getType());
         ORIGIN = origin;
         DESTINATION = destination;
         PIECES = pieces;
@@ -32,7 +31,7 @@ public class MovingCoordinates extends Coordinates {
     }
 
     @Override
-    public int with(Board board, Color nextPlayer, Function<Board, Integer> function) {
+    public int with(Board board, Color nextColor, Function<Board, Integer> function) {
         board.moveSilent(ORIGIN, DESTINATION, PIECES);
         Integer result = function.apply(board);
         board.moveSilent(DESTINATION, ORIGIN, PIECES);

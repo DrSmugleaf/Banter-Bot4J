@@ -10,14 +10,20 @@ import com.github.drsmugleaf.tak.pieces.Type;
  */
 public class Hand {
 
+    private final Preset PRESET;
     private final Color COLOR;
     private int PIECES;
     private int CAPSTONES;
 
     Hand(Color color, Preset preset) {
+        PRESET = preset;
         COLOR = color;
         PIECES = preset.getStones();
         CAPSTONES = preset.getCapstones();
+    }
+
+    public Preset getPreset() {
+        return PRESET;
     }
 
     public Color getColor() {
@@ -68,6 +74,11 @@ public class Hand {
         }
 
         return new Piece(COLOR, type);
+    }
+
+    public void reset() {
+        PIECES = getPreset().getStones();
+        CAPSTONES = getPreset().getCapstones();
     }
 
 }

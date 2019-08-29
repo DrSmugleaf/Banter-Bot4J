@@ -5,23 +5,23 @@ package com.github.drsmugleaf.tak;
  */
 public abstract class GameException extends TakException {
 
-    public GameException(Game game) {
+    public GameException() {
         super();
     }
 
-    public GameException(Game game, String message) {
+    public GameException(String message) {
         super(message);
     }
 
-    public GameException(Game game, String message, Throwable cause) {
+    public GameException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public GameException(Game game, Throwable cause) {
+    public GameException(Throwable cause) {
         super(cause);
     }
 
-    protected GameException(Game game, String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    protected GameException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 
