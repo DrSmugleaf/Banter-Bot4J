@@ -62,7 +62,7 @@ public class NeuralBot extends Bot implements MDP<NeuralBoard, Integer, Discrete
     private final DiscreteSpace ACTION_SPACE;
     private final ObservationSpace<NeuralBoard> OBSERVATION_SPACE = new ArrayObservationSpace<>(new int[]{550});
     private static int wins = 0;
-    private static int other = 0;
+    private static int losses = 0;
     private static int ties = 0;
 
     protected NeuralBot(String name, NeuralGame game, Color color, Preset preset) {
@@ -100,6 +100,9 @@ public class NeuralBot extends Bot implements MDP<NeuralBoard, Integer, Discrete
             throw new UncheckedIOException("Error loading policy", e);
         }
 
+        wins = 0;
+        losses = 0;
+        ties = 0;
         double totalRewards = 0;
         int iterations = 1000;
         long time = System.nanoTime();
@@ -114,7 +117,7 @@ public class NeuralBot extends Bot implements MDP<NeuralBoard, Integer, Discrete
         System.out.println("Average reward: " + totalRewards / iterations);
 
         System.out.println("Wins: " + wins);
-        System.out.println("Other: " + other);
+        System.out.println("Losses: " + losses);
         System.out.println("Ties: " + ties);
         System.out.println("Win rate: " + wins / (iterations / 100.0) + "%");
     }
@@ -202,7 +205,7 @@ public class NeuralBot extends Bot implements MDP<NeuralBoard, Integer, Discrete
         if (equals(winner)) {
             wins++;
         } else if (winner != null) {
-            other++;
+            losses++;
         } else {
             ties++;
         }
