@@ -208,67 +208,14 @@
 
         <dependency>
             <groupId>org.deeplearning4j</groupId>
-            <artifactId>deeplearning4j-cuda-10.1</artifactId>
-            <version>1.0.0-beta4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.nd4j</groupId>
-            <artifactId>nd4j-cuda-10.1</artifactId>
-            <version>1.0.0-beta4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.deeplearning4j</groupId>
             <artifactId>rl4j-core</artifactId>
             <version>1.0.0-beta4</version>
         </dependency>
 
         <dependency>
-            <groupId>org.deeplearning4j</groupId>
-            <artifactId>rl4j-gym</artifactId>
+            <groupId>org.nd4j</groupId>
+            <artifactId>nd4j-native-platform</artifactId>
             <version>1.0.0-beta4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.deeplearning4j</groupId>
-            <artifactId>gym-java-client</artifactId>
-            <version>1.0.0-beta4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.bytedeco</groupId>
-            <artifactId>cuda-platform</artifactId>
-            <version>10.1-7.5-1.5</version>
-        </dependency>
-
-        <!-- Additional dependencies to use bundled CUDA, cuDNN, and NCCL -->
-        <dependency>
-            <groupId>org.bytedeco</groupId>
-            <artifactId>cuda</artifactId>
-            <version>10.1-7.5-1.5</version>
-            <classifier>linux-x86_64-redist</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>org.bytedeco</groupId>
-            <artifactId>cuda</artifactId>
-            <version>10.1-7.5-1.5</version>
-            <classifier>linux-ppc64le-redist</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>org.bytedeco</groupId>
-            <artifactId>cuda</artifactId>
-            <version>10.1-7.5-1.5</version>
-            <classifier>macosx-x86_64-redist</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>org.bytedeco</groupId>
-            <artifactId>cuda</artifactId>
-            <version>10.1-7.5-1.5</version>
-            <classifier>windows-x86_64-redist</classifier>
         </dependency>
 
         <!-- jackson dependencies -->
