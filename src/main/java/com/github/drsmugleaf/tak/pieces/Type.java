@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.pieces;
 
 import com.github.drsmugleaf.tak.board.Square;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public enum Type {
     FLAT_STONE("flat.png", false, false, true, 2, "F"),
     STANDING_STONE("wall.png", true, false, false, 3, "S");
 
-    private static final ImmutableList<Type> TYPES = ImmutableList.copyOf(values());
+    private static final ImmutableSet<Type> TYPES = ImmutableSet.copyOf(values());
     private final String FILE_NAME;
     private final boolean BLOCKS;
     private final boolean IGNORES_BLOCK;
@@ -46,7 +46,7 @@ public enum Type {
         STRING = string;
     }
 
-    public static ImmutableList<Type> getTypes() {
+    public static ImmutableSet<Type> getTypes() {
         return TYPES;
     }
 

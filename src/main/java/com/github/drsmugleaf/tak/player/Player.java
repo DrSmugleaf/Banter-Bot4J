@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by DrSmugleaf on 01/12/2018
@@ -90,7 +91,7 @@ public abstract class Player {
         return places;
     }
 
-    public final List<ICoordinates> getAvailablePlaces(Board board, List<Type> types) {
+    public final List<ICoordinates> getAvailablePlaces(Board board, Set<Type> types) {
         return getAvailablePlaces(board, types.toArray(new Type[0]));
     }
 

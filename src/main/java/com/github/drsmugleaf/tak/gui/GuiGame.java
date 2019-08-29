@@ -20,14 +20,14 @@ public class GuiGame extends Game {
     private final BoardPanel BOARD_PANEL;
     private JFrame FRAME;
 
-    private GuiGame(BoardPanel board, Preset preset, String playerName1, String playerName2, Function<PlayerInformation, Player> playerMaker1, Function<PlayerInformation, Player> playerMaker2) {
-        super(board, preset, playerName1, playerName2, playerMaker1, playerMaker2);
+    private GuiGame(BoardPanel board, String playerName1, String playerName2, Function<PlayerInformation, Player> playerMaker1, Function<PlayerInformation, Player> playerMaker2) {
+        super(board, playerName1, playerName2, playerMaker1, playerMaker2);
         BOARD_PANEL = board;
         FRAME = setupFrame();
     }
 
     public GuiGame(Preset preset, String playerName1, String playerName2, Function<PlayerInformation, Player> playerMaker1, Function<PlayerInformation, Player> playerMaker2) {
-        this(BoardPanel.from(preset), preset, playerName1, playerName2, playerMaker1, playerMaker2);
+        this(BoardPanel.from(preset), playerName1, playerName2, playerMaker1, playerMaker2);
     }
 
     public static void main(String[] args) {

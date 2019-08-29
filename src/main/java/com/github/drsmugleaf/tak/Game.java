@@ -10,7 +10,7 @@ import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -20,7 +20,7 @@ import java.util.function.Function;
 public class Game {
 
     private final Board BOARD;
-    private final Map<Color, Player> PLAYERS = new HashMap<>();
+    private final Map<Color, Player> PLAYERS = new EnumMap<>(Color.class);
     public Player nextPlayer;
     @Nullable
     private Player winner = null;
@@ -28,28 +28,28 @@ public class Game {
 
     public Game(
             Board board,
-            Preset preset,
             String playerName1,
             String playerName2,
             Function<PlayerInformation, Player> playerMaker1,
             Function<PlayerInformation, Player> playerMaker2
     ) {
         BOARD = board;
-        Player player1 = playerMaker1.apply(new PlayerInformation<>(playerName1, this, Color.BLACK, preset));
-        Player player2 = playerMaker2.apply(new PlayerInformation<>(playerName2, this, Color.WHITE, preset));
+        Player player1 = playerMaker1.apply(new PlayerInformation<>(playerName1, this, Color.BLACK, BOARD.getPreset()));
+        Player player2 = playerMaker2.apply(new PlayerInformation<>(playerName2, this, Color.WHITE, BOARD.getPreset()));
         PLAYERS.put(player1.getColor(), player1);
         PLAYERS.put(player2.getColor(), player2);
         nextPlayer = player1;
     }
 
-    public Game(
+    public static Game from(
             Preset preset,
             String playerName1,
             String playerName2,
             Function<PlayerInformation, Player> playerMaker1,
             Function<PlayerInformation, Player> playerMaker2
     ) {
-        this(new Board(preset), preset, playerName1, playerName2, playerMaker1, playerMaker2);
+        Board board = new Board(preset);
+        return new Game(board, playerName1, playerName2, playerMaker1, playerMaker2);
     }
 
     public Board getBoard() {
@@ -61,7 +61,7 @@ public class Game {
     }
 
     public Map<Color, Player> getPlayers() {
-        return new HashMap<>(PLAYERS);
+        return new EnumMap<>(PLAYERS);
     }
 
     public boolean canMove(Player player, Square origin, Square destination, int pieces) {
@@ -117,16 +117,34 @@ public class Game {
 
     @Nullable
     protected Player forceVictory() {
-        int blackFlat = getBoard().countFlat(Color.BLACK);
-        int whiteFlat = getBoard().countFlat(Color.WHITE);
-
-        if (blackFlat > whiteFlat) {
-            return PLAYERS.get(Color.BLACK);
-        } else if (blackFlat < whiteFlat) {
-            return PLAYERS.get(Color.WHITE);
-        } else {
-            return null;
+        Map<Color, Integer> flatStonesByColor = new EnumMap<>(Color.class);
+        Board board = getBoard();
+        for (Color color : Color.getColors()) {
+            int stones = board.countFlat(color);
+            flatStonesByColor.put(color, stones);
         }
+
+        Map.Entry<Color, Integer> maximum = null;
+        for (Map.Entry<Color, Integer> entry : flatStonesByColor.entrySet()) {
+            if (maximum == null) {
+                maximum = entry;
+                continue;
+            }
+
+            if (maximum.getValue().equals(entry.getValue())) {
+                return null;
+            }
+
+            if (maximum.getValue() < entry.getValue()) {
+                maximum = entry;
+            }
+        }
+
+        if (maximum == null) {
+            throw new IllegalStateException("No initial maximum entry found");
+        }
+
+        return getPlayer(maximum.getKey());
     }
 
     public Player getNextPlayer() {

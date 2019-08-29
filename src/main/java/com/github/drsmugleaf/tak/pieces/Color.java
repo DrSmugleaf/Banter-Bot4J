@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.tak.pieces;
 
+import com.google.common.collect.ImmutableSet;
+
 /**
  * Created by DrSmugleaf on 01/12/2018
  */
@@ -18,6 +20,7 @@ public enum Color {
         }
     };
 
+    private static final ImmutableSet<Color> COLORS = ImmutableSet.copyOf(values());
     private final String FOLDER_NAME;
     private final double VALUE;
     private final String STRING;
@@ -26,6 +29,10 @@ public enum Color {
         FOLDER_NAME = folderName;
         VALUE = value;
         STRING = string;
+    }
+
+    public static ImmutableSet<Color> getColors() {
+        return COLORS;
     }
 
     public String getFolderName() {
