@@ -1,10 +1,10 @@
 package com.github.drsmugleaf.tak.player;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tak.Game;
 import com.github.drsmugleaf.tak.board.*;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Type;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;

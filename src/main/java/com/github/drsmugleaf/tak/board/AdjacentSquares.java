@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tak.board;
 
-import org.jetbrains.annotations.Nullable;
+import com.github.drsmugleaf.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;

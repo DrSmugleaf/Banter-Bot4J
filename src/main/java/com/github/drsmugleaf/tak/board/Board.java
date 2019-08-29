@@ -1,9 +1,9 @@
 package com.github.drsmugleaf.tak.board;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tak.IllegalGameCall;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;

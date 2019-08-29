@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.tak;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tak.board.Board;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.board.Square;
@@ -8,7 +9,6 @@ import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.Map;

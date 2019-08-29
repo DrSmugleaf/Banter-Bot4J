@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.board;
 
 import com.github.drsmugleaf.BanterBot4J;
-import org.jetbrains.annotations.Nullable;
+import com.github.drsmugleaf.Nullable;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
