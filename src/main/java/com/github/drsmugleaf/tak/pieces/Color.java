@@ -5,51 +5,42 @@ package com.github.drsmugleaf.tak.pieces;
  */
 public enum Color {
 
-    BLACK("black/") {
+    BLACK("black/", 1, "B") {
         @Override
         public Color getOpposite() {
             return WHITE;
         }
-
-        @Override
-        public double toDouble() {
-            return 1;
-        }
-
-        @Override
-        public String toString() {
-            return "B";
-        }
     },
-    WHITE("white/") {
+    WHITE("white/", -1, "W") {
         @Override
         public Color getOpposite() {
             return BLACK;
         }
-
-        @Override
-        public double toDouble() {
-            return -1;
-        }
-
-        @Override
-        public String toString() {
-            return "W";
-        }
     };
 
     private final String FOLDER_NAME;
+    private final double VALUE;
+    private final String STRING;
 
-    Color(String folderName) {
+    Color(String folderName, double value, String string) {
         FOLDER_NAME = folderName;
+        VALUE = value;
+        STRING = string;
     }
 
     public String getFolderName() {
         return FOLDER_NAME;
     }
 
-    public abstract Color getOpposite();
+    public double toDouble() {
+        return VALUE;
+    }
 
-    public abstract double toDouble();
+    @Override
+    public String toString() {
+        return STRING;
+    }
+
+    public abstract Color getOpposite();
 
 }

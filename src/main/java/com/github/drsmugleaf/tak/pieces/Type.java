@@ -10,7 +10,7 @@ import java.util.List;
  */
 public enum Type {
 
-    CAPSTONE("capstone.png", true, true, true) {
+    CAPSTONE("capstone.png", true, true, true, 1, "C") {
         @Override
         public boolean canMoveTo(Piece topPiece) {
             return topPiece.getType() != CAPSTONE;
@@ -25,51 +25,25 @@ public enum Type {
 
             pieces.add(piece);
         }
-
-        @Override
-        public double toDouble() {
-            return 1;
-        }
-
-        @Override
-        public String toString() {
-            return "C";
-        }
     },
-    FLAT_STONE("flat.png", false, false, true) {
-        @Override
-        public double toDouble() {
-            return 2;
-        }
-
-        @Override
-        public String toString() {
-            return "F";
-        }
-    },
-    STANDING_STONE("wall.png", true, false, false) {
-        @Override
-        public double toDouble() {
-            return 3;
-        }
-
-        @Override
-        public String toString() {
-            return "S";
-        }
-    };
+    FLAT_STONE("flat.png", false, false, true, 2, "F"),
+    STANDING_STONE("wall.png", true, false, false, 3, "S");
 
     private static final ImmutableList<Type> TYPES = ImmutableList.copyOf(values());
     private final String FILE_NAME;
     private final boolean BLOCKS;
     private final boolean IGNORES_BLOCK;
     private final boolean FORMS_ROAD;
+    private final double VALUE;
+    private final String STRING;
 
-    Type(String fileName, boolean blocks, boolean ignoresBlock, boolean formsRoad) {
+    Type(String fileName, boolean blocks, boolean ignoresBlock, boolean formsRoad, double value, String string) {
         FILE_NAME = fileName;
         BLOCKS = blocks;
         IGNORES_BLOCK = ignoresBlock;
         FORMS_ROAD = formsRoad;
+        VALUE = value;
+        STRING = string;
     }
 
     public static ImmutableList<Type> getTypes() {
@@ -92,6 +66,15 @@ public enum Type {
         return FORMS_ROAD;
     }
 
+    public double toDouble() {
+        return VALUE;
+    }
+
+    @Override
+    public String toString() {
+        return STRING;
+    }
+
     public boolean canMoveTo(Piece topPiece) {
         return ignoresBlock() || !topPiece.getType().blocks();
     }
@@ -99,7 +82,5 @@ public enum Type {
     public void place(Square square, List<Piece> pieces, Piece piece) {
         pieces.add(piece);
     }
-
-    public abstract double toDouble();
 
 }
