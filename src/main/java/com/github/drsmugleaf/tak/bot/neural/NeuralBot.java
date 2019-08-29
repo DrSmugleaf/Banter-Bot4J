@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.tak.bot.neural;
 
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.env.Keys;
 import com.github.drsmugleaf.tak.board.ICoordinates;
 import com.github.drsmugleaf.tak.board.Line;
 import com.github.drsmugleaf.tak.board.Preset;
@@ -34,11 +35,11 @@ import java.util.List;
  */
 public class NeuralBot extends Bot implements MDP<NeuralBoard, Integer, DiscreteSpace> {
 
-    public static QLearning.QLConfiguration QL = new QLearning
+    private static QLearning.QLConfiguration QL = new QLearning
             .QLConfiguration(
             42,
             200,
-            150000,
+            1000,
             150000,
             32,
             500,
@@ -50,7 +51,7 @@ public class NeuralBot extends Bot implements MDP<NeuralBoard, Integer, Discrete
             1000,
             true
     );
-    public static DQNFactoryStdDense.Configuration NET = DQNFactoryStdDense
+    private static DQNFactoryStdDense.Configuration NET = DQNFactoryStdDense
             .Configuration
             .builder()
             .l2(0.001)
@@ -60,7 +61,7 @@ public class NeuralBot extends Bot implements MDP<NeuralBoard, Integer, Discrete
             .build();
 
     private final DiscreteSpace ACTION_SPACE;
-    private final ObservationSpace<NeuralBoard> OBSERVATION_SPACE = new ArrayObservationSpace<>(new int[]{550});
+    private final ObservationSpace<NeuralBoard> OBSERVATION_SPACE;
     private static int wins = 0;
     private static int losses = 0;
     private static int ties = 0;
@@ -68,6 +69,7 @@ public class NeuralBot extends Bot implements MDP<NeuralBoard, Integer, Discrete
     protected NeuralBot(String name, NeuralGame game, Color color, Preset preset) {
         super(name, game, color, preset);
         ACTION_SPACE = new TakSpace(game, preset);
+        OBSERVATION_SPACE = new ArrayObservationSpace<>(new int[]{TakSpace.getSize(preset)});
     }
 
     public static void main(String[] args) {
@@ -84,7 +86,7 @@ public class NeuralBot extends Bot implements MDP<NeuralBoard, Integer, Discrete
         dql.train();
         DQNPolicy<NeuralBoard> policy = dql.getPolicy();
         try {
-            policy.save("C:\\Users\\javie\\tmp\\poll");
+            policy.save(Keys.TAK_POLICY_DIRECTORY.VALUE);
         } catch (IOException e) {
             throw new UncheckedIOException("Error saving policy", e);
         }
@@ -95,7 +97,7 @@ public class NeuralBot extends Bot implements MDP<NeuralBoard, Integer, Discrete
         NeuralBot mdp2 = (NeuralBot) game2.getPlayer(Color.BLACK);
         DQNPolicy<NeuralBoard> policy2;
         try {
-            policy2 = DQNPolicy.load("C:\\Users\\javie\\tmp\\poll");
+            policy2 = DQNPolicy.load(Keys.TAK_POLICY_DIRECTORY.VALUE);
         } catch (IOException e) {
             throw new UncheckedIOException("Error loading policy", e);
         }

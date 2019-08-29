@@ -21,7 +21,8 @@ public enum Keys {
     DISCORD_WARNING_CHANNEL(""),
     GOOGLE_KEY,
     TRIPWIRE_TEST_USERNAME(""),
-    TRIPWIRE_TEST_PASSWORD("");
+    TRIPWIRE_TEST_PASSWORD(""),
+    TAK_POLICY_DIRECTORY("");
 
     public final String VALUE;
 

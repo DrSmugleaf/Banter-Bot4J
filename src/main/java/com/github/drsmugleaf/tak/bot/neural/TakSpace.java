@@ -19,7 +19,7 @@ public class TakSpace extends DiscreteSpace {
         GAME = game;
     }
 
-    private static int getSize(Preset preset) {
+    public static int getSize(Preset preset) {
         return preset.getSize() * preset.getSize() * (preset.getCapstones() + preset.getStones());
     }
 
