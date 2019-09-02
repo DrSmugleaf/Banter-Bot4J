@@ -15,6 +15,10 @@ import org.jetbrains.annotations.Contract;
  */
 public class NeuralBot extends Bot {
 
+    public static int win = 0;
+    public static int loss = 0;
+    public static int tie = 0;
+
     protected NeuralBot(String name, Game game, Color color, Preset preset) {
         super(name, game, color, preset, true);
     }
@@ -38,4 +42,9 @@ public class NeuralBot extends Bot {
         return null;
     }
 
+    @Override
+    public void onGameEnd(@Nullable Player winner) {
+        if (winner == null) tie++;
+        if (winner == this) win++; else loss++;
+    }
 }

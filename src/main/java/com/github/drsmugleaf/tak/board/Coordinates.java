@@ -22,6 +22,10 @@ public class Coordinates implements ICoordinates {
         PIECE = piece;
     }
 
+    public Coordinates(Square square, Type piece) {
+        this(square.getColumn(), square.getRow(), piece);
+    }
+
     @Override
     public boolean canPlace(Player player) {
         return player.canPlace(PIECE, COLUMN, ROW);

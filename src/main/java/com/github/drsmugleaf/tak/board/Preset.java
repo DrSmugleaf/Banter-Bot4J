@@ -2,10 +2,14 @@ package com.github.drsmugleaf.tak.board;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.tak.pieces.Type;
+import com.google.common.collect.ImmutableList;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -23,6 +27,7 @@ public enum Preset {
     private final int CAPSTONES;
     private final int STONES;
     private final String IMAGE_NAME;
+    private final ImmutableList<ICoordinates> ALL_ACTIONS;
 
     Preset(int size, int capstones, int stones, String imageName) {
         if (size <= 0) {
@@ -33,6 +38,31 @@ public enum Preset {
         STONES = stones;
         CAPSTONES = capstones;
         IMAGE_NAME = imageName;
+
+        List<ICoordinates> allActions = new ArrayList<>();
+        Board board = new Board(this);
+        for (Line row : board.getRows()) {
+            for (Square origin : row.getSquares()) {
+                for (Type type : Type.getTypes()) {
+                    Coordinates place = new Coordinates(origin, type);
+                    allActions.add(place);
+                }
+
+                AdjacentSquares adjacent = board.getAdjacent(origin);
+                for (Square destination : adjacent.getAll()) {
+                    if (destination == null) {
+                        continue;
+                    }
+
+                    for (int pieces = 0; pieces <= getCarryLimit(); pieces++) {
+                        MovingCoordinates move = new MovingCoordinates(origin, destination, pieces);
+                        allActions.add(move);
+                    }
+                }
+            }
+        }
+
+        ALL_ACTIONS = ImmutableList.copyOf(allActions);
     }
 
     public static Preset getDefault() {
@@ -74,6 +104,10 @@ public enum Preset {
 
     public int getCarryLimit() {
         return getSize();
+    }
+
+    public ImmutableList<ICoordinates> getAllActions() {
+        return ALL_ACTIONS;
     }
 
 }

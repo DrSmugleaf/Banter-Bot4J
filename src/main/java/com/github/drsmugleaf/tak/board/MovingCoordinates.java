@@ -10,31 +10,39 @@ import java.util.function.Function;
  */
 public class MovingCoordinates implements ICoordinates {
 
-    private final Square ORIGIN;
-    private final Square DESTINATION;
+    private final int ORIGIN_COLUMN;
+    private final int ORIGIN_ROW;
+    private final int DESTINATION_COLUMN;
+    private final int DESTINATION_ROW;
     private final int PIECES;
 
-    public MovingCoordinates(Square origin, Square destination, int pieces) {
-        ORIGIN = origin;
-        DESTINATION = destination;
+    public MovingCoordinates(int originColumn, int originRow, int destinationColumn, int destinationRow, int pieces) {
+        ORIGIN_COLUMN = originColumn;
+        ORIGIN_ROW = originRow;
+        DESTINATION_COLUMN = destinationColumn;
+        DESTINATION_ROW = destinationRow;
         PIECES = pieces;
+    }
+
+    public MovingCoordinates(Square origin, Square destination, int pieces) {
+        this(origin.getColumn(), origin.getRow(), destination.getColumn(), destination.getRow(), pieces);
     }
 
     @Override
     public boolean canPlace(Player player) {
-        return player.canMove(ORIGIN, DESTINATION, PIECES);
+        return player.canMove(ORIGIN_COLUMN, ORIGIN_ROW, DESTINATION_COLUMN, DESTINATION_ROW, PIECES);
     }
 
     @Override
     public void place(Player player) {
-        player.move(ORIGIN, DESTINATION, PIECES);
+        player.move(ORIGIN_COLUMN, ORIGIN_ROW, DESTINATION_COLUMN, DESTINATION_ROW, PIECES);
     }
 
     @Override
     public int with(Board board, Color nextColor, Function<Board, Integer> function) {
-        board.moveSilent(ORIGIN, DESTINATION, PIECES);
+        board.moveSilent(ORIGIN_COLUMN, ORIGIN_ROW, DESTINATION_COLUMN, DESTINATION_ROW, PIECES);
         Integer result = function.apply(board);
-        board.moveSilent(DESTINATION, ORIGIN, PIECES);
+        board.moveSilent(ORIGIN_COLUMN, ORIGIN_ROW, DESTINATION_COLUMN, DESTINATION_ROW, PIECES);
 
         return result;
     }

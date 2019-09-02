@@ -54,14 +54,14 @@ public abstract class Player {
 
         for (Line row : board.getRows()) {
             for (Square origin : row.getSquares()) {
-                AdjacentSquares adjacent = GAME.getBoard().getAdjacent(origin);
+                AdjacentSquares adjacent = board.getAdjacent(origin);
 
                 for (Square destination : adjacent.getAll()) {
                     if (destination == null) {
                         continue;
                     }
 
-                    for (int amount = 1; amount < GAME.getBoard().getPreset().getCarryLimit(); amount++) {
+                    for (int amount = 1; amount <= board.getPreset().getCarryLimit(); amount++) {
                         if (canMove(origin, destination, amount)) {
                             moves.add(new MovingCoordinates(origin, destination, amount));
                         }
@@ -145,8 +145,22 @@ public abstract class Player {
         return getColor() == origin.getColor() && GAME.canMove(this, origin, destination, pieces);
     }
 
+    public final boolean canMove(int originColumn, int originRow, int destinationColumn, int destinationRow, int pieces) {
+        Line[] rows = getGame().getBoard().getRows();
+        Square origin = rows[originRow].getSquares()[originColumn];
+        Square destination = rows[destinationRow].getSquares()[destinationColumn];
+        return canMove(origin, destination, pieces);
+    }
+
     public final Square move(Square origin, Square destination, int pieces) {
         return GAME.move(this, origin, destination, pieces);
+    }
+
+    public final Square move(int originColumn, int originRow, int destinationColumn, int destinationRow, int pieces) {
+        Line[] rows = getGame().getBoard().getRows();
+        Square origin = rows[originRow].getSquares()[originColumn];
+        Square destination = rows[destinationRow].getSquares()[destinationColumn];
+        return move(origin, destination, pieces);
     }
 
     public final boolean canPlace(Type type, int column, int row) {
@@ -171,15 +185,15 @@ public abstract class Player {
     }
 
     public final void nextTurn() {
-        if (isPassive()) {
-            try {
-                synchronized (this) {
-                    wait();
-                }
-            } catch (InterruptedException e) {
-                throw new IllegalStateException("Player thread interrupted", e);
-            }
-        }
+//        if (isPassive()) {
+//            try {
+//                synchronized (this) {
+//                    wait();
+//                }
+//            } catch (InterruptedException e) {
+//                throw new IllegalStateException("Player thread interrupted", e);
+//            }
+//        }
 
         if (NEXT_ACTION == null) {
             NEXT_ACTION = getNextAction();
@@ -190,6 +204,8 @@ public abstract class Player {
         } else {
             NEXT_ACTION.place(this);
         }
+
+        NEXT_ACTION = null;
 
     }
 

@@ -160,6 +160,13 @@ public class Board {
         return move(origin, destination, pieces, true);
     }
 
+    public final Square moveSilent(int originColumn, int originRow, int destinationColumn, int destinationRow, int pieces) {
+        Line[] rows = getRows();
+        Square origin = rows[originRow].getSquares()[originColumn];
+        Square destination = rows[destinationRow].getSquares()[destinationColumn];
+        return moveSilent(origin, destination, pieces);
+    }
+
     public boolean canPlace(int column, int row) {
         return column < COLUMNS.length && COLUMNS[column].canPlace(row);
     }
