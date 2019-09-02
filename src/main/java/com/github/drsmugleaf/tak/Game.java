@@ -17,9 +17,9 @@ import java.util.function.Function;
 /**
  * Created by DrSmugleaf on 01/12/2018
  */
-public class Game {
+public class Game<T extends Board> {
 
-    private final Board BOARD;
+    private final T BOARD;
     private final Map<Color, Player> PLAYERS = new EnumMap<>(Color.class);
     public Player nextPlayer;
     @Nullable
@@ -27,7 +27,7 @@ public class Game {
     private boolean active = true;
 
     public Game(
-            Board board,
+            T board,
             String playerName1,
             String playerName2,
             Function<PlayerInformation, Player> playerMaker1,
@@ -49,10 +49,10 @@ public class Game {
             Function<PlayerInformation, Player> playerMaker2
     ) {
         Board board = new Board(preset);
-        return new Game(board, playerName1, playerName2, playerMaker1, playerMaker2);
+        return new Game<>(board, playerName1, playerName2, playerMaker1, playerMaker2);
     }
 
-    public Board getBoard() {
+    public T getBoard() {
         return BOARD;
     }
 
@@ -65,7 +65,7 @@ public class Game {
     }
 
     public boolean canMove(Player player, Square origin, Square destination, int pieces) {
-        return isActive() && nextPlayer == player && getBoard().canMove(origin, destination, pieces);
+        return isActive() && nextPlayer == player && BOARD.canMove(origin, destination, pieces);
     }
 
     public Square move(Player player, Square origin, Square destination, int pieces) {
@@ -73,13 +73,13 @@ public class Game {
             throw new IllegalGameCall("Illegal move call, origin " + origin + ", destination " + destination + " and pieces " + pieces);
         }
 
-        Square square = getBoard().move(origin, destination, pieces);
+        Square square = BOARD.move(origin, destination, pieces);
         onPieceMove(player, origin, destination, pieces);
         return square;
     }
 
     public boolean canPlace(Player player, int column, int row) {
-        return isActive() && nextPlayer == player && getBoard().canPlace(column, row);
+        return isActive() && nextPlayer == player && BOARD.canPlace(column, row);
     }
 
     public Square place(Player player, Type type, int column, int row) {
@@ -88,15 +88,15 @@ public class Game {
         }
 
         Piece piece = player.getHand().takePiece(type);
-        Square square = getBoard().place(piece, column, row);
+        Square square = BOARD.place(piece, column, row);
         onPiecePlace(player, type, square);
         return square;
     }
 
     @Nullable
     protected Player checkVictory() {
-        boolean blackWins = getBoard().hasRoad(Color.BLACK);
-        boolean whiteWins = getBoard().hasRoad(Color.WHITE);
+        boolean blackWins = BOARD.hasRoad(Color.BLACK);
+        boolean whiteWins = BOARD.hasRoad(Color.WHITE);
         if (blackWins && whiteWins) {
             return nextPlayer;
         }
@@ -118,9 +118,8 @@ public class Game {
     @Nullable
     protected Player forceVictory() {
         Map<Color, Integer> flatStonesByColor = new EnumMap<>(Color.class);
-        Board board = getBoard();
         for (Color color : Color.getColors()) {
-            int stones = board.countFlat(color);
+            int stones = BOARD.countFlat(color);
             flatStonesByColor.put(color, stones);
         }
 
@@ -197,7 +196,7 @@ public class Game {
         setWinner(checkVictory());
         if (getWinner() != null) {
             end();
-        } else if (!nextPlayer.getHand().hasAny() || getBoard().isFull()) {
+        } else if (!nextPlayer.getHand().hasAny() || BOARD.isFull()) {
             setWinner(forceVictory());
             end();
         }
@@ -211,7 +210,7 @@ public class Game {
             player.resetPlayer();
         }
 
-        getBoard().reset();
+        BOARD.reset();
         nextPlayer = getPlayer(Color.BLACK);
         winner = null;
         active = true;

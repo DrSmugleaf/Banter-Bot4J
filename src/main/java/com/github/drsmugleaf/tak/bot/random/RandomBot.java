@@ -16,7 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public abstract class RandomBot extends Bot {
 
     protected RandomBot(String name, Game game, Color color, Preset preset) {
-        super(name, game, color, preset);
+        super(name, game, color, preset, false);
     }
 
     @Nullable

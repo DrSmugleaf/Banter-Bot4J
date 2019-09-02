@@ -47,10 +47,7 @@ public class GuiMouseListener implements MouseListener {
 
         Coordinates coordinates = new Coordinates(SQUARE.getColumn(), SQUARE.getRow(), type);
         if (coordinates.canPlace(PLAYER)) {
-            PLAYER.setNextMove(coordinates);
-            synchronized (PLAYER) {
-                PLAYER.notify();
-            }
+            PLAYER.setNextAction(coordinates);
         }
     }
 

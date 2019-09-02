@@ -18,11 +18,15 @@ public abstract class Player {
     private final String NAME;
     private final Game GAME;
     private final Hand HAND;
+    @Nullable
+    private ICoordinates NEXT_ACTION = null;
+    private final boolean PASSIVE;
 
-    public Player(String name, Game game, Color color, Preset preset) {
+    public Player(String name, Game game, Color color, Preset preset, boolean passive) {
         NAME = name;
         HAND = new Hand(color, preset);
         GAME = game;
+        PASSIVE = passive;
     }
 
     public final List<ICoordinates> getAvailableActions(Board board, Type type) {
@@ -119,6 +123,20 @@ public abstract class Player {
         return HAND;
     }
 
+    public final boolean isPassive() {
+        return PASSIVE;
+    }
+
+    @Nullable
+    public abstract ICoordinates getNextAction();
+
+    public final void setNextAction(ICoordinates action) {
+        NEXT_ACTION = action;
+        synchronized (this) {
+            notify();
+        }
+    }
+
     public final Color getColor() {
         return getHand().getColor();
     }
@@ -147,9 +165,33 @@ public abstract class Player {
 
     public final void resetPlayer() {
         HAND.reset();
+        synchronized (this) {
+            notify();
+        }
     }
 
-    public abstract void nextTurn();
+    public final void nextTurn() {
+        if (isPassive()) {
+            try {
+                synchronized (this) {
+                    wait();
+                }
+            } catch (InterruptedException e) {
+                throw new IllegalStateException("Player thread interrupted", e);
+            }
+        }
+
+        if (NEXT_ACTION == null) {
+            NEXT_ACTION = getNextAction();
+        }
+
+        if (NEXT_ACTION == null) {
+            surrender();
+        } else {
+            NEXT_ACTION.place(this);
+        }
+
+    }
 
     public void onEnemyPieceMove(Player player, Square origin, Square destination, int pieces) {}
 

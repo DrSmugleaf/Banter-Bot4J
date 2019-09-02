@@ -383,14 +383,14 @@ public class Board {
     public double[][][] toDoubleArray() {
         Preset preset = getPreset();
         int size = preset.getSize();
-        int totalPieces = preset.getCapstones() + preset.getStones();
-        double[][][] array = new double[size][size][totalPieces];
+        int maximumPieces = 1 + preset.getStones() * 2;
+        double[][][] array = new double[size][size][maximumPieces];
 
         Line[] rows = getRows();
         for (int r = 0; r < rows.length; r++) {
             Square[] columns = rows[r].getSquares();
             for (int c = 0; c < columns.length; c++) {
-                double[] pieces = columns[c].toDoubleArray(totalPieces);
+                double[] pieces = columns[c].toDoubleArray(maximumPieces);
                 array[r][c] = pieces;
             }
         }

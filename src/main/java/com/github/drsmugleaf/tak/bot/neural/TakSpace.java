@@ -15,12 +15,8 @@ public class TakSpace extends DiscreteSpace {
     private final Game GAME;
 
     public TakSpace(Game game, Preset preset) {
-        super(getSize(preset));
+        super(preset.getSize() * preset.getSize());
         GAME = game;
-    }
-
-    public static int getSize(Preset preset) {
-        return preset.getSize() * preset.getSize() * (preset.getCapstones() + preset.getStones());
     }
 
     @Override
