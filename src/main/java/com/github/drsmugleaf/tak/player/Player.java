@@ -21,6 +21,8 @@ public abstract class Player {
     @Nullable
     private ICoordinates NEXT_ACTION = null;
     private final boolean PASSIVE;
+    @Nullable
+    private List<ICoordinates> AVAILABLE_ACTIONS = null;
 
     public Player(String name, Game game, Color color, Preset preset, boolean passive) {
         NAME = name;
@@ -46,7 +48,13 @@ public abstract class Player {
     }
 
     public final List<ICoordinates> getAvailableActions() {
-        return getAvailableActions(getGame().getBoard());
+        if (AVAILABLE_ACTIONS != null) {
+            return AVAILABLE_ACTIONS;
+        }
+
+        List<ICoordinates> actions = getAvailableActions(getGame().getBoard());
+        AVAILABLE_ACTIONS = actions;
+        return actions;
     }
 
     public final List<ICoordinates> getAvailableMoves(Board board) {
@@ -54,6 +62,10 @@ public abstract class Player {
 
         for (Line row : board.getRows()) {
             for (Square origin : row.getSquares()) {
+                if (origin.getTopPiece() == null) {
+                    continue;
+                }
+
                 AdjacentSquares adjacent = board.getAdjacent(origin);
 
                 for (Square destination : adjacent.getAll()) {
@@ -206,7 +218,7 @@ public abstract class Player {
         }
 
         NEXT_ACTION = null;
-
+        AVAILABLE_ACTIONS = null;
     }
 
     public void onEnemyPieceMove(Player player, Square origin, Square destination, int pieces) {}
