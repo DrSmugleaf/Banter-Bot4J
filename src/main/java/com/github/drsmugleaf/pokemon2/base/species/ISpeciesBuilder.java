@@ -3,7 +3,6 @@ package com.github.drsmugleaf.pokemon2.base.species;
 import com.github.drsmugleaf.pokemon.battle.Tier;
 import com.github.drsmugleaf.pokemon.pokemon.Gender;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
-import com.github.drsmugleaf.pokemon2.base.builder.IBuilder;
 import com.github.drsmugleaf.pokemon2.base.type.IType;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -14,7 +13,7 @@ import java.util.Map;
 /**
  * Created by DrSmugleaf on 11/07/2019
  */
-public interface ISpeciesBuilder<T extends ISpecies> extends IBuilder<T> {
+public interface ISpeciesBuilder<T extends ISpecies> {
 
     String getName();
     ISpeciesBuilder<T> setName(String name);
@@ -33,9 +32,9 @@ public interface ISpeciesBuilder<T extends ISpecies> extends IBuilder<T> {
     ISpeciesBuilder<T> setWeight(double weight);
     Double getHeight();
     ISpeciesBuilder<T> setHeight(double height);
-    String getSuffix();
-    ISpeciesBuilder<T> setSuffix(String suffix);
     ImmutableSet<Gender> getGenders();
     ISpeciesBuilder<T> setGenders(Collection<Gender> genders);
+    ImmutableSet<String> getAlts();
+    ISpeciesBuilder<T> setAlts(Collection<String> alts);
 
 }

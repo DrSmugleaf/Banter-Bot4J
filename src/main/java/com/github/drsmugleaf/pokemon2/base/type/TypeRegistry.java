@@ -22,9 +22,9 @@ public class TypeRegistry extends Registry<IType> {
         return generation.getSmogon().getTypes().build();
     }
 
-    public List<IType> fromAlt(JSONObject alt) {
+    public List<IType> fromJson(JSONObject pokemon) {
         List<IType> types = new ArrayList<>();
-        JSONArray jsonTypes = alt.getJSONArray("types");
+        JSONArray jsonTypes = pokemon.getJSONArray("types");
 
         for (int i = 0; i < jsonTypes.length(); i++) {
             String name = jsonTypes.getString(i);

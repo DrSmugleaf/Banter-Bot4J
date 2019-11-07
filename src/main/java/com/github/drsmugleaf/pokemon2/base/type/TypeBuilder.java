@@ -1,13 +1,11 @@
 package com.github.drsmugleaf.pokemon2.base.type;
 
-import com.github.drsmugleaf.pokemon2.base.builder.IBuilder;
-
 import java.util.*;
 
 /**
  * Created by DrSmugleaf on 05/07/2019
  */
-public class TypeBuilder implements IBuilder<Map<String, IType>> {
+public class TypeBuilder {
 
     private final Map<String, HashSet<String>> weakTo = new HashMap<>();
     private final Map<String, HashSet<String>> resistantTo = new HashMap<>();
@@ -25,7 +23,6 @@ public class TypeBuilder implements IBuilder<Map<String, IType>> {
         return new SpecificTypeBuilder(this, type);
     }
 
-    @Override
     public Map<String, IType> build() {
         Map<String, IType> types = new HashMap<>();
         Set<String> names = new HashSet<>();
@@ -45,7 +42,7 @@ public class TypeBuilder implements IBuilder<Map<String, IType>> {
         return types;
     }
 
-    public class SpecificTypeBuilder implements IBuilder<IType> {
+    public class SpecificTypeBuilder {
 
         private final TypeBuilder BUILDER;
         private final String TYPE;
@@ -70,7 +67,6 @@ public class TypeBuilder implements IBuilder<Map<String, IType>> {
             return this;
         }
 
-        @Override
         public IType build() {
             HashSet<String> weaknesses = BUILDER.weakTo.computeIfAbsent(TYPE, (n) -> new HashSet<>());
             HashSet<String> resistances = BUILDER.resistantTo.computeIfAbsent(TYPE, (n) -> new HashSet<>());

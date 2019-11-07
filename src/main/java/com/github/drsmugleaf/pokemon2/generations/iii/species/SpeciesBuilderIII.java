@@ -30,6 +30,11 @@ public class SpeciesBuilderIII<T extends ISpecies> extends SpeciesBuilder<T> {
         CONSTRUCTOR = constructor;
     }
 
+    public SpeciesBuilderIII(SpeciesBuilder<T> builder, Function<SpeciesBuilderIII<T>, T> constructor) {
+        super(builder);
+        CONSTRUCTOR = constructor;
+    }
+
     public SpeciesBuilderIII(SpeciesBuilderIII<T> builder) {
         super(builder);
         abilities = builder.abilities;
@@ -100,20 +105,15 @@ public class SpeciesBuilderIII<T extends ISpecies> extends SpeciesBuilder<T> {
     }
 
     @Override
-    public SpeciesBuilderIII<T> setSuffix(String suffix) {
-        super.setSuffix(suffix);
-        return this;
-    }
-
-    @Override
     public SpeciesBuilderIII<T> setGenders(Collection<Gender> genders) {
         super.setGenders(genders);
         return this;
     }
 
     @Override
-    public T build() {
-        return CONSTRUCTOR.apply(this);
+    public SpeciesBuilderIII<T> setAlts(Collection<String> alts) {
+        super.setAlts(alts);
+        return this;
     }
 
 }

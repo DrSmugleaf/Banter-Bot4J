@@ -9,7 +9,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.*;
-import java.util.function.Function;
 
 /**
  * Created by DrSmugleaf on 03/07/2019
@@ -32,13 +31,9 @@ public class SpeciesBuilder<T extends ISpecies> implements ISpeciesBuilder<T> {
     private Double height;
     private String suffix = "";
     private Set<Gender> genders = new HashSet<>(); // TODO: 06-Jul-19 Add valid genders
-    private Function<SpeciesBuilder<T>, T> CONSTRUCTOR;
+    private Set<String> alts = new HashSet<>();
 
     public SpeciesBuilder() {}
-
-    public SpeciesBuilder(Function<SpeciesBuilder<T>, T> constructor) {
-        CONSTRUCTOR = constructor;
-    }
 
     public SpeciesBuilder(SpeciesBuilder<T> builder) {
         name = builder.name;
@@ -51,110 +46,125 @@ public class SpeciesBuilder<T extends ISpecies> implements ISpeciesBuilder<T> {
         height = builder.height;
         suffix = builder.suffix;
         genders = builder.genders;
-        CONSTRUCTOR = builder.CONSTRUCTOR;
     }
 
     @Nullable
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public SpeciesBuilder<T> setName(String name) {
         this.name = name;
         return this;
     }
 
+    @Override
     public ImmutableSet<String> getGenerations() {
         return ImmutableSet.copyOf(generations);
     }
 
+    @Override
     public SpeciesBuilder<T> setGenerations(Collection<String> generations) {
         this.generations = new HashSet<>(generations);
         return this;
     }
 
+    @Override
     public ImmutableSet<IType> getTypes() {
         return ImmutableSet.copyOf(types);
     }
 
+    @Override
     public SpeciesBuilder<T> setTypes(Collection<? extends IType> types) {
         this.types = new HashSet<>(types);
         return this;
     }
 
+    @Override
     public ImmutableSet<Tier> getTiers() {
         return ImmutableSet.copyOf(tiers);
     }
 
+    @Override
     public SpeciesBuilder<T> setTiers(Collection<Tier> tiers) {
         this.tiers = new HashSet<>(tiers);
         return this;
     }
 
+    @Override
     public ImmutableMap<PermanentStat, Integer> getStats() {
         return ImmutableMap.copyOf(stats);
     }
 
+    @Override
     public SpeciesBuilder<T> addStat(PermanentStat stat, Integer amount) {
         this.stats.put(stat, amount);
         return this;
     }
 
+    @Override
     public SpeciesBuilder<T> setStats(Map<PermanentStat, Integer> stats) {
         this.stats = stats;
         return this;
     }
 
+    @Override
     public ImmutableSet<T> getEvolutions() {
         return ImmutableSet.copyOf(evolutions);
     }
 
+    @Override
     public SpeciesBuilder<T> setEvolutions(Collection<T> evolutions) {
         this.evolutions = new HashSet<>(evolutions);
         return this;
     }
 
     @Nullable
+    @Override
     public Double getWeight() {
         return weight;
     }
 
+    @Override
     public SpeciesBuilder<T> setWeight(double weight) {
         this.weight = weight;
         return this;
     }
 
     @Nullable
+    @Override
     public Double getHeight() {
         return height;
     }
 
+    @Override
     public SpeciesBuilder<T> setHeight(double height) {
         this.height = height;
         return this;
     }
 
-    public String getSuffix() {
-        return suffix;
-    }
-
-    public SpeciesBuilder<T> setSuffix(String suffix) {
-        this.suffix = suffix;
-        return this;
-    }
-
+    @Override
     public ImmutableSet<Gender> getGenders() {
         return ImmutableSet.copyOf(genders);
     }
 
+    @Override
     public SpeciesBuilder<T> setGenders(Collection<Gender> genders) {
         this.genders = new HashSet<>(genders);
         return this;
     }
 
     @Override
-    public T build() {
-        return CONSTRUCTOR.apply(this);
+    public ImmutableSet<String> getAlts() {
+        return ImmutableSet.copyOf(alts);
+    }
+
+    @Override
+    public SpeciesBuilder<T> setAlts(Collection<String> alts) {
+        this.alts = new HashSet<>(alts);
+        return this;
     }
 
 }

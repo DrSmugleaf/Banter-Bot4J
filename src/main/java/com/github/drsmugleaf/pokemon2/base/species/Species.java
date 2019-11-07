@@ -20,8 +20,8 @@ public abstract class Species<T extends ISpecies<T>> implements ISpecies<T> {
     private final ImmutableSet<T> EVOLUTIONS;
     private final double HEIGHT;
     private final double WEIGHT;
-    private final String SUFFIX;
     private final ImmutableSet<Gender> GENDERS;
+    private final ImmutableSet<String> ALTS;
     private final String NAME;
 
     protected Species(SpeciesBuilder<T> builder) {
@@ -32,8 +32,8 @@ public abstract class Species<T extends ISpecies<T>> implements ISpecies<T> {
         EVOLUTIONS = builder.getEvolutions();
         HEIGHT = builder.getHeight();
         WEIGHT = builder.getWeight();
-        SUFFIX = builder.getSuffix();
         GENDERS = builder.getGenders();
+        ALTS = builder.getAlts();
         NAME = builder.getName();
     }
 
@@ -73,13 +73,13 @@ public abstract class Species<T extends ISpecies<T>> implements ISpecies<T> {
     }
 
     @Override
-    public String getSuffix() {
-        return SUFFIX;
+    public ImmutableSet<Gender> getGenders() {
+        return GENDERS;
     }
 
     @Override
-    public ImmutableSet<Gender> getGenders() {
-        return GENDERS;
+    public ImmutableSet<String> getAlts() {
+        return ALTS;
     }
 
     @Contract(pure = true)

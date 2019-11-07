@@ -20,13 +20,13 @@ import java.util.function.Function;
 /**
  * Created by DrSmugleaf on 06/07/2019
  */
-public class PokedexI<T extends ISpecies> extends Pokedex<T> {
+public class PokedexI<T extends ISpecies<T>> extends Pokedex<T> {
 
     public PokedexI(IGeneration generation, Function<SpeciesBuilder<T>, T> constructor) {
         super(getAll(generation, constructor));
     }
 
-    public static <T extends ISpecies> Map<String, T> getAll(
+    public static <T extends ISpecies<T>> Map<String, T> getAll(
             IGeneration gen,
             Function<SpeciesBuilder<T>, T> constructor
     ) {
@@ -35,63 +35,83 @@ public class PokedexI<T extends ISpecies> extends Pokedex<T> {
         JSONArray pokemons = smogon.getSpecies();
 
         for (int i = 0; i < pokemons.length(); i++) {
-            JSONObject jsonPokemon = pokemons.getJSONObject(i);
-            String name = jsonPokemon.getString("name");
-
-            JSONObject oob = jsonPokemon.getJSONObject("oob");
-            JSONArray jsonGenerations = oob.getJSONArray("genfamily");
-            List<String> generations = new ArrayList<>();
-            for (int j = 0; j < jsonGenerations.length(); j++) {
-                String generation = jsonGenerations.getString(j);
-                generations.add(generation);
-            }
-
-            JSONArray alts = oob.getJSONArray("alts");
-            for (int j = 0; j < alts.length(); j++) {
-                JSONObject alt = alts.getJSONObject(j);
-                String suffix = alt.getString("suffix");
-                if (!suffix.isEmpty()) {
-                    name = name.concat("-" + suffix);
-                }
-
-                int hp = alt.getInt("hp");
-                int attack = alt.getInt("atk");
-                int defense = alt.getInt("def");
-                int specialAttack = alt.getInt("spa");
-                int specialDefense = alt.getInt("spd");
-                int speed = alt.getInt("spe");
-                double weight = alt.getDouble("weight");
-                double height = alt.getDouble("height");
-
-                List<? extends IType> types = gen.getTypes().fromAlt(alt);
-
-                JSONArray jsonTiers = alt.getJSONArray("formats");
-                List<Tier> tiers = new ArrayList<>();
-                for (int k = 0; k < jsonTiers.length(); k++) {
-                    Tier tier = Tier.getTier(jsonTiers.getString(k));
-                    tiers.add(tier);
-                }
-
-                // TODO: 05-Jul-19 Add evolutions
-                SpeciesBuilder<T> builder = new SpeciesBuilder<>(constructor)
-                        .setName(name)
-                        .setGenerations(generations)
-                        .addStat(PermanentStat.HP, hp)
-                        .addStat(PermanentStat.ATTACK, attack)
-                        .addStat(PermanentStat.DEFENSE, defense)
-                        .addStat(PermanentStat.SPECIAL_ATTACK, specialAttack)
-                        .addStat(PermanentStat.SPECIAL_DEFENSE, specialDefense)
-                        .addStat(PermanentStat.SPEED, speed)
-                        .setWeight(weight)
-                        .setHeight(height)
-                        .setTypes(types)
-                        .setTiers(tiers);
-
-                species.put(name, constructor.apply(builder));
-            }
+            JSONObject pokemon = pokemons.getJSONObject(i);
+            SpeciesBuilder<T> builder = toBuilder(gen, pokemon, species);
+            species.put(builder.getName(), constructor.apply(builder));
         }
 
         return species;
+    }
+
+    public static <T extends ISpecies<T>> SpeciesBuilder<T> toBuilder(
+            IGeneration gen,
+            JSONObject pokemon,
+            Map<String, T> species
+    ) {
+        String name = pokemon.getString("name");
+        JSONObject oob = pokemon;
+        List<String> alts = new ArrayList<>();
+        if (!pokemon.isNull("oob")) {
+            oob = pokemon.getJSONObject("oob");
+
+            JSONArray altsJson = oob.getJSONArray("alts");
+            for (int i = 0; i < altsJson.length(); i++) {
+                String altName = altsJson.getString(i);
+                alts.add(altName);
+            }
+        }
+
+        JSONArray jsonGenerations;
+        List<String> generations = new ArrayList<>();
+        if (oob.has("genfamily")) {
+            jsonGenerations = oob.getJSONArray("genfamily");
+            for (int i = 0; i < jsonGenerations.length(); i++) {
+                String generation = jsonGenerations.getString(i);
+                generations.add(generation);
+            }
+        } else {
+            for (T previousSpecies : species.values()) {
+                if (previousSpecies.getAlts().contains(name)) {
+                    generations.addAll(previousSpecies.getGenerations());
+                }
+            }
+        }
+
+
+        int hp = pokemon.getInt("hp");
+        int attack = pokemon.getInt("atk");
+        int defense = pokemon.getInt("def");
+        int specialAttack = pokemon.getInt("spa");
+        int specialDefense = pokemon.getInt("spd");
+        int speed = pokemon.getInt("spe");
+        double weight = pokemon.getDouble("weight");
+        double height = pokemon.getDouble("height");
+
+        List<? extends IType> types = gen.getTypes().fromJson(pokemon);
+
+        JSONArray jsonFormats = pokemon.getJSONArray("formats");
+        List<Tier> formats = new ArrayList<>();
+        for (int k = 0; k < jsonFormats.length(); k++) {
+            Tier format = Tier.getTier(jsonFormats.getString(k));
+            formats.add(format);
+        }
+
+        // TODO: 05-Jul-19 Add evolutions
+        // TODO: 07-Nov-19 Add genders
+        return new SpeciesBuilder<T>()
+                .setName(name)
+                .setGenerations(generations)
+                .addStat(PermanentStat.HP, hp)
+                .addStat(PermanentStat.ATTACK, attack)
+                .addStat(PermanentStat.DEFENSE, defense)
+                .addStat(PermanentStat.SPECIAL_ATTACK, specialAttack)
+                .addStat(PermanentStat.SPECIAL_DEFENSE, specialDefense)
+                .addStat(PermanentStat.SPEED, speed)
+                .setWeight(weight)
+                .setHeight(height)
+                .setTypes(types)
+                .setTiers(formats)
+                .setAlts(alts);
     }
 
 }

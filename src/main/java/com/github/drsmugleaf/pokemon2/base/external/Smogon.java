@@ -173,21 +173,7 @@ public class Smogon {
                             .toUpperCase()
             );
 
-            String suffix = pokemon.getSuffix();
-            if (!suffix.isEmpty()) {
-                System.out.print(
-                        "_" +
-                                suffix
-                                        .replace("-", "_")
-                                        .toUpperCase()
-                );
-            }
-
-            System.out.print("(\"" + name);
-            if (!suffix.isEmpty()) {
-                System.out.print("-" + suffix);
-            }
-            System.out.println("\"),");
+            System.out.println("(\"" + name + "\"),");
         }
     }
 

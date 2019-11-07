@@ -20,7 +20,7 @@ public interface ISpecies<T extends ISpecies<T>> extends Nameable {
     ImmutableSet<T> getEvolutions();
     double getHeight();
     double getWeight();
-    String getSuffix();
     ImmutableSet<Gender> getGenders();
+    ImmutableSet<String> getAlts();
 
 }
