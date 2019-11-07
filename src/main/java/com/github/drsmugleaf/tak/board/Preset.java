@@ -54,7 +54,7 @@ public enum Preset {
                         continue;
                     }
 
-                    for (int pieces = 0; pieces <= getCarryLimit(); pieces++) {
+                    for (int pieces = 1; pieces <= getCarryLimit(); pieces++) {
                         MovingCoordinates move = new MovingCoordinates(origin, destination, pieces);
                         allActions.add(move);
                     }

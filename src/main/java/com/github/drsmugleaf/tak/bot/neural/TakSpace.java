@@ -17,11 +17,6 @@ public class TakSpace extends DiscreteSpace {
     }
 
     @Override
-    public int getSize() {
-        return GAME.getNextPlayer().getAvailableActions().size();
-    }
-
-    @Override
     public Integer randomAction() {
         int actions = GAME.getNextPlayer().getAvailableActions().size();
         if (actions <= 0) {

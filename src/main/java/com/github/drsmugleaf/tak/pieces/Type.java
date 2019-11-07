@@ -3,8 +3,6 @@ package com.github.drsmugleaf.tak.pieces;
 import com.github.drsmugleaf.tak.board.Square;
 import com.google.common.collect.ImmutableSet;
 
-import java.util.List;
-
 /**
  * Created by DrSmugleaf on 01/12/2018
  */
@@ -17,13 +15,11 @@ public enum Type {
         }
 
         @Override
-        public void place(Square square, List<Piece> pieces, Piece piece) {
-            Piece topPiece = square.getTopPiece();
-            if (topPiece != null && topPiece.getType() == STANDING_STONE) {
+        public void move(Square to, int pieces) {
+            Piece topPiece = to.getTopPiece();
+            if (pieces == 1 && topPiece != null && topPiece.getType() == STANDING_STONE) {
                 topPiece.flatten();
             }
-
-            pieces.add(piece);
         }
     },
     FLAT_STONE("flat.png", false, false, true, 2, "F"),
@@ -79,8 +75,6 @@ public enum Type {
         return ignoresBlock() || !topPiece.getType().blocks();
     }
 
-    public void place(Square square, List<Piece> pieces, Piece piece) {
-        pieces.add(piece);
-    }
+    public void move(Square to, int pieces) {}
 
 }

@@ -12,13 +12,13 @@ public class Hand {
 
     private final Preset PRESET;
     private final Color COLOR;
-    private int PIECES;
+    private int STONES;
     private int CAPSTONES;
 
     Hand(Color color, Preset preset) {
         PRESET = preset;
         COLOR = color;
-        PIECES = preset.getStones();
+        STONES = preset.getStones();
         CAPSTONES = preset.getCapstones();
     }
 
@@ -30,21 +30,21 @@ public class Hand {
         return COLOR;
     }
 
-    public int getPieces() {
-        return PIECES;
-    }
-
     public int getCapstones() {
         return CAPSTONES;
     }
 
+    public int getStones() {
+        return STONES;
+    }
+
     public int getAmount(Type type) {
         switch (type) {
-            case FLAT_STONE:
-            case STANDING_STONE:
-                return getPieces();
             case CAPSTONE:
                 return getCapstones();
+            case FLAT_STONE:
+            case STANDING_STONE:
+                return getStones();
             default:
                 throw new IllegalArgumentException("Unrecognized piece type: " + type);
         }
@@ -55,7 +55,13 @@ public class Hand {
     }
 
     public boolean hasAny() {
-        return has(Type.FLAT_STONE) || has(Type.STANDING_STONE) || has(Type.CAPSTONE);
+        for (Type type : Type.getTypes()) {
+            if (has(type)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public Piece takePiece(Type type) {
@@ -64,12 +70,12 @@ public class Hand {
         }
 
         switch (type) {
-            case FLAT_STONE:
-            case STANDING_STONE:
-                PIECES--;
-                break;
             case CAPSTONE:
                 CAPSTONES--;
+                break;
+            case FLAT_STONE:
+            case STANDING_STONE:
+                STONES--;
                 break;
         }
 
@@ -77,7 +83,7 @@ public class Hand {
     }
 
     public void reset() {
-        PIECES = getPreset().getStones();
+        STONES = getPreset().getStones();
         CAPSTONES = getPreset().getCapstones();
     }
 

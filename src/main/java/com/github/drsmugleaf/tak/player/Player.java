@@ -24,9 +24,9 @@ public abstract class Player {
     @Nullable
     private List<ICoordinates> AVAILABLE_ACTIONS = null;
 
-    public Player(String name, Game game, Color color, Preset preset, boolean passive) {
+    public Player(String name, Game game, Color color, boolean passive) {
         NAME = name;
-        HAND = new Hand(color, preset);
+        HAND = new Hand(color, game.getBoard().getPreset());
         GAME = game;
         PASSIVE = passive;
     }
@@ -184,6 +184,7 @@ public abstract class Player {
     }
 
     public final void surrender() {
+        AVAILABLE_ACTIONS = null;
         if (GAME.isActive()) {
             GAME.surrender(this);
         }
@@ -191,6 +192,8 @@ public abstract class Player {
 
     public final void resetPlayer() {
         HAND.reset();
+        NEXT_ACTION = null;
+        AVAILABLE_ACTIONS = null;
         synchronized (this) {
             notify();
         }

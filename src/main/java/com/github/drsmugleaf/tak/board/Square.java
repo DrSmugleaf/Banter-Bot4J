@@ -8,6 +8,7 @@ import com.github.drsmugleaf.tak.pieces.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Created by DrSmugleaf on 01/12/2018
@@ -104,17 +105,23 @@ public class Square {
             return true;
         }
 
-        if (pieces != 1 && otherTopPiece.getType().blocks()) {
-            return false;
+        if (pieces == 1) {
+            return thisTopPiece.getType().canMoveTo(otherTopPiece);
+        } else {
+            return !otherTopPiece.getType().blocks();
         }
-
-        return pieces == 1 && thisTopPiece.getType().canMoveTo(otherTopPiece);
     }
 
     public Square move(Square destination, int pieces, boolean silent) {
-        for (int i = pieces - 1; i >= 0; i--) {
-            Piece piece = PIECES.remove(i);
+        ListIterator<Piece> iterator = PIECES.listIterator(PIECES.size());
+        while (iterator.hasPrevious() && pieces > 0) {
+            Piece piece = iterator.previous();
+
+            piece.getType().move(destination, pieces);
+            iterator.remove();
             destination.PIECES.add(piece);
+
+            pieces--;
         }
 
         if (!silent) {
@@ -130,7 +137,7 @@ public class Square {
     }
 
     public Square place(Piece piece, boolean silent) {
-        piece.getType().place(this, PIECES, piece);
+        PIECES.add(piece);
 
         if (!silent) {
             onUpdate();

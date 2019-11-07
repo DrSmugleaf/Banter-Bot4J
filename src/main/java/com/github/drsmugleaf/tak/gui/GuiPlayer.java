@@ -16,7 +16,7 @@ public class GuiPlayer extends Player {
     private final GuiGame GAME;
 
     public GuiPlayer(String name, GuiGame game, Color color, Preset preset) {
-        super(name, game, color, preset, true);
+        super(name, game, color, true);
 
         GAME = game;
 

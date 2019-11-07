@@ -11,7 +11,7 @@ import com.github.drsmugleaf.tak.player.Player;
 public abstract class Bot extends Player {
 
     protected Bot(String name, Game game, Color color, Preset preset, boolean passive) {
-        super(name, game, color, preset, passive);
+        super(name, game, color, passive);
     }
 
 }

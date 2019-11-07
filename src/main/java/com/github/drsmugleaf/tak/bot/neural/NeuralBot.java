@@ -9,6 +9,10 @@ import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
 import org.jetbrains.annotations.Contract;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.factory.Nd4j;
+
+import java.util.List;
 
 /**
  * Created by DrSmugleaf on 16/08/2019
@@ -31,15 +35,11 @@ public class NeuralBot extends Bot {
     @Nullable
     @Override
     public ICoordinates getNextAction() {
-//        String directory = Keys.TAK_POLICY_DIRECTORY.VALUE;
-//        DQNPolicy<NeuralBoard> policy;
-//        try {
-//            policy = DQNPolicy.load(directory + "/pol1");
-//        } catch (IOException e) {
-//            throw new UncheckedIOException("Error loading policy", e);
-//        }
-
-        return null;
+        NeuralBoard board = (NeuralBoard) getGame().getBoard();
+        INDArray array = Nd4j.create(board.toArray()).reshape(2L);
+        Integer action = TakMDP.getPolicy().nextAction(array);
+        List<ICoordinates> actions = getAvailableActions();
+        return actions.get(action);
     }
 
     @Override
