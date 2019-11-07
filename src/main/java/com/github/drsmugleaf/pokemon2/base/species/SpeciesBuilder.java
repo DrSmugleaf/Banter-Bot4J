@@ -53,7 +53,7 @@ public class SpeciesBuilder<T extends ISpecies> implements ISpeciesBuilder<T> {
         genders = builder.genders;
         CONSTRUCTOR = builder.CONSTRUCTOR;
     }
-    
+
     @Nullable
     public String getName() {
         return name;

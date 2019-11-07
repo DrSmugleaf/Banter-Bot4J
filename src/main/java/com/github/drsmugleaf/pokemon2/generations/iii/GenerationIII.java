@@ -1,14 +1,14 @@
 package com.github.drsmugleaf.pokemon2.generations.iii;
 
-import com.github.drsmugleaf.pokemon.battle.Game;
+import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon2.base.generation.Generation;
 import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
 import com.github.drsmugleaf.pokemon2.generations.ii.GenerationII;
 import com.github.drsmugleaf.pokemon2.generations.iii.ability.AbilityRegistry;
+import com.github.drsmugleaf.pokemon2.generations.iii.game.GamesIII;
 import com.github.drsmugleaf.pokemon2.generations.iii.nature.NatureRegistry;
 import com.github.drsmugleaf.pokemon2.generations.iii.species.PokedexIII;
 import com.github.drsmugleaf.pokemon2.generations.iii.species.SpeciesIII;
-import com.google.common.collect.ImmutableSet;
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -18,12 +18,7 @@ public class GenerationIII extends Generation {
 
     private static final GenerationIII INSTANCE = new GenerationIII();
 
-    private final ImmutableSet<Game> CORE_GAMES = ImmutableSet.of(
-            Game.RUBY_AND_SAPPHIRE,
-            Game.FIRERED_AND_LEAFGREEN,
-            Game.EMERALD
-    );
-    private final ImmutableSet<Game> SIDE_GAMES = ImmutableSet.of();
+    private final GameRegistry GAMES = new GameRegistry(GamesIII.values());
     private final Pokedex<SpeciesIII> POKEDEX = new PokedexIII<>(this, SpeciesIII::new);
     private final NatureRegistry NATURES = new NatureRegistry(this);
     private final AbilityRegistry ABILITIES = new AbilityRegistry(this);
@@ -48,13 +43,8 @@ public class GenerationIII extends Generation {
     }
 
     @Override
-    public ImmutableSet<Game> getCoreGames() {
-        return CORE_GAMES;
-    }
-
-    @Override
-    public ImmutableSet<Game> getSideGames() {
-        return SIDE_GAMES;
+    public GameRegistry getGames() {
+        return GAMES;
     }
 
     @Override

@@ -1,12 +1,12 @@
 package com.github.drsmugleaf.pokemon2.generations.vi;
 
-import com.github.drsmugleaf.pokemon.battle.Game;
+import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon2.base.generation.Generation;
 import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
 import com.github.drsmugleaf.pokemon2.generations.iii.species.PokedexIII;
 import com.github.drsmugleaf.pokemon2.generations.v.GenerationV;
+import com.github.drsmugleaf.pokemon2.generations.vi.game.GamesVI;
 import com.github.drsmugleaf.pokemon2.generations.vi.species.SpeciesVI;
-import com.google.common.collect.ImmutableSet;
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -16,11 +16,7 @@ public class GenerationVI extends Generation {
 
     private static final GenerationVI INSTANCE = new GenerationVI();
 
-    private final ImmutableSet<Game> CORE_GAMES = ImmutableSet.of(
-            Game.X_AND_Y,
-            Game.OMEGA_RUBY_AND_ALPHA_SAPPHIRE
-    );
-    private final ImmutableSet<Game> SIDE_GAMES = ImmutableSet.of();
+    private final GameRegistry GAMES = new GameRegistry(GamesVI.values());
     private final Pokedex<SpeciesVI> POKEDEX = new PokedexIII<>(this, SpeciesVI::new);
 
     protected GenerationVI() {
@@ -43,13 +39,8 @@ public class GenerationVI extends Generation {
     }
 
     @Override
-    public ImmutableSet<Game> getCoreGames() {
-        return CORE_GAMES;
-    }
-
-    @Override
-    public ImmutableSet<Game> getSideGames() {
-        return SIDE_GAMES;
+    public GameRegistry getGames() {
+        return GAMES;
     }
 
     @Override

@@ -1,12 +1,12 @@
 package com.github.drsmugleaf.pokemon2.generations.iv;
 
-import com.github.drsmugleaf.pokemon.battle.Game;
+import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon2.base.generation.Generation;
 import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
 import com.github.drsmugleaf.pokemon2.generations.iii.GenerationIII;
 import com.github.drsmugleaf.pokemon2.generations.iii.species.PokedexIII;
+import com.github.drsmugleaf.pokemon2.generations.iv.game.GamesIV;
 import com.github.drsmugleaf.pokemon2.generations.iv.species.SpeciesIV;
-import com.google.common.collect.ImmutableSet;
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -16,12 +16,7 @@ public class GenerationIV extends Generation {
 
     private static final GenerationIV INSTANCE = new GenerationIV();
 
-    private final ImmutableSet<Game> CORE_GAMES = ImmutableSet.of(
-            Game.DIAMOND_AND_PEARL,
-            Game.PLATINUM,
-            Game.HEARTGOLD_AND_SOULSILVER
-    );
-    private final ImmutableSet<Game> SIDE_GAMES = ImmutableSet.of();
+    private final GameRegistry GAMES = new GameRegistry(GamesIV.values());
     private final Pokedex<SpeciesIV> POKEDEX = new PokedexIII<>(this, SpeciesIV::new);
 
     protected GenerationIV() {
@@ -44,13 +39,8 @@ public class GenerationIV extends Generation {
     }
 
     @Override
-    public ImmutableSet<Game> getCoreGames() {
-        return CORE_GAMES;
-    }
-
-    @Override
-    public ImmutableSet<Game> getSideGames() {
-        return SIDE_GAMES;
+    public GameRegistry getGames() {
+        return GAMES;
     }
 
     @Override
