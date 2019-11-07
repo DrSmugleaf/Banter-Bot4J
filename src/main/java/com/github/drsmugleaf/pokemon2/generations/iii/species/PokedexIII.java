@@ -40,14 +40,15 @@ public class PokedexIII<T extends SpeciesIII> extends Pokedex<T> {
             JSONObject jsonPokemon = pokemons.getJSONObject(i);
             String name = jsonPokemon.getString("name");
 
-            JSONArray jsonGenerations = jsonPokemon.getJSONArray("genfamily");
+            JSONObject oob = jsonPokemon.getJSONObject("oob");
+            JSONArray jsonGenerations = oob.getJSONArray("genfamily");
             List<String> generations = new ArrayList<>();
             for (int j = 0; j < jsonGenerations.length(); j++) {
                 String generation = jsonGenerations.getString(j);
                 generations.add(generation);
             }
 
-            JSONArray alts = jsonPokemon.getJSONArray("alts");
+            JSONArray alts = oob.getJSONArray("alts");
             for (int j = 0; j < alts.length(); j++) {
                 JSONObject alt = alts.getJSONObject(j);
                 String suffix = alt.getString("suffix");
