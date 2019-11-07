@@ -3,13 +3,9 @@ package com.github.drsmugleaf.pokemon.pokemon;
 import com.github.drsmugleaf.pokemon.ability.Abilities;
 import com.github.drsmugleaf.pokemon.battle.Generation;
 import com.github.drsmugleaf.pokemon.battle.Tier;
-import com.github.drsmugleaf.pokemon.external.smogon.SmogonParser;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon.types.Type;
-import com.github.drsmugleaf.pokemon2.generations.vii.GenerationVII;
 import org.jetbrains.annotations.Contract;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.*;
 
@@ -1024,76 +1020,6 @@ public enum Species {
     ZYGARDE_10("Zygarde-10%", Gender.GENDERLESS),
     ZYGARDE_10_COMPLETE("Zygarde-10%-Complete", Gender.GENDERLESS),
     ZYGARDE_COMPLETE("Zygarde-Complete", Gender.GENDERLESS);
-
-    static {
-        JSONArray pokemons = SmogonParser.getPokemons(GenerationVII.get());
-
-        for (int i = 0; i < pokemons.length(); i++) {
-            JSONObject jsonPokemon = pokemons.getJSONObject(i);
-            String name = jsonPokemon.getString("name");
-
-            JSONArray jsonGenerations = jsonPokemon.getJSONArray("genfamily");
-            List<Generation> genFamilies = new ArrayList<>();
-            for (int k = 0; k < jsonGenerations.length(); k++) {
-                Generation generation = Generation.getGeneration(jsonGenerations.getString(k));
-                genFamilies.add(generation);
-            }
-
-            JSONArray alts = jsonPokemon.getJSONArray("alts");
-            for (int j = 0; j < alts.length(); j++) {
-                JSONObject alt = alts.getJSONObject(j);
-                String pokemonName = name;
-                String suffix = alt.getString("suffix");
-                if (!suffix.isEmpty()) {
-                    pokemonName = pokemonName.concat("-" + suffix);
-                }
-
-                Species pokemon;
-                try {
-                    pokemon = getPokemon(pokemonName);
-                } catch (NullPointerException e) {
-                    System.err.println(e.getMessage());
-                    continue;
-                }
-
-                int hp = alt.getInt("hp");
-                int attack = alt.getInt("atk");
-                int defense = alt.getInt("def");
-                int specialAttack = alt.getInt("spa");
-                int specialDefense = alt.getInt("spd");
-                int speed = alt.getInt("spe");
-                double weight = alt.getDouble("weight");
-                double height = alt.getDouble("height");
-
-                JSONArray jsonAbilities = alt.getJSONArray("abilities");
-                List<Abilities> abilities = Abilities.getAbilities(jsonAbilities);
-                pokemon.addAbilities(abilities);
-
-                JSONArray jsonTypes = alt.getJSONArray("types");
-                for (int k = 0; k < jsonTypes.length(); k++) {
-                    Type type = Type.getType(jsonTypes.getString(k));
-                    pokemon.addTypes(type);
-                }
-
-                JSONArray jsonTiers = alt.getJSONArray("formats");
-                for (int k = 0; k < jsonTiers.length(); k++) {
-                    Tier tier = Tier.getTier(jsonTiers.getString(k));
-                    pokemon.addTiers(tier);
-                }
-
-                pokemon
-                        .addGenerations(genFamilies)
-                        .addStats(PermanentStat.HP, hp)
-                        .addStats(PermanentStat.ATTACK, attack)
-                        .addStats(PermanentStat.DEFENSE, defense)
-                        .addStats(PermanentStat.SPECIAL_ATTACK, specialAttack)
-                        .addStats(PermanentStat.SPECIAL_DEFENSE, specialDefense)
-                        .addStats(PermanentStat.SPEED, speed)
-                        .setWeight(weight)
-                        .setHeight(height);
-            }
-        }
-    }
 
     public final String NAME;
     private final List<Generation> GENERATIONS = new ArrayList<>();
