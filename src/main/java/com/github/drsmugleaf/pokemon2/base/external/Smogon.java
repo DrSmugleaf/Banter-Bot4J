@@ -4,13 +4,12 @@ import com.github.drsmugleaf.pokemon.external.ParsingException;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon2.base.generation.IGeneration;
 import com.github.drsmugleaf.pokemon2.base.species.ISpecies;
-import com.github.drsmugleaf.pokemon2.generations.i.species.PokedexI;
-import com.github.drsmugleaf.pokemon2.base.species.SpeciesBuilder;
 import com.github.drsmugleaf.pokemon2.base.type.TypeBuilder;
 import com.github.drsmugleaf.pokemon2.generations.iii.ability.Ability;
 import com.github.drsmugleaf.pokemon2.generations.iii.ability.IAbility;
 import com.github.drsmugleaf.pokemon2.generations.iii.nature.INature;
 import com.github.drsmugleaf.pokemon2.generations.iii.nature.Nature;
+import com.google.common.collect.ImmutableSet;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Connection;
@@ -20,7 +19,6 @@ import org.jsoup.nodes.Document;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 /**
  * Created by DrSmugleaf on 06/07/2019
@@ -151,13 +149,12 @@ public class Smogon {
         return abilities;
     }
 
-    public <T extends ISpecies<T>> void printPokemonsAsEnums(Function<SpeciesBuilder<T>, T> constructor, IGeneration gen, IGeneration... minus) {
-        PokedexI<T> dex = new PokedexI<>(gen, constructor);
-        HashMap<String, T> species = new HashMap<>(dex.get());
+    public void printPokemonsAsEnums(IGeneration gen, IGeneration... minus) {
+        HashMap<String, ISpecies<?>> species = new HashMap<>(gen.getPokedex().get());
 
         for (IGeneration minusGen : minus) {
-            PokedexI<T> minusDex = new PokedexI<>(minusGen, constructor);
-            species.keySet().removeAll(minusDex.get().keySet());
+            ImmutableSet<String> names = minusGen.getPokedex().get().keySet();
+            species.keySet().removeAll(names);
         }
 
         for (ISpecies pokemon : species.values()) {

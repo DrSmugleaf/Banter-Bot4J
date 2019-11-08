@@ -7,13 +7,14 @@ import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon2.base.type.IType;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import org.jetbrains.annotations.Contract;
 
 import java.util.*;
 
 /**
  * Created by DrSmugleaf on 03/07/2019
  */
-public class SpeciesBuilder<T extends ISpecies> implements ISpeciesBuilder<T> {
+public class SpeciesBuilder<T extends ISpecies, B extends SpeciesBuilder<T, B> & ISpeciesBuilder<T, B>> implements ISpeciesBuilder<T, B> {
 
     @Nullable
     private String name;
@@ -29,23 +30,28 @@ public class SpeciesBuilder<T extends ISpecies> implements ISpeciesBuilder<T> {
     private Double weight;
     @Nullable
     private Double height;
-    private String suffix = "";
     private Set<Gender> genders = new HashSet<>(); // TODO: 06-Jul-19 Add valid genders
     private Set<String> alts = new HashSet<>();
 
     public SpeciesBuilder() {}
 
-    public SpeciesBuilder(SpeciesBuilder<T> builder) {
-        name = builder.name;
-        generations = builder.generations;
-        types = builder.types;
-        tiers = builder.tiers;
-        stats = builder.stats;
-        evolutions = builder.evolutions;
-        weight = builder.weight;
-        height = builder.height;
-        suffix = builder.suffix;
-        genders = builder.genders;
+    public SpeciesBuilder(ISpeciesBuilder<T, ?> builder) {
+        name = builder.getName();
+        generations = builder.getGenerations();
+        types = builder.getTypes();
+        tiers = builder.getTiers();
+        stats = builder.getStats();
+        evolutions = builder.getEvolutions();
+        weight = builder.getWeight();
+        height = builder.getHeight();
+        genders = builder.getGenders();
+        alts = builder.getAlts();
+    }
+
+    @Contract(" -> new")
+    @SuppressWarnings("unchecked")
+    public static <T extends ISpecies, B extends SpeciesBuilder<T, B>> SpeciesBuilder<T, B> create() {
+        return (B) new SpeciesBuilder<>();
     }
 
     @Nullable
@@ -55,9 +61,9 @@ public class SpeciesBuilder<T extends ISpecies> implements ISpeciesBuilder<T> {
     }
 
     @Override
-    public SpeciesBuilder<T> setName(String name) {
+    public B setName(String name) {
         this.name = name;
-        return this;
+        return getThis();
     }
 
     @Override
@@ -66,9 +72,9 @@ public class SpeciesBuilder<T extends ISpecies> implements ISpeciesBuilder<T> {
     }
 
     @Override
-    public SpeciesBuilder<T> setGenerations(Collection<String> generations) {
+    public B setGenerations(Collection<String> generations) {
         this.generations = new HashSet<>(generations);
-        return this;
+        return getThis();
     }
 
     @Override
@@ -77,9 +83,9 @@ public class SpeciesBuilder<T extends ISpecies> implements ISpeciesBuilder<T> {
     }
 
     @Override
-    public SpeciesBuilder<T> setTypes(Collection<? extends IType> types) {
+    public B setTypes(Collection<? extends IType> types) {
         this.types = new HashSet<>(types);
-        return this;
+        return getThis();
     }
 
     @Override
@@ -88,9 +94,9 @@ public class SpeciesBuilder<T extends ISpecies> implements ISpeciesBuilder<T> {
     }
 
     @Override
-    public SpeciesBuilder<T> setTiers(Collection<Tier> tiers) {
+    public B setTiers(Collection<Tier> tiers) {
         this.tiers = new HashSet<>(tiers);
-        return this;
+        return getThis();
     }
 
     @Override
@@ -99,15 +105,15 @@ public class SpeciesBuilder<T extends ISpecies> implements ISpeciesBuilder<T> {
     }
 
     @Override
-    public SpeciesBuilder<T> addStat(PermanentStat stat, Integer amount) {
+    public B addStat(PermanentStat stat, Integer amount) {
         this.stats.put(stat, amount);
-        return this;
+        return getThis();
     }
 
     @Override
-    public SpeciesBuilder<T> setStats(Map<PermanentStat, Integer> stats) {
+    public B setStats(Map<PermanentStat, Integer> stats) {
         this.stats = stats;
-        return this;
+        return getThis();
     }
 
     @Override
@@ -116,9 +122,9 @@ public class SpeciesBuilder<T extends ISpecies> implements ISpeciesBuilder<T> {
     }
 
     @Override
-    public SpeciesBuilder<T> setEvolutions(Collection<T> evolutions) {
+    public B setEvolutions(Collection<T> evolutions) {
         this.evolutions = new HashSet<>(evolutions);
-        return this;
+        return getThis();
     }
 
     @Nullable
@@ -128,9 +134,9 @@ public class SpeciesBuilder<T extends ISpecies> implements ISpeciesBuilder<T> {
     }
 
     @Override
-    public SpeciesBuilder<T> setWeight(double weight) {
+    public B setWeight(double weight) {
         this.weight = weight;
-        return this;
+        return getThis();
     }
 
     @Nullable
@@ -140,9 +146,9 @@ public class SpeciesBuilder<T extends ISpecies> implements ISpeciesBuilder<T> {
     }
 
     @Override
-    public SpeciesBuilder<T> setHeight(double height) {
+    public B setHeight(double height) {
         this.height = height;
-        return this;
+        return getThis();
     }
 
     @Override
@@ -151,9 +157,9 @@ public class SpeciesBuilder<T extends ISpecies> implements ISpeciesBuilder<T> {
     }
 
     @Override
-    public SpeciesBuilder<T> setGenders(Collection<Gender> genders) {
+    public B setGenders(Collection<Gender> genders) {
         this.genders = new HashSet<>(genders);
-        return this;
+        return getThis();
     }
 
     @Override
@@ -162,9 +168,9 @@ public class SpeciesBuilder<T extends ISpecies> implements ISpeciesBuilder<T> {
     }
 
     @Override
-    public SpeciesBuilder<T> setAlts(Collection<String> alts) {
+    public B setAlts(Collection<String> alts) {
         this.alts = new HashSet<>(alts);
-        return this;
+        return getThis();
     }
 
 }

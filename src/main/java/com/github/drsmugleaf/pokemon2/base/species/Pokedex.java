@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Created by DrSmugleaf on 11/07/2019
  */
-public abstract class Pokedex<T extends ISpecies> extends Registry<T> {
+public abstract class Pokedex<T extends ISpecies<T>> extends Registry<T> {
 
     public Pokedex(Map<String, T> map) {
         super(map);

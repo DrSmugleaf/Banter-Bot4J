@@ -1,14 +1,15 @@
 package com.github.drsmugleaf.pokemon2.generations.vii.species;
 
-import com.github.drsmugleaf.pokemon2.generations.iii.species.SpeciesBuilderIII;
-import com.github.drsmugleaf.pokemon2.generations.vi.species.SpeciesVI;
+import com.github.drsmugleaf.pokemon2.generations.iii.species.BaseSpeciesIII;
+import com.github.drsmugleaf.pokemon2.generations.iii.species.ISpeciesBuilderIII;
+import com.github.drsmugleaf.pokemon2.generations.iii.species.ISpeciesIII;
 
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public class SpeciesVII<T extends SpeciesVII<T>> extends SpeciesVI<T> {
+public class SpeciesVII extends BaseSpeciesIII<SpeciesVII> implements ISpeciesIII<SpeciesVII> {
 
-    public SpeciesVII(SpeciesBuilderIII<T> builder) {
+    public SpeciesVII(ISpeciesBuilderIII<SpeciesVII, ?> builder) {
         super(builder);
     }
 

@@ -2,11 +2,9 @@ package com.github.drsmugleaf.pokemon2.generations.i.species;
 
 import com.github.drsmugleaf.pokemon.battle.Tier;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
-import com.github.drsmugleaf.pokemon2.base.external.Smogon;
 import com.github.drsmugleaf.pokemon2.base.generation.IGeneration;
 import com.github.drsmugleaf.pokemon2.base.species.ISpecies;
 import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
-import com.github.drsmugleaf.pokemon2.base.species.SpeciesBuilder;
 import com.github.drsmugleaf.pokemon2.base.type.IType;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,28 +20,27 @@ import java.util.function.Function;
  */
 public class PokedexI<T extends ISpecies<T>> extends Pokedex<T> {
 
-    public PokedexI(IGeneration generation, Function<SpeciesBuilder<T>, T> constructor) {
+    public PokedexI(IGeneration generation, Function<SpeciesBuilderI<T>, T> constructor) {
         super(getAll(generation, constructor));
     }
 
     public static <T extends ISpecies<T>> Map<String, T> getAll(
             IGeneration gen,
-            Function<SpeciesBuilder<T>, T> constructor
+            Function<SpeciesBuilderI<T>, T> constructor
     ) {
         Map<String, T> species = new HashMap<>();
-        Smogon smogon = new Smogon(gen);
-        JSONArray pokemons = smogon.getSpecies();
+        JSONArray pokemons = gen.getSmogon().getSpecies();
 
         for (int i = 0; i < pokemons.length(); i++) {
             JSONObject pokemon = pokemons.getJSONObject(i);
-            SpeciesBuilder<T> builder = toBuilder(gen, pokemon, species);
+            SpeciesBuilderI<T> builder = toBuilder(gen, pokemon, species);
             species.put(builder.getName(), constructor.apply(builder));
         }
 
         return species;
     }
 
-    public static <T extends ISpecies<T>> SpeciesBuilder<T> toBuilder(
+    public static <T extends ISpecies<T>> SpeciesBuilderI<T> toBuilder(
             IGeneration gen,
             JSONObject pokemon,
             Map<String, T> species
@@ -98,7 +95,7 @@ public class PokedexI<T extends ISpecies<T>> extends Pokedex<T> {
 
         // TODO: 05-Jul-19 Add evolutions
         // TODO: 07-Nov-19 Add genders
-        return new SpeciesBuilder<T>()
+        return new SpeciesBuilderI<T>()
                 .setName(name)
                 .setGenerations(generations)
                 .addStat(PermanentStat.HP, hp)

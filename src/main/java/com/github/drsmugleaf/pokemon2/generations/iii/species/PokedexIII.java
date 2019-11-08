@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.pokemon2.generations.iii.species;
 
-import com.github.drsmugleaf.pokemon2.base.external.Smogon;
 import com.github.drsmugleaf.pokemon2.base.generation.IGeneration;
 import com.github.drsmugleaf.pokemon2.base.species.ISpecies;
 import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Created by DrSmugleaf on 11/07/2019
  */
-public class PokedexIII<T extends SpeciesIII<T>> extends Pokedex<T> {
+public class PokedexIII<T extends BaseSpeciesIII<T>> extends Pokedex<T> {
 
     public PokedexIII(IGeneration generation, Function<SpeciesBuilderIII<T>, T> constructor) {
         super(getAll(generation, constructor));
@@ -31,12 +30,11 @@ public class PokedexIII<T extends SpeciesIII<T>> extends Pokedex<T> {
             Function<SpeciesBuilderIII<T>, T> constructor
     ) {
         Map<String, T> species = new HashMap<>();
-        Smogon smogon = new Smogon(gen);
-        JSONArray pokemons = smogon.getSpecies();
+        JSONArray pokemons = gen.getSmogon().getSpecies();
 
         for (int i = 0; i < pokemons.length(); i++) {
             JSONObject pokemon = pokemons.getJSONObject(i);
-            SpeciesBuilderIII<T> builder = toBuilder(gen, constructor, pokemon, species);
+            SpeciesBuilderIII<T> builder = toBuilder(gen, pokemon, species);
             species.put(builder.getName(), constructor.apply(builder));
         }
 
@@ -45,7 +43,6 @@ public class PokedexIII<T extends SpeciesIII<T>> extends Pokedex<T> {
 
     public static <T extends ISpecies<T>> SpeciesBuilderIII<T> toBuilder(
             IGeneration gen,
-            Function<SpeciesBuilderIII<T>, T> constructor,
             JSONObject pokemon,
             Map<String, T> species
     ) {
@@ -57,8 +54,8 @@ public class PokedexIII<T extends SpeciesIII<T>> extends Pokedex<T> {
                 .map(Ability::new)
                 .collect(Collectors.toList());
 
-        SpeciesBuilder<T> builderI = PokedexI.toBuilder(gen, pokemon, species);
-        return new SpeciesBuilderIII<>(builderI, constructor).setAbilities(abilities);
+        SpeciesBuilder<T, ?> builderI = PokedexI.toBuilder(gen, pokemon, species);
+        return new SpeciesBuilderIII<>(builderI).setAbilities(abilities);
     }
 
 }

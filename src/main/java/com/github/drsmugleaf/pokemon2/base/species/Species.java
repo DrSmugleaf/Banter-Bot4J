@@ -24,7 +24,7 @@ public abstract class Species<T extends ISpecies<T>> implements ISpecies<T> {
     private final ImmutableSet<String> ALTS;
     private final String NAME;
 
-    protected Species(SpeciesBuilder<T> builder) {
+    protected Species(ISpeciesBuilder<T, ?> builder) {
         GENERATIONS = builder.getGenerations();
         TYPES = builder.getTypes();
         TIERS = builder.getTiers();
