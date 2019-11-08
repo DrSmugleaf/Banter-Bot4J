@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.pokemon2.base;
+package com.github.drsmugleaf.pokemon2.base.nameable;
 
 /**
  * Created by DrSmugleaf on 01/07/2019

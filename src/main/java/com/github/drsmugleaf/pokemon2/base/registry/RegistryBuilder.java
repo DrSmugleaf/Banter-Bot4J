@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.pokemon2.base.registry;
 
-import com.github.drsmugleaf.pokemon2.base.Nameable;
+import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
 
 import java.util.Map;
 import java.util.TreeMap;

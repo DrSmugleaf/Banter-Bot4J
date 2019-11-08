@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.pokemon2.base;
+package com.github.drsmugleaf.pokemon2.base.builder;
 
 import org.jetbrains.annotations.Contract;
 

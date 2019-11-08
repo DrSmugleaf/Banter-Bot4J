@@ -3,7 +3,7 @@ package com.github.drsmugleaf.pokemon2.base.species;
 import com.github.drsmugleaf.pokemon.battle.Tier;
 import com.github.drsmugleaf.pokemon.pokemon.Gender;
 import com.github.drsmugleaf.pokemon.stats.PermanentStat;
-import com.github.drsmugleaf.pokemon2.base.Nameable;
+import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
 import com.github.drsmugleaf.pokemon2.base.type.IType;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;

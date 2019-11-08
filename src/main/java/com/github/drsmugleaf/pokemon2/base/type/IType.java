@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.pokemon2.base.type;
 
-import com.github.drsmugleaf.pokemon2.base.Nameable;
+import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
 import com.google.common.collect.ImmutableSet;
 
 /**

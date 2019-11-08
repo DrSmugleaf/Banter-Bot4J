@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.pokemon2.base;
+package com.github.drsmugleaf.pokemon2.base.logger;
 
 import org.jetbrains.annotations.Contract;
 import org.slf4j.LoggerFactory;

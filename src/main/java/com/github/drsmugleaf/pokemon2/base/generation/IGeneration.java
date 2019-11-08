@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.pokemon2.base.generation;
 
-import com.github.drsmugleaf.pokemon2.base.Nameable;
+import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
 import com.github.drsmugleaf.pokemon2.base.external.Smogon;
 import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon2.base.species.ISpecies;

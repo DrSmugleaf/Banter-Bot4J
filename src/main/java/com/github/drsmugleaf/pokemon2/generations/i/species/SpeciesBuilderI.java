@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.pokemon2.generations.i.species;
 
-import com.github.drsmugleaf.pokemon2.base.IBuilder;
+import com.github.drsmugleaf.pokemon2.base.builder.IBuilder;
 import com.github.drsmugleaf.pokemon2.base.species.ISpecies;
 import com.github.drsmugleaf.pokemon2.base.species.SpeciesBuilder;
 
