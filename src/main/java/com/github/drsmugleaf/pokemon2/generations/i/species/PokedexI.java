@@ -74,7 +74,6 @@ public class PokedexI<T extends ISpecies<T>> extends Pokedex<T> {
             }
         }
 
-
         int hp = pokemon.getInt("hp");
         int attack = pokemon.getInt("atk");
         int defense = pokemon.getInt("def");

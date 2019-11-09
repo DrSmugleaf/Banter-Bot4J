@@ -3,6 +3,7 @@ package com.github.drsmugleaf.pokemon2.base.registry;
 import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
 import com.google.common.collect.ImmutableMap;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -20,12 +21,11 @@ public abstract class Registry<T extends Nameable> {
     }
 
     public Registry(Set<T> set) {
-        MAP = set.stream().collect(
-                Collectors.collectingAndThen(
-                        Collectors.toMap(Nameable::getName, Function.identity()),
-                        ImmutableMap::copyOf
-                )
-        );
+        this(set.stream().collect(Collectors.toMap(Nameable::getName, Function.identity())));
+    }
+
+    public Registry(T... elements) {
+        this(Arrays.stream(elements).collect(Collectors.toMap(Nameable::getName, Function.identity())));
     }
 
     public ImmutableMap<String, T> get() {

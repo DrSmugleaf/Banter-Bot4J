@@ -2,14 +2,11 @@ package com.github.drsmugleaf.pokemon2.base.game;
 
 import com.github.drsmugleaf.pokemon2.base.registry.Registry;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by DrSmugleaf on 07/11/2019
@@ -19,37 +16,27 @@ public class GameRegistry extends Registry<IGame> {
     private final ImmutableMap<String, IGame> CORE_GAMES;
     private final ImmutableMap<String, IGame> SIDE_GAMES;
 
-    public GameRegistry(Map<String, IGame> games) {
+    public GameRegistry(Set<IGame> games) {
         super(games);
-        CORE_GAMES = games
-                .entrySet()
-                .stream()
-                .filter(entry -> entry.getValue().isCore())
-                .collect(
-                        Collectors.collectingAndThen(
-                                Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue),
-                                ImmutableMap::copyOf
-                        )
-                );
+        Map<String, IGame> core = new HashMap<>();
+        Map<String, IGame> side = new HashMap<>();
 
-        SIDE_GAMES = games
-                .entrySet()
-                .stream()
-                .filter(entry -> !entry.getValue().isCore())
-                .collect(
-                        Collectors.collectingAndThen(
-                                Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue),
-                                ImmutableMap::copyOf
-                        )
-                );
-    }
+        for (IGame game : games) {
+            String name = game.getName();
 
-    public GameRegistry(Set<IGame> core, Set<IGame> side) {
-        this(Stream.of(core, side).flatMap(Collection::stream).collect(Collectors.toMap(IGame::getName, Function.identity())));
+            if (game.isCore()) {
+                core.put(name, game);
+            } else {
+                side.put(name, game);
+            }
+        }
+
+        CORE_GAMES = ImmutableMap.copyOf(core);
+        SIDE_GAMES = ImmutableMap.copyOf(side);
     }
 
     public GameRegistry(IGame... games) {
-        this(Arrays.stream(games).collect(Collectors.toMap(IGame::getName, Function.identity())));
+        this(ImmutableSet.copyOf(games));
     }
 
     public ImmutableMap<String, IGame> getCoreGames() {
