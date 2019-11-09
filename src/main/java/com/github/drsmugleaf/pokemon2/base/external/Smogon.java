@@ -1,10 +1,10 @@
 package com.github.drsmugleaf.pokemon2.base.external;
 
-import com.github.drsmugleaf.pokemon.external.ParsingException;
-import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon2.base.generation.IGeneration;
 import com.github.drsmugleaf.pokemon2.base.species.ISpecies;
-import com.github.drsmugleaf.pokemon2.base.type.TypeBuilder;
+import com.github.drsmugleaf.pokemon2.base.species.stats.IStat;
+import com.github.drsmugleaf.pokemon2.base.species.type.TypeBuilder;
+import com.github.drsmugleaf.pokemon2.generations.ii.stats.StatsII;
 import com.github.drsmugleaf.pokemon2.generations.iii.ability.Ability;
 import com.github.drsmugleaf.pokemon2.generations.iii.ability.IAbility;
 import com.github.drsmugleaf.pokemon2.generations.iii.nature.INature;
@@ -119,13 +119,13 @@ public class Smogon {
             double atk = natureObject.getDouble("atk");
             double spe = natureObject.getDouble("spe");
 
-            Map<PermanentStat, Double> multipliers = new HashMap<>();
-            multipliers.put(PermanentStat.DEFENSE, def);
-            multipliers.put(PermanentStat.SPECIAL_ATTACK, spa);
-            multipliers.put(PermanentStat.SPECIAL_DEFENSE, spd);
-            multipliers.put(PermanentStat.HP, hp);
-            multipliers.put(PermanentStat.ATTACK, atk);
-            multipliers.put(PermanentStat.SPEED, spe);
+            Map<IStat, Double> multipliers = new HashMap<>();
+            multipliers.put(StatsII.DEFENSE, def);
+            multipliers.put(StatsII.SPECIAL_ATTACK, spa);
+            multipliers.put(StatsII.SPECIAL_DEFENSE, spd);
+            multipliers.put(StatsII.HP, hp);
+            multipliers.put(StatsII.ATTACK, atk);
+            multipliers.put(StatsII.SPEED, spe);
 
             INature nature = new Nature(name, multipliers);
             natures.put(name, nature);

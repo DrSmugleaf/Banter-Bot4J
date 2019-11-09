@@ -1,11 +1,11 @@
 package com.github.drsmugleaf.pokemon2.generations.i.species;
 
 import com.github.drsmugleaf.pokemon.battle.Tier;
-import com.github.drsmugleaf.pokemon.stats.PermanentStat;
 import com.github.drsmugleaf.pokemon2.base.generation.IGeneration;
 import com.github.drsmugleaf.pokemon2.base.species.ISpecies;
 import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
-import com.github.drsmugleaf.pokemon2.base.type.IType;
+import com.github.drsmugleaf.pokemon2.base.species.type.IType;
+import com.github.drsmugleaf.pokemon2.generations.i.stats.StatsI;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -79,7 +79,6 @@ public class PokedexI<T extends ISpecies<T>> extends Pokedex<T> {
         int attack = pokemon.getInt("atk");
         int defense = pokemon.getInt("def");
         int specialAttack = pokemon.getInt("spa");
-        int specialDefense = pokemon.getInt("spd");
         int speed = pokemon.getInt("spe");
         double weight = pokemon.getDouble("weight");
         double height = pokemon.getDouble("height");
@@ -98,12 +97,11 @@ public class PokedexI<T extends ISpecies<T>> extends Pokedex<T> {
         return new SpeciesBuilderI<T>()
                 .setName(name)
                 .setGenerations(generations)
-                .addStat(PermanentStat.HP, hp)
-                .addStat(PermanentStat.ATTACK, attack)
-                .addStat(PermanentStat.DEFENSE, defense)
-                .addStat(PermanentStat.SPECIAL_ATTACK, specialAttack)
-                .addStat(PermanentStat.SPECIAL_DEFENSE, specialDefense)
-                .addStat(PermanentStat.SPEED, speed)
+                .addStat(StatsI.HP, hp)
+                .addStat(StatsI.ATTACK, attack)
+                .addStat(StatsI.DEFENSE, defense)
+                .addStat(StatsI.SPECIAL, specialAttack)
+                .addStat(StatsI.SPEED, speed)
                 .setWeight(weight)
                 .setHeight(height)
                 .setTypes(types)

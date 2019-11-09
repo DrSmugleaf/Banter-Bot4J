@@ -3,6 +3,8 @@ package com.github.drsmugleaf.pokemon2.generations.vii;
 import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon2.base.generation.Generation;
 import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
+import com.github.drsmugleaf.pokemon2.base.species.stats.StatRegistry;
+import com.github.drsmugleaf.pokemon2.generations.ii.GenerationII;
 import com.github.drsmugleaf.pokemon2.generations.iii.species.PokedexIII;
 import com.github.drsmugleaf.pokemon2.generations.vi.GenerationVI;
 import com.github.drsmugleaf.pokemon2.generations.vii.game.GamesVII;
@@ -31,6 +33,11 @@ public class GenerationVII extends Generation {
     @Override
     public Pokedex<SpeciesVII> getPokedex() {
         return POKEDEX;
+    }
+
+    @Override
+    public StatRegistry getStats() {
+        return GenerationII.get().getStats();
     }
 
     @Override

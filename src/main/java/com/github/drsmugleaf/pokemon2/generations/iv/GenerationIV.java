@@ -3,6 +3,8 @@ package com.github.drsmugleaf.pokemon2.generations.iv;
 import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon2.base.generation.Generation;
 import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
+import com.github.drsmugleaf.pokemon2.base.species.stats.StatRegistry;
+import com.github.drsmugleaf.pokemon2.generations.ii.GenerationII;
 import com.github.drsmugleaf.pokemon2.generations.iii.GenerationIII;
 import com.github.drsmugleaf.pokemon2.generations.iii.species.PokedexIII;
 import com.github.drsmugleaf.pokemon2.generations.iv.game.GamesIV;
@@ -31,6 +33,11 @@ public class GenerationIV extends Generation {
     @Override
     public Pokedex<SpeciesIV> getPokedex() {
         return POKEDEX;
+    }
+
+    @Override
+    public StatRegistry getStats() {
+        return GenerationII.get().getStats();
     }
 
     @Override

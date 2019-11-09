@@ -5,7 +5,8 @@ import com.github.drsmugleaf.pokemon2.base.external.Smogon;
 import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon2.base.species.ISpecies;
 import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
-import com.github.drsmugleaf.pokemon2.base.type.TypeRegistry;
+import com.github.drsmugleaf.pokemon2.base.species.stats.StatRegistry;
+import com.github.drsmugleaf.pokemon2.base.species.type.TypeRegistry;
 
 /**
  * Created by DrSmugleaf on 01/07/2019
@@ -15,6 +16,7 @@ public interface IGeneration extends Nameable {
     Smogon getSmogon();
     Pokedex<? extends ISpecies<?>> getPokedex();
     TypeRegistry getTypes();
+    StatRegistry getStats();
     String getAbbreviation();
     GameRegistry getGames();
     int getNewPokemons();

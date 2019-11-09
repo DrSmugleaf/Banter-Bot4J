@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.pokemon2.base.generation;
 
 import com.github.drsmugleaf.pokemon2.base.external.Smogon;
-import com.github.drsmugleaf.pokemon2.base.type.TypeRegistry;
+import com.github.drsmugleaf.pokemon2.base.species.type.TypeRegistry;
 import com.github.drsmugleaf.pokemon2.generations.vii.GenerationVII;
 import org.jetbrains.annotations.Contract;
 

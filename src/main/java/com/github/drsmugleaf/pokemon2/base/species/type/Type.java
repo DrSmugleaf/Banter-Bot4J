@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.pokemon2.base.type;
+package com.github.drsmugleaf.pokemon2.base.species.type;
 
 import com.google.common.collect.ImmutableSet;
 

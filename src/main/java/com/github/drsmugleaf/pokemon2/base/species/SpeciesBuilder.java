@@ -3,8 +3,8 @@ package com.github.drsmugleaf.pokemon2.base.species;
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon.battle.Tier;
 import com.github.drsmugleaf.pokemon.pokemon.Gender;
-import com.github.drsmugleaf.pokemon.stats.PermanentStat;
-import com.github.drsmugleaf.pokemon2.base.type.IType;
+import com.github.drsmugleaf.pokemon2.base.species.stats.IStat;
+import com.github.drsmugleaf.pokemon2.base.species.type.IType;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.jetbrains.annotations.Contract;
@@ -24,7 +24,7 @@ public class SpeciesBuilder<T extends ISpecies, B extends SpeciesBuilder<T, B> &
     private Set<IType> types;
     @Nullable
     private Set<Tier> tiers;
-    private Map<PermanentStat, Integer> stats = new HashMap<>();
+    private Map<IStat, Integer> stats = new HashMap<>();
     private Set<T> evolutions = new HashSet<>(); // TODO: 06-Jul-19 Add valid evolutions
     @Nullable
     private Double weight;
@@ -100,18 +100,18 @@ public class SpeciesBuilder<T extends ISpecies, B extends SpeciesBuilder<T, B> &
     }
 
     @Override
-    public ImmutableMap<PermanentStat, Integer> getStats() {
+    public ImmutableMap<IStat, Integer> getStats() {
         return ImmutableMap.copyOf(stats);
     }
 
     @Override
-    public B addStat(PermanentStat stat, Integer amount) {
+    public B addStat(IStat stat, Integer amount) {
         this.stats.put(stat, amount);
         return getThis();
     }
 
     @Override
-    public B setStats(Map<PermanentStat, Integer> stats) {
+    public B setStats(Map<IStat, Integer> stats) {
         this.stats = stats;
         return getThis();
     }
