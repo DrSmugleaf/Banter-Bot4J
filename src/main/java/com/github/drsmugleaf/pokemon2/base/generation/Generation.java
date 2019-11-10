@@ -2,7 +2,7 @@ package com.github.drsmugleaf.pokemon2.base.generation;
 
 import com.github.drsmugleaf.pokemon2.base.external.Smogon;
 import com.github.drsmugleaf.pokemon2.base.species.type.TypeRegistry;
-import com.github.drsmugleaf.pokemon2.generations.vii.GenerationVII;
+import com.github.drsmugleaf.pokemon2.generations.i.GenerationI;
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -25,9 +25,35 @@ public abstract class Generation implements IGeneration {
         return GENERATIONS;
     }
 
-    @Contract(pure = true)
-    public static IGeneration getLatestGeneration() {
-        return GenerationVII.get();
+    public static IGeneration getLatest() {
+        IGeneration latest = GenerationI.get();
+        for (IGeneration generation : GENERATIONS.get().values()) {
+            if (generation.getID() > latest.getID()) {
+                latest = generation;
+            }
+        }
+
+        return latest;
+    }
+
+    public IGeneration getPrevious() {
+        for (IGeneration generation : GENERATIONS.get().values()) {
+            if (generation.getID() == getID() - 1) {
+                return generation;
+            }
+        }
+
+        return this;
+    }
+
+    public IGeneration getNext() {
+        for (IGeneration generation : GENERATIONS.get().values()) {
+            if (generation.getID() == getID() + 1) {
+                return generation;
+            }
+        }
+
+        return this;
     }
 
     @Override

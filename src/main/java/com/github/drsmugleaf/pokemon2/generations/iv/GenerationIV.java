@@ -31,6 +31,11 @@ public class GenerationIV extends Generation {
     }
 
     @Override
+    public int getID() {
+        return 4;
+    }
+
+    @Override
     public Pokedex<SpeciesIV> getPokedex() {
         return POKEDEX;
     }

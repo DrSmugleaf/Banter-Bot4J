@@ -32,6 +32,11 @@ public class GenerationII extends Generation {
     }
 
     @Override
+    public int getID() {
+        return 2;
+    }
+
+    @Override
     public Pokedex<SpeciesII> getPokedex() {
         return POKEDEX;
     }

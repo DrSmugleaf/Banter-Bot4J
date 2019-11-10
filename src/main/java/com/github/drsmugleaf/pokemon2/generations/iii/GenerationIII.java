@@ -34,6 +34,11 @@ public class GenerationIII extends Generation {
     }
 
     @Override
+    public int getID() {
+        return 3;
+    }
+
+    @Override
     public Pokedex<SpeciesIII> getPokedex() {
         return POKEDEX;
     }

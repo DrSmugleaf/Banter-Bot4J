@@ -31,6 +31,11 @@ public class GenerationVI extends Generation {
     }
 
     @Override
+    public int getID() {
+        return 6;
+    }
+
+    @Override
     public Pokedex<SpeciesVI> getPokedex() {
         return POKEDEX;
     }

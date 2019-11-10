@@ -13,6 +13,7 @@ import com.github.drsmugleaf.pokemon2.base.species.type.TypeRegistry;
  */
 public interface IGeneration extends Nameable {
 
+    int getID();
     Smogon getSmogon();
     Pokedex<? extends ISpecies<?>> getPokedex();
     TypeRegistry getTypes();
