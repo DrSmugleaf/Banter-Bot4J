@@ -1,10 +1,13 @@
-package com.github.drsmugleaf.pokemon2.generations.iv;
+package com.github.drsmugleaf.pokemon2.generations.iv.generation;
 
 import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon2.base.generation.Generation;
 import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
 import com.github.drsmugleaf.pokemon2.base.species.stats.StatRegistry;
-import com.github.drsmugleaf.pokemon2.generations.ii.GenerationII;
+import com.github.drsmugleaf.pokemon2.generations.ii.generation.GenerationII;
+import com.github.drsmugleaf.pokemon2.generations.iii.ability.AbilityRegistry;
+import com.github.drsmugleaf.pokemon2.generations.iii.generation.IGenerationIII;
+import com.github.drsmugleaf.pokemon2.generations.iii.nature.NatureRegistry;
 import com.github.drsmugleaf.pokemon2.generations.iii.species.PokedexIII;
 import com.github.drsmugleaf.pokemon2.generations.iv.game.GamesIV;
 import com.github.drsmugleaf.pokemon2.generations.iv.species.SpeciesIV;
@@ -13,14 +16,16 @@ import org.jetbrains.annotations.Contract;
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public class GenerationIV extends Generation {
+public class GenerationIV extends Generation implements IGenerationIII {
 
     private static final GenerationIV INSTANCE = new GenerationIV();
 
     private final GameRegistry GAMES = new GameRegistry(GamesIV.values());
     private final Pokedex<SpeciesIV> POKEDEX = new PokedexIII<>(this, SpeciesIV::new);
+    private final NatureRegistry NATURES = new NatureRegistry(this);
+    private final AbilityRegistry ABILITIES = new AbilityRegistry(this);
 
-    protected GenerationIV() {
+    private GenerationIV() {
         super();
     }
 
@@ -62,6 +67,16 @@ public class GenerationIV extends Generation {
     @Override
     public String getName() {
         return "Generation IV";
+    }
+
+    @Override
+    public NatureRegistry getNatures() {
+        return NATURES;
+    }
+
+    @Override
+    public AbilityRegistry getAbilities() {
+        return ABILITIES;
     }
 
 }

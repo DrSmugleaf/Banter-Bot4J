@@ -1,45 +1,46 @@
-package com.github.drsmugleaf.pokemon2.generations.iii;
+package com.github.drsmugleaf.pokemon2.generations.vii.generation;
 
 import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon2.base.generation.Generation;
 import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
 import com.github.drsmugleaf.pokemon2.base.species.stats.StatRegistry;
-import com.github.drsmugleaf.pokemon2.generations.ii.GenerationII;
+import com.github.drsmugleaf.pokemon2.generations.ii.generation.GenerationII;
 import com.github.drsmugleaf.pokemon2.generations.iii.ability.AbilityRegistry;
-import com.github.drsmugleaf.pokemon2.generations.iii.game.GamesIII;
+import com.github.drsmugleaf.pokemon2.generations.iii.generation.IGenerationIII;
 import com.github.drsmugleaf.pokemon2.generations.iii.nature.NatureRegistry;
 import com.github.drsmugleaf.pokemon2.generations.iii.species.PokedexIII;
-import com.github.drsmugleaf.pokemon2.generations.iii.species.SpeciesIII;
+import com.github.drsmugleaf.pokemon2.generations.vii.game.GamesVII;
+import com.github.drsmugleaf.pokemon2.generations.vii.species.SpeciesVII;
 import org.jetbrains.annotations.Contract;
 
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public class GenerationIII extends Generation {
+public class GenerationVII extends Generation implements IGenerationIII {
 
-    private static final GenerationIII INSTANCE = new GenerationIII();
+    private static final GenerationVII INSTANCE = new GenerationVII();
 
-    private final GameRegistry GAMES = new GameRegistry(GamesIII.values());
-    private final Pokedex<SpeciesIII> POKEDEX = new PokedexIII<>(this, SpeciesIII::new);
+    private final GameRegistry GAMES = new GameRegistry(GamesVII.values());
+    private final Pokedex<SpeciesVII> POKEDEX = new PokedexIII<>(this, SpeciesVII::new);
     private final NatureRegistry NATURES = new NatureRegistry(this);
     private final AbilityRegistry ABILITIES = new AbilityRegistry(this);
 
-    protected GenerationIII() {
+    private GenerationVII() {
         super();
     }
 
     @Contract(pure = true)
-    public static GenerationIII get() {
+    public static GenerationVII get() {
         return INSTANCE;
     }
 
     @Override
     public int getID() {
-        return 3;
+        return 7;
     }
 
     @Override
-    public Pokedex<SpeciesIII> getPokedex() {
+    public Pokedex<SpeciesVII> getPokedex() {
         return POKEDEX;
     }
 
@@ -50,7 +51,7 @@ public class GenerationIII extends Generation {
 
     @Override
     public String getAbbreviation() {
-        return "RS";
+        return "SM";
     }
 
     @Override
@@ -60,12 +61,22 @@ public class GenerationIII extends Generation {
 
     @Override
     public int getNewPokemons() {
-        return 135;
+        return 81;
     }
 
     @Override
     public String getName() {
-        return "Generation III";
+        return "Generation VII";
+    }
+
+    @Override
+    public NatureRegistry getNatures() {
+        return NATURES;
+    }
+
+    @Override
+    public AbilityRegistry getAbilities() {
+        return ABILITIES;
     }
 
 }

@@ -2,13 +2,13 @@ package com.github.drsmugleaf.pokemon2.base.generation;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.registry.Registry;
-import com.github.drsmugleaf.pokemon2.generations.i.GenerationI;
-import com.github.drsmugleaf.pokemon2.generations.ii.GenerationII;
-import com.github.drsmugleaf.pokemon2.generations.iii.GenerationIII;
-import com.github.drsmugleaf.pokemon2.generations.iv.GenerationIV;
-import com.github.drsmugleaf.pokemon2.generations.v.GenerationV;
-import com.github.drsmugleaf.pokemon2.generations.vi.GenerationVI;
-import com.github.drsmugleaf.pokemon2.generations.vii.GenerationVII;
+import com.github.drsmugleaf.pokemon2.generations.i.generation.GenerationI;
+import com.github.drsmugleaf.pokemon2.generations.ii.generation.GenerationII;
+import com.github.drsmugleaf.pokemon2.generations.iii.generation.GenerationIII;
+import com.github.drsmugleaf.pokemon2.generations.iv.generation.GenerationIV;
+import com.github.drsmugleaf.pokemon2.generations.v.generation.GenerationV;
+import com.github.drsmugleaf.pokemon2.generations.vi.generation.GenerationVI;
+import com.github.drsmugleaf.pokemon2.generations.vii.generation.GenerationVII;
 
 import java.util.SortedMap;
 import java.util.TreeMap;

@@ -1,42 +1,42 @@
-package com.github.drsmugleaf.pokemon2.generations.i;
+package com.github.drsmugleaf.pokemon2.generations.ii.generation;
 
 import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon2.base.generation.Generation;
 import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
 import com.github.drsmugleaf.pokemon2.base.species.stats.StatRegistry;
-import com.github.drsmugleaf.pokemon2.generations.i.game.GamesI;
 import com.github.drsmugleaf.pokemon2.generations.i.species.PokedexI;
-import com.github.drsmugleaf.pokemon2.generations.i.species.SpeciesI;
-import com.github.drsmugleaf.pokemon2.generations.i.stats.StatsI;
+import com.github.drsmugleaf.pokemon2.generations.ii.game.GamesII;
+import com.github.drsmugleaf.pokemon2.generations.ii.species.SpeciesII;
+import com.github.drsmugleaf.pokemon2.generations.ii.stats.StatsII;
 import org.jetbrains.annotations.Contract;
 
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public class GenerationI extends Generation {
+public class GenerationII extends Generation {
 
-    private static final GenerationI INSTANCE = new GenerationI();
+    private static final GenerationII INSTANCE = new GenerationII();
 
-    private final GameRegistry GAMES = new GameRegistry(GamesI.values());
-    private final Pokedex<SpeciesI> POKEDEX = new PokedexI<>(this, SpeciesI::new);
-    private final StatRegistry STATS = new StatRegistry(StatsI.values());
+    private final GameRegistry GAMES = new GameRegistry(GamesII.values());
+    private final Pokedex<SpeciesII> POKEDEX = new PokedexI<>(this, SpeciesII::new);
+    private final StatRegistry STATS = new StatRegistry(StatsII.values());
 
-    protected GenerationI() {
+    private GenerationII() {
         super();
     }
 
     @Contract(pure = true)
-    public static GenerationI get() {
+    public static GenerationII get() {
         return INSTANCE;
     }
 
     @Override
     public int getID() {
-        return 1;
+        return 2;
     }
 
     @Override
-    public Pokedex<SpeciesI> getPokedex() {
+    public Pokedex<SpeciesII> getPokedex() {
         return POKEDEX;
     }
 
@@ -47,7 +47,7 @@ public class GenerationI extends Generation {
 
     @Override
     public String getAbbreviation() {
-        return "RB";
+        return "GS";
     }
 
     @Override
@@ -57,12 +57,12 @@ public class GenerationI extends Generation {
 
     @Override
     public int getNewPokemons() {
-        return 151;
+        return 100;
     }
 
     @Override
     public String getName() {
-        return "Generation I";
+        return "Generation II";
     }
 
 }
