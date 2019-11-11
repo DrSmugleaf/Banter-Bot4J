@@ -1,9 +1,12 @@
 package com.github.drsmugleaf.pokemon2.base.generation;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.external.Smogon;
 import com.github.drsmugleaf.pokemon2.base.species.type.TypeRegistry;
-import com.github.drsmugleaf.pokemon2.generations.i.GenerationI;
 import org.jetbrains.annotations.Contract;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by DrSmugleaf on 06/07/2019
@@ -25,35 +28,38 @@ public abstract class Generation implements IGeneration {
         return GENERATIONS;
     }
 
-    public static IGeneration getLatest() {
-        IGeneration latest = GenerationI.get();
-        for (IGeneration generation : GENERATIONS.get().values()) {
-            if (generation.getID() > latest.getID()) {
-                latest = generation;
-            }
-        }
-
-        return latest;
-    }
-
+    @Nullable
+    @Override
     public IGeneration getPrevious() {
-        for (IGeneration generation : GENERATIONS.get().values()) {
-            if (generation.getID() == getID() - 1) {
-                return generation;
-            }
-        }
-
-        return this;
+        return GENERATIONS.get(getID() - 1);
     }
 
-    public IGeneration getNext() {
-        for (IGeneration generation : GENERATIONS.get().values()) {
-            if (generation.getID() == getID() + 1) {
-                return generation;
-            }
+    @Override
+    public Set<IGeneration> getAllPrevious() {
+        Set<IGeneration> generations = new HashSet<>();
+        IGeneration generation;
+        while ((generation = getPrevious()) != null) {
+            generations.add(generation);
         }
 
-        return this;
+        return generations;
+    }
+
+    @Nullable
+    @Override
+    public IGeneration getNext() {
+        return GENERATIONS.get(getID() + 1);
+    }
+
+    @Override
+    public Set<IGeneration> getAllNext() {
+        Set<IGeneration> generations = new HashSet<>();
+        IGeneration generation;
+        while ((generation = getNext()) != null) {
+            generations.add(generation);
+        }
+
+        return generations;
     }
 
     @Override
@@ -64,6 +70,11 @@ public abstract class Generation implements IGeneration {
     @Override
     public TypeRegistry getTypes() {
         return TYPES;
+    }
+
+    @Override
+    public int getTotalPokemons() {
+        return getNewPokemons() + (getPrevious() == null ? 0 : getPrevious().getTotalPokemons());
     }
 
 }

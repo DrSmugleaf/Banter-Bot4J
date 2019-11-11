@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.pokemon2.generations.iii.nature;
 
-import com.github.drsmugleaf.pokemon2.base.generation.Generation;
 import com.github.drsmugleaf.pokemon2.base.generation.IGeneration;
 import com.github.drsmugleaf.pokemon2.base.registry.Registry;
 
@@ -11,7 +10,7 @@ import java.util.Map;
  */
 public class NatureRegistry extends Registry<INature> {
 
-    public NatureRegistry(Generation generation) {
+    public NatureRegistry(IGeneration generation) {
         super(getAll(generation));
     }
 

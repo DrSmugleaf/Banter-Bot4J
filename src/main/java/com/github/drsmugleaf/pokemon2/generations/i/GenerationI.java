@@ -61,11 +61,6 @@ public class GenerationI extends Generation {
     }
 
     @Override
-    public int getTotalPokemons() {
-        return getNewPokemons();
-    }
-
-    @Override
     public String getName() {
         return "Generation I";
     }

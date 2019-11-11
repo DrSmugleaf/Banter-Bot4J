@@ -16,6 +16,10 @@ public abstract class Registry<T extends Nameable> {
 
     private final ImmutableMap<String, T> MAP;
 
+    public Registry() {
+        MAP = ImmutableMap.of();
+    }
+
     public Registry(Map<String, T> map) {
         MAP = ImmutableMap.copyOf(map);
     }

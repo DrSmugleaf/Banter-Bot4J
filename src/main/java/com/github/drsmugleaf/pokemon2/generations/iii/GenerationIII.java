@@ -64,11 +64,6 @@ public class GenerationIII extends Generation {
     }
 
     @Override
-    public int getTotalPokemons() {
-        return getNewPokemons() + GenerationII.get().getTotalPokemons();
-    }
-
-    @Override
     public String getName() {
         return "Generation III";
     }

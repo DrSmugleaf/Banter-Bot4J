@@ -4,7 +4,6 @@ import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon2.base.generation.Generation;
 import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
 import com.github.drsmugleaf.pokemon2.base.species.stats.StatRegistry;
-import com.github.drsmugleaf.pokemon2.generations.i.GenerationI;
 import com.github.drsmugleaf.pokemon2.generations.i.species.PokedexI;
 import com.github.drsmugleaf.pokemon2.generations.ii.game.GamesII;
 import com.github.drsmugleaf.pokemon2.generations.ii.species.SpeciesII;
@@ -59,11 +58,6 @@ public class GenerationII extends Generation {
     @Override
     public int getNewPokemons() {
         return 100;
-    }
-
-    @Override
-    public int getTotalPokemons() {
-        return getNewPokemons() + GenerationI.get().getTotalPokemons();
     }
 
     @Override
