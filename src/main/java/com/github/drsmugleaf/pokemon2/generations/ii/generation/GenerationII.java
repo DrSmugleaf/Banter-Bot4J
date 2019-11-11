@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.pokemon2.generations.ii.generation;
 
 import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
-import com.github.drsmugleaf.pokemon2.base.generation.Generation;
+import com.github.drsmugleaf.pokemon2.base.generation.BaseGeneration;
 import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
 import com.github.drsmugleaf.pokemon2.base.species.stats.StatRegistry;
 import com.github.drsmugleaf.pokemon2.generations.i.species.PokedexI;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Contract;
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public class GenerationII extends Generation {
+public class GenerationII extends BaseGeneration {
 
     private static final GenerationII INSTANCE = new GenerationII();
 

@@ -11,14 +11,14 @@ import java.util.Set;
 /**
  * Created by DrSmugleaf on 06/07/2019
  */
-public abstract class Generation implements IGeneration {
+public abstract class BaseGeneration implements IGeneration {
 
     private static final GenerationRegistry GENERATIONS = new GenerationRegistry();
 
     private final Smogon SMOGON;
     private final TypeRegistry TYPES;
 
-    protected Generation() {
+    protected BaseGeneration() {
         SMOGON = new Smogon(this);
         TYPES = new TypeRegistry(this);
     }

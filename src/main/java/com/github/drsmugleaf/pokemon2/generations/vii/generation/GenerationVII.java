@@ -1,13 +1,10 @@
 package com.github.drsmugleaf.pokemon2.generations.vii.generation;
 
 import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
-import com.github.drsmugleaf.pokemon2.base.generation.Generation;
 import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
 import com.github.drsmugleaf.pokemon2.base.species.stats.StatRegistry;
 import com.github.drsmugleaf.pokemon2.generations.ii.generation.GenerationII;
-import com.github.drsmugleaf.pokemon2.generations.iii.ability.AbilityRegistry;
-import com.github.drsmugleaf.pokemon2.generations.iii.generation.IGenerationIII;
-import com.github.drsmugleaf.pokemon2.generations.iii.nature.NatureRegistry;
+import com.github.drsmugleaf.pokemon2.generations.iii.generation.BaseGenerationIII;
 import com.github.drsmugleaf.pokemon2.generations.iii.species.PokedexIII;
 import com.github.drsmugleaf.pokemon2.generations.vii.game.GamesVII;
 import com.github.drsmugleaf.pokemon2.generations.vii.species.SpeciesVII;
@@ -16,14 +13,12 @@ import org.jetbrains.annotations.Contract;
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public class GenerationVII extends Generation implements IGenerationIII {
+public class GenerationVII extends BaseGenerationIII {
 
     private static final GenerationVII INSTANCE = new GenerationVII();
 
     private final GameRegistry GAMES = new GameRegistry(GamesVII.values());
     private final Pokedex<SpeciesVII> POKEDEX = new PokedexIII<>(this, SpeciesVII::new);
-    private final NatureRegistry NATURES = new NatureRegistry(this);
-    private final AbilityRegistry ABILITIES = new AbilityRegistry(this);
 
     private GenerationVII() {
         super();
@@ -67,16 +62,6 @@ public class GenerationVII extends Generation implements IGenerationIII {
     @Override
     public String getName() {
         return "Generation VII";
-    }
-
-    @Override
-    public NatureRegistry getNatures() {
-        return NATURES;
-    }
-
-    @Override
-    public AbilityRegistry getAbilities() {
-        return ABILITIES;
     }
 
 }
