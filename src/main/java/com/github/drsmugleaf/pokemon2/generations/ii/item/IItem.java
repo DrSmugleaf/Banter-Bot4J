@@ -6,13 +6,7 @@ import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public interface IItems extends Nameable {
-
-    int getId();
-
-    default String getHex() {
-        return Integer.toHexString(getId());
-    }
+public interface IItem extends Nameable {
 
     ItemCategory getCategory();
 

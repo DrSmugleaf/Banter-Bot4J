@@ -5,14 +5,14 @@ import org.jetbrains.annotations.Contract;
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public enum ItemCategory implements IItemCategory {
+public enum ItemCategories implements IItemCategory {
 
     NONE("None"),
     BERRY("Berry");
 
     private final String NAME;
 
-    ItemCategory(String name) {
+    ItemCategories(String name) {
         NAME = name;
     }
 

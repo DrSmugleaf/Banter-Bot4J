@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.pokemon2.generations.i.stats;
 
-import com.github.drsmugleaf.pokemon2.base.species.stats.IStat;
+import com.github.drsmugleaf.pokemon2.base.species.stat.IStat;
 import org.jetbrains.annotations.Contract;
 
 /**

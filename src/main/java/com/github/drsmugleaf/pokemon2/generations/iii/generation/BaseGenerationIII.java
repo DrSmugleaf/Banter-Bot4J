@@ -1,13 +1,13 @@
 package com.github.drsmugleaf.pokemon2.generations.iii.generation;
 
-import com.github.drsmugleaf.pokemon2.base.generation.BaseGeneration;
+import com.github.drsmugleaf.pokemon2.generations.ii.generation.BaseGenerationII;
 import com.github.drsmugleaf.pokemon2.generations.iii.ability.AbilityRegistry;
 import com.github.drsmugleaf.pokemon2.generations.iii.nature.NatureRegistry;
 
 /**
  * Created by DrSmugleaf on 11/11/2019
  */
-public abstract class BaseGenerationIII extends BaseGeneration implements IGenerationIII {
+public abstract class BaseGenerationIII extends BaseGenerationII implements IGenerationIII {
 
     private final NatureRegistry NATURES = new NatureRegistry(this);
     private final AbilityRegistry ABILITIES = new AbilityRegistry(this);

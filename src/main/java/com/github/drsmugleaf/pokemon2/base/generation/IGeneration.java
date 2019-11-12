@@ -6,7 +6,7 @@ import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
 import com.github.drsmugleaf.pokemon2.base.species.ISpecies;
 import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
-import com.github.drsmugleaf.pokemon2.base.species.stats.StatRegistry;
+import com.github.drsmugleaf.pokemon2.base.species.stat.StatRegistry;
 import com.github.drsmugleaf.pokemon2.base.species.type.TypeRegistry;
 
 import java.util.Set;

@@ -2,8 +2,10 @@ package com.github.drsmugleaf.pokemon2.base.external;
 
 import com.github.drsmugleaf.pokemon2.base.generation.IGeneration;
 import com.github.drsmugleaf.pokemon2.base.species.ISpecies;
-import com.github.drsmugleaf.pokemon2.base.species.stats.IStat;
+import com.github.drsmugleaf.pokemon2.base.species.stat.IStat;
 import com.github.drsmugleaf.pokemon2.base.species.type.TypeBuilder;
+import com.github.drsmugleaf.pokemon2.generations.ii.item.IItem;
+import com.github.drsmugleaf.pokemon2.generations.ii.item.Item;
 import com.github.drsmugleaf.pokemon2.generations.ii.stats.StatsII;
 import com.github.drsmugleaf.pokemon2.generations.iii.ability.Ability;
 import com.github.drsmugleaf.pokemon2.generations.iii.ability.IAbility;
@@ -147,6 +149,20 @@ public class Smogon {
         }
 
         return abilities;
+    }
+
+    public Map<String, IItem> getItems() {
+        Map<String, IItem> items = new HashMap<>();
+        JSONArray itemsArray = get("items");
+
+        for (int i = 0; i < itemsArray.length(); i++) {
+            JSONObject itemObject = itemsArray.getJSONObject(i);
+            String name = itemObject.getString("name");
+            Item item = new Item(name);
+            items.put(name, item);
+        }
+
+        return items;
     }
 
     public void printPokemonsAsEnums(IGeneration gen, IGeneration... minus) {

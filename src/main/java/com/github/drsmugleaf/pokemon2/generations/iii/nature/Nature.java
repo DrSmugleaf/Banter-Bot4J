@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.pokemon2.generations.iii.nature;
 
-import com.github.drsmugleaf.pokemon2.base.species.stats.IStat;
+import com.github.drsmugleaf.pokemon2.base.species.stat.IStat;
 import com.google.common.collect.ImmutableMap;
 
 import java.util.Map;

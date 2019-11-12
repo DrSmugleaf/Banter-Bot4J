@@ -2,11 +2,9 @@ package com.github.drsmugleaf.pokemon2.base.game;
 
 import com.github.drsmugleaf.pokemon2.base.registry.Registry;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by DrSmugleaf on 07/11/2019
@@ -16,7 +14,7 @@ public class GameRegistry extends Registry<IGame> {
     private final ImmutableMap<String, IGame> CORE_GAMES;
     private final ImmutableMap<String, IGame> SIDE_GAMES;
 
-    public GameRegistry(Set<IGame> games) {
+    public GameRegistry(IGame... games) {
         super(games);
         Map<String, IGame> core = new HashMap<>();
         Map<String, IGame> side = new HashMap<>();
@@ -33,10 +31,6 @@ public class GameRegistry extends Registry<IGame> {
 
         CORE_GAMES = ImmutableMap.copyOf(core);
         SIDE_GAMES = ImmutableMap.copyOf(side);
-    }
-
-    public GameRegistry(IGame... games) {
-        this(ImmutableSet.copyOf(games));
     }
 
     public ImmutableMap<String, IGame> getCoreGames() {

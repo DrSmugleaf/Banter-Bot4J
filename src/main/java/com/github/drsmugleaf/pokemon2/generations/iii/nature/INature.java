@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.pokemon2.generations.iii.nature;
 
 import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
-import com.github.drsmugleaf.pokemon2.base.species.stats.IStat;
+import com.github.drsmugleaf.pokemon2.base.species.stat.IStat;
 
 /**
  * Created by DrSmugleaf on 06/07/2019
