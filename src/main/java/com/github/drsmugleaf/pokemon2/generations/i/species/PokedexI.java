@@ -5,7 +5,7 @@ import com.github.drsmugleaf.pokemon2.base.generation.IGeneration;
 import com.github.drsmugleaf.pokemon2.base.species.ISpecies;
 import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
 import com.github.drsmugleaf.pokemon2.base.species.type.IType;
-import com.github.drsmugleaf.pokemon2.generations.i.stats.StatsI;
+import com.github.drsmugleaf.pokemon2.generations.i.species.stat.StatsI;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

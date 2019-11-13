@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.pokemon2.generations.i.stats;
+package com.github.drsmugleaf.pokemon2.generations.ii.species.stat;
 
 import com.github.drsmugleaf.pokemon2.base.species.stat.IStat;
 import org.jetbrains.annotations.Contract;
@@ -6,13 +6,14 @@ import org.jetbrains.annotations.Contract;
 /**
  * Created by DrSmugleaf on 09/11/2019
  */
-public enum StatsI implements IStat {
+public enum StatsII implements IStat {
 
     HP("HP", "HP", true),
     ATTACK("Attack", "Atk", true),
     DEFENSE("Defense", "Def", true),
     SPEED("Speed", "Spd", true),
-    SPECIAL("Special", "Spe", true),
+    SPECIAL_ATTACK("Special Attack", "SpA", true),
+    SPECIAL_DEFENSE("Special Defense", "SpD", true),
     EVASION("Evasion", "Eva", false),
     ACCURACY("Accuracy", "Acc", false);
 
@@ -20,7 +21,7 @@ public enum StatsI implements IStat {
     private final String ABBREVIATION;
     private final boolean IS_PERMANENT;
 
-    StatsI(String name, String abbreviation, boolean isPermanent) {
+    StatsII(String name, String abbreviation, boolean isPermanent) {
         NAME = name;
         ABBREVIATION = abbreviation;
         IS_PERMANENT = isPermanent;

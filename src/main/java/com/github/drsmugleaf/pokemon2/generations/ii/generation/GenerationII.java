@@ -6,7 +6,7 @@ import com.github.drsmugleaf.pokemon2.base.species.stat.StatRegistry;
 import com.github.drsmugleaf.pokemon2.generations.i.species.PokedexI;
 import com.github.drsmugleaf.pokemon2.generations.ii.game.GamesII;
 import com.github.drsmugleaf.pokemon2.generations.ii.species.SpeciesII;
-import com.github.drsmugleaf.pokemon2.generations.ii.stats.StatsII;
+import com.github.drsmugleaf.pokemon2.generations.ii.species.stat.StatsII;
 import org.jetbrains.annotations.Contract;
 
 /**
