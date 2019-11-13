@@ -1,9 +1,9 @@
 package com.github.drsmugleaf.pokemon2.base.pokemon.species;
 
-import com.github.drsmugleaf.pokemon.pokemon.Gender;
 import com.github.drsmugleaf.pokemon2.base.format.IFormat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.IType;
+import com.github.drsmugleaf.pokemon2.generations.ii.pokemon.gender.IGender;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.jetbrains.annotations.Contract;
@@ -20,7 +20,7 @@ public abstract class Species<T extends ISpecies<T>> implements ISpecies<T> {
     private final ImmutableSet<T> EVOLUTIONS;
     private final double HEIGHT;
     private final double WEIGHT;
-    private final ImmutableSet<Gender> GENDERS;
+    private final ImmutableSet<IGender> GENDERS;
     private final ImmutableSet<String> ALTS;
     private final String NAME;
 
@@ -73,7 +73,7 @@ public abstract class Species<T extends ISpecies<T>> implements ISpecies<T> {
     }
 
     @Override
-    public ImmutableSet<Gender> getGenders() {
+    public ImmutableSet<IGender> getGenders() {
         return GENDERS;
     }
 

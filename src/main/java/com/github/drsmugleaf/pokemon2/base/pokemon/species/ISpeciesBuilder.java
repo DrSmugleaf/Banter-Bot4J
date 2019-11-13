@@ -1,10 +1,10 @@
 package com.github.drsmugleaf.pokemon2.base.pokemon.species;
 
-import com.github.drsmugleaf.pokemon.pokemon.Gender;
 import com.github.drsmugleaf.pokemon2.base.builder.IBuilder;
 import com.github.drsmugleaf.pokemon2.base.format.IFormat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.IType;
+import com.github.drsmugleaf.pokemon2.generations.ii.pokemon.gender.IGender;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
@@ -33,8 +33,8 @@ public interface ISpeciesBuilder<T extends ISpecies, B extends ISpeciesBuilder<T
     B setWeight(double weight);
     Double getHeight();
     B setHeight(double height);
-    ImmutableSet<Gender> getGenders();
-    B setGenders(Collection<Gender> genders);
+    ImmutableSet<IGender> getGenders();
+    B setGenders(Collection<IGender> genders);
     ImmutableSet<String> getAlts();
     B setAlts(Collection<String> alts);
 

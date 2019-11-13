@@ -1,10 +1,10 @@
 package com.github.drsmugleaf.pokemon2.base.pokemon.species;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.pokemon.pokemon.Gender;
 import com.github.drsmugleaf.pokemon2.base.format.IFormat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.IType;
+import com.github.drsmugleaf.pokemon2.generations.ii.pokemon.gender.IGender;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
@@ -26,7 +26,7 @@ public class SpeciesBuilder<T extends ISpecies, B extends SpeciesBuilder<T, B> &
     private Double weight;
     @Nullable
     private Double height;
-    private Set<Gender> genders = new HashSet<>(); // TODO: 06-Jul-19 Add valid genders
+    private Set<IGender> genders = new HashSet<>(); // TODO: 06-Jul-19 Add valid genders
     private Set<String> alts = new HashSet<>();
 
     public SpeciesBuilder() {}
@@ -142,12 +142,12 @@ public class SpeciesBuilder<T extends ISpecies, B extends SpeciesBuilder<T, B> &
     }
 
     @Override
-    public ImmutableSet<Gender> getGenders() {
+    public ImmutableSet<IGender> getGenders() {
         return ImmutableSet.copyOf(genders);
     }
 
     @Override
-    public B setGenders(Collection<Gender> genders) {
+    public B setGenders(Collection<IGender> genders) {
         this.genders = new HashSet<>(genders);
         return getThis();
     }
