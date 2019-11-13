@@ -1,10 +1,10 @@
 package com.github.drsmugleaf.pokemon2.base.generation;
 
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.pokemon2.PokemonGame;
 import com.github.drsmugleaf.pokemon2.base.external.Smogon;
 import com.github.drsmugleaf.pokemon2.base.format.FormatRegistry;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.TypeRegistry;
-import org.jetbrains.annotations.Contract;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,8 +13,6 @@ import java.util.Set;
  * Created by DrSmugleaf on 06/07/2019
  */
 public abstract class BaseGeneration implements IGeneration {
-
-    private static final GenerationRegistry GENERATIONS = new GenerationRegistry();
 
     private final Smogon SMOGON;
     private final TypeRegistry TYPES;
@@ -26,22 +24,17 @@ public abstract class BaseGeneration implements IGeneration {
         FORMATS = new FormatRegistry(this);
     }
 
-    @Contract(pure = true)
-    public static GenerationRegistry getGenerations() {
-        return GENERATIONS;
-    }
-
     @Nullable
     @Override
     public IGeneration getPrevious() {
-        return GENERATIONS.get(getID() - 1);
+        return PokemonGame.get().getGenerations().get(getID() - 1);
     }
 
     @Override
     public Set<IGeneration> getAllPrevious() {
         Set<IGeneration> generations = new HashSet<>();
-        IGeneration generation;
-        while ((generation = getPrevious()) != null) {
+        IGeneration generation = this;
+        while ((generation = generation.getPrevious()) != null) {
             generations.add(generation);
         }
 
@@ -51,7 +44,7 @@ public abstract class BaseGeneration implements IGeneration {
     @Nullable
     @Override
     public IGeneration getNext() {
-        return GENERATIONS.get(getID() + 1);
+        return PokemonGame.get().getGenerations().get(getID() + 1);
     }
 
     @Override

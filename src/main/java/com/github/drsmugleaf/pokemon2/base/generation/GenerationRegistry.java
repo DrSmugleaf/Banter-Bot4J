@@ -20,6 +20,13 @@ public class GenerationRegistry extends Registry<IGeneration> {
 
     private final SortedMap<Integer, IGeneration> GENERATIONS_BY_ID = new TreeMap<>();
 
+    public GenerationRegistry(IGeneration... generations) {
+        super(generations);
+        for (IGeneration generation : generations) {
+            GENERATIONS_BY_ID.put(generation.getID(), generation);
+        }
+    }
+
     public GenerationRegistry() {
         this(
                 GenerationI.get(),
@@ -30,10 +37,6 @@ public class GenerationRegistry extends Registry<IGeneration> {
                 GenerationVI.get(),
                 GenerationVII.get()
         );
-    }
-
-    public GenerationRegistry(IGeneration... generations) {
-        super(generations);
     }
 
     public SortedMap<Integer, IGeneration> getByID() {
