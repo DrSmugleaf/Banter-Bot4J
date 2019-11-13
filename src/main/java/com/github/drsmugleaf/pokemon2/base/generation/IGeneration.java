@@ -5,10 +5,10 @@ import com.github.drsmugleaf.pokemon2.base.external.Smogon;
 import com.github.drsmugleaf.pokemon2.base.format.FormatRegistry;
 import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
-import com.github.drsmugleaf.pokemon2.base.species.ISpecies;
-import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
-import com.github.drsmugleaf.pokemon2.base.species.stat.StatRegistry;
-import com.github.drsmugleaf.pokemon2.base.species.type.TypeRegistry;
+import com.github.drsmugleaf.pokemon2.base.pokemon.species.ISpecies;
+import com.github.drsmugleaf.pokemon2.base.pokemon.species.Pokedex;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.StatRegistry;
+import com.github.drsmugleaf.pokemon2.base.pokemon.type.TypeRegistry;
 
 import java.util.Set;
 

@@ -1,13 +1,13 @@
 package com.github.drsmugleaf.pokemon2.generations.iv.generation;
 
 import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
-import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
-import com.github.drsmugleaf.pokemon2.base.species.stat.StatRegistry;
+import com.github.drsmugleaf.pokemon2.base.pokemon.species.Pokedex;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.StatRegistry;
 import com.github.drsmugleaf.pokemon2.generations.ii.generation.GenerationII;
 import com.github.drsmugleaf.pokemon2.generations.iii.generation.BaseGenerationIII;
-import com.github.drsmugleaf.pokemon2.generations.iii.species.PokedexIII;
+import com.github.drsmugleaf.pokemon2.generations.iii.pokemon.species.PokedexIII;
 import com.github.drsmugleaf.pokemon2.generations.iv.game.GamesIV;
-import com.github.drsmugleaf.pokemon2.generations.iv.species.SpeciesIV;
+import com.github.drsmugleaf.pokemon2.generations.iv.pokemon.species.SpeciesIV;
 import org.jetbrains.annotations.Contract;
 
 /**

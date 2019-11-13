@@ -3,7 +3,7 @@ package com.github.drsmugleaf.pokemon2.base.generation;
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.external.Smogon;
 import com.github.drsmugleaf.pokemon2.base.format.FormatRegistry;
-import com.github.drsmugleaf.pokemon2.base.species.type.TypeRegistry;
+import com.github.drsmugleaf.pokemon2.base.pokemon.type.TypeRegistry;
 import org.jetbrains.annotations.Contract;
 
 import java.util.HashSet;
