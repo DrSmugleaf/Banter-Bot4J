@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.pokemon2.generations.i.pokemon.stat;
 
+import com.github.drsmugleaf.pokemon2.base.pokemon.IPokemon;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
 import org.jetbrains.annotations.Contract;
 
@@ -8,7 +9,14 @@ import org.jetbrains.annotations.Contract;
  */
 public enum StatsI implements IStat {
 
-    HP("HP", "HP", true),
+    HP("HP", "HP", true) {
+        @Override
+        public int calculate(IPokemon<?> pokemon) {
+            Integer baseStat = pokemon.getSpecies().getStats().get(this);
+            int level = pokemon.getLevel();
+            return ((((baseStat) * 2) + level) / 100) + level + 10;
+        }
+    },
     ATTACK("Attack", "Atk", true),
     DEFENSE("Defense", "Def", true),
     SPEED("Speed", "Spd", true),
@@ -36,6 +44,13 @@ public enum StatsI implements IStat {
     @Override
     public boolean isPermanent() {
         return IS_PERMANENT;
+    }
+
+    @Override
+    public int calculate(IPokemon<?> pokemon) {
+        Integer baseStat = pokemon.getSpecies().getStats().get(this);
+        int level = pokemon.getLevel();
+        return (((baseStat) * 2 * level) / 100) + 5;
     }
 
     @Contract(pure = true)

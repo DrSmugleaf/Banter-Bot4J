@@ -27,5 +27,7 @@ public interface IPokemon<T extends ISpecies<T>> {
     ImmutableSet<IStat> getStats();
     int getHP();
     double getWeight(); // Kilograms
+    boolean isAlive();
+    void damage(int amount);
 
 }

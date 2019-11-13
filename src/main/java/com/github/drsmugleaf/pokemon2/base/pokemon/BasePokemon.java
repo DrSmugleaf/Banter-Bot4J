@@ -28,6 +28,7 @@ public abstract class BasePokemon<T extends ISpecies<T>> implements IPokemon<T> 
     private final ImmutableSet<IStat> STATS;
     private int hp;
     private double weight;
+    private boolean isAlive;
 
     public BasePokemon(
             T species,
@@ -48,6 +49,7 @@ public abstract class BasePokemon<T extends ISpecies<T>> implements IPokemon<T> 
         STATS = ImmutableSet.copyOf(stats);
         this.hp = hp;
         weight = species.getWeight();
+        isAlive = true;
     }
 
     @Override
@@ -100,6 +102,21 @@ public abstract class BasePokemon<T extends ISpecies<T>> implements IPokemon<T> 
     @Override
     public double getWeight() {
         return weight;
+    }
+
+    @Override
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    @Override
+    public void damage(int amount) {
+        hp -= amount;
+
+        if (hp <= 0) {
+            hp = 0;
+            isAlive = false;
+        }
     }
 
 }
