@@ -67,8 +67,8 @@ public abstract class BasePokemon<T extends ISpecies<T>> implements IPokemon<T> 
 
     @Override
     public void setTypes(Collection<IType> types) {
-        this.TYPES.clear();
-        this.TYPES.addAll(types);
+        TYPES.clear();
+        TYPES.addAll(types);
     }
 
     @Nullable
