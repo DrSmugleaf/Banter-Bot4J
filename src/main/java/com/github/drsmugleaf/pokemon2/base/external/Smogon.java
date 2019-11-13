@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.pokemon2.base.external;
 
+import com.github.drsmugleaf.pokemon2.base.format.Format;
+import com.github.drsmugleaf.pokemon2.base.format.IFormat;
 import com.github.drsmugleaf.pokemon2.base.generation.IGeneration;
 import com.github.drsmugleaf.pokemon2.base.species.ISpecies;
 import com.github.drsmugleaf.pokemon2.base.species.stat.IStat;
@@ -163,6 +165,21 @@ public class Smogon {
         }
 
         return items;
+    }
+
+    public Map<String, IFormat> getFormats() {
+        Map<String, IFormat> formats = new HashMap<>();
+        JSONArray formatsArray = get("formats");
+
+        for (int i = 0; i < formatsArray.length(); i++) {
+            JSONObject formatObject = formatsArray.getJSONObject(i);
+            String name = formatObject.getString("name");
+            String abbreviation = formatObject.getString("shorthand");
+            Format format = new Format(name, abbreviation);
+            formats.put(name, format);
+        }
+
+        return formats;
     }
 
     public void printPokemonsAsEnums(IGeneration gen, IGeneration... minus) {

@@ -1,26 +1,24 @@
 package com.github.drsmugleaf.pokemon2.generations.ii.item;
 
-import com.github.drsmugleaf.pokemon.item.ItemCategory;
-
 /**
  * Created by DrSmugleaf on 11/11/2019
  */
 public class Item implements IItem {
 
-    private final ItemCategory CATEGORY;
+    private final IItemCategory CATEGORY;
     private final String NAME;
 
-    public Item(ItemCategory category, String name) {
+    public Item(IItemCategory category, String name) {
         CATEGORY = category;
         NAME = name;
     }
 
     public Item(String name) {
-        this(ItemCategory.DEFAULT, name);
+        this(ItemCategories.NONE, name);
     }
 
     @Override
-    public ItemCategory getCategory() {
+    public IItemCategory getCategory() {
         return CATEGORY;
     }
 

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 /**
  * Created by DrSmugleaf on 06/07/2019
  */
-public abstract class Registry<T extends Nameable> {
+public class Registry<T extends Nameable> implements IRegistry<T> {
 
     private final ImmutableMap<String, T> MAP;
 
@@ -32,10 +32,12 @@ public abstract class Registry<T extends Nameable> {
         this(Arrays.stream(elements).collect(Collectors.toMap(Nameable::getName, Function.identity())));
     }
 
+    @Override
     public ImmutableMap<String, T> get() {
         return MAP;
     }
 
+    @Override
     public T get(String name) {
         return MAP.get(name);
     }

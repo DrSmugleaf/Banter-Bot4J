@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.pokemon2.generations.i.species;
 
-import com.github.drsmugleaf.pokemon.battle.Tier;
+import com.github.drsmugleaf.pokemon2.base.format.IFormat;
 import com.github.drsmugleaf.pokemon2.base.generation.IGeneration;
 import com.github.drsmugleaf.pokemon2.base.species.ISpecies;
 import com.github.drsmugleaf.pokemon2.base.species.Pokedex;
@@ -9,10 +9,7 @@ import com.github.drsmugleaf.pokemon2.generations.i.species.stat.StatsI;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -85,9 +82,10 @@ public class PokedexI<T extends ISpecies<T>> extends Pokedex<T> {
         List<? extends IType> types = gen.getTypes().fromJson(pokemon);
 
         JSONArray jsonFormats = pokemon.getJSONArray("formats");
-        List<Tier> formats = new ArrayList<>();
-        for (int k = 0; k < jsonFormats.length(); k++) {
-            Tier format = Tier.getTier(jsonFormats.getString(k));
+        Set<IFormat> formats = new HashSet<>();
+        for (int i = 0; i < jsonFormats.length(); i++) {
+            String jsonFormat = jsonFormats.getString(i);
+            IFormat format = gen.getFormats().getByAbbreviation().get(jsonFormat);
             formats.add(format);
         }
 

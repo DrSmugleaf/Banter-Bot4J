@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.pokemon2.base.species;
 
-import com.github.drsmugleaf.pokemon.battle.Tier;
 import com.github.drsmugleaf.pokemon.pokemon.Gender;
+import com.github.drsmugleaf.pokemon2.base.format.IFormat;
 import com.github.drsmugleaf.pokemon2.base.species.stat.IStat;
 import com.github.drsmugleaf.pokemon2.base.species.type.IType;
 import com.google.common.collect.ImmutableMap;
@@ -15,7 +15,7 @@ public abstract class Species<T extends ISpecies<T>> implements ISpecies<T> {
 
     private final ImmutableSet<String> GENERATIONS;
     private final ImmutableSet<IType> TYPES;
-    private final ImmutableSet<Tier> TIERS;
+    private final ImmutableSet<IFormat> TIERS;
     private final ImmutableMap<IStat, Integer> STATS;
     private final ImmutableSet<T> EVOLUTIONS;
     private final double HEIGHT;
@@ -48,7 +48,7 @@ public abstract class Species<T extends ISpecies<T>> implements ISpecies<T> {
     }
 
     @Override
-    public ImmutableSet<Tier> getTiers() {
+    public ImmutableSet<IFormat> getTier() {
         return TIERS;
     }
 

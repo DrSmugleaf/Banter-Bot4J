@@ -2,6 +2,7 @@ package com.github.drsmugleaf.pokemon2.base.generation;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.external.Smogon;
+import com.github.drsmugleaf.pokemon2.base.format.FormatRegistry;
 import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
 import com.github.drsmugleaf.pokemon2.base.species.ISpecies;
@@ -24,6 +25,7 @@ public interface IGeneration extends Nameable {
     Smogon getSmogon();
     Pokedex<? extends ISpecies<?>> getPokedex();
     TypeRegistry getTypes();
+    FormatRegistry getFormats();
     StatRegistry getStats();
     String getAbbreviation();
     GameRegistry getGames();

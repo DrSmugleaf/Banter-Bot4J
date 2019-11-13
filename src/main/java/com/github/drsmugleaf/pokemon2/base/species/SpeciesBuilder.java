@@ -1,13 +1,12 @@
 package com.github.drsmugleaf.pokemon2.base.species;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.pokemon.battle.Tier;
 import com.github.drsmugleaf.pokemon.pokemon.Gender;
+import com.github.drsmugleaf.pokemon2.base.format.IFormat;
 import com.github.drsmugleaf.pokemon2.base.species.stat.IStat;
 import com.github.drsmugleaf.pokemon2.base.species.type.IType;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import org.jetbrains.annotations.Contract;
 
 import java.util.*;
 
@@ -18,12 +17,9 @@ public class SpeciesBuilder<T extends ISpecies, B extends SpeciesBuilder<T, B> &
 
     @Nullable
     private String name;
-    @Nullable
-    private Set<String> generations;
-    @Nullable
-    private Set<IType> types;
-    @Nullable
-    private Set<Tier> tiers;
+    private Set<String> generations = new HashSet<>();
+    private Set<IType> types = new HashSet<>();
+    private Set<IFormat> tiers = new HashSet<>();
     private Map<IStat, Integer> stats = new HashMap<>();
     private Set<T> evolutions = new HashSet<>(); // TODO: 06-Jul-19 Add valid evolutions
     @Nullable
@@ -46,12 +42,6 @@ public class SpeciesBuilder<T extends ISpecies, B extends SpeciesBuilder<T, B> &
         height = builder.getHeight();
         genders = builder.getGenders();
         alts = builder.getAlts();
-    }
-
-    @Contract(" -> new")
-    @SuppressWarnings("unchecked")
-    public static <T extends ISpecies, B extends SpeciesBuilder<T, B>> SpeciesBuilder<T, B> create() {
-        return (B) new SpeciesBuilder<>();
     }
 
     @Nullable
@@ -89,12 +79,12 @@ public class SpeciesBuilder<T extends ISpecies, B extends SpeciesBuilder<T, B> &
     }
 
     @Override
-    public ImmutableSet<Tier> getTiers() {
+    public ImmutableSet<IFormat> getTiers() {
         return ImmutableSet.copyOf(tiers);
     }
 
     @Override
-    public B setTiers(Collection<Tier> tiers) {
+    public B setTiers(Collection<IFormat> tiers) {
         this.tiers = new HashSet<>(tiers);
         return getThis();
     }

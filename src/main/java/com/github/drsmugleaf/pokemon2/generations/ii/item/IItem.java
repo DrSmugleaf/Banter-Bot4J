@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.pokemon2.generations.ii.item;
 
-import com.github.drsmugleaf.pokemon.item.ItemCategory;
 import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
 
 /**
@@ -8,6 +7,6 @@ import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
  */
 public interface IItem extends Nameable {
 
-    ItemCategory getCategory();
+    IItemCategory getCategory();
 
 }

@@ -2,6 +2,7 @@ package com.github.drsmugleaf.pokemon2.base.generation;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.external.Smogon;
+import com.github.drsmugleaf.pokemon2.base.format.FormatRegistry;
 import com.github.drsmugleaf.pokemon2.base.species.type.TypeRegistry;
 import org.jetbrains.annotations.Contract;
 
@@ -17,10 +18,12 @@ public abstract class BaseGeneration implements IGeneration {
 
     private final Smogon SMOGON;
     private final TypeRegistry TYPES;
+    private final FormatRegistry FORMATS;
 
     protected BaseGeneration() {
         SMOGON = new Smogon(this);
         TYPES = new TypeRegistry(this);
+        FORMATS = new FormatRegistry(this);
     }
 
     @Contract(pure = true)
@@ -70,6 +73,11 @@ public abstract class BaseGeneration implements IGeneration {
     @Override
     public TypeRegistry getTypes() {
         return TYPES;
+    }
+
+    @Override
+    public FormatRegistry getFormats() {
+        return FORMATS;
     }
 
     @Override
