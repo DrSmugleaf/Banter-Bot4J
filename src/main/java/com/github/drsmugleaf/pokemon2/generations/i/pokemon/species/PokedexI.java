@@ -26,11 +26,11 @@ public class PokedexI<T extends ISpecies<T>> extends Pokedex<T> {
             Function<SpeciesBuilderI<T>, T> constructor
     ) {
         Map<String, T> species = new HashMap<>();
-        JSONArray pokemons = gen.getSmogon().getSpecies();
+        JSONArray allSpecies = gen.getSmogon().getSpecies();
 
-        for (int i = 0; i < pokemons.length(); i++) {
-            JSONObject pokemon = pokemons.getJSONObject(i);
-            SpeciesBuilderI<T> builder = toBuilder(gen, pokemon, species);
+        for (int i = 0; i < allSpecies.length(); i++) {
+            JSONObject speciesJson = allSpecies.getJSONObject(i);
+            SpeciesBuilderI<T> builder = toBuilder(gen, speciesJson, species);
             species.put(builder.getName(), constructor.apply(builder));
         }
 
