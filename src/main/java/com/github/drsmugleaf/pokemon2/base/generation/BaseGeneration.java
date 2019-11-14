@@ -6,8 +6,8 @@ import com.github.drsmugleaf.pokemon2.base.external.Smogon;
 import com.github.drsmugleaf.pokemon2.base.format.FormatRegistry;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.TypeRegistry;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Created by DrSmugleaf on 06/07/2019
@@ -31,8 +31,8 @@ public abstract class BaseGeneration implements IGeneration {
     }
 
     @Override
-    public Set<IGeneration> getAllPrevious() {
-        Set<IGeneration> generations = new HashSet<>();
+    public SortedSet<IGeneration> getAllPrevious() {
+        SortedSet<IGeneration> generations = new TreeSet<>();
         IGeneration generation = this;
         while ((generation = generation.getPrevious()) != null) {
             generations.add(generation);
@@ -48,8 +48,8 @@ public abstract class BaseGeneration implements IGeneration {
     }
 
     @Override
-    public Set<IGeneration> getAllNext() {
-        Set<IGeneration> generations = new HashSet<>();
+    public SortedSet<IGeneration> getAllNext() {
+        SortedSet<IGeneration> generations = new TreeSet<>();
         IGeneration generation = this;
         while ((generation = generation.getNext()) != null) {
             generations.add(generation);

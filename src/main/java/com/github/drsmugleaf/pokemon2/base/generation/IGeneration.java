@@ -10,18 +10,22 @@ import com.github.drsmugleaf.pokemon2.base.pokemon.species.Pokedex;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.StatRegistry;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.TypeRegistry;
 
-import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public interface IGeneration extends Nameable {
+public interface IGeneration extends Nameable, Comparable<IGeneration> {
 
+    @Override
+    default int compareTo(IGeneration o) {
+        return Integer.compare(getID(), o.getID());
+    }
     int getID();
     @Nullable IGeneration getPrevious();
-    Set<IGeneration> getAllPrevious();
+    SortedSet<IGeneration> getAllPrevious();
     @Nullable IGeneration getNext();
-    Set<IGeneration> getAllNext();
+    SortedSet<IGeneration> getAllNext();
     Smogon getSmogon();
     Pokedex<? extends ISpecies<?>> getPokedex();
     TypeRegistry getTypes();
