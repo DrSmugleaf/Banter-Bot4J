@@ -50,8 +50,8 @@ public abstract class BaseGeneration implements IGeneration {
     @Override
     public Set<IGeneration> getAllNext() {
         Set<IGeneration> generations = new HashSet<>();
-        IGeneration generation;
-        while ((generation = getNext()) != null) {
+        IGeneration generation = this;
+        while ((generation = generation.getNext()) != null) {
             generations.add(generation);
         }
 
