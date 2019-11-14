@@ -7,11 +7,17 @@ import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
  */
 public interface IBattleVariant extends Nameable {
 
-    int getMinTrainers();
+    default int getMinTrainers() {
+        return getMaxTrainers();
+    }
     int getMaxTrainers();
-    int getMinActivePokemon();
+    default int getMinActivePokemon() {
+        return getMaxActivePokemon();
+    }
     int getMaxActivePokemon();
-    int getMinPartySize();
+    default int getMinPartySize() {
+        return getMaxPartySize();
+    }
     int getMaxPartySize();
 
 }
