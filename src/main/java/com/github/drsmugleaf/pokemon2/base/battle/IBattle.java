@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.pokemon2.base.battle;
 
+import com.github.drsmugleaf.pokemon2.base.battle.variant.IBattleVariant;
 import com.github.drsmugleaf.pokemon2.base.generation.IGeneration;
 import com.github.drsmugleaf.pokemon2.base.pokemon.species.ISpecies;
 import com.github.drsmugleaf.pokemon2.base.trainer.ITrainer;
@@ -13,5 +14,6 @@ public interface IBattle<T extends ISpecies<T>> {
 
     IGeneration getGeneration();
     Set<ITrainer<T>> getTrainers();
+    IBattleVariant getVariant();
 
 }
