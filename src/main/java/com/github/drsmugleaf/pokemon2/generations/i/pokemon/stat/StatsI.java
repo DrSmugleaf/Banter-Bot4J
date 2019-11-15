@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.pokemon2.generations.i.pokemon.stat;
 
 import com.github.drsmugleaf.pokemon2.base.pokemon.IPokemon;
-import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IBaseStat;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.base.IBaseStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
 import org.jetbrains.annotations.Contract;
 

@@ -3,7 +3,7 @@ package com.github.drsmugleaf.pokemon2.generations.i.generation;
 import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon2.base.generation.BaseGeneration;
 import com.github.drsmugleaf.pokemon2.base.pokemon.species.Pokedex;
-import com.github.drsmugleaf.pokemon2.base.pokemon.stat.BaseStatRegistry;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.base.BaseStatRegistry;
 import com.github.drsmugleaf.pokemon2.generations.i.game.GamesI;
 import com.github.drsmugleaf.pokemon2.generations.i.pokemon.species.PokedexI;
 import com.github.drsmugleaf.pokemon2.generations.i.pokemon.species.SpeciesI;

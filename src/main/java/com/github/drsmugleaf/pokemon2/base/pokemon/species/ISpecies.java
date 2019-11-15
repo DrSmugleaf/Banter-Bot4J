@@ -2,7 +2,7 @@ package com.github.drsmugleaf.pokemon2.base.pokemon.species;
 
 import com.github.drsmugleaf.pokemon2.base.format.IFormat;
 import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
-import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IBaseStat;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.base.IBaseStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.IType;
 import com.github.drsmugleaf.pokemon2.generations.ii.pokemon.gender.IGender;
 import com.google.common.collect.ImmutableMap;

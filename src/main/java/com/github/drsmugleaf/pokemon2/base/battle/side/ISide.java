@@ -16,5 +16,4 @@ public interface ISide<T extends ISpecies<T>> {
     List<IPokemon<T>> getActivePokemon();
     int getSize();
 
-
 }
