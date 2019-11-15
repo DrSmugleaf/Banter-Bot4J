@@ -23,7 +23,7 @@ public interface IStage extends Nameable {
         return dividend / divisor;
     }
     double getTemporaryStatMultiplier();
-    default double getStatMutiplier(IStat stat) {
+    default double getStatMultiplier(IStat stat) {
         return stat.isPermanent() ? getPermanentStatMultiplier() : getTemporaryStatMultiplier();
     }
     @Override

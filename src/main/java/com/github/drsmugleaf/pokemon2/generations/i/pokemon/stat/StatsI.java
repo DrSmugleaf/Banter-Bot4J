@@ -57,7 +57,8 @@ public enum StatsI implements IBaseStat {
         IStat stat = pokemon.getStats().get(this);
         int iv = stat.getIndividualValue();
         int ev = stat.getEffortValue();
-        return (int) ((int) (((((baseStat + iv) * 2 + (Math.sqrt(ev) / 4)) * level) / 100) + 5));
+        double stageMultiplier = stat.getStage().getStatMultiplier(stat);
+        return (int) ((int) (((((baseStat + iv) * 2 + (Math.sqrt(ev) / 4)) * level) / 100) + 5) * stageMultiplier);
     }
 
     @Contract(pure = true)
