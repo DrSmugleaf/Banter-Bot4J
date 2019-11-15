@@ -2,7 +2,7 @@ package com.github.drsmugleaf.pokemon2.base.pokemon.species;
 
 import com.github.drsmugleaf.pokemon2.base.builder.IBuilder;
 import com.github.drsmugleaf.pokemon2.base.format.IFormat;
-import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IBaseStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.IType;
 import com.github.drsmugleaf.pokemon2.generations.ii.pokemon.gender.IGender;
 import com.google.common.collect.ImmutableMap;
@@ -24,9 +24,9 @@ public interface ISpeciesBuilder<T extends ISpecies, B extends ISpeciesBuilder<T
     B setTypes(Collection<? extends IType> types);
     ImmutableSet<IFormat> getTiers();
     B setTiers(Collection<IFormat> tiers);
-    ImmutableMap<IStat, Integer> getStats();
-    B addStat(IStat stat, Integer amount);
-    B setStats(Map<IStat, Integer> stats);
+    ImmutableMap<IBaseStat, Integer> getStats();
+    B addStat(IBaseStat stat, Integer amount);
+    B setStats(Map<IBaseStat, Integer> stats);
     ImmutableSet<T> getEvolutions();
     B setEvolutions(Collection<T> evolutions);
     Double getWeight();

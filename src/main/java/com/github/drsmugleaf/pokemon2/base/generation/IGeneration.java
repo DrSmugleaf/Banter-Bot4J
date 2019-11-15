@@ -7,7 +7,7 @@ import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
 import com.github.drsmugleaf.pokemon2.base.pokemon.species.ISpecies;
 import com.github.drsmugleaf.pokemon2.base.pokemon.species.Pokedex;
-import com.github.drsmugleaf.pokemon2.base.pokemon.stat.StatRegistry;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.BaseStatRegistry;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.TypeRegistry;
 
 import java.util.SortedSet;
@@ -30,7 +30,7 @@ public interface IGeneration extends Nameable, Comparable<IGeneration> {
     Pokedex<? extends ISpecies<?>> getPokedex();
     TypeRegistry getTypes();
     FormatRegistry getFormats();
-    StatRegistry getStats();
+    BaseStatRegistry getStats();
     String getAbbreviation();
     GameRegistry getGames();
     int getNewPokemons();

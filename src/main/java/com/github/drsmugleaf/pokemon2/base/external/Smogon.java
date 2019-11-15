@@ -4,7 +4,7 @@ import com.github.drsmugleaf.pokemon2.base.format.Format;
 import com.github.drsmugleaf.pokemon2.base.format.IFormat;
 import com.github.drsmugleaf.pokemon2.base.generation.IGeneration;
 import com.github.drsmugleaf.pokemon2.base.pokemon.species.ISpecies;
-import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IBaseStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.TypeBuilder;
 import com.github.drsmugleaf.pokemon2.generations.ii.item.IItem;
 import com.github.drsmugleaf.pokemon2.generations.ii.item.Item;
@@ -123,7 +123,7 @@ public class Smogon {
             double atk = natureObject.getDouble("atk");
             double spe = natureObject.getDouble("spe");
 
-            Map<IStat, Double> multipliers = new HashMap<>();
+            Map<IBaseStat, Double> multipliers = new HashMap<>();
             multipliers.put(StatsII.DEFENSE, def);
             multipliers.put(StatsII.SPECIAL_ATTACK, spa);
             multipliers.put(StatsII.SPECIAL_DEFENSE, spd);

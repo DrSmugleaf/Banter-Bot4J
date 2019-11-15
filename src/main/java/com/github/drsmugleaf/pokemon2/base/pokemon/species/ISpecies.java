@@ -2,7 +2,7 @@ package com.github.drsmugleaf.pokemon2.base.pokemon.species;
 
 import com.github.drsmugleaf.pokemon2.base.format.IFormat;
 import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
-import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IBaseStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.IType;
 import com.github.drsmugleaf.pokemon2.generations.ii.pokemon.gender.IGender;
 import com.google.common.collect.ImmutableMap;
@@ -16,7 +16,7 @@ public interface ISpecies<T extends ISpecies<T>> extends Nameable {
     ImmutableSet<String> getGenerations();
     ImmutableSet<IType> getTypes();
     ImmutableSet<IFormat> getTier();
-    ImmutableMap<IStat, Integer> getStats();
+    ImmutableMap<IBaseStat, Integer> getStats();
     ImmutableSet<T> getEvolutions();
     double getHeight();
     double getWeight();

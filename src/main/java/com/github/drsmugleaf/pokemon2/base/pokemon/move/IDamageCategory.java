@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.pokemon2.base.pokemon.move;
 
 import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
-import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IBaseStat;
 
 /**
  * Created by DrSmugleaf on 13/11/2019
@@ -9,7 +9,7 @@ import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
 public interface IDamageCategory extends Nameable {
 
     boolean doesDamage();
-    IStat getAttackStat();
-    IStat getDefenseStat();
+    IBaseStat getAttackStat();
+    IBaseStat getDefenseStat();
 
 }

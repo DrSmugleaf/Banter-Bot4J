@@ -1,12 +1,13 @@
 package com.github.drsmugleaf.pokemon2.base.pokemon;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.pokemon.stats.IStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.species.ISpecies;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IBaseStat;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.IType;
 import com.github.drsmugleaf.pokemon2.generations.ii.item.IItem;
 import com.github.drsmugleaf.pokemon2.generations.ii.pokemon.gender.IGender;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableMap;
 
 import java.util.Collection;
 import java.util.Set;
@@ -24,7 +25,7 @@ public interface IPokemon<T extends ISpecies<T>> {
     IItem getItem();
     IGender getGender();
     int getLevel();
-    ImmutableSet<IStat> getStats();
+    ImmutableMap<IBaseStat, IStat> getStats();
     int getHP();
     double getWeight(); // Kilograms
     boolean isAlive();

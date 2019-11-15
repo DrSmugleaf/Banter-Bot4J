@@ -2,7 +2,7 @@ package com.github.drsmugleaf.pokemon2.generations.i.pokemon.move;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.pokemon.move.IDamageCategory;
-import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IBaseStat;
 import com.github.drsmugleaf.pokemon2.generations.i.pokemon.stat.StatsI;
 
 /**
@@ -17,11 +17,11 @@ public enum DamageCategoriesI implements IDamageCategory {
     private final String NAME;
     private final boolean DOES_DAMAGE;
     @Nullable
-    private final IStat ATTACK_STAT;
+    private final IBaseStat ATTACK_STAT;
     @Nullable
-    private final IStat DEFENSE_STAT;
+    private final IBaseStat DEFENSE_STAT;
 
-    DamageCategoriesI(String name, boolean doesDamage, @Nullable IStat attackStat, @Nullable IStat defenseStat) {
+    DamageCategoriesI(String name, boolean doesDamage, @Nullable IBaseStat attackStat, @Nullable IBaseStat defenseStat) {
         NAME = name;
         DOES_DAMAGE = doesDamage;
         ATTACK_STAT = attackStat;
@@ -35,13 +35,13 @@ public enum DamageCategoriesI implements IDamageCategory {
 
     @Nullable
     @Override
-    public IStat getAttackStat() {
+    public IBaseStat getAttackStat() {
         return ATTACK_STAT;
     }
 
     @Nullable
     @Override
-    public IStat getDefenseStat() {
+    public IBaseStat getDefenseStat() {
         return DEFENSE_STAT;
     }
 

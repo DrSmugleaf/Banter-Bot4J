@@ -1,20 +1,24 @@
 package com.github.drsmugleaf.pokemon2.generations.ii.pokemon.stat;
 
 import com.github.drsmugleaf.pokemon2.base.pokemon.IPokemon;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IBaseStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
 import org.jetbrains.annotations.Contract;
 
 /**
  * Created by DrSmugleaf on 09/11/2019
  */
-public enum StatsII implements IStat {
+public enum StatsII implements IBaseStat {
 
     HP("HP", "HP", true) {
         @Override
         public int calculate(IPokemon<?> pokemon) {
             Integer baseStat = pokemon.getSpecies().getStats().get(this);
             int level = pokemon.getLevel();
-            return ((((baseStat) * 2) + level) / 100) + level + 10;
+            IStat hpStat = pokemon.getStats().get(this);
+            int iv = hpStat.getIndividualValue();
+            int ev = hpStat.getEffortValue();
+            return (int) ((((((baseStat + iv) * 2) + (Math.sqrt(ev) / 4)) * level) / 100) + level + 10);
         }
     },
     ATTACK("Attack", "Atk", true),
@@ -51,7 +55,10 @@ public enum StatsII implements IStat {
     public int calculate(IPokemon<?> pokemon) {
         Integer baseStat = pokemon.getSpecies().getStats().get(this);
         int level = pokemon.getLevel();
-        return (((baseStat) * 2 * level) / 100) + 5;
+        IStat hpStat = pokemon.getStats().get(this);
+        int iv = hpStat.getIndividualValue();
+        int ev = hpStat.getEffortValue();
+        return (int) ((((baseStat + iv) * 2 + (Math.sqrt(ev) / 4)) * level) / 100) + 5;
     }
 
     @Contract(pure = true)

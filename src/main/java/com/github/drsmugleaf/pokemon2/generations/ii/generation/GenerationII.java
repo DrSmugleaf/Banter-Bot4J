@@ -2,7 +2,7 @@ package com.github.drsmugleaf.pokemon2.generations.ii.generation;
 
 import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon2.base.pokemon.species.Pokedex;
-import com.github.drsmugleaf.pokemon2.base.pokemon.stat.StatRegistry;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.BaseStatRegistry;
 import com.github.drsmugleaf.pokemon2.generations.i.pokemon.species.PokedexI;
 import com.github.drsmugleaf.pokemon2.generations.ii.game.GamesII;
 import com.github.drsmugleaf.pokemon2.generations.ii.pokemon.species.SpeciesII;
@@ -18,7 +18,7 @@ public class GenerationII extends BaseGenerationII {
 
     private final GameRegistry GAMES = new GameRegistry(GamesII.values());
     private final Pokedex<SpeciesII> POKEDEX = new PokedexI<>(this, SpeciesII::new);
-    private final StatRegistry STATS = new StatRegistry(StatsII.values());
+    private final BaseStatRegistry STATS = new BaseStatRegistry(StatsII.values());
 
     private GenerationII() {
         super();
@@ -40,7 +40,7 @@ public class GenerationII extends BaseGenerationII {
     }
 
     @Override
-    public StatRegistry getStats() {
+    public BaseStatRegistry getStats() {
         return STATS;
     }
 
