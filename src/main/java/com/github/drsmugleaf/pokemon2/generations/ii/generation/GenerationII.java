@@ -55,7 +55,7 @@ public class GenerationII extends BaseGenerationII {
     }
 
     @Override
-    public int getNewPokemons() {
+    public int getNewPokemon() {
         return 100;
     }
 

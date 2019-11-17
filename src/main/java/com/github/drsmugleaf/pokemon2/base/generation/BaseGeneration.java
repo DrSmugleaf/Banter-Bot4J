@@ -74,8 +74,8 @@ public abstract class BaseGeneration implements IGeneration {
     }
 
     @Override
-    public int getTotalPokemons() {
-        return getNewPokemons() + (getPrevious() == null ? 0 : getPrevious().getTotalPokemons());
+    public int getTotalPokemon() {
+        return getNewPokemon() + (getPrevious() == null ? 0 : getPrevious().getTotalPokemon());
     }
 
 }

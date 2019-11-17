@@ -182,7 +182,7 @@ public class Smogon {
         return formats;
     }
 
-    public void printPokemonsAsEnums(IGeneration gen, IGeneration... minus) {
+    public void printPokemonAsEnums(IGeneration gen, IGeneration... minus) {
         HashMap<String, ISpecies<?>> species = new HashMap<>(gen.getPokedex().get());
 
         for (IGeneration minusGen : minus) {

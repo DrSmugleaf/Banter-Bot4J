@@ -29,7 +29,7 @@ public class GenerationVIII extends BaseGenerationVIII {
     }
 
     @Override
-    public int getRemovedPokemons() {
+    public int getRemovedPokemon() {
         return 458;
     }
 
@@ -59,7 +59,7 @@ public class GenerationVIII extends BaseGenerationVIII {
     }
 
     @Override
-    public int getNewPokemons() {
+    public int getNewPokemon() {
         return 81;
     }
 

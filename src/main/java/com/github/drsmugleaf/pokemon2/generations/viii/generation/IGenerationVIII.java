@@ -7,6 +7,6 @@ import com.github.drsmugleaf.pokemon2.generations.iii.generation.IGenerationIII;
  */
 public interface IGenerationVIII extends IGenerationIII {
 
-    int getRemovedPokemons();
+    int getRemovedPokemon();
 
 }

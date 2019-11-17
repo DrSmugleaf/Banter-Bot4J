@@ -33,7 +33,7 @@ public interface IGeneration extends Nameable, Comparable<IGeneration> {
     BaseStatRegistry getStats();
     String getAbbreviation();
     GameRegistry getGames();
-    int getNewPokemons();
-    int getTotalPokemons();
+    int getNewPokemon();
+    int getTotalPokemon();
 
 }

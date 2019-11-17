@@ -12,8 +12,8 @@ public abstract class BaseGenerationVIII extends BaseGenerationIII implements IG
     }
 
     @Override
-    public int getTotalPokemons() {
-        return super.getTotalPokemons() - getRemovedPokemons();
+    public int getTotalPokemon() {
+        return super.getTotalPokemon() - getRemovedPokemon();
     }
 
 }
