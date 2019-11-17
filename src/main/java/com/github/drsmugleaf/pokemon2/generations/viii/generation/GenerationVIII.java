@@ -30,8 +30,8 @@ public class GenerationVIII extends BaseGenerationVIII {
 
     @Override
     public int getRemovedPokemons() {
-        return 0;
-    } // TODO: 13-Nov-19
+        return 458;
+    }
 
     @Override
     public int getID() {
@@ -60,7 +60,7 @@ public class GenerationVIII extends BaseGenerationVIII {
 
     @Override
     public int getNewPokemons() {
-        return 20;
+        return 81;
     }
 
     @Override
