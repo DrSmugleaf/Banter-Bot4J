@@ -2,10 +2,10 @@ package com.github.drsmugleaf.pokemon2.generations.v.generation;
 
 import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon2.base.pokemon.species.Pokedex;
-import com.github.drsmugleaf.pokemon2.base.pokemon.stat.base.BaseStatRegistry;
-import com.github.drsmugleaf.pokemon2.generations.ii.generation.GenerationII;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.type.StatTypeRegistry;
 import com.github.drsmugleaf.pokemon2.generations.iii.generation.BaseGenerationIII;
 import com.github.drsmugleaf.pokemon2.generations.iii.pokemon.species.PokedexIII;
+import com.github.drsmugleaf.pokemon2.generations.iv.generation.GenerationIV;
 import com.github.drsmugleaf.pokemon2.generations.v.game.GamesV;
 import com.github.drsmugleaf.pokemon2.generations.v.pokemon.species.SpeciesV;
 import org.jetbrains.annotations.Contract;
@@ -19,6 +19,7 @@ public class GenerationV extends BaseGenerationIII {
 
     private final GameRegistry GAMES = new GameRegistry(GamesV.values());
     private final Pokedex<SpeciesV> POKEDEX = new PokedexIII<>(this, SpeciesV::new);
+    private final StatTypeRegistry STATS = GenerationIV.get().getStats();
 
     private GenerationV() {
         super();
@@ -40,8 +41,8 @@ public class GenerationV extends BaseGenerationIII {
     }
 
     @Override
-    public BaseStatRegistry getStats() {
-        return GenerationII.get().getStats();
+    public StatTypeRegistry getStats() {
+        return STATS;
     }
 
     @Override

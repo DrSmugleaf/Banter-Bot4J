@@ -7,7 +7,7 @@ import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
 import com.github.drsmugleaf.pokemon2.base.pokemon.species.ISpecies;
 import com.github.drsmugleaf.pokemon2.base.pokemon.species.Pokedex;
-import com.github.drsmugleaf.pokemon2.base.pokemon.stat.base.BaseStatRegistry;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.type.StatTypeRegistry;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.TypeRegistry;
 
 import java.util.SortedSet;
@@ -22,15 +22,17 @@ public interface IGeneration extends Nameable, Comparable<IGeneration> {
         return Integer.compare(getID(), o.getID());
     }
     int getID();
-    @Nullable IGeneration getPrevious();
+    @Nullable
+    IGeneration getPrevious();
     SortedSet<IGeneration> getAllPrevious();
-    @Nullable IGeneration getNext();
+    @Nullable
+    IGeneration getNext();
     SortedSet<IGeneration> getAllNext();
     Smogon getSmogon();
     Pokedex<? extends ISpecies<?>> getPokedex();
     TypeRegistry getTypes();
     FormatRegistry getFormats();
-    BaseStatRegistry getStats();
+    StatTypeRegistry getStats();
     String getAbbreviation();
     GameRegistry getGames();
     int getNewPokemon();

@@ -2,7 +2,7 @@ package com.github.drsmugleaf.pokemon2.generations.i.pokemon.move;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.pokemon.move.IDamageCategory;
-import com.github.drsmugleaf.pokemon2.base.pokemon.stat.base.IStatType;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.type.IStatType;
 import com.github.drsmugleaf.pokemon2.generations.i.pokemon.stat.StatsI;
 
 /**

@@ -2,6 +2,6 @@
  * Created by DrSmugleaf on 25/06/2019
  */
 @NonnullApi
-package com.github.drsmugleaf.pokemon2.base.pokemon.stat.base;
+package com.github.drsmugleaf.pokemon2.base.pokemon.stat.type;
 
 import com.github.drsmugleaf.NonnullApi;

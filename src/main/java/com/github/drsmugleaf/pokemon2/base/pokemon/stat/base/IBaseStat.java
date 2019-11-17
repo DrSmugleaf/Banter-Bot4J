@@ -2,6 +2,7 @@ package com.github.drsmugleaf.pokemon2.base.pokemon.stat.base;
 
 import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
 import com.github.drsmugleaf.pokemon2.base.pokemon.IPokemon;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.type.IStatType;
 
 /**
  * Created by DrSmugleaf on 16/11/2019

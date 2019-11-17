@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.pokemon2.base.pokemon.stat.base;
+package com.github.drsmugleaf.pokemon2.base.pokemon.stat.type;
 
 import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
 

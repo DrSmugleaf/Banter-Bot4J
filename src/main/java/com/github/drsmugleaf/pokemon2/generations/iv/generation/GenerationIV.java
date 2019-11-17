@@ -2,9 +2,9 @@ package com.github.drsmugleaf.pokemon2.generations.iv.generation;
 
 import com.github.drsmugleaf.pokemon2.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon2.base.pokemon.species.Pokedex;
-import com.github.drsmugleaf.pokemon2.base.pokemon.stat.base.BaseStatRegistry;
-import com.github.drsmugleaf.pokemon2.generations.ii.generation.GenerationII;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.type.StatTypeRegistry;
 import com.github.drsmugleaf.pokemon2.generations.iii.generation.BaseGenerationIII;
+import com.github.drsmugleaf.pokemon2.generations.iii.generation.GenerationIII;
 import com.github.drsmugleaf.pokemon2.generations.iii.pokemon.species.PokedexIII;
 import com.github.drsmugleaf.pokemon2.generations.iv.game.GamesIV;
 import com.github.drsmugleaf.pokemon2.generations.iv.pokemon.species.SpeciesIV;
@@ -19,6 +19,7 @@ public class GenerationIV extends BaseGenerationIII {
 
     private final GameRegistry GAMES = new GameRegistry(GamesIV.values());
     private final Pokedex<SpeciesIV> POKEDEX = new PokedexIII<>(this, SpeciesIV::new);
+    private final StatTypeRegistry STATS = GenerationIII.get().getStats();
 
     private GenerationIV() {
         super();
@@ -40,8 +41,8 @@ public class GenerationIV extends BaseGenerationIII {
     }
 
     @Override
-    public BaseStatRegistry getStats() {
-        return GenerationII.get().getStats();
+    public StatTypeRegistry getStats() {
+        return STATS;
     }
 
     @Override

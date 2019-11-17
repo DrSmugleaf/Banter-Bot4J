@@ -4,7 +4,7 @@ import com.github.drsmugleaf.pokemon2.base.format.Format;
 import com.github.drsmugleaf.pokemon2.base.format.IFormat;
 import com.github.drsmugleaf.pokemon2.base.generation.IGeneration;
 import com.github.drsmugleaf.pokemon2.base.pokemon.species.ISpecies;
-import com.github.drsmugleaf.pokemon2.base.pokemon.stat.base.IStatType;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.type.IStatType;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.TypeBuilder;
 import com.github.drsmugleaf.pokemon2.generations.ii.item.IItem;
 import com.github.drsmugleaf.pokemon2.generations.ii.item.Item;
