@@ -7,4 +7,4 @@ import com.github.drsmugleaf.pokemon2.base.pokemon.species.SpeciesBuilder;
 /**
  * Created by DrSmugleaf on 08/11/2019
  */
-public class SpeciesBuilderI<T extends ISpecies> extends SpeciesBuilder<T, SpeciesBuilderI<T>> implements IBuilder<SpeciesBuilderI<T>> {}
+public class SpeciesBuilderI<T extends ISpecies<T>> extends SpeciesBuilder<T, SpeciesBuilderI<T>> implements IBuilder<SpeciesBuilderI<T>> {}

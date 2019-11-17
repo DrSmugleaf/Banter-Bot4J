@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.pokemon2.base.pokemon.stat;
 
+import com.github.drsmugleaf.pokemon2.base.pokemon.IPokemon;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.base.IBaseStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.stage.IStage;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.stage.StageRegistry;
@@ -7,14 +8,14 @@ import com.github.drsmugleaf.pokemon2.base.pokemon.stat.stage.StageRegistry;
 /**
  * Created by DrSmugleaf on 15/11/2019
  */
-public abstract class Stat implements IStat {
+public abstract class Stat<T extends IPokemon<T>> implements IStat<T> {
 
-    private final IBaseStat STAT;
+    private final IBaseStat<T> STAT;
     private final int IV;
     private final int EV;
     private IStage stage;
 
-    public Stat(IBaseStat stat, int iv, int ev, StageRegistry stages) {
+    public Stat(IBaseStat<T> stat, int iv, int ev, StageRegistry stages) {
         STAT = stat;
         IV = iv;
         EV = ev;
@@ -22,7 +23,7 @@ public abstract class Stat implements IStat {
     }
 
     @Override
-    public IBaseStat getBaseStat() {
+    public IBaseStat<T> getBaseStat() {
         return STAT;
     }
 
@@ -39,6 +40,26 @@ public abstract class Stat implements IStat {
     @Override
     public IStage getStage() {
         return stage;
+    }
+
+    @Override
+    public int calculate(T pokemon) {
+        return getBaseStat().calculate(pokemon);
+    }
+
+    @Override
+    public String getAbbreviation() {
+        return getBaseStat().getAbbreviation();
+    }
+
+    @Override
+    public boolean isPermanent() {
+        return getBaseStat().isPermanent();
+    }
+
+    @Override
+    public String getName() {
+        return getBaseStat().getName();
     }
 
 }

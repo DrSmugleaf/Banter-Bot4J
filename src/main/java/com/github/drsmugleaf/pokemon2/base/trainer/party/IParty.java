@@ -2,14 +2,13 @@ package com.github.drsmugleaf.pokemon2.base.trainer.party;
 
 import com.github.drsmugleaf.pokemon2.base.battle.IBattle;
 import com.github.drsmugleaf.pokemon2.base.pokemon.IPokemon;
-import com.github.drsmugleaf.pokemon2.base.pokemon.species.ISpecies;
 
 import java.util.Set;
 
 /**
  * Created by DrSmugleaf on 14/11/2019
  */
-public interface IParty<T extends ISpecies<T>> {
+public interface IParty<T extends IPokemon<T>> {
 
     Set<IPokemon<T>> getPokemon();
     IPokemon<T> getPokemon(int i);

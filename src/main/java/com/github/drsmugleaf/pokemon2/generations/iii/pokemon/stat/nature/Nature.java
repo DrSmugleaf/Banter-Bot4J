@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.pokemon2.generations.iii.pokemon.stat.nature;
 
-import com.github.drsmugleaf.pokemon2.base.pokemon.stat.base.IBaseStat;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.base.IStatType;
 import com.google.common.collect.ImmutableMap;
 
 import java.util.Map;
@@ -11,15 +11,15 @@ import java.util.Map;
 public class Nature implements INature {
 
     private final String NAME;
-    private final ImmutableMap<IBaseStat, Double> MULTIPLIERS;
+    private final ImmutableMap<IStatType, Double> MULTIPLIERS;
 
-    public Nature(String name, Map<IBaseStat, Double> multipliers) {
+    public Nature(String name, Map<IStatType, Double> multipliers) {
         NAME = name;
         MULTIPLIERS = ImmutableMap.copyOf(multipliers);
     }
 
     @Override
-    public double getStatMultiplier(IBaseStat stat) {
+    public double getStatMultiplier(IStatType stat) {
         return MULTIPLIERS.getOrDefault(stat, 1.0);
     }
 

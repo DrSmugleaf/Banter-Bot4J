@@ -7,7 +7,7 @@ import com.github.drsmugleaf.pokemon2.base.pokemon.type.IType;
 /**
  * Created by DrSmugleaf on 13/11/2019
  */
-public interface IMoveInformation extends Nameable {
+public interface IMoveInformation<T extends IPokemon<T>> extends Nameable {
 
     IType getType();
     IDamageCategory getCategory();
@@ -16,6 +16,6 @@ public interface IMoveInformation extends Nameable {
     int getAccuracy();
     // TODO: 13-Nov-19 Tags
     // TODO: 13-Nov-19 Target
-    int getDamage(IPokemon<?> user, IPokemon<?> target);
+    int getDamage(T user, T target);
 
 }

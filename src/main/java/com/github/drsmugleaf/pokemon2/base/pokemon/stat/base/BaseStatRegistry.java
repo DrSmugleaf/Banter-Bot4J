@@ -5,9 +5,9 @@ import com.github.drsmugleaf.pokemon2.base.registry.Registry;
 /**
  * Created by DrSmugleaf on 08/11/2019
  */
-public class BaseStatRegistry extends Registry<IBaseStat> {
+public class BaseStatRegistry extends Registry<IStatType> {
 
-    public BaseStatRegistry(IBaseStat... stats) {
+    public BaseStatRegistry(IStatType... stats) {
         super(stats);
     }
 

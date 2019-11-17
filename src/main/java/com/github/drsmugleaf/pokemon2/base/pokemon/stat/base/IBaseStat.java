@@ -4,12 +4,10 @@ import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
 import com.github.drsmugleaf.pokemon2.base.pokemon.IPokemon;
 
 /**
- * Created by DrSmugleaf on 08/11/2019
+ * Created by DrSmugleaf on 16/11/2019
  */
-public interface IBaseStat extends Nameable {
+public interface IBaseStat<T extends IPokemon> extends IStatType, Nameable {
 
-    String getAbbreviation();
-    boolean isPermanent();
-    int calculate(IPokemon<?> pokemon);
+    int calculate(T pokemon);
 
 }

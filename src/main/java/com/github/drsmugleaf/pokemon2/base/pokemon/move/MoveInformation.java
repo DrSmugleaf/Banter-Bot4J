@@ -8,7 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Created by DrSmugleaf on 13/11/2019
  */
-public class MoveInformation implements IMoveInformation {
+public class MoveInformation<T extends IPokemon<T>> implements IMoveInformation<T> {
 
     private final IType TYPE;
     private final IDamageCategory CATEGORY;
@@ -59,14 +59,14 @@ public class MoveInformation implements IMoveInformation {
     }
 
     @Override
-    public int getDamage(IPokemon<?> user, IPokemon<?> target) {
+    public int getDamage(T user, T target) {
         if (!getCategory().doesDamage()) {
             return 0;
         }
 
         int level = user.getLevel();
-        int attackStat = getCategory().getAttackStat().calculate(user);
-        int defenseStat = getCategory().getDefenseStat().calculate(target);
+        int attackStat = user.getStats().get(getCategory().getAttackStat()).calculate(user);
+        int defenseStat = user.getStats().get(getCategory().getAttackStat()).calculate(user);
         double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
         return (int) ((((((2 * level) / 5 + 2) * POWER * attackStat / defenseStat) / 50) + 2) * randomNumber);
     }

@@ -1,30 +1,31 @@
-package com.github.drsmugleaf.pokemon2.generations.i.pokemon.stat;
+package com.github.drsmugleaf.pokemon2.generations.iii.pokemon.stat;
 
-import com.github.drsmugleaf.pokemon2.base.pokemon.IPokemon;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.base.IBaseStat;
+import com.github.drsmugleaf.pokemon2.generations.iii.pokemon.IPokemonIII;
 import org.jetbrains.annotations.Contract;
 
 /**
  * Created by DrSmugleaf on 09/11/2019
  */
-public enum StatsI implements IBaseStat<IPokemon<?>> {
+public enum StatsIII implements IBaseStat<IPokemonIII<?>> {
 
     HP("HP", "HP", true) {
         @Override
-        public int calculate(IPokemon<?> pokemon) {
+        public int calculate(IPokemonIII<?> pokemon) {
             Integer speciesStat = pokemon.getSpeciesStats().get(this);
             int level = pokemon.getLevel();
             IStat hpStat = pokemon.getStats().get(this);
             int iv = hpStat.getIndividualValue();
             int ev = hpStat.getEffortValue();
-            return (int) ((((((speciesStat + iv) * 2) + (Math.sqrt(ev) / 4)) * level) / 100) + level + 10);
+            return (((((2 * speciesStat) + iv + (ev / 4))) * level) / 100) + level + 10;
         }
     },
     ATTACK("Attack", "Atk", true),
     DEFENSE("Defense", "Def", true),
     SPEED("Speed", "Spd", true),
-    SPECIAL("Special", "Spe", true),
+    SPECIAL_ATTACK("Special Attack", "SpA", true),
+    SPECIAL_DEFENSE("Special Defense", "SpD", true),
     EVASION("Evasion", "Eva", false),
     ACCURACY("Accuracy", "Acc", false);
 
@@ -32,7 +33,7 @@ public enum StatsI implements IBaseStat<IPokemon<?>> {
     private final String ABBREVIATION;
     private final boolean IS_PERMANENT;
 
-    StatsI(String name, String abbreviation, boolean isPermanent) {
+    StatsIII(String name, String abbreviation, boolean isPermanent) {
         NAME = name;
         ABBREVIATION = abbreviation;
         IS_PERMANENT = isPermanent;
@@ -51,14 +52,15 @@ public enum StatsI implements IBaseStat<IPokemon<?>> {
     }
 
     @Override
-    public int calculate(IPokemon<?> pokemon) {
+    public int calculate(IPokemonIII<?> pokemon) {
         Integer speciesStat = pokemon.getSpeciesStats().get(this);
         int level = pokemon.getLevel();
         IStat stat = pokemon.getStats().get(this);
         int iv = stat.getIndividualValue();
         int ev = stat.getEffortValue();
         double stageMultiplier = stat.getStage().getStatMultiplier(stat);
-        return (int) ((int) (((((speciesStat + iv) * 2 + (Math.sqrt(ev) / 4)) * level) / 100) + 5) * stageMultiplier);
+        double natureMultiplier = pokemon.getNature().getStatMultiplier(stat);
+        return (int) ((int) (((int) ((((2.0 * speciesStat + iv + (ev / 4.0)) * level) / 100.0) + 5.0)) * natureMultiplier) * stageMultiplier);
     }
 
     @Contract(pure = true)

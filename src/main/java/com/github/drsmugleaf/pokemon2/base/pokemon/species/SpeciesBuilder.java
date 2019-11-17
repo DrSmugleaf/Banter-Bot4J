@@ -2,7 +2,7 @@ package com.github.drsmugleaf.pokemon2.base.pokemon.species;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.format.IFormat;
-import com.github.drsmugleaf.pokemon2.base.pokemon.stat.base.IBaseStat;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.base.IStatType;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.IType;
 import com.github.drsmugleaf.pokemon2.generations.ii.pokemon.gender.IGender;
 import com.google.common.collect.ImmutableMap;
@@ -13,14 +13,14 @@ import java.util.*;
 /**
  * Created by DrSmugleaf on 03/07/2019
  */
-public class SpeciesBuilder<T extends ISpecies, B extends SpeciesBuilder<T, B> & ISpeciesBuilder<T, B>> implements ISpeciesBuilder<T, B> {
+public class SpeciesBuilder<T extends ISpecies<T>, B extends SpeciesBuilder<T, B> & ISpeciesBuilder<T, B>> implements ISpeciesBuilder<T, B> {
 
     @Nullable
     private String name;
     private Set<String> generations = new HashSet<>();
     private Set<IType> types = new HashSet<>();
     private Set<IFormat> tiers = new HashSet<>();
-    private Map<IBaseStat, Integer> stats = new HashMap<>();
+    private Map<IStatType, Integer> stats = new HashMap<>();
     private Set<T> evolutions = new HashSet<>(); // TODO: 06-Jul-19 Add valid evolutions
     @Nullable
     private Double weight;
@@ -90,18 +90,18 @@ public class SpeciesBuilder<T extends ISpecies, B extends SpeciesBuilder<T, B> &
     }
 
     @Override
-    public ImmutableMap<IBaseStat, Integer> getStats() {
+    public ImmutableMap<IStatType, Integer> getStats() {
         return ImmutableMap.copyOf(stats);
     }
 
     @Override
-    public B addStat(IBaseStat stat, Integer amount) {
+    public B addStat(IStatType stat, Integer amount) {
         this.stats.put(stat, amount);
         return getThis();
     }
 
     @Override
-    public B setStats(Map<IBaseStat, Integer> stats) {
+    public B setStats(Map<IStatType, Integer> stats) {
         this.stats = stats;
         return getThis();
     }
