@@ -10,16 +10,17 @@ import com.github.drsmugleaf.pokemon2.generations.i.pokemon.status.NonVolatileSt
  */
 public enum EffectsI implements IEffect<IBattlePokemon<?>> {
 
-    POUND(1) {
-        @Override
-        public void use(IMoveInformation<IBattlePokemon<?>> move, IBattlePokemon<?> target, IBattlePokemon<?> user) {
-            user.damage(move.getDamage(target, user));
-        }
-    },
+    POUND(1),
     SING(2) {
         @Override
-        public void use(IMoveInformation<IBattlePokemon<?>> move, IBattlePokemon<?> target, IBattlePokemon<?> user) {
+        public void effect(IMoveInformation<IBattlePokemon<?>> move, IBattlePokemon<?> target, IBattlePokemon<?> user) {
             NonVolatileStatusesI.SLEEP.apply(target);
+        }
+    },
+    POISON_STING(3) {
+        @Override
+        public void effect(IMoveInformation<IBattlePokemon<?>> move, IBattlePokemon<?> target, IBattlePokemon<?> user) {
+            super.effect(move, target, user);
         }
     };
 
@@ -33,5 +34,15 @@ public enum EffectsI implements IEffect<IBattlePokemon<?>> {
     public int getID() {
         return ID;
     }
+
+    @Override
+    public void use(IMoveInformation<IBattlePokemon<?>> move, IBattlePokemon<?> target, IBattlePokemon<?> user) {
+        if (move.getCategory().doesDamage()) {
+            user.damage(move.getDamage(target, user));
+        }
+    }
+
+    @Override
+    public void effect(IMoveInformation<IBattlePokemon<?>> move, IBattlePokemon<?> target, IBattlePokemon<?> user) {}
 
 }

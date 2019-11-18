@@ -10,5 +10,6 @@ public interface IEffect<T extends IBattlePokemon> {
 
     int getID();
     void use(IMoveInformation<T> move, T target, T user);
+    void effect(IMoveInformation<T> move, T target, T user);
 
 }

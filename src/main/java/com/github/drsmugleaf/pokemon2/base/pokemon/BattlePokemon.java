@@ -10,6 +10,7 @@ import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.type.IStatType;
 import com.github.drsmugleaf.pokemon2.base.pokemon.state.IPokemonState;
 import com.github.drsmugleaf.pokemon2.base.pokemon.state.PokemonStates;
+import com.github.drsmugleaf.pokemon2.base.pokemon.status.IStatus;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.IType;
 import com.github.drsmugleaf.pokemon2.generations.ii.item.IItem;
 import com.github.drsmugleaf.pokemon2.generations.ii.pokemon.gender.IGender;
@@ -49,6 +50,15 @@ public class BattlePokemon<T extends IBattlePokemon<T>> extends BasePokemon<T> i
     @Override
     public IBattle<T> getBattle() {
         return BATTLE;
+    }
+
+    @Override
+    public IStatus<T> getStatus() {
+        return null;
+    }
+
+    @Override
+    public void setStatus(IStatus<? super T> status) {
     }
 
     @Override

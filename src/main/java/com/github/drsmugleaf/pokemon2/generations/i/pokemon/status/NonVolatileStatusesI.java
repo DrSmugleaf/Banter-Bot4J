@@ -12,7 +12,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public enum NonVolatileStatusesI implements INonVolatileStatus<IBattlePokemon<?>> {
 
-    SLEEP(false, "Sleep") {
+    SLEEP("Sleep") {
         @Override
         public Integer getDuration() {
             return ThreadLocalRandom.current().nextInt(1, 7 + 1);
@@ -22,26 +22,25 @@ public enum NonVolatileStatusesI implements INonVolatileStatus<IBattlePokemon<?>
         public void apply(IBattlePokemon<?> pokemon) {
             pokemon.addModifier(PokemonStates.ATTEMPTING_MOVE, this, () -> false);
         }
+    },
+    POISON("Poison") {
+        @Override
+        public void apply(IBattlePokemon<?> pokemon) {
+            pokemon.setStatus(this);
+        }
     };
 
-    private final boolean IS_VOLATILE;
     @Nullable
     private final Integer DURATION;
     private final String NAME;
 
-    NonVolatileStatusesI(boolean isVolatile, @Nullable Integer duration, String name) {
-        IS_VOLATILE = isVolatile;
+    NonVolatileStatusesI(@Nullable Integer duration, String name) {
         DURATION = duration;
         NAME = name;
     }
 
-    NonVolatileStatusesI(boolean isVolatile, String name) {
-        this(isVolatile, null, name);
-    }
-
-    @Override
-    public boolean isVolatileStatus() {
-        return IS_VOLATILE;
+    NonVolatileStatusesI(String name) {
+        this(null, name);
     }
 
     @Override
