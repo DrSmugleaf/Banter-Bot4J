@@ -13,5 +13,6 @@ public interface IStatus<T extends IBattlePokemon> extends Nameable {
     boolean isBattleStatus();
     @Nullable
     Integer getDuration();
+    void apply(T pokemon);
 
 }

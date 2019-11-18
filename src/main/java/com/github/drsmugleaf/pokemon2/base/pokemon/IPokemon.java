@@ -34,8 +34,6 @@ public interface IPokemon<T extends IPokemon<T>> extends ISpecies<T> {
     double getWeight(); // Kilograms
     boolean isAlive();
     void damage(int amount);
-    IPokemonState getState();
-    ImmutableMultimap<IPokemonState, IModifier> getModifiers();
     @Override
     default ImmutableSet<String> getGenerations() {
         return getSpecies().getGenerations();

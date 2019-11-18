@@ -5,6 +5,7 @@ package com.github.drsmugleaf.pokemon2.base.pokemon.state;
  */
 public enum PokemonStates implements IPokemonState {
 
+    DEFAULT,
     ATTEMPTING_MOVE
 
 }

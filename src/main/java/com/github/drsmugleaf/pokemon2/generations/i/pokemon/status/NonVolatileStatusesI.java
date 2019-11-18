@@ -2,6 +2,7 @@ package com.github.drsmugleaf.pokemon2.generations.i.pokemon.status;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.battle.IBattlePokemon;
+import com.github.drsmugleaf.pokemon2.base.pokemon.state.PokemonStates;
 import com.github.drsmugleaf.pokemon2.base.pokemon.status.INonVolatileStatus;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -15,6 +16,11 @@ public enum NonVolatileStatusesI implements INonVolatileStatus<IBattlePokemon<?>
         @Override
         public Integer getDuration() {
             return ThreadLocalRandom.current().nextInt(1, 7 + 1);
+        }
+
+        @Override
+        public void apply(IBattlePokemon<?> pokemon) {
+            pokemon.addModifier(PokemonStates.ATTEMPTING_MOVE, this, () -> false);
         }
     };
 
