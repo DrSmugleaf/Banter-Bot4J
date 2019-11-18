@@ -1,48 +1,40 @@
-package com.github.drsmugleaf.pokemon2.generations.iii.pokemon;
+package com.github.drsmugleaf.pokemon2.base.battle;
 
-import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.pokemon.BasePokemon;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.type.IStatType;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.IType;
 import com.github.drsmugleaf.pokemon2.generations.ii.item.IItem;
 import com.github.drsmugleaf.pokemon2.generations.ii.pokemon.gender.IGender;
-import com.github.drsmugleaf.pokemon2.generations.iii.pokemon.stat.nature.INature;
 
 import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by DrSmugleaf on 15/11/2019
+ * Created by DrSmugleaf on 17/11/2019
  */
-public abstract class BasePokemonIII<T extends IPokemonIII<T>> extends BasePokemon<T> implements IPokemonIII<T> {
+public class BattlePokemon<T extends IBattlePokemon<T>> extends BasePokemon<T> implements IBattlePokemon<T> {
 
-    private final T SPECIES;
-    private final INature NATURE;
+    private final IBattle<T> BATTLE;
 
-    public BasePokemonIII(
+    public BattlePokemon(
             T species,
-            @Nullable String nickname,
+            String nickname,
             Set<IType> types,
-            @Nullable IItem item,
+            IItem item,
             IGender gender,
             int level,
             Map<IStatType, IStat<T>> stats,
             int hp,
-            INature nature
+            IBattle<T> battle
     ) {
         super(species, nickname, types, item, gender, level, stats, hp);
-        SPECIES = species;
-        NATURE = nature;
-    }
-
-    public T getSpecies() {
-        return SPECIES;
+        BATTLE = battle;
     }
 
     @Override
-    public INature getNature() {
-        return NATURE;
+    public IBattle<T> getBattle() {
+        return BATTLE;
     }
 
 }

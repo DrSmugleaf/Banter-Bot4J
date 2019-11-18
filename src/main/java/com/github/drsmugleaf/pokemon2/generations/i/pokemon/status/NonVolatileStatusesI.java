@@ -1,14 +1,15 @@
 package com.github.drsmugleaf.pokemon2.generations.i.pokemon.status;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.pokemon2.base.pokemon.status.IStatus;
+import com.github.drsmugleaf.pokemon2.base.battle.IBattlePokemon;
+import com.github.drsmugleaf.pokemon2.base.pokemon.status.INonVolatileStatus;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by DrSmugleaf on 13/11/2019
  */
-public enum StatusesI implements IStatus {
+public enum NonVolatileStatusesI implements INonVolatileStatus<IBattlePokemon<?>> {
 
     SLEEP(false, "Sleep") {
         @Override
@@ -22,18 +23,18 @@ public enum StatusesI implements IStatus {
     private final Integer DURATION;
     private final String NAME;
 
-    StatusesI(boolean isVolatile, @Nullable Integer duration, String name) {
+    NonVolatileStatusesI(boolean isVolatile, @Nullable Integer duration, String name) {
         IS_VOLATILE = isVolatile;
         DURATION = duration;
         NAME = name;
     }
 
-    StatusesI(boolean isVolatile, String name) {
+    NonVolatileStatusesI(boolean isVolatile, String name) {
         this(isVolatile, null, name);
     }
 
     @Override
-    public boolean isVolatile() {
+    public boolean isVolatileStatus() {
         return IS_VOLATILE;
     }
 

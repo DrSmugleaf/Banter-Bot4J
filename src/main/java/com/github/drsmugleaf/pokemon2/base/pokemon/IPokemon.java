@@ -5,6 +5,7 @@ import com.github.drsmugleaf.pokemon2.base.format.IFormat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.species.ISpecies;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.type.IStatType;
+import com.github.drsmugleaf.pokemon2.base.pokemon.state.IPokemonState;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.IType;
 import com.github.drsmugleaf.pokemon2.generations.ii.item.IItem;
 import com.github.drsmugleaf.pokemon2.generations.ii.pokemon.gender.IGender;
@@ -31,6 +32,7 @@ public interface IPokemon<T extends IPokemon<T>> extends ISpecies<T> {
     double getWeight(); // Kilograms
     boolean isAlive();
     void damage(int amount);
+    IPokemonState getState();
     @Override
     default ImmutableSet<String> getGenerations() {
         return getSpecies().getGenerations();
