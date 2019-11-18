@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.pokemon2.base.battle;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
 import com.github.drsmugleaf.pokemon2.base.pokemon.IPokemon;
 import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.IModifier;
@@ -14,8 +15,9 @@ import com.google.common.collect.ImmutableMultimap;
 public interface IBattlePokemon<T extends IBattlePokemon<T>> extends IPokemon<T> {
 
     IBattle<T> getBattle();
-    IStatus<T> getStatus();
-    void setStatus(IStatus<? super T> status);
+    @Nullable
+    IStatus<? super T> getStatus();
+    void setStatus(@Nullable IStatus<? super T> status);
     IPokemonState getState();
     void setState(IPokemonState state);
     ImmutableMultimap<IPokemonState, INamedModifier> getModifiers();

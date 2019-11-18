@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.pokemon2.base.pokemon;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.battle.IBattle;
 import com.github.drsmugleaf.pokemon2.base.battle.IBattlePokemon;
 import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
@@ -27,6 +28,8 @@ import java.util.Set;
 public class BattlePokemon<T extends IBattlePokemon<T>> extends BasePokemon<T> implements IBattlePokemon<T> {
 
     private final IBattle<T> BATTLE;
+    @Nullable
+    private IStatus<? super T> status = null;
     private IPokemonState state;
     private final Multimap<IPokemonState, INamedModifier> MODIFIERS;
 
@@ -52,13 +55,15 @@ public class BattlePokemon<T extends IBattlePokemon<T>> extends BasePokemon<T> i
         return BATTLE;
     }
 
+    @Nullable
     @Override
-    public IStatus<T> getStatus() {
-        return null;
+    public IStatus<? super T> getStatus() {
+        return status;
     }
 
     @Override
-    public void setStatus(IStatus<? super T> status) {
+    public void setStatus(@Nullable IStatus<? super T> status) {
+        this.status = status;
     }
 
     @Override
