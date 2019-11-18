@@ -40,3 +40,4 @@ buildNumber.properties
 # Environment variables
 .env
 *.java___jb_tmp___
+*.MF
