@@ -2,16 +2,13 @@ package com.github.drsmugleaf.pokemon2.base.pokemon;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.format.IFormat;
-import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.IModifier;
 import com.github.drsmugleaf.pokemon2.base.pokemon.species.ISpecies;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.type.IStatType;
-import com.github.drsmugleaf.pokemon2.base.pokemon.state.IPokemonState;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.IType;
 import com.github.drsmugleaf.pokemon2.generations.ii.item.IItem;
 import com.github.drsmugleaf.pokemon2.generations.ii.pokemon.gender.IGender;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.Collection;

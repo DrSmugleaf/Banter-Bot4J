@@ -7,7 +7,7 @@ import com.github.drsmugleaf.pokemon2.base.pokemon.type.IType;
 /**
  * Created by DrSmugleaf on 13/11/2019
  */
-public interface IMoveInformation<T extends IPokemon<T>> extends Nameable {
+public interface IMoveInformation<T extends IPokemon> extends Nameable {
 
     IType getType();
     IDamageCategory getCategory();

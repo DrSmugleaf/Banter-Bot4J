@@ -1,14 +1,14 @@
 package com.github.drsmugleaf.pokemon2.base.pokemon.move.effect;
 
-import com.github.drsmugleaf.pokemon2.base.pokemon.IPokemon;
+import com.github.drsmugleaf.pokemon2.base.battle.IBattlePokemon;
 import com.github.drsmugleaf.pokemon2.base.pokemon.move.IMoveInformation;
 
 /**
  * Created by DrSmugleaf on 13/11/2019
  */
-public interface IEffect {
+public interface IEffect<T extends IBattlePokemon> {
 
     int getID();
-    void use(IMoveInformation move, IPokemon target, IPokemon user);
+    void use(IMoveInformation<T> move, T target, T user);
 
 }
