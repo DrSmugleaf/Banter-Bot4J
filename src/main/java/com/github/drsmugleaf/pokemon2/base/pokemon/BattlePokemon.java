@@ -50,6 +50,13 @@ public abstract class BattlePokemon<T extends IBattlePokemon<T>> extends BasePok
         MODIFIERS = ArrayListMultimap.create();
     }
 
+    public BattlePokemon(BattlePokemon<T> pokemon) {
+        super(pokemon);
+        BATTLE = pokemon.BATTLE;
+        state = pokemon.state;
+        MODIFIERS = ArrayListMultimap.create(pokemon.MODIFIERS);
+    }
+
     @Override
     public IBattle<T> getBattle() {
         return BATTLE;
@@ -79,6 +86,23 @@ public abstract class BattlePokemon<T extends IBattlePokemon<T>> extends BasePok
     @Override
     public ImmutableMultimap<IPokemonState, INamedModifier> getModifiers() {
         return ImmutableMultimap.copyOf(MODIFIERS);
+    }
+
+    @Override
+    public boolean hasModifier(String name) {
+        return getModifier(name) != null;
+    }
+
+    @Nullable
+    @Override
+    public INamedModifier getModifier(String name) {
+        for (INamedModifier modifier : MODIFIERS.values()) {
+            if (name.equals(modifier.getName())) {
+                return modifier;
+            }
+        }
+
+        return null;
     }
 
     @Override

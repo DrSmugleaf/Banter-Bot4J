@@ -58,6 +58,23 @@ public abstract class BasePokemon<T extends ISpecies<T>> implements IPokemon<T> 
         isAlive = true;
     }
 
+    public BasePokemon(BasePokemon<T> pokemon) {
+        this(
+                pokemon.SPECIES,
+                pokemon.NICKNAME,
+                pokemon.TYPES,
+                pokemon.item,
+                pokemon.GENDER,
+                pokemon.LEVEL,
+                pokemon.STATS,
+                pokemon.hp
+        );
+
+        MAX_HP = pokemon.MAX_HP;
+        weight = pokemon.weight;
+        isAlive = pokemon.isAlive;
+    }
+
     @Override
     public T getSpecies() {
         return SPECIES;

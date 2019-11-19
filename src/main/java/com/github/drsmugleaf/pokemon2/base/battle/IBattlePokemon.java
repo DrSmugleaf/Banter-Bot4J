@@ -20,6 +20,8 @@ public interface IBattlePokemon<T extends IBattlePokemon<T>> extends IPokemon<T>
     IPokemonState getState();
     void setState(IPokemonState state);
     ImmutableMultimap<IPokemonState, INamedModifier> getModifiers();
+    boolean hasModifier(String name);
+    @Nullable INamedModifier getModifier(String name);
     void addModifier(IPokemonState state, Nameable nameable, IModifier modifier);
     void addModifierUnique(IPokemonState state, Nameable nameable, IModifier modifier);
 
