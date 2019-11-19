@@ -15,5 +15,6 @@ public interface IBattle<T extends IPokemon<T>> {
     IGeneration getGeneration();
     Set<ISide<T>> getTrainers();
     IBattleVariant getVariant();
+    boolean bugsEnabled();
 
 }
