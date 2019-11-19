@@ -24,6 +24,18 @@ public abstract class BaseGeneration implements IGeneration {
         FORMATS = new FormatRegistry(this);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof BaseGeneration)) return false;
+        BaseGeneration that = (BaseGeneration) o;
+        return getID() == that.getID();
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(getID());
+    }
+
     @Nullable
     @Override
     public IGeneration getPrevious() {
