@@ -25,7 +25,7 @@ import java.util.Set;
 /**
  * Created by DrSmugleaf on 17/11/2019
  */
-public class BattlePokemon<T extends IBattlePokemon<T>> extends BasePokemon<T> implements IBattlePokemon<T> {
+public abstract class BattlePokemon<T extends IBattlePokemon<T>> extends BasePokemon<T> implements IBattlePokemon<T> {
 
     private final IBattle<T> BATTLE;
     @Nullable
@@ -40,7 +40,7 @@ public class BattlePokemon<T extends IBattlePokemon<T>> extends BasePokemon<T> i
             IItem item,
             IGender gender,
             int level,
-            Map<IStatType, IStat<T>> stats,
+            Map<IStatType, IStat<IPokemon<T>>> stats,
             int hp,
             IBattle<T> battle
     ) {

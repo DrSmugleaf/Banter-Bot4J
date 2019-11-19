@@ -5,6 +5,7 @@ import com.github.drsmugleaf.pokemon2.base.pokemon.species.ISpecies;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.type.IStatType;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.IType;
+import com.github.drsmugleaf.pokemon2.generations.i.pokemon.stat.StatsI;
 import com.github.drsmugleaf.pokemon2.generations.ii.item.IItem;
 import com.github.drsmugleaf.pokemon2.generations.ii.pokemon.gender.IGender;
 import com.google.common.collect.ImmutableMap;
@@ -18,7 +19,7 @@ import java.util.Set;
 /**
  * Created by DrSmugleaf on 13/11/2019
  */
-public abstract class BasePokemon<T extends IPokemon<T>> implements IPokemon<T> {
+public abstract class BasePokemon<T extends ISpecies<T>> implements IPokemon<T> {
 
     private final T SPECIES;
     @Nullable
@@ -28,7 +29,8 @@ public abstract class BasePokemon<T extends IPokemon<T>> implements IPokemon<T> 
     private IItem item;
     private final IGender GENDER;
     private final int LEVEL;
-    private final ImmutableMap<IStatType, IStat<T>> STATS;
+    private final ImmutableMap<IStatType, IStat<IPokemon<T>>> STATS;
+    private int MAX_HP;
     private int hp;
     private double weight;
     private boolean isAlive;
@@ -40,7 +42,7 @@ public abstract class BasePokemon<T extends IPokemon<T>> implements IPokemon<T> 
             @Nullable IItem item,
             IGender gender,
             int level,
-            Map<IStatType, IStat<T>> stats,
+            Map<IStatType, IStat<IPokemon<T>>> stats,
             int hp
     ) {
         SPECIES = species;
@@ -50,13 +52,14 @@ public abstract class BasePokemon<T extends IPokemon<T>> implements IPokemon<T> 
         GENDER = gender;
         LEVEL = level;
         STATS = ImmutableMap.copyOf(stats);
+        MAX_HP = getStats().get(StatsI.HP).calculate(this);
         this.hp = hp;
         weight = species.getWeight();
         isAlive = true;
     }
 
     @Override
-    public ISpecies<T> getSpecies() {
+    public T getSpecies() {
         return SPECIES;
     }
 
@@ -93,8 +96,13 @@ public abstract class BasePokemon<T extends IPokemon<T>> implements IPokemon<T> 
     }
 
     @Override
-    public ImmutableMap<IStatType, IStat<T>> getStats() {
+    public ImmutableMap<IStatType, IStat<IPokemon<T>>> getStats() {
         return STATS;
+    }
+
+    @Override
+    public int getMaxHP() {
+        return MAX_HP;
     }
 
     @Override
@@ -114,12 +122,25 @@ public abstract class BasePokemon<T extends IPokemon<T>> implements IPokemon<T> 
 
     @Override
     public void damage(int amount) {
+        if (amount > hp) {
+            amount = hp;
+        }
+
         hp -= amount;
 
         if (hp <= 0) {
             hp = 0;
             isAlive = false;
         }
+    }
+
+    @Override
+    public void heal(int amount) {
+        if (hp + amount > getMaxHP()) {
+            amount = getMaxHP() - hp;
+        }
+
+        hp += amount;
     }
 
 }

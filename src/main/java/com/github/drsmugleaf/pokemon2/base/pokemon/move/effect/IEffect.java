@@ -9,7 +9,7 @@ import com.github.drsmugleaf.pokemon2.base.pokemon.move.IMoveInformation;
 public interface IEffect<T extends IBattlePokemon> {
 
     int getID();
-    void use(IMoveInformation<T> move, T target, T user);
-    void effect(IMoveInformation<T> move, T target, T user);
+    int use(IMoveInformation<T> move, T target, T user);
+    void effect(int damageDealt, T target, T user, IMoveInformation<T> move);
 
 }

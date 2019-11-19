@@ -15,8 +15,7 @@ import com.google.common.collect.ImmutableMultimap;
 public interface IBattlePokemon<T extends IBattlePokemon<T>> extends IPokemon<T> {
 
     IBattle<T> getBattle();
-    @Nullable
-    IStatus<? super T> getStatus();
+    @Nullable IStatus<? super T> getStatus();
     void setStatus(@Nullable IStatus<? super T> status);
     IPokemonState getState();
     void setState(IPokemonState state);

@@ -16,9 +16,9 @@ import java.util.Collection;
 /**
  * Created by DrSmugleaf on 13/11/2019
  */
-public interface IPokemon<T extends IPokemon<T>> extends ISpecies<T> {
+public interface IPokemon<T extends ISpecies<T>> extends ISpecies<T> {
 
-    ISpecies<T> getSpecies();
+    T getSpecies();
     String getDisplayName();
     ImmutableSet<IType> getTypes();
     void setTypes(Collection<IType> types);
@@ -26,11 +26,13 @@ public interface IPokemon<T extends IPokemon<T>> extends ISpecies<T> {
     IItem getItem();
     IGender getGender();
     int getLevel();
-    ImmutableMap<IStatType, IStat<T>> getStats();
+    ImmutableMap<IStatType, IStat<IPokemon<T>>> getStats();
+    int getMaxHP();
     int getHP();
     double getWeight(); // Kilograms
     boolean isAlive();
     void damage(int amount);
+    void heal(int amount);
     @Override
     default ImmutableSet<String> getGenerations() {
         return getSpecies().getGenerations();
