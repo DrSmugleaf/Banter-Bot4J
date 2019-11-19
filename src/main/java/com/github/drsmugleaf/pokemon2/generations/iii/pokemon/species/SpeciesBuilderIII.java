@@ -15,10 +15,10 @@ import java.util.Set;
 /**
  * Created by DrSmugleaf on 08/07/2019
  */
-public class SpeciesBuilderIII<T extends ISpecies<T>> extends SpeciesBuilder<T, SpeciesBuilderIII<T>> implements ISpeciesBuilderIII<T, SpeciesBuilderIII<T>>, IBuilder<SpeciesBuilderIII<T>> {
+public class SpeciesBuilderIII<T extends ISpecies> extends SpeciesBuilder<T, SpeciesBuilderIII<T>> implements ISpeciesBuilderIII<T, SpeciesBuilderIII<T>>, IBuilder<SpeciesBuilderIII<T>> {
 
     @Nullable
-    private Set<IAbility> abilities;
+    private Set<IAbility> abilities = new HashSet<>();
 
     public SpeciesBuilderIII() {
         super();

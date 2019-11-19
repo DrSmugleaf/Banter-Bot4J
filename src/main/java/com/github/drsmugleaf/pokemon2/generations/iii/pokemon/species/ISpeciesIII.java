@@ -7,7 +7,7 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Created by DrSmugleaf on 08/11/2019
  */
-public interface ISpeciesIII<T extends ISpeciesIII<T>> extends ISpecies<T> {
+public interface ISpeciesIII<T extends ISpeciesIII<T>> extends ISpecies {
 
     ImmutableSet<IAbility> getAbilities();
 

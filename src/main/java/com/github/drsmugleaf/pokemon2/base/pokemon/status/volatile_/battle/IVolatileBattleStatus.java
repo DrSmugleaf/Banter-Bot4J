@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.pokemon2.base.pokemon.status.volatile_.battle;
 
-import com.github.drsmugleaf.pokemon2.base.battle.IBattlePokemon;
+import com.github.drsmugleaf.pokemon2.base.pokemon.IBattlePokemon;
 import com.github.drsmugleaf.pokemon2.base.pokemon.status.volatile_.IVolatileStatus;
 
 /**

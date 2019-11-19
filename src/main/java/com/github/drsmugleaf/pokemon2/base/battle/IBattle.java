@@ -1,20 +1,22 @@
 package com.github.drsmugleaf.pokemon2.base.battle;
 
-import com.github.drsmugleaf.pokemon2.base.battle.side.ISide;
-import com.github.drsmugleaf.pokemon2.base.battle.variant.IBattleVariant;
+import com.github.drsmugleaf.pokemon2.base.battle.field.IField;
+import com.github.drsmugleaf.pokemon2.base.battle.turn.ITurn;
 import com.github.drsmugleaf.pokemon2.base.generation.IGeneration;
-import com.github.drsmugleaf.pokemon2.base.pokemon.IPokemon;
-
-import java.util.Set;
+import com.github.drsmugleaf.pokemon2.base.pokemon.IBattlePokemon;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Created by DrSmugleaf on 14/11/2019
  */
-public interface IBattle<T extends IPokemon<T>> {
+public interface IBattle<T extends IBattlePokemon> {
 
     IGeneration getGeneration();
-    Set<ISide<T>> getTrainers();
-    IBattleVariant getVariant();
+    IField<T> getField();
+    ImmutableList<ITurn<T>> getTurns();
+    ITurn<T> getTurn();
+    ITurn<T> getTurn(int i);
+    ITurn<T> getPreviousTurn();
     boolean bugsEnabled();
 
 }

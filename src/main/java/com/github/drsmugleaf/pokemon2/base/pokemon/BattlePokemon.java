@@ -2,7 +2,6 @@ package com.github.drsmugleaf.pokemon2.base.pokemon;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.battle.IBattle;
-import com.github.drsmugleaf.pokemon2.base.battle.IBattlePokemon;
 import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
 import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.IModifier;
 import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.INamedModifier;
@@ -25,8 +24,9 @@ import java.util.Set;
 /**
  * Created by DrSmugleaf on 17/11/2019
  */
-public abstract class BattlePokemon<T extends IBattlePokemon<T>> extends BasePokemon<T> implements IBattlePokemon<T> {
+public class BattlePokemon<T extends IBattlePokemon<T>> extends Pokemon<T> implements IBattlePokemon<T> {
 
+    private final int ID;
     private final IBattle<T> BATTLE;
     @Nullable
     private IStatus<? super T> status = null;
@@ -34,6 +34,7 @@ public abstract class BattlePokemon<T extends IBattlePokemon<T>> extends BasePok
     private final Multimap<IPokemonState, INamedModifier> MODIFIERS;
 
     public BattlePokemon(
+            int id,
             T species,
             String nickname,
             Set<IType> types,
@@ -45,16 +46,23 @@ public abstract class BattlePokemon<T extends IBattlePokemon<T>> extends BasePok
             IBattle<T> battle
     ) {
         super(species, nickname, types, item, gender, level, stats, hp);
+        ID = id;
         BATTLE = battle;
         state = PokemonStates.DEFAULT;
         MODIFIERS = ArrayListMultimap.create();
     }
 
-    public BattlePokemon(BattlePokemon<T> pokemon) {
+    public BattlePokemon(T pokemon) {
         super(pokemon);
-        BATTLE = pokemon.BATTLE;
-        state = pokemon.state;
-        MODIFIERS = ArrayListMultimap.create(pokemon.MODIFIERS);
+        ID = pokemon.getID();
+        BATTLE = pokemon.getBattle();
+        state = pokemon.getState();
+        MODIFIERS = ArrayListMultimap.create(pokemon.getModifiers());
+    }
+
+    @Override
+    public int getID() {
+        return ID;
     }
 
     @Override
@@ -97,7 +105,7 @@ public abstract class BattlePokemon<T extends IBattlePokemon<T>> extends BasePok
     @Override
     public INamedModifier getModifier(String name) {
         for (INamedModifier modifier : MODIFIERS.values()) {
-            if (name.equals(modifier.getName())) {
+            if (name.equalsIgnoreCase(modifier.getName())) {
                 return modifier;
             }
         }

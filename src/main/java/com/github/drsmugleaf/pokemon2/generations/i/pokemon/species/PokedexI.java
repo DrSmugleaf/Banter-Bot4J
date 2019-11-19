@@ -15,13 +15,13 @@ import java.util.function.Function;
 /**
  * Created by DrSmugleaf on 06/07/2019
  */
-public class PokedexI<T extends ISpecies<T>> extends Pokedex<T> {
+public class PokedexI<T extends ISpecies> extends Pokedex<T> {
 
     public PokedexI(IGeneration generation, Function<SpeciesBuilderI<T>, T> constructor) {
         super(getAll(generation, constructor));
     }
 
-    public static <T extends ISpecies<T>> Map<String, T> getAll(
+    public static <T extends ISpecies> Map<String, T> getAll(
             IGeneration gen,
             Function<SpeciesBuilderI<T>, T> constructor
     ) {
@@ -37,7 +37,7 @@ public class PokedexI<T extends ISpecies<T>> extends Pokedex<T> {
         return species;
     }
 
-    public static <T extends ISpecies<T>> SpeciesBuilderI<T> toBuilder(
+    public static <T extends ISpecies> SpeciesBuilderI<T> toBuilder(
             IGeneration gen,
             JSONObject pokemon,
             Map<String, T> species

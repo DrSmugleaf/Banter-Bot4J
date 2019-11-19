@@ -10,7 +10,7 @@ import java.util.Collection;
 /**
  * Created by DrSmugleaf on 07/11/2019
  */
-public interface ISpeciesBuilderIII<T extends ISpecies<T>, B extends ISpeciesBuilderIII<T, B>> extends ISpeciesBuilder<T, B> {
+public interface ISpeciesBuilderIII<T extends ISpecies, B extends ISpeciesBuilderIII<T, B>> extends ISpeciesBuilder<T, B> {
 
     ImmutableSet<IAbility> getAbilities();
     B setAbilities(Collection<IAbility> abilities);

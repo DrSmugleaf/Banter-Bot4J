@@ -25,7 +25,7 @@ public class PokedexIII<T extends BaseSpeciesIII<T>> extends Pokedex<T> {
         super(getAll(generation, constructor));
     }
 
-    private static <T extends ISpecies<T>> Map<String, T> getAll(
+    private static <T extends ISpecies> Map<String, T> getAll(
             IGeneration gen,
             Function<SpeciesBuilderIII<T>, T> constructor
     ) {
@@ -41,7 +41,7 @@ public class PokedexIII<T extends BaseSpeciesIII<T>> extends Pokedex<T> {
         return species;
     }
 
-    public static <T extends ISpecies<T>> SpeciesBuilderIII<T> toBuilder(
+    public static <T extends ISpecies> SpeciesBuilderIII<T> toBuilder(
             IGeneration gen,
             JSONObject pokemon,
             Map<String, T> species

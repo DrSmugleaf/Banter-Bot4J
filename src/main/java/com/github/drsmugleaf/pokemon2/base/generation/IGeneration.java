@@ -29,7 +29,7 @@ public interface IGeneration extends Nameable, Comparable<IGeneration> {
     IGeneration getNext();
     SortedSet<IGeneration> getAllNext();
     Smogon getSmogon();
-    Pokedex<? extends ISpecies<?>> getPokedex();
+    Pokedex<? extends ISpecies> getPokedex();
     TypeRegistry getTypes();
     FormatRegistry getFormats();
     StatTypeRegistry getStats();

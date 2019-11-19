@@ -2,13 +2,15 @@ package com.github.drsmugleaf.pokemon2.base.pokemon;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.pokemon.species.ISpecies;
+import com.github.drsmugleaf.pokemon2.base.pokemon.species.Species;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStatHandler;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.StatHandler;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.type.IStatType;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.IType;
 import com.github.drsmugleaf.pokemon2.generations.i.pokemon.stat.StatsI;
 import com.github.drsmugleaf.pokemon2.generations.ii.item.IItem;
 import com.github.drsmugleaf.pokemon2.generations.ii.pokemon.gender.IGender;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.Collection;
@@ -19,7 +21,7 @@ import java.util.Set;
 /**
  * Created by DrSmugleaf on 13/11/2019
  */
-public abstract class BasePokemon<T extends ISpecies<T>> implements IPokemon<T> {
+public abstract class Pokemon<T extends ISpecies> extends Species<T> implements IPokemon<T> {
 
     private final T SPECIES;
     @Nullable
@@ -29,13 +31,13 @@ public abstract class BasePokemon<T extends ISpecies<T>> implements IPokemon<T> 
     private IItem item;
     private final IGender GENDER;
     private final int LEVEL;
-    private final ImmutableMap<IStatType, IStat<IPokemon<T>>> STATS;
+    private final IStatHandler<IPokemon<T>> STATS;
     private int MAX_HP;
     private int hp;
     private double weight;
     private boolean isAlive;
 
-    public BasePokemon(
+    public Pokemon(
             T species,
             @Nullable String nickname,
             Set<IType> types,
@@ -45,39 +47,46 @@ public abstract class BasePokemon<T extends ISpecies<T>> implements IPokemon<T> 
             Map<IStatType, IStat<IPokemon<T>>> stats,
             int hp
     ) {
+        super(species);
         SPECIES = species;
         NICKNAME = nickname;
         TYPES = new HashSet<>(types);
         this.item = item;
         GENDER = gender;
         LEVEL = level;
-        STATS = ImmutableMap.copyOf(stats);
+        STATS = new StatHandler<>(stats);
         MAX_HP = getStats().get(StatsI.HP).calculate(this);
         this.hp = hp;
         weight = species.getWeight();
         isAlive = true;
     }
 
-    public BasePokemon(BasePokemon<T> pokemon) {
+    public Pokemon(IPokemon<T> pokemon) {
         this(
-                pokemon.SPECIES,
-                pokemon.NICKNAME,
-                pokemon.TYPES,
-                pokemon.item,
-                pokemon.GENDER,
-                pokemon.LEVEL,
-                pokemon.STATS,
-                pokemon.hp
+                pokemon.getSpecies(),
+                pokemon.getNickname(),
+                pokemon.getTypes(),
+                pokemon.getItem(),
+                pokemon.getGender(),
+                pokemon.getLevel(),
+                pokemon.getStats().get(),
+                pokemon.getHP()
         );
 
-        MAX_HP = pokemon.MAX_HP;
-        weight = pokemon.weight;
-        isAlive = pokemon.isAlive;
+        MAX_HP = pokemon.getMaxHP();
+        weight = pokemon.getWeight();
+        isAlive = pokemon.isAlive();
     }
 
     @Override
     public T getSpecies() {
         return SPECIES;
+    }
+
+    @Nullable
+    @Override
+    public String getNickname() {
+        return NICKNAME;
     }
 
     @Override
@@ -113,7 +122,7 @@ public abstract class BasePokemon<T extends ISpecies<T>> implements IPokemon<T> 
     }
 
     @Override
-    public ImmutableMap<IStatType, IStat<IPokemon<T>>> getStats() {
+    public IStatHandler<IPokemon<T>> getStats() {
         return STATS;
     }
 

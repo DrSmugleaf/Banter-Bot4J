@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by DrSmugleaf on 11/07/2019
  */
-public interface ISpeciesBuilder<T extends ISpecies<T>, B extends ISpeciesBuilder<T, B>> extends IBuilder<B> {
+public interface ISpeciesBuilder<T extends ISpecies, B extends ISpeciesBuilder<T, B>> extends IBuilder<B> {
 
     String getName();
     B setName(String name);

@@ -9,10 +9,10 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Created by DrSmugleaf on 15/11/2019
  */
-public interface IPokemonIII<T extends IPokemonIII<T>> extends IPokemon<T>, ISpeciesIII<T> {
+public interface IPokemonIII<T extends ISpeciesIII<T>> extends IPokemon<T>, ISpeciesIII<T> {
 
     @Override
-    ISpeciesIII<T> getSpecies();
+    T getSpecies();
     INature getNature();
     @Override
     default ImmutableSet<IAbility> getAbilities() {

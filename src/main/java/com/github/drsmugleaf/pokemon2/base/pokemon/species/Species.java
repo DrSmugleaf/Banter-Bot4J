@@ -11,13 +11,13 @@ import org.jetbrains.annotations.Contract;
 /**
  * Created by DrSmugleaf on 06/07/2019
  */
-public abstract class Species<T extends ISpecies<T>> implements ISpecies<T> {
+public abstract class Species<T extends ISpecies> implements ISpecies {
 
     private final ImmutableSet<String> GENERATIONS;
     private final ImmutableSet<IType> TYPES;
     private final ImmutableSet<IFormat> TIERS;
     private final ImmutableMap<IStatType, Integer> STATS;
-    private final ImmutableSet<T> EVOLUTIONS;
+    private final ImmutableSet<? extends ISpecies> EVOLUTIONS;
     private final double HEIGHT;
     private final double WEIGHT;
     private final ImmutableSet<IGender> GENDERS;
@@ -36,6 +36,19 @@ public abstract class Species<T extends ISpecies<T>> implements ISpecies<T> {
         ALTS = builder.getAlts();
         NAME = builder.getName();
     }
+    
+    protected Species(T species) {
+        GENERATIONS = species.getGenerations();
+        TYPES = species.getSpeciesTypes();
+        TIERS = species.getTiers();
+        STATS = species.getSpeciesStats();
+        EVOLUTIONS = species.getEvolutions();
+        HEIGHT = species.getHeight();
+        WEIGHT = species.getWeight();
+        GENDERS = species.getGenders();
+        ALTS = species.getAlts();
+        NAME = species.getName();
+    }
 
     @Override
     public ImmutableSet<String> getGenerations() {
@@ -48,7 +61,7 @@ public abstract class Species<T extends ISpecies<T>> implements ISpecies<T> {
     }
 
     @Override
-    public ImmutableSet<IFormat> getTier() {
+    public ImmutableSet<IFormat> getTiers() {
         return TIERS;
     }
 
@@ -58,7 +71,7 @@ public abstract class Species<T extends ISpecies<T>> implements ISpecies<T> {
     }
 
     @Override
-    public ImmutableSet<T> getEvolutions() {
+    public ImmutableSet<? extends ISpecies> getEvolutions() {
         return EVOLUTIONS;
     }
 

@@ -11,13 +11,13 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public interface ISpecies<T extends ISpecies<T>> extends Nameable {
+public interface ISpecies extends Nameable {
 
     ImmutableSet<String> getGenerations();
     ImmutableSet<IType> getSpeciesTypes();
-    ImmutableSet<IFormat> getTier();
+    ImmutableSet<IFormat> getTiers();
     ImmutableMap<IStatType, Integer> getSpeciesStats();
-    ImmutableSet<T> getEvolutions();
+    ImmutableSet<? extends ISpecies> getEvolutions();
     double getHeight();
     double getWeight();
     ImmutableSet<IGender> getGenders();

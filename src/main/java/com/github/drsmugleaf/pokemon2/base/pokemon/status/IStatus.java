@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.pokemon2.base.pokemon.status;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.pokemon2.base.battle.IBattlePokemon;
+import com.github.drsmugleaf.pokemon2.base.pokemon.IBattlePokemon;
 import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
 
 /**

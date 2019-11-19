@@ -13,7 +13,7 @@ import java.util.*;
 /**
  * Created by DrSmugleaf on 03/07/2019
  */
-public class SpeciesBuilder<T extends ISpecies<T>, B extends SpeciesBuilder<T, B> & ISpeciesBuilder<T, B>> implements ISpeciesBuilder<T, B> {
+public class SpeciesBuilder<T extends ISpecies, B extends SpeciesBuilder<T, B> & ISpeciesBuilder<T, B>> implements ISpeciesBuilder<T, B> {
 
     @Nullable
     private String name;
