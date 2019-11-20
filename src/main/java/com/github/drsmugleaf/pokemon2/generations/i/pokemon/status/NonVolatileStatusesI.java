@@ -2,7 +2,7 @@ package com.github.drsmugleaf.pokemon2.generations.i.pokemon.status;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.pokemon.IBattlePokemon;
-import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.IModifier;
+import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.IExecutableModifier;
 import com.github.drsmugleaf.pokemon2.base.pokemon.state.PokemonStates;
 import com.github.drsmugleaf.pokemon2.base.pokemon.status.INonVolatileStatus;
 
@@ -21,14 +21,19 @@ public enum NonVolatileStatusesI implements INonVolatileStatus<IBattlePokemon<?>
 
         @Override
         public void apply(IBattlePokemon<?> pokemon) {
-            pokemon.addModifierUnique(PokemonStates.ATTEMPTING_MOVE, this, () -> false);
+            pokemon.getModifiers().addAllowedUnique(PokemonStates.ATTEMPTING_MOVE, this, () -> false);
         }
     },
-    POISON("Poison"),
+    POISON("Poison") {
+        @Override
+        public void apply(IBattlePokemon<?> pokemon) {
+            pokemon.getModifiers().addExecutableUnique(PokemonStates.AFTER_MOVE, this, (IExecutableModifier) () -> pokemon.damage(1.0 / 16.0));
+        }
+    },
     BURN("Burn") {
         @Override
         public void apply(IBattlePokemon<?> pokemon) {
-            pokemon.addModifierUnique(PokemonStates.AFTER_MOVE, this, (IModifier) () -> pokemon.damage(1.0 / 16.0));
+            pokemon.getModifiers().addExecutableUnique(PokemonStates.AFTER_MOVE, this, (IExecutableModifier) () -> pokemon.damage(1.0 / 16.0));
         }
     };
 
@@ -45,6 +50,7 @@ public enum NonVolatileStatusesI implements INonVolatileStatus<IBattlePokemon<?>
         this(null, name);
     }
 
+    @Nullable
     @Override
     public Integer getDuration() {
         return DURATION;

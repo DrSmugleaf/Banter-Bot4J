@@ -2,10 +2,8 @@ package com.github.drsmugleaf.pokemon2.base.pokemon;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.battle.IBattle;
-import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
-import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.IAllowedModifier;
-import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.INamedAllowedModifier;
-import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.NamedAllowedModifier;
+import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.IModifiers;
+import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.Modifiers;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.type.IStatType;
 import com.github.drsmugleaf.pokemon2.base.pokemon.state.IPokemonState;
@@ -14,9 +12,6 @@ import com.github.drsmugleaf.pokemon2.base.pokemon.status.INonVolatileStatus;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.IType;
 import com.github.drsmugleaf.pokemon2.generations.ii.item.IItem;
 import com.github.drsmugleaf.pokemon2.generations.ii.pokemon.gender.IGender;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 
 import java.util.Map;
 import java.util.Set;
@@ -31,7 +26,7 @@ public class BattlePokemon<T extends IBattlePokemon<T>> extends Pokemon<T> imple
     @Nullable
     private INonVolatileStatus<? super T> status = null;
     private IPokemonState state;
-    private final Multimap<IPokemonState, INamedAllowedModifier> MODIFIERS;
+    private final IModifiers MODIFIERS;
 
     public BattlePokemon(
             int id,
@@ -49,7 +44,7 @@ public class BattlePokemon<T extends IBattlePokemon<T>> extends Pokemon<T> imple
         ID = id;
         BATTLE = battle;
         state = PokemonStates.DEFAULT;
-        MODIFIERS = ArrayListMultimap.create();
+        MODIFIERS = new Modifiers();
     }
 
     public BattlePokemon(T pokemon) {
@@ -57,7 +52,7 @@ public class BattlePokemon<T extends IBattlePokemon<T>> extends Pokemon<T> imple
         ID = pokemon.getID();
         BATTLE = pokemon.getBattle();
         state = pokemon.getState();
-        MODIFIERS = ArrayListMultimap.create(pokemon.getModifiers());
+        MODIFIERS = new Modifiers(pokemon.getModifiers());
     }
 
     @Override
@@ -92,36 +87,8 @@ public class BattlePokemon<T extends IBattlePokemon<T>> extends Pokemon<T> imple
     }
 
     @Override
-    public ImmutableMultimap<IPokemonState, INamedAllowedModifier> getModifiers() {
-        return ImmutableMultimap.copyOf(MODIFIERS);
-    }
-
-    @Override
-    public boolean hasModifier(String name) {
-        return getModifier(name) != null;
-    }
-
-    @Nullable
-    @Override
-    public INamedAllowedModifier getModifier(String name) {
-        for (INamedAllowedModifier modifier : MODIFIERS.values()) {
-            if (name.equalsIgnoreCase(modifier.getName())) {
-                return modifier;
-            }
-        }
-
-        return null;
-    }
-
-    @Override
-    public void addModifier(IPokemonState state, Nameable nameable, IAllowedModifier modifier) {
-        MODIFIERS.put(state, new NamedAllowedModifier(nameable, modifier));
-    }
-
-    public void addModifierUnique(IPokemonState state, Nameable nameable, IAllowedModifier modifier) {
-        if (!MODIFIERS.containsEntry(state, modifier)) {
-            addModifier(state, nameable, modifier);
-        }
+    public IModifiers getModifiers() {
+        return MODIFIERS;
     }
 
 }

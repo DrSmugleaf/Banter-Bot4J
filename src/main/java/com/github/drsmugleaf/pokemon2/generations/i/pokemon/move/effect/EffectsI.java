@@ -31,8 +31,8 @@ public enum EffectsI implements IEffect<IBattlePokemon<?>> {
         @Override
         public void effect(IMoveInformation<IBattlePokemon<?>> move, IBattlePokemon<?> user, IBattlePokemon<?> target, IMoveReport<IBattlePokemon<?>> report) {
             int heal = IntMath.divide(report.getDamage(), 2, RoundingMode.CEILING);
-            boolean hadSubstitute = report.getBeforeSnapshot().getBattle().getField().getPokemon(target).hasModifier("SUBSTITUTE");
-            boolean hasSubstitute = target.hasModifier("SUBSTITUTE");
+            boolean hadSubstitute = report.getBeforeSnapshot().getBattle().getField().getPokemon(target).getModifiers().hasModifier("SUBSTITUTE");
+            boolean hasSubstitute = target.getModifiers().hasModifier("SUBSTITUTE");
             if (hadSubstitute && !hasSubstitute) {
                 heal = 0;
             }
