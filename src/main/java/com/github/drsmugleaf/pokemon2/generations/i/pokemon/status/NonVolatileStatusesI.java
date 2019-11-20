@@ -13,7 +13,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * Created by DrSmugleaf on 13/11/2019
  */
 public enum NonVolatileStatusesI implements INonVolatileStatus<IBattlePokemon<?>> {
-
+    // TODO: 20-Nov-19 Add type immunities
     SLEEP("Sleep") {
         @Override
         public Integer getDuration() {
@@ -21,19 +21,19 @@ public enum NonVolatileStatusesI implements INonVolatileStatus<IBattlePokemon<?>
         }
 
         @Override
-        public void apply(IBattlePokemon<?> pokemon) {
+        protected void applyEffect(IBattlePokemon<?> pokemon) {
             pokemon.getModifiers().addAllowedUnique(PokemonStates.ATTEMPTING_MOVE, this, () -> false);
         }
     },
     POISON("Poison") {
         @Override
-        public void apply(IBattlePokemon<?> pokemon) {
+        protected void applyEffect(IBattlePokemon<?> pokemon) {
             pokemon.getModifiers().addExecutableUnique(PokemonStates.AFTER_MOVE, this, (IExecutableModifier) () -> pokemon.damage(1.0 / 16.0));
         }
     },
     BURN("Burn") {
         @Override
-        public void apply(IBattlePokemon<?> pokemon) {
+        protected void applyEffect(IBattlePokemon<?> pokemon) {
             pokemon.getModifiers().addExecutableUnique(PokemonStates.AFTER_MOVE, this, (IExecutableModifier) () -> pokemon.damage(1.0 / 16.0));
             pokemon.getModifiers().addMultiplierUnique(PokemonStates.CALCULATING_ATTACK, this, (IMultiplierModifier) () -> 0.5);
         }
@@ -59,13 +59,17 @@ public enum NonVolatileStatusesI implements INonVolatileStatus<IBattlePokemon<?>
     }
 
     @Override
-    public void apply(IBattlePokemon<?> pokemon) {
+    public final void apply(IBattlePokemon<?> pokemon) {
         pokemon.setStatus(this);
+        applyEffect(pokemon);
     }
+
+    protected abstract void applyEffect(IBattlePokemon<?> pokemon);
 
     @Override
     public void remove(IBattlePokemon<?> pokemon) {
         pokemon.getModifiers().removeAll(this);
+        pokemon.setStatus(null);
     }
 
     @Override
