@@ -14,20 +14,21 @@ import java.math.RoundingMode;
  */
 public enum EffectsI implements IEffect<IBattlePokemon<?>> {
 
-    POUND(1),
-    SING(2) {
+    NONE,
+    POUND,
+    SING {
         @Override
         public void effect(IMoveInformation<IBattlePokemon<?>> move, IBattlePokemon<?> user, IBattlePokemon<?> target, IMoveReport<IBattlePokemon<?>> report) {
             NonVolatileStatusesI.SLEEP.apply(target);
         }
     },
-    POISON_STING(3) {
+    POISON_STING {
         @Override
         public void effect(IMoveInformation<IBattlePokemon<?>> move, IBattlePokemon<?> user, IBattlePokemon<?> target, IMoveReport<IBattlePokemon<?>> report) {
             NonVolatileStatusesI.POISON.apply(target);
         }
     },
-    ABSORB(4) {
+    ABSORB {
         @Override
         public void effect(IMoveInformation<IBattlePokemon<?>> move, IBattlePokemon<?> user, IBattlePokemon<?> target, IMoveReport<IBattlePokemon<?>> report) {
             int heal = IntMath.divide(report.getDamage(), 2, RoundingMode.CEILING);
@@ -40,28 +41,24 @@ public enum EffectsI implements IEffect<IBattlePokemon<?>> {
             user.heal(heal);
         }
     },
-    FIRE_PUNCH(5) {
+    FIRE_PUNCH {
         @Override
         public void effect(IMoveInformation<IBattlePokemon<?>> move, IBattlePokemon<?> user, IBattlePokemon<?> target, IMoveReport<IBattlePokemon<?>> report) {
             NonVolatileStatusesI.BURN.apply(target);
         }
     },
-    ICE_PUNCH(6) {
+    ICE_PUNCH {
         @Override
         public void effect(IMoveInformation<IBattlePokemon<?>> move, IBattlePokemon<?> user, IBattlePokemon<?> target, IMoveReport<IBattlePokemon<?>> report) {
             NonVolatileStatusesI.FREEZE.apply(target);
         }
     };
 
-    private final int ID;
-
-    EffectsI(int id) {
-        ID = id;
-    }
+    EffectsI() {}
 
     @Override
     public int getID() {
-        return ID;
+        return ordinal();
     }
 
     @Override
