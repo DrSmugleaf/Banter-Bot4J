@@ -3,6 +3,7 @@ package com.github.drsmugleaf.pokemon2.generations.i.pokemon.status;
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.pokemon.IBattlePokemon;
 import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.IExecutableModifier;
+import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.IMultiplierModifier;
 import com.github.drsmugleaf.pokemon2.base.pokemon.state.PokemonStates;
 import com.github.drsmugleaf.pokemon2.base.pokemon.status.INonVolatileStatus;
 
@@ -34,6 +35,7 @@ public enum NonVolatileStatusesI implements INonVolatileStatus<IBattlePokemon<?>
         @Override
         public void apply(IBattlePokemon<?> pokemon) {
             pokemon.getModifiers().addExecutableUnique(PokemonStates.AFTER_MOVE, this, (IExecutableModifier) () -> pokemon.damage(1.0 / 16.0));
+            pokemon.getModifiers().addMultiplierUnique(PokemonStates.CALCULATING_ATTACK, this, (IMultiplierModifier) () -> 0.5);
         }
     };
 
