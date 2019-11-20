@@ -9,6 +9,7 @@ public enum PokemonStates implements IPokemonState {
     ATTEMPTING_MOVE,
     CALCULATING_ATTACK,
     DEALING_DAMAGE,
-    AFTER_MOVE // TODO: Or at the end of the turn if it did not attack
+    AFTER_MOVE, // TODO: Or at the end of the turn if it did not attack
+    RECEIVING_MOVE
 
 }

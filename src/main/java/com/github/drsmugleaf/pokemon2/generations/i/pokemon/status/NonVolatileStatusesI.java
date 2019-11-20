@@ -37,6 +37,18 @@ public enum NonVolatileStatusesI implements INonVolatileStatus<IBattlePokemon<?>
             pokemon.getModifiers().addExecutableUnique(PokemonStates.AFTER_MOVE, this, (IExecutableModifier) () -> pokemon.damage(1.0 / 16.0));
             pokemon.getModifiers().addMultiplierUnique(PokemonStates.CALCULATING_ATTACK, this, (IMultiplierModifier) () -> 0.5);
         }
+    },
+    FREEZE("Freeze") {
+        @Override
+        protected void applyEffect(IBattlePokemon<?> pokemon) {
+            pokemon.getModifiers().addAllowedUnique(PokemonStates.ATTEMPTING_MOVE, this, () -> false);
+            pokemon.getModifiers().addExecutableUnique(PokemonStates.RECEIVING_MOVE, this, (IExecutableModifier) () -> {
+                boolean hitByFire = pokemon.getBattle().getTurn().getMove().getMove().getType().getName().equalsIgnoreCase("FIRE");
+                if (hitByFire) {
+                    remove(pokemon);
+                }
+            });
+        }
     };
 
     @Nullable

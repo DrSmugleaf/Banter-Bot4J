@@ -45,6 +45,12 @@ public enum EffectsI implements IEffect<IBattlePokemon<?>> {
         public void effect(IMoveInformation<IBattlePokemon<?>> move, IBattlePokemon<?> user, IBattlePokemon<?> target, IMoveReport<IBattlePokemon<?>> report) {
             NonVolatileStatusesI.BURN.apply(target);
         }
+    },
+    ICE_PUNCH(6) {
+        @Override
+        public void effect(IMoveInformation<IBattlePokemon<?>> move, IBattlePokemon<?> user, IBattlePokemon<?> target, IMoveReport<IBattlePokemon<?>> report) {
+            NonVolatileStatusesI.FREEZE.apply(target);
+        }
     };
 
     private final int ID;
