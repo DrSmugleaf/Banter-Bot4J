@@ -29,6 +29,7 @@ public interface IPokemon<T extends ISpecies> extends ISpecies {
     double getWeight(); // Kilograms
     boolean isAlive();
     void damage(int amount);
+    void damage(double percentage);
     void heal(int amount);
 
 }

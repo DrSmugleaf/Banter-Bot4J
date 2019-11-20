@@ -5,17 +5,17 @@ import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
 /**
  * Created by DrSmugleaf on 18/11/2019
  */
-public class NamedModifier implements INamedModifier {
+public class NamedAllowedModifier implements INamedAllowedModifier {
 
     private final String NAME;
-    private final IModifier MODIFIER;
+    private final IAllowedModifier MODIFIER;
 
-    public NamedModifier(String name, IModifier modifier) {
+    public NamedAllowedModifier(String name, IAllowedModifier modifier) {
         NAME = name;
         MODIFIER = modifier;
     }
 
-    public NamedModifier(Nameable nameable, IModifier modifier) {
+    public NamedAllowedModifier(Nameable nameable, IAllowedModifier modifier) {
         this(nameable.getName(), modifier);
     }
 
@@ -25,8 +25,8 @@ public class NamedModifier implements INamedModifier {
     }
 
     @Override
-    public boolean run() {
-        return MODIFIER.run();
+    public boolean allowed() {
+        return MODIFIER.allowed();
     }
 
 }

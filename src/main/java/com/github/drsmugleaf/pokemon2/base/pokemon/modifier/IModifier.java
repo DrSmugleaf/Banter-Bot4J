@@ -1,10 +1,14 @@
 package com.github.drsmugleaf.pokemon2.base.pokemon.modifier;
 
 /**
- * Created by DrSmugleaf on 18/11/2019
+ * Created by DrSmugleaf on 19/11/2019
  */
-public interface IModifier {
+public interface IModifier extends IAllowedModifier {
 
-    boolean run();
+    default boolean allowed() {
+        run();
+        return true;
+    }
+    void run();
 
 }

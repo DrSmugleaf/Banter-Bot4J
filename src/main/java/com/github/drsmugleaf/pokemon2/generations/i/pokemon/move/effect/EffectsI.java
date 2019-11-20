@@ -39,6 +39,12 @@ public enum EffectsI implements IEffect<IBattlePokemon<?>> {
 
             user.heal(heal);
         }
+    },
+    FIRE_PUNCH(5) {
+        @Override
+        public void effect(IMoveInformation<IBattlePokemon<?>> move, IBattlePokemon<?> user, IBattlePokemon<?> target, IMoveReport<IBattlePokemon<?>> report) {
+            NonVolatileStatusesI.BURN.apply(target);
+        }
     };
 
     private final int ID;

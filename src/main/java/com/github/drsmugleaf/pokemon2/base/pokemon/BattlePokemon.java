@@ -3,14 +3,14 @@ package com.github.drsmugleaf.pokemon2.base.pokemon;
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.battle.IBattle;
 import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
-import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.IModifier;
-import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.INamedModifier;
-import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.NamedModifier;
+import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.IAllowedModifier;
+import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.INamedAllowedModifier;
+import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.NamedAllowedModifier;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.type.IStatType;
 import com.github.drsmugleaf.pokemon2.base.pokemon.state.IPokemonState;
 import com.github.drsmugleaf.pokemon2.base.pokemon.state.PokemonStates;
-import com.github.drsmugleaf.pokemon2.base.pokemon.status.IStatus;
+import com.github.drsmugleaf.pokemon2.base.pokemon.status.INonVolatileStatus;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.IType;
 import com.github.drsmugleaf.pokemon2.generations.ii.item.IItem;
 import com.github.drsmugleaf.pokemon2.generations.ii.pokemon.gender.IGender;
@@ -29,9 +29,9 @@ public class BattlePokemon<T extends IBattlePokemon<T>> extends Pokemon<T> imple
     private final int ID;
     private final IBattle<T> BATTLE;
     @Nullable
-    private IStatus<? super T> status = null;
+    private INonVolatileStatus<? super T> status = null;
     private IPokemonState state;
-    private final Multimap<IPokemonState, INamedModifier> MODIFIERS;
+    private final Multimap<IPokemonState, INamedAllowedModifier> MODIFIERS;
 
     public BattlePokemon(
             int id,
@@ -72,12 +72,12 @@ public class BattlePokemon<T extends IBattlePokemon<T>> extends Pokemon<T> imple
 
     @Nullable
     @Override
-    public IStatus<? super T> getStatus() {
+    public INonVolatileStatus<? super T> getStatus() {
         return status;
     }
 
     @Override
-    public void setStatus(@Nullable IStatus<? super T> status) {
+    public void setStatus(@Nullable INonVolatileStatus<? super T> status) {
         this.status = status;
     }
 
@@ -92,7 +92,7 @@ public class BattlePokemon<T extends IBattlePokemon<T>> extends Pokemon<T> imple
     }
 
     @Override
-    public ImmutableMultimap<IPokemonState, INamedModifier> getModifiers() {
+    public ImmutableMultimap<IPokemonState, INamedAllowedModifier> getModifiers() {
         return ImmutableMultimap.copyOf(MODIFIERS);
     }
 
@@ -103,8 +103,8 @@ public class BattlePokemon<T extends IBattlePokemon<T>> extends Pokemon<T> imple
 
     @Nullable
     @Override
-    public INamedModifier getModifier(String name) {
-        for (INamedModifier modifier : MODIFIERS.values()) {
+    public INamedAllowedModifier getModifier(String name) {
+        for (INamedAllowedModifier modifier : MODIFIERS.values()) {
             if (name.equalsIgnoreCase(modifier.getName())) {
                 return modifier;
             }
@@ -114,11 +114,11 @@ public class BattlePokemon<T extends IBattlePokemon<T>> extends Pokemon<T> imple
     }
 
     @Override
-    public void addModifier(IPokemonState state, Nameable nameable, IModifier modifier) {
-        MODIFIERS.put(state, new NamedModifier(nameable, modifier));
+    public void addModifier(IPokemonState state, Nameable nameable, IAllowedModifier modifier) {
+        MODIFIERS.put(state, new NamedAllowedModifier(nameable, modifier));
     }
 
-    public void addModifierUnique(IPokemonState state, Nameable nameable, IModifier modifier) {
+    public void addModifierUnique(IPokemonState state, Nameable nameable, IAllowedModifier modifier) {
         if (!MODIFIERS.containsEntry(state, modifier)) {
             addModifier(state, nameable, modifier);
         }

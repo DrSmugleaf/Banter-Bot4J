@@ -2,6 +2,7 @@ package com.github.drsmugleaf.pokemon2.generations.i.pokemon.status;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.pokemon.IBattlePokemon;
+import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.IModifier;
 import com.github.drsmugleaf.pokemon2.base.pokemon.state.PokemonStates;
 import com.github.drsmugleaf.pokemon2.base.pokemon.status.INonVolatileStatus;
 
@@ -20,13 +21,14 @@ public enum NonVolatileStatusesI implements INonVolatileStatus<IBattlePokemon<?>
 
         @Override
         public void apply(IBattlePokemon<?> pokemon) {
-            pokemon.addModifier(PokemonStates.ATTEMPTING_MOVE, this, () -> false);
+            pokemon.addModifierUnique(PokemonStates.ATTEMPTING_MOVE, this, () -> false);
         }
     },
-    POISON("Poison") {
+    POISON("Poison"),
+    BURN("Burn") {
         @Override
         public void apply(IBattlePokemon<?> pokemon) {
-            pokemon.setStatus(this);
+            pokemon.addModifierUnique(PokemonStates.AFTER_MOVE, this, (IModifier) () -> pokemon.damage(1.0 / 16.0));
         }
     };
 
@@ -46,6 +48,11 @@ public enum NonVolatileStatusesI implements INonVolatileStatus<IBattlePokemon<?>
     @Override
     public Integer getDuration() {
         return DURATION;
+    }
+
+    @Override
+    public void apply(IBattlePokemon<?> pokemon) {
+        pokemon.setStatus(this);
     }
 
     @Override

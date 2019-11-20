@@ -161,6 +161,12 @@ public abstract class Pokemon<T extends ISpecies> extends Species<T> implements 
     }
 
     @Override
+    public void damage(double percentage) {
+        int amount = (int) (getMaxHP() * percentage);
+        damage(amount);
+    }
+
+    @Override
     public void heal(int amount) {
         if (hp + amount > getMaxHP()) {
             amount = getMaxHP() - hp;
