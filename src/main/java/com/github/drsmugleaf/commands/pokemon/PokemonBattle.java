@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.commands.pokemon;
 
 import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.pokemon.battle.*;
 import com.github.drsmugleaf.pokemon.trainer.TrainerBuilder;
 import com.github.drsmugleaf.pokemon.trainer.UserException;
@@ -15,6 +16,9 @@ import java.util.Map.Entry;
 /**
  * Created by DrSmugleaf on 11/06/2017.
  */
+@CommandInfo(
+        description = "Add yourself to the list of trainers waiting for a battle"
+)
 public class PokemonBattle extends Command {
 
     private static final Map<User, TrainerBuilder> awaitingTrainer = new LinkedHashMap<>();
