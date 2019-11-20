@@ -2,7 +2,9 @@ package com.github.drsmugleaf.commands.eve;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.CommandInfo;
 import net.troja.eve.esi.ApiException;
 import net.troja.eve.esi.api.ContractsApi;
 import net.troja.eve.esi.api.UniverseApi;
@@ -19,20 +21,20 @@ import java.util.stream.Collectors;
 /**
  * Created by DrSmugleaf on 26/08/2018
  */
+@CommandInfo(
+        description = "Get a list of the cheapest blueprints in Eve Online"
+)
 public class EveCheapestBlueprints extends Command {
 
     private static final ContractsApi CONTRACTS_API = new ContractsApi();
-
     private static final int THE_FORGE_REGION_ID = 10000002;
-
     private static final UniverseApi UNIVERSE_API = new UniverseApi();
+
+    @Argument(position = 1, examples = "Erebus", maxWords = Integer.MAX_VALUE)
+    private String blueprint;
 
     @Override
     public void run() {
-        if (ARGUMENTS.isEmpty()) {
-            reply("You didn't write a blueprint name to search for").subscribe();
-            return;
-        }
 
         reply("Contacting the EVE Online API, please wait")
                 .flatMap(message -> message.edit(spec -> {
@@ -44,11 +46,10 @@ public class EveCheapestBlueprints extends Command {
 
                     contracts.removeIf(contract -> !isItemExchangeContract(contract));
                     contracts.removeIf(contract -> !isSellingBlueprint(contract));
-                    String requestedItem = ARGUMENTS.toString();
-                    contracts.removeIf(contract -> !containsItem(contract, requestedItem));
+                    contracts.removeIf(contract -> !containsItem(contract, blueprint));
 
                     if (contracts.isEmpty()) {
-                        spec.setContent("No contracts found selling a blueprint named " + requestedItem);
+                        spec.setContent("No contracts found selling a blueprint named " + blueprint);
                         return;
                     }
 

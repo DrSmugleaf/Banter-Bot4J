@@ -3,7 +3,7 @@ package com.github.drsmugleaf.commands.eve;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.database.models.EveTimerModel;
+import com.github.drsmugleaf.database.model.EveTimerModel;
 
 import java.util.List;
 
@@ -17,14 +17,15 @@ import java.util.List;
                 "evetimerdel", "evetimer del",
                 "evetimerremove", "evetimer remove",
                 "evetimerrem", "evetimer rem"
-        }
+        },
+        description = "Delete a structure timer for Eve Online"
 )
 public class EveTimerDelete extends Command {
 
-    @Argument(position = 1, example = "Fortizar")
+    @Argument(position = 1, examples = "Fortizar")
     private String structure;
 
-    @Argument(position = 2, example = "Jita")
+    @Argument(position = 2, examples = "Jita")
     private String system;
 
     @Override

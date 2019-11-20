@@ -3,15 +3,17 @@ package com.github.drsmugleaf.commands.api;
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.converter.Result;
-import com.github.drsmugleaf.commands.api.converter.TypeConverters;
+import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
 import com.github.drsmugleaf.commands.api.registry.CommandField;
 import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
 import com.github.drsmugleaf.commands.api.registry.Entry;
 import com.github.drsmugleaf.commands.api.tags.Tag;
+import com.github.drsmugleaf.commands.api.tags.Tags;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.User;
 import discord4j.core.spec.MessageCreateSpec;
+import org.jetbrains.annotations.Contract;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
@@ -25,34 +27,27 @@ import java.util.function.Consumer;
 /**
  * Created by DrSmugleaf on 09/06/2018
  */
-public class Command implements ICommand {
+public abstract class Command implements ICommand {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(Command.class);
-
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
-
     public CommandReceivedEvent EVENT;
     public Arguments ARGUMENTS;
-
-    @Nullable
     public User SELF_USER;
-
+    @Nullable
     public Member SELF_MEMBER;
 
     protected Command() {}
 
-    protected static void run(CommandSearchResult commandSearch, CommandReceivedEvent event) {
-        Entry entry = commandSearch.getEntry();
-        CommandInfo annotation = entry.getCommandInfo();
-
-        if (annotation != null) {
-            for (Tag tags : annotation.tags()) {
-                tags.execute(event);
-            }
+    protected static void run(CommandSearchResult search, CommandReceivedEvent event) {
+        Entry entry = search.getEntry();
+        Tags[] tags = entry.getCommandInfo().tags();
+        for (Tag tag : tags) {
+            tag.execute(event);
         }
 
         Command command = entry.newInstance();
-        Arguments arguments = new Arguments(commandSearch, event);
+        Arguments arguments = new Arguments(search, event);
         Entry.setEvent(command, event);
         Entry.setArgs(command, arguments);
         Entry.setSelfUser(command, event);
@@ -63,6 +58,7 @@ public class Command implements ICommand {
         }
     }
 
+    @Contract("null -> false")
     public static boolean isOwner(@Nullable User user) {
         if (user == null) {
             return false;
@@ -119,9 +115,6 @@ public class Command implements ICommand {
         return EVENT.reply(content);
     }
 
-    @Override
-    public void run() {}
-
-    public void registerConverters(TypeConverters converter) {}
+    public void registerConverters(ConverterRegistry converter) {}
 
 }

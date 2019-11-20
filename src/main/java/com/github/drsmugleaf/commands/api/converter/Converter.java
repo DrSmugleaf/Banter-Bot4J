@@ -10,9 +10,7 @@ import java.util.function.BiFunction;
 public class Converter<T, U, R> {
 
     private final TripleIdentifier<T, U, R> IDENTIFIER;
-
     private final BiFunction<T, U, R> CONVERTER;
-
     private final Validator<R> VALIDATOR;
 
     public Converter(TripleIdentifier<T, U, R> identifier, BiFunction<T, U, R> converter, Validator<R> validator) {

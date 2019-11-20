@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  */
 enum ModelValidator {
 
-    PRIMITIVE_ONLY {
+    NO_PRIMITIVES {
         @Override
         <T extends Model<T>> void validate(Class<T> model) {
             List<TypeResolver> columns = Model.getColumns(model);

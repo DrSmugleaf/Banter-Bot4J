@@ -8,9 +8,7 @@ import java.util.Objects;
 public class TripleIdentifier<T, U, R> {
 
     private final Class<T> FROM1;
-
     private final Class<U> FROM2;
-
     private final Class<R> TO;
 
     public TripleIdentifier(Class<T> from1, Class<U> from2, Class<R> to) {

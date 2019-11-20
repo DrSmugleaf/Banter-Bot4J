@@ -15,7 +15,11 @@ import java.util.AbstractMap;
 /**
  * Created by DrSmugleaf on 09/06/2018
  */
-@CommandInfo(permissions = {Permission.MUTE_MEMBERS}, tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE})
+@CommandInfo(
+        permissions = {Permission.MUTE_MEMBERS},
+        tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE},
+        description = "Stop the current track"
+)
 public class Stop extends MusicCommand {
 
     @Override

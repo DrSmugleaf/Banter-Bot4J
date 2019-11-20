@@ -13,8 +13,10 @@ import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.TextChannel;
 import discord4j.core.object.util.Snowflake;
+import org.jetbrains.annotations.Contract;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Mono;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -32,31 +34,30 @@ import java.util.List;
 public class BanterBot4J {
 
     public static final Logger LOGGER = initLogger();
-
-    public static final DiscordClient CLIENT = buildClient();
-
+    public static final DiscordClient CLIENT = initClient();
     public static final String BOT_PREFIX = Keys.BOT_PREFIX.VALUE;
-
     public static final ImmutableList<Long> OWNERS = ImmutableList.copyOf(
             Arrays.asList(
                     109067752286715904L
             )
     );
-
     @Nullable
     private static MessageChannel DISCORD_WARNING_CHANNEL = null;
-
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
+    private static Handler HANDLER = initHandler();
 
-    private static Handler HANDLER;
-
-    private static DiscordClient buildClient() {
+    private static DiscordClient initClient() {
         DiscordClientBuilder builder = new DiscordClientBuilder(Keys.DISCORD_TOKEN.VALUE);
         return builder.build();
     }
 
     private static Logger initLogger() {
         return LoggerFactory.getLogger(BanterBot4J.class);
+    }
+
+    @Contract(" -> new")
+    private static Handler initHandler() {
+        return new Handler("com.github.drsmugleaf.commands");
     }
 
     private static void registerListeners() {
@@ -78,13 +79,16 @@ public class BanterBot4J {
     }
 
     public static void main(String[] args) {
-        Database.init("com.github.drsmugleaf.database.models");
+        Database.init("com.github.drsmugleaf.database.model");
         registerListeners();
-        HANDLER = new Handler("com.github.drsmugleaf.commands");
         CLIENT
                 .getEventDispatcher()
                 .on(MessageCreateEvent.class)
-                .subscribe(HANDLER::handle);
+                .flatMap(m -> HANDLER.handle(m).onErrorResume(e -> {
+                    warn("Error handling message with id " + m.getMessage().getId().asLong(), e);
+                    return Mono.empty();
+                }))
+                .subscribe();
 
         CLIENT
                 .login()
@@ -161,6 +165,7 @@ public class BanterBot4J {
                 });
     }
 
+    @Contract(pure = true)
     public static Handler getHandler() {
         return HANDLER;
     }

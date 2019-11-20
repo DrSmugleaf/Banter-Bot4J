@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.commands.api.registry;
 
-import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
@@ -19,10 +19,7 @@ import java.util.List;
 public class Entry {
 
     private final Class<? extends Command> COMMAND;
-
-    @Nullable
     private final CommandInfo COMMAND_INFO;
-
     private final ImmutableList<CommandField> COMMAND_FIELDS;
 
     protected Entry(Class<? extends Command> command) {
@@ -81,7 +78,6 @@ public class Entry {
         return COMMAND;
     }
 
-    @Nullable
     public CommandInfo getCommandInfo() {
         return COMMAND_INFO;
     }
@@ -90,7 +86,7 @@ public class Entry {
         String commandName;
         CommandInfo annotation = getCommandInfo();
 
-        if (annotation == null || annotation.name().isEmpty()) {
+        if (annotation.name().isEmpty()) {
             commandName = getCommand().getSimpleName();
         } else {
             commandName = annotation.name();
@@ -103,7 +99,7 @@ public class Entry {
         CommandInfo annotation = getCommandInfo();
 
         List<String> commandAliases = new ArrayList<>();
-        if (annotation == null || annotation.aliases().length == 0) {
+        if (annotation.aliases().length == 0) {
             return commandAliases;
         }
 
@@ -130,6 +126,82 @@ public class Entry {
         } catch (InstantiationException | IllegalAccessException e) {
             throw new IllegalStateException("Error creating instance of command " + getName(), e);
         }
+    }
+
+    public String getFormats() {
+        StringBuilder formats = new StringBuilder();
+        formats
+                .append("**Formats:**\n")
+                .append(BanterBot4J.BOT_PREFIX)
+                .append(getName());
+
+        for (CommandField field : getCommandFields()) {
+            formats.append(" ");
+            String fieldName = field.getField().getName();
+            if (field.getArgument().optional()) {
+                formats
+                        .append("[")
+                        .append(fieldName)
+                        .append("]");
+            } else {
+                formats.append(fieldName);
+            }
+        }
+
+        return formats.toString();
+    }
+
+    private String getAllExampleCombinations(String from, String[] argumentExamples) {
+        List<String> examples = new ArrayList<>();
+
+        for (String example : argumentExamples) {
+            if (example.contains(" ")) {
+                examples.add(from + " \"" + example + "\"");
+            } else {
+                examples.add(from + " " + example);
+            }
+        }
+
+        return String.join("\n", examples);
+    }
+
+    private String getMandatoryExamples() {
+        List<String> examples = new ArrayList<>();
+
+        for (CommandField field : getCommandFields()) {
+            if (field.getArgument().optional()) {
+                continue;
+            }
+
+            String example = getAllExampleCombinations(BanterBot4J.BOT_PREFIX + getName(), field.getArgument().examples());
+            examples.add(example);
+        }
+
+        return String.join("\n", examples);
+    }
+
+    private String getOptionalExamples() {
+        List<String> examples = new ArrayList<>();
+
+        for (CommandField field1 : getCommandFields()) {
+            if (!field1.getArgument().optional()) {
+                continue;
+            }
+
+            String example = getAllExampleCombinations(BanterBot4J.BOT_PREFIX + getName(), field1.getArgument().examples());
+            examples.add(example);
+        }
+
+        String text = String.join("\n", examples);
+        return text.isEmpty() ? text : text + "\n";
+    }
+
+    public String getExamples() {
+        return "**Examples:**\n" + getOptionalExamples() + getMandatoryExamples();
+    }
+
+    public String getFormatsExamples() {
+        return getFormats() + "\n" + getExamples();
     }
 
 }

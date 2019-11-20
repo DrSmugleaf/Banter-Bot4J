@@ -2,8 +2,10 @@ package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
+import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.Member;
@@ -20,7 +22,10 @@ import java.util.stream.Collectors;
 /**
  * Created by DrSmugleaf on 23/01/2018.
  */
-@CommandInfo(tags = {Tags.GUILD_ONLY})
+@CommandInfo(
+        tags = {Tags.GUILD_ONLY},
+        description = "Change your name color"
+)
 public class Color extends Command {
 
     @Nullable
@@ -43,6 +48,10 @@ public class Color extends Command {
         return color;
     }
 
+    @Argument(position = 1, examples = "#FF0000", maxWords = Integer.MAX_VALUE, optional = true)
+    @Nullable
+    private java.awt.Color color;
+
     @Override
     public void run() {
         Mono<Guild> guildMono = EVENT.getGuild();
@@ -58,7 +67,7 @@ public class Color extends Command {
                     List<Role> roles = tuple.getT1();
                     Guild guild = tuple.getT2();
 
-                    if (ARGUMENTS.isEmpty()) {
+                    if (color == null) {
                         if (roles.isEmpty()) {
                             reply("You don't have a name color. Use " + BanterBot4J.BOT_PREFIX + "color name OR hexadecimal code to assign one.").subscribe();
                             return;
@@ -90,8 +99,6 @@ public class Color extends Command {
                                 .zipWith(
                                         guild
                                                 .getMembers()
-                                                .groupBy(User::getId)
-                                                .flatMap(member -> member.reduce((a, b) -> a.getId().compareTo(b.getId()) > 0 ? a : b)) // Remove once Discord4J#543 is fixed
                                                 .filterWhen(member -> member.getRoles().hasElement(colorRole))
                                                 .count()
                                 )
@@ -105,13 +112,6 @@ public class Color extends Command {
                                 .flatMap(hex -> reply("Removed your name color. It was " + hex))
                                 .subscribe();
                     } else {
-                        String requestedColor = ARGUMENTS.get(0);
-                        java.awt.Color color = resolve(requestedColor);
-                        if (color == null) {
-                            reply("Invalid color. Make sure it is a hexadecimal string (0000FF) or a simple color like red.").subscribe();
-                            return;
-                        }
-
                         if (roles.isEmpty()) {
                             EVENT
                                     .getMessage()
@@ -129,7 +129,7 @@ public class Color extends Command {
                                             .setPermissions(PermissionSet.none())
                                     ).map(Role::getId))
                                     .flatMap(tuple2 -> tuple2.getT1().addRole(tuple2.getT2()))
-                                    .then(reply("Changed your name color to " + requestedColor))
+                                    .then(reply("Changed your name color to " + String.join(" ", ARGUMENTS)))
                                     .subscribe();
                         } else {
                             Role role = roles.get(0);
@@ -140,11 +140,16 @@ public class Color extends Command {
                                     .zipWith(role.edit(spec -> spec.setColor(color)).map(Role::getId))
                                     .flatMap(tuple2 -> tuple2.getT1().addRole(tuple2.getT2()))
                                     .doOnError(e -> reply("I can't modify your name color. Check my highest role with permission to manage roles.").subscribe())
-                                    .then(reply("Changed your name color to " + requestedColor + ". Your old name color's hex code was " + oldHex))
+                                    .then(reply("Changed your name color to " + String.join(" ", ARGUMENTS) + ". Your old name color's hex code was " + oldHex))
                                     .subscribe();
                         }
                     }
                 });
+    }
+
+    @Override
+    public void registerConverters(ConverterRegistry converter) {
+        converter.registerCommandTo(java.awt.Color.class, (s, e) -> resolve(s));
     }
 
 }

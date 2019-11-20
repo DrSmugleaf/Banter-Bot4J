@@ -9,7 +9,6 @@ public class Result<E> {
 
     @Nullable
     private final E ELEMENT;
-
     private final String ERROR_RESPONSE;
 
     public Result(@Nullable E element, String errorResponse) {

@@ -3,7 +3,7 @@ package com.github.drsmugleaf.commands;
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.database.models.DiscordMember;
+import com.github.drsmugleaf.database.model.DiscordMember;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Role;
@@ -16,7 +16,10 @@ import reactor.util.function.Tuples;
 /**
  * Created by DrSmugleaf on 14/05/2017.
  */
-@CommandInfo(permissions = {Permission.KICK_MEMBERS})
+@CommandInfo(
+        permissions = {Permission.KICK_MEMBERS},
+        description = "Blacklist an user from using the bot"
+)
 public class Blacklist extends Command {
 
     private static String invalidArgumentsResponse() {
@@ -83,7 +86,7 @@ public class Blacklist extends Command {
 
                     sink.next(mentionMember);
                 }).cast(Member.class)
-                .map(member -> Tuples.of(member, new DiscordMember(member.getId().asLong(), member.getGuildId().asLong())))
+                .map(member -> Tuples.of(member, new DiscordMember(member.getId().asLong(), member.getGuildId().asLong(), null)))
                 .subscribe(tuple -> {
                     Member mention = tuple.getT1();
                     DiscordMember member = tuple.getT2();

@@ -4,9 +4,8 @@ import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
-import com.github.drsmugleaf.commands.api.converter.TypeConverters;
-import com.github.drsmugleaf.database.models.EveTimerModel;
+import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
+import com.github.drsmugleaf.database.model.EveTimerModel;
 import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.util.Snowflake;
@@ -23,17 +22,18 @@ import java.util.regex.Pattern;
         aliases = {
                 "evetimercreate", "evetimer create",
                 "evetimernew", "evetimer new"
-        }
+        },
+        description = "Create a structure timer for Eve Online"
 )
 public class EveTimer extends Command {
 
-    @Argument(position = 1, example = "Fortizar")
+    @Argument(position = 1, examples = "Fortizar")
     private String structure;
 
-    @Argument(position = 2, example = "Jita")
+    @Argument(position = 2, examples = "Jita")
     private String system;
 
-    @Argument(position = 3, example = "4d15h30m")
+    @Argument(position = 3, examples = "4d15h30m")
     private ZonedDateTime date;
 
     @Nullable
@@ -90,8 +90,8 @@ public class EveTimer extends Command {
     }
 
     @Override
-    public void registerConverters(TypeConverters converter) {
-        converter.registerStringTo(CommandReceivedEvent.class, ZonedDateTime.class, (s, e) -> {
+    public void registerConverters(ConverterRegistry converter) {
+        converter.registerCommandTo(ZonedDateTime.class, (s, e) -> {
             Long days = parseDatePortion(s, Pattern.compile("(\\d+)d"));
             Long hours = parseDatePortion(s, Pattern.compile("(\\d+)h"));
             Long minutes = parseDatePortion(s, Pattern.compile("(\\d+)m"));

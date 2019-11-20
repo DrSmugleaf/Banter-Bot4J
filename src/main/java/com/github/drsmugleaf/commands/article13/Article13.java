@@ -6,8 +6,8 @@ import com.github.drsmugleaf.article13.vote.Decision;
 import com.github.drsmugleaf.article13.vote.Vote;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
-import com.github.drsmugleaf.commands.api.converter.TypeConverters;
+import com.github.drsmugleaf.commands.api.CommandInfo;
+import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
 
 import java.util.List;
 import java.util.Map;
@@ -16,15 +16,16 @@ import java.util.stream.Collectors;
 /**
  * Created by DrSmugleaf on 07/04/2019
  */
+@CommandInfo(description = "Results from the EU Article 13 vote, sorted by country, party and vote")
 public class Article13 extends Command {
 
-    @Argument(position = 1, example = "spain")
+    @Argument(position = 1, examples = "spain")
     private Country country;
 
-    @Argument(position = 2, example = "for/against")
+    @Argument(position = 2, examples = "for")
     private Decision decision;
 
-    @Argument(position = 3, example = "final")
+    @Argument(position = 3, examples = "final")
     private Vote vote;
 
     @Override
@@ -55,10 +56,11 @@ public class Article13 extends Command {
     }
 
     @Override
-    public void registerConverters(TypeConverters converter) {
-        converter.registerStringTo(CommandReceivedEvent.class, Country.class, (s, e) -> Country.getCountry(s));
-        converter.registerStringTo(CommandReceivedEvent.class, Decision.class, (s, e) -> Decision.from(s));
-        converter.registerStringTo(CommandReceivedEvent.class, Vote.class, (s, e) -> Vote.getVote(s));
+    public void registerConverters(ConverterRegistry converter) {
+        converter
+                .registerCommandTo(Country.class, (s, e) -> Country.getCountry(s))
+                .registerCommandTo(Decision.class, (s, e) -> Decision.from(s))
+                .registerCommandTo(Vote.class, (s, e) -> Vote.getVote(s));
     }
 
 }

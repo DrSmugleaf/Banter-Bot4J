@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.commands.translate;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.database.models.BridgedChannel;
+import com.github.drsmugleaf.database.model.BridgedChannel;
 import com.github.drsmugleaf.translator.API;
 import com.github.drsmugleaf.translator.Languages;
 import discord4j.core.event.domain.message.MessageCreateEvent;
@@ -9,6 +9,7 @@ import discord4j.core.object.entity.Attachment;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,33 +20,33 @@ import java.util.Map;
  */
 public class TranslatedMessage {
 
-    private final Message MESSAGE;
-
+    private Message MESSAGE;
     private final Map<BridgedChannel, Message> MESSAGES_SENT = new HashMap<>();
 
     public TranslatedMessage(MessageCreateEvent event) {
         MESSAGE = event.getMessage();
     }
 
+    private String translate(Languages channelLanguage, Languages bridgedLanguage) {
+        return Mono
+                .justOrEmpty(MESSAGE.getContent())
+                .map(content -> API.translate(channelLanguage, bridgedLanguage, content))
+                .defaultIfEmpty("")
+                .map(this::formatMessage)
+                .blockOptional()
+                .orElseThrow(() -> new IllegalStateException("Error getting translation for message " + MESSAGE.getId().asLong()));
+    }
+
     private Map<BridgedChannel, String> getTranslations() {
         Map<BridgedChannel, String> translations = new HashMap<>();
-        List<BridgedChannel> bridgedChannels = new BridgedChannel(MESSAGE.getChannelId().asLong()).get();
+        List<BridgedChannel> bridgedChannels = new BridgedChannel(MESSAGE.getChannelId().asLong(), null).get();
 
         for (BridgedChannel bridgedChannel : bridgedChannels) {
             Languages channelLanguage = bridgedChannel.channelLanguage;
             Languages bridgedLanguage = bridgedChannel.bridgedLanguage;
 
-            MESSAGE
-                    .getContent()
-                    .ifPresent(message -> {
-                        String translation = API.translate(channelLanguage, bridgedLanguage, message);
-                        if (translation == null) {
-                            return;
-                        }
-
-                        translation = formatMessage(translation);
-                        translations.put(bridgedChannel, translation);
-                    });
+            String translation = translate(channelLanguage, bridgedLanguage);
+            translations.put(bridgedChannel, translation);
         }
 
         return translations;
@@ -68,6 +69,8 @@ public class TranslatedMessage {
     }
 
     void updateTranslations(Message editedMessage) {
+        MESSAGE = editedMessage;
+
         for (Map.Entry<BridgedChannel, Message> entry : MESSAGES_SENT.entrySet()) {
             BridgedChannel bridgedChannel = entry.getKey();
             Message message = entry.getValue();
@@ -75,16 +78,10 @@ public class TranslatedMessage {
             Languages channelLanguage = bridgedChannel.channelLanguage;
             Languages bridgedLanguage = bridgedChannel.bridgedLanguage;
 
-            editedMessage.getContent().ifPresent(content -> {
-                String translation = API.translate(channelLanguage, bridgedLanguage, content);
-                if (translation == null) {
-                    return;
-                }
-
-                translation = formatMessage(translation);
-                String finalTranslation = translation;
-                message.edit(spec -> spec.setContent(finalTranslation));
-            });
+            String finalTranslation = translate(channelLanguage, bridgedLanguage);
+            message
+                    .edit(spec -> spec.setContent(finalTranslation))
+                    .subscribe();
         }
     }
 

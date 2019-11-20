@@ -7,7 +7,6 @@ import com.github.drsmugleaf.commands.api.converter.Converter;
 import com.github.drsmugleaf.commands.api.converter.Result;
 import com.github.drsmugleaf.commands.api.registry.CommandField;
 import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
-import com.github.drsmugleaf.commands.api.registry.Entry;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 
 import java.lang.reflect.Field;
@@ -23,14 +22,12 @@ import java.util.regex.Pattern;
 public class Arguments extends ArrayList<String> {
 
     private static final Pattern SPLIT_ON_SPACES_EXCEPT_WITHIN_QUOTES = Pattern.compile("\"([^\"]*)\"|'([^']*)'|[^\\s]+");
-
-    private final CommandSearchResult RESULT;
-
+    private final CommandSearchResult SEARCH;
     private final CommandReceivedEvent EVENT;
 
-    Arguments(CommandSearchResult result, CommandReceivedEvent event) {
-        super(getArgs(result, event));
-        RESULT = result;
+    Arguments(CommandSearchResult search, CommandReceivedEvent event) {
+        super(getArgs(search, event));
+        SEARCH = search;
         EVENT = event;
     }
 
@@ -69,8 +66,8 @@ public class Arguments extends ArrayList<String> {
         return args;
     }
 
-    public static List<String> getArgs(CommandSearchResult result, MessageCreateEvent event) {
-        String argumentsString = extractArgs(result, event);
+    public static List<String> getArgs(CommandSearchResult search, MessageCreateEvent event) {
+        String argumentsString = extractArgs(search, event);
         return parseArgs(argumentsString);
     }
 
@@ -174,14 +171,18 @@ public class Arguments extends ArrayList<String> {
             }
 
             if (!argument.optional()) {
-                return new Result<>(null, "Invalid arguments.\n" + getInvalidArgumentsResponse());
+                return new Result<>(null, "Invalid arguments.\n" + SEARCH.getEntry().getFormatsExamples());
             }
 
             return new Result<>(null, "");
         }
 
         Class<?> fieldType = field.getType();
-        Converter<String, CommandReceivedEvent, ?> converter = BanterBot4J.getHandler().getRegistry().getConverters().find(String.class, CommandReceivedEvent.class, fieldType);
+        Converter<String, CommandReceivedEvent, ?> converter = BanterBot4J
+                .getHandler()
+                .getRegistry()
+                .getConverters()
+                .find(String.class, CommandReceivedEvent.class, fieldType);
         if (converter == null) {
             throw new IllegalStateException("No converter found for type" + fieldType);
         }
@@ -192,7 +193,7 @@ public class Arguments extends ArrayList<String> {
         try {
             result = converter.convert(commandField, stringArg, EVENT);
         } catch (ConversionException e) {
-            return new Result<>(null, "Invalid " + field.getName() + ".\n" + getInvalidArgumentsResponse());
+            return new Result<>(null, "Invalid " + field.getName() + ".\n" + SEARCH.getEntry().getFormatsExamples());
         }
 
         if (!result.isValid()) {
@@ -202,59 +203,26 @@ public class Arguments extends ArrayList<String> {
         arg = result.getElement();
 
         if (arg == null) {
-            return new Result<>(null, "Invalid arguments.\n" + getInvalidArgumentsResponse());
+            return new Result<>(null, "Invalid arguments.\n" + SEARCH.getEntry().getFormatsExamples());
         } else {
             return new Result<>((E) arg, "");
         }
     }
 
-    @Nullable
     public String getStringArg(CommandField field) {
         int position = field.getArgument().position() - 1;
-        return get(position);
-    }
+        long words = field.getArgument().maxWords();
 
-    @Nullable
-    public Integer getIntegerArg(CommandField field) {
-        int position = field.getArgument().position() - 1;
-        return getInteger(position);
-    }
-
-    public String getInvalidArgumentsResponse() {
-        Entry entry = RESULT.getEntry();
-        StringBuilder response = new StringBuilder();
-        response
-                .append("**Formats:**\n")
-                .append(BanterBot4J.BOT_PREFIX)
-                .append(entry.getName());
-
-        for (CommandField field : entry.getCommandFields()) {
-            String fieldName = field.getField().getName();
-            response
-                    .append(" ")
-                    .append(fieldName);
-        }
-
-        response
-                .append("\n**Example:**\n")
-                .append(BanterBot4J.BOT_PREFIX)
-                .append(entry.getName());
-
-        for (CommandField field : entry.getCommandFields()) {
-            String example = field.getArgument().example();
-            response.append(" ");
-
-            if (example.contains(" ")) {
-                response
-                        .append("\"")
-                        .append(example)
-                        .append("\"");
-            } else {
-                response.append(example);
+        if (field.getField().getType() == String.class) {
+            List<String> strings = new ArrayList<>();
+            for (int i = position; i < position + words && i < size(); i++) {
+                strings.add(get(i));
             }
+
+            return String.join(" ", strings);
         }
 
-        return response.toString();
+        return get(position);
     }
 
 }

@@ -6,7 +6,6 @@ package com.github.drsmugleaf.commands.api.registry;
 public class CommandSearchResult {
 
     private final Entry ENTRY;
-
     private final String MATCHED_NAME;
 
     CommandSearchResult(Entry entry, String matchedName) {

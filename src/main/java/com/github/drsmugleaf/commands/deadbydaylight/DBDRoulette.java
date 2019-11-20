@@ -3,8 +3,8 @@ package com.github.drsmugleaf.commands.deadbydaylight;
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
-import com.github.drsmugleaf.commands.api.converter.TypeConverters;
+import com.github.drsmugleaf.commands.api.CommandInfo;
+import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
 import com.github.drsmugleaf.deadbydaylight.ICharacter;
 import com.github.drsmugleaf.deadbydaylight.dennisreep.*;
 
@@ -13,15 +13,18 @@ import java.io.InputStream;
 /**
  * Created by DrSmugleaf on 09/11/2018
  */
+@CommandInfo(
+        description = "Random perks for Dead by Daylight"
+)
 public class DBDRoulette extends Command {
 
-    @Argument(position = 1, example = "(killer/survivor/friends)")
+    @Argument(position = 1, examples = {"killer", "survivor", "friends"})
     private RouletteTypes type;
 
-    @Argument(position = 2, example = "2.50", minimum = 0, optional = true)
+    @Argument(position = 2, examples = "2.50", minimum = 0, optional = true)
     private double minimumRating = 0;
 
-    @Argument(position = 3, example = "4,32", maximum = 5, optional = true)
+    @Argument(position = 3, examples = "4,32", maximum = 5, optional = true)
     private double maximumRating = 5;
 
     private void sendResponse(
@@ -120,8 +123,8 @@ public class DBDRoulette extends Command {
     }
 
     @Override
-    public void registerConverters(TypeConverters converter) {
-        converter.registerStringTo(CommandReceivedEvent.class, RouletteTypes.class, (s, e) -> RouletteTypes.from(s));
+    public void registerConverters(ConverterRegistry converter) {
+        converter.registerCommandTo(RouletteTypes.class, (s, e) -> RouletteTypes.from(s));
     }
 
 }

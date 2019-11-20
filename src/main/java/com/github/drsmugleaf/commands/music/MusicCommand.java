@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 /**
  * Created by DrSmugleaf on 28/08/2018
  */
-public class MusicCommand extends Command {
+public abstract class MusicCommand extends Command {
 
     private static final Map<Guild, Message> LAST_MESSAGES = new HashMap<>();
 
