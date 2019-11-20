@@ -14,5 +14,6 @@ public interface IStatus<T extends IBattlePokemon> extends Nameable {
     @Nullable
     Integer getDuration();
     void apply(T pokemon);
+    void remove(T pokemon);
 
 }

@@ -14,15 +14,17 @@ public interface IModifiers {
     void addAllowedUnique(IPokemonState state, Nameable nameable, IModifier<Boolean> multiplier);
     ImmutableMultimap<IPokemonState, INamedModifier<Boolean>> getAllowed();
     ImmutableCollection<INamedModifier<Boolean>> getAllowed(IPokemonState state);
-    void addMultiplier(IPokemonState state, Nameable nameable, IModifier<Double> multiplier);
-    void addMultiplierUnique(IPokemonState state, Nameable nameable, IModifier<Double> multiplier);
-    ImmutableMultimap<IPokemonState, INamedModifier<Double>> getMultiplier();
-    ImmutableCollection<INamedModifier<Double>> getMultiplier(IPokemonState state);
     void addExecutable(IPokemonState state, Nameable nameable, IModifier<Void> executable);
     void addExecutableUnique(IPokemonState state, Nameable nameable, IModifier<Void> executable);
     ImmutableMultimap<IPokemonState, INamedModifier<Void>> getExecutable();
     ImmutableCollection<INamedModifier<Void>> getExecutable(IPokemonState state);
+    void addMultiplier(IPokemonState state, Nameable nameable, IModifier<Double> multiplier);
+    void addMultiplierUnique(IPokemonState state, Nameable nameable, IModifier<Double> multiplier);
+    ImmutableMultimap<IPokemonState, INamedModifier<Double>> getMultiplier();
+    ImmutableCollection<INamedModifier<Double>> getMultiplier(IPokemonState state);
     boolean hasModifier(String name);
     boolean hasModifier(Nameable nameable);
+    void removeAll(String name);
+    void removeAll(Nameable nameable);
 
 }

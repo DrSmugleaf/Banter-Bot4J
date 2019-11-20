@@ -48,28 +48,6 @@ public class Modifiers implements IModifiers {
     }
 
     @Override
-    public void addMultiplier(IPokemonState state, Nameable nameable, IModifier<Double> multiplier) {
-        MULTIPLIER_MODIFIERS.put(state, new NamedModifier<>(nameable, multiplier));
-    }
-
-    @Override
-    public void addMultiplierUnique(IPokemonState state, Nameable nameable, IModifier<Double> multiplier) {
-        if (MULTIPLIER_MODIFIERS.values().stream().map(Nameable::getName).noneMatch(name -> name.equalsIgnoreCase(nameable.getName()))) {
-            addMultiplier(state, nameable, multiplier);
-        }
-    }
-
-    @Override
-    public ImmutableMultimap<IPokemonState, INamedModifier<Double>> getMultiplier() {
-        return ImmutableMultimap.copyOf(MULTIPLIER_MODIFIERS);
-    }
-
-    @Override
-    public ImmutableCollection<INamedModifier<Double>> getMultiplier(IPokemonState state) {
-        return ImmutableList.copyOf(MULTIPLIER_MODIFIERS.get(state));
-    }
-
-    @Override
     public void addExecutable(IPokemonState state, Nameable nameable, IModifier<Void> executable) {
         EXECUTABLE_MODIFIERS.put(state, new NamedModifier<>(nameable, executable));
     }
@@ -89,6 +67,28 @@ public class Modifiers implements IModifiers {
     @Override
     public ImmutableCollection<INamedModifier<Void>> getExecutable(IPokemonState state) {
         return ImmutableList.copyOf(EXECUTABLE_MODIFIERS.get(state));
+    }
+
+    @Override
+    public void addMultiplier(IPokemonState state, Nameable nameable, IModifier<Double> multiplier) {
+        MULTIPLIER_MODIFIERS.put(state, new NamedModifier<>(nameable, multiplier));
+    }
+
+    @Override
+    public void addMultiplierUnique(IPokemonState state, Nameable nameable, IModifier<Double> multiplier) {
+        if (MULTIPLIER_MODIFIERS.values().stream().map(Nameable::getName).noneMatch(name -> name.equalsIgnoreCase(nameable.getName()))) {
+            addMultiplier(state, nameable, multiplier);
+        }
+    }
+
+    @Override
+    public ImmutableMultimap<IPokemonState, INamedModifier<Double>> getMultiplier() {
+        return ImmutableMultimap.copyOf(MULTIPLIER_MODIFIERS);
+    }
+
+    @Override
+    public ImmutableCollection<INamedModifier<Double>> getMultiplier(IPokemonState state) {
+        return ImmutableList.copyOf(MULTIPLIER_MODIFIERS.get(state));
     }
 
     @Override
@@ -117,6 +117,22 @@ public class Modifiers implements IModifiers {
     @Override
     public boolean hasModifier(Nameable nameable) {
         return hasModifier(nameable.getName());
+    }
+
+    private <T> void removeAll(Multimap<IPokemonState, INamedModifier<T>> map, String name) {
+        map.values().removeIf(modifier -> name.equalsIgnoreCase(modifier.getName()));
+    }
+
+    @Override
+    public void removeAll(String name) {
+        removeAll(ALLOWED_MODIFIERS, name);
+        removeAll(EXECUTABLE_MODIFIERS, name);
+        removeAll(MULTIPLIER_MODIFIERS, name);
+    }
+
+    @Override
+    public void removeAll(Nameable nameable) {
+        removeAll(nameable.getName());
     }
 
 }

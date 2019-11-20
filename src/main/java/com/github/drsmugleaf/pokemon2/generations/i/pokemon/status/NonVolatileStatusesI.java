@@ -64,6 +64,11 @@ public enum NonVolatileStatusesI implements INonVolatileStatus<IBattlePokemon<?>
     }
 
     @Override
+    public void remove(IBattlePokemon<?> pokemon) {
+        pokemon.getModifiers().removeAll(this);
+    }
+
+    @Override
     public String getName() {
         return NAME;
     }
