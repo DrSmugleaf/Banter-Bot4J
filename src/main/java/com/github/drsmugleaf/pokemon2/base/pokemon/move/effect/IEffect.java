@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.pokemon2.base.pokemon.move.effect;
 
+import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
 import com.github.drsmugleaf.pokemon2.base.pokemon.IBattlePokemon;
 import com.github.drsmugleaf.pokemon2.base.pokemon.move.IMoveInformation;
 import com.github.drsmugleaf.pokemon2.base.pokemon.move.IMoveReport;
@@ -7,7 +8,7 @@ import com.github.drsmugleaf.pokemon2.base.pokemon.move.IMoveReport;
 /**
  * Created by DrSmugleaf on 13/11/2019
  */
-public interface IEffect<T extends IBattlePokemon> {
+public interface IEffect<T extends IBattlePokemon> extends Nameable {
 
     int getID();
     int use(IMoveInformation<T> move, T user, T target);

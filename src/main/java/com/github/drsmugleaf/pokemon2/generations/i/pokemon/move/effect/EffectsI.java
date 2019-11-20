@@ -75,4 +75,9 @@ public enum EffectsI implements IEffect<IBattlePokemon<?>> {
     @Override
     public void effect(IMoveInformation<IBattlePokemon<?>> move, IBattlePokemon<?> user, IBattlePokemon<?> target, IMoveReport<IBattlePokemon<?>> report) {}
 
+    @Override
+    public String getName() {
+        return name();
+    }
+
 }
