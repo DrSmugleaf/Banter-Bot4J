@@ -2,6 +2,7 @@ package com.github.drsmugleaf.pokemon2.generations.i.pokemon.status;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.pokemon.IBattlePokemon;
+import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.IModifiers;
 import com.github.drsmugleaf.pokemon2.base.pokemon.state.PokemonStates;
 import com.github.drsmugleaf.pokemon2.base.pokemon.status.INonVolatileStatus;
 
@@ -32,21 +33,31 @@ public enum NonVolatileStatusesI implements INonVolatileStatus<IBattlePokemon<?>
     BURN("Burn") {
         @Override
         protected void applyEffect(IBattlePokemon<?> pokemon) {
-            pokemon.getModifiers().getExecutable().addUnique(PokemonStates.AFTER_MOVE, this, () -> pokemon.damage(1.0 / 16.0));
-            pokemon.getModifiers().getMultiplier().addUnique(PokemonStates.CALCULATING_ATTACK, this, () -> 0.5);
+            IModifiers mod = pokemon.getModifiers();
+            mod.getExecutable().addUnique(PokemonStates.AFTER_MOVE, this, () -> pokemon.damage(1.0 / 16.0));
+            mod.getMultiplier().addUnique(PokemonStates.CALCULATING_ATTACK, this, () -> 0.5);
         }
     },
     FREEZE("Freeze") {
         @Override
         protected void applyEffect(IBattlePokemon<?> pokemon) {
-            pokemon.getModifiers().getAllowed().addUnique(PokemonStates.ATTEMPTING_MOVE, this, () -> false);
-            pokemon.getModifiers().getExecutable().addUnique(PokemonStates.RECEIVING_MOVE, this, () -> {
+            IModifiers mod = pokemon.getModifiers();
+            mod.getAllowed().addUnique(PokemonStates.ATTEMPTING_MOVE, this, () -> false);
+            mod.getExecutable().addUnique(PokemonStates.RECEIVING_MOVE, this, () -> {
                 boolean hitByFire = pokemon.getBattle().getTurn().getMove().getMove().getType().getName().equalsIgnoreCase("FIRE");
                 boolean isFireSpin = pokemon.getBattle().getTurn().getMove().getMove().getEffect().getID() == 43;
                 if (hitByFire && !isFireSpin) {
                     remove(pokemon);
                 }
             });
+        }
+    },
+    PARALYSIS("Paralysis") {
+        @Override
+        protected void applyEffect(IBattlePokemon<?> pokemon) {
+            IModifiers mod = pokemon.getModifiers();
+            mod.getMultiplier().addUnique(PokemonStates.CALCULATING_SPEED, this, () -> 0.25);
+            mod.getAllowed().addUnique(PokemonStates.ATTEMPTING_MOVE, this, () -> ThreadLocalRandom.current().nextDouble() < 0.25);
         }
     };
 
