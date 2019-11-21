@@ -2,116 +2,50 @@ package com.github.drsmugleaf.pokemon2.base.pokemon.modifier;
 
 import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
 import com.github.drsmugleaf.pokemon2.base.pokemon.state.IPokemonState;
-import com.google.common.collect.*;
+
+import java.util.stream.Stream;
 
 /**
  * Created by DrSmugleaf on 20/11/2019
  */
 public class Modifiers implements IModifiers {
 
-    private final Multimap<IPokemonState, INamedModifier<Boolean>> ALLOWED_MODIFIERS;
-    private final Multimap<IPokemonState, INamedModifier<Double>> MULTIPLIER_MODIFIERS;
-    private final Multimap<IPokemonState, INamedModifier<Void>> EXECUTABLE_MODIFIERS;
+    private final IModifierGroup<IPokemonState, IAllowedModifier, Boolean> ALLOWED_MODIFIERS;
+    private final IModifierGroup<IPokemonState, IMultiplierModifier, Double> MULTIPLIER_MODIFIERS;
+    private final IModifierGroup<IPokemonState, IExecutableModifier, Void> EXECUTABLE_MODIFIERS;
 
     public Modifiers() {
-        ALLOWED_MODIFIERS = ArrayListMultimap.create();
-        MULTIPLIER_MODIFIERS = ArrayListMultimap.create();
-        EXECUTABLE_MODIFIERS = ArrayListMultimap.create();
+        ALLOWED_MODIFIERS = new ModifierGroup<>();
+        MULTIPLIER_MODIFIERS = new ModifierGroup<>();
+        EXECUTABLE_MODIFIERS = new ModifierGroup<>();
     }
 
     public Modifiers(IModifiers modifiers) {
-        ALLOWED_MODIFIERS = ArrayListMultimap.create(modifiers.getAllowed());
-        MULTIPLIER_MODIFIERS = ArrayListMultimap.create(modifiers.getMultiplier());
-        EXECUTABLE_MODIFIERS = ArrayListMultimap.create(modifiers.getExecutable());
+        ALLOWED_MODIFIERS = new ModifierGroup<>(modifiers.getAllowed());
+        MULTIPLIER_MODIFIERS = new ModifierGroup<>(modifiers.getMultiplier());
+        EXECUTABLE_MODIFIERS = new ModifierGroup<>(modifiers.getExecutable());
     }
 
     @Override
-    public void addAllowed(IPokemonState state, Nameable nameable, IModifier<Boolean> multiplier) {
-        ALLOWED_MODIFIERS.put(state, new NamedModifier<>(nameable, multiplier));
+    public IModifierGroup<IPokemonState, IAllowedModifier, Boolean> getAllowed() {
+        return ALLOWED_MODIFIERS;
     }
 
     @Override
-    public void addAllowedUnique(IPokemonState state, Nameable nameable, IModifier<Boolean> multiplier) {
-        if (ALLOWED_MODIFIERS.values().stream().map(Nameable::getName).noneMatch(name -> name.equalsIgnoreCase(nameable.getName()))) {
-            addAllowed(state, nameable, multiplier);
-        }
+    public IModifierGroup<IPokemonState, IExecutableModifier, Void> getExecutable() {
+        return EXECUTABLE_MODIFIERS;
     }
 
     @Override
-    public ImmutableMultimap<IPokemonState, INamedModifier<Boolean>> getAllowed() {
-        return ImmutableMultimap.copyOf(ALLOWED_MODIFIERS);
-    }
-
-    @Override
-    public ImmutableCollection<INamedModifier<Boolean>> getAllowed(IPokemonState state) {
-        return ImmutableList.copyOf(ALLOWED_MODIFIERS.get(state));
-    }
-
-    @Override
-    public void addExecutable(IPokemonState state, Nameable nameable, IModifier<Void> executable) {
-        EXECUTABLE_MODIFIERS.put(state, new NamedModifier<>(nameable, executable));
-    }
-
-    @Override
-    public void addExecutableUnique(IPokemonState state, Nameable nameable, IModifier<Void> executable) {
-        if (EXECUTABLE_MODIFIERS.values().stream().map(Nameable::getName).noneMatch(name -> name.equalsIgnoreCase(nameable.getName()))) {
-            addExecutable(state, nameable, executable);
-        }
-    }
-
-    @Override
-    public ImmutableMultimap<IPokemonState, INamedModifier<Void>> getExecutable() {
-        return ImmutableMultimap.copyOf(EXECUTABLE_MODIFIERS);
-    }
-
-    @Override
-    public ImmutableCollection<INamedModifier<Void>> getExecutable(IPokemonState state) {
-        return ImmutableList.copyOf(EXECUTABLE_MODIFIERS.get(state));
-    }
-
-    @Override
-    public void addMultiplier(IPokemonState state, Nameable nameable, IModifier<Double> multiplier) {
-        MULTIPLIER_MODIFIERS.put(state, new NamedModifier<>(nameable, multiplier));
-    }
-
-    @Override
-    public void addMultiplierUnique(IPokemonState state, Nameable nameable, IModifier<Double> multiplier) {
-        if (MULTIPLIER_MODIFIERS.values().stream().map(Nameable::getName).noneMatch(name -> name.equalsIgnoreCase(nameable.getName()))) {
-            addMultiplier(state, nameable, multiplier);
-        }
-    }
-
-    @Override
-    public ImmutableMultimap<IPokemonState, INamedModifier<Double>> getMultiplier() {
-        return ImmutableMultimap.copyOf(MULTIPLIER_MODIFIERS);
-    }
-
-    @Override
-    public ImmutableCollection<INamedModifier<Double>> getMultiplier(IPokemonState state) {
-        return ImmutableList.copyOf(MULTIPLIER_MODIFIERS.get(state));
+    public IModifierGroup<IPokemonState, IMultiplierModifier, Double> getMultiplier() {
+        return MULTIPLIER_MODIFIERS;
     }
 
     @Override
     public boolean hasModifier(String name) {
-        for (INamedModifier<Boolean> modifier : ALLOWED_MODIFIERS.values()) {
-            if (modifier.getName().equalsIgnoreCase(name)) {
-                return true;
-            }
-        }
-
-        for (INamedModifier<Double> modifier : MULTIPLIER_MODIFIERS.values()) {
-            if (modifier.getName().equalsIgnoreCase(name)) {
-                return true;
-            }
-        }
-
-        for (INamedModifier<Void> modifier : EXECUTABLE_MODIFIERS.values()) {
-            if (modifier.getName().equalsIgnoreCase(name)) {
-                return true;
-            }
-        }
-
-        return false;
+        return Stream
+                .of(ALLOWED_MODIFIERS, EXECUTABLE_MODIFIERS, MULTIPLIER_MODIFIERS)
+                .anyMatch(group -> group.has(name));
     }
 
     @Override
@@ -119,15 +53,11 @@ public class Modifiers implements IModifiers {
         return hasModifier(nameable.getName());
     }
 
-    private <T> void removeAll(Multimap<IPokemonState, INamedModifier<T>> map, String name) {
-        map.values().removeIf(modifier -> name.equalsIgnoreCase(modifier.getName()));
-    }
-
     @Override
     public void removeAll(String name) {
-        removeAll(ALLOWED_MODIFIERS, name);
-        removeAll(EXECUTABLE_MODIFIERS, name);
-        removeAll(MULTIPLIER_MODIFIERS, name);
+        ALLOWED_MODIFIERS.remove(name);
+        EXECUTABLE_MODIFIERS.remove(name);
+        MULTIPLIER_MODIFIERS.remove(name);
     }
 
     @Override
