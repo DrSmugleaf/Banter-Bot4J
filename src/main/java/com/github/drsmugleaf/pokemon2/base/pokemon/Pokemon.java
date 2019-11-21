@@ -147,6 +147,11 @@ public abstract class Pokemon<T extends ISpecies> extends Species<T> implements 
     }
 
     @Override
+    public void faint() {
+        damage(hp);
+    }
+
+    @Override
     public void damage(int amount) {
         if (amount > hp) {
             amount = hp;

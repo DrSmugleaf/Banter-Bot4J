@@ -58,6 +58,19 @@ public enum EffectsI implements IEffect<IBattlePokemon<?>> {
         public void effect(IMoveInformation<IBattlePokemon<?>> move, IBattlePokemon<?> user, IBattlePokemon<?> target, IMoveReport<IBattlePokemon<?>> report) {
             NonVolatileStatusesI.PARALYSIS.apply(target);
         }
+    },
+    SELF_DESTRUCT {
+        @Override
+        public void effect(IMoveInformation<IBattlePokemon<?>> move, IBattlePokemon<?> user, IBattlePokemon<?> target, IMoveReport<IBattlePokemon<?>> report) {
+            user.faint(); // TODO: 21-Nov-19 No attack or recurrent damage for opponent, Stadium: 260 power,no defense halving, fainting after breaking substitute
+        }
+
+        @Override
+        public boolean doesEffect(IMoveInformation<IBattlePokemon<?>> move, IBattlePokemon<?> user, IBattlePokemon<?> target, IMoveReport<IBattlePokemon<?>> report) {
+            boolean hadSubstitute = report.getBeforeSnapshot().getBattle().getField().getPokemon(target).getModifiers().hasModifier("SUBSTITUTE");
+            boolean hasSubstitute = target.getModifiers().hasModifier("SUBSTITUTE");
+            return !hadSubstitute || hasSubstitute;
+        }
     };
 
     EffectsI() {}
@@ -80,6 +93,11 @@ public enum EffectsI implements IEffect<IBattlePokemon<?>> {
 
     @Override
     public void effect(IMoveInformation<IBattlePokemon<?>> move, IBattlePokemon<?> user, IBattlePokemon<?> target, IMoveReport<IBattlePokemon<?>> report) {}
+
+    @Override
+    public boolean doesEffect(IMoveInformation<IBattlePokemon<?>> move, IBattlePokemon<?> user, IBattlePokemon<?> target, IMoveReport<IBattlePokemon<?>> report) {
+        return report.hit();
+    }
 
     @Override
     public String getName() {

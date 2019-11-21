@@ -13,5 +13,6 @@ public interface IEffect<T extends IBattlePokemon> extends Nameable {
     int getID();
     int use(IMoveInformation<T> move, T user, T target);
     void effect(IMoveInformation<T> move, T user, T target, IMoveReport<T> report);
+    boolean doesEffect(IMoveInformation<T> move, T user, T target, IMoveReport<T> report);
 
 }

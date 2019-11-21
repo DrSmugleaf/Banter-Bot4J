@@ -28,6 +28,7 @@ public interface IPokemon<T extends ISpecies> extends ISpecies {
     int getHP();
     double getWeight(); // Kilograms
     boolean isAlive();
+    void faint();
     void damage(int amount);
     void damage(double percentage);
     void heal(int amount);

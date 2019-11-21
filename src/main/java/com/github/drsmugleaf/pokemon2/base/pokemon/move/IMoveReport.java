@@ -14,6 +14,7 @@ public interface IMoveReport<T extends IBattlePokemon> {
     @Nullable T getTarget();
     ImmutableSet<T> getDefenders();
     IMoveInformation<T> getMove();
+    boolean hit();
     int getDamage();
     ISnapshot<T> getBeforeSnapshot();
 
