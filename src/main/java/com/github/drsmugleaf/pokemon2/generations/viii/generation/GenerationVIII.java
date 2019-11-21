@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Contract;
  */
 public class GenerationVIII extends BaseGenerationVIII {
 
-    private static final GenerationVIII INSTANCE = null; // TODO: 13-Nov-19 Instantiate Generation VIII after Smogon adds it
+    private static final GenerationVIII INSTANCE = new GenerationVIII();
 
     private final GameRegistry GAMES = new GameRegistry(GamesVIII.values());
     private final Pokedex<SpeciesVIII> POKEDEX = new PokedexIII<>(this, SpeciesVIII::new);
@@ -51,7 +51,7 @@ public class GenerationVIII extends BaseGenerationVIII {
 
     @Override
     public String getAbbreviation() {
-        return "SW";
+        return "SS";
     }
 
     @Override
