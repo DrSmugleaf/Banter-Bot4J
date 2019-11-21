@@ -42,7 +42,8 @@ public enum NonVolatileStatusesI implements INonVolatileStatus<IBattlePokemon<?>
             pokemon.getModifiers().getAllowed().addUnique(PokemonStates.ATTEMPTING_MOVE, this, () -> false);
             pokemon.getModifiers().getExecutable().addUnique(PokemonStates.RECEIVING_MOVE, this, () -> {
                 boolean hitByFire = pokemon.getBattle().getTurn().getMove().getMove().getType().getName().equalsIgnoreCase("FIRE");
-                if (hitByFire) {
+                boolean isFireSpin = pokemon.getBattle().getTurn().getMove().getMove().getEffect().getID() == 43;
+                if (hitByFire && !isFireSpin) {
                     remove(pokemon);
                 }
             });

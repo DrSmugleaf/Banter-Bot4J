@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.pokemon2.base.pokemon.move;
 
-import com.github.drsmugleaf.pokemon2.base.pokemon.IPokemon;
+import com.github.drsmugleaf.pokemon2.base.pokemon.IBattlePokemon;
+import com.github.drsmugleaf.pokemon2.base.pokemon.move.effect.IEffect;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.IType;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -8,13 +9,14 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Created by DrSmugleaf on 13/11/2019
  */
-public class MoveInformation<T extends IPokemon<T>> implements IMoveInformation<T> {
+public class MoveInformation<T extends IBattlePokemon<T>> implements IMoveInformation<T> {
 
     private final IType TYPE;
     private final IDamageCategory CATEGORY;
     private final int PP;
     private final int POWER;
     private final int ACCURACY;
+    private final IEffect<T> EFFECT;
     private final String NAME;
 
     public MoveInformation(
@@ -23,6 +25,7 @@ public class MoveInformation<T extends IPokemon<T>> implements IMoveInformation<
             int pp,
             int power,
             int accuracy,
+            IEffect<T> effect,
             String name
     ) {
         TYPE = type;
@@ -30,6 +33,7 @@ public class MoveInformation<T extends IPokemon<T>> implements IMoveInformation<
         PP = pp;
         POWER = power;
         ACCURACY = accuracy;
+        EFFECT = effect;
         NAME = name;
     }
 
@@ -56,6 +60,11 @@ public class MoveInformation<T extends IPokemon<T>> implements IMoveInformation<
     @Override
     public int getAccuracy() {
         return ACCURACY;
+    }
+
+    @Override
+    public IEffect<T> getEffect() {
+        return EFFECT;
     }
 
     @Override
