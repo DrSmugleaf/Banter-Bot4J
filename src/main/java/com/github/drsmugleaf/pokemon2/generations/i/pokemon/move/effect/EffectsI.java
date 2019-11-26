@@ -17,7 +17,27 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public enum EffectsI implements IEffect<IBattlePokemonI> {
 
-    NONE,
+    NONE {
+        @Override
+        public int use(IMoveInformation<IBattlePokemonI> move, IBattlePokemonI user, IBattlePokemonI target) {
+            return 0;
+        }
+
+        @Override
+        public boolean works(IMoveInformation<IBattlePokemonI> move, IBattlePokemonI user, IBattlePokemonI target) {
+            return false;
+        }
+
+        @Override
+        public boolean doesEffect(IMoveInformation<IBattlePokemonI> move, IBattlePokemonI user, IBattlePokemonI target, IMoveReport<IBattlePokemonI> report) {
+            return false;
+        }
+
+        @Override
+        public int getDamage(IMoveInformation<IBattlePokemonI> move, IBattlePokemonI user, IBattlePokemonI target) {
+            return 0;
+        }
+    },
     POUND,
     SING {
         @Override

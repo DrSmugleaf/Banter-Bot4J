@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.pokemon2.generations.iv.item;
+package com.github.drsmugleaf.pokemon2.generations.iii.item;
 
 import com.github.drsmugleaf.pokemon2.generations.ii.item.IItemCategory;
 import org.jetbrains.annotations.Contract;
@@ -6,13 +6,13 @@ import org.jetbrains.annotations.Contract;
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public enum ItemCategories implements IItemCategory {
+public enum ItemCategoriesIII implements IItemCategory {
 
-    ARCEUS_PLATE("Arceus Plate");
+    ;
 
     private final String NAME;
 
-    ItemCategories(String name) {
+    ItemCategoriesIII(String name) {
         NAME = name;
     }
 

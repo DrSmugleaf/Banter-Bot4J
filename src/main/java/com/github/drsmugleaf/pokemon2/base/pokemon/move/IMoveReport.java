@@ -10,9 +10,9 @@ import com.google.common.collect.ImmutableSet;
  */
 public interface IMoveReport<T extends IBattlePokemon<T>> {
 
-    T getAttacker();
-    @Nullable T getTarget();
-    ImmutableSet<T> getDefenders();
+    T getUser();
+    @Nullable T getTargeted();
+    ImmutableSet<T> getTargets();
     IMoveInformation<T> getMove();
     boolean hit();
     int getDamage();

@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.pokemon2.generations.vi.item;
+package com.github.drsmugleaf.pokemon2.generations.v.item;
 
 import com.github.drsmugleaf.pokemon2.generations.ii.item.IItemCategory;
 import org.jetbrains.annotations.Contract;
@@ -6,14 +6,13 @@ import org.jetbrains.annotations.Contract;
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public enum ItemCategories implements IItemCategory {
+public enum ItemCategoriesV implements IItemCategory {
 
-    MEGA_STONE("Mega Stone"),
-    PRIMAL_ORB("Primal Orb");
+    GENESECT_DRIVE("Genesect Drive");
 
     private final String NAME;
 
-    ItemCategories(String name) {
+    ItemCategoriesV(String name) {
         NAME = name;
     }
 

@@ -12,6 +12,7 @@ public interface IVolatileStatus<T extends IBattlePokemon<T>> extends IStatus<T>
     default boolean isVolatileStatus() {
         return true;
     }
+
     @Override
     default boolean isBattleStatus() {
         return false;

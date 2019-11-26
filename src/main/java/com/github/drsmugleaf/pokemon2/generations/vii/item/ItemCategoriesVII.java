@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.pokemon2.generations.v.item;
+package com.github.drsmugleaf.pokemon2.generations.vii.item;
 
 import com.github.drsmugleaf.pokemon2.generations.ii.item.IItemCategory;
 import org.jetbrains.annotations.Contract;
@@ -6,13 +6,14 @@ import org.jetbrains.annotations.Contract;
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public enum ItemCategories implements IItemCategory {
+public enum ItemCategoriesVII implements IItemCategory {
 
-    GENESECT_DRIVE("Genesect Drive");
+    SILVALLY_MEMORY("Silvally Memory"),
+    Z_CRYSTAL("Z-Crystal");
 
     private final String NAME;
 
-    ItemCategories(String name) {
+    ItemCategoriesVII(String name) {
         NAME = name;
     }
 
