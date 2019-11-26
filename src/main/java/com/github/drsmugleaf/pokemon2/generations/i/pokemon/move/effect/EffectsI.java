@@ -73,6 +73,24 @@ public enum EffectsI implements IEffect<IBattlePokemonI> {
             boolean hasSubstitute = target.getModifiers().hasModifier("SUBSTITUTE");
             return !hadSubstitute || hasSubstitute;
         }
+
+        @Override
+        public int getDamage(IMoveInformation<IBattlePokemonI> move, IBattlePokemonI user, IBattlePokemonI target) {
+            IDamageCategory category = move.getCategory();
+            if (!category.doesDamage()) {
+                return 0;
+            }
+
+            int level = user.getLevel();
+            int power = move.getPower();
+            int attackStat = user.getStats().get(category.getAttackStat()).calculate(user);
+            int defenseStat = target.getStats().get(category.getDefenseStat()).calculate(target);
+            if (defenseStat > 1) {
+                defenseStat /= 2;
+            }
+            double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
+            return (int) ((((((2 * level) / 5 + 2) * power * attackStat / defenseStat) / 50) + 2) * randomNumber);
+        }
     };
 
     EffectsI() {}
