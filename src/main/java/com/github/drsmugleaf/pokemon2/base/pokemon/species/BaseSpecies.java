@@ -11,20 +11,20 @@ import org.jetbrains.annotations.Contract;
 /**
  * Created by DrSmugleaf on 06/07/2019
  */
-public abstract class Species<T extends ISpecies> implements ISpecies {
+public abstract class BaseSpecies<T extends BaseSpecies<T>> implements ISpecies {
 
     private final ImmutableSet<String> GENERATIONS;
     private final ImmutableSet<IType> TYPES;
     private final ImmutableSet<IFormat> TIERS;
     private final ImmutableMap<IStatType, Integer> STATS;
-    private final ImmutableSet<? extends ISpecies> EVOLUTIONS;
+    private final ImmutableSet<T> EVOLUTIONS;
     private final double HEIGHT;
     private final double WEIGHT;
     private final ImmutableSet<IGender> GENDERS;
     private final ImmutableSet<String> ALTS;
     private final String NAME;
 
-    protected Species(ISpeciesBuilder<T, ?> builder) {
+    protected BaseSpecies(ISpeciesBuilder<T, ?> builder) {
         GENERATIONS = builder.getGenerations();
         TYPES = builder.getTypes();
         TIERS = builder.getTiers();
@@ -37,7 +37,7 @@ public abstract class Species<T extends ISpecies> implements ISpecies {
         NAME = builder.getName();
     }
     
-    protected Species(T species) {
+    protected BaseSpecies(T species) {
         GENERATIONS = species.getGenerations();
         TYPES = species.getSpeciesTypes();
         TIERS = species.getTiers();
@@ -71,7 +71,7 @@ public abstract class Species<T extends ISpecies> implements ISpecies {
     }
 
     @Override
-    public ImmutableSet<? extends ISpecies> getEvolutions() {
+    public ImmutableSet<T> getEvolutions() {
         return EVOLUTIONS;
     }
 

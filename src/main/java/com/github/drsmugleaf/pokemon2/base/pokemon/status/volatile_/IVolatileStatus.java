@@ -6,7 +6,7 @@ import com.github.drsmugleaf.pokemon2.base.pokemon.status.IStatus;
 /**
  * Created by DrSmugleaf on 17/11/2019
  */
-public interface IVolatileStatus<T extends IBattlePokemon> extends IStatus<T> {
+public interface IVolatileStatus<T extends IBattlePokemon<T>> extends IStatus<T> {
 
     @Override
     default boolean isVolatileStatus() {

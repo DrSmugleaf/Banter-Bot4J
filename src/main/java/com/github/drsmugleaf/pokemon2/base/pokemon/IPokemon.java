@@ -1,11 +1,14 @@
 package com.github.drsmugleaf.pokemon2.base.pokemon;
 
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.pokemon2.base.format.IFormat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.species.ISpecies;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStatHandler;
+import com.github.drsmugleaf.pokemon2.base.pokemon.stat.type.IStatType;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.IType;
 import com.github.drsmugleaf.pokemon2.generations.ii.item.IItem;
 import com.github.drsmugleaf.pokemon2.generations.ii.pokemon.gender.IGender;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.Collection;
@@ -13,9 +16,9 @@ import java.util.Collection;
 /**
  * Created by DrSmugleaf on 13/11/2019
  */
-public interface IPokemon<T extends ISpecies> extends ISpecies {
+public interface IPokemon<T extends IPokemon<T>> extends ISpecies {
 
-    T getSpecies();
+    ISpecies getSpecies();
     @Nullable String getNickname();
     String getDisplayName();
     ImmutableSet<IType> getTypes();
@@ -23,7 +26,7 @@ public interface IPokemon<T extends ISpecies> extends ISpecies {
     @Nullable IItem getItem();
     IGender getGender();
     int getLevel();
-    IStatHandler<IPokemon<T>> getStats();
+    IStatHandler<T> getStats();
     int getMaxHP();
     int getHP();
     double getWeight(); // Kilograms
@@ -32,5 +35,50 @@ public interface IPokemon<T extends ISpecies> extends ISpecies {
     void damage(int amount);
     void damage(double percentage);
     void heal(int amount);
+
+    @Override
+    default ImmutableSet<String> getGenerations() {
+        return getSpecies().getGenerations();
+    }
+
+    @Override
+    default ImmutableSet<IType> getSpeciesTypes() {
+        return getSpecies().getSpeciesTypes();
+    }
+
+    @Override
+    default ImmutableSet<IFormat> getTiers() {
+        return getSpecies().getTiers();
+    }
+
+    @Override
+    default ImmutableMap<IStatType, Integer> getSpeciesStats() {
+        return getSpecies().getSpeciesStats();
+    }
+
+    @Override
+    default ImmutableSet<? extends ISpecies> getEvolutions() {
+        return getSpecies().getEvolutions();
+    }
+
+    @Override
+    default double getHeight() {
+        return getSpecies().getHeight();
+    }
+
+    @Override
+    default ImmutableSet<IGender> getGenders() {
+        return getSpecies().getGenders();
+    }
+
+    @Override
+    default ImmutableSet<String> getAlts() {
+        return getSpecies().getAlts();
+    }
+
+    @Override
+    default String getName() {
+        return getSpecies().getName();
+    }
 
 }

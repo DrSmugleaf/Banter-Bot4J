@@ -7,7 +7,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * Created by DrSmugleaf on 19/11/2019
  */
-public interface IStatHandler<T extends IPokemon> {
+public interface IStatHandler<T extends IPokemon<T>> {
 
     ImmutableMap<IStatType, IStat<T>> get();
     IStat<T> get(IStatType type);

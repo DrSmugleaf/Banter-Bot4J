@@ -7,7 +7,7 @@ import com.github.drsmugleaf.pokemon2.base.nameable.Nameable;
 /**
  * Created by DrSmugleaf on 13/11/2019
  */
-public interface IStatus<T extends IBattlePokemon> extends Nameable {
+public interface IStatus<T extends IBattlePokemon<T>> extends Nameable {
 
     boolean isVolatileStatus();
     boolean isBattleStatus();

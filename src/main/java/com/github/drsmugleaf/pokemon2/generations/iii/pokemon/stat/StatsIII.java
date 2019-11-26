@@ -2,17 +2,17 @@ package com.github.drsmugleaf.pokemon2.generations.iii.pokemon.stat;
 
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.base.IBaseStat;
-import com.github.drsmugleaf.pokemon2.generations.iii.pokemon.IPokemonIII;
+import com.github.drsmugleaf.pokemon2.generations.iii.pokemon.IBattlePokemonIII;
 import org.jetbrains.annotations.Contract;
 
 /**
  * Created by DrSmugleaf on 09/11/2019
  */
-public enum StatsIII implements IBaseStat<IPokemonIII<?>> {
+public enum StatsIII implements IBaseStat<IBattlePokemonIII> {
 
     HP("HP", "HP", true) {
         @Override
-        public int calculate(IPokemonIII<?> pokemon) {
+        public int calculate(IBattlePokemonIII pokemon) {
             Integer speciesStat = pokemon.getSpeciesStats().get(this);
             int level = pokemon.getLevel();
             IStat hpStat = pokemon.getStats().get(this);
@@ -52,7 +52,7 @@ public enum StatsIII implements IBaseStat<IPokemonIII<?>> {
     }
 
     @Override
-    public int calculate(IPokemonIII<?> pokemon) {
+    public int calculate(IBattlePokemonIII pokemon) {
         Integer speciesStat = pokemon.getSpeciesStats().get(this);
         int level = pokemon.getLevel();
         IStat stat = pokemon.getStats().get(this);

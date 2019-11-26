@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * Created by DrSmugleaf on 14/11/2019
  */
-public interface IParty<T extends IBattlePokemon> {
+public interface IParty<T extends IBattlePokemon<T>> {
 
     Set<T> getPokemon();
     T getPokemon(int i);

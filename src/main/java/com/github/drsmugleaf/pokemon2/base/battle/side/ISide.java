@@ -10,10 +10,10 @@ import java.util.Set;
 /**
  * Created by DrSmugleaf on 14/11/2019
  */
-public interface ISide<T extends IBattlePokemon> {
+public interface ISide<T extends IBattlePokemon<T>> {
 
     Set<IBattleTrainer<T>> getTrainers();
-    List<IPokemon<T>> getActivePokemon();
+    List<IPokemon> getActivePokemon();
     int getSize();
 
 }

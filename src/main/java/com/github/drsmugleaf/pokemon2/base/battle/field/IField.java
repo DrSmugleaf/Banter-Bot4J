@@ -8,7 +8,7 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Created by DrSmugleaf on 19/11/2019
  */
-public interface IField<T extends IBattlePokemon> {
+public interface IField<T extends IBattlePokemon<T>> {
 
     ImmutableSet<ISide<T>> getSides();
     IBattleVariant getVariant();

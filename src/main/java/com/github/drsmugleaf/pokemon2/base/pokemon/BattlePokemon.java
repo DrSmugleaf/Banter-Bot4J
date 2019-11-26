@@ -4,6 +4,7 @@ import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.battle.IBattle;
 import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.IModifiers;
 import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.Modifiers;
+import com.github.drsmugleaf.pokemon2.base.pokemon.species.ISpecies;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.type.IStatType;
 import com.github.drsmugleaf.pokemon2.base.pokemon.state.IPokemonState;
@@ -19,28 +20,29 @@ import java.util.Set;
 /**
  * Created by DrSmugleaf on 17/11/2019
  */
-public class BattlePokemon<T extends IBattlePokemon<T>> extends Pokemon<T> implements IBattlePokemon<T> {
+public class BattlePokemon<T extends BattlePokemon<T, S>, S extends ISpecies> extends Pokemon<T, S> implements IBattlePokemon<T> {
 
     private final int ID;
     private final IBattle<T> BATTLE;
     @Nullable
-    private INonVolatileStatus<? super T> status = null;
+    private INonVolatileStatus<T> status = null;
     private IPokemonState state;
     private final IModifiers MODIFIERS;
 
     public BattlePokemon(
             int id,
-            T species,
+            S species,
             String nickname,
             Set<IType> types,
             IItem item,
             IGender gender,
             int level,
-            Map<IStatType, IStat<IPokemon<T>>> stats,
+            Map<IStatType, IStat<T>> stats,
             int hp,
+            int maxHp,
             IBattle<T> battle
     ) {
-        super(species, nickname, types, item, gender, level, stats, hp);
+        super(species, nickname, types, item, gender, level, stats, hp, maxHp);
         ID = id;
         BATTLE = battle;
         state = PokemonStates.DEFAULT;
@@ -67,12 +69,12 @@ public class BattlePokemon<T extends IBattlePokemon<T>> extends Pokemon<T> imple
 
     @Nullable
     @Override
-    public INonVolatileStatus<? super T> getStatus() {
+    public INonVolatileStatus<T> getStatus() {
         return status;
     }
 
     @Override
-    public void setStatus(@Nullable INonVolatileStatus<? super T> status) {
+    public void setStatus(@Nullable INonVolatileStatus<T> status) {
         this.status = status;
     }
 

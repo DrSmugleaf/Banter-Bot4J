@@ -2,13 +2,11 @@ package com.github.drsmugleaf.pokemon2.base.pokemon;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon2.base.pokemon.species.ISpecies;
-import com.github.drsmugleaf.pokemon2.base.pokemon.species.Species;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStat;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.IStatHandler;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.StatHandler;
 import com.github.drsmugleaf.pokemon2.base.pokemon.stat.type.IStatType;
 import com.github.drsmugleaf.pokemon2.base.pokemon.type.IType;
-import com.github.drsmugleaf.pokemon2.generations.i.pokemon.stat.StatsI;
 import com.github.drsmugleaf.pokemon2.generations.ii.item.IItem;
 import com.github.drsmugleaf.pokemon2.generations.ii.pokemon.gender.IGender;
 import com.google.common.collect.ImmutableSet;
@@ -21,9 +19,9 @@ import java.util.Set;
 /**
  * Created by DrSmugleaf on 13/11/2019
  */
-public abstract class Pokemon<T extends ISpecies> extends Species<T> implements IPokemon<T> {
+public abstract class Pokemon<T extends Pokemon<T, S>, S extends ISpecies> implements IPokemon<T> {
 
-    private final T SPECIES;
+    private final S SPECIES;
     @Nullable
     private final String NICKNAME;
     private final Set<IType> TYPES;
@@ -31,23 +29,23 @@ public abstract class Pokemon<T extends ISpecies> extends Species<T> implements 
     private IItem item;
     private final IGender GENDER;
     private final int LEVEL;
-    private final IStatHandler<IPokemon<T>> STATS;
+    private final IStatHandler<T> STATS;
     private int MAX_HP;
     private int hp;
     private double weight;
     private boolean isAlive;
 
     public Pokemon(
-            T species,
+            S species,
             @Nullable String nickname,
             Set<IType> types,
             @Nullable IItem item,
             IGender gender,
             int level,
-            Map<IStatType, IStat<IPokemon<T>>> stats,
-            int hp
+            Map<IStatType, IStat<T>> stats,
+            int hp,
+            int maxHp
     ) {
-        super(species);
         SPECIES = species;
         NICKNAME = nickname;
         TYPES = new HashSet<>(types);
@@ -55,13 +53,13 @@ public abstract class Pokemon<T extends ISpecies> extends Species<T> implements 
         GENDER = gender;
         LEVEL = level;
         STATS = new StatHandler<>(stats);
-        MAX_HP = getStats().get(StatsI.HP).calculate(this);
+        MAX_HP = maxHp;
         this.hp = hp;
         weight = species.getWeight();
         isAlive = true;
     }
 
-    public Pokemon(IPokemon<T> pokemon) {
+    public Pokemon(T pokemon) {
         this(
                 pokemon.getSpecies(),
                 pokemon.getNickname(),
@@ -70,7 +68,8 @@ public abstract class Pokemon<T extends ISpecies> extends Species<T> implements 
                 pokemon.getGender(),
                 pokemon.getLevel(),
                 pokemon.getStats().get(),
-                pokemon.getHP()
+                pokemon.getHP(),
+                pokemon.getMaxHP()
         );
 
         MAX_HP = pokemon.getMaxHP();
@@ -79,7 +78,7 @@ public abstract class Pokemon<T extends ISpecies> extends Species<T> implements 
     }
 
     @Override
-    public T getSpecies() {
+    public S getSpecies() {
         return SPECIES;
     }
 
@@ -122,7 +121,7 @@ public abstract class Pokemon<T extends ISpecies> extends Species<T> implements 
     }
 
     @Override
-    public IStatHandler<IPokemon<T>> getStats() {
+    public IStatHandler<T> getStats() {
         return STATS;
     }
 

@@ -12,7 +12,7 @@ import com.github.drsmugleaf.pokemon2.generations.iii.pokemon.species.ISpeciesII
 public interface IGenerationIII extends IGenerationII {
 
     @Override
-    Pokedex<? extends ISpeciesIII<?>> getPokedex();
+    Pokedex<? extends ISpeciesIII> getPokedex();
     NatureRegistry getNatures();
     AbilityRegistry getAbilities();
 

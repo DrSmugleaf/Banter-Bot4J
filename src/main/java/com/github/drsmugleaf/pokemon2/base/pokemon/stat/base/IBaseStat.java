@@ -7,7 +7,7 @@ import com.github.drsmugleaf.pokemon2.base.pokemon.stat.type.IStatType;
 /**
  * Created by DrSmugleaf on 16/11/2019
  */
-public interface IBaseStat<T extends IPokemon> extends IStatType, Nameable {
+public interface IBaseStat<T extends IPokemon<T>> extends IStatType, Nameable {
 
     int calculate(T pokemon);
 

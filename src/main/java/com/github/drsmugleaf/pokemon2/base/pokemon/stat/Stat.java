@@ -8,7 +8,7 @@ import com.github.drsmugleaf.pokemon2.base.pokemon.stat.stage.StageRegistry;
 /**
  * Created by DrSmugleaf on 15/11/2019
  */
-public abstract class Stat<T extends IPokemon<T>> implements IStat<T> {
+public abstract class Stat<T extends IPokemon<T>> implements IStat {
 
     private final IBaseStat<T> STAT;
     private final int IV;
@@ -40,26 +40,6 @@ public abstract class Stat<T extends IPokemon<T>> implements IStat<T> {
     @Override
     public IStage getStage() {
         return stage;
-    }
-
-    @Override
-    public int calculate(T pokemon) {
-        return getBaseStat().calculate(pokemon);
-    }
-
-    @Override
-    public String getAbbreviation() {
-        return getBaseStat().getAbbreviation();
-    }
-
-    @Override
-    public boolean isPermanent() {
-        return getBaseStat().isPermanent();
-    }
-
-    @Override
-    public String getName() {
-        return getBaseStat().getName();
     }
 
 }

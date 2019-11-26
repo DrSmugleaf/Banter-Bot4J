@@ -8,7 +8,7 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Created by DrSmugleaf on 19/11/2019
  */
-public interface IMoveReport<T extends IBattlePokemon> {
+public interface IMoveReport<T extends IBattlePokemon<T>> {
 
     T getAttacker();
     @Nullable T getTarget();

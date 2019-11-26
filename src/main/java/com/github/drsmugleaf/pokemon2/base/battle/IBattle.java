@@ -9,7 +9,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * Created by DrSmugleaf on 14/11/2019
  */
-public interface IBattle<T extends IBattlePokemon> {
+public interface IBattle<T extends IBattlePokemon<T>> {
 
     IGeneration getGeneration();
     IField<T> getField();

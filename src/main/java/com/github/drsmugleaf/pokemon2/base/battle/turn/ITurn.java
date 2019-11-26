@@ -7,7 +7,7 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Created by DrSmugleaf on 19/11/2019
  */
-public interface ITurn<T extends IBattlePokemon> {
+public interface ITurn<T extends IBattlePokemon<T>> {
 
     ImmutableSet<IMoveReport<T>> getMoves();
     IMoveReport<T> getMove();

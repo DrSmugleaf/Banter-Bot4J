@@ -8,7 +8,7 @@ import com.github.drsmugleaf.pokemon2.base.pokemon.stat.stage.IStage;
 /**
  * Created by DrSmugleaf on 14/11/2019
  */
-public interface IStat<T extends IPokemon> extends IBaseStat<T>, Nameable {
+public interface IStat<T extends IPokemon<T>> extends IBaseStat<T>, Nameable {
 
     IBaseStat<T> getBaseStat();
     int getIndividualValue();

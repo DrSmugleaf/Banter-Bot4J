@@ -1,17 +1,17 @@
 package com.github.drsmugleaf.pokemon2.generations.i.pokemon.status;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.pokemon2.base.pokemon.IBattlePokemon;
 import com.github.drsmugleaf.pokemon2.base.pokemon.modifier.IModifiers;
 import com.github.drsmugleaf.pokemon2.base.pokemon.state.PokemonStates;
 import com.github.drsmugleaf.pokemon2.base.pokemon.status.INonVolatileStatus;
+import com.github.drsmugleaf.pokemon2.generations.i.pokemon.IBattlePokemonI;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by DrSmugleaf on 13/11/2019
  */
-public enum NonVolatileStatusesI implements INonVolatileStatus<IBattlePokemon<?>> {
+public enum NonVolatileStatusesI implements INonVolatileStatus<IBattlePokemonI> {
     // TODO: 20-Nov-19 Add type immunities
     SLEEP("Sleep") {
         @Override
@@ -20,19 +20,19 @@ public enum NonVolatileStatusesI implements INonVolatileStatus<IBattlePokemon<?>
         }
 
         @Override
-        protected void applyEffect(IBattlePokemon<?> pokemon) {
+        protected void applyEffect(IBattlePokemonI pokemon) {
             pokemon.getModifiers().getAllowed().addUnique(PokemonStates.ATTEMPTING_MOVE, this, () -> false);
         }
     },
     POISON("Poison") {
         @Override
-        protected void applyEffect(IBattlePokemon<?> pokemon) {
+        protected void applyEffect(IBattlePokemonI pokemon) {
             pokemon.getModifiers().getExecutable().addUnique(PokemonStates.AFTER_MOVE, this, () -> pokemon.damage(1.0 / 16.0));
         }
     },
     BURN("Burn") {
         @Override
-        protected void applyEffect(IBattlePokemon<?> pokemon) {
+        protected void applyEffect(IBattlePokemonI pokemon) {
             IModifiers mod = pokemon.getModifiers();
             mod.getExecutable().addUnique(PokemonStates.AFTER_MOVE, this, () -> pokemon.damage(1.0 / 16.0));
             mod.getMultiplier().addUnique(PokemonStates.CALCULATING_ATTACK, this, () -> 0.5);
@@ -40,7 +40,7 @@ public enum NonVolatileStatusesI implements INonVolatileStatus<IBattlePokemon<?>
     },
     FREEZE("Freeze") {
         @Override
-        protected void applyEffect(IBattlePokemon<?> pokemon) {
+        protected void applyEffect(IBattlePokemonI pokemon) {
             IModifiers mod = pokemon.getModifiers();
             mod.getAllowed().addUnique(PokemonStates.ATTEMPTING_MOVE, this, () -> false);
             mod.getExecutable().addUnique(PokemonStates.RECEIVING_MOVE, this, () -> {
@@ -54,7 +54,7 @@ public enum NonVolatileStatusesI implements INonVolatileStatus<IBattlePokemon<?>
     },
     PARALYSIS("Paralysis") {
         @Override
-        protected void applyEffect(IBattlePokemon<?> pokemon) {
+        protected void applyEffect(IBattlePokemonI pokemon) {
             IModifiers mod = pokemon.getModifiers();
             mod.getMultiplier().addUnique(PokemonStates.CALCULATING_SPEED, this, () -> 0.25);
             mod.getAllowed().addUnique(PokemonStates.ATTEMPTING_MOVE, this, () -> ThreadLocalRandom.current().nextDouble() < 0.25);
@@ -81,15 +81,15 @@ public enum NonVolatileStatusesI implements INonVolatileStatus<IBattlePokemon<?>
     }
 
     @Override
-    public final void apply(IBattlePokemon<?> pokemon) {
+    public final void apply(IBattlePokemonI pokemon) {
         pokemon.setStatus(this);
         applyEffect(pokemon);
     }
 
-    protected abstract void applyEffect(IBattlePokemon<?> pokemon);
+    protected abstract void applyEffect(IBattlePokemonI pokemon);
 
     @Override
-    public void remove(IBattlePokemon<?> pokemon) {
+    public void remove(IBattlePokemonI pokemon) {
         pokemon.getModifiers().removeAll(this);
         pokemon.setStatus(null);
     }

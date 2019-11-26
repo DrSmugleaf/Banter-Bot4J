@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * Created by DrSmugleaf on 19/11/2019
  */
-public class StatHandler<T extends IPokemon> implements IStatHandler<T> {
+public class StatHandler<T extends IPokemon<T>> implements IStatHandler<T> {
 
     private final ImmutableMap<IStatType, IStat<T>> STATS;
 

@@ -8,7 +8,7 @@ import com.github.drsmugleaf.pokemon2.base.pokemon.type.IType;
 /**
  * Created by DrSmugleaf on 13/11/2019
  */
-public interface IMoveInformation<T extends IBattlePokemon> extends Nameable {
+public interface IMoveInformation<T extends IBattlePokemon<T>> extends Nameable {
 
     IType getType();
     IDamageCategory getCategory();
@@ -18,6 +18,5 @@ public interface IMoveInformation<T extends IBattlePokemon> extends Nameable {
     IEffect<T> getEffect();
     // TODO: 13-Nov-19 Tags
     // TODO: 13-Nov-19 Target
-    int getDamage(T user, T target);
 
 }

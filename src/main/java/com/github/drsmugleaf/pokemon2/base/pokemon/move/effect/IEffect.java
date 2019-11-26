@@ -8,11 +8,12 @@ import com.github.drsmugleaf.pokemon2.base.pokemon.move.IMoveReport;
 /**
  * Created by DrSmugleaf on 13/11/2019
  */
-public interface IEffect<T extends IBattlePokemon> extends Nameable {
+public interface IEffect<T extends IBattlePokemon<T>> extends Nameable {
 
     int getID();
     int use(IMoveInformation<T> move, T user, T target);
     void effect(IMoveInformation<T> move, T user, T target, IMoveReport<T> report);
     boolean doesEffect(IMoveInformation<T> move, T user, T target, IMoveReport<T> report);
+    int getDamage(IMoveInformation<T> move, T user, T target);
 
 }
