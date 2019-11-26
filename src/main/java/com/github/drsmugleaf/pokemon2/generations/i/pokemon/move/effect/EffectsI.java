@@ -5,6 +5,7 @@ import com.github.drsmugleaf.pokemon2.base.pokemon.move.IMoveInformation;
 import com.github.drsmugleaf.pokemon2.base.pokemon.move.IMoveReport;
 import com.github.drsmugleaf.pokemon2.base.pokemon.move.effect.IEffect;
 import com.github.drsmugleaf.pokemon2.generations.i.pokemon.IBattlePokemonI;
+import com.github.drsmugleaf.pokemon2.generations.i.pokemon.stat.StatsI;
 import com.github.drsmugleaf.pokemon2.generations.i.pokemon.status.NonVolatileStatusesI;
 import com.google.common.math.IntMath;
 
@@ -36,11 +37,9 @@ public enum EffectsI implements IEffect<IBattlePokemonI> {
             int heal = IntMath.divide(report.getDamage(), 2, RoundingMode.CEILING);
             boolean hadSubstitute = report.getBeforeSnapshot().getBattle().getField().getPokemon(target).getModifiers().hasModifier("SUBSTITUTE");
             boolean hasSubstitute = target.getModifiers().hasModifier("SUBSTITUTE");
-            if (hadSubstitute && !hasSubstitute) {
-                heal = 0;
+            if (!hadSubstitute || hasSubstitute) {
+                user.heal(heal);
             }
-
-            user.heal(heal);
         }
     },
     FIRE_PUNCH {
@@ -91,6 +90,17 @@ public enum EffectsI implements IEffect<IBattlePokemonI> {
             double randomNumber = ThreadLocalRandom.current().nextDouble(0.85, 1.0);
             return (int) ((((((2 * level) / 5 + 2) * power * attackStat / defenseStat) / 50) + 2) * randomNumber);
         }
+    },
+    DREAM_EATER {
+        @Override
+        public boolean works(IMoveInformation<IBattlePokemonI> move, IBattlePokemonI user, IBattlePokemonI target) {
+            return target.getStatus() == NonVolatileStatusesI.SLEEP; // TODO: 26-Nov-19 Generation 2 onwards: doesn't work against substitute
+        }
+
+        @Override
+        public void effect(IMoveInformation<IBattlePokemonI> move, IBattlePokemonI user, IBattlePokemonI target, IMoveReport<IBattlePokemonI> report) {
+            ABSORB.effect(move, user, target, report);
+        }
     };
 
     EffectsI() {}
@@ -109,6 +119,35 @@ public enum EffectsI implements IEffect<IBattlePokemonI> {
         }
 
         return damage;
+    }
+
+    @Override
+    public final boolean hits(IMoveInformation<IBattlePokemonI> move, IBattlePokemonI user, IBattlePokemonI target) {
+        if (!works(move, user, target)) {
+            return false;
+        }
+
+        if (target.getTypes().stream().anyMatch(type -> type.isImmune(move.getType()))) {
+            return false;
+        }
+
+        int moveAccuracy = move.getAccuracy();
+        if (moveAccuracy == 0) {
+            return true;
+        }
+
+        if (ThreadLocalRandom.current().nextDouble() < 0.004) {
+            return false;
+        }
+
+        double userAccuracy = user.getStats().get(StatsI.ACCURACY).calculate(user);
+        double targetEvasion = target.getStats().get(StatsI.EVASION).calculate(target);
+        double probability = moveAccuracy * (userAccuracy / targetEvasion);
+        return probability > 1 || probability < ThreadLocalRandom.current().nextDouble();
+    }
+
+    public boolean works(IMoveInformation<IBattlePokemonI> move, IBattlePokemonI user, IBattlePokemonI target) {
+        return true;
     }
 
     @Override
