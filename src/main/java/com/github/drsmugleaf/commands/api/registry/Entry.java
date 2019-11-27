@@ -122,8 +122,8 @@ public class Entry {
 
     public Command newInstance() {
         try {
-            return COMMAND.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+            return COMMAND.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
             throw new IllegalStateException("Error creating instance of command " + getName(), e);
         }
     }

@@ -164,16 +164,16 @@ public class TypeResolver {
 
     private Collection<?> toCollection(Class<?> type) {
         try {
-            return (Collection<?>) type.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+            return (Collection<?>) type.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
             throw new ModelException("Error creating collection from class " + type.getSimpleName());
         }
     }
 
     private Map<?, ?> toMap(Class<?> type) {
         try {
-            return (Map<?, ?>) type.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+            return (Map<?, ?>) type.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
             throw new ModelException("Error creating map from class " + type.getSimpleName());
         }
     }
