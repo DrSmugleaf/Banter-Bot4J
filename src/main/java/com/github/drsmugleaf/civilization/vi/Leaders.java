@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.civilization.vi;
 
+import org.jetbrains.annotations.Contract;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -47,9 +49,9 @@ public enum Leaders {
     VICTORIA("Victoria"),
     WILHELMINA("Wilhelmina");
 
-    public static final int AMOUNT = Leaders.values().length;
+    private static final int AMOUNT = Leaders.values().length;
 
-    public final String NAME;
+    private final String NAME;
 
     Leaders(String name) {
         NAME = name;
@@ -61,6 +63,12 @@ public enum Leaders {
         return leaders.subList(0, amount);
     }
 
+    @Contract(pure = true)
+    public static int getAmount() {
+        return AMOUNT;
+    }
+
+    @Contract(pure = true)
     public String getName() {
         return NAME;
     }

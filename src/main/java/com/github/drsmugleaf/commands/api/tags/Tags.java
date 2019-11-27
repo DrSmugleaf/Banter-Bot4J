@@ -16,15 +16,12 @@ import java.util.Optional;
 public enum Tags implements Tag {
 
     DELETE_COMMAND_MESSAGE {
-
         @Override
         public void execute(CommandReceivedEvent event) {
             event.getMessage().delete().subscribe();
         }
-
     },
     GUILD_ONLY {
-
         @Override
         public boolean isValid(MessageCreateEvent event) {
             return event.getGuild().blockOptional().isPresent();
@@ -34,10 +31,8 @@ public enum Tags implements Tag {
         public String message() {
             return "That command must be used in a server channel.";
         }
-
     },
     OWNER_ONLY {
-
         @Override
         public boolean isValid(MessageCreateEvent event) {
             return Command.isOwner(event.getMember().orElse(null));
@@ -47,10 +42,8 @@ public enum Tags implements Tag {
         public String message() {
             return "You don't have permission to use that command.";
         }
-
     },
     SAME_VOICE_CHANNEL {
-
         @Override
         public boolean isValid(MessageCreateEvent event) {
             if (!GUILD_ONLY.isValid(event)) {
@@ -76,10 +69,8 @@ public enum Tags implements Tag {
         public String message() {
             return "You aren't in the same voice channel as me.";
         }
-
     },
     VOICE_ONLY {
-
         @Override
         public boolean isValid(MessageCreateEvent event) {
             if (!GUILD_ONLY.isValid(event)) {
@@ -96,7 +87,6 @@ public enum Tags implements Tag {
         public String message() {
             return "You must be in a voice channel to use that command.";
         }
-
     };
 
     public boolean isValid(MessageCreateEvent event) {

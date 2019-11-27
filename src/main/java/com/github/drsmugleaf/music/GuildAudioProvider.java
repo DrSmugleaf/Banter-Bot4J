@@ -13,7 +13,6 @@ import java.nio.ByteBuffer;
 public class GuildAudioProvider extends AudioProvider {
 
     private final AudioPlayer PLAYER;
-
     private final MutableAudioFrame FRAME = new MutableAudioFrame();
 
     public GuildAudioProvider(AudioPlayer player) {

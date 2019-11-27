@@ -8,11 +8,11 @@ import com.github.drsmugleaf.charactersheets.Nameable;
 public class Stat implements Nameable {
 
     private final String NAME;
-    private long VALUE;
+    private long value;
 
     public Stat(String name, long value) {
         NAME = name;
-        VALUE = value;
+        this.value = value;
     }
 
     @Override
@@ -21,11 +21,11 @@ public class Stat implements Nameable {
     }
 
     public long getValue() {
-        return VALUE;
+        return value;
     }
 
     public Stat changeValue(long amount) {
-        VALUE += amount;
+        value += amount;
         return this;
     }
 

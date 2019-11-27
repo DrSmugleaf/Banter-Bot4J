@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.commands.deadbydaylight;
 
+import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
@@ -25,6 +26,7 @@ public class DBDBest extends Command {
     private Integer perks = 4;
 
     @Argument(position = 2, examples = "trapper", optional = true)
+    @Nullable
     private Killer killer;
 
     private static Consumer<EmbedCreateSpec> getBaseEmbed(int perkAmount) {

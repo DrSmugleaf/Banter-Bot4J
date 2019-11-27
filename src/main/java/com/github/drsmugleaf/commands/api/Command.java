@@ -2,8 +2,8 @@ package com.github.drsmugleaf.commands.api;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.commands.api.converter.Result;
 import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
+import com.github.drsmugleaf.commands.api.converter.Result;
 import com.github.drsmugleaf.commands.api.registry.CommandField;
 import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
 import com.github.drsmugleaf.commands.api.registry.Entry;
@@ -31,6 +31,7 @@ public abstract class Command implements ICommand {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(Command.class);
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
+
     public CommandReceivedEvent EVENT;
     public Arguments ARGUMENTS;
     public User SELF_USER;

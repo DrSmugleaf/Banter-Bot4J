@@ -11,7 +11,6 @@ import java.util.Map;
 public abstract class Node<T extends Node<T>> {
 
     public final String NAME;
-
     public final List<T> SHORTEST_PATH = new LinkedList<>();
 
     Integer distance = Integer.MAX_VALUE;

@@ -13,7 +13,7 @@ public class CharacterBuilder implements Builder<Character> {
 
     @Nullable
     private String name;
-    private SheetBuilder sheet = new SheetBuilder();
+    private final SheetBuilder SHEET = new SheetBuilder();
     @Nullable
     private State state;
     @Nullable
@@ -32,7 +32,7 @@ public class CharacterBuilder implements Builder<Character> {
     }
 
     public SheetBuilder getSheet() {
-        return sheet;
+        return SHEET;
     }
 
     @Nullable
@@ -57,7 +57,7 @@ public class CharacterBuilder implements Builder<Character> {
 
     @Override
     public Character build() {
-        return new Character(name, sheet.build(), state, location);
+        return new Character(name, SHEET.build(), state, location);
     }
 
 }

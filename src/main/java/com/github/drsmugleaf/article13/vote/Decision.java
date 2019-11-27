@@ -19,7 +19,6 @@ public enum Decision {
     private static final ImmutableSet<Decision> DECISIONS = ImmutableSet.copyOf(values());
 
     private final String NAME;
-
     private final String[] ALIASES;
 
     Decision(String... name) {

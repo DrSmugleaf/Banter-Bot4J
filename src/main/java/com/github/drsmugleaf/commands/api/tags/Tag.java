@@ -9,9 +9,7 @@ import discord4j.core.event.domain.message.MessageCreateEvent;
 public interface Tag {
 
     boolean isValid(MessageCreateEvent event);
-
     String message();
-
     void execute(CommandReceivedEvent event);
 
 }

@@ -34,7 +34,6 @@ public interface SQLTypes {
     }
 
     String getName();
-
     Class<?> getJavaType();
 
 }

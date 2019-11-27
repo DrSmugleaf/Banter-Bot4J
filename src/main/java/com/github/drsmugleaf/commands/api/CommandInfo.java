@@ -16,13 +16,9 @@ import java.lang.annotation.Target;
 public @interface CommandInfo {
 
     String name() default "";
-
     String[] aliases() default {};
-
     Permission[] permissions() default {};
-
     Tags[] tags() default {};
-
     String description();
 
 }

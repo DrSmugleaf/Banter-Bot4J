@@ -13,7 +13,6 @@ import java.lang.annotation.Target;
 public @interface Relation {
 
     RelationTypes type();
-
     String columnName();
 
 }

@@ -9,9 +9,7 @@ import java.util.stream.Collectors;
 public class Route {
 
     public final SystemGraph GRAPH;
-
     private StarSystem ORIGIN;
-
     private StarSystem DESTINATION;
 
     Route(SystemGraph graph, StarSystem origin, StarSystem destination) {

@@ -5,6 +5,7 @@ import com.github.drsmugleaf.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -78,20 +79,8 @@ public class PerkList<E extends Perk> extends ArrayList<E> {
     }
 
     public PerkList<E> getWithinRating(@Nullable Double from, @Nullable Double to) {
-        final double finalFrom;
-        if (from == null) {
-            finalFrom = Double.MIN_VALUE;
-        } else {
-            finalFrom = from;
-        }
-
-        final double finalTo;
-        if (to == null) {
-            finalTo = Double.MAX_VALUE;
-        } else {
-            finalTo = to;
-        }
-
+        final double finalFrom = Objects.requireNonNullElse(from, Double.MIN_VALUE);
+        final double finalTo = Objects.requireNonNullElse(to, Double.MAX_VALUE);
         PerkList<E> newPerks = new PerkList<>(this);
         newPerks.removeIf(entry -> {
                     double perkRating = entry.getRating();

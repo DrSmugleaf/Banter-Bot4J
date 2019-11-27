@@ -9,7 +9,6 @@ import java.util.Map;
 public class Result implements Comparable<Result> {
 
     private final Decision DECISION;
-
     private final int VOTES;
 
     public Result(Decision decision, int votes) {

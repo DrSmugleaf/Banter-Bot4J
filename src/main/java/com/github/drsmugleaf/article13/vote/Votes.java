@@ -10,7 +10,6 @@ import java.util.Map;
 public class Votes {
 
     private final Vote VOTE;
-
     private final ImmutableMap<Decision, Result> RESULTS;
 
     public Votes(Vote vote, Map<Decision, Integer> results) {
