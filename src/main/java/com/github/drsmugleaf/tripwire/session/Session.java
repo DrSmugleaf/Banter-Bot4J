@@ -12,13 +12,9 @@ import java.util.Map;
 public class Session {
 
     public final long ID;
-
     public final String NAME;
-
     public final Map<String, String> COOKIES = new HashMap<>();
-
     public final String VERSION;
-
     public final String INSTANCE = getInstance();
 
     Session(long id, String name, Map<String, String> cookies, String version) {

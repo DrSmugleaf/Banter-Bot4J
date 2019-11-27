@@ -1,7 +1,6 @@
 package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
 import com.github.drsmugleaf.Nullable;
-import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -14,6 +13,7 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 /**
  * Created by DrSmugleaf on 06/11/2018
@@ -21,17 +21,13 @@ import java.util.concurrent.TimeUnit;
 public class KillersAPI extends API {
 
     private static final String KILLER_DATA_ENDPOINT = "getKillerData/";
-
     private static final String KILLER_PERK_DATA_ENDPOINT = "getKillerPerkData/";
-
     private static final Supplier<Map<String, Killer>> KILLERS = Suppliers.memoizeWithExpiration(
             KillersAPI::getKillerData, 12, TimeUnit.HOURS
-    );
-
+    )::get;
     private static final Supplier<PerkList<KillerPerk>> GLOBAL_KILLER_PERKS = Suppliers.memoizeWithExpiration(
             KillersAPI::getKillerPerkData, 12, TimeUnit.HOURS
-    );
-
+    )::get;
     private static final Cache<Killer, PerkList<KillerPerk>> SPECIFIC_KILLER_PERKS = CacheBuilder
             .newBuilder()
             .expireAfterWrite(12, TimeUnit.HOURS)

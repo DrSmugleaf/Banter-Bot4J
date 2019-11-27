@@ -75,7 +75,6 @@ public enum Languages {
     YUCATEC_MAYA("Yucatec Maya", "yua");
 
     private final String NAME;
-
     private final String CODE;
 
     Languages(String name, String code) {

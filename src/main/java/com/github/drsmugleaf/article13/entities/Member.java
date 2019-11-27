@@ -13,19 +13,12 @@ import java.util.Map;
 public class Member {
 
     private final String FIRST_NAME;
-
     private final String LAST_NAME;
-
     private final String COUNTRY;
-
     private final String JURISDICTION;
-
     private final String POLITICAL_GROUP;
-
     private final ImmutableMap<Vote, Decision> VOTES;
-
     private final String NATIONAL_POLITICAL_GROUP;
-
     private final String NATIONAL_POLITICAL_GROUP_SHORT;
 
     protected Member(Map<String, String> csvLine) {

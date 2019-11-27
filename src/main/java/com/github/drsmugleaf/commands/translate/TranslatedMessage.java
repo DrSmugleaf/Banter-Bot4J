@@ -20,26 +20,26 @@ import java.util.Map;
  */
 public class TranslatedMessage {
 
-    private Message MESSAGE;
+    private Message message;
     private final Map<BridgedChannel, Message> MESSAGES_SENT = new HashMap<>();
 
     public TranslatedMessage(MessageCreateEvent event) {
-        MESSAGE = event.getMessage();
+        message = event.getMessage();
     }
 
     private String translate(Languages channelLanguage, Languages bridgedLanguage) {
         return Mono
-                .justOrEmpty(MESSAGE.getContent())
+                .justOrEmpty(message.getContent())
                 .map(content -> API.translate(channelLanguage, bridgedLanguage, content))
                 .defaultIfEmpty("")
                 .map(this::formatMessage)
                 .blockOptional()
-                .orElseThrow(() -> new IllegalStateException("Error getting translation for message " + MESSAGE.getId().asLong()));
+                .orElseThrow(() -> new IllegalStateException("Error getting translation for message " + message.getId().asLong()));
     }
 
     private Map<BridgedChannel, String> getTranslations() {
         Map<BridgedChannel, String> translations = new HashMap<>();
-        List<BridgedChannel> bridgedChannels = new BridgedChannel(MESSAGE.getChannelId().asLong(), null).get();
+        List<BridgedChannel> bridgedChannels = new BridgedChannel(message.getChannelId().asLong(), null).get();
 
         for (BridgedChannel bridgedChannel : bridgedChannels) {
             Languages channelLanguage = bridgedChannel.channelLanguage;
@@ -69,7 +69,7 @@ public class TranslatedMessage {
     }
 
     void updateTranslations(Message editedMessage) {
-        MESSAGE = editedMessage;
+        message = editedMessage;
 
         for (Map.Entry<BridgedChannel, Message> entry : MESSAGES_SENT.entrySet()) {
             BridgedChannel bridgedChannel = entry.getKey();
@@ -85,7 +85,7 @@ public class TranslatedMessage {
         }
     }
 
-    Flux<Void> delete() {
+    protected Flux<Void> delete() {
         return Flux
                 .fromIterable(MESSAGES_SENT.entrySet())
                 .map(Map.Entry::getValue)
@@ -93,13 +93,13 @@ public class TranslatedMessage {
     }
 
     private String formatMessage(@Nullable final String translation) {
-        return MESSAGE
+        return message
                 .getAuthorAsMember()
                 .map(Member::getDisplayName)
                 .map(name -> "**" + name + "**: " + (translation == null ? "" : translation))
                 .map(content -> {
                     StringBuilder message = new StringBuilder(content);
-                    for (Attachment attachment : MESSAGE.getAttachments()) {
+                    for (Attachment attachment : this.message.getAttachments()) {
                         message
                                 .append("\n")
                                 .append(attachment.getUrl());

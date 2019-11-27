@@ -4,6 +4,6 @@ sudo: required
 dist: trusty
 
 jdk:
-  - oraclejdk8
+  - oraclejdk13
 
 install: true

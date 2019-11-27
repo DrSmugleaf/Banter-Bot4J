@@ -20,8 +20,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>13</source>
+                    <target>13</target>
                 </configuration>
             </plugin>
 
@@ -86,7 +86,7 @@
         <dependency>
             <groupId>com.discord4j</groupId>
             <artifactId>discord4j-core</artifactId>
-            <version>3.0.8</version>
+            <version>3.0.11</version>
         </dependency>
 
         <dependency>
@@ -225,7 +225,7 @@
     </dependencies>
 
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>13</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <gson-fire-version>1.8.0</gson-fire-version>

@@ -15,11 +15,11 @@ import java.util.Map;
  */
 public class SystemGraph extends Graph<StarSystem> {
 
-    SystemGraph(Collection<StarSystem> systems) {
+    private SystemGraph(Collection<StarSystem> systems) {
         super(systems);
     }
 
-    static SystemGraph fromSignaturesAndWormholes(Map<Integer, Signature> signatures, List<Wormhole> wormholes) {
+    private static SystemGraph fromSignaturesAndWormholes(Map<Integer, Signature> signatures, List<Wormhole> wormholes) {
         Map<Integer, StarSystem> systems = StarSystem.fromSignatures(signatures.values());
 
         for (Wormhole wormhole : wormholes) {

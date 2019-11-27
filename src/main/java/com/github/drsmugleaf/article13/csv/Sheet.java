@@ -5,6 +5,7 @@ import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVReaderHeaderAware;
 import com.opencsv.CSVReaderHeaderAwareBuilder;
 import org.apache.commons.io.FilenameUtils;
+import org.jetbrains.annotations.Contract;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -40,10 +41,12 @@ public class Sheet extends File {
         super(file.toURI());
     }
 
+    @Contract(pure = true)
     private static String getSheetsPath() {
         return SHEETS_PATH;
     }
 
+    @Contract(" -> new")
     private static File getSheetsFolder() {
         return new File(getSheetsPath());
     }

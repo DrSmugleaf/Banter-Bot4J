@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class Turn {
 
-    private long NUMBER = 1;
+    private long number = 1;
     private final List<Runnable> RECURRING_EFFECTS = new ArrayList<>();
 
     public Turn() {}
@@ -34,7 +34,7 @@ public class Turn {
             }
         }
 
-        NUMBER++;
+        number++;
     }
 
 }

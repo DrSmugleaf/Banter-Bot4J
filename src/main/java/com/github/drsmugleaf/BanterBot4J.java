@@ -25,7 +25,6 @@ import java.lang.reflect.Method;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,15 +35,13 @@ public class BanterBot4J {
     public static final Logger LOGGER = initLogger();
     public static final DiscordClient CLIENT = initClient();
     public static final String BOT_PREFIX = Keys.BOT_PREFIX.VALUE;
-    public static final ImmutableList<Long> OWNERS = ImmutableList.copyOf(
-            Arrays.asList(
-                    109067752286715904L
-            )
+    public static final ImmutableList<Long> OWNERS = ImmutableList.of(
+            109067752286715904L
     );
     @Nullable
     private static MessageChannel DISCORD_WARNING_CHANNEL = null;
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC);
-    private static Handler HANDLER = initHandler();
+    private static final Handler HANDLER = initHandler();
 
     private static DiscordClient initClient() {
         DiscordClientBuilder builder = new DiscordClientBuilder(Keys.DISCORD_TOKEN.VALUE);

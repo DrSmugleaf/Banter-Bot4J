@@ -7,7 +7,6 @@ import com.github.drsmugleaf.commands.api.tags.Tags;
 import com.github.drsmugleaf.database.model.DiscordMember;
 import com.github.drsmugleaf.reflection.Reflection;
 import discord4j.core.event.domain.message.MessageCreateEvent;
-import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.util.Permission;
 import discord4j.core.object.util.PermissionSet;
@@ -51,7 +50,7 @@ public class Handler {
                 .filter(content -> !author.map(User::isBot).get())
                 .map(content -> Tuples.of(content, author.get().getId()))
                 .filter(tuple -> {
-                    if (!guildId.isPresent()) {
+                    if (guildId.isEmpty()) {
                         return true;
                     }
 
@@ -68,14 +67,14 @@ public class Handler {
                         return Mono.empty();
                     }
 
-                    if (!guildId.isPresent()) {
+                    if (guildId.isEmpty()) {
                         return Mono.just(search);
                     }
 
                     return event
                             .getGuild()
                             .flatMap(guild -> guild.getMemberById(tuple.getT2()))
-                            .flatMap(Member::getBasePermissions)
+                            .flatMap(member -> member.getBasePermissions())
                             .zipWith(event.getMessage().getChannel())
                             .flatMap(tuple2 -> {
                                 Permission[] permissions = search.getEntry().getCommandInfo().permissions();

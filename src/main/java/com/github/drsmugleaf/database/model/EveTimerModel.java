@@ -92,15 +92,13 @@ public class EveTimerModel extends Model<EveTimerModel> {
                     return channel.createMessage(message -> {
                         message.setContent("@everyone Structure timer");
 
-                        message.setEmbed(embed -> {
-                            embed
-                                    .setTitle(skipped ? "SKIPPED STRUCTURE ALERT" : "Structure alert")
-                                    .addField("Structure", structure, true)
-                                    .addField("System", system, true)
-                                    .addField("Submitted by", submitterName, true)
-                                    .setFooter(formattedDate, null)
-                                    .setColor(skipped ? Color.RED : Color.GREEN);
-                        });
+                        message.setEmbed(embed -> embed
+                                .setTitle(skipped ? "SKIPPED STRUCTURE ALERT" : "Structure alert")
+                                .addField("Structure", structure, true)
+                                .addField("System", system, true)
+                                .addField("Submitted by", submitterName, true)
+                                .setFooter(formattedDate, null)
+                                .setColor(skipped ? Color.RED : Color.GREEN));
                     });
                 })
                 .subscribe(message -> deleteTimer(timer));
@@ -159,7 +157,7 @@ public class EveTimerModel extends Model<EveTimerModel> {
                 }
 
                 Database.LOGGER.info(
-                        "Scheduled eve structure alert for structure %s in system %s in %s seconds",
+                        "Scheduled eve structure alert for structure {} in system {} in {} seconds",
                         timer.structure, timer.system, timer.date / 1000
                 );
             }

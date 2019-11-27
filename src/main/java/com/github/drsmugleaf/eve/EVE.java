@@ -8,6 +8,6 @@ import org.slf4j.LoggerFactory;
  */
 class EVE {
 
-    static Logger LOGGER = LoggerFactory.getLogger(EVE.class);
+    static final Logger LOGGER = LoggerFactory.getLogger(EVE.class);
 
 }

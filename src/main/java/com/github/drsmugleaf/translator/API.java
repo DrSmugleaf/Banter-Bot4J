@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Created by DrSmugleaf on 18/01/2018.
@@ -26,7 +27,7 @@ public class API {
         }
 
         try {
-            text = URLEncoder.encode(text, "UTF8");
+            text = URLEncoder.encode(text, StandardCharsets.UTF_8);
             URL url = new URL(PATH + "?from=" + from.getCode()+ "&to=" + to.getCode() + "&text=" + text);
 
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();

@@ -19,21 +19,13 @@ import java.util.Objects;
 public abstract class API {
 
     public static final String HOME_URL = "https://dennisreep.nl/dbd/";
-
     public static final String KILLER_PERKS_URL = "https://dennisreep.nl/dbd/perks/killer/";
-
     public static final String SURVIVOR_PERKS_URL = "https://dennisreep.nl/dbd/perks/survivor/";
-
     public static final String KILLERS_URL = "https://dennisreep.nl/dbd/killers/";
-
     public static final String KILLER_ROULETTE_URL = "https://dennisreep.nl/dbd/roulette/killer/";
-
     public static final String SURVIVOR_ROULETTE_URL = "https://dennisreep.nl/dbd/roulette/survivor/";
-
     public static final String IMAGES_PATH = Objects.requireNonNull(API.class.getClassLoader().getResource("deadbydaylight")).getFile();
-
     public static final String PATH = "https://dennisreep.nl/dbd/api/v2/";
-
     protected static final Gson GSON = new GsonBuilder().create();
 
     public static InputStream getDBDLogo() {

@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.deadbydaylight;
+package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
 import com.github.drsmugleaf.Nullable;
 
@@ -10,9 +10,7 @@ import java.io.InputStream;
 public interface ICharacter {
 
     String getName();
-
     InputStream getImage();
-
     @Nullable
     Double getRating();
 

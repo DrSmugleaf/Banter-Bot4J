@@ -17,7 +17,6 @@ import java.util.Queue;
 public class TrackScheduler extends AudioEventAdapter {
 
     private final AudioPlayer PLAYER;
-
     private final Queue<AudioTrack> QUEUE = new LinkedList<>();
 
     @Nullable

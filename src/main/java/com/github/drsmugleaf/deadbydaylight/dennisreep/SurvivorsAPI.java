@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
-import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -11,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 /**
  * Created by DrSmugleaf on 21/04/2019
@@ -18,18 +18,15 @@ import java.util.concurrent.TimeUnit;
 public class SurvivorsAPI extends API {
 
     private static final String SURVIVOR_PERK_DATA_ENDPOINT = "getSurvivorPerkData/";
-
     private static final Supplier<Map<String, Survivor>> SURVIVORS = Suppliers.memoizeWithExpiration(
             SurvivorsAPI::getSurvivorData, 12, TimeUnit.HOURS
-    );
-
+    )::get;
     private static final Supplier<Map<String, String>> SURVIVOR_NAMES = Suppliers.memoizeWithExpiration(
             SurvivorsAPI::getSurvivorNames, 12, TimeUnit.HOURS
-    );
-
+    )::get;
     private static final Supplier<PerkList<SurvivorPerk>> PERKS = Suppliers.memoizeWithExpiration(
             SurvivorsAPI::getPerkData, 12, TimeUnit.HOURS
-    );
+    )::get;
 
     private SurvivorsAPI() {}
 

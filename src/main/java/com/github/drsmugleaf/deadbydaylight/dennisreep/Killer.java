@@ -2,7 +2,6 @@ package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.deadbydaylight.ICharacter;
 import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 

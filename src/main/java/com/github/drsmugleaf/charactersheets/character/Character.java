@@ -11,7 +11,7 @@ import com.github.drsmugleaf.charactersheets.state.State;
 public class Character implements Nameable {
 
     private final String NAME;
-    private Sheet SHEET;
+    private final Sheet SHEET;
     private State STATE;
     private Location LOCATION;
 

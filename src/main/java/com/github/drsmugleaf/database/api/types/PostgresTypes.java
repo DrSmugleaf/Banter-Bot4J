@@ -44,7 +44,6 @@ public enum PostgresTypes implements SQLTypes {
     TINYINT("int2", Byte.class);
 
     private final String NAME;
-
     private final Class<?> CLASS;
 
     PostgresTypes(String name, Class<?> clazz) {

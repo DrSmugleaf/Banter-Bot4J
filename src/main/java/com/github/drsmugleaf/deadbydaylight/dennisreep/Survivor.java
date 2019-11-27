@@ -2,7 +2,6 @@ package com.github.drsmugleaf.deadbydaylight.dennisreep;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.deadbydaylight.ICharacter;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,7 +14,6 @@ import java.io.InputStream;
 public class Survivor implements ICharacter {
 
     private final String NAME;
-
     private final String IMAGE_URL;
 
     public Survivor(String name, String imageURL) {

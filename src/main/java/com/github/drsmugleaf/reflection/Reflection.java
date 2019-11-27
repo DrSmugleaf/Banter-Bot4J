@@ -1,8 +1,5 @@
 package com.github.drsmugleaf.reflection;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -20,8 +17,6 @@ import java.util.stream.Collectors;
  * Created by DrSmugleaf on 21/05/2017.
  */
 public class Reflection {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(Reflection.class);
 
     private final String PACKAGE_NAME;
 
@@ -115,10 +110,12 @@ public class Reflection {
     }
 
     public List<Class<?>> findClassesWithMethodAnnotation(Class<? extends Annotation> annotation) {
-        List<Class<?>> classes = getClasses();
-        return classes.stream().filter(clazz -> {
-            return Arrays.stream(clazz.getDeclaredMethods()).anyMatch(method -> method.isAnnotationPresent(annotation));
-        }).collect(Collectors.toList());
+        return getClasses()
+                .stream()
+                .filter(clazz -> Arrays
+                        .stream(clazz.getDeclaredMethods())
+                        .anyMatch(method -> method.isAnnotationPresent(annotation))
+                ).collect(Collectors.toList());
     }
 
     @SuppressWarnings("unchecked")

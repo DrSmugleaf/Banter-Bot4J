@@ -12,7 +12,7 @@ import java.util.TreeMap;
 public class StatsBuilder implements Builder<StatGroup> {
 
     private final String NAME;
-    private Map<String, Stat> STATS = new TreeMap<>();
+    private final Map<String, Stat> STATS = new TreeMap<>();
 
     public StatsBuilder(String name) {
         NAME = name;
@@ -32,7 +32,8 @@ public class StatsBuilder implements Builder<StatGroup> {
     }
 
     public StatsBuilder setStats(Map<String, Stat> stats) {
-        STATS = stats;
+        STATS.clear();
+        STATS.putAll(stats);
         return this;
     }
 

@@ -13,15 +13,10 @@ import java.lang.annotation.Target;
 public @interface Column {
 
     String name();
-
     String defaultValue() default "";
-
     String columnDefinition() default "";
-
     int length() default 255;
-
     int precision() default 0;
-
     int scale() default 0;
 
     @Retention(RetentionPolicy.RUNTIME)

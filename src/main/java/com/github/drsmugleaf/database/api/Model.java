@@ -71,7 +71,7 @@ public abstract class Model<T extends Model<T>> {
     }
 
     @SuppressWarnings("unchecked")
-    private final void createRequirements() {
+    private void createRequirements() {
         for (TypeResolver column : getColumns().keySet()) {
             Field field = column.FIELD;
 
