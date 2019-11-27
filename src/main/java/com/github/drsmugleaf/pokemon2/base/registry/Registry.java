@@ -28,7 +28,7 @@ public class Registry<T extends Nameable> implements IRegistry<T> {
         this(set.stream().collect(Collectors.toMap(Nameable::getName, Function.identity())));
     }
 
-    public Registry(T... elements) {
+    public Registry(T[] elements) {
         this(Arrays.stream(elements).collect(Collectors.toMap(Nameable::getName, Function.identity())));
     }
 
