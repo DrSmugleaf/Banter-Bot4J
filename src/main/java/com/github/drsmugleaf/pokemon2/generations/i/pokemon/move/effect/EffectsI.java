@@ -19,7 +19,7 @@ public enum EffectsI implements IEffect<IBattlePokemonI> {
 
     NONE {
         @Override
-        public int use(IMoveInformation<IBattlePokemonI> move, IBattlePokemonI user, IBattlePokemonI target) {
+        public int damage(IMoveInformation<IBattlePokemonI> move, IBattlePokemonI user, IBattlePokemonI target) {
             return 0;
         }
 
@@ -131,7 +131,7 @@ public enum EffectsI implements IEffect<IBattlePokemonI> {
     }
 
     @Override
-    public int use(IMoveInformation<IBattlePokemonI> move, IBattlePokemonI user, IBattlePokemonI target) {
+    public int damage(IMoveInformation<IBattlePokemonI> move, IBattlePokemonI user, IBattlePokemonI target) {
         int damage = 0;
         if (move.getCategory().doesDamage()) {
             damage = getDamage(move, user, target);
