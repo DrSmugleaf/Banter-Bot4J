@@ -3,13 +3,16 @@ package com.github.drsmugleaf.pokemon2.generations.i.pokemon.move.effect;
 import com.github.drsmugleaf.pokemon2.base.pokemon.move.IDamageCategory;
 import com.github.drsmugleaf.pokemon2.base.pokemon.move.IMoveInformation;
 import com.github.drsmugleaf.pokemon2.base.pokemon.move.IMoveReport;
+import com.github.drsmugleaf.pokemon2.base.pokemon.move.MoveReport;
 import com.github.drsmugleaf.pokemon2.base.pokemon.move.effect.IEffect;
 import com.github.drsmugleaf.pokemon2.generations.i.pokemon.IBattlePokemonI;
 import com.github.drsmugleaf.pokemon2.generations.i.pokemon.stat.StatsI;
 import com.github.drsmugleaf.pokemon2.generations.i.pokemon.status.NonVolatileStatusesI;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.math.IntMath;
 
 import java.math.RoundingMode;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -121,6 +124,87 @@ public enum EffectsI implements IEffect<IBattlePokemonI> {
         public void effect(IMoveInformation<IBattlePokemonI> move, IBattlePokemonI user, IBattlePokemonI target, IMoveReport<IBattlePokemonI> report) {
             ABSORB.effect(move, user, target, report);
         }
+    },
+    MIRROR_MOVE {
+        // https://www.smogon.com/dp/articles/move_restrictions#mirror
+        private final ImmutableSet<Integer> IGNORED_EFFECTS = ImmutableSet.of(
+                227, // Acupressure
+                268, // Chatter
+                90, // Counter
+                110, // Curse
+                149, // Doom Desire and Future Sight
+                224, // Feint
+                171, // Focus Punch
+                177, // Helping Hand
+                83, // Mimic
+                145, // Mirror Coat
+                179, // Role Play
+                115, // Perish Song
+                144, // Psych Up
+                96, // Sketch
+                162, // Spit Up
+                255, // Struggle
+                58 // Transform
+        );
+
+        private final ImmutableSet<Integer> INCOMPATIBLE_MOVES = ImmutableSet.of(
+                91 // Encore
+        );
+
+        private final ImmutableSet<Integer> CALL_MOVES = ImmutableSet.of(
+                181, // Assist
+                243, // Copycat
+                184, // Magic Coat
+                242, // Me First
+                84, // Metronome
+                10, // Mirror Move
+                174, // Nature Power
+                98, // Sleep Talk
+                196 // Snatch
+        );
+
+        @Override
+        public boolean works(IMoveInformation<IBattlePokemonI> move, IBattlePokemonI user, IBattlePokemonI target) {
+            var lastReport = user.getLastMoveTargetedBy();
+            if (lastReport == null) {
+                return false;
+            }
+
+            int lastEffectID = lastReport.getMove().getEffect().getID();
+            return user.getLastTargetedBy().containsKey(target) &&
+                    user.hasValidTarget() &&
+                    !IGNORED_EFFECTS.contains(lastEffectID) &&
+                    !INCOMPATIBLE_MOVES.contains(lastEffectID) &&
+                    !CALL_MOVES.contains(lastEffectID);
+        }
+
+        @Override
+        public void effect(IMoveInformation<IBattlePokemonI> move, IBattlePokemonI user, IBattlePokemonI target, IMoveReport<IBattlePokemonI> report) {
+            var iterator = user.getLastTargetedBy().values().iterator();
+            IMoveReport<IBattlePokemonI> lastReport = iterator.next();
+            while (iterator.hasNext()) {
+                lastReport = iterator.next();
+            }
+
+            var moveToMirror = lastReport.getMove();
+            target = user.getRandomTarget();
+            moveToMirror.getEffect().target(moveToMirror, user, Objects.requireNonNull(target));
+        }
+
+        @Override
+        public ImmutableSet<Integer> getIgnoredEffects() {
+            return IGNORED_EFFECTS;
+        }
+
+        @Override
+        public ImmutableSet<Integer> getIncompatibleMoves() {
+            return INCOMPATIBLE_MOVES;
+        }
+
+        @Override
+        public ImmutableSet<Integer> getCallMoves() {
+            return CALL_MOVES;
+        }
     };
 
     EffectsI() {}
@@ -128,6 +212,22 @@ public enum EffectsI implements IEffect<IBattlePokemonI> {
     @Override
     public int getID() {
         return ordinal();
+    }
+
+    @Override
+    public IMoveReport<IBattlePokemonI> target(IMoveInformation<IBattlePokemonI> move, IBattlePokemonI user, IBattlePokemonI target) {
+        IMoveReport<IBattlePokemonI> report;
+        if (hits(move, user, target)) {
+            int damage = damage(move, user, target);
+            report = new MoveReport<>(move, user, target, true, damage); // TODO: 29-Nov-19 Targeting
+            if (doesEffect(move, user, target, report)) {
+                effect(move, user, target, report);
+            }
+        } else {
+            report = new MoveReport<>(move, user, target, false, 0);
+        }
+
+        return report;
     }
 
     @Override
