@@ -53,6 +53,11 @@ public abstract class BaseGeneration implements IGeneration {
         return generations;
     }
 
+    @Override
+    public boolean isAfter(IGeneration other) {
+        return getAllPrevious().contains(other);
+    }
+
     @Nullable
     @Override
     public IGeneration getNext() {
@@ -68,6 +73,11 @@ public abstract class BaseGeneration implements IGeneration {
         }
 
         return generations;
+    }
+
+    @Override
+    public boolean isBefore(IGeneration other) {
+        return getAllNext().contains(other);
     }
 
     @Override

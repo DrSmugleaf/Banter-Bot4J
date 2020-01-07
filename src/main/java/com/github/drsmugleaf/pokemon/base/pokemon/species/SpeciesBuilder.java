@@ -1,11 +1,9 @@
 package com.github.drsmugleaf.pokemon.base.pokemon.species;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.pokemon.PokemonGame;
 import com.github.drsmugleaf.pokemon.base.format.FormatRegistry;
 import com.github.drsmugleaf.pokemon.base.format.IFormat;
 import com.github.drsmugleaf.pokemon.base.generation.GenerationRegistry;
-import com.github.drsmugleaf.pokemon.base.generation.IGeneration;
 import com.github.drsmugleaf.pokemon.base.pokemon.stat.type.IStatType;
 import com.github.drsmugleaf.pokemon.base.pokemon.type.IType;
 import com.github.drsmugleaf.pokemon.base.pokemon.type.TypeRegistry;
@@ -14,7 +12,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Created by DrSmugleaf on 03/07/2019
@@ -65,8 +62,7 @@ public abstract class SpeciesBuilder<T extends ISpecies, B extends SpeciesBuilde
 
     @Override
     public B setGenerations(Collection<String> generationNames) {
-        Set<IGeneration> generations = generationNames.stream().map(name -> PokemonGame.get().getGenerations().get(name)).collect(Collectors.toSet());
-        this.generations = new GenerationRegistry(generations);
+        this.generations = new GenerationRegistry(generationNames);
         return getThis();
     }
 

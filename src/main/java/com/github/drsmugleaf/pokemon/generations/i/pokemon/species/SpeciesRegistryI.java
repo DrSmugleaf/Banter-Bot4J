@@ -51,29 +51,28 @@ public class SpeciesRegistryI<T extends ISpecies> extends SpeciesRegistry<T> {
         List<String> alts = new ArrayList<>();
         if (!pokemon.isNull("oob")) {
             oob = pokemon.getJSONObject("oob");
-
             JSONArray altsJson = oob.getJSONArray("alts");
+
             for (int i = 0; i < altsJson.length(); i++) {
                 String altName = altsJson.getString(i);
                 alts.add(altName);
             }
         }
 
-        JSONArray jsonGenerations;
-        List<String> generations = new ArrayList<>();
+        List<String> generationNames = new ArrayList<>();
         if (oob.has("genfamily")) {
-            jsonGenerations = oob.getJSONArray("genfamily");
+            JSONArray jsonGenerations = oob.getJSONArray("genfamily");
             for (int i = 0; i < jsonGenerations.length(); i++) {
-                String generation = jsonGenerations.getString(i);
-                generations.add(generation);
+                String generationName = jsonGenerations.getString(i);
+                generationNames.add(generationName);
             }
         } else {
             for (T previousSpecies : species.values()) {
-                if (previousSpecies.getAlts().contains(name)) {
-                    for (IGeneration generation : previousSpecies.getGenerations().get().values()) {
-                        generations.add(generation.getName());
-                    }
+                if (!previousSpecies.getAlts().contains(name)) {
+                    continue;
                 }
+
+                generationNames.addAll(previousSpecies.getGenerations().getRaw());
             }
         }
 
@@ -99,7 +98,7 @@ public class SpeciesRegistryI<T extends ISpecies> extends SpeciesRegistry<T> {
         // TODO: 07-Nov-19 Add genders
         return new SpeciesBuilderI<T>()
                 .setName(name)
-                .setGenerations(generations)
+                .setGenerations(generationNames)
                 .addStat(StatsI.HP, hp)
                 .addStat(StatsI.ATTACK, attack)
                 .addStat(StatsI.DEFENSE, defense)

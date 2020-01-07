@@ -7,7 +7,7 @@ import com.github.drsmugleaf.pokemon.base.pokemon.stat.type.IStatType;
 import com.github.drsmugleaf.pokemon.base.pokemon.type.TypeRegistry;
 import com.github.drsmugleaf.pokemon.base.registry.Columns;
 import com.github.drsmugleaf.pokemon.base.registry.IColumns;
-import com.github.drsmugleaf.pokemon.base.registry.IRegistrable;
+import com.github.drsmugleaf.pokemon.base.registry.IEntry;
 import com.github.drsmugleaf.pokemon.generations.ii.pokemon.gender.IGender;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public interface ISpecies extends IRegistrable {
+public interface ISpecies extends IEntry {
 
     @Override
     default Map<String, String> export() {

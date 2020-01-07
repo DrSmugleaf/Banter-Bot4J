@@ -2,14 +2,14 @@ package com.github.drsmugleaf.pokemon.generations.ii.item;
 
 import com.github.drsmugleaf.pokemon.base.registry.Columns;
 import com.github.drsmugleaf.pokemon.base.registry.IColumns;
-import com.github.drsmugleaf.pokemon.base.registry.IRegistrable;
+import com.github.drsmugleaf.pokemon.base.registry.IEntry;
 
 import java.util.Map;
 
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public interface IItem extends IRegistrable {
+public interface IItem extends IEntry {
 
     @Override
     default Map<String, String> export() {

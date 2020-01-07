@@ -10,7 +10,7 @@ import com.github.drsmugleaf.pokemon.base.pokemon.stat.type.StatTypeRegistry;
 import com.github.drsmugleaf.pokemon.base.pokemon.type.TypeRegistry;
 import com.github.drsmugleaf.pokemon.base.registry.Columns;
 import com.github.drsmugleaf.pokemon.base.registry.IColumns;
-import com.github.drsmugleaf.pokemon.base.registry.IRegistrable;
+import com.github.drsmugleaf.pokemon.base.registry.IEntry;
 
 import java.util.Map;
 import java.util.SortedSet;
@@ -18,7 +18,7 @@ import java.util.SortedSet;
 /**
  * Created by DrSmugleaf on 01/07/2019
  */
-public interface IGeneration extends IRegistrable, Comparable<IGeneration> {
+public interface IGeneration extends IEntry, Comparable<IGeneration> {
 
     @Override
     default Map<String, String> export() {
@@ -36,17 +36,21 @@ public interface IGeneration extends IRegistrable, Comparable<IGeneration> {
 
         return columns.get();
     }
+
     @Override
     default int compareTo(IGeneration o) {
         return Integer.compare(getID(), o.getID());
     }
+
     int getID();
     @Nullable
     IGeneration getPrevious();
     SortedSet<IGeneration> getAllPrevious();
+    boolean isAfter(IGeneration other);
     @Nullable
     IGeneration getNext();
     SortedSet<IGeneration> getAllNext();
+    boolean isBefore(IGeneration other);
     Smogon getSmogon();
     SpeciesRegistry<? extends ISpecies> getPokedex();
     TypeRegistry getTypes();

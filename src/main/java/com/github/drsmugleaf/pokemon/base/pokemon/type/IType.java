@@ -2,7 +2,7 @@ package com.github.drsmugleaf.pokemon.base.pokemon.type;
 
 import com.github.drsmugleaf.pokemon.base.registry.Columns;
 import com.github.drsmugleaf.pokemon.base.registry.IColumns;
-import com.github.drsmugleaf.pokemon.base.registry.IRegistrable;
+import com.github.drsmugleaf.pokemon.base.registry.IEntry;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.Map;
@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Created by DrSmugleaf on 05/07/2019
  */
-public interface IType extends IRegistrable {
+public interface IType extends IEntry {
 
     @Override
     default Map<String, String> export() {

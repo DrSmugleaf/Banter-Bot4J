@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 /**
  * Created by DrSmugleaf on 06/07/2019
  */
-public class Registry<T extends IRegistrable> implements IRegistry<T> {
+public class Registry<T extends IEntry> implements IRegistry<T> {
 
     private final ImmutableMap<String, T> MAP;
 
@@ -30,19 +30,19 @@ public class Registry<T extends IRegistrable> implements IRegistry<T> {
         this(Arrays.stream(elements).collect(Collectors.toMap(Nameable::getName, Function.identity())));
     }
 
-    public static <T extends IRegistrable> Registry<T> from() {
+    public static <T extends IEntry> Registry<T> from() {
         return new Registry<>();
     }
 
-    public static <T extends IRegistrable> Registry<T> from(Map<String, T> map) {
+    public static <T extends IEntry> Registry<T> from(Map<String, T> map) {
         return new Registry<>(map);
     }
 
-    public static <T extends IRegistrable> Registry<T> from(Collection<T> set) {
+    public static <T extends IEntry> Registry<T> from(Collection<T> set) {
         return new Registry<>(set);
     }
 
-    public static <T extends IRegistrable> Registry<T> from(T[] elements) {
+    public static <T extends IEntry> Registry<T> from(T[] elements) {
         return new Registry<>(elements);
     }
 

@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Created by DrSmugleaf on 13/11/2019
  */
-public interface IRegistry<T extends IRegistrable> {
+public interface IRegistry<T extends IEntry> {
 
     ImmutableMap<String, T> get();
     T get(String name);

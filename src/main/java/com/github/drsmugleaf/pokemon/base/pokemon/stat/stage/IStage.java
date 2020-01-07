@@ -3,14 +3,14 @@ package com.github.drsmugleaf.pokemon.base.pokemon.stat.stage;
 import com.github.drsmugleaf.pokemon.base.pokemon.stat.IStat;
 import com.github.drsmugleaf.pokemon.base.registry.Columns;
 import com.github.drsmugleaf.pokemon.base.registry.IColumns;
-import com.github.drsmugleaf.pokemon.base.registry.IRegistrable;
+import com.github.drsmugleaf.pokemon.base.registry.IEntry;
 
 import java.util.Map;
 
 /**
  * Created by DrSmugleaf on 15/11/2019
  */
-public interface IStage extends IRegistrable {
+public interface IStage extends IEntry {
 
     @Override
     default Map<String, String> export() {
