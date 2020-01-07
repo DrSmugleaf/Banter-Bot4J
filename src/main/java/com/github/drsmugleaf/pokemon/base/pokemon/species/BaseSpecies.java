@@ -1,8 +1,9 @@
 package com.github.drsmugleaf.pokemon.base.pokemon.species;
 
-import com.github.drsmugleaf.pokemon.base.format.IFormat;
+import com.github.drsmugleaf.pokemon.base.format.FormatRegistry;
+import com.github.drsmugleaf.pokemon.base.generation.GenerationRegistry;
 import com.github.drsmugleaf.pokemon.base.pokemon.stat.type.IStatType;
-import com.github.drsmugleaf.pokemon.base.pokemon.type.IType;
+import com.github.drsmugleaf.pokemon.base.pokemon.type.TypeRegistry;
 import com.github.drsmugleaf.pokemon.generations.ii.pokemon.gender.IGender;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -13,11 +14,11 @@ import org.jetbrains.annotations.Contract;
  */
 public abstract class BaseSpecies<T extends BaseSpecies<T>> implements ISpecies {
 
-    private final ImmutableSet<String> GENERATIONS;
-    private final ImmutableSet<IType> TYPES;
-    private final ImmutableSet<IFormat> TIERS;
+    private final GenerationRegistry GENERATIONS;
+    private final TypeRegistry TYPES;
+    private final FormatRegistry TIERS;
     private final ImmutableMap<IStatType, Integer> STATS;
-    private final ImmutableSet<T> EVOLUTIONS;
+    private final Pokedex<T> EVOLUTIONS;
     private final double HEIGHT;
     private final double WEIGHT;
     private final ImmutableSet<IGender> GENDERS;
@@ -51,17 +52,17 @@ public abstract class BaseSpecies<T extends BaseSpecies<T>> implements ISpecies 
     }
 
     @Override
-    public ImmutableSet<String> getGenerations() {
+    public GenerationRegistry getGenerations() {
         return GENERATIONS;
     }
 
     @Override
-    public ImmutableSet<IType> getSpeciesTypes() {
+    public TypeRegistry getSpeciesTypes() {
         return TYPES;
     }
 
     @Override
-    public ImmutableSet<IFormat> getTiers() {
+    public FormatRegistry getTiers() {
         return TIERS;
     }
 
@@ -71,7 +72,7 @@ public abstract class BaseSpecies<T extends BaseSpecies<T>> implements ISpecies 
     }
 
     @Override
-    public ImmutableSet<T> getEvolutions() {
+    public Pokedex<T> getEvolutions() {
         return EVOLUTIONS;
     }
 

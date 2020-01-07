@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.pokemon.generations.iii.pokemon;
 
 import com.github.drsmugleaf.pokemon.base.pokemon.IPokemon;
+import com.github.drsmugleaf.pokemon.base.pokemon.species.Pokedex;
 import com.github.drsmugleaf.pokemon.generations.iii.pokemon.ability.IAbility;
 import com.github.drsmugleaf.pokemon.generations.iii.pokemon.species.ISpeciesIII;
 import com.github.drsmugleaf.pokemon.generations.iii.pokemon.stat.nature.INature;
@@ -22,7 +23,7 @@ public interface IPokemonIII<T extends IPokemonIII<T>> extends IPokemon<T>, ISpe
     }
 
     @Override
-    default ImmutableSet<? extends ISpeciesIII> getEvolutions() {
+    default Pokedex<? extends ISpeciesIII> getEvolutions() {
         return getSpecies().getEvolutions();
     }
 

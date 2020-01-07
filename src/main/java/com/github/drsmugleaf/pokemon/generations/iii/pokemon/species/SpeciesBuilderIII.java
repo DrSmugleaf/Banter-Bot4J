@@ -1,9 +1,9 @@
 package com.github.drsmugleaf.pokemon.generations.iii.pokemon.species;
 
-import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon.base.builder.IBuilder;
 import com.github.drsmugleaf.pokemon.base.pokemon.species.ISpecies;
 import com.github.drsmugleaf.pokemon.base.pokemon.species.ISpeciesBuilder;
+import com.github.drsmugleaf.pokemon.base.pokemon.species.Pokedex;
 import com.github.drsmugleaf.pokemon.base.pokemon.species.SpeciesBuilder;
 import com.github.drsmugleaf.pokemon.generations.iii.pokemon.ability.IAbility;
 import com.google.common.collect.ImmutableSet;
@@ -17,8 +17,8 @@ import java.util.Set;
  */
 public class SpeciesBuilderIII<T extends ISpecies> extends SpeciesBuilder<T, SpeciesBuilderIII<T>> implements ISpeciesBuilderIII<T, SpeciesBuilderIII<T>>, IBuilder<SpeciesBuilderIII<T>> {
 
-    @Nullable
     private Set<IAbility> abilities = new HashSet<>();
+    private Pokedex<T> evolutions; // TODO: 06-Jul-19 Add valid evolutions
 
     public SpeciesBuilderIII() {
         super();
@@ -31,6 +31,17 @@ public class SpeciesBuilderIII<T extends ISpecies> extends SpeciesBuilder<T, Spe
     public SpeciesBuilderIII(ISpeciesBuilderIII<T, ?> builder) {
         super(builder);
         abilities = builder.getAbilities();
+    }
+
+    @Override
+    public Pokedex<T> getEvolutions() {
+        return evolutions;
+    }
+
+    @Override
+    public SpeciesBuilderIII<T> setEvolutions(Collection<T> evolutions) {
+        this.evolutions = new Pokedex<>(evolutions);
+        return this;
     }
 
     @Override

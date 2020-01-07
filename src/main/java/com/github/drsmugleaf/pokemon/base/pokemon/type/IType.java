@@ -1,12 +1,24 @@
 package com.github.drsmugleaf.pokemon.base.pokemon.type;
 
-import com.github.drsmugleaf.pokemon.base.nameable.Nameable;
+import com.github.drsmugleaf.pokemon.base.registry.Columns;
+import com.github.drsmugleaf.pokemon.base.registry.IColumns;
+import com.github.drsmugleaf.pokemon.base.registry.IRegistrable;
 import com.google.common.collect.ImmutableSet;
+
+import java.util.Map;
 
 /**
  * Created by DrSmugleaf on 05/07/2019
  */
-public interface IType extends Nameable {
+public interface IType extends IRegistrable {
+
+    @Override
+    default Map<String, String> export() {
+        IColumns columns = new Columns();
+        columns.put("name", getName());
+
+        return columns.get();
+    }
 
     ImmutableSet<String> getWeaknesses();
     ImmutableSet<String> getResistances();

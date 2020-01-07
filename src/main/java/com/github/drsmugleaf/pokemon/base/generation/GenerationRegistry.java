@@ -10,6 +10,7 @@ import com.github.drsmugleaf.pokemon.generations.v.generation.GenerationV;
 import com.github.drsmugleaf.pokemon.generations.vi.generation.GenerationVI;
 import com.github.drsmugleaf.pokemon.generations.vii.generation.GenerationVII;
 
+import java.util.Collection;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -19,13 +20,6 @@ import java.util.TreeMap;
 public class GenerationRegistry extends Registry<IGeneration> {
 
     private final SortedMap<Integer, IGeneration> GENERATIONS_BY_ID = new TreeMap<>();
-
-    public GenerationRegistry(IGeneration... generations) {
-        super(generations);
-        for (IGeneration generation : generations) {
-            GENERATIONS_BY_ID.put(generation.getID(), generation);
-        }
-    }
 
     public GenerationRegistry() {
         this(
@@ -37,6 +31,17 @@ public class GenerationRegistry extends Registry<IGeneration> {
                 GenerationVI.get(),
                 GenerationVII.get()
         );
+    }
+
+    public GenerationRegistry(IGeneration... generations) {
+        super(generations);
+        for (IGeneration generation : generations) {
+            GENERATIONS_BY_ID.put(generation.getID(), generation);
+        }
+    }
+
+    public GenerationRegistry(Collection<IGeneration> generations) {
+        super(generations.toArray(new IGeneration[0]));
     }
 
     public SortedMap<Integer, IGeneration> getByID() {

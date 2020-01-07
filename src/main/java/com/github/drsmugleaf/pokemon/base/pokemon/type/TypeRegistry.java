@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,10 @@ public class TypeRegistry extends Registry<IType> {
 
     public TypeRegistry(IGeneration generation) {
         super(getAll(generation));
+    }
+
+    public TypeRegistry(Collection<IType> types) {
+        super(types);
     }
 
     private static Map<String, IType> getAll(IGeneration generation) {

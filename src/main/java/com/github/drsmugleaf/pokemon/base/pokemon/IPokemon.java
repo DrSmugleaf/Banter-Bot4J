@@ -1,11 +1,14 @@
 package com.github.drsmugleaf.pokemon.base.pokemon;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.pokemon.base.format.IFormat;
+import com.github.drsmugleaf.pokemon.base.format.FormatRegistry;
+import com.github.drsmugleaf.pokemon.base.generation.GenerationRegistry;
 import com.github.drsmugleaf.pokemon.base.pokemon.species.ISpecies;
+import com.github.drsmugleaf.pokemon.base.pokemon.species.Pokedex;
 import com.github.drsmugleaf.pokemon.base.pokemon.stat.IStatHandler;
 import com.github.drsmugleaf.pokemon.base.pokemon.stat.type.IStatType;
 import com.github.drsmugleaf.pokemon.base.pokemon.type.IType;
+import com.github.drsmugleaf.pokemon.base.pokemon.type.TypeRegistry;
 import com.github.drsmugleaf.pokemon.generations.ii.item.IItem;
 import com.github.drsmugleaf.pokemon.generations.ii.pokemon.gender.IGender;
 import com.google.common.collect.ImmutableMap;
@@ -37,17 +40,17 @@ public interface IPokemon<T extends IPokemon<T>> extends ISpecies {
     void heal(int amount);
 
     @Override
-    default ImmutableSet<String> getGenerations() {
+    default GenerationRegistry getGenerations() {
         return getSpecies().getGenerations();
     }
 
     @Override
-    default ImmutableSet<IType> getSpeciesTypes() {
+    default TypeRegistry getSpeciesTypes() {
         return getSpecies().getSpeciesTypes();
     }
 
     @Override
-    default ImmutableSet<IFormat> getTiers() {
+    default FormatRegistry getTiers() {
         return getSpecies().getTiers();
     }
 
@@ -57,7 +60,7 @@ public interface IPokemon<T extends IPokemon<T>> extends ISpecies {
     }
 
     @Override
-    default ImmutableSet<? extends ISpecies> getEvolutions() {
+    default Pokedex<? extends ISpecies> getEvolutions() {
         return getSpecies().getEvolutions();
     }
 

@@ -1,12 +1,24 @@
 package com.github.drsmugleaf.pokemon.base.pokemon.stat.stage;
 
-import com.github.drsmugleaf.pokemon.base.nameable.Nameable;
 import com.github.drsmugleaf.pokemon.base.pokemon.stat.IStat;
+import com.github.drsmugleaf.pokemon.base.registry.Columns;
+import com.github.drsmugleaf.pokemon.base.registry.IColumns;
+import com.github.drsmugleaf.pokemon.base.registry.IRegistrable;
+
+import java.util.Map;
 
 /**
  * Created by DrSmugleaf on 15/11/2019
  */
-public interface IStage extends Nameable {
+public interface IStage extends IRegistrable {
+
+    @Override
+    default Map<String, String> export() {
+        IColumns columns = new Columns();
+        columns.put("name", getName());
+
+        return columns.get();
+    }
 
     int getStep();
     default double getPermanentStatMultiplier() {
@@ -23,7 +35,7 @@ public interface IStage extends Nameable {
         return dividend / divisor;
     }
     double getTemporaryStatMultiplier();
-    default double getStatMultiplier(IStat stat) {
+    default double getStatMultiplier(IStat<?> stat) {
         return stat.isPermanent() ? getPermanentStatMultiplier() : getTemporaryStatMultiplier();
     }
     @Override

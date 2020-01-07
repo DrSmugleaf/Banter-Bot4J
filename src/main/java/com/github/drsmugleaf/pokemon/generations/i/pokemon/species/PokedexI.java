@@ -66,7 +66,9 @@ public class PokedexI<T extends ISpecies> extends Pokedex<T> {
         } else {
             for (T previousSpecies : species.values()) {
                 if (previousSpecies.getAlts().contains(name)) {
-                    generations.addAll(previousSpecies.getGenerations());
+                    for (IGeneration generation : previousSpecies.getGenerations().get().values()) {
+                        generations.add(generation.getName());
+                    }
                 }
             }
         }
@@ -79,7 +81,7 @@ public class PokedexI<T extends ISpecies> extends Pokedex<T> {
         double weight = pokemon.getDouble("weight");
         double height = pokemon.getDouble("height");
 
-        List<? extends IType> types = gen.getTypes().fromJson(pokemon);
+        List<IType> types = gen.getTypes().fromJson(pokemon);
 
         JSONArray jsonFormats = pokemon.getJSONArray("formats");
         Set<IFormat> formats = new HashSet<>();

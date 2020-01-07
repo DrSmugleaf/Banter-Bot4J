@@ -1,30 +1,33 @@
 package com.github.drsmugleaf.pokemon.base.pokemon.species;
 
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.pokemon.PokemonGame;
+import com.github.drsmugleaf.pokemon.base.format.FormatRegistry;
 import com.github.drsmugleaf.pokemon.base.format.IFormat;
+import com.github.drsmugleaf.pokemon.base.generation.GenerationRegistry;
+import com.github.drsmugleaf.pokemon.base.generation.IGeneration;
 import com.github.drsmugleaf.pokemon.base.pokemon.stat.type.IStatType;
 import com.github.drsmugleaf.pokemon.base.pokemon.type.IType;
+import com.github.drsmugleaf.pokemon.base.pokemon.type.TypeRegistry;
 import com.github.drsmugleaf.pokemon.generations.ii.pokemon.gender.IGender;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by DrSmugleaf on 03/07/2019
  */
-public class SpeciesBuilder<T extends ISpecies, B extends SpeciesBuilder<T, B> & ISpeciesBuilder<T, B>> implements ISpeciesBuilder<T, B> {
+public abstract class SpeciesBuilder<T extends ISpecies, B extends SpeciesBuilder<T, B> & ISpeciesBuilder<T, B>> implements ISpeciesBuilder<T, B> {
 
     @Nullable
     private String name;
-    private Set<String> generations = new HashSet<>();
-    private Set<IType> types = new HashSet<>();
-    private Set<IFormat> tiers = new HashSet<>();
+    private GenerationRegistry generations;
+    private TypeRegistry types;
+    private FormatRegistry tiers;
     private Map<IStatType, Integer> stats = new HashMap<>();
-    private Set<T> evolutions = new HashSet<>(); // TODO: 06-Jul-19 Add valid evolutions
-    @Nullable
     private Double weight;
-    @Nullable
     private Double height;
     private Set<IGender> genders = new HashSet<>(); // TODO: 06-Jul-19 Add valid genders
     private Set<String> alts = new HashSet<>();
@@ -37,7 +40,6 @@ public class SpeciesBuilder<T extends ISpecies, B extends SpeciesBuilder<T, B> &
         types = builder.getTypes();
         tiers = builder.getTiers();
         stats = builder.getStats();
-        evolutions = builder.getEvolutions();
         weight = builder.getWeight();
         height = builder.getHeight();
         genders = builder.getGenders();
@@ -57,35 +59,36 @@ public class SpeciesBuilder<T extends ISpecies, B extends SpeciesBuilder<T, B> &
     }
 
     @Override
-    public ImmutableSet<String> getGenerations() {
-        return ImmutableSet.copyOf(generations);
+    public GenerationRegistry getGenerations() {
+        return generations;
     }
 
     @Override
-    public B setGenerations(Collection<String> generations) {
-        this.generations = new HashSet<>(generations);
+    public B setGenerations(Collection<String> generationNames) {
+        Set<IGeneration> generations = generationNames.stream().map(name -> PokemonGame.get().getGenerations().get(name)).collect(Collectors.toSet());
+        this.generations = new GenerationRegistry(generations);
         return getThis();
     }
 
     @Override
-    public ImmutableSet<IType> getTypes() {
-        return ImmutableSet.copyOf(types);
+    public TypeRegistry getTypes() {
+        return types;
     }
 
     @Override
-    public B setTypes(Collection<? extends IType> types) {
-        this.types = new HashSet<>(types);
+    public B setTypes(Collection<IType> types) {
+        this.types = new TypeRegistry(types);
         return getThis();
     }
 
     @Override
-    public ImmutableSet<IFormat> getTiers() {
-        return ImmutableSet.copyOf(tiers);
+    public FormatRegistry getTiers() {
+        return tiers;
     }
 
     @Override
     public B setTiers(Collection<IFormat> tiers) {
-        this.tiers = new HashSet<>(tiers);
+        this.tiers = new FormatRegistry(tiers);
         return getThis();
     }
 
@@ -107,18 +110,6 @@ public class SpeciesBuilder<T extends ISpecies, B extends SpeciesBuilder<T, B> &
     }
 
     @Override
-    public ImmutableSet<T> getEvolutions() {
-        return ImmutableSet.copyOf(evolutions);
-    }
-
-    @Override
-    public B setEvolutions(Collection<T> evolutions) {
-        this.evolutions = new HashSet<>(evolutions);
-        return getThis();
-    }
-
-    @Nullable
-    @Override
     public Double getWeight() {
         return weight;
     }
@@ -129,7 +120,6 @@ public class SpeciesBuilder<T extends ISpecies, B extends SpeciesBuilder<T, B> &
         return getThis();
     }
 
-    @Nullable
     @Override
     public Double getHeight() {
         return height;
