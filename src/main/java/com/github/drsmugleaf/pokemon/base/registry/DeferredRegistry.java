@@ -59,6 +59,10 @@ public class DeferredRegistry<T extends IEntry> implements IDeferredRegistry<T> 
 
     @Override
     public T get(String name) {
+        if (fullRegistry != null) {
+            fullRegistry.get(name);
+        }
+
         T entry;
         if (!MAP.containsKey(name)) {
             entry = LOOKUP.apply(name);
