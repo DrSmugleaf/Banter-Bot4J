@@ -3,7 +3,7 @@ package com.github.drsmugleaf.pokemon.generations.i.pokemon.species;
 import com.github.drsmugleaf.pokemon.base.format.IFormat;
 import com.github.drsmugleaf.pokemon.base.generation.IGeneration;
 import com.github.drsmugleaf.pokemon.base.pokemon.species.ISpecies;
-import com.github.drsmugleaf.pokemon.base.pokemon.species.Pokedex;
+import com.github.drsmugleaf.pokemon.base.pokemon.species.SpeciesRegistry;
 import com.github.drsmugleaf.pokemon.base.pokemon.type.IType;
 import com.github.drsmugleaf.pokemon.generations.i.pokemon.stat.StatsI;
 import org.json.JSONArray;
@@ -15,9 +15,13 @@ import java.util.function.Function;
 /**
  * Created by DrSmugleaf on 06/07/2019
  */
-public class PokedexI<T extends ISpecies> extends Pokedex<T> {
+public class SpeciesRegistryI<T extends ISpecies> extends SpeciesRegistry<T> {
 
-    public PokedexI(IGeneration generation, Function<SpeciesBuilderI<T>, T> constructor) {
+    public SpeciesRegistryI(Collection<T> set) {
+        super(set);
+    }
+
+    public SpeciesRegistryI(IGeneration generation, Function<SpeciesBuilderI<T>, T> constructor) {
         super(getAll(generation, constructor));
     }
 

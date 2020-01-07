@@ -48,7 +48,7 @@ public interface ISpecies extends IRegistrable {
     TypeRegistry getSpeciesTypes();
     FormatRegistry getTiers();
     ImmutableMap<IStatType, Integer> getSpeciesStats();
-    Pokedex<? extends ISpecies> getEvolutions();
+    SpeciesRegistry<? extends ISpecies> getEvolutions();
     double getHeight();
     double getWeight();
     ImmutableSet<IGender> getGenders();

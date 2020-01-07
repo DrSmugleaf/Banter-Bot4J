@@ -1,10 +1,10 @@
 package com.github.drsmugleaf.pokemon.generations.iii.generation;
 
 import com.github.drsmugleaf.pokemon.base.game.GameRegistry;
-import com.github.drsmugleaf.pokemon.base.pokemon.species.Pokedex;
+import com.github.drsmugleaf.pokemon.base.pokemon.species.SpeciesRegistry;
 import com.github.drsmugleaf.pokemon.base.pokemon.stat.type.StatTypeRegistry;
 import com.github.drsmugleaf.pokemon.generations.iii.game.GamesIII;
-import com.github.drsmugleaf.pokemon.generations.iii.pokemon.species.PokedexIII;
+import com.github.drsmugleaf.pokemon.generations.iii.pokemon.species.SpeciesRegistryIII;
 import com.github.drsmugleaf.pokemon.generations.iii.pokemon.species.SpeciesIII;
 import com.github.drsmugleaf.pokemon.generations.iii.pokemon.stat.StatsIII;
 import org.jetbrains.annotations.Contract;
@@ -17,7 +17,7 @@ public class GenerationIII extends BaseGenerationIII {
     private static final GenerationIII INSTANCE = new GenerationIII();
 
     private final GameRegistry GAMES = new GameRegistry(GamesIII.values());
-    private final Pokedex<SpeciesIII> POKEDEX = new PokedexIII<>(this, SpeciesIII::new);
+    private final SpeciesRegistry<SpeciesIII> POKEDEX = new SpeciesRegistryIII<>(this, SpeciesIII::new);
     private final StatTypeRegistry STATS = new StatTypeRegistry(StatsIII.values());
 
     protected GenerationIII() {
@@ -35,7 +35,7 @@ public class GenerationIII extends BaseGenerationIII {
     }
 
     @Override
-    public Pokedex<SpeciesIII> getPokedex() {
+    public SpeciesRegistry<SpeciesIII> getPokedex() {
         return POKEDEX;
     }
 

@@ -30,7 +30,7 @@ public interface ISpeciesBuilder<T extends ISpecies, B extends ISpeciesBuilder<T
     ImmutableMap<IStatType, Integer> getStats();
     B addStat(IStatType stat, Integer amount);
     B setStats(Map<IStatType, Integer> stats);
-    Pokedex<T> getEvolutions();
+    SpeciesRegistry<T> getEvolutions();
     B setEvolutions(Collection<T> evolutions);
     Double getWeight();
     B setWeight(double weight);

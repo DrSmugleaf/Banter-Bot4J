@@ -18,7 +18,7 @@ public abstract class BaseSpecies<T extends BaseSpecies<T>> implements ISpecies 
     private final TypeRegistry TYPES;
     private final FormatRegistry TIERS;
     private final ImmutableMap<IStatType, Integer> STATS;
-    private final Pokedex<T> EVOLUTIONS;
+    private final SpeciesRegistry<T> EVOLUTIONS;
     private final double HEIGHT;
     private final double WEIGHT;
     private final ImmutableSet<IGender> GENDERS;
@@ -72,7 +72,7 @@ public abstract class BaseSpecies<T extends BaseSpecies<T>> implements ISpecies 
     }
 
     @Override
-    public Pokedex<T> getEvolutions() {
+    public SpeciesRegistry<T> getEvolutions() {
         return EVOLUTIONS;
     }
 

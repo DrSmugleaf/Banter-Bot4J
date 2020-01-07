@@ -5,7 +5,7 @@ import com.github.drsmugleaf.pokemon.base.external.Smogon;
 import com.github.drsmugleaf.pokemon.base.format.FormatRegistry;
 import com.github.drsmugleaf.pokemon.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon.base.pokemon.species.ISpecies;
-import com.github.drsmugleaf.pokemon.base.pokemon.species.Pokedex;
+import com.github.drsmugleaf.pokemon.base.pokemon.species.SpeciesRegistry;
 import com.github.drsmugleaf.pokemon.base.pokemon.stat.type.StatTypeRegistry;
 import com.github.drsmugleaf.pokemon.base.pokemon.type.TypeRegistry;
 import com.github.drsmugleaf.pokemon.base.registry.Columns;
@@ -48,7 +48,7 @@ public interface IGeneration extends IRegistrable, Comparable<IGeneration> {
     IGeneration getNext();
     SortedSet<IGeneration> getAllNext();
     Smogon getSmogon();
-    Pokedex<? extends ISpecies> getPokedex();
+    SpeciesRegistry<? extends ISpecies> getPokedex();
     TypeRegistry getTypes();
     FormatRegistry getFormats();
     StatTypeRegistry getStats();

@@ -1,9 +1,9 @@
 package com.github.drsmugleaf.pokemon.generations.ii.generation;
 
 import com.github.drsmugleaf.pokemon.base.game.GameRegistry;
-import com.github.drsmugleaf.pokemon.base.pokemon.species.Pokedex;
+import com.github.drsmugleaf.pokemon.base.pokemon.species.SpeciesRegistry;
 import com.github.drsmugleaf.pokemon.base.pokemon.stat.type.StatTypeRegistry;
-import com.github.drsmugleaf.pokemon.generations.i.pokemon.species.PokedexI;
+import com.github.drsmugleaf.pokemon.generations.i.pokemon.species.SpeciesRegistryI;
 import com.github.drsmugleaf.pokemon.generations.ii.game.GamesII;
 import com.github.drsmugleaf.pokemon.generations.ii.pokemon.species.SpeciesII;
 import com.github.drsmugleaf.pokemon.generations.ii.pokemon.stat.StatsII;
@@ -17,7 +17,7 @@ public class GenerationII extends BaseGenerationII {
     private static final GenerationII INSTANCE = new GenerationII();
 
     private final GameRegistry GAMES = new GameRegistry(GamesII.values());
-    private final Pokedex<SpeciesII> POKEDEX = new PokedexI<>(this, SpeciesII::new);
+    private final SpeciesRegistry<SpeciesII> POKEDEX = new SpeciesRegistryI<>(this, SpeciesII::new);
     private final StatTypeRegistry STATS = new StatTypeRegistry(StatsII.values());
 
     private GenerationII() {
@@ -35,7 +35,7 @@ public class GenerationII extends BaseGenerationII {
     }
 
     @Override
-    public Pokedex<SpeciesII> getPokedex() {
+    public SpeciesRegistry<SpeciesII> getPokedex() {
         return POKEDEX;
     }
 

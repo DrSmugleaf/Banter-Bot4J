@@ -4,7 +4,7 @@ import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.pokemon.base.format.FormatRegistry;
 import com.github.drsmugleaf.pokemon.base.generation.GenerationRegistry;
 import com.github.drsmugleaf.pokemon.base.pokemon.species.ISpecies;
-import com.github.drsmugleaf.pokemon.base.pokemon.species.Pokedex;
+import com.github.drsmugleaf.pokemon.base.pokemon.species.SpeciesRegistry;
 import com.github.drsmugleaf.pokemon.base.pokemon.stat.IStatHandler;
 import com.github.drsmugleaf.pokemon.base.pokemon.stat.type.IStatType;
 import com.github.drsmugleaf.pokemon.base.pokemon.type.IType;
@@ -60,7 +60,7 @@ public interface IPokemon<T extends IPokemon<T>> extends ISpecies {
     }
 
     @Override
-    default Pokedex<? extends ISpecies> getEvolutions() {
+    default SpeciesRegistry<? extends ISpecies> getEvolutions() {
         return getSpecies().getEvolutions();
     }
 

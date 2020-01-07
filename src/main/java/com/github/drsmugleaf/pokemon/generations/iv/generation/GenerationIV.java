@@ -1,11 +1,11 @@
 package com.github.drsmugleaf.pokemon.generations.iv.generation;
 
 import com.github.drsmugleaf.pokemon.base.game.GameRegistry;
-import com.github.drsmugleaf.pokemon.base.pokemon.species.Pokedex;
+import com.github.drsmugleaf.pokemon.base.pokemon.species.SpeciesRegistry;
 import com.github.drsmugleaf.pokemon.base.pokemon.stat.type.StatTypeRegistry;
 import com.github.drsmugleaf.pokemon.generations.iii.generation.BaseGenerationIII;
 import com.github.drsmugleaf.pokemon.generations.iii.generation.GenerationIII;
-import com.github.drsmugleaf.pokemon.generations.iii.pokemon.species.PokedexIII;
+import com.github.drsmugleaf.pokemon.generations.iii.pokemon.species.SpeciesRegistryIII;
 import com.github.drsmugleaf.pokemon.generations.iv.game.GamesIV;
 import com.github.drsmugleaf.pokemon.generations.iv.pokemon.species.SpeciesIV;
 import org.jetbrains.annotations.Contract;
@@ -18,7 +18,7 @@ public class GenerationIV extends BaseGenerationIII {
     private static final GenerationIV INSTANCE = new GenerationIV();
 
     private final GameRegistry GAMES = new GameRegistry(GamesIV.values());
-    private final Pokedex<SpeciesIV> POKEDEX = new PokedexIII<>(this, SpeciesIV::new);
+    private final SpeciesRegistry<SpeciesIV> POKEDEX = new SpeciesRegistryIII<>(this, SpeciesIV::new);
     private final StatTypeRegistry STATS = GenerationIII.get().getStats();
 
     private GenerationIV() {
@@ -36,7 +36,7 @@ public class GenerationIV extends BaseGenerationIII {
     }
 
     @Override
-    public Pokedex<SpeciesIV> getPokedex() {
+    public SpeciesRegistry<SpeciesIV> getPokedex() {
         return POKEDEX;
     }
 

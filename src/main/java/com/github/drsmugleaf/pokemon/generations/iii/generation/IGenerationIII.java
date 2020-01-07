@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.pokemon.generations.iii.generation;
 
-import com.github.drsmugleaf.pokemon.base.pokemon.species.Pokedex;
+import com.github.drsmugleaf.pokemon.base.pokemon.species.SpeciesRegistry;
 import com.github.drsmugleaf.pokemon.generations.ii.generation.IGenerationII;
 import com.github.drsmugleaf.pokemon.generations.iii.pokemon.ability.AbilityRegistry;
 import com.github.drsmugleaf.pokemon.generations.iii.pokemon.stat.nature.NatureRegistry;
@@ -12,7 +12,7 @@ import com.github.drsmugleaf.pokemon.generations.iii.pokemon.species.ISpeciesIII
 public interface IGenerationIII extends IGenerationII {
 
     @Override
-    Pokedex<? extends ISpeciesIII> getPokedex();
+    SpeciesRegistry<? extends ISpeciesIII> getPokedex();
     NatureRegistry getNatures();
     AbilityRegistry getAbilities();
 

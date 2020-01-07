@@ -1,10 +1,10 @@
 package com.github.drsmugleaf.pokemon.generations.vi.generation;
 
 import com.github.drsmugleaf.pokemon.base.game.GameRegistry;
-import com.github.drsmugleaf.pokemon.base.pokemon.species.Pokedex;
+import com.github.drsmugleaf.pokemon.base.pokemon.species.SpeciesRegistry;
 import com.github.drsmugleaf.pokemon.base.pokemon.stat.type.StatTypeRegistry;
 import com.github.drsmugleaf.pokemon.generations.iii.generation.BaseGenerationIII;
-import com.github.drsmugleaf.pokemon.generations.iii.pokemon.species.PokedexIII;
+import com.github.drsmugleaf.pokemon.generations.iii.pokemon.species.SpeciesRegistryIII;
 import com.github.drsmugleaf.pokemon.generations.v.generation.GenerationV;
 import com.github.drsmugleaf.pokemon.generations.vi.game.GamesVI;
 import com.github.drsmugleaf.pokemon.generations.vi.pokemon.species.SpeciesVI;
@@ -18,7 +18,7 @@ public class GenerationVI extends BaseGenerationIII {
     private static final GenerationVI INSTANCE = new GenerationVI();
 
     private final GameRegistry GAMES = new GameRegistry(GamesVI.values());
-    private final Pokedex<SpeciesVI> POKEDEX = new PokedexIII<>(this, SpeciesVI::new);
+    private final SpeciesRegistry<SpeciesVI> POKEDEX = new SpeciesRegistryIII<>(this, SpeciesVI::new);
     private final StatTypeRegistry STATS = GenerationV.get().getStats();
 
     private GenerationVI() {
@@ -36,7 +36,7 @@ public class GenerationVI extends BaseGenerationIII {
     }
 
     @Override
-    public Pokedex<SpeciesVI> getPokedex() {
+    public SpeciesRegistry<SpeciesVI> getPokedex() {
         return POKEDEX;
     }
 

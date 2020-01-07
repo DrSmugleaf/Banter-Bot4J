@@ -1,9 +1,9 @@
 package com.github.drsmugleaf.pokemon.generations.viii.generation;
 
 import com.github.drsmugleaf.pokemon.base.game.GameRegistry;
-import com.github.drsmugleaf.pokemon.base.pokemon.species.Pokedex;
+import com.github.drsmugleaf.pokemon.base.pokemon.species.SpeciesRegistry;
 import com.github.drsmugleaf.pokemon.base.pokemon.stat.type.StatTypeRegistry;
-import com.github.drsmugleaf.pokemon.generations.iii.pokemon.species.PokedexIII;
+import com.github.drsmugleaf.pokemon.generations.iii.pokemon.species.SpeciesRegistryIII;
 import com.github.drsmugleaf.pokemon.generations.vii.generation.GenerationVII;
 import com.github.drsmugleaf.pokemon.generations.viii.game.GamesVIII;
 import com.github.drsmugleaf.pokemon.generations.viii.pokemon.species.SpeciesVIII;
@@ -17,7 +17,7 @@ public class GenerationVIII extends BaseGenerationVIII {
     private static final GenerationVIII INSTANCE = new GenerationVIII();
 
     private final GameRegistry GAMES = new GameRegistry(GamesVIII.values());
-    private final Pokedex<SpeciesVIII> POKEDEX = new PokedexIII<>(this, SpeciesVIII::new);
+    private final SpeciesRegistry<SpeciesVIII> POKEDEX = new SpeciesRegistryIII<>(this, SpeciesVIII::new);
     private final StatTypeRegistry STATS = GenerationVII.get().getStats();
 
     private GenerationVIII() {
@@ -40,7 +40,7 @@ public class GenerationVIII extends BaseGenerationVIII {
     }
 
     @Override
-    public Pokedex<SpeciesVIII> getPokedex() {
+    public SpeciesRegistry<SpeciesVIII> getPokedex() {
         return POKEDEX;
     }
 

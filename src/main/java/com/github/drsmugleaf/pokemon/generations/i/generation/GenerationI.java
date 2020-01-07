@@ -2,10 +2,10 @@ package com.github.drsmugleaf.pokemon.generations.i.generation;
 
 import com.github.drsmugleaf.pokemon.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon.base.generation.BaseGeneration;
-import com.github.drsmugleaf.pokemon.base.pokemon.species.Pokedex;
+import com.github.drsmugleaf.pokemon.base.pokemon.species.SpeciesRegistry;
 import com.github.drsmugleaf.pokemon.base.pokemon.stat.type.StatTypeRegistry;
 import com.github.drsmugleaf.pokemon.generations.i.game.GamesI;
-import com.github.drsmugleaf.pokemon.generations.i.pokemon.species.PokedexI;
+import com.github.drsmugleaf.pokemon.generations.i.pokemon.species.SpeciesRegistryI;
 import com.github.drsmugleaf.pokemon.generations.i.pokemon.species.SpeciesI;
 import com.github.drsmugleaf.pokemon.generations.i.pokemon.stat.StatsI;
 import org.jetbrains.annotations.Contract;
@@ -18,7 +18,7 @@ public class GenerationI extends BaseGeneration {
     private static final GenerationI INSTANCE = new GenerationI();
 
     private final GameRegistry GAMES = new GameRegistry(GamesI.values());
-    private final Pokedex<SpeciesI> POKEDEX = new PokedexI<>(this, SpeciesI::new);
+    private final SpeciesRegistry<SpeciesI> POKEDEX = new SpeciesRegistryI<>(this, SpeciesI::new);
     private final StatTypeRegistry STATS = new StatTypeRegistry(StatsI.values());
 
     private GenerationI() {
@@ -36,7 +36,7 @@ public class GenerationI extends BaseGeneration {
     }
 
     @Override
-    public Pokedex<SpeciesI> getPokedex() {
+    public SpeciesRegistry<SpeciesI> getPokedex() {
         return POKEDEX;
     }
 
