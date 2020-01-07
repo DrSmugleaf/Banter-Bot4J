@@ -13,7 +13,7 @@ import java.util.function.Function;
 /**
  * Created by DrSmugleaf on 07/01/2020
  */
-public class DeferredRegistry<T extends IEntry> implements IRegistry<T> {
+public class DeferredRegistry<T extends IEntry> implements IDeferredRegistry<T> {
 
     private final ImmutableSet<String> SET;
     private final Function<String, T> LOOKUP;
@@ -47,6 +47,7 @@ public class DeferredRegistry<T extends IEntry> implements IRegistry<T> {
         return fullRegistry;
     }
 
+    @Override
     public ImmutableSet<String> getRaw() {
         return SET;
     }
