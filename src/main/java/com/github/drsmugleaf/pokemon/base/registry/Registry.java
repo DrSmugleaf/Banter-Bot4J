@@ -18,32 +18,32 @@ public class Registry<T extends IEntry> implements IRegistry<T> {
         MAP = ImmutableMap.of();
     }
 
-    public Registry(Map<String, T> map) {
-        MAP = ImmutableMap.copyOf(map);
+    public Registry(Map<String, T> entries) {
+        MAP = ImmutableMap.copyOf(entries);
     }
 
-    public Registry(Collection<T> collection) {
-        this(collection.stream().collect(Collectors.toMap(Nameable::getName, Function.identity())));
+    public Registry(Collection<T> entries) {
+        this(entries.stream().collect(Collectors.toMap(Nameable::getName, Function.identity())));
     }
 
-    public Registry(T[] elements) {
-        this(Arrays.stream(elements).collect(Collectors.toMap(Nameable::getName, Function.identity())));
+    public Registry(T[] entries) {
+        this(Arrays.stream(entries).collect(Collectors.toMap(Nameable::getName, Function.identity())));
     }
 
     public static <T extends IEntry> Registry<T> from() {
         return new Registry<>();
     }
 
-    public static <T extends IEntry> Registry<T> from(Map<String, T> map) {
-        return new Registry<>(map);
+    public static <T extends IEntry> Registry<T> from(Map<String, T> entries) {
+        return new Registry<>(entries);
     }
 
-    public static <T extends IEntry> Registry<T> from(Collection<T> set) {
-        return new Registry<>(set);
+    public static <T extends IEntry> Registry<T> from(Collection<T> entries) {
+        return new Registry<>(entries);
     }
 
-    public static <T extends IEntry> Registry<T> from(T[] elements) {
-        return new Registry<>(elements);
+    public static <T extends IEntry> Registry<T> from(T[] entries) {
+        return new Registry<>(entries);
     }
 
     @Override

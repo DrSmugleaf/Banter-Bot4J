@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.pokemon.base.registry;
 
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.pokemon.base.nameable.Nameable;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Created by DrSmugleaf on 07/01/2020
@@ -21,13 +23,26 @@ public class DeferredRegistry<T extends IEntry> implements IDeferredRegistry<T> 
     @Nullable
     private Registry<T> fullRegistry = null;
 
-    public DeferredRegistry(Function<String, T> lookup) {
-        SET = ImmutableSet.of();
+    public DeferredRegistry(Map<String, T> entries, Collection<String> names, Function<String, T> lookup) {
+        MAP.putAll(entries);
+        SET = ImmutableSet.copyOf(names);
         LOOKUP = lookup;
+
+        if (SET.size() == MAP.size()) {
+            getFullRegistry();
+        }
     }
 
-    public DeferredRegistry(Collection<String> collection, Function<String, T> lookup) {
-        SET = ImmutableSet.copyOf(collection);
+    public DeferredRegistry(Collection<T> entries, Collection<String> names, Function<String, T> lookup) {
+        this(
+                entries.stream().collect(Collectors.toMap(Nameable::getName, Function.identity())),
+                names,
+                lookup
+        );
+    }
+
+    public DeferredRegistry(Collection<String> names, Function<String, T> lookup) {
+        SET = ImmutableSet.copyOf(names);
         LOOKUP = lookup;
     }
 
