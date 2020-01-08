@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.tak.bot.neural;
 
-import com.github.drsmugleaf.tak.Game;
 import com.github.drsmugleaf.tak.board.Preset;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
 
@@ -9,9 +8,9 @@ import org.deeplearning4j.rl4j.space.DiscreteSpace;
  */
 public class TakSpace extends DiscreteSpace {
 
-    private final Game GAME;
+    private final INeuralGame GAME;
 
-    public TakSpace(Game game, Preset preset) {
+    public TakSpace(INeuralGame game, Preset preset) {
         super(preset.getAllActions().size());
         GAME = game;
     }

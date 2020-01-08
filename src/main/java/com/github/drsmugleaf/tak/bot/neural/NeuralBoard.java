@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * Created by DrSmugleaf on 21/08/2019
  */
-public class NeuralBoard extends Board implements Encodable {
+public class NeuralBoard extends Board implements INeuralBoard, Encodable {
 
     public NeuralBoard(Preset preset) {
         super(preset);

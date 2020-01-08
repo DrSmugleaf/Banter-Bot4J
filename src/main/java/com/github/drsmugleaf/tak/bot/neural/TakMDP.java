@@ -1,8 +1,10 @@
 package com.github.drsmugleaf.tak.bot.neural;
 
 import com.github.drsmugleaf.env.Keys;
-import com.github.drsmugleaf.tak.Game;
-import com.github.drsmugleaf.tak.board.*;
+import com.github.drsmugleaf.tak.board.ICoordinates;
+import com.github.drsmugleaf.tak.board.ISquare;
+import com.github.drsmugleaf.tak.board.Line;
+import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.player.Player;
 import org.deeplearning4j.gym.StepReply;
@@ -26,7 +28,7 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 30/08/2019
  */
-public class TakMDP implements MDP<NeuralBoard, Integer, DiscreteSpace> {
+public class TakMDP implements MDP<INeuralBoard, Integer, DiscreteSpace> {
 
     private static DQNFactoryStdDense.Configuration NET = DQNFactoryStdDense
             .Configuration
@@ -51,13 +53,13 @@ public class TakMDP implements MDP<NeuralBoard, Integer, DiscreteSpace> {
             1000,
             true
     );
-    private static DQNPolicy<NeuralBoard> POLICY;
-    private final Game GAME;
-    private final ObservationSpace<NeuralBoard> OBSERVATION_SPACE;
+    private static DQNPolicy<INeuralBoard> POLICY;
+    private final INeuralGame GAME;
+    private final ObservationSpace<INeuralBoard> OBSERVATION_SPACE;
     private final TakSpace ACTION_SPACE;
 
     public TakMDP(Preset preset) {
-        GAME = new Game(new NeuralBoard(preset), "Neural Bot 1", "Neural Bot 2", NeuralBot::from, NeuralBot::from);
+        GAME = new NeuralGame(new NeuralBoard(preset), "Neural Bot 1", "Neural Bot 2", NeuralBot::from, NeuralBot::from);
         OBSERVATION_SPACE = new ArrayObservationSpace<>(new int[]{preset.getSize() * preset.getSize() * (1 + preset.getStones() * 2)});
         ACTION_SPACE = new TakSpace(GAME, preset);
     }
@@ -74,7 +76,7 @@ public class TakMDP implements MDP<NeuralBoard, Integer, DiscreteSpace> {
         }
 
         TakMDP mdp = new TakMDP(Preset.getDefault());
-        QLearningDiscreteDense<NeuralBoard> dql = new QLearningDiscreteDense<>(mdp, NET, QL, manager);
+        QLearningDiscreteDense<INeuralBoard> dql = new QLearningDiscreteDense<>(mdp, NET, QL, manager);
         POLICY = dql.getPolicy();
         dql.train();
         try {
@@ -86,12 +88,12 @@ public class TakMDP implements MDP<NeuralBoard, Integer, DiscreteSpace> {
         mdp.close();
     }
 
-    public static DQNPolicy<NeuralBoard> getPolicy() {
+    public static DQNPolicy<INeuralBoard> getPolicy() {
         return POLICY;
     }
 
     @Override
-    public ObservationSpace<NeuralBoard> getObservationSpace() {
+    public ObservationSpace<INeuralBoard> getObservationSpace() {
         return OBSERVATION_SPACE;
     }
 
@@ -101,7 +103,7 @@ public class TakMDP implements MDP<NeuralBoard, Integer, DiscreteSpace> {
     }
 
     @Override
-    public NeuralBoard reset() {
+    public INeuralBoard reset() {
         GAME.reset();
         return GAME.getBoard();
     }
@@ -112,13 +114,13 @@ public class TakMDP implements MDP<NeuralBoard, Integer, DiscreteSpace> {
     }
 
     @Override
-    public StepReply<NeuralBoard> step(Integer action) {
+    public StepReply<INeuralBoard> step(Integer action) {
         Player nextPlayer = GAME.getNextPlayer();
         if (!(nextPlayer instanceof NeuralBot)) {
             throw new IllegalStateException();
         }
 
-        NeuralBoard board = GAME.getBoard();
+        INeuralBoard board = GAME.getBoard();
         List<ICoordinates> coordinates = nextPlayer.getAvailableActions();
         if (action.equals(ACTION_SPACE.noOp()) || action >= coordinates.size()) {
             nextPlayer.surrender();
@@ -161,11 +163,11 @@ public class TakMDP implements MDP<NeuralBoard, Integer, DiscreteSpace> {
     }
 
     @Override
-    public MDP<NeuralBoard, Integer, DiscreteSpace> newInstance() {
+    public MDP<INeuralBoard, Integer, DiscreteSpace> newInstance() {
         return new TakMDP(GAME.getBoard().getPreset());
     }
 
-    public Game getGame() {
+    public INeuralGame getGame() {
         return GAME;
     }
 
