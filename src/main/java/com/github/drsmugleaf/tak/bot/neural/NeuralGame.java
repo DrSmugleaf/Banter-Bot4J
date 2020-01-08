@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tak.bot.neural;
 
-import com.github.drsmugleaf.tak.Game;
+import com.github.drsmugleaf.tak.game.Game;
 import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
 

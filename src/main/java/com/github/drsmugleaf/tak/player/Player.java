@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.player;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.tak.IGame;
+import com.github.drsmugleaf.tak.game.IGame;
 import com.github.drsmugleaf.tak.board.*;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Type;

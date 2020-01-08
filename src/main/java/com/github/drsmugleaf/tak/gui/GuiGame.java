@@ -1,9 +1,9 @@
 package com.github.drsmugleaf.tak.gui;
 
-import com.github.drsmugleaf.tak.Game;
+import com.github.drsmugleaf.tak.game.Game;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.bot.minimax.MinimaxFlatMoveBot;
-import com.github.drsmugleaf.tak.Images;
+import com.github.drsmugleaf.tak.images.Images;
 import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
 

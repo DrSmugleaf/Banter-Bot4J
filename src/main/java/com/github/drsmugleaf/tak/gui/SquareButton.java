@@ -2,7 +2,7 @@ package com.github.drsmugleaf.tak.gui;
 
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.board.Square;
-import com.github.drsmugleaf.tak.Images;
+import com.github.drsmugleaf.tak.images.Images;
 import com.github.drsmugleaf.tak.pieces.Piece;
 
 import javax.swing.*;

@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tak.bot;
 
-import com.github.drsmugleaf.tak.IGame;
+import com.github.drsmugleaf.tak.game.IGame;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.player.Player;

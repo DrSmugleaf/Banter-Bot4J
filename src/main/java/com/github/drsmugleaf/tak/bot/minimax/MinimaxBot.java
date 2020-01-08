@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.bot.minimax;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.tak.IGame;
+import com.github.drsmugleaf.tak.game.IGame;
 import com.github.drsmugleaf.tak.board.*;
 import com.github.drsmugleaf.tak.bot.Bot;
 import com.github.drsmugleaf.tak.pieces.Color;

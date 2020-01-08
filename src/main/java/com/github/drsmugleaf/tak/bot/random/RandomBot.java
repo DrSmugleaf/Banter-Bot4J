@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.bot.random;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.tak.IGame;
+import com.github.drsmugleaf.tak.game.IGame;
 import com.github.drsmugleaf.tak.board.ICoordinates;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.bot.Bot;

@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.pieces;
 
-import com.github.drsmugleaf.tak.IllegalGameCall;
-import com.github.drsmugleaf.tak.Images;
+import com.github.drsmugleaf.tak.game.IllegalGameCall;
+import com.github.drsmugleaf.tak.images.Images;
 
 import java.awt.*;
 

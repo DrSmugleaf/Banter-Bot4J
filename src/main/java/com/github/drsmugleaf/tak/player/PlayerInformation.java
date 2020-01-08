@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tak.player;
 
-import com.github.drsmugleaf.tak.Game;
+import com.github.drsmugleaf.tak.game.Game;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.pieces.Color;
 
