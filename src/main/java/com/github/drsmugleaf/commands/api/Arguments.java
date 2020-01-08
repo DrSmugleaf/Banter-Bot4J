@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 public class Arguments extends ArrayList<String> {
 
     private static final Pattern SPLIT_ON_SPACES_EXCEPT_WITHIN_QUOTES = Pattern.compile("\"([^\"]*)\"|'([^']*)'|[^\\s]+");
+
     private final CommandSearchResult SEARCH;
     private final CommandReceivedEvent EVENT;
 

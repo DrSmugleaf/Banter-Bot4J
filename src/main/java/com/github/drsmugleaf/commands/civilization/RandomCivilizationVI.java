@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class RandomCivilizationVI extends Command {
 
     @Argument.Maximum("leaders")
-    private static final int MAXIMUM_LEADERS = Leaders.AMOUNT;
+    private static final int MAXIMUM_LEADERS = Leaders.getAmount();
 
     @Argument(position = 1, examples = "3")
     private Integer leaders;

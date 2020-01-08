@@ -5,7 +5,7 @@ import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
-import com.github.drsmugleaf.deadbydaylight.ICharacter;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.ICharacter;
 import com.github.drsmugleaf.deadbydaylight.dennisreep.*;
 
 import java.io.InputStream;

@@ -18,9 +18,7 @@ import java.util.Map;
 public class Party implements Comparable<Party> {
 
     private final String NAME;
-
     private final ImmutableList<Member> MEMBERS;
-
     private final ImmutableMap<Vote, Votes> VOTES;
 
     public Party(String name, List<Member> members) {

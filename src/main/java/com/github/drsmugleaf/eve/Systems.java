@@ -17,17 +17,14 @@ import java.util.Map;
 public class Systems {
 
     private static final String STARGATES_FILE_NAME = "./src/main/java/com/github/drsmugleaf/eve/stargates.csv";
-
     private static final String SYSTEMS_FILE_NAME = "./src/main/java/com/github/drsmugleaf/eve/systems.csv";
-
     public static final Multimap<Integer, Integer> CONNECTIONS = ArrayListMultimap.create();
-
     public static final Map<Integer, String> NAMES = new HashMap<>();
 
     static {
         try (
                 CSVReader stargates = new CSVReaderBuilder(new FileReader(STARGATES_FILE_NAME)).withSkipLines(1).build();
-                CSVReader systems = new CSVReaderBuilder(new FileReader(SYSTEMS_FILE_NAME)).withSkipLines(1).build();
+                CSVReader systems = new CSVReaderBuilder(new FileReader(SYSTEMS_FILE_NAME)).withSkipLines(1).build()
         ) {
             String[] nextLine;
 

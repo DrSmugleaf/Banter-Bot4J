@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  */
 public class StarSystem extends Node<StarSystem> {
 
-    final int ID;
+    private final int ID;
 
     StarSystem(int id, String name) {
         super(name);

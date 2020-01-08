@@ -10,9 +10,7 @@ import discord4j.core.object.entity.VoiceChannel;
 public class TrackUserData {
 
     public final TextChannel TEXT_CHANNEL;
-
     public final Member SUBMITTER;
-
     public final VoiceChannel VOICE_CHANNEL;
 
     protected TrackUserData(TextChannel textChannel, Member submitter, VoiceChannel voiceChannel) {

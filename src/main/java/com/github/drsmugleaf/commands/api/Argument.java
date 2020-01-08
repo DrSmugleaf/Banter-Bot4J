@@ -13,15 +13,10 @@ import java.lang.annotation.Target;
 public @interface Argument {
 
     int position();
-
     int maxWords() default 1;
-
     long minimum() default 1;
-
     long maximum() default Long.MAX_VALUE;
-
     String[] examples();
-
     boolean optional() default false;
 
     @Retention(RetentionPolicy.RUNTIME)

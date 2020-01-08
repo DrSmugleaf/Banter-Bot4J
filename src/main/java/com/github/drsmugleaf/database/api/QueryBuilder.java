@@ -15,7 +15,6 @@ import java.util.*;
 class QueryBuilder<T extends Model<T>> {
 
     private final Class<T> MODEL;
-
     private final List<TypeResolver> COLUMNS = new ArrayList<>();
 
     QueryBuilder(Class<T> model) {

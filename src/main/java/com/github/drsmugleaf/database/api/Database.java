@@ -16,7 +16,6 @@ import java.util.List;
 public class Database {
 
     public static final Logger LOGGER = initLogger();
-
     private static final HikariDataSource DATA_SOURCE = DatabaseConnection.initialize();
 
     private static Logger initLogger() {

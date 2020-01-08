@@ -15,9 +15,7 @@ public enum Tiers {
     F("F", 0.00, new Color(0, 0, 0, 127));
 
     public final String NAME;
-
     public final double THRESHOLD;
-
     public final Color COLOR;
 
     Tiers(String name, double threshold, Color color) {

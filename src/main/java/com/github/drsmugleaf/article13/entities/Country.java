@@ -16,9 +16,7 @@ public class Country {
     private static final ImmutableMap<String, Country> COUNTRIES = parseCountries();
 
     private final String NAME;
-
     private final ImmutableList<Member> MEMBERS;
-
     private final ImmutableMap<String, Party> PARTIES;
 
     private Country(Sheet csv) {

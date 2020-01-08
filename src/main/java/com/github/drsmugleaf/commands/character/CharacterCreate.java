@@ -36,9 +36,7 @@ public class CharacterCreate extends Command {
         EVENT
                 .getMessage()
                 .getAuthor()
-                .ifPresent(author -> {
-                    CHARACTERS.put(author, character);
-                });
+                .ifPresent(author -> CHARACTERS.put(author, character));
     }
 
 }

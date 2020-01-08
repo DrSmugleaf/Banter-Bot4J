@@ -17,44 +17,45 @@ import java.util.Map;
  */
 public class SheetBuilder implements Builder<Sheet> {
 
-    private Map<State, StatsBuilder> statBuilders = new HashMap<>();
-    private Map<State, AbilitiesBuilder> abilityBuilders = new HashMap<>();
+    private final Map<State, StatsBuilder> STAT_BUILDERS = new HashMap<>();
+    private final Map<State, AbilitiesBuilder> ABILITY_BUILDERS = new HashMap<>();
 
     public SheetBuilder() {}
 
     public ImmutableMap<State, StatsBuilder> getStats() {
-        return ImmutableMap.copyOf(statBuilders);
+        return ImmutableMap.copyOf(STAT_BUILDERS);
     }
 
     public StatsBuilder getStats(State state) {
-        return statBuilders.computeIfAbsent(state, (state1) -> new StatsBuilder(state.getName()));
+        return STAT_BUILDERS.computeIfAbsent(state, (state1) -> new StatsBuilder(state.getName()));
     }
 
     public SheetBuilder addAbilities(Ability ability) {
         State state = ability.getValidState();
-        abilityBuilders.computeIfAbsent(state, (state1) -> new AbilitiesBuilder(state1.getName()));
-        abilityBuilders.get(state).addAbility(ability);
+        ABILITY_BUILDERS.computeIfAbsent(state, (state1) -> new AbilitiesBuilder(state1.getName()));
+        ABILITY_BUILDERS.get(state).addAbility(ability);
         return this;
     }
 
     public ImmutableMap<State, AbilitiesBuilder> getAbilities() {
-        return ImmutableMap.copyOf(abilityBuilders);
+        return ImmutableMap.copyOf(ABILITY_BUILDERS);
     }
 
     public SheetBuilder setAbilities(Map<State, AbilitiesBuilder> abilities) {
-        this.abilityBuilders = abilities;
+        ABILITY_BUILDERS.clear();
+        ABILITY_BUILDERS.putAll(abilities);
         return this;
     }
 
     @Override
     public Sheet build() {
         Map<State, StatGroup> stats = new HashMap<>();
-        for (Map.Entry<State, StatsBuilder> entry : statBuilders.entrySet()) {
+        for (Map.Entry<State, StatsBuilder> entry : STAT_BUILDERS.entrySet()) {
             stats.put(entry.getKey(), entry.getValue().build());
         }
 
         Map<State, AbilitySet> abilities = new HashMap<>();
-        for (Map.Entry<State, AbilitiesBuilder> entry : abilityBuilders.entrySet()) {
+        for (Map.Entry<State, AbilitiesBuilder> entry : ABILITY_BUILDERS.entrySet()) {
             abilities.put(entry.getKey(), entry.getValue().build());
         }
 

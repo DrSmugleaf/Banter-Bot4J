@@ -12,29 +12,30 @@ import java.util.Map;
 public class AbilitiesBuilder implements Builder<AbilitySet> {
 
     private final String NAME;
-    private Map<String, Ability> abilities = new HashMap<>();
+    private final Map<String, Ability> ABILITIES = new HashMap<>();
 
     public AbilitiesBuilder(String name) {
         NAME = name;
     }
 
     public ImmutableMap<String, Ability> getAbilities() {
-        return ImmutableMap.copyOf(abilities);
+        return ImmutableMap.copyOf(ABILITIES);
     }
 
     public AbilitiesBuilder addAbility(Ability ability) {
-        abilities.put(ability.getName(), ability);
+        ABILITIES.put(ability.getName(), ability);
         return this;
     }
 
     public AbilitiesBuilder setAbilities(Map<String, Ability> abilities) {
-        this.abilities = abilities;
+        ABILITIES.clear();
+        ABILITIES.putAll(abilities);
         return this;
     }
 
     @Override
     public AbilitySet build() {
-        return new AbilitySet(NAME, abilities);
+        return new AbilitySet(NAME, ABILITIES);
     }
 
 }

@@ -16,6 +16,7 @@ import discord4j.core.object.util.PermissionSet;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
+import java.awt.Color;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,19 +27,19 @@ import java.util.stream.Collectors;
         tags = {Tags.GUILD_ONLY},
         description = "Change your name color"
 )
-public class Color extends Command {
+public class ColorCommand extends Command {
 
     @Nullable
-    private static java.awt.Color resolve(String string) {
-        java.awt.Color color = null;
+    private static Color resolve(String string) {
+        Color color = null;
         try {
-            color = java.awt.Color.decode(string);
+            color = Color.decode(string);
         } catch (NumberFormatException nfe) {
             try {
-                color = java.awt.Color.decode("#" + string);
+                color = Color.decode("#" + string);
             } catch (NumberFormatException nfe2) {
                 try {
-                    color = (java.awt.Color) java.awt.Color.class.getField(string.trim().toUpperCase().replace(" ", "_")).get(null);
+                    color = (Color) Color.class.getField(string.trim().toUpperCase().replace(" ", "_")).get(null);
                 } catch (IllegalAccessException | NoSuchFieldException e) {
                     LOGGER.warn("Error resolving color " + string, e);
                 }
@@ -50,7 +51,7 @@ public class Color extends Command {
 
     @Argument(position = 1, examples = "#FF0000", maxWords = Integer.MAX_VALUE, optional = true)
     @Nullable
-    private java.awt.Color color;
+    private Color color;
 
     @Override
     public void run() {
@@ -149,7 +150,7 @@ public class Color extends Command {
 
     @Override
     public void registerConverters(ConverterRegistry converter) {
-        converter.registerCommandTo(java.awt.Color.class, (s, e) -> resolve(s));
+        converter.registerCommandTo(Color.class, (s, e) -> resolve(s));
     }
 
 }
