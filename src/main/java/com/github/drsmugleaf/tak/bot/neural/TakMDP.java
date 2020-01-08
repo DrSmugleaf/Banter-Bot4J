@@ -16,7 +16,6 @@ import org.deeplearning4j.rl4j.policy.DQNPolicy;
 import org.deeplearning4j.rl4j.space.ArrayObservationSpace;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
 import org.deeplearning4j.rl4j.space.ObservationSpace;
-import org.deeplearning4j.rl4j.util.DataManager;
 import org.json.JSONObject;
 import org.nd4j.linalg.learning.config.Adam;
 
@@ -68,15 +67,8 @@ public class TakMDP implements MDP<INeuralBoard, Integer, DiscreteSpace> {
         String directory = Keys.TAK_POLICY_DIRECTORY.VALUE;
         new File(directory).mkdirs();
 
-        DataManager manager;
-        try {
-            manager = new DataManager(true);
-        } catch (IOException e) {
-            throw new UncheckedIOException("Error creating data manager", e);
-        }
-
         TakMDP mdp = new TakMDP(Preset.getDefault());
-        QLearningDiscreteDense<INeuralBoard> dql = new QLearningDiscreteDense<>(mdp, NET, QL, manager);
+        QLearningDiscreteDense<INeuralBoard> dql = new QLearningDiscreteDense<>(mdp, NET, QL);
         POLICY = dql.getPolicy();
         dql.train();
         try {
@@ -124,7 +116,7 @@ public class TakMDP implements MDP<INeuralBoard, Integer, DiscreteSpace> {
         List<ICoordinates> coordinates = nextPlayer.getAvailableActions();
         if (action.equals(ACTION_SPACE.noOp()) || action >= coordinates.size()) {
             nextPlayer.surrender();
-            return new StepReply<>(GAME.getBoard(), Integer.MIN_VALUE, isDone(), new JSONObject("{}"));
+            return new StepReply<>(board, Integer.MIN_VALUE, isDone(), new JSONObject("{}"));
         }
 
         ICoordinates coordinate = coordinates.get(action);
@@ -154,7 +146,7 @@ public class TakMDP implements MDP<INeuralBoard, Integer, DiscreteSpace> {
             }
         }
 
-        return new StepReply<>(GAME.getBoard(), reward, isDone(), new JSONObject("{}"));
+        return new StepReply<>(board, reward, isDone(), new JSONObject("{}"));
     }
 
     @Override
