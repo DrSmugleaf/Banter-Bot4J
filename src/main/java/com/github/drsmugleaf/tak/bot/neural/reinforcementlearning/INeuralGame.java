@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.tak.bot.neural;
+package com.github.drsmugleaf.tak.bot.neural.reinforcementlearning;
 
 import com.github.drsmugleaf.tak.game.IGame;
 

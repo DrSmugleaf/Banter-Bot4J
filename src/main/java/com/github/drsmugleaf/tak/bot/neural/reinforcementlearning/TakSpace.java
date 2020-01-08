@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.tak.bot.neural;
+package com.github.drsmugleaf.tak.bot.neural.reinforcementlearning;
 
 import com.github.drsmugleaf.tak.board.Preset;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
