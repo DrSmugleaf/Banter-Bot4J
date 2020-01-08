@@ -1,7 +1,6 @@
 package com.github.drsmugleaf.tak.gui;
 
 import com.github.drsmugleaf.tak.board.ICoordinates;
-import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
@@ -15,7 +14,7 @@ public class GuiPlayer extends Player {
 
     private final GuiGame GAME;
 
-    public GuiPlayer(String name, GuiGame game, Color color, Preset preset) {
+    public GuiPlayer(String name, GuiGame game, Color color) {
         super(name, game, color, true);
 
         GAME = game;
@@ -29,8 +28,8 @@ public class GuiPlayer extends Player {
         }
     }
 
-    public static Player from(PlayerInformation<GuiGame> information) {
-        return new GuiPlayer(information.NAME, information.GAME, information.COLOR, information.PRESET);
+    public static Player from(PlayerInformation information, GuiGame game) {
+        return new GuiPlayer(information.NAME, game, information.COLOR);
     }
 
     @Override

@@ -35,8 +35,8 @@ public class Game implements IGame {
             Function<PlayerInformation, Player> playerMaker2
     ) {
         BOARD = board;
-        Player player1 = playerMaker1.apply(new PlayerInformation<>(playerName1, this, Color.BLACK, BOARD.getPreset()));
-        Player player2 = playerMaker2.apply(new PlayerInformation<>(playerName2, this, Color.WHITE, BOARD.getPreset()));
+        Player player1 = playerMaker1.apply(new PlayerInformation(playerName1, this, Color.BLACK, BOARD.getPreset()));
+        Player player2 = playerMaker2.apply(new PlayerInformation(playerName2, this, Color.WHITE, BOARD.getPreset()));
         PLAYERS.put(player1.getColor(), player1);
         PLAYERS.put(player2.getColor(), player2);
         nextPlayer = player1;
