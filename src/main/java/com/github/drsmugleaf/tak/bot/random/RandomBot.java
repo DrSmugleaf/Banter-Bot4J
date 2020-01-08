@@ -1,10 +1,9 @@
 package com.github.drsmugleaf.tak.bot.random;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.tak.game.IGame;
 import com.github.drsmugleaf.tak.board.ICoordinates;
-import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.bot.Bot;
+import com.github.drsmugleaf.tak.game.IGame;
 import com.github.drsmugleaf.tak.pieces.Color;
 
 import java.util.List;
@@ -15,8 +14,8 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public abstract class RandomBot extends Bot {
 
-    protected RandomBot(String name, IGame game, Color color, Preset preset) {
-        super(name, game, color, preset, false);
+    protected RandomBot(String name, IGame game, Color color) {
+        super(name, game, color, false);
     }
 
     @Nullable

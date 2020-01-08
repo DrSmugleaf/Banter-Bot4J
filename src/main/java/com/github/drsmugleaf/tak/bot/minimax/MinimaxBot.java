@@ -17,8 +17,8 @@ public abstract class MinimaxBot extends Bot {
 
     protected final int DEPTH;
 
-    protected MinimaxBot(String name, IGame game, Color color, Preset preset, int depth) {
-        super(name, game, color, preset, false);
+    protected MinimaxBot(String name, IGame game, Color color, int depth) {
+        super(name, game, color, false);
         DEPTH = depth;
     }
 

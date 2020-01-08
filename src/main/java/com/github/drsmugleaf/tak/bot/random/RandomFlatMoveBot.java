@@ -3,7 +3,6 @@ package com.github.drsmugleaf.tak.bot.random;
 import com.github.drsmugleaf.tak.game.IGame;
 import com.github.drsmugleaf.tak.board.IBoard;
 import com.github.drsmugleaf.tak.board.ICoordinates;
-import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.Player;
@@ -16,12 +15,12 @@ import java.util.List;
  */
 public class RandomFlatMoveBot extends RandomBot {
 
-    protected RandomFlatMoveBot(String name, IGame game, Color color, Preset preset) {
-        super(name, game, color, preset);
+    protected RandomFlatMoveBot(String name, IGame game, Color color) {
+        super(name, game, color);
     }
 
     public static Player from(PlayerInformation information) {
-        return new RandomFlatMoveBot(information.NAME, information.GAME, information.COLOR, information.PRESET);
+        return new RandomFlatMoveBot(information.NAME, information.GAME, information.COLOR);
     }
 
     @Override
