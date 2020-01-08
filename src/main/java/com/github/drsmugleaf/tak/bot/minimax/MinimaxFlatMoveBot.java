@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tak.bot.minimax;
 
-import com.github.drsmugleaf.tak.Game;
+import com.github.drsmugleaf.tak.IGame;
 import com.github.drsmugleaf.tak.board.IBoard;
 import com.github.drsmugleaf.tak.board.ICoordinates;
 import com.github.drsmugleaf.tak.board.Preset;
@@ -17,7 +17,7 @@ import java.util.function.Function;
  */
 public class MinimaxFlatMoveBot extends MinimaxBot {
 
-    protected MinimaxFlatMoveBot(String name, Game game, Color color, Preset preset, int depth) {
+    protected MinimaxFlatMoveBot(String name, IGame game, Color color, Preset preset, int depth) {
         super(name, game, color, preset, depth);
     }
 

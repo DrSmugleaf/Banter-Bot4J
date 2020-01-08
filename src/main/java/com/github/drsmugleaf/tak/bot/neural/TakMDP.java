@@ -102,7 +102,7 @@ public class TakMDP implements MDP<NeuralBoard, Integer, DiscreteSpace> {
 
     @Override
     public NeuralBoard reset() {
-        GAME.resetGame();
+        GAME.reset();
         return GAME.getBoard();
     }
 

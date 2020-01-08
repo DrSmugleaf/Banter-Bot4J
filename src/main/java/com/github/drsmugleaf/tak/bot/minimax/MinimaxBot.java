@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.bot.minimax;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.tak.Game;
+import com.github.drsmugleaf.tak.IGame;
 import com.github.drsmugleaf.tak.board.*;
 import com.github.drsmugleaf.tak.bot.Bot;
 import com.github.drsmugleaf.tak.pieces.Color;
@@ -17,7 +17,7 @@ public abstract class MinimaxBot extends Bot {
 
     protected final int DEPTH;
 
-    protected MinimaxBot(String name, Game game, Color color, Preset preset, int depth) {
+    protected MinimaxBot(String name, IGame game, Color color, Preset preset, int depth) {
         super(name, game, color, preset, false);
         DEPTH = depth;
     }

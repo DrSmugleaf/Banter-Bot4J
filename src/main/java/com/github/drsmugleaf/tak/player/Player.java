@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.player;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.tak.Game;
+import com.github.drsmugleaf.tak.IGame;
 import com.github.drsmugleaf.tak.board.*;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Type;
@@ -16,7 +16,7 @@ import java.util.Set;
 public abstract class Player {
 
     private final String NAME;
-    private final Game GAME;
+    private final IGame GAME;
     private final Hand HAND;
     @Nullable
     private ICoordinates NEXT_ACTION = null;
@@ -24,7 +24,7 @@ public abstract class Player {
     @Nullable
     private List<ICoordinates> AVAILABLE_ACTIONS = null;
 
-    public Player(String name, Game game, Color color, boolean passive) {
+    public Player(String name, IGame game, Color color, boolean passive) {
         NAME = name;
         HAND = new Hand(color, game.getBoard().getPreset());
         GAME = game;
@@ -127,7 +127,7 @@ public abstract class Player {
         return NAME;
     }
 
-    public final Game getGame() {
+    public final IGame getGame() {
         return GAME;
     }
 

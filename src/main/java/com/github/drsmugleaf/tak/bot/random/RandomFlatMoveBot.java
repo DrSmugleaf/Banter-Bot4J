@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tak.bot.random;
 
-import com.github.drsmugleaf.tak.Game;
+import com.github.drsmugleaf.tak.IGame;
 import com.github.drsmugleaf.tak.board.IBoard;
 import com.github.drsmugleaf.tak.board.ICoordinates;
 import com.github.drsmugleaf.tak.board.Preset;
@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class RandomFlatMoveBot extends RandomBot {
 
-    protected RandomFlatMoveBot(String name, Game game, Color color, Preset preset) {
+    protected RandomFlatMoveBot(String name, IGame game, Color color, Preset preset) {
         super(name, game, color, preset);
     }
 
