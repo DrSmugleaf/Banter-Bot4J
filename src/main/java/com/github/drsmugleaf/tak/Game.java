@@ -2,6 +2,7 @@ package com.github.drsmugleaf.tak;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tak.board.Board;
+import com.github.drsmugleaf.tak.board.IBoard;
 import com.github.drsmugleaf.tak.board.ISquare;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.pieces.Color;
@@ -17,9 +18,9 @@ import java.util.function.Function;
 /**
  * Created by DrSmugleaf on 01/12/2018
  */
-public class Game<T extends Board> {
+public class Game {
 
-    private final T BOARD;
+    private final IBoard BOARD;
     private final Map<Color, Player> PLAYERS = new EnumMap<>(Color.class);
     public Player nextPlayer;
     @Nullable
@@ -27,7 +28,7 @@ public class Game<T extends Board> {
     private boolean active = true;
 
     public Game(
-            T board,
+            IBoard board,
             String playerName1,
             String playerName2,
             Function<PlayerInformation, Player> playerMaker1,
@@ -48,11 +49,11 @@ public class Game<T extends Board> {
             Function<PlayerInformation, Player> playerMaker1,
             Function<PlayerInformation, Player> playerMaker2
     ) {
-        Board board = new Board(preset);
-        return new Game<>(board, playerName1, playerName2, playerMaker1, playerMaker2);
+        IBoard board = new Board(preset);
+        return new Game(board, playerName1, playerName2, playerMaker1, playerMaker2);
     }
 
-    public T getBoard() {
+    public IBoard getBoard() {
         return BOARD;
     }
 

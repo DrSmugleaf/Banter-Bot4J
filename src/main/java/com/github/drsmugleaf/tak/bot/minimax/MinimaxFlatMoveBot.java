@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.bot.minimax;
 
 import com.github.drsmugleaf.tak.Game;
-import com.github.drsmugleaf.tak.board.Board;
+import com.github.drsmugleaf.tak.board.IBoard;
 import com.github.drsmugleaf.tak.board.ICoordinates;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.pieces.Color;
@@ -34,7 +34,7 @@ public class MinimaxFlatMoveBot extends MinimaxBot {
     }
 
     @Override
-    public List<ICoordinates> getAvailableActions(Board board) {
+    public List<ICoordinates> getAvailableActions(IBoard board) {
         return getAvailableActions(board, Type.FLAT_STONE);
     }
 

@@ -37,7 +37,7 @@ public class Coordinates implements ICoordinates {
     }
 
     @Override
-    public int with(Board board, Color nextColor, Function<Board, Integer> function) {
+    public int with(IBoard board, Color nextColor, Function<IBoard, Integer> function) {
         Piece piece = new Piece(nextColor, PIECE);
         board.placeSilent(piece, COLUMN, ROW);
         Integer result = function.apply(board);

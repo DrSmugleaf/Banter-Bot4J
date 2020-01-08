@@ -52,12 +52,12 @@ public class TakMDP implements MDP<NeuralBoard, Integer, DiscreteSpace> {
             true
     );
     private static DQNPolicy<NeuralBoard> POLICY;
-    private final Game<NeuralBoard> GAME;
+    private final Game GAME;
     private final ObservationSpace<NeuralBoard> OBSERVATION_SPACE;
     private final TakSpace ACTION_SPACE;
 
     public TakMDP(Preset preset) {
-        GAME = new Game<>(new NeuralBoard(preset), "Neural Bot 1", "Neural Bot 2", NeuralBot::from, NeuralBot::from);
+        GAME = new Game(new NeuralBoard(preset), "Neural Bot 1", "Neural Bot 2", NeuralBot::from, NeuralBot::from);
         OBSERVATION_SPACE = new ArrayObservationSpace<>(new int[]{preset.getSize() * preset.getSize() * (1 + preset.getStones() * 2)});
         ACTION_SPACE = new TakSpace(GAME, preset);
     }

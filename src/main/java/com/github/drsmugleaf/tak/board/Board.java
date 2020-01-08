@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by DrSmugleaf on 01/12/2018
  */
-public class Board {
+public class Board implements IBoard {
 
     private final Preset PRESET;
     private final Line[] COLUMNS;
@@ -76,66 +76,36 @@ public class Board {
         ROWS = rows;
     }
 
-    private Board(Board board) {
+    private Board(IBoard board) {
         this(board.toSquareArray());
     }
 
-    public Board copy() {
+    @Override
+    public IBoard copy() {
         return new Board(this);
     }
 
-    public ISquare[][] toSquareArray() {
-        int boardSize = PRESET.getSize();
-        ISquare[][] squares = new ISquare[boardSize][boardSize];
-
-        for (int i = 0; i < ROWS.length; i++) {
-            ISquare[] row = ROWS[i].getSquares();
-            for (int j = 0; j < row.length; j++) {
-                squares[i][j] = row[j].copy();
-            }
-        }
-
-        return squares;
-    }
-
     @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        ISquare[][] board = toSquareArray();
-
-        for (int rowIndex = 0; rowIndex < board.length; rowIndex++) {
-            ISquare[] row = board[rowIndex];
-
-            for (int column = 0; column < row.length; column++) {
-                builder.append(row[column]);
-
-                if (column < row.length - 1) {
-                    builder.append(", ");
-                } else {
-                    builder.append("\n");
-                }
-            }
-        }
-
-        return builder.toString();
-    }
-
-    public Board getDefault() {
+    public IBoard getDefault() {
         return new Board(Preset.getDefault());
     }
 
+    @Override
     public Line[] getColumns() {
         return COLUMNS;
     }
 
+    @Override
     public Line[] getRows() {
         return ROWS;
     }
 
+    @Override
     public Preset getPreset() {
         return PRESET;
     }
 
+    @Override
     public boolean canMove(ISquare origin, ISquare destination, int pieces) {
         int column = origin.getColumn();
         int row = origin.getRow();
@@ -147,20 +117,24 @@ public class Board {
                COLUMNS[column].canMove(row, destination, pieces);
     }
 
-    private ISquare move(ISquare origin, ISquare destination, int pieces, boolean silent) {
+    @Override
+    public ISquare move(ISquare origin, ISquare destination, int pieces, boolean silent) {
         int column = origin.getColumn();
         int row = origin.getRow();
         return COLUMNS[column].move(row, destination, pieces, silent);
     }
 
+    @Override
     public ISquare move(ISquare origin, ISquare destination, int pieces) {
         return move(origin, destination, pieces, false);
     }
 
+    @Override
     public ISquare moveSilent(ISquare origin, ISquare destination, int pieces) {
         return move(origin, destination, pieces, true);
     }
 
+    @Override
     public final ISquare moveSilent(int originColumn, int originRow, int destinationColumn, int destinationRow, int pieces) {
         Line[] rows = getRows();
         ISquare origin = rows[originRow].getSquares()[originColumn];
@@ -168,50 +142,62 @@ public class Board {
         return moveSilent(origin, destination, pieces);
     }
 
+    @Override
     public boolean canPlace(int column, int row) {
         return column < COLUMNS.length && COLUMNS[column].canPlace(row);
     }
 
+    @Override
     public ISquare place(Piece piece, int column, int row, boolean silent) {
         return COLUMNS[column].place(piece, row, silent);
     }
 
+    @Override
     public ISquare place(Piece piece, int column, int row) {
         return COLUMNS[column].place(piece, row, false);
     }
 
+    @Override
     public ISquare placeSilent(Piece piece, int column, int row) {
         return COLUMNS[column].place(piece, row, true);
     }
 
-    protected ISquare remove(Piece piece, int column, int row, boolean silent) {
+    @Override
+    public ISquare remove(Piece piece, int column, int row, boolean silent) {
         return COLUMNS[column].remove(piece, row, silent);
     }
 
-    protected ISquare remove(Piece piece, int column, int row) {
+    @Override
+    public ISquare remove(Piece piece, int column, int row) {
         return COLUMNS[column].remove(piece, row, false);
     }
 
-    protected ISquare removeSilent(Piece piece, int column, int row) {
+    @Override
+    public ISquare removeSilent(Piece piece, int column, int row) {
         return COLUMNS[column].remove(piece, row, true);
     }
 
+    @Override
     public Line getFirstRow() {
         return ROWS[0];
     }
 
+    @Override
     public Line getLastRow() {
         return ROWS[ROWS.length - 1];
     }
 
+    @Override
     public Line getFirstColumn() {
         return COLUMNS[0];
     }
 
+    @Override
     public Line getLastColumn() {
         return COLUMNS[COLUMNS.length - 1];
     }
 
+    @Override
     public int countAdjacent(Color color) {
         int amount = 0;
 
@@ -229,6 +215,7 @@ public class Board {
         return amount;
     }
 
+    @Override
     public IAdjacentSquares getAdjacent(ISquare square) {
         Line[] rows = getRows();
         int rowIndex = square.getRow();
@@ -268,7 +255,8 @@ public class Board {
         return new AdjacentSquares(centerSquare, upSquare, rightSquare, downSquare, leftSquare);
     }
 
-    private boolean isConnected(ISquare origin, ISquare destination) {
+    @Override
+    public boolean isConnected(ISquare origin, ISquare destination) {
         if (origin.getColor() == null || origin.getColor() != destination.getColor()) {
             return false;
         }
@@ -284,9 +272,10 @@ public class Board {
         return visited.contains(destination);
     }
 
-    private void getAllConnections(ISquare squareOne, List<ISquare> visited) {
-        ImmutableSet<ISquare> connections = getAdjacent(squareOne).getConnections();
-        visited.add(squareOne);
+    @Override
+    public void getAllConnections(ISquare origin, List<ISquare> visited) {
+        ImmutableSet<ISquare> connections = getAdjacent(origin).getConnections();
+        visited.add(origin);
 
         for (ISquare connection : connections) {
             if (visited.contains(connection)) {
@@ -297,6 +286,7 @@ public class Board {
         }
     }
 
+    @Override
     public boolean hasRoad(Color color, Line line1, Line line2) {
         for (ISquare origin : line1.getSquares()) {
             if (origin.getColor() != color) {
@@ -321,14 +311,15 @@ public class Board {
         return false;
     }
 
+    @Override
     public boolean hasRoad(Color color) {
-        if (hasPieceInEveryRow(color)) {
+        if (hasPiecesInEveryRow(color)) {
             if (hasRoad(color, getFirstRow(), getLastRow())) {
                 return true;
             }
         }
 
-        if (hasPieceInEveryColumn(color)) {
+        if (hasPiecesInEveryColumn(color)) {
             return hasRoad(color, getFirstColumn(), getLastColumn());
         }
 
@@ -336,6 +327,7 @@ public class Board {
     }
 
     @Nullable
+    @Override
     public Color getRoad() {
         for (Color color : Color.values()) {
             if (hasRoad(color)) {
@@ -346,7 +338,8 @@ public class Board {
         return null;
     }
 
-    public boolean hasPieceInEveryColumn(Color color) {
+    @Override
+    public boolean hasPiecesInEveryColumn(Color color) {
         for (Line column : COLUMNS) {
             if (!column.hasSquare(color)) {
                 return false;
@@ -356,7 +349,8 @@ public class Board {
         return true;
     }
 
-    public boolean hasPieceInEveryRow(Color color) {
+    @Override
+    public boolean hasPiecesInEveryRow(Color color) {
         for (Line row : ROWS) {
             if (!row.hasSquare(color)) {
                 return false;
@@ -366,6 +360,7 @@ public class Board {
         return true;
     }
 
+    @Override
     public boolean isFull() {
         for (ISquare[] row : toSquareArray()) {
             for (ISquare square : row) {
@@ -378,6 +373,7 @@ public class Board {
         return true;
     }
 
+    @Override
     public int countFlat(Color color) {
         int amount = 0;
 
@@ -388,6 +384,17 @@ public class Board {
         return amount;
     }
 
+    @Override
+    public void reset() {
+        int size = getPreset().getSize();
+
+        for (int i = 0; i < size; i++) {
+            COLUMNS[i].reset();
+            ROWS[i].reset();
+        }
+    }
+
+    @Override
     public double[][][] toDoubleArray() {
         Preset preset = getPreset();
         int size = preset.getSize();
@@ -406,13 +413,41 @@ public class Board {
         return array;
     }
 
-    public void reset() {
-        int size = getPreset().getSize();
+    @Override
+    public ISquare[][] toSquareArray() {
+        int boardSize = PRESET.getSize();
+        ISquare[][] squares = new ISquare[boardSize][boardSize];
 
-        for (int i = 0; i < size; i++) {
-            COLUMNS[i].reset();
-            ROWS[i].reset();
+        for (int i = 0; i < ROWS.length; i++) {
+            ISquare[] row = ROWS[i].getSquares();
+            for (int j = 0; j < row.length; j++) {
+                squares[i][j] = row[j].copy();
+            }
         }
+
+        return squares;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        ISquare[][] board = toSquareArray();
+
+        for (int rowIndex = 0; rowIndex < board.length; rowIndex++) {
+            ISquare[] row = board[rowIndex];
+
+            for (int column = 0; column < row.length; column++) {
+                builder.append(row[column]);
+
+                if (column < row.length - 1) {
+                    builder.append(", ");
+                } else {
+                    builder.append("\n");
+                }
+            }
+        }
+
+        return builder.toString();
     }
 
 }

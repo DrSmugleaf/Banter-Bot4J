@@ -40,7 +40,7 @@ public enum Preset {
         IMAGE_NAME = imageName;
 
         List<ICoordinates> allActions = new ArrayList<>();
-        Board board = new Board(this);
+        IBoard board = new Board(this);
         for (Line row : board.getRows()) {
             for (ISquare origin : row.getSquares()) {
                 for (Type type : Type.getTypes()) {

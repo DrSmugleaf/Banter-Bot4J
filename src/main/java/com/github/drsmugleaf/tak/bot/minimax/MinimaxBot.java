@@ -29,17 +29,17 @@ public abstract class MinimaxBot extends Bot {
     }
 
     protected Pair<ICoordinates, Integer> getBestPlace() {
-        Board board = getGame().getBoard();
+        IBoard board = getGame().getBoard();
         Color nextColor = getGame().getNextPlayer().getColor();
 
         return getMax(getAvailableActions(), board, nextColor, Integer.MIN_VALUE, Integer.MAX_VALUE, DEPTH);
     }
 
-    private boolean isTerminal(Board board) {
+    private boolean isTerminal(IBoard board) {
         return board.getRoad() != null;
     }
 
-    private int getScore(Board board) {
+    private int getScore(IBoard board) {
         Color winner = board.getRoad();
         if (winner != null) {
             if (winner == getColor()) {
@@ -78,7 +78,7 @@ public abstract class MinimaxBot extends Bot {
         return score;
     }
 
-    protected final Pair<ICoordinates, Integer> getMax(List<ICoordinates> moves, Board board, Color nextPlayer, int alpha, int beta, final int depth) {
+    protected final Pair<ICoordinates, Integer> getMax(List<ICoordinates> moves, IBoard board, Color nextPlayer, int alpha, int beta, final int depth) {
         ICoordinates bestMove = null;
         int score = 0;
 

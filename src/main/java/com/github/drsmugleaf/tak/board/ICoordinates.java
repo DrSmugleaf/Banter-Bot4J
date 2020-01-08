@@ -12,6 +12,6 @@ public interface ICoordinates {
 
     boolean canPlace(Player player);
     void place(Player player);
-    int with(Board board, Color nextColor, Function<Board, Integer> function);
+    int with(IBoard board, Color nextColor, Function<IBoard, Integer> function);
 
 }

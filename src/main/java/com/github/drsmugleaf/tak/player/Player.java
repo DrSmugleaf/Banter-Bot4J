@@ -31,7 +31,7 @@ public abstract class Player {
         PASSIVE = passive;
     }
 
-    public final List<ICoordinates> getAvailableActions(Board board, Type type) {
+    public final List<ICoordinates> getAvailableActions(IBoard board, Type type) {
         List<ICoordinates> moves = getAvailableMoves(board);
         List<ICoordinates> places = getAvailablePlaces(board, type);
         moves.addAll(places);
@@ -39,7 +39,7 @@ public abstract class Player {
         return moves;
     }
 
-    public List<ICoordinates> getAvailableActions(Board board) {
+    public List<ICoordinates> getAvailableActions(IBoard board) {
         List<ICoordinates> moves = getAvailableMoves(board);
         List<ICoordinates> places = getAvailablePlaces(board);
         moves.addAll(places);
@@ -57,7 +57,7 @@ public abstract class Player {
         return actions;
     }
 
-    public final List<ICoordinates> getAvailableMoves(Board board) {
+    public final List<ICoordinates> getAvailableMoves(IBoard board) {
         List<ICoordinates> moves = new ArrayList<>();
 
         for (Line row : board.getRows()) {
@@ -89,7 +89,7 @@ public abstract class Player {
         return getAvailableMoves(getGame().getBoard());
     }
 
-    public final List<ICoordinates> getAvailablePlaces(Board board, Type... types) {
+    public final List<ICoordinates> getAvailablePlaces(IBoard board, Type... types) {
         List<ICoordinates> places = new ArrayList<>();
 
         Line[] rows = board.getRows();
@@ -107,11 +107,11 @@ public abstract class Player {
         return places;
     }
 
-    public final List<ICoordinates> getAvailablePlaces(Board board, Set<Type> types) {
+    public final List<ICoordinates> getAvailablePlaces(IBoard board, Set<Type> types) {
         return getAvailablePlaces(board, types.toArray(new Type[0]));
     }
 
-    public final List<ICoordinates> getAvailablePlaces(Board board) {
+    public final List<ICoordinates> getAvailablePlaces(IBoard board) {
         return getAvailablePlaces(board, Type.getTypes());
     }
 
