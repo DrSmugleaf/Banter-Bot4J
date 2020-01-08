@@ -11,8 +11,6 @@ import com.google.common.collect.ImmutableSet;
  */
 public interface IEffect<T extends IBattlePokemon<T>> extends Nameable {
 
-    ImmutableSet<Integer> EMPTY = ImmutableSet.of();
-
     int getID();
     IMoveReport<T> target(IMoveInformation<T> move, T user, T target);
     int damage(IMoveInformation<T> move, T user, T target);
@@ -21,13 +19,13 @@ public interface IEffect<T extends IBattlePokemon<T>> extends Nameable {
     boolean doesEffect(IMoveInformation<T> move, T user, T target, IMoveReport<T> report);
     int getDamage(IMoveInformation<T> move, T user, T target);
     default ImmutableSet<Integer> getIgnoredEffects() {
-        return EMPTY;
+        return ImmutableSet.of();
     }
     default ImmutableSet<Integer> getIncompatibleMoves() {
-        return EMPTY;
+        return ImmutableSet.of();
     }
     default ImmutableSet<Integer> getCallMoves() {
-        return EMPTY;
+        return ImmutableSet.of();
     }
 
 }
