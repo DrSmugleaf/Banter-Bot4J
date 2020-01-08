@@ -61,14 +61,14 @@ public abstract class Player {
         List<ICoordinates> moves = new ArrayList<>();
 
         for (Line row : board.getRows()) {
-            for (Square origin : row.getSquares()) {
+            for (ISquare origin : row.getSquares()) {
                 if (origin.getTopPiece() == null) {
                     continue;
                 }
 
-                AdjacentSquares adjacent = board.getAdjacent(origin);
+                IAdjacentSquares adjacent = board.getAdjacent(origin);
 
-                for (Square destination : adjacent.getAll()) {
+                for (ISquare destination : adjacent.getAll()) {
                     if (destination == null) {
                         continue;
                     }
@@ -94,7 +94,7 @@ public abstract class Player {
 
         Line[] rows = board.getRows();
         for (int i = 0; i < rows.length; i++) {
-            Square[] row = rows[i].getSquares();
+            ISquare[] row = rows[i].getSquares();
             for (int j = 0; j < row.length; j++) {
                 for (Type type : types) {
                     if (canPlace(type, j, i)) {
@@ -153,25 +153,25 @@ public abstract class Player {
         return getHand().getColor();
     }
 
-    public final boolean canMove(Square origin, Square destination, int pieces) {
+    public final boolean canMove(ISquare origin, ISquare destination, int pieces) {
         return getColor() == origin.getColor() && GAME.canMove(this, origin, destination, pieces);
     }
 
     public final boolean canMove(int originColumn, int originRow, int destinationColumn, int destinationRow, int pieces) {
         Line[] rows = getGame().getBoard().getRows();
-        Square origin = rows[originRow].getSquares()[originColumn];
-        Square destination = rows[destinationRow].getSquares()[destinationColumn];
+        ISquare origin = rows[originRow].getSquares()[originColumn];
+        ISquare destination = rows[destinationRow].getSquares()[destinationColumn];
         return canMove(origin, destination, pieces);
     }
 
-    public final Square move(Square origin, Square destination, int pieces) {
+    public final ISquare move(ISquare origin, ISquare destination, int pieces) {
         return GAME.move(this, origin, destination, pieces);
     }
 
-    public final Square move(int originColumn, int originRow, int destinationColumn, int destinationRow, int pieces) {
+    public final ISquare move(int originColumn, int originRow, int destinationColumn, int destinationRow, int pieces) {
         Line[] rows = getGame().getBoard().getRows();
-        Square origin = rows[originRow].getSquares()[originColumn];
-        Square destination = rows[destinationRow].getSquares()[destinationColumn];
+        ISquare origin = rows[originRow].getSquares()[originColumn];
+        ISquare destination = rows[destinationRow].getSquares()[destinationColumn];
         return move(origin, destination, pieces);
     }
 
@@ -179,7 +179,7 @@ public abstract class Player {
         return getHand().has(type) && GAME.canPlace(this, column, row);
     }
 
-    public final Square place(Type type, int column, int row) {
+    public final ISquare place(Type type, int column, int row) {
         return GAME.place(this, type, column, row);
     }
 
@@ -224,13 +224,13 @@ public abstract class Player {
         AVAILABLE_ACTIONS = null;
     }
 
-    public void onEnemyPieceMove(Player player, Square origin, Square destination, int pieces) {}
+    public void onEnemyPieceMove(Player player, ISquare origin, ISquare destination, int pieces) {}
 
-    public void onOwnPieceMove(Square origin, Square destination, int pieces) {}
+    public void onOwnPieceMove(ISquare origin, ISquare destination, int pieces) {}
 
-    public void onEnemyPiecePlace(Player player, Type type, Square square) {}
+    public void onEnemyPiecePlace(Player player, Type type, ISquare square) {}
 
-    public void onOwnPiecePlace(Type type, Square square) {}
+    public void onOwnPiecePlace(Type type, ISquare square) {}
 
     public void onEnemyTurnEnd(Player player) {}
 

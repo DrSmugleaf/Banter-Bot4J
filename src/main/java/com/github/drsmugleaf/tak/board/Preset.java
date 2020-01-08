@@ -42,14 +42,14 @@ public enum Preset {
         List<ICoordinates> allActions = new ArrayList<>();
         Board board = new Board(this);
         for (Line row : board.getRows()) {
-            for (Square origin : row.getSquares()) {
+            for (ISquare origin : row.getSquares()) {
                 for (Type type : Type.getTypes()) {
                     Coordinates place = new Coordinates(origin, type);
                     allActions.add(place);
                 }
 
-                AdjacentSquares adjacent = board.getAdjacent(origin);
-                for (Square destination : adjacent.getAll()) {
+                IAdjacentSquares adjacent = board.getAdjacent(origin);
+                for (ISquare destination : adjacent.getAll()) {
                     if (destination == null) {
                         continue;
                     }

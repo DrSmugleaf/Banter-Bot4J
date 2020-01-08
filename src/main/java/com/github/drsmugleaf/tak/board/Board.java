@@ -4,6 +4,7 @@ import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tak.IllegalGameCall;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
+import com.google.common.collect.ImmutableSet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class Board {
 
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
-                Square square = new Square(column, row);
+                ISquare square = new Square(column, row);
                 rows[row].SQUARES[column] = square;
                 columns[column].SQUARES[row] = square;
             }
@@ -41,7 +42,7 @@ public class Board {
         ROWS = rows;
     }
 
-    public Board(Square[][] squares) {
+    public Board(ISquare[][] squares) {
         Preset preset = Preset.getPreset(squares.length);
         if (preset == null) {
             throw new IllegalArgumentException("No preset found for array length " + squares.length);
@@ -49,7 +50,7 @@ public class Board {
 
         PRESET = preset;
         int boardSize = PRESET.getSize();
-        for (Square[] column : squares) {
+        for (ISquare[] column : squares) {
             int columnLength = column.length;
             if (columnLength != boardSize) {
                 throw new IllegalArgumentException("Array isn't a square. Expected size: " + boardSize + ". Found: " + columnLength);
@@ -83,12 +84,12 @@ public class Board {
         return new Board(this);
     }
 
-    public Square[][] toSquareArray() {
+    public ISquare[][] toSquareArray() {
         int boardSize = PRESET.getSize();
-        Square[][] squares = new Square[boardSize][boardSize];
+        ISquare[][] squares = new ISquare[boardSize][boardSize];
 
         for (int i = 0; i < ROWS.length; i++) {
-            Square[] row = ROWS[i].getSquares();
+            ISquare[] row = ROWS[i].getSquares();
             for (int j = 0; j < row.length; j++) {
                 squares[i][j] = row[j].copy();
             }
@@ -100,10 +101,10 @@ public class Board {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        Square[][] board = toSquareArray();
+        ISquare[][] board = toSquareArray();
 
         for (int rowIndex = 0; rowIndex < board.length; rowIndex++) {
-            Square[] row = board[rowIndex];
+            ISquare[] row = board[rowIndex];
 
             for (int column = 0; column < row.length; column++) {
                 builder.append(row[column]);
@@ -135,10 +136,10 @@ public class Board {
         return PRESET;
     }
 
-    public boolean canMove(Square origin, Square destination, int pieces) {
+    public boolean canMove(ISquare origin, ISquare destination, int pieces) {
         int column = origin.getColumn();
         int row = origin.getRow();
-        AdjacentSquares adjacent = getAdjacent(origin);
+        IAdjacentSquares adjacent = getAdjacent(origin);
 
         return column < COLUMNS.length &&
                pieces <= PRESET.getCarryLimit() &&
@@ -146,24 +147,24 @@ public class Board {
                COLUMNS[column].canMove(row, destination, pieces);
     }
 
-    private Square move(Square origin, Square destination, int pieces, boolean silent) {
+    private ISquare move(ISquare origin, ISquare destination, int pieces, boolean silent) {
         int column = origin.getColumn();
         int row = origin.getRow();
         return COLUMNS[column].move(row, destination, pieces, silent);
     }
 
-    public Square move(Square origin, Square destination, int pieces) {
+    public ISquare move(ISquare origin, ISquare destination, int pieces) {
         return move(origin, destination, pieces, false);
     }
 
-    public Square moveSilent(Square origin, Square destination, int pieces) {
+    public ISquare moveSilent(ISquare origin, ISquare destination, int pieces) {
         return move(origin, destination, pieces, true);
     }
 
-    public final Square moveSilent(int originColumn, int originRow, int destinationColumn, int destinationRow, int pieces) {
+    public final ISquare moveSilent(int originColumn, int originRow, int destinationColumn, int destinationRow, int pieces) {
         Line[] rows = getRows();
-        Square origin = rows[originRow].getSquares()[originColumn];
-        Square destination = rows[destinationRow].getSquares()[destinationColumn];
+        ISquare origin = rows[originRow].getSquares()[originColumn];
+        ISquare destination = rows[destinationRow].getSquares()[destinationColumn];
         return moveSilent(origin, destination, pieces);
     }
 
@@ -171,27 +172,27 @@ public class Board {
         return column < COLUMNS.length && COLUMNS[column].canPlace(row);
     }
 
-    public Square place(Piece piece, int column, int row, boolean silent) {
+    public ISquare place(Piece piece, int column, int row, boolean silent) {
         return COLUMNS[column].place(piece, row, silent);
     }
 
-    public Square place(Piece piece, int column, int row) {
+    public ISquare place(Piece piece, int column, int row) {
         return COLUMNS[column].place(piece, row, false);
     }
 
-    public Square placeSilent(Piece piece, int column, int row) {
+    public ISquare placeSilent(Piece piece, int column, int row) {
         return COLUMNS[column].place(piece, row, true);
     }
 
-    protected Square remove(Piece piece, int column, int row, boolean silent) {
+    protected ISquare remove(Piece piece, int column, int row, boolean silent) {
         return COLUMNS[column].remove(piece, row, silent);
     }
 
-    protected Square remove(Piece piece, int column, int row) {
+    protected ISquare remove(Piece piece, int column, int row) {
         return COLUMNS[column].remove(piece, row, false);
     }
 
-    protected Square removeSilent(Piece piece, int column, int row) {
+    protected ISquare removeSilent(Piece piece, int column, int row) {
         return COLUMNS[column].remove(piece, row, true);
     }
 
@@ -215,12 +216,12 @@ public class Board {
         int amount = 0;
 
         for (Line column : getColumns()) {
-            for (Square square : column.getSquares()) {
+            for (ISquare square : column.getSquares()) {
                 if (square.getColor() != color) {
                     continue;
                 }
 
-                AdjacentSquares adjacent = getAdjacent(square);
+                IAdjacentSquares adjacent = getAdjacent(square);
                 amount += adjacent.getConnections().size();
             }
         }
@@ -228,7 +229,7 @@ public class Board {
         return amount;
     }
 
-    public AdjacentSquares getAdjacent(Square square) {
+    public IAdjacentSquares getAdjacent(ISquare square) {
         Line[] rows = getRows();
         int rowIndex = square.getRow();
         int columnIndex = square.getColumn();
@@ -237,29 +238,29 @@ public class Board {
             throw new ArrayIndexOutOfBoundsException("Row " + rowIndex + " is out of bounds");
         }
 
-        Square[] row = rows[rowIndex].getSquares();
+        ISquare[] row = rows[rowIndex].getSquares();
         if (columnIndex >= row.length) {
             throw new ArrayIndexOutOfBoundsException("Column " + columnIndex + " is out of bounds");
         }
 
-        Square centerSquare = row[columnIndex];
+        ISquare centerSquare = row[columnIndex];
 
-        Square upSquare = null;
+        ISquare upSquare = null;
         if (rowIndex > 0) {
             upSquare = ROWS[rowIndex - 1].getSquares()[columnIndex];
         }
 
-        Square rightSquare = null;
+        ISquare rightSquare = null;
         if ((columnIndex + 1) < row.length) {
             rightSquare = row[columnIndex + 1];
         }
 
-        Square downSquare = null;
+        ISquare downSquare = null;
         if ((rowIndex + 1) < ROWS.length) {
             downSquare = ROWS[rowIndex + 1].getSquares()[columnIndex];
         }
 
-        Square leftSquare = null;
+        ISquare leftSquare = null;
         if (columnIndex > 0) {
             leftSquare = row[columnIndex - 1];
         }
@@ -267,27 +268,27 @@ public class Board {
         return new AdjacentSquares(centerSquare, upSquare, rightSquare, downSquare, leftSquare);
     }
 
-    private boolean isConnected(Square origin, Square destination) {
+    private boolean isConnected(ISquare origin, ISquare destination) {
         if (origin.getColor() == null || origin.getColor() != destination.getColor()) {
             return false;
         }
 
-        List<Square> connections = getAdjacent(origin).getConnections();
-        List<Square> visited = new ArrayList<>();
+        ImmutableSet<ISquare> connections = getAdjacent(origin).getConnections();
+        List<ISquare> visited = new ArrayList<>();
         visited.add(origin);
 
-        for (Square connection : connections) {
+        for (ISquare connection : connections) {
             getAllConnections(connection, visited);
         }
 
         return visited.contains(destination);
     }
 
-    private void getAllConnections(Square squareOne, List<Square> visited) {
-        List<Square> connections = getAdjacent(squareOne).getConnections();
+    private void getAllConnections(ISquare squareOne, List<ISquare> visited) {
+        ImmutableSet<ISquare> connections = getAdjacent(squareOne).getConnections();
         visited.add(squareOne);
 
-        for (Square connection : connections) {
+        for (ISquare connection : connections) {
             if (visited.contains(connection)) {
                 continue;
             }
@@ -297,12 +298,12 @@ public class Board {
     }
 
     public boolean hasRoad(Color color, Line line1, Line line2) {
-        for (Square origin : line1.getSquares()) {
+        for (ISquare origin : line1.getSquares()) {
             if (origin.getColor() != color) {
                 continue;
             }
 
-            for (Square destination : line2.getSquares()) {
+            for (ISquare destination : line2.getSquares()) {
                 if (destination.getColor() != color) {
                     continue;
                 }
@@ -366,8 +367,8 @@ public class Board {
     }
 
     public boolean isFull() {
-        for (Square[] row : toSquareArray()) {
-            for (Square square : row) {
+        for (ISquare[] row : toSquareArray()) {
+            for (ISquare square : row) {
                 if (square.getTopPiece() == null) {
                     return false;
                 }
@@ -395,7 +396,7 @@ public class Board {
 
         Line[] rows = getRows();
         for (int r = 0; r < rows.length; r++) {
-            Square[] columns = rows[r].getSquares();
+            ISquare[] columns = rows[r].getSquares();
             for (int c = 0; c < columns.length; c++) {
                 double[] pieces = columns[c].toDoubleArray(maximumPieces);
                 array[r][c] = pieces;

@@ -23,7 +23,7 @@ public class TakSpace extends DiscreteSpace {
             return noOp();
         }
 
-        return rd.nextInt(actions);
+        return rnd .nextInt(actions);
     }
 
     @Override

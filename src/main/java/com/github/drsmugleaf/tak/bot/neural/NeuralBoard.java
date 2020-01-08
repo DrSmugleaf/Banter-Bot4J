@@ -1,8 +1,8 @@
 package com.github.drsmugleaf.tak.bot.neural;
 
 import com.github.drsmugleaf.tak.board.Board;
+import com.github.drsmugleaf.tak.board.ISquare;
 import com.github.drsmugleaf.tak.board.Preset;
-import com.github.drsmugleaf.tak.board.Square;
 import org.deeplearning4j.rl4j.space.Encodable;
 
 import java.util.Arrays;
@@ -16,7 +16,7 @@ public class NeuralBoard extends Board implements Encodable {
         super(preset);
     }
 
-    public NeuralBoard(Square[][] squares) {
+    public NeuralBoard(ISquare[][] squares) {
         super(squares);
     }
 

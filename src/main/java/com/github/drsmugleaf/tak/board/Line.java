@@ -9,21 +9,21 @@ import com.github.drsmugleaf.tak.pieces.Type;
  */
 public class Line {
 
-    protected final Square[] SQUARES;
+    protected final ISquare[] SQUARES;
 
     protected Line(int size) {
-        SQUARES = new Square[size];
+        SQUARES = new ISquare[size];
     }
 
-    public Square[] getSquares() {
+    public ISquare[] getSquares() {
         return SQUARES;
     }
 
-    public boolean canMove(int origin, Square destination, int pieces) {
+    public boolean canMove(int origin, ISquare destination, int pieces) {
         return origin < SQUARES.length && SQUARES[origin].canMove(destination, pieces);
     }
 
-    public Square move(int origin, Square destination, int pieces, boolean silent) {
+    public ISquare move(int origin, ISquare destination, int pieces, boolean silent) {
         return SQUARES[origin].move(destination, pieces, silent);
     }
 
@@ -31,20 +31,20 @@ public class Line {
         return location < SQUARES.length && SQUARES[location].canPlace();
     }
 
-    public Square place(Piece piece, int location, boolean silent) {
+    public ISquare place(Piece piece, int location, boolean silent) {
         return SQUARES[location].place(piece, silent);
     }
 
-    public Square remove(Piece piece, int location, boolean silent) {
+    public ISquare remove(Piece piece, int location, boolean silent) {
         return SQUARES[location].remove(piece, silent);
     }
 
-    protected void setSquare(int i, Square square) {
+    protected void setSquare(int i, ISquare square) {
         SQUARES[i] = square;
     }
 
     public boolean hasSquare(Color color) {
-        for (Square square : SQUARES) {
+        for (ISquare square : SQUARES) {
             if (square.getColor() == color) {
                 return true;
             }
@@ -56,7 +56,7 @@ public class Line {
     public int countFlat(Color color) {
         int amount = 0;
 
-        for (Square square : SQUARES) {
+        for (ISquare square : SQUARES) {
             Piece topPiece = square.getTopPiece();
             if (topPiece != null && topPiece.getColor() == color && topPiece.getType() == Type.FLAT_STONE) {
                 amount++;
@@ -67,7 +67,7 @@ public class Line {
     }
 
     public void reset() {
-        for (Square square : SQUARES) {
+        for (ISquare square : SQUARES) {
             square.reset();
         }
     }

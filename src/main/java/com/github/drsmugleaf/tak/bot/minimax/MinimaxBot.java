@@ -54,7 +54,7 @@ public abstract class MinimaxBot extends Bot {
         int score = 0;
 
         for (Line row : board.getRows()) {
-            for (Square square : row.getSquares()) {
+            for (ISquare square : row.getSquares()) {
                 Piece topPiece = square.getTopPiece();
                 if (topPiece == null) {
                     continue;

@@ -24,7 +24,7 @@ public class MovingCoordinates implements ICoordinates {
         PIECES = pieces;
     }
 
-    public MovingCoordinates(Square origin, Square destination, int pieces) {
+    public MovingCoordinates(ISquare origin, ISquare destination, int pieces) {
         this(origin.getColumn(), origin.getRow(), destination.getColumn(), destination.getRow(), pieces);
     }
 

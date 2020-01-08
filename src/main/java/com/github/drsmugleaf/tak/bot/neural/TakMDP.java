@@ -2,10 +2,7 @@ package com.github.drsmugleaf.tak.bot.neural;
 
 import com.github.drsmugleaf.env.Keys;
 import com.github.drsmugleaf.tak.Game;
-import com.github.drsmugleaf.tak.board.ICoordinates;
-import com.github.drsmugleaf.tak.board.Line;
-import com.github.drsmugleaf.tak.board.Preset;
-import com.github.drsmugleaf.tak.board.Square;
+import com.github.drsmugleaf.tak.board.*;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.player.Player;
 import org.deeplearning4j.gym.StepReply;
@@ -141,7 +138,7 @@ public class TakMDP implements MDP<NeuralBoard, Integer, DiscreteSpace> {
             reward = getGame().getWinner().getColor() == nextPlayer.getColor() ? Integer.MAX_VALUE : Integer.MIN_VALUE;
         } else {
             for (Line column : getGame().getBoard().getColumns()) {
-                for (Square square : column.getSquares()) {
+                for (ISquare square : column.getSquares()) {
                     Piece topPiece = square.getTopPiece();
                     if (topPiece == null) {
                         continue;

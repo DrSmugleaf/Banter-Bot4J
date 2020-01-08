@@ -47,7 +47,7 @@ public class SquareButton extends Square {
     }
 
     @Override
-    protected void onUpdate() {
+    public void onUpdate() {
         List<Piece> pieces = getPieces();
         Image background = getDefaultImage();
         Graphics g = background.getGraphics();

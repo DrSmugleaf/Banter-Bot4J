@@ -2,8 +2,8 @@ package com.github.drsmugleaf.tak;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tak.board.Board;
+import com.github.drsmugleaf.tak.board.ISquare;
 import com.github.drsmugleaf.tak.board.Preset;
-import com.github.drsmugleaf.tak.board.Square;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
@@ -64,16 +64,16 @@ public class Game<T extends Board> {
         return new EnumMap<>(PLAYERS);
     }
 
-    public boolean canMove(Player player, Square origin, Square destination, int pieces) {
+    public boolean canMove(Player player, ISquare origin, ISquare destination, int pieces) {
         return isActive() && nextPlayer == player && BOARD.canMove(origin, destination, pieces);
     }
 
-    public Square move(Player player, Square origin, Square destination, int pieces) {
+    public ISquare move(Player player, ISquare origin, ISquare destination, int pieces) {
         if (!canMove(player, origin, destination, pieces)) {
             throw new IllegalGameCall("Illegal move call, origin " + origin + ", destination " + destination + " and pieces " + pieces);
         }
 
-        Square square = BOARD.move(origin, destination, pieces);
+        ISquare square = BOARD.move(origin, destination, pieces);
         onPieceMove(player, origin, destination, pieces);
         return square;
     }
@@ -82,13 +82,13 @@ public class Game<T extends Board> {
         return isActive() && nextPlayer == player && BOARD.canPlace(column, row);
     }
 
-    public Square place(Player player, Type type, int column, int row) {
+    public ISquare place(Player player, Type type, int column, int row) {
         if (!canPlace(player, column, row)) {
             throw new IllegalGameCall("Illegal place call, piece type " + type + " at row " + row + " and column " + column);
         }
 
         Piece piece = player.getHand().takePiece(type);
-        Square square = BOARD.place(piece, column, row);
+        ISquare square = BOARD.place(piece, column, row);
         onPiecePlace(player, type, square);
         return square;
     }
@@ -216,12 +216,12 @@ public class Game<T extends Board> {
         active = true;
     }
 
-    protected void onPieceMove(Player player, Square origin, Square destination, int pieces) {
+    protected void onPieceMove(Player player, ISquare origin, ISquare destination, int pieces) {
         player.onOwnPieceMove(origin, destination, pieces);
         getOtherPlayer(player).onEnemyPieceMove(player, origin, destination, pieces);
     }
 
-    protected void onPiecePlace(Player player, Type type, Square square) {
+    protected void onPiecePlace(Player player, Type type, ISquare square) {
         player.onOwnPiecePlace(type, square);
         getOtherPlayer(player).onEnemyPiecePlace(player, type, square);
     }

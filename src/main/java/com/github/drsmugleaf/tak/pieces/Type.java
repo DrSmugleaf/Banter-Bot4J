@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tak.pieces;
 
-import com.github.drsmugleaf.tak.board.Square;
+import com.github.drsmugleaf.tak.board.ISquare;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -15,7 +15,7 @@ public enum Type {
         }
 
         @Override
-        public void move(Square to, int pieces) {
+            public void move(ISquare to, int pieces) {
             Piece topPiece = to.getTopPiece();
             if (pieces == 1 && topPiece != null && topPiece.getType() == STANDING_STONE) {
                 topPiece.flatten();
@@ -75,6 +75,6 @@ public enum Type {
         return ignoresBlock() || !topPiece.getType().blocks();
     }
 
-    public void move(Square to, int pieces) {}
+    public void move(ISquare to, int pieces) {}
 
 }

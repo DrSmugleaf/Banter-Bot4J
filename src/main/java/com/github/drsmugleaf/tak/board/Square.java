@@ -13,7 +13,7 @@ import java.util.ListIterator;
 /**
  * Created by DrSmugleaf on 01/12/2018
  */
-public class Square {
+public class Square implements ISquare {
 
     private final List<Piece> PIECES = new ArrayList<>();
     private final int COLUMN;
@@ -24,7 +24,7 @@ public class Square {
         ROW = row;
     }
 
-    private Square(Square square) {
+    private Square(ISquare square) {
         this(square.getColumn(), square.getRow());
 
         for (Piece piece : square.getPieces()) {
@@ -32,38 +32,34 @@ public class Square {
         }
     }
 
-    public static Square createCustom(int column, int row, Piece... pieces) {
-        Square square = new Square(column, row);
-        Collections.addAll(square.PIECES, pieces);
+    public static ISquare createCustom(int column, int row, Piece... pieces) {
+        ISquare square = new Square(column, row);
+        Collections.addAll(square.getPieces(), pieces);
         return square;
     }
 
-    public Square copy() {
+    @Override
+    public ISquare copy() {
         return new Square(this);
     }
 
+    @Override
     public int getColumn() {
         return COLUMN;
     }
 
+    @Override
     public int getRow() {
         return ROW;
     }
 
+    @Override
     public List<Piece> getPieces() {
-        return new ArrayList<>(PIECES);
-    }
-
-    public double[] toDoubleArray(int totalPieces) {
-        double[] array = new double[totalPieces];
-        for (int i = 0; i < PIECES.size(); i++) {
-            array[i] = PIECES.get(i).toDouble();
-        }
-
-        return array;
+        return PIECES;
     }
 
     @Nullable
+    @Override
     public Color getColor() {
         if (getTopPiece() == null) {
             return null;
@@ -73,6 +69,7 @@ public class Square {
     }
 
     @Nullable
+    @Override
     public Type getType() {
         if (getTopPiece() == null) {
             return null;
@@ -82,6 +79,7 @@ public class Square {
     }
 
     @Nullable
+    @Override
     public Piece getTopPiece() {
         if (PIECES.isEmpty()) {
             return null;
@@ -90,7 +88,8 @@ public class Square {
         return PIECES.get(PIECES.size() - 1);
     }
 
-    public boolean canMove(Square other, int pieces) {
+    @Override
+    public boolean canMove(ISquare other, int pieces) {
         if (pieces <= 0 || pieces > PIECES.size()) {
             return false;
         }
@@ -112,14 +111,15 @@ public class Square {
         }
     }
 
-    public Square move(Square destination, int pieces, boolean silent) {
+    @Override
+    public ISquare move(ISquare destination, int pieces, boolean silent) {
         ListIterator<Piece> iterator = PIECES.listIterator(PIECES.size());
         while (iterator.hasPrevious() && pieces > 0) {
             Piece piece = iterator.previous();
 
             piece.getType().move(destination, pieces);
             iterator.remove();
-            destination.PIECES.add(piece);
+            destination.getPieces().add(piece);
 
             pieces--;
         }
@@ -132,11 +132,13 @@ public class Square {
         return this;
     }
 
+    @Override
     public boolean canPlace() {
         return getTopPiece() == null;
     }
 
-    public Square place(Piece piece, boolean silent) {
+    @Override
+    public ISquare place(Piece piece, boolean silent) {
         PIECES.add(piece);
 
         if (!silent) {
@@ -146,7 +148,8 @@ public class Square {
         return this;
     }
 
-    public Square remove(Piece piece, boolean silent) {
+    @Override
+    public ISquare remove(Piece piece, boolean silent) {
         PIECES.remove(piece);
 
         if (!silent) {
@@ -156,6 +159,7 @@ public class Square {
         return this;
     }
 
+    @Override
     public boolean connectsTo(@Nullable Piece piece) {
         Piece topPiece = getTopPiece();
         if (piece == null || topPiece == null) {
@@ -165,12 +169,31 @@ public class Square {
         return getColor() == piece.getColor() && topPiece.getType().formsRoad() && piece.getType().formsRoad();
     }
 
-    public boolean connectsTo(@Nullable Square square) {
+    @Override
+    public boolean connectsTo(@Nullable ISquare square) {
         if (square == null) {
             return false;
         }
 
         return connectsTo(square.getTopPiece());
+    }
+
+    @Override
+    public void onUpdate() {}
+
+    @Override
+    public void reset() {
+        PIECES.clear();
+    }
+
+    @Override
+    public double[] toDoubleArray(int totalPieces) {
+        double[] array = new double[totalPieces];
+        for (int i = 0; i < PIECES.size(); i++) {
+            array[i] = PIECES.get(i).toDouble();
+        }
+
+        return array;
     }
 
     @Override
@@ -188,12 +211,6 @@ public class Square {
         }
 
         return builder.toString();
-    }
-
-    protected void onUpdate() {}
-
-    public void reset() {
-        PIECES.clear();
     }
 
 }

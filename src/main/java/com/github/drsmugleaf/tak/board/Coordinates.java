@@ -22,7 +22,7 @@ public class Coordinates implements ICoordinates {
         PIECE = piece;
     }
 
-    public Coordinates(Square square, Type piece) {
+    public Coordinates(ISquare square, Type piece) {
         this(square.getColumn(), square.getRow(), piece);
     }
 

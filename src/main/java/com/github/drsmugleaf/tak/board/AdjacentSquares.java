@@ -1,66 +1,104 @@
 package com.github.drsmugleaf.tak.board;
 
 import com.github.drsmugleaf.Nullable;
+import com.google.common.collect.ImmutableSet;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collector;
+import java.util.stream.Stream;
 
 /**
  * Created by DrSmugleaf on 02/12/2018
  */
-public class AdjacentSquares {
+public class AdjacentSquares implements IAdjacentSquares {
 
-    private static final int UP = 0;
-    private static final int RIGHT = 1;
-    private static final int DOWN = 2;
-    private static final int LEFT = 3;
-    private final Square CENTER;
-    private final List<Square> ADJACENT = new ArrayList<>();
+    private final ISquare ORIGIN;
+    @Nullable
+    private final ISquare UP;
+    @Nullable
+    private final ISquare RIGHT;
+    @Nullable
+    private final ISquare DOWN;
+    @Nullable
+    private final ISquare LEFT;
+    private final ImmutableSet<ISquare> ADJACENT;
+    private final ImmutableSet<ISquare> CONNECTIONS;
 
-    protected AdjacentSquares(Square center, @Nullable Square up, @Nullable Square right, @Nullable Square down, @Nullable Square left) {
-        CENTER = center;
-        ADJACENT.add(UP, up);
-        ADJACENT.add(RIGHT, right);
-        ADJACENT.add(DOWN, down);
-        ADJACENT.add(LEFT, left);
+    protected AdjacentSquares(
+            ISquare origin,
+            @Nullable ISquare up,
+            @Nullable ISquare right,
+            @Nullable ISquare down,
+            @Nullable ISquare left
+    ) {
+        ORIGIN = origin;
+        UP = up;
+        RIGHT = right;
+        DOWN = down;
+        LEFT = left;
+        ADJACENT = Stream
+                .of(UP, RIGHT, DOWN, LEFT)
+                .filter(Objects::nonNull)
+                .collect(Collector.of(
+                        ImmutableSet.Builder<ISquare>::new,
+                        ImmutableSet.Builder<ISquare>::add,
+                        (b1, b2) -> b1.addAll(b2.build()),
+                        ImmutableSet.Builder<ISquare>::build
+                ));
+        CONNECTIONS = Stream
+                .of(UP, RIGHT, DOWN, LEFT)
+                .filter(Objects::nonNull)
+                .filter(square -> square.connectsTo(ORIGIN))
+                .collect(Collector.of(
+                        ImmutableSet.Builder<ISquare>::new,
+                        ImmutableSet.Builder<ISquare>::add,
+                        (b1, b2) -> b1.addAll(b2.build()),
+                        ImmutableSet.Builder<ISquare>::build
+                ));
     }
 
-    public boolean contains(Square square) {
+    @Override
+    public ISquare getOrigin() {
+        return ORIGIN;
+    }
+
+    @Override
+    @Nullable
+    public ISquare getUp() {
+        return UP;
+    }
+
+    @Override
+    @Nullable
+    public ISquare getRight() {
+        return RIGHT;
+    }
+
+    @Override
+    @Nullable
+    public ISquare getDown() {
+        return DOWN;
+    }
+
+    @Override
+    @Nullable
+    public ISquare getLeft() {
+        return LEFT;
+    }
+
+    @Override
+    public boolean contains(ISquare square) {
         return ADJACENT.contains(square);
     }
 
-    public List<Square> getAll() {
+    @Override
+    public ImmutableSet<ISquare> getAll() {
         return ADJACENT;
     }
 
-    public List<Square> getConnections() {
-        List<Square> squares = new ArrayList<>(getAll());
-        squares.removeIf(square -> !getCenter().connectsTo(square));
-        return squares;
-    }
-
-    public Square getCenter() {
-        return CENTER;
-    }
-
-    @Nullable
-    public Square getUp() {
-        return ADJACENT.get(UP);
-    }
-
-    @Nullable
-    public Square getRight() {
-        return ADJACENT.get(RIGHT);
-    }
-
-    @Nullable
-    public Square getDown() {
-        return ADJACENT.get(DOWN);
-    }
-
-    @Nullable
-    public Square getLeft() {
-        return ADJACENT.get(LEFT);
+    @Override
+    public ImmutableSet<ISquare> getConnections() {
+        return CONNECTIONS;
     }
 
 }
