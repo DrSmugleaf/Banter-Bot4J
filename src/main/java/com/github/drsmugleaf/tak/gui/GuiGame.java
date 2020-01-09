@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.tak.gui;
 
+import com.github.drsmugleaf.tak.board.IPreset;
 import com.github.drsmugleaf.tak.game.Game;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.bot.minimax.MinimaxFlatMoveBot;
@@ -26,7 +27,7 @@ public class GuiGame extends Game {
         FRAME = setupFrame();
     }
 
-    public GuiGame(Preset preset, String playerName1, String playerName2, Function<PlayerInformation, Player> playerMaker1, Function<PlayerInformation, Player> playerMaker2) {
+    public GuiGame(IPreset preset, String playerName1, String playerName2, Function<PlayerInformation, Player> playerMaker1, Function<PlayerInformation, Player> playerMaker2) {
         this(BoardPanel.from(preset), playerName1, playerName2, playerMaker1, playerMaker2);
     }
 

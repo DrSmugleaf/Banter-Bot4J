@@ -1,10 +1,7 @@
 package com.github.drsmugleaf.tak.game;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.tak.board.Board;
-import com.github.drsmugleaf.tak.board.IBoard;
-import com.github.drsmugleaf.tak.board.ISquare;
-import com.github.drsmugleaf.tak.board.Preset;
+import com.github.drsmugleaf.tak.board.*;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
@@ -35,15 +32,15 @@ public class Game implements IGame {
             Function<PlayerInformation, Player> playerMaker2
     ) {
         BOARD = board;
-        Player player1 = playerMaker1.apply(new PlayerInformation(playerName1, this, Color.BLACK, BOARD.getPreset()));
-        Player player2 = playerMaker2.apply(new PlayerInformation(playerName2, this, Color.WHITE, BOARD.getPreset()));
+        Player player1 = playerMaker1.apply(new PlayerInformation(playerName1, this, Color.BLACK));
+        Player player2 = playerMaker2.apply(new PlayerInformation(playerName2, this, Color.WHITE));
         PLAYERS.put(player1.getColor(), player1);
         PLAYERS.put(player2.getColor(), player2);
         nextPlayer = player1;
     }
 
     public static IGame from(
-            Preset preset,
+            IPreset preset,
             String playerName1,
             String playerName2,
             Function<PlayerInformation, Player> playerMaker1,

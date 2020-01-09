@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tak.bot.neural.reinforcementlearning;
 
-import com.github.drsmugleaf.tak.board.Preset;
+import com.github.drsmugleaf.tak.board.IPreset;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
 
 /**
@@ -8,7 +8,7 @@ import org.deeplearning4j.rl4j.space.DiscreteSpace;
  */
 public class TakSpace extends DiscreteSpace {
 
-    public TakSpace(Preset preset) {
+    public TakSpace(IPreset preset) {
         super(preset.getAllActions().size());
     }
 

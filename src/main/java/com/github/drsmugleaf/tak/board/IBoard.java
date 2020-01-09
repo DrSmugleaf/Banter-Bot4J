@@ -15,7 +15,7 @@ public interface IBoard {
     IBoard getDefault();
     Line[] getColumns();
     Line[] getRows();
-    Preset getPreset();
+    IPreset getPreset();
     boolean canMove(ISquare origin, ISquare destination, int pieces);
     ISquare move(ISquare origin, ISquare destination, int pieces, boolean silent);
     ISquare move(ISquare origin, ISquare destination, int pieces);

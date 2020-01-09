@@ -1,8 +1,8 @@
 package com.github.drsmugleaf.tak.bot.neural.reinforcementlearning;
 
 import com.github.drsmugleaf.tak.board.Board;
+import com.github.drsmugleaf.tak.board.IPreset;
 import com.github.drsmugleaf.tak.board.ISquare;
-import com.github.drsmugleaf.tak.board.Preset;
 import org.deeplearning4j.rl4j.space.Encodable;
 
 import java.util.Arrays;
@@ -12,7 +12,7 @@ import java.util.Arrays;
  */
 public class NeuralBoard extends Board implements INeuralBoard, Encodable {
 
-    public NeuralBoard(Preset preset) {
+    public NeuralBoard(IPreset preset) {
         super(preset);
     }
 

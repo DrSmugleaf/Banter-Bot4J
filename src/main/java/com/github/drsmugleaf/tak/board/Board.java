@@ -14,11 +14,11 @@ import java.util.List;
  */
 public class Board implements IBoard {
 
-    private final Preset PRESET;
+    private final IPreset PRESET;
     private final Line[] COLUMNS;
     private final Line[] ROWS;
 
-    public Board(Preset preset) {
+    public Board(IPreset preset) {
         PRESET = preset;
         int size = PRESET.getSize();
 
@@ -43,7 +43,7 @@ public class Board implements IBoard {
     }
 
     public Board(ISquare[][] squares) {
-        Preset preset = Preset.getPreset(squares.length);
+        IPreset preset = Preset.getPreset(squares.length);
         if (preset == null) {
             throw new IllegalArgumentException("No preset found for array length " + squares.length);
         }
@@ -101,7 +101,7 @@ public class Board implements IBoard {
     }
 
     @Override
-    public Preset getPreset() {
+    public IPreset getPreset() {
         return PRESET;
     }
 
@@ -396,7 +396,7 @@ public class Board implements IBoard {
 
     @Override
     public double[][][] toDoubleArray() {
-        Preset preset = getPreset();
+        IPreset preset = getPreset();
         int size = preset.getSize();
         int maximumPieces = 1 + preset.getStones() * 2;
         double[][][] array = new double[size][size][maximumPieces];

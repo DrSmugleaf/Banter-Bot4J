@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tak.player;
 
-import com.github.drsmugleaf.tak.board.Preset;
+import com.github.drsmugleaf.tak.board.IPreset;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
@@ -10,19 +10,19 @@ import com.github.drsmugleaf.tak.pieces.Type;
  */
 public class Hand {
 
-    private final Preset PRESET;
+    private final IPreset PRESET;
     private final Color COLOR;
     private int STONES;
     private int CAPSTONES;
 
-    Hand(Color color, Preset preset) {
+    Hand(Color color, IPreset preset) {
         PRESET = preset;
         COLOR = color;
         STONES = preset.getStones();
         CAPSTONES = preset.getCapstones();
     }
 
-    public Preset getPreset() {
+    public IPreset getPreset() {
         return PRESET;
     }
 

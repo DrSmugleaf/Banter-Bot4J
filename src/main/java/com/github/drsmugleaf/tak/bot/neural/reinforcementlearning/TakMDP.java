@@ -2,6 +2,7 @@ package com.github.drsmugleaf.tak.bot.neural.reinforcementlearning;
 
 import com.github.drsmugleaf.env.Keys;
 import com.github.drsmugleaf.tak.board.ICoordinates;
+import com.github.drsmugleaf.tak.board.IPreset;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.bot.random.RandomFlatBot;
 import com.github.drsmugleaf.tak.player.Player;
@@ -58,7 +59,7 @@ public class TakMDP implements MDP<INeuralBoard, Integer, DiscreteSpace> {
     private final ObservationSpace<INeuralBoard> OBSERVATION_SPACE;
     private final TakSpace ACTION_SPACE;
 
-    public TakMDP(Preset preset) {
+    public TakMDP(IPreset preset) {
         GAME = new NeuralGame(new NeuralBoard(preset), "Neural Bot 1", "Neural Bot 2", NeuralBot::from, RandomFlatBot::from);
         OBSERVATION_SPACE = new ArrayObservationSpace<>(new int[]{preset.getSize() * preset.getSize() * (1 + preset.getStones() * 2)});
         ACTION_SPACE = new TakSpace(preset);

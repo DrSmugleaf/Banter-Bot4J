@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.gui;
 
 import com.github.drsmugleaf.tak.board.Board;
-import com.github.drsmugleaf.tak.board.Preset;
+import com.github.drsmugleaf.tak.board.IPreset;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -17,7 +17,7 @@ public class BoardPanel extends Board {
     private final JPanel BOARD;
     private final SquareButton[][] BUTTONS;
 
-    private BoardPanel(Preset preset, SquareButton[][] squares) {
+    private BoardPanel(IPreset preset, SquareButton[][] squares) {
         super(squares);
         BUTTONS = squares;
 
@@ -35,7 +35,7 @@ public class BoardPanel extends Board {
         }
     }
 
-    public static BoardPanel from(Preset preset) {
+    public static BoardPanel from(IPreset preset) {
         int dimensions = preset.getSize();
         SquareButton[][] board = new SquareButton[dimensions][dimensions];
         for (int i = 0; i < board.length; i++) {

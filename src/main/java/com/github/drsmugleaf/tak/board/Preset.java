@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * Created by DrSmugleaf on 01/12/2018
  */
-public enum Preset {
+public enum Preset implements IPreset {
 
     FOUR(4, 0, 15, "4x4.jpg"),
     FIVE(5, 1, 21, "5x5.jpg"),
@@ -65,13 +65,13 @@ public enum Preset {
         ALL_ACTIONS = ImmutableList.copyOf(allActions);
     }
 
-    public static Preset getDefault() {
+    public static IPreset getDefault() {
         return FIVE;
     }
 
     @Nullable
-    public static Preset getPreset(int size) {
-        for (Preset preset : values()) {
+    public static IPreset getPreset(int size) {
+        for (IPreset preset : values()) {
             if (preset.getSize() == size) {
                 return preset;
             }
@@ -80,6 +80,7 @@ public enum Preset {
         return null;
     }
 
+    @Override
     public InputStream getImage() {
         String fileName = "/" + IMAGE_NAME;
         try {
@@ -90,22 +91,27 @@ public enum Preset {
         }
     }
 
+    @Override
     public int getSize() {
         return SIZE;
     }
 
+    @Override
     public int getCapstones() {
         return CAPSTONES;
     }
 
+    @Override
     public int getStones() {
         return STONES;
     }
 
+    @Override
     public int getCarryLimit() {
         return getSize();
     }
 
+    @Override
     public ImmutableList<ICoordinates> getAllActions() {
         return ALL_ACTIONS;
     }

@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tak.gui;
 
-import com.github.drsmugleaf.tak.board.Preset;
+import com.github.drsmugleaf.tak.board.IPreset;
 import com.github.drsmugleaf.tak.board.Square;
 import com.github.drsmugleaf.tak.images.Images;
 import com.github.drsmugleaf.tak.pieces.Piece;
@@ -20,7 +20,7 @@ public class SquareButton extends Square {
     private final int SIZE;
     private final JButton BUTTON;
 
-    protected SquareButton(int column, int row, Preset preset) {
+    protected SquareButton(int column, int row, IPreset preset) {
         super(column, row);
         SIZE = SINGLE_SQUARE_SIZE / preset.getSize();
 
