@@ -8,21 +8,8 @@ import org.deeplearning4j.rl4j.space.DiscreteSpace;
  */
 public class TakSpace extends DiscreteSpace {
 
-    private final INeuralGame GAME;
-
-    public TakSpace(INeuralGame game, Preset preset) {
+    public TakSpace(Preset preset) {
         super(preset.getAllActions().size());
-        GAME = game;
-    }
-
-    @Override
-    public Integer randomAction() {
-        int actions = GAME.getNextPlayer().getAvailableActions().size();
-        if (actions <= 0) {
-            return noOp();
-        }
-
-        return rnd .nextInt(actions);
     }
 
     @Override

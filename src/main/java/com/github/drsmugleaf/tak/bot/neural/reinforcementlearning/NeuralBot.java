@@ -35,7 +35,7 @@ public class NeuralBot extends Bot {
     @Override
     public ICoordinates getNextAction() {
         NeuralBoard board = (NeuralBoard) getGame().getBoard();
-        INDArray array = Nd4j.create(board.toArray()).reshape(2L);
+        INDArray array = Nd4j.create(board.toArray());
         Integer action = TakMDP.getPolicy().nextAction(array);
         List<ICoordinates> actions = getAvailableActions();
         return actions.get(action);
