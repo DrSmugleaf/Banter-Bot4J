@@ -5,7 +5,7 @@ import com.github.drsmugleaf.tak.game.Game;
 import com.github.drsmugleaf.tak.board.ICoordinates;
 import com.github.drsmugleaf.tak.bot.Bot;
 import com.github.drsmugleaf.tak.pieces.Color;
-import com.github.drsmugleaf.tak.player.Player;
+import com.github.drsmugleaf.tak.player.IPlayer;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
 import org.jetbrains.annotations.Contract;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -27,7 +27,7 @@ public class NeuralBot extends Bot {
     }
 
     @Contract("_ -> new")
-    public static Player from(PlayerInformation information) {
+    public static IPlayer from(PlayerInformation information) {
         return new NeuralBot(information.NAME, information.GAME, information.COLOR);
     }
 
@@ -42,7 +42,7 @@ public class NeuralBot extends Bot {
     }
 
     @Override
-    public void onGameEnd(@Nullable Player winner) {
+    public void onGameEnd(@Nullable IPlayer winner) {
         if (winner == null) tie++;
         if (winner == this) win++; else loss++;
     }

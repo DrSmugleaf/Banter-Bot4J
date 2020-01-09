@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.board;
 
 import com.github.drsmugleaf.tak.pieces.Color;
-import com.github.drsmugleaf.tak.player.Player;
+import com.github.drsmugleaf.tak.player.IPlayer;
 
 import java.util.function.Function;
 
@@ -29,12 +29,12 @@ public class MovingCoordinates implements ICoordinates {
     }
 
     @Override
-    public boolean canPlace(Player player) {
+    public boolean canPlace(IPlayer player) {
         return player.canMove(ORIGIN_COLUMN, ORIGIN_ROW, DESTINATION_COLUMN, DESTINATION_ROW, PIECES);
     }
 
     @Override
-    public void place(Player player) {
+    public void place(IPlayer player) {
         player.move(ORIGIN_COLUMN, ORIGIN_ROW, DESTINATION_COLUMN, DESTINATION_ROW, PIECES);
     }
 

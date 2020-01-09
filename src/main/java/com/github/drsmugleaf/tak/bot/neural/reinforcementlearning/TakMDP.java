@@ -5,7 +5,7 @@ import com.github.drsmugleaf.tak.board.ICoordinates;
 import com.github.drsmugleaf.tak.board.IPreset;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.bot.random.RandomFlatBot;
-import com.github.drsmugleaf.tak.player.Player;
+import com.github.drsmugleaf.tak.player.IPlayer;
 import org.deeplearning4j.gym.StepReply;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.discrete.QLearningDiscreteDense;
@@ -137,7 +137,7 @@ public class TakMDP implements MDP<INeuralBoard, Integer, DiscreteSpace> {
 
     @Override
     public StepReply<INeuralBoard> step(Integer action) {
-        Player nextPlayer = GAME.getNextPlayer();
+        IPlayer nextPlayer = GAME.getNextPlayer();
         if (!(nextPlayer instanceof NeuralBot)) {
             throw new IllegalStateException();
         }

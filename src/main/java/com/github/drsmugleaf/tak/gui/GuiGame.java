@@ -5,7 +5,7 @@ import com.github.drsmugleaf.tak.game.Game;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.bot.minimax.MinimaxFlatMoveBot;
 import com.github.drsmugleaf.tak.images.Images;
-import com.github.drsmugleaf.tak.player.Player;
+import com.github.drsmugleaf.tak.player.IPlayer;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
 
 import javax.swing.*;
@@ -21,13 +21,13 @@ public class GuiGame extends Game {
     private final BoardPanel BOARD_PANEL;
     private JFrame FRAME;
 
-    private GuiGame(BoardPanel board, String playerName1, String playerName2, Function<PlayerInformation, Player> playerMaker1, Function<PlayerInformation, Player> playerMaker2) {
+    private GuiGame(BoardPanel board, String playerName1, String playerName2, Function<PlayerInformation, IPlayer> playerMaker1, Function<PlayerInformation, IPlayer> playerMaker2) {
         super(board, playerName1, playerName2, playerMaker1, playerMaker2);
         BOARD_PANEL = board;
         FRAME = setupFrame();
     }
 
-    public GuiGame(IPreset preset, String playerName1, String playerName2, Function<PlayerInformation, Player> playerMaker1, Function<PlayerInformation, Player> playerMaker2) {
+    public GuiGame(IPreset preset, String playerName1, String playerName2, Function<PlayerInformation, IPlayer> playerMaker1, Function<PlayerInformation, IPlayer> playerMaker2) {
         this(BoardPanel.from(preset), playerName1, playerName2, playerMaker1, playerMaker2);
     }
 

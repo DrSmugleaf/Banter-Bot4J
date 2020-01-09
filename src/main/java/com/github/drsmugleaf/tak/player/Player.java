@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * Created by DrSmugleaf on 01/12/2018
  */
-public abstract class Player {
+public abstract class Player implements IPlayer {
 
     private final String NAME;
     private final IGame GAME;
@@ -31,6 +31,7 @@ public abstract class Player {
         PASSIVE = passive;
     }
 
+    @Override
     public final List<ICoordinates> getAvailableActions(IBoard board, Type type) {
         List<ICoordinates> moves = getAvailableMoves(board);
         List<ICoordinates> places = getAvailablePlaces(board, type);
@@ -39,6 +40,7 @@ public abstract class Player {
         return moves;
     }
 
+    @Override
     public List<ICoordinates> getAvailableActions(IBoard board) {
         List<ICoordinates> moves = getAvailableMoves(board);
         List<ICoordinates> places = getAvailablePlaces(board);
@@ -47,6 +49,7 @@ public abstract class Player {
         return moves;
     }
 
+    @Override
     public final List<ICoordinates> getAvailableActions() {
         if (AVAILABLE_ACTIONS != null) {
             return AVAILABLE_ACTIONS;
@@ -57,6 +60,7 @@ public abstract class Player {
         return actions;
     }
 
+    @Override
     public final List<ICoordinates> getAvailableMoves(IBoard board) {
         List<ICoordinates> moves = new ArrayList<>();
 
@@ -85,10 +89,12 @@ public abstract class Player {
         return moves;
     }
 
+    @Override
     public final List<ICoordinates> getAvailableMoves() {
         return getAvailableMoves(getGame().getBoard());
     }
 
+    @Override
     public final List<ICoordinates> getAvailablePlaces(IBoard board, Type... types) {
         List<ICoordinates> places = new ArrayList<>();
 
@@ -107,41 +113,47 @@ public abstract class Player {
         return places;
     }
 
+    @Override
     public final List<ICoordinates> getAvailablePlaces(IBoard board, Set<Type> types) {
         return getAvailablePlaces(board, types.toArray(new Type[0]));
     }
 
+    @Override
     public final List<ICoordinates> getAvailablePlaces(IBoard board) {
         return getAvailablePlaces(board, Type.getTypes());
     }
 
+    @Override
     public final List<ICoordinates> getAvailablePlaces(Type type) {
         return getAvailablePlaces(getGame().getBoard(), type);
     }
 
+    @Override
     public final List<ICoordinates> getAvailablePlaces() {
         return getAvailablePlaces(getGame().getBoard(), Type.getTypes());
     }
 
+    @Override
     public final String getName() {
         return NAME;
     }
 
+    @Override
     public final IGame getGame() {
         return GAME;
     }
 
+    @Override
     public final Hand getHand() {
         return HAND;
     }
 
+    @Override
     public final boolean isPassive() {
         return PASSIVE;
     }
 
-    @Nullable
-    public abstract ICoordinates getNextAction();
-
+    @Override
     public final void setNextAction(ICoordinates action) {
         NEXT_ACTION = action;
         synchronized (this) {
@@ -149,14 +161,17 @@ public abstract class Player {
         }
     }
 
+    @Override
     public final Color getColor() {
         return getHand().getColor();
     }
 
+    @Override
     public final boolean canMove(ISquare origin, ISquare destination, int pieces) {
         return getColor() == origin.getColor() && GAME.canMove(this, origin, destination, pieces);
     }
 
+    @Override
     public final boolean canMove(int originColumn, int originRow, int destinationColumn, int destinationRow, int pieces) {
         Line[] rows = getGame().getBoard().getRows();
         ISquare origin = rows[originRow].getSquares()[originColumn];
@@ -164,10 +179,12 @@ public abstract class Player {
         return canMove(origin, destination, pieces);
     }
 
+    @Override
     public final ISquare move(ISquare origin, ISquare destination, int pieces) {
         return GAME.move(this, origin, destination, pieces);
     }
 
+    @Override
     public final ISquare move(int originColumn, int originRow, int destinationColumn, int destinationRow, int pieces) {
         Line[] rows = getGame().getBoard().getRows();
         ISquare origin = rows[originRow].getSquares()[originColumn];
@@ -175,14 +192,17 @@ public abstract class Player {
         return move(origin, destination, pieces);
     }
 
+    @Override
     public final boolean canPlace(Type type, int column, int row) {
         return getHand().has(type) && GAME.canPlace(this, column, row);
     }
 
+    @Override
     public final ISquare place(Type type, int column, int row) {
         return GAME.place(this, type, column, row);
     }
 
+    @Override
     public final void surrender() {
         AVAILABLE_ACTIONS = null;
         if (GAME.isActive()) {
@@ -190,6 +210,7 @@ public abstract class Player {
         }
     }
 
+    @Override
     public final void resetPlayer() {
         HAND.reset();
         NEXT_ACTION = null;
@@ -199,6 +220,7 @@ public abstract class Player {
         }
     }
 
+    @Override
     public final void nextTurn() {
 //        if (isPassive()) {
 //            try {
@@ -224,18 +246,25 @@ public abstract class Player {
         AVAILABLE_ACTIONS = null;
     }
 
-    public void onEnemyPieceMove(Player player, ISquare origin, ISquare destination, int pieces) {}
+    @Override
+    public void onEnemyPieceMove(IPlayer player, ISquare origin, ISquare destination, int pieces) {}
 
+    @Override
     public void onOwnPieceMove(ISquare origin, ISquare destination, int pieces) {}
 
-    public void onEnemyPiecePlace(Player player, Type type, ISquare square) {}
+    @Override
+    public void onEnemyPiecePlace(IPlayer player, Type type, ISquare square) {}
 
+    @Override
     public void onOwnPiecePlace(Type type, ISquare square) {}
 
-    public void onEnemyTurnEnd(Player player) {}
+    @Override
+    public void onEnemyTurnEnd(IPlayer player) {}
 
+    @Override
     public void onOwnTurnEnd() {}
 
-    public void onGameEnd(@Nullable Player winner) {}
+    @Override
+    public void onGameEnd(@Nullable IPlayer winner) {}
 
 }

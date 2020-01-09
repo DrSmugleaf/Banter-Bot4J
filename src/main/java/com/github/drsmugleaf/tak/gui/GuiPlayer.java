@@ -2,6 +2,7 @@ package com.github.drsmugleaf.tak.gui;
 
 import com.github.drsmugleaf.tak.board.ICoordinates;
 import com.github.drsmugleaf.tak.pieces.Color;
+import com.github.drsmugleaf.tak.player.IPlayer;
 import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
 
@@ -28,7 +29,7 @@ public class GuiPlayer extends Player {
         }
     }
 
-    public static Player from(PlayerInformation information, GuiGame game) {
+    public static IPlayer from(PlayerInformation information, GuiGame game) {
         return new GuiPlayer(information.NAME, game, information.COLOR);
     }
 

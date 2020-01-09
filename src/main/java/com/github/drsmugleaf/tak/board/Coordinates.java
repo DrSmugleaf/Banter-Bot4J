@@ -3,7 +3,7 @@ package com.github.drsmugleaf.tak.board;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
-import com.github.drsmugleaf.tak.player.Player;
+import com.github.drsmugleaf.tak.player.IPlayer;
 
 import java.util.function.Function;
 
@@ -27,12 +27,12 @@ public class Coordinates implements ICoordinates {
     }
 
     @Override
-    public boolean canPlace(Player player) {
+    public boolean canPlace(IPlayer player) {
         return player.canPlace(PIECE, COLUMN, ROW);
     }
 
     @Override
-    public void place(Player player) {
+    public void place(IPlayer player) {
         player.place(PIECE, COLUMN, ROW);
     }
 

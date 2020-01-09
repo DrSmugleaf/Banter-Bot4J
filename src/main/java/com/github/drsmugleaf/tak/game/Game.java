@@ -8,7 +8,7 @@ import com.github.drsmugleaf.tak.board.ISquare;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
-import com.github.drsmugleaf.tak.player.Player;
+import com.github.drsmugleaf.tak.player.IPlayer;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
 import com.google.common.collect.ImmutableMap;
 
@@ -22,22 +22,22 @@ import java.util.function.Function;
 public class Game implements IGame {
 
     private final IBoard BOARD;
-    private final ImmutableMap<Color, Player> PLAYERS;
-    public Player nextPlayer;
+    private final ImmutableMap<Color, IPlayer> PLAYERS;
+    public IPlayer nextPlayer;
     @Nullable
-    private Player winner = null;
+    private IPlayer winner = null;
     private boolean active = true;
 
     public Game(
             IBoard board,
             String playerName1,
             String playerName2,
-            Function<PlayerInformation, Player> playerMaker1,
-            Function<PlayerInformation, Player> playerMaker2
+            Function<PlayerInformation, IPlayer> playerMaker1,
+            Function<PlayerInformation, IPlayer> playerMaker2
     ) {
         BOARD = board;
-        Player player1 = playerMaker1.apply(new PlayerInformation(playerName1, this, Color.BLACK));
-        Player player2 = playerMaker2.apply(new PlayerInformation(playerName2, this, Color.WHITE));
+        IPlayer player1 = playerMaker1.apply(new PlayerInformation(playerName1, this, Color.BLACK));
+        IPlayer player2 = playerMaker2.apply(new PlayerInformation(playerName2, this, Color.WHITE));
         PLAYERS = ImmutableMap.of(player1.getColor(), player1, player2.getColor(), player2);
         nextPlayer = player1;
     }
@@ -46,8 +46,8 @@ public class Game implements IGame {
             IPreset preset,
             String playerName1,
             String playerName2,
-            Function<PlayerInformation, Player> playerMaker1,
-            Function<PlayerInformation, Player> playerMaker2
+            Function<PlayerInformation, IPlayer> playerMaker1,
+            Function<PlayerInformation, IPlayer> playerMaker2
     ) {
         IBoard board = new Board(preset);
         return new Game(board, playerName1, playerName2, playerMaker1, playerMaker2);
@@ -59,22 +59,22 @@ public class Game implements IGame {
     }
 
     @Override
-    public Player getPlayer(Color color) {
+    public IPlayer getPlayer(Color color) {
         return PLAYERS.get(color);
     }
 
     @Override
-    public ImmutableMap<Color, Player> getPlayers() {
+    public ImmutableMap<Color, IPlayer> getPlayers() {
         return PLAYERS;
     }
 
     @Override
-    public boolean canMove(Player player, ISquare origin, ISquare destination, int pieces) {
+    public boolean canMove(IPlayer player, ISquare origin, ISquare destination, int pieces) {
         return isActive() && nextPlayer == player && BOARD.canMove(origin, destination, pieces);
     }
 
     @Override
-    public ISquare move(Player player, ISquare origin, ISquare destination, int pieces) {
+    public ISquare move(IPlayer player, ISquare origin, ISquare destination, int pieces) {
         if (!canMove(player, origin, destination, pieces)) {
             throw new IllegalGameCall("Illegal move call, origin " + origin + ", destination " + destination + " and pieces " + pieces);
         }
@@ -85,12 +85,12 @@ public class Game implements IGame {
     }
 
     @Override
-    public boolean canPlace(Player player, int column, int row) {
+    public boolean canPlace(IPlayer player, int column, int row) {
         return isActive() && nextPlayer == player && BOARD.canPlace(column, row);
     }
 
     @Override
-    public ISquare place(Player player, Type type, int column, int row) {
+    public ISquare place(IPlayer player, Type type, int column, int row) {
         if (!canPlace(player, column, row)) {
             throw new IllegalGameCall("Illegal place call, piece type " + type + " at row " + row + " and column " + column);
         }
@@ -103,7 +103,7 @@ public class Game implements IGame {
 
     @Nullable
     @Override
-    public Player checkVictory() {
+    public IPlayer checkVictory() {
         boolean blackWins = BOARD.hasRoad(Color.BLACK);
         boolean whiteWins = BOARD.hasRoad(Color.WHITE);
         if (blackWins && whiteWins) {
@@ -119,14 +119,14 @@ public class Game implements IGame {
             return null;
         }
 
-        Player winner = PLAYERS.get(winningColor);
+        IPlayer winner = PLAYERS.get(winningColor);
         setWinner(winner);
         return getWinner();
     }
 
     @Nullable
     @Override
-    public Player forceVictory() {
+    public IPlayer forceVictory() {
         Map<Color, Integer> flatStonesByColor = new EnumMap<>(Color.class);
         for (Color color : Color.getColors()) {
             int stones = BOARD.countFlat(color);
@@ -157,12 +157,12 @@ public class Game implements IGame {
     }
 
     @Override
-    public Player getNextPlayer() {
+    public IPlayer getNextPlayer() {
         return nextPlayer;
     }
 
     @Override
-    public Player getOtherPlayer(Player player) {
+    public IPlayer getOtherPlayer(IPlayer player) {
         return PLAYERS.get(player.getColor().getOpposite());
     }
 
@@ -179,17 +179,17 @@ public class Game implements IGame {
 
     @Nullable
     @Override
-    public Player getWinner() {
+    public IPlayer getWinner() {
         return winner;
     }
 
     @Override
-    public void setWinner(@Nullable Player winner) {
+    public void setWinner(@Nullable IPlayer winner) {
         this.winner = winner;
     }
 
     @Override
-    public void surrender(Player loser) {
+    public void surrender(IPlayer loser) {
         if (!isActive()) {
             throw new IllegalGameCall("Game already ended");
         }
@@ -200,7 +200,7 @@ public class Game implements IGame {
 
     @Nullable
     @Override
-    public Player start() {
+    public IPlayer start() {
         while (isActive()) {
             nextTurn();
         }
@@ -226,7 +226,7 @@ public class Game implements IGame {
 
     @Override
     public void reset() {
-        for (Player player : PLAYERS.values()) {
+        for (IPlayer player : PLAYERS.values()) {
             player.resetPlayer();
         }
 
@@ -237,26 +237,26 @@ public class Game implements IGame {
     }
 
     @Override
-    public void onPieceMove(Player player, ISquare origin, ISquare destination, int pieces) {
+    public void onPieceMove(IPlayer player, ISquare origin, ISquare destination, int pieces) {
         player.onOwnPieceMove(origin, destination, pieces);
         getOtherPlayer(player).onEnemyPieceMove(player, origin, destination, pieces);
     }
 
     @Override
-    public void onPiecePlace(Player player, Type type, ISquare square) {
+    public void onPiecePlace(IPlayer player, Type type, ISquare square) {
         player.onOwnPiecePlace(type, square);
         getOtherPlayer(player).onEnemyPiecePlace(player, type, square);
     }
 
     @Override
-    public void onTurnEnd(Player player) {
+    public void onTurnEnd(IPlayer player) {
         player.onOwnTurnEnd();
         getOtherPlayer(player).onEnemyTurnEnd(player);
     }
 
     @Override
-    public void onGameEnd(@Nullable Player winner) {
-        for (Player player : PLAYERS.values()) {
+    public void onGameEnd(@Nullable IPlayer winner) {
+        for (IPlayer player : PLAYERS.values()) {
             player.onGameEnd(winner);
         }
     }
