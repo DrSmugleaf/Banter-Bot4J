@@ -9,6 +9,7 @@ import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.IPlayer;
+import com.github.drsmugleaf.tak.player.IPlayerInformation;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
 import com.google.common.collect.ImmutableMap;
 
@@ -32,8 +33,8 @@ public class Game implements IGame {
             IBoard board,
             String playerName1,
             String playerName2,
-            Function<PlayerInformation, IPlayer> playerMaker1,
-            Function<PlayerInformation, IPlayer> playerMaker2
+            Function<IPlayerInformation, IPlayer> playerMaker1,
+            Function<IPlayerInformation, IPlayer> playerMaker2
     ) {
         BOARD = board;
         IPlayer player1 = playerMaker1.apply(new PlayerInformation(playerName1, this, Color.BLACK));
@@ -46,8 +47,8 @@ public class Game implements IGame {
             IPreset preset,
             String playerName1,
             String playerName2,
-            Function<PlayerInformation, IPlayer> playerMaker1,
-            Function<PlayerInformation, IPlayer> playerMaker2
+            Function<IPlayerInformation, IPlayer> playerMaker1,
+            Function<IPlayerInformation, IPlayer> playerMaker2
     ) {
         IBoard board = new Board(preset);
         return new Game(board, playerName1, playerName2, playerMaker1, playerMaker2);

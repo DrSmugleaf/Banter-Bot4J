@@ -2,7 +2,7 @@ package com.github.drsmugleaf.tak.bot.neural.reinforcementlearning;
 
 import com.github.drsmugleaf.tak.game.Game;
 import com.github.drsmugleaf.tak.player.IPlayer;
-import com.github.drsmugleaf.tak.player.PlayerInformation;
+import com.github.drsmugleaf.tak.player.IPlayerInformation;
 
 import java.util.function.Function;
 
@@ -15,8 +15,8 @@ public class NeuralGame extends Game implements INeuralGame {
             INeuralBoard board,
             String playerName1,
             String playerName2,
-            Function<PlayerInformation, IPlayer> playerMaker1,
-            Function<PlayerInformation, IPlayer> playerMaker2
+            Function<IPlayerInformation, IPlayer> playerMaker1,
+            Function<IPlayerInformation, IPlayer> playerMaker2
     ) {
         super(board, playerName1, playerName2, playerMaker1, playerMaker2);
     }

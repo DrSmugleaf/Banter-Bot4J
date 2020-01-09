@@ -6,7 +6,7 @@ import com.github.drsmugleaf.tak.board.ICoordinates;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.IPlayer;
-import com.github.drsmugleaf.tak.player.PlayerInformation;
+import com.github.drsmugleaf.tak.player.IPlayerInformation;
 
 import java.util.List;
 import java.util.function.Function;
@@ -20,15 +20,15 @@ public class MinimaxFlatMoveBot extends MinimaxBot {
         super(name, game, color, depth);
     }
 
-    public static IPlayer from(PlayerInformation information, int depth) {
-        return new MinimaxFlatMoveBot(information.NAME, information.GAME, information.COLOR, depth);
+    public static IPlayer from(IPlayerInformation information, int depth) {
+        return new MinimaxFlatMoveBot(information.getName(), information.getGame(), information.getColor(), depth);
     }
 
-    public static Function<PlayerInformation, IPlayer> from(int depth) {
+    public static Function<IPlayerInformation, IPlayer> from(int depth) {
         return information -> from(information, depth);
     }
 
-    public static IPlayer from(PlayerInformation information) {
+    public static IPlayer from(IPlayerInformation information) {
         return from(information, 3);
     }
 

@@ -3,8 +3,8 @@ package com.github.drsmugleaf.tak.gui;
 import com.github.drsmugleaf.tak.board.ICoordinates;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.player.IPlayer;
+import com.github.drsmugleaf.tak.player.IPlayerInformation;
 import com.github.drsmugleaf.tak.player.Player;
-import com.github.drsmugleaf.tak.player.PlayerInformation;
 
 import javax.swing.*;
 
@@ -29,8 +29,8 @@ public class GuiPlayer extends Player {
         }
     }
 
-    public static IPlayer from(PlayerInformation information, GuiGame game) {
-        return new GuiPlayer(information.NAME, game, information.COLOR);
+    public static IPlayer from(IPlayerInformation information, GuiGame game) {
+        return new GuiPlayer(information.getName(), game, information.getColor());
     }
 
     @Override

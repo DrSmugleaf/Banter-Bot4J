@@ -6,7 +6,7 @@ import com.github.drsmugleaf.tak.board.ICoordinates;
 import com.github.drsmugleaf.tak.bot.Bot;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.player.IPlayer;
-import com.github.drsmugleaf.tak.player.PlayerInformation;
+import com.github.drsmugleaf.tak.player.IPlayerInformation;
 import org.jetbrains.annotations.Contract;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
@@ -27,8 +27,8 @@ public class NeuralBot extends Bot {
     }
 
     @Contract("_ -> new")
-    public static IPlayer from(PlayerInformation information) {
-        return new NeuralBot(information.NAME, information.GAME, information.COLOR);
+    public static IPlayer from(IPlayerInformation information) {
+        return new NeuralBot(information.getName(), information.getGame(), information.getColor());
     }
 
     @Nullable

@@ -6,7 +6,7 @@ import com.github.drsmugleaf.tak.board.ICoordinates;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.IPlayer;
-import com.github.drsmugleaf.tak.player.PlayerInformation;
+import com.github.drsmugleaf.tak.player.IPlayerInformation;
 
 import java.util.List;
 
@@ -19,8 +19,8 @@ public class RandomFlatMoveBot extends RandomBot {
         super(name, game, color);
     }
 
-    public static IPlayer from(PlayerInformation information) {
-        return new RandomFlatMoveBot(information.NAME, information.GAME, information.COLOR);
+    public static IPlayer from(IPlayerInformation information) {
+        return new RandomFlatMoveBot(information.getName(), information.getGame(), information.getColor());
     }
 
     @Override
