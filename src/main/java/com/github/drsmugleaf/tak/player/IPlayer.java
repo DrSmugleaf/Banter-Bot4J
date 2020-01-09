@@ -5,8 +5,8 @@ import com.github.drsmugleaf.tak.board.IBoard;
 import com.github.drsmugleaf.tak.board.ICoordinates;
 import com.github.drsmugleaf.tak.board.ISquare;
 import com.github.drsmugleaf.tak.game.IGame;
-import com.github.drsmugleaf.tak.pieces.Color;
-import com.github.drsmugleaf.tak.pieces.Type;
+import com.github.drsmugleaf.tak.pieces.IColor;
+import com.github.drsmugleaf.tak.pieces.IType;
 
 import java.util.List;
 import java.util.Set;
@@ -16,15 +16,15 @@ import java.util.Set;
  */
 public interface IPlayer {
 
-    List<ICoordinates> getAvailableActions(IBoard board, Type type);
+    List<ICoordinates> getAvailableActions(IBoard board, IType type);
     List<ICoordinates> getAvailableActions(IBoard board);
     List<ICoordinates> getAvailableActions();
     List<ICoordinates> getAvailableMoves(IBoard board);
     List<ICoordinates> getAvailableMoves();
-    List<ICoordinates> getAvailablePlaces(IBoard board, Type... types);
-    List<ICoordinates> getAvailablePlaces(IBoard board, Set<Type> types);
+    List<ICoordinates> getAvailablePlaces(IBoard board, IType... types);
+    List<ICoordinates> getAvailablePlaces(IBoard board, Set<IType> types);
     List<ICoordinates> getAvailablePlaces(IBoard board);
-    List<ICoordinates> getAvailablePlaces(Type type);
+    List<ICoordinates> getAvailablePlaces(IType type);
     List<ICoordinates> getAvailablePlaces();
     String getName();
     IGame getGame();
@@ -33,20 +33,20 @@ public interface IPlayer {
     @Nullable
     ICoordinates getNextAction();
     void setNextAction(ICoordinates action);
-    Color getColor();
+    IColor getColor();
     boolean canMove(ISquare origin, ISquare destination, int pieces);
     boolean canMove(int originColumn, int originRow, int destinationColumn, int destinationRow, int pieces);
     ISquare move(ISquare origin, ISquare destination, int pieces);
     ISquare move(int originColumn, int originRow, int destinationColumn, int destinationRow, int pieces);
-    boolean canPlace(Type type, int column, int row);
-    ISquare place(Type type, int column, int row);
+    boolean canPlace(IType type, int column, int row);
+    ISquare place(IType type, int column, int row);
     void surrender();
     void resetPlayer();
     void nextTurn();
     void onEnemyPieceMove(IPlayer player, ISquare origin, ISquare destination, int pieces);
     void onOwnPieceMove(ISquare origin, ISquare destination, int pieces);
-    void onEnemyPiecePlace(IPlayer player, Type type, ISquare square);
-    void onOwnPiecePlace(Type type, ISquare square);
+    void onEnemyPiecePlace(IPlayer player, IType type, ISquare square);
+    void onOwnPiecePlace(IType type, ISquare square);
     void onEnemyTurnEnd(IPlayer player);
     void onOwnTurnEnd();
     void onGameEnd(@Nullable IPlayer winner);

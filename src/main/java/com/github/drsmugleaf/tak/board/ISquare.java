@@ -1,9 +1,9 @@
 package com.github.drsmugleaf.tak.board;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.tak.pieces.Color;
-import com.github.drsmugleaf.tak.pieces.Piece;
-import com.github.drsmugleaf.tak.pieces.Type;
+import com.github.drsmugleaf.tak.pieces.IColor;
+import com.github.drsmugleaf.tak.pieces.IPiece;
+import com.github.drsmugleaf.tak.pieces.IType;
 
 import java.util.List;
 
@@ -15,19 +15,19 @@ public interface ISquare {
     ISquare copy();
     int getColumn();
     int getRow();
-    List<Piece> getPieces();
+    List<IPiece> getPieces();
     @Nullable
-    Color getColor();
+    IColor getColor();
     @Nullable
-    Type getType();
+    IType getType();
     @Nullable
-    Piece getTopPiece();
+    IPiece getTopPiece();
     boolean canMove(ISquare other, int pieces);
     ISquare move(ISquare destination, int pieces, boolean silent);
     boolean canPlace();
-    ISquare place(Piece piece, boolean silent);
-    ISquare remove(Piece piece, boolean silent);
-    boolean connectsTo(@Nullable Piece piece);
+    ISquare place(IPiece piece, boolean silent);
+    ISquare remove(IPiece piece, boolean silent);
+    boolean connectsTo(@Nullable IPiece piece);
     boolean connectsTo(@Nullable ISquare square);
     void onUpdate();
     void reset();

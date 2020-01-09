@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.board;
 
-import com.github.drsmugleaf.tak.pieces.Color;
-import com.github.drsmugleaf.tak.pieces.Piece;
+import com.github.drsmugleaf.tak.pieces.IColor;
+import com.github.drsmugleaf.tak.pieces.IPiece;
 import com.github.drsmugleaf.tak.pieces.Type;
 
 /**
@@ -36,12 +36,12 @@ public class Line implements ILine {
     }
 
     @Override
-    public ISquare place(Piece piece, int location, boolean silent) {
+    public ISquare place(IPiece piece, int location, boolean silent) {
         return getSquares()[location].place(piece, silent);
     }
 
     @Override
-    public ISquare remove(Piece piece, int location, boolean silent) {
+    public ISquare remove(IPiece piece, int location, boolean silent) {
         return getSquares()[location].remove(piece, silent);
     }
 
@@ -51,7 +51,7 @@ public class Line implements ILine {
     }
 
     @Override
-    public boolean hasSquare(Color color) {
+    public boolean hasSquare(IColor color) {
         for (ISquare square : getSquares()) {
             if (square.getColor() == color) {
                 return true;
@@ -62,11 +62,11 @@ public class Line implements ILine {
     }
 
     @Override
-    public int countFlat(Color color) {
+    public int countFlat(IColor color) {
         int amount = 0;
 
         for (ISquare square : getSquares()) {
-            Piece topPiece = square.getTopPiece();
+            IPiece topPiece = square.getTopPiece();
             if (topPiece != null && topPiece.getColor() == color && topPiece.getType() == Type.FLAT_STONE) {
                 amount++;
             }

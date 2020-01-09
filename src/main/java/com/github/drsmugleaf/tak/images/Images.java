@@ -1,9 +1,7 @@
 package com.github.drsmugleaf.tak.images;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.tak.pieces.Color;
-import com.github.drsmugleaf.tak.pieces.Piece;
-import com.github.drsmugleaf.tak.pieces.Type;
+import com.github.drsmugleaf.tak.pieces.*;
 
 import javax.imageio.ImageIO;
 import java.awt.Image;
@@ -21,7 +19,7 @@ public class Images {
 
     private static final String IMAGES_PATH = Objects.requireNonNull(Images.class.getClassLoader().getResource("tak")).getFile();
     private static final Image LOGO = registerLogo();
-    private static final Map<Color, Map<Type, Image>> PIECES = registerPieces();
+    private static final Map<IColor, Map<IType, Image>> PIECES = registerPieces();
     private static final Map<String, Image> SQUARES = registerSquares();
 
     private Images() {}
@@ -41,13 +39,13 @@ public class Images {
         }
     }
 
-    private static Map<Color, Map<Type, Image>> registerPieces() {
-        Map<Color, Map<Type, Image>> images = new EnumMap<>(Color.class);
+    private static Map<IColor, Map<IType, Image>> registerPieces() {
+        Map<IColor, Map<IType, Image>> images = new EnumMap<>(Color.class);
 
-        for (Color color : Color.values()) {
+        for (IColor color : Color.values()) {
             images.put(color, new EnumMap<>(Type.class));
 
-            for (Type type : Type.getTypes()) {
+            for (IType type : Type.getTypes()) {
                 String filePath = IMAGES_PATH + "/pieces/" + color.getFolderName() + type.getFileName();
                 try (FileInputStream stream = new FileInputStream(filePath)) {
                     BufferedImage image = ImageIO.read(stream);
@@ -96,11 +94,11 @@ public class Images {
         return LOGO;
     }
 
-    public static Image getPiece(Piece piece) {
+    public static Image getPiece(IPiece piece) {
         return PIECES.get(piece.getColor()).get(piece.getType());
     }
 
-    public static Image getPiece(Piece piece, int height, int width) {
+    public static Image getPiece(IPiece piece, int height, int width) {
         return getPiece(piece).getScaledInstance(width, height, Image.SCALE_SMOOTH);
     }
 

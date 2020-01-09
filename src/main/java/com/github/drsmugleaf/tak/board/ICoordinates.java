@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tak.board;
 
-import com.github.drsmugleaf.tak.pieces.Color;
+import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.player.IPlayer;
 
 import java.util.function.Function;
@@ -12,6 +12,6 @@ public interface ICoordinates {
 
     boolean canPlace(IPlayer player);
     void place(IPlayer player);
-    int with(IBoard board, Color nextColor, Function<IBoard, Integer> function);
+    int with(IBoard board, IColor nextColor, Function<IBoard, Integer> function);
 
 }

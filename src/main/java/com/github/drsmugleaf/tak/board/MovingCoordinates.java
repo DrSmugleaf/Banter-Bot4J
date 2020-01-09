@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tak.board;
 
-import com.github.drsmugleaf.tak.pieces.Color;
+import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.player.IPlayer;
 
 import java.util.function.Function;
@@ -39,7 +39,7 @@ public class MovingCoordinates implements ICoordinates {
     }
 
     @Override
-    public int with(IBoard board, Color nextColor, Function<IBoard, Integer> function) {
+    public int with(IBoard board, IColor nextColor, Function<IBoard, Integer> function) {
         board.moveSilent(ORIGIN_COLUMN, ORIGIN_ROW, DESTINATION_COLUMN, DESTINATION_ROW, PIECES);
         Integer result = function.apply(board);
         board.moveSilent(ORIGIN_COLUMN, ORIGIN_ROW, DESTINATION_COLUMN, DESTINATION_ROW, PIECES);

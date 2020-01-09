@@ -3,7 +3,8 @@ package com.github.drsmugleaf.tak.player;
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tak.game.IGame;
 import com.github.drsmugleaf.tak.board.*;
-import com.github.drsmugleaf.tak.pieces.Color;
+import com.github.drsmugleaf.tak.pieces.IColor;
+import com.github.drsmugleaf.tak.pieces.IType;
 import com.github.drsmugleaf.tak.pieces.Type;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public abstract class Player implements IPlayer {
     @Nullable
     private List<ICoordinates> AVAILABLE_ACTIONS = null;
 
-    public Player(String name, IGame game, Color color, boolean passive) {
+    public Player(String name, IGame game, IColor color, boolean passive) {
         NAME = name;
         HAND = new Hand(color, game.getBoard().getPreset());
         GAME = game;
@@ -32,7 +33,7 @@ public abstract class Player implements IPlayer {
     }
 
     @Override
-    public final List<ICoordinates> getAvailableActions(IBoard board, Type type) {
+    public final List<ICoordinates> getAvailableActions(IBoard board, IType type) {
         List<ICoordinates> moves = getAvailableMoves(board);
         List<ICoordinates> places = getAvailablePlaces(board, type);
         moves.addAll(places);
@@ -95,14 +96,14 @@ public abstract class Player implements IPlayer {
     }
 
     @Override
-    public final List<ICoordinates> getAvailablePlaces(IBoard board, Type... types) {
+    public final List<ICoordinates> getAvailablePlaces(IBoard board, IType... types) {
         List<ICoordinates> places = new ArrayList<>();
 
         Line[] rows = board.getRows();
         for (int i = 0; i < rows.length; i++) {
             ISquare[] row = rows[i].getSquares();
             for (int j = 0; j < row.length; j++) {
-                for (Type type : types) {
+                for (IType type : types) {
                     if (canPlace(type, j, i)) {
                         places.add(new Coordinates(j, i, type));
                     }
@@ -114,8 +115,8 @@ public abstract class Player implements IPlayer {
     }
 
     @Override
-    public final List<ICoordinates> getAvailablePlaces(IBoard board, Set<Type> types) {
-        return getAvailablePlaces(board, types.toArray(new Type[0]));
+    public final List<ICoordinates> getAvailablePlaces(IBoard board, Set<IType> types) {
+        return getAvailablePlaces(board, types.toArray(new IType[0]));
     }
 
     @Override
@@ -124,7 +125,7 @@ public abstract class Player implements IPlayer {
     }
 
     @Override
-    public final List<ICoordinates> getAvailablePlaces(Type type) {
+    public final List<ICoordinates> getAvailablePlaces(IType type) {
         return getAvailablePlaces(getGame().getBoard(), type);
     }
 
@@ -162,7 +163,7 @@ public abstract class Player implements IPlayer {
     }
 
     @Override
-    public final Color getColor() {
+    public final IColor getColor() {
         return getHand().getColor();
     }
 
@@ -193,12 +194,12 @@ public abstract class Player implements IPlayer {
     }
 
     @Override
-    public final boolean canPlace(Type type, int column, int row) {
+    public final boolean canPlace(IType type, int column, int row) {
         return getHand().has(type) && GAME.canPlace(this, column, row);
     }
 
     @Override
-    public final ISquare place(Type type, int column, int row) {
+    public final ISquare place(IType type, int column, int row) {
         return GAME.place(this, type, column, row);
     }
 
@@ -253,10 +254,10 @@ public abstract class Player implements IPlayer {
     public void onOwnPieceMove(ISquare origin, ISquare destination, int pieces) {}
 
     @Override
-    public void onEnemyPiecePlace(IPlayer player, Type type, ISquare square) {}
+    public void onEnemyPiecePlace(IPlayer player, IType type, ISquare square) {}
 
     @Override
-    public void onOwnPiecePlace(Type type, ISquare square) {}
+    public void onOwnPiecePlace(IType type, ISquare square) {}
 
     @Override
     public void onEnemyTurnEnd(IPlayer player) {}

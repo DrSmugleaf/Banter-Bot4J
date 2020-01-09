@@ -4,8 +4,8 @@ import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tak.game.IGame;
 import com.github.drsmugleaf.tak.board.*;
 import com.github.drsmugleaf.tak.bot.Bot;
-import com.github.drsmugleaf.tak.pieces.Color;
-import com.github.drsmugleaf.tak.pieces.Piece;
+import com.github.drsmugleaf.tak.pieces.IColor;
+import com.github.drsmugleaf.tak.pieces.IPiece;
 import javafx.util.Pair;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public abstract class MinimaxBot extends Bot {
 
     protected final int DEPTH;
 
-    protected MinimaxBot(String name, IGame game, Color color, int depth) {
+    protected MinimaxBot(String name, IGame game, IColor color, int depth) {
         super(name, game, color, false);
         DEPTH = depth;
     }
@@ -30,7 +30,7 @@ public abstract class MinimaxBot extends Bot {
 
     protected Pair<ICoordinates, Integer> getBestPlace() {
         IBoard board = getGame().getBoard();
-        Color nextColor = getGame().getNextPlayer().getColor();
+        IColor nextColor = getGame().getNextPlayer().getColor();
 
         return getMax(getAvailableActions(), board, nextColor, Integer.MIN_VALUE, Integer.MAX_VALUE, DEPTH);
     }
@@ -40,7 +40,7 @@ public abstract class MinimaxBot extends Bot {
     }
 
     private int getScore(IBoard board) {
-        Color winner = board.getRoad();
+        IColor winner = board.getRoad();
         if (winner != null) {
             if (winner == getColor()) {
                 return Integer.MAX_VALUE;
@@ -55,14 +55,14 @@ public abstract class MinimaxBot extends Bot {
 
         for (Line row : board.getRows()) {
             for (ISquare square : row.getSquares()) {
-                Piece topPiece = square.getTopPiece();
+                IPiece topPiece = square.getTopPiece();
                 if (topPiece == null) {
                     continue;
                 }
 
                 int adjacentScore = board.getAdjacent(square).getConnections().size() * 10;
 
-                Color topColor = topPiece.getColor();
+                IColor topColor = topPiece.getColor();
                 if (topColor == getColor()) {
                     score++;
                     score += adjacentScore;
@@ -78,7 +78,7 @@ public abstract class MinimaxBot extends Bot {
         return score;
     }
 
-    protected final Pair<ICoordinates, Integer> getMax(List<ICoordinates> moves, IBoard board, Color nextPlayer, int alpha, int beta, final int depth) {
+    protected final Pair<ICoordinates, Integer> getMax(List<ICoordinates> moves, IBoard board, IColor nextPlayer, int alpha, int beta, final int depth) {
         ICoordinates bestMove = null;
         int score = 0;
 

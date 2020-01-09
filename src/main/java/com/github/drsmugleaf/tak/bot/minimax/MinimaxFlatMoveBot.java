@@ -3,7 +3,7 @@ package com.github.drsmugleaf.tak.bot.minimax;
 import com.github.drsmugleaf.tak.game.IGame;
 import com.github.drsmugleaf.tak.board.IBoard;
 import com.github.drsmugleaf.tak.board.ICoordinates;
-import com.github.drsmugleaf.tak.pieces.Color;
+import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.IPlayer;
 import com.github.drsmugleaf.tak.player.IPlayerInformation;
@@ -16,7 +16,7 @@ import java.util.function.Function;
  */
 public class MinimaxFlatMoveBot extends MinimaxBot {
 
-    protected MinimaxFlatMoveBot(String name, IGame game, Color color, int depth) {
+    protected MinimaxFlatMoveBot(String name, IGame game, IColor color, int depth) {
         super(name, game, color, depth);
     }
 

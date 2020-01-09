@@ -8,12 +8,12 @@ import java.awt.*;
 /**
  * Created by DrSmugleaf on 01/12/2018
  */
-public class Piece {
+public class Piece implements IPiece {
 
-    private final Color COLOR;
-    private Type TYPE;
+    private final IColor COLOR;
+    private IType TYPE;
 
-    public Piece(Color color, Type type) {
+    public Piece(IColor color, IType type) {
         COLOR = color;
         TYPE = type;
     }
@@ -22,18 +22,22 @@ public class Piece {
         this(piece.COLOR, piece.TYPE);
     }
 
-    public Piece copy() {
+    @Override
+    public IPiece copy() {
         return new Piece(this);
     }
 
-    public Color getColor() {
+    @Override
+    public IColor getColor() {
         return COLOR;
     }
 
-    public Type getType() {
+    @Override
+    public IType getType() {
         return TYPE;
     }
 
+    @Override
     public void flatten() {
         if (getType() != Type.STANDING_STONE) {
             throw new IllegalGameCall("Piece isn't a standing stone");
@@ -47,10 +51,12 @@ public class Piece {
         return COLOR.toString() + TYPE.toString();
     }
 
+    @Override
     public Image toImage(int height, int width) {
         return Images.getPiece(this, height, width);
     }
 
+    @Override
     public double toDouble() {
         return getColor().toDouble() * getType().toDouble();
     }

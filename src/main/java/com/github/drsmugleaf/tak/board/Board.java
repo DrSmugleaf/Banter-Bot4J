@@ -3,7 +3,8 @@ package com.github.drsmugleaf.tak.board;
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tak.game.IllegalGameCall;
 import com.github.drsmugleaf.tak.pieces.Color;
-import com.github.drsmugleaf.tak.pieces.Piece;
+import com.github.drsmugleaf.tak.pieces.IColor;
+import com.github.drsmugleaf.tak.pieces.IPiece;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.ArrayList;
@@ -148,32 +149,32 @@ public class Board implements IBoard {
     }
 
     @Override
-    public ISquare place(Piece piece, int column, int row, boolean silent) {
+    public ISquare place(IPiece piece, int column, int row, boolean silent) {
         return COLUMNS[column].place(piece, row, silent);
     }
 
     @Override
-    public ISquare place(Piece piece, int column, int row) {
+    public ISquare place(IPiece piece, int column, int row) {
         return COLUMNS[column].place(piece, row, false);
     }
 
     @Override
-    public ISquare placeSilent(Piece piece, int column, int row) {
+    public ISquare placeSilent(IPiece piece, int column, int row) {
         return COLUMNS[column].place(piece, row, true);
     }
 
     @Override
-    public ISquare remove(Piece piece, int column, int row, boolean silent) {
+    public ISquare remove(IPiece piece, int column, int row, boolean silent) {
         return COLUMNS[column].remove(piece, row, silent);
     }
 
     @Override
-    public ISquare remove(Piece piece, int column, int row) {
+    public ISquare remove(IPiece piece, int column, int row) {
         return COLUMNS[column].remove(piece, row, false);
     }
 
     @Override
-    public ISquare removeSilent(Piece piece, int column, int row) {
+    public ISquare removeSilent(IPiece piece, int column, int row) {
         return COLUMNS[column].remove(piece, row, true);
     }
 
@@ -198,7 +199,7 @@ public class Board implements IBoard {
     }
 
     @Override
-    public int countAdjacent(Color color) {
+    public int countAdjacent(IColor color) {
         int amount = 0;
 
         for (Line column : getColumns()) {
@@ -287,7 +288,7 @@ public class Board implements IBoard {
     }
 
     @Override
-    public boolean hasRoad(Color color, Line line1, Line line2) {
+    public boolean hasRoad(IColor color, Line line1, Line line2) {
         for (ISquare origin : line1.getSquares()) {
             if (origin.getColor() != color) {
                 continue;
@@ -312,7 +313,7 @@ public class Board implements IBoard {
     }
 
     @Override
-    public boolean hasRoad(Color color) {
+    public boolean hasRoad(IColor color) {
         if (hasPiecesInEveryRow(color)) {
             if (hasRoad(color, getFirstRow(), getLastRow())) {
                 return true;
@@ -328,8 +329,8 @@ public class Board implements IBoard {
 
     @Nullable
     @Override
-    public Color getRoad() {
-        for (Color color : Color.values()) {
+    public IColor getRoad() {
+        for (IColor color : Color.values()) {
             if (hasRoad(color)) {
                 return color;
             }
@@ -339,7 +340,7 @@ public class Board implements IBoard {
     }
 
     @Override
-    public boolean hasPiecesInEveryColumn(Color color) {
+    public boolean hasPiecesInEveryColumn(IColor color) {
         for (Line column : COLUMNS) {
             if (!column.hasSquare(color)) {
                 return false;
@@ -350,7 +351,7 @@ public class Board implements IBoard {
     }
 
     @Override
-    public boolean hasPiecesInEveryRow(Color color) {
+    public boolean hasPiecesInEveryRow(IColor color) {
         for (Line row : ROWS) {
             if (!row.hasSquare(color)) {
                 return false;
@@ -374,7 +375,7 @@ public class Board implements IBoard {
     }
 
     @Override
-    public int countFlat(Color color) {
+    public int countFlat(IColor color) {
         int amount = 0;
 
         for (Line column : getColumns()) {

@@ -3,7 +3,7 @@ package com.github.drsmugleaf.tak.bot.random;
 import com.github.drsmugleaf.tak.game.IGame;
 import com.github.drsmugleaf.tak.board.IBoard;
 import com.github.drsmugleaf.tak.board.ICoordinates;
-import com.github.drsmugleaf.tak.pieces.Color;
+import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.IPlayer;
 import com.github.drsmugleaf.tak.player.IPlayerInformation;
@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class RandomFlatMoveBot extends RandomBot {
 
-    protected RandomFlatMoveBot(String name, IGame game, Color color) {
+    protected RandomFlatMoveBot(String name, IGame game, IColor color) {
         super(name, game, color);
     }
 

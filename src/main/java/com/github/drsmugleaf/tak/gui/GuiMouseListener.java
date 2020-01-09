@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.tak.gui;
 
 import com.github.drsmugleaf.tak.board.Coordinates;
+import com.github.drsmugleaf.tak.pieces.IType;
 import com.github.drsmugleaf.tak.pieces.Type;
 
 import javax.swing.*;
@@ -26,7 +27,7 @@ public class GuiMouseListener implements MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         JButton button = SQUARE.getButton();
-        Type type;
+        IType type;
 
         switch (e.getButton()) {
             case MouseEvent.BUTTON1:

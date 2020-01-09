@@ -1,8 +1,6 @@
 package com.github.drsmugleaf.tak.board;
 
-import com.github.drsmugleaf.tak.pieces.Color;
-import com.github.drsmugleaf.tak.pieces.Piece;
-import com.github.drsmugleaf.tak.pieces.Type;
+import com.github.drsmugleaf.tak.pieces.*;
 import com.github.drsmugleaf.tak.player.IPlayer;
 
 import java.util.function.Function;
@@ -14,15 +12,15 @@ public class Coordinates implements ICoordinates {
 
     private int ROW;
     private int COLUMN;
-    private final Type PIECE;
+    private final IType PIECE;
 
-    public Coordinates(int column, int row, Type piece) {
+    public Coordinates(int column, int row, IType piece) {
         ROW = row;
         COLUMN = column;
         PIECE = piece;
     }
 
-    public Coordinates(ISquare square, Type piece) {
+    public Coordinates(ISquare square, IType piece) {
         this(square.getColumn(), square.getRow(), piece);
     }
 
@@ -37,8 +35,8 @@ public class Coordinates implements ICoordinates {
     }
 
     @Override
-    public int with(IBoard board, Color nextColor, Function<IBoard, Integer> function) {
-        Piece piece = new Piece(nextColor, PIECE);
+    public int with(IBoard board, IColor nextColor, Function<IBoard, Integer> function) {
+        IPiece piece = new Piece(nextColor, PIECE);
         board.placeSilent(piece, COLUMN, ROW);
         Integer result = function.apply(board);
         board.removeSilent(piece, COLUMN, ROW);

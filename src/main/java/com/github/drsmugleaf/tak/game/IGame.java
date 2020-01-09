@@ -3,8 +3,8 @@ package com.github.drsmugleaf.tak.game;
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tak.board.IBoard;
 import com.github.drsmugleaf.tak.board.ISquare;
-import com.github.drsmugleaf.tak.pieces.Color;
-import com.github.drsmugleaf.tak.pieces.Type;
+import com.github.drsmugleaf.tak.pieces.IColor;
+import com.github.drsmugleaf.tak.pieces.IType;
 import com.github.drsmugleaf.tak.player.IPlayer;
 import com.google.common.collect.ImmutableMap;
 
@@ -14,12 +14,12 @@ import com.google.common.collect.ImmutableMap;
 public interface IGame {
 
     IBoard getBoard();
-    IPlayer getPlayer(Color color);
-    ImmutableMap<Color, IPlayer> getPlayers();
+    IPlayer getPlayer(IColor color);
+    ImmutableMap<IColor, IPlayer> getPlayers();
     boolean canMove(IPlayer player, ISquare origin, ISquare destination, int pieces);
     ISquare move(IPlayer player, ISquare origin, ISquare destination, int pieces);
     boolean canPlace(IPlayer player, int column, int row);
-    ISquare place(IPlayer player, Type type, int column, int row);
+    ISquare place(IPlayer player, IType type, int column, int row);
     IPlayer checkVictory();
     IPlayer forceVictory();
     IPlayer getNextPlayer();
@@ -35,7 +35,7 @@ public interface IGame {
     void nextTurn();
     void reset();
     void onPieceMove(IPlayer player, ISquare origin, ISquare destination, int pieces);
-    void onPiecePlace(IPlayer player, Type type, ISquare square);
+    void onPiecePlace(IPlayer player, IType type, ISquare square);
     void onTurnEnd(IPlayer player);
     void onGameEnd(@Nullable IPlayer winner);
 

@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.gui;
 
 import com.github.drsmugleaf.tak.board.ICoordinates;
-import com.github.drsmugleaf.tak.pieces.Color;
+import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.player.IPlayer;
 import com.github.drsmugleaf.tak.player.IPlayerInformation;
 import com.github.drsmugleaf.tak.player.Player;
@@ -15,7 +15,7 @@ public class GuiPlayer extends Player {
 
     private final GuiGame GAME;
 
-    public GuiPlayer(String name, GuiGame game, Color color) {
+    public GuiPlayer(String name, GuiGame game, IColor color) {
         super(name, game, color, true);
 
         GAME = game;

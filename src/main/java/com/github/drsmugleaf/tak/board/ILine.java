@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.board;
 
-import com.github.drsmugleaf.tak.pieces.Color;
-import com.github.drsmugleaf.tak.pieces.Piece;
+import com.github.drsmugleaf.tak.pieces.IColor;
+import com.github.drsmugleaf.tak.pieces.IPiece;
 
 /**
  * Created by DrSmugleaf on 09/01/2020
@@ -12,11 +12,11 @@ public interface ILine {
     boolean canMove(int origin, ISquare destination, int pieces);
     ISquare move(int origin, ISquare destination, int pieces, boolean silent);
     boolean canPlace(int index);
-    ISquare place(Piece piece, int location, boolean silent);
-    ISquare remove(Piece piece, int location, boolean silent);
+    ISquare place(IPiece piece, int location, boolean silent);
+    ISquare remove(IPiece piece, int location, boolean silent);
     void setSquare(int index, ISquare square);
-    boolean hasSquare(Color color);
-    int countFlat(Color color);
+    boolean hasSquare(IColor color);
+    int countFlat(IColor color);
     void reset();
 
 }

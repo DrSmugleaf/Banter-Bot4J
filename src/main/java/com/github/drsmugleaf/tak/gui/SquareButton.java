@@ -3,7 +3,7 @@ package com.github.drsmugleaf.tak.gui;
 import com.github.drsmugleaf.tak.board.IPreset;
 import com.github.drsmugleaf.tak.board.Square;
 import com.github.drsmugleaf.tak.images.Images;
-import com.github.drsmugleaf.tak.pieces.Piece;
+import com.github.drsmugleaf.tak.pieces.IPiece;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,14 +48,14 @@ public class SquareButton extends Square {
 
     @Override
     public void onUpdate() {
-        List<Piece> pieces = getPieces();
+        List<IPiece> pieces = getPieces();
         Image background = getDefaultImage();
         Graphics g = background.getGraphics();
         int backgroundHeight = background.getHeight(null);
         int backgroundWidth = background.getWidth(null);
 
         for (int i = 0; i < pieces.size(); i++) {
-            Piece piece = pieces.get(i);
+            IPiece piece = pieces.get(i);
             int pieceSize = SIZE - 20 * i;
             if (pieceSize < 10) {
                 pieceSize = 10;

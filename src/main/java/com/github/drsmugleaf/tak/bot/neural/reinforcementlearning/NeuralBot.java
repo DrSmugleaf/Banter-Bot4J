@@ -4,7 +4,7 @@ import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tak.game.Game;
 import com.github.drsmugleaf.tak.board.ICoordinates;
 import com.github.drsmugleaf.tak.bot.Bot;
-import com.github.drsmugleaf.tak.pieces.Color;
+import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.player.IPlayer;
 import com.github.drsmugleaf.tak.player.IPlayerInformation;
 import org.jetbrains.annotations.Contract;
@@ -22,7 +22,7 @@ public class NeuralBot extends Bot {
     public static int loss = 0;
     public static int tie = 0;
 
-    protected NeuralBot(String name, Game game, Color color) {
+    protected NeuralBot(String name, Game game, IColor color) {
         super(name, game, color, true);
     }
 

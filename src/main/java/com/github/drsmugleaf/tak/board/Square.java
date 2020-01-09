@@ -1,9 +1,9 @@
 package com.github.drsmugleaf.tak.board;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.tak.pieces.Color;
-import com.github.drsmugleaf.tak.pieces.Piece;
-import com.github.drsmugleaf.tak.pieces.Type;
+import com.github.drsmugleaf.tak.pieces.IColor;
+import com.github.drsmugleaf.tak.pieces.IPiece;
+import com.github.drsmugleaf.tak.pieces.IType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,7 +15,7 @@ import java.util.ListIterator;
  */
 public class Square implements ISquare {
 
-    private final List<Piece> PIECES = new ArrayList<>();
+    private final List<IPiece> PIECES = new ArrayList<>();
     private final int COLUMN;
     private final int ROW;
 
@@ -27,12 +27,12 @@ public class Square implements ISquare {
     private Square(ISquare square) {
         this(square.getColumn(), square.getRow());
 
-        for (Piece piece : square.getPieces()) {
+        for (IPiece piece : square.getPieces()) {
             PIECES.add(piece.copy());
         }
     }
 
-    public static ISquare createCustom(int column, int row, Piece... pieces) {
+    public static ISquare createCustom(int column, int row, IPiece... pieces) {
         ISquare square = new Square(column, row);
         Collections.addAll(square.getPieces(), pieces);
         return square;
@@ -54,13 +54,13 @@ public class Square implements ISquare {
     }
 
     @Override
-    public List<Piece> getPieces() {
+    public List<IPiece> getPieces() {
         return PIECES;
     }
 
     @Nullable
     @Override
-    public Color getColor() {
+    public IColor getColor() {
         if (getTopPiece() == null) {
             return null;
         }
@@ -70,7 +70,7 @@ public class Square implements ISquare {
 
     @Nullable
     @Override
-    public Type getType() {
+    public IType getType() {
         if (getTopPiece() == null) {
             return null;
         }
@@ -80,7 +80,7 @@ public class Square implements ISquare {
 
     @Nullable
     @Override
-    public Piece getTopPiece() {
+    public IPiece getTopPiece() {
         if (PIECES.isEmpty()) {
             return null;
         }
@@ -94,12 +94,12 @@ public class Square implements ISquare {
             return false;
         }
 
-        Piece thisTopPiece = getTopPiece();
+        IPiece thisTopPiece = getTopPiece();
         if (thisTopPiece == null) {
             return false;
         }
 
-        Piece otherTopPiece = other.getTopPiece();
+        IPiece otherTopPiece = other.getTopPiece();
         if (otherTopPiece == null) {
             return true;
         }
@@ -113,9 +113,9 @@ public class Square implements ISquare {
 
     @Override
     public ISquare move(ISquare destination, int pieces, boolean silent) {
-        ListIterator<Piece> iterator = PIECES.listIterator(PIECES.size());
+        ListIterator<IPiece> iterator = PIECES.listIterator(PIECES.size());
         while (iterator.hasPrevious() && pieces > 0) {
-            Piece piece = iterator.previous();
+            IPiece piece = iterator.previous();
 
             piece.getType().move(destination, pieces);
             iterator.remove();
@@ -138,7 +138,7 @@ public class Square implements ISquare {
     }
 
     @Override
-    public ISquare place(Piece piece, boolean silent) {
+    public ISquare place(IPiece piece, boolean silent) {
         PIECES.add(piece);
 
         if (!silent) {
@@ -149,7 +149,7 @@ public class Square implements ISquare {
     }
 
     @Override
-    public ISquare remove(Piece piece, boolean silent) {
+    public ISquare remove(IPiece piece, boolean silent) {
         PIECES.remove(piece);
 
         if (!silent) {
@@ -160,8 +160,8 @@ public class Square implements ISquare {
     }
 
     @Override
-    public boolean connectsTo(@Nullable Piece piece) {
-        Piece topPiece = getTopPiece();
+    public boolean connectsTo(@Nullable IPiece piece) {
+        IPiece topPiece = getTopPiece();
         if (piece == null || topPiece == null) {
             return false;
         }
@@ -199,10 +199,10 @@ public class Square implements ISquare {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        List<Piece> pieces = getPieces();
+        List<IPiece> pieces = getPieces();
 
         for (int i = 0; i < pieces.size(); i++) {
-            Piece piece = pieces.get(i);
+            IPiece piece = pieces.get(i);
             builder.append(piece);
 
             if (i < pieces.size() - 1) {

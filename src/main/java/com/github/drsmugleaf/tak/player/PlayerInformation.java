@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.player;
 
 import com.github.drsmugleaf.tak.game.Game;
-import com.github.drsmugleaf.tak.pieces.Color;
+import com.github.drsmugleaf.tak.pieces.IColor;
 
 /**
  * Created by DrSmugleaf on 26/12/2018
@@ -10,9 +10,9 @@ public class PlayerInformation implements IPlayerInformation {
 
     private final String NAME;
     private final Game GAME;
-    private final Color COLOR;
+    private final IColor COLOR;
 
-    public PlayerInformation(String name, Game game, Color color) {
+    public PlayerInformation(String name, Game game, IColor color) {
         NAME = name;
         GAME = game;
         COLOR = color;
@@ -29,7 +29,7 @@ public class PlayerInformation implements IPlayerInformation {
     }
 
     @Override
-    public Color getColor() {
+    public IColor getColor() {
         return COLOR;
     }
 

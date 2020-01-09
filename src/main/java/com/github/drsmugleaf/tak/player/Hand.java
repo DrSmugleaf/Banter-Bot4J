@@ -1,9 +1,7 @@
 package com.github.drsmugleaf.tak.player;
 
 import com.github.drsmugleaf.tak.board.IPreset;
-import com.github.drsmugleaf.tak.pieces.Color;
-import com.github.drsmugleaf.tak.pieces.Piece;
-import com.github.drsmugleaf.tak.pieces.Type;
+import com.github.drsmugleaf.tak.pieces.*;
 
 /**
  * Created by DrSmugleaf on 01/12/2018
@@ -11,11 +9,11 @@ import com.github.drsmugleaf.tak.pieces.Type;
 public class Hand {
 
     private final IPreset PRESET;
-    private final Color COLOR;
+    private final IColor COLOR;
     private int STONES;
     private int CAPSTONES;
 
-    Hand(Color color, IPreset preset) {
+    Hand(IColor color, IPreset preset) {
         PRESET = preset;
         COLOR = color;
         STONES = preset.getStones();
@@ -26,7 +24,7 @@ public class Hand {
         return PRESET;
     }
 
-    public Color getColor() {
+    public IColor getColor() {
         return COLOR;
     }
 
@@ -38,7 +36,7 @@ public class Hand {
         return STONES;
     }
 
-    public int getAmount(Type type) {
+    public int getAmount(IType type) {
         switch (type) {
             case CAPSTONE:
                 return getCapstones();
@@ -50,12 +48,12 @@ public class Hand {
         }
     }
 
-    public boolean has(Type type) {
+    public boolean has(IType type) {
         return getAmount(type) > 0;
     }
 
     public boolean hasAny() {
-        for (Type type : Type.getTypes()) {
+        for (IType type : Type.getTypes()) {
             if (has(type)) {
                 return true;
             }
@@ -64,7 +62,7 @@ public class Hand {
         return false;
     }
 
-    public Piece takePiece(Type type) {
+    public IPiece takePiece(IType type) {
         if (!has(type)) {
             throw new IllegalArgumentException("No pieces left in this hand of type " + type);
         }

@@ -5,22 +5,22 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Created by DrSmugleaf on 01/12/2018
  */
-public enum Color {
+public enum Color implements IColor {
 
     BLACK("black/", 1, "B") {
         @Override
-        public Color getOpposite() {
+        public IColor getOpposite() {
             return WHITE;
         }
     },
     WHITE("white/", -1, "W") {
         @Override
-        public Color getOpposite() {
+        public IColor getOpposite() {
             return BLACK;
         }
     };
 
-    private static final ImmutableSet<Color> COLORS = ImmutableSet.copyOf(values());
+    private static final ImmutableSet<IColor> COLORS = ImmutableSet.copyOf(values());
     private final String FOLDER_NAME;
     private final double VALUE;
     private final String STRING;
@@ -31,14 +31,16 @@ public enum Color {
         STRING = string;
     }
 
-    public static ImmutableSet<Color> getColors() {
+    public static ImmutableSet<IColor> getColors() {
         return COLORS;
     }
 
+    @Override
     public String getFolderName() {
         return FOLDER_NAME;
     }
 
+    @Override
     public double toDouble() {
         return VALUE;
     }
@@ -47,7 +49,5 @@ public enum Color {
     public String toString() {
         return STRING;
     }
-
-    public abstract Color getOpposite();
 
 }

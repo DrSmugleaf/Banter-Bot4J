@@ -2,6 +2,7 @@ package com.github.drsmugleaf.tak.board;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.tak.pieces.IType;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.google.common.collect.ImmutableList;
 
@@ -43,7 +44,7 @@ public enum Preset implements IPreset {
         IBoard board = new Board(this);
         for (Line row : board.getRows()) {
             for (ISquare origin : row.getSquares()) {
-                for (Type type : Type.getTypes()) {
+                for (IType type : Type.getTypes()) {
                     Coordinates place = new Coordinates(origin, type);
                     allActions.add(place);
                 }

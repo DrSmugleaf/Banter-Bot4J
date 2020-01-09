@@ -5,9 +5,7 @@ import com.github.drsmugleaf.tak.board.Board;
 import com.github.drsmugleaf.tak.board.IBoard;
 import com.github.drsmugleaf.tak.board.IPreset;
 import com.github.drsmugleaf.tak.board.ISquare;
-import com.github.drsmugleaf.tak.pieces.Color;
-import com.github.drsmugleaf.tak.pieces.Piece;
-import com.github.drsmugleaf.tak.pieces.Type;
+import com.github.drsmugleaf.tak.pieces.*;
 import com.github.drsmugleaf.tak.player.IPlayer;
 import com.github.drsmugleaf.tak.player.IPlayerInformation;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
@@ -23,7 +21,7 @@ import java.util.function.Function;
 public class Game implements IGame {
 
     private final IBoard BOARD;
-    private final ImmutableMap<Color, IPlayer> PLAYERS;
+    private final ImmutableMap<IColor, IPlayer> PLAYERS;
     public IPlayer nextPlayer;
     @Nullable
     private IPlayer winner = null;
@@ -60,12 +58,12 @@ public class Game implements IGame {
     }
 
     @Override
-    public IPlayer getPlayer(Color color) {
+    public IPlayer getPlayer(IColor color) {
         return PLAYERS.get(color);
     }
 
     @Override
-    public ImmutableMap<Color, IPlayer> getPlayers() {
+    public ImmutableMap<IColor, IPlayer> getPlayers() {
         return PLAYERS;
     }
 
@@ -91,12 +89,12 @@ public class Game implements IGame {
     }
 
     @Override
-    public ISquare place(IPlayer player, Type type, int column, int row) {
+    public ISquare place(IPlayer player, IType type, int column, int row) {
         if (!canPlace(player, column, row)) {
             throw new IllegalGameCall("Illegal place call, piece type " + type + " at row " + row + " and column " + column);
         }
 
-        Piece piece = player.getHand().takePiece(type);
+        IPiece piece = player.getHand().takePiece(type);
         ISquare square = BOARD.place(piece, column, row);
         onPiecePlace(player, type, square);
         return square;
@@ -111,7 +109,7 @@ public class Game implements IGame {
             return nextPlayer;
         }
 
-        Color winningColor;
+        IColor winningColor;
         if (blackWins) {
             winningColor = Color.BLACK;
         } else if (whiteWins) {
@@ -128,14 +126,14 @@ public class Game implements IGame {
     @Nullable
     @Override
     public IPlayer forceVictory() {
-        Map<Color, Integer> flatStonesByColor = new EnumMap<>(Color.class);
-        for (Color color : Color.getColors()) {
+        Map<IColor, Integer> flatStonesByColor = new EnumMap<>(Color.class);
+        for (IColor color : Color.getColors()) {
             int stones = BOARD.countFlat(color);
             flatStonesByColor.put(color, stones);
         }
 
-        Map.Entry<Color, Integer> maximum = null;
-        for (Map.Entry<Color, Integer> entry : flatStonesByColor.entrySet()) {
+        Map.Entry<IColor, Integer> maximum = null;
+        for (Map.Entry<IColor, Integer> entry : flatStonesByColor.entrySet()) {
             if (maximum == null) {
                 maximum = entry;
                 continue;
@@ -244,7 +242,7 @@ public class Game implements IGame {
     }
 
     @Override
-    public void onPiecePlace(IPlayer player, Type type, ISquare square) {
+    public void onPiecePlace(IPlayer player, IType type, ISquare square) {
         player.onOwnPiecePlace(type, square);
         getOtherPlayer(player).onEnemyPiecePlace(player, type, square);
     }
