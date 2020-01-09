@@ -1,12 +1,16 @@
 package com.github.drsmugleaf.tak.game;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.tak.board.*;
+import com.github.drsmugleaf.tak.board.Board;
+import com.github.drsmugleaf.tak.board.IBoard;
+import com.github.drsmugleaf.tak.board.IPreset;
+import com.github.drsmugleaf.tak.board.ISquare;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.Player;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
+import com.google.common.collect.ImmutableMap;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -18,7 +22,7 @@ import java.util.function.Function;
 public class Game implements IGame {
 
     private final IBoard BOARD;
-    private final Map<Color, Player> PLAYERS = new EnumMap<>(Color.class);
+    private final ImmutableMap<Color, Player> PLAYERS;
     public Player nextPlayer;
     @Nullable
     private Player winner = null;
@@ -34,8 +38,7 @@ public class Game implements IGame {
         BOARD = board;
         Player player1 = playerMaker1.apply(new PlayerInformation(playerName1, this, Color.BLACK));
         Player player2 = playerMaker2.apply(new PlayerInformation(playerName2, this, Color.WHITE));
-        PLAYERS.put(player1.getColor(), player1);
-        PLAYERS.put(player2.getColor(), player2);
+        PLAYERS = ImmutableMap.of(player1.getColor(), player1, player2.getColor(), player2);
         nextPlayer = player1;
     }
 
@@ -61,8 +64,8 @@ public class Game implements IGame {
     }
 
     @Override
-    public Map<Color, Player> getPlayers() {
-        return new EnumMap<>(PLAYERS);
+    public ImmutableMap<Color, Player> getPlayers() {
+        return PLAYERS;
     }
 
     @Override

@@ -6,8 +6,7 @@ import com.github.drsmugleaf.tak.board.ISquare;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.Player;
-
-import java.util.Map;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Created by DrSmugleaf on 08/01/2020
@@ -16,7 +15,7 @@ public interface IGame {
 
     IBoard getBoard();
     Player getPlayer(Color color);
-    Map<Color, Player> getPlayers();
+    ImmutableMap<Color, Player> getPlayers();
     boolean canMove(Player player, ISquare origin, ISquare destination, int pieces);
     ISquare move(Player player, ISquare origin, ISquare destination, int pieces);
     boolean canPlace(Player player, int column, int row);
