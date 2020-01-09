@@ -7,6 +7,9 @@ import com.github.drsmugleaf.tak.board.ISquare;
  */
 public interface IType {
 
+    boolean isCapstone();
+    boolean isFlatStone();
+    boolean isStandingStone();
     String getFileName();
     boolean blocks();
     boolean ignoresBlock();

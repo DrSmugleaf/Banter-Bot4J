@@ -10,6 +10,11 @@ public enum Type implements IType {
 
     CAPSTONE("capstone.png", true, true, true, 1, "C") {
         @Override
+        public boolean isCapstone() {
+            return true;
+        }
+
+        @Override
         public boolean canMoveTo(IPiece topPiece) {
             return topPiece.getType() != CAPSTONE;
         }
@@ -22,8 +27,18 @@ public enum Type implements IType {
             }
         }
     },
-    FLAT_STONE("flat.png", false, false, true, 2, "F"),
-    STANDING_STONE("wall.png", true, false, false, 3, "S");
+    FLAT_STONE("flat.png", false, false, true, 2, "F") {
+        @Override
+        public boolean isFlatStone() {
+            return true;
+        }
+    },
+    STANDING_STONE("wall.png", true, false, false, 3, "S") {
+        @Override
+        public boolean isStandingStone() {
+            return true;
+        }
+    };
 
     private static final ImmutableSet<IType> TYPES = ImmutableSet.copyOf(values());
     private final String FILE_NAME;
@@ -44,6 +59,21 @@ public enum Type implements IType {
 
     public static ImmutableSet<IType> getTypes() {
         return TYPES;
+    }
+
+    @Override
+    public boolean isCapstone() {
+        return false;
+    }
+
+    @Override
+    public boolean isFlatStone() {
+        return false;
+    }
+
+    @Override
+    public boolean isStandingStone() {
+        return false;
     }
 
     @Override

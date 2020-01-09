@@ -37,14 +37,12 @@ public class Hand {
     }
 
     public int getAmount(IType type) {
-        switch (type) {
-            case CAPSTONE:
-                return getCapstones();
-            case FLAT_STONE:
-            case STANDING_STONE:
-                return getStones();
-            default:
-                throw new IllegalArgumentException("Unrecognized piece type: " + type);
+        if (type.isCapstone()) {
+            return getCapstones();
+        } else if (type.isFlatStone() || type.isStandingStone()) {
+            return getStones();
+        } else {
+            throw new IllegalArgumentException("Unrecognized piece type: " + type);
         }
     }
 
@@ -67,14 +65,12 @@ public class Hand {
             throw new IllegalArgumentException("No pieces left in this hand of type " + type);
         }
 
-        switch (type) {
-            case CAPSTONE:
-                CAPSTONES--;
-                break;
-            case FLAT_STONE:
-            case STANDING_STONE:
-                STONES--;
-                break;
+        if (type.isCapstone()) {
+            CAPSTONES--;
+        } else if (type.isFlatStone() || type.isStandingStone()) {
+            STONES--;
+        } else {
+            throw new IllegalArgumentException("Unrecognized piece type: " + type);
         }
 
         return new Piece(COLOR, type);
