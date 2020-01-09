@@ -5,13 +5,16 @@ import com.github.drsmugleaf.tak.board.Board;
 import com.github.drsmugleaf.tak.board.IBoard;
 import com.github.drsmugleaf.tak.board.IPreset;
 import com.github.drsmugleaf.tak.board.ISquare;
-import com.github.drsmugleaf.tak.pieces.*;
+import com.github.drsmugleaf.tak.pieces.Color;
+import com.github.drsmugleaf.tak.pieces.IColor;
+import com.github.drsmugleaf.tak.pieces.IPiece;
+import com.github.drsmugleaf.tak.pieces.IType;
 import com.github.drsmugleaf.tak.player.IPlayer;
 import com.github.drsmugleaf.tak.player.IPlayerInformation;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
 import com.google.common.collect.ImmutableMap;
 
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -126,7 +129,7 @@ public class Game implements IGame {
     @Nullable
     @Override
     public IPlayer forceVictory() {
-        Map<IColor, Integer> flatStonesByColor = new EnumMap<>(Color.class);
+        Map<IColor, Integer> flatStonesByColor = new HashMap<>();
         for (IColor color : Color.getColors()) {
             int stones = BOARD.countFlat(color);
             flatStonesByColor.put(color, stones);

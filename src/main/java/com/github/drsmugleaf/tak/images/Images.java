@@ -1,13 +1,13 @@
 package com.github.drsmugleaf.tak.images;
 
 import com.github.drsmugleaf.BanterBot4J;
+import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.*;
 
 import javax.imageio.ImageIO;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -40,10 +40,10 @@ public class Images {
     }
 
     private static Map<IColor, Map<IType, Image>> registerPieces() {
-        Map<IColor, Map<IType, Image>> images = new EnumMap<>(Color.class);
+        Map<IColor, Map<IType, Image>> images = new HashMap<>();
 
         for (IColor color : Color.values()) {
-            images.put(color, new EnumMap<>(Type.class));
+            images.put(color, new HashMap<>());
 
             for (IType type : Type.getTypes()) {
                 String filePath = IMAGES_PATH + "/pieces/" + color.getFolderName() + type.getFileName();
