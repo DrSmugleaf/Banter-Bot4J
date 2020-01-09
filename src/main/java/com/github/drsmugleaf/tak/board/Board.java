@@ -33,8 +33,8 @@ public class Board implements IBoard {
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
                 ISquare square = new Square(column, row);
-                rows[row].SQUARES[column] = square;
-                columns[column].SQUARES[row] = square;
+                rows[row].getSquares()[column] = square;
+                columns[column].getSquares()[row] = square;
             }
         }
 

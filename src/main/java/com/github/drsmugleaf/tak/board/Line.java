@@ -7,44 +7,52 @@ import com.github.drsmugleaf.tak.pieces.Type;
 /**
  * Created by DrSmugleaf on 02/01/2019
  */
-public class Line {
+public class Line implements ILine {
 
-    protected final ISquare[] SQUARES;
+    private final ISquare[] SQUARES;
 
     protected Line(int size) {
         SQUARES = new ISquare[size];
     }
 
+    @Override
     public ISquare[] getSquares() {
         return SQUARES;
     }
 
+    @Override
     public boolean canMove(int origin, ISquare destination, int pieces) {
-        return origin < SQUARES.length && SQUARES[origin].canMove(destination, pieces);
+        return origin < getSquares().length && getSquares()[origin].canMove(destination, pieces);
     }
 
+    @Override
     public ISquare move(int origin, ISquare destination, int pieces, boolean silent) {
-        return SQUARES[origin].move(destination, pieces, silent);
+        return getSquares()[origin].move(destination, pieces, silent);
     }
 
-    public boolean canPlace(int location) {
-        return location < SQUARES.length && SQUARES[location].canPlace();
+    @Override
+    public boolean canPlace(int index) {
+        return index < getSquares().length && getSquares()[index].canPlace();
     }
 
+    @Override
     public ISquare place(Piece piece, int location, boolean silent) {
-        return SQUARES[location].place(piece, silent);
+        return getSquares()[location].place(piece, silent);
     }
 
+    @Override
     public ISquare remove(Piece piece, int location, boolean silent) {
-        return SQUARES[location].remove(piece, silent);
+        return getSquares()[location].remove(piece, silent);
     }
 
-    protected void setSquare(int i, ISquare square) {
-        SQUARES[i] = square;
+    @Override
+    public void setSquare(int index, ISquare square) {
+        getSquares()[index] = square;
     }
 
+    @Override
     public boolean hasSquare(Color color) {
-        for (ISquare square : SQUARES) {
+        for (ISquare square : getSquares()) {
             if (square.getColor() == color) {
                 return true;
             }
@@ -53,10 +61,11 @@ public class Line {
         return false;
     }
 
+    @Override
     public int countFlat(Color color) {
         int amount = 0;
 
-        for (ISquare square : SQUARES) {
+        for (ISquare square : getSquares()) {
             Piece topPiece = square.getTopPiece();
             if (topPiece != null && topPiece.getColor() == color && topPiece.getType() == Type.FLAT_STONE) {
                 amount++;
@@ -66,8 +75,9 @@ public class Line {
         return amount;
     }
 
+    @Override
     public void reset() {
-        for (ISquare square : SQUARES) {
+        for (ISquare square : getSquares()) {
             square.reset();
         }
     }
