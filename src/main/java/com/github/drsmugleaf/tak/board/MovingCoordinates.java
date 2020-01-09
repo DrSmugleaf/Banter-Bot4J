@@ -3,6 +3,7 @@ package com.github.drsmugleaf.tak.board;
 import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.player.IPlayer;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -45,6 +46,23 @@ public class MovingCoordinates implements ICoordinates {
         board.moveSilent(ORIGIN_COLUMN, ORIGIN_ROW, DESTINATION_COLUMN, DESTINATION_ROW, PIECES);
 
         return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MovingCoordinates)) return false;
+        MovingCoordinates that = (MovingCoordinates) o;
+        return ORIGIN_COLUMN == that.ORIGIN_COLUMN &&
+                ORIGIN_ROW == that.ORIGIN_ROW &&
+                DESTINATION_COLUMN == that.DESTINATION_COLUMN &&
+                DESTINATION_ROW == that.DESTINATION_ROW &&
+                PIECES == that.PIECES;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ORIGIN_COLUMN, ORIGIN_ROW, DESTINATION_COLUMN, DESTINATION_ROW, PIECES);
     }
 
 }

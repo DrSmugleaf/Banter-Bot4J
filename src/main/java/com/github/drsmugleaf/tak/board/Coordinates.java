@@ -3,6 +3,7 @@ package com.github.drsmugleaf.tak.board;
 import com.github.drsmugleaf.tak.pieces.*;
 import com.github.drsmugleaf.tak.player.IPlayer;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -42,6 +43,21 @@ public class Coordinates implements ICoordinates {
         board.removeSilent(piece, COLUMN, ROW);
 
         return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Coordinates)) return false;
+        Coordinates that = (Coordinates) o;
+        return ROW == that.ROW &&
+                COLUMN == that.COLUMN &&
+                PIECE.equals(that.PIECE);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ROW, COLUMN, PIECE);
     }
 
 }
