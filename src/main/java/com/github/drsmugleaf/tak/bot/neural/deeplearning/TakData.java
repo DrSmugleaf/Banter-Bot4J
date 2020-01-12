@@ -6,6 +6,9 @@ import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.BackpropType;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.Updater;
+import org.deeplearning4j.nn.conf.inputs.InputType;
+import org.deeplearning4j.nn.conf.layers.ConvolutionLayer;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
@@ -15,7 +18,6 @@ import org.nd4j.evaluation.classification.Evaluation;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
-import org.nd4j.linalg.learning.config.Sgd;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 import java.util.logging.Logger;
@@ -29,11 +31,12 @@ public class TakData {
             .weightInit(WeightInit.XAVIER)
             .activation(Activation.RELU)
             .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
-            .updater(new Sgd(0.05))
+            .updater(Updater.ADAGRAD)
             .list()
-            .layer(0, new DenseLayer.Builder().nIn(getInputs()).nOut(250).build())
-            .layer(1, new DenseLayer.Builder().nOut(250).build())
+            .layer(0, new ConvolutionLayer.Builder(3, 3).nIn(11).stride(1, 1).nOut(50).activation(Activation.RELU).build())
+            .layer(1, new DenseLayer.Builder().nOut(500).activation(Activation.RELU).build())
             .layer(2, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD).nOut(getOutputs()).activation(Activation.SOFTMAX).build())
+            .setInputType(InputType.convolutional(getPreset().getSize(), getPreset().getSize(), 11))
             .backpropType(BackpropType.Standard)
             .build();
 
