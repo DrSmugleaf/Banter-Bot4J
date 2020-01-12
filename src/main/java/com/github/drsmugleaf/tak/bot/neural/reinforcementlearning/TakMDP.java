@@ -62,7 +62,7 @@ public class TakMDP implements MDP<INeuralBoard, Integer, DiscreteSpace> {
     public TakMDP(IPreset preset) {
         GAME = new NeuralGame(new NeuralBoard(preset), "Neural Bot 1", "Neural Bot 2", NeuralBot::from, RandomFlatBot::from);
         OBSERVATION_SPACE = new ArrayObservationSpace<>(new int[]{preset.getSize() * preset.getSize() * (1 + preset.getStones() * 2)});
-        ACTION_SPACE = new TakSpace(preset);
+        ACTION_SPACE = new TakSpace(GAME);
     }
 
     public static void main(String[] args) {
@@ -144,9 +144,9 @@ public class TakMDP implements MDP<INeuralBoard, Integer, DiscreteSpace> {
 
         INeuralBoard board = GAME.getBoard();
         List<ICoordinates> coordinates = board.getPreset().getAllActions();
+        System.out.println("MDP: " + nextPlayer.getAvailableActions().size());
         ICoordinates coordinate = coordinates.get(action);
         if (action.equals(ACTION_SPACE.noOp()) || action >= coordinates.size() || !coordinate.canPlace(nextPlayer)) {
-            nextPlayer.surrender();
             return new StepReply<>(board, Integer.MIN_VALUE, isDone(), new JSONObject("{}"));
         }
 
