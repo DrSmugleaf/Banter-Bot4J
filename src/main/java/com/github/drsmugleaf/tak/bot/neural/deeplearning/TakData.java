@@ -7,6 +7,7 @@ import org.deeplearning4j.nn.conf.BackpropType;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
+import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
@@ -15,6 +16,7 @@ import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.learning.config.Sgd;
+import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 import java.util.logging.Logger;
 
@@ -30,8 +32,8 @@ public class TakData {
             .updater(new Sgd(0.05))
             .list()
             .layer(0, new DenseLayer.Builder().nIn(getInputs()).nOut(250).build())
-            .layer(0, new DenseLayer.Builder().nIn(250).nOut(250).build())
-            .layer(0, new DenseLayer.Builder().nIn(250).nOut(getOutputs()).build())
+            .layer(1, new DenseLayer.Builder().nOut(250).build())
+            .layer(2, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD).nOut(getOutputs()).activation(Activation.SOFTMAX).build())
             .backpropType(BackpropType.Standard)
             .build();
 
