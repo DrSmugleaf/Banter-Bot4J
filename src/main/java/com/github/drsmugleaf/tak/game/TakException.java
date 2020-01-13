@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.tak;
+package com.github.drsmugleaf.tak.game;
 
 /**
  * Created by DrSmugleaf on 16/03/2019

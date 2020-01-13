@@ -1,7 +1,5 @@
 package com.github.drsmugleaf.tak.game;
 
-import com.github.drsmugleaf.tak.TakException;
-
 /**
  * Created by DrSmugleaf on 16/03/2019
  */
