@@ -27,7 +27,6 @@ public class TakSpace extends DiscreteSpace {
 
         int randomIndex = rnd.nextInt(actions.size());
         IAction randomAction = actions.get(randomIndex);
-        System.out.println("Space: " + actions.size());
         return GAME.getBoard().getPreset().getAllActions().indexOf(randomAction);
     }
 

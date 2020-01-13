@@ -7,6 +7,8 @@ import com.github.drsmugleaf.tak.board.layout.Preset;
 import com.github.drsmugleaf.tak.bot.random.RandomFlatBot;
 import com.github.drsmugleaf.tak.player.IPlayer;
 import org.deeplearning4j.gym.StepReply;
+import org.deeplearning4j.rl4j.learning.Learning;
+import org.deeplearning4j.rl4j.learning.sync.Transition;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.discrete.QLearningDiscreteDense;
 import org.deeplearning4j.rl4j.mdp.MDP;
@@ -17,7 +19,10 @@ import org.deeplearning4j.rl4j.space.DiscreteSpace;
 import org.deeplearning4j.rl4j.space.ObservationSpace;
 import org.deeplearning4j.rl4j.util.DataManager;
 import org.json.JSONObject;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.learning.config.Adam;
+import org.nd4j.linalg.util.ArrayUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,13 +40,13 @@ public class TakMDP implements MDP<INeuralBoard, Integer, DiscreteSpace> {
             .builder()
             .l2(0.001)
             .updater(new Adam(0.0005))
-            .numHiddenNodes(16)
+            .numHiddenNodes(800)
             .numLayer(3)
             .build();
     private static QLearning.QLConfiguration QL = new QLearning.QLConfiguration(
             42,    //Random seed
             200,    //Max step By epoch
-            150000, //Max step
+            15000, //Max step
             150000, //Max size of experience replay
             32,     //size of batches
             500,    //target update (hard)
@@ -98,6 +103,19 @@ public class TakMDP implements MDP<INeuralBoard, Integer, DiscreteSpace> {
             return;
         }
 
+        mdp.GAME.reset();
+        System.out.println(pol2.getNeuralNet().isRecurrent());
+        double[][] input = new double[][]{mdp.getGame().getBoard().toArray()};
+
+        pol2.getNeuralNet().reset();
+        Learning.InitMdp<INeuralBoard> initMdp = Learning.initMdp(mdp, null);
+        INeuralBoard obs = initMdp.getLastObs();
+        INDArray lInput = Learning.getInput(mdp, obs);
+        INDArray[] history = new INDArray[] {lInput};
+        INDArray hstack = Transition.concat(history);
+        hstack = hstack.reshape(Learning.makeShape(1, ArrayUtil.toInts(hstack.shape())));
+        INDArray output = pol2.getNeuralNet().output(Nd4j.create(input));
+
         double rewards = 0;
         int iterations = 1000;
         for (int i = 0; i < iterations; i++) {
@@ -144,7 +162,6 @@ public class TakMDP implements MDP<INeuralBoard, Integer, DiscreteSpace> {
 
         INeuralBoard board = GAME.getBoard();
         List<IAction> actions = board.getPreset().getAllActions();
-        System.out.println("MDP: " + nextPlayer.getAvailableActions().size());
         IAction action = actions.get(actionIndex);
         if (actionIndex.equals(ACTION_SPACE.noOp()) || actionIndex >= actions.size() || !action.canExecute(nextPlayer)) {
             return new StepReply<>(board, Integer.MIN_VALUE, isDone(), new JSONObject("{}"));
