@@ -363,8 +363,8 @@ public class Board implements IBoard {
 
     @Override
     public boolean isFull() {
-        for (ISquare[] row : toSquareArray()) {
-            for (ISquare square : row) {
+        for (Row row : getRows()) {
+            for (ISquare square : row.getSquares()) {
                 if (square.getTopPiece() == null) {
                     return false;
                 }
