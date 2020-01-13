@@ -28,7 +28,7 @@ public class Square implements ISquare {
         this(square.getRow(), square.getColumn());
 
         for (IPiece piece : square.getPieces()) {
-            PIECES.add(piece.copy());
+            getPieces().add(piece.copy());
         }
     }
 
@@ -81,16 +81,17 @@ public class Square implements ISquare {
     @Nullable
     @Override
     public IPiece getTopPiece() {
-        if (PIECES.isEmpty()) {
+        List<IPiece> pieces = getPieces();
+        if (pieces.isEmpty()) {
             return null;
         }
 
-        return PIECES.get(PIECES.size() - 1);
+        return pieces.get(pieces.size() - 1);
     }
 
     @Override
-    public boolean canMove(ISquare other, int pieces) {
-        if (pieces <= 0 || pieces > PIECES.size()) {
+    public boolean canMove(ISquare other, int amount) {
+        if (amount <= 0 || amount > getPieces().size()) {
             return false;
         }
 
@@ -104,7 +105,7 @@ public class Square implements ISquare {
             return true;
         }
 
-        if (pieces == 1) {
+        if (amount == 1) {
             return thisTopPiece.getType().canMoveTo(otherTopPiece);
         } else {
             return !otherTopPiece.getType().blocks();
@@ -112,16 +113,17 @@ public class Square implements ISquare {
     }
 
     @Override
-    public ISquare move(ISquare destination, int pieces, boolean silent) {
-        ListIterator<IPiece> iterator = PIECES.listIterator(PIECES.size());
-        while (iterator.hasPrevious() && pieces > 0) {
+    public ISquare move(ISquare destination, int amount, boolean silent) {
+        List<IPiece> pieces = getPieces();
+        ListIterator<IPiece> iterator = pieces.listIterator(pieces.size());
+        while (iterator.hasPrevious() && amount > 0) {
             IPiece piece = iterator.previous();
 
-            piece.getType().move(destination, pieces);
+            piece.getType().move(destination, amount);
             iterator.remove();
             destination.getPieces().add(piece);
 
-            pieces--;
+            amount--;
         }
 
         if (!silent) {
@@ -139,7 +141,7 @@ public class Square implements ISquare {
 
     @Override
     public ISquare place(IPiece piece, boolean silent) {
-        PIECES.add(piece);
+        getPieces().add(piece);
 
         if (!silent) {
             onUpdate();
@@ -150,7 +152,7 @@ public class Square implements ISquare {
 
     @Override
     public ISquare remove(IPiece piece, boolean silent) {
-        PIECES.remove(piece);
+        getPieces().remove(piece);
 
         if (!silent) {
             onUpdate();
@@ -183,14 +185,14 @@ public class Square implements ISquare {
 
     @Override
     public void reset() {
-        PIECES.clear();
+        getPieces().clear();
     }
 
     @Override
     public double[] toDoubleArray(int totalPieces) {
         double[] array = new double[totalPieces];
-        for (int i = 0; i < PIECES.size(); i++) {
-            array[i] = PIECES.get(i).toDouble();
+        for (int i = 0; i < getPieces().size(); i++) {
+            array[i] = getPieces().get(i).toDouble();
         }
 
         return array;
