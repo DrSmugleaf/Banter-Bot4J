@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tak.gui;
 
-import com.github.drsmugleaf.tak.board.ICoordinates;
+import com.github.drsmugleaf.tak.board.IAction;
 import com.github.drsmugleaf.tak.game.Game;
 import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.player.IPlayer;
@@ -35,7 +35,7 @@ public class GuiPlayer extends Player {
     }
 
     @Override
-    public ICoordinates getNextAction() {
+    public IAction getNextAction() {
         return null;
     }
 

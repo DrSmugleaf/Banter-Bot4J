@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.tak.gui;
 
-import com.github.drsmugleaf.tak.board.Coordinates;
+import com.github.drsmugleaf.tak.board.IPlace;
+import com.github.drsmugleaf.tak.board.Place;
 import com.github.drsmugleaf.tak.pieces.IType;
 import com.github.drsmugleaf.tak.pieces.Type;
 
@@ -46,9 +47,9 @@ public class GuiMouseListener implements MouseListener {
         button.getModel().setArmed(true);
         button.getModel().setPressed(true);
 
-        Coordinates coordinates = new Coordinates(SQUARE.getRow(), SQUARE.getColumn(), type);
-        if (coordinates.canPlace(PLAYER)) {
-            PLAYER.setNextAction(coordinates);
+        IPlace place = new Place(SQUARE.getRow(), SQUARE.getColumn(), type);
+        if (place.canExecute(PLAYER)) {
+            PLAYER.setNextAction(place);
         }
     }
 

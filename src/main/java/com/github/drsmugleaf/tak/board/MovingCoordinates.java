@@ -1,51 +1,46 @@
 package com.github.drsmugleaf.tak.board;
 
-import com.github.drsmugleaf.tak.pieces.IColor;
-import com.github.drsmugleaf.tak.player.IPlayer;
-
 import java.util.Objects;
-import java.util.function.Function;
 
 /**
  * Created by DrSmugleaf on 01/01/2019
  */
-public class MovingCoordinates implements ICoordinates {
+public class MovingCoordinates implements IMovingCoordinates {
 
     private final int ORIGIN_ROW;
     private final int ORIGIN_COLUMN;
     private final int DESTINATION_ROW;
     private final int DESTINATION_COLUMN;
-    private final int PIECES;
 
-    public MovingCoordinates(int originRow, int originColumn, int destinationRow, int destinationColumn, int pieces) {
+    public MovingCoordinates(int originRow, int originColumn, int destinationRow, int destinationColumn) {
         ORIGIN_ROW = originRow;
         ORIGIN_COLUMN = originColumn;
         DESTINATION_ROW = destinationRow;
         DESTINATION_COLUMN = destinationColumn;
-        PIECES = pieces;
     }
 
-    public MovingCoordinates(ISquare origin, ISquare destination, int pieces) {
-        this(origin.getRow(), origin.getColumn(), destination.getRow(), destination.getColumn(), pieces);
-    }
-
-    @Override
-    public boolean canPlace(IPlayer player) {
-        return player.canMove(ORIGIN_ROW, ORIGIN_COLUMN, DESTINATION_ROW, DESTINATION_COLUMN, PIECES);
+    public MovingCoordinates(ISquare origin, ISquare destination) {
+        this(origin.getRow(), origin.getColumn(), destination.getRow(), destination.getColumn());
     }
 
     @Override
-    public void place(IPlayer player) {
-        player.move(ORIGIN_ROW, ORIGIN_COLUMN, DESTINATION_ROW, DESTINATION_COLUMN, PIECES);
+    public int getOriginRow() {
+        return ORIGIN_ROW;
     }
 
     @Override
-    public int with(IBoard board, IColor nextColor, Function<IBoard, Integer> function) {
-        board.moveSilent(ORIGIN_ROW, ORIGIN_COLUMN, DESTINATION_ROW, DESTINATION_COLUMN, PIECES);
-        Integer result = function.apply(board);
-        board.moveSilent(DESTINATION_ROW, DESTINATION_COLUMN, ORIGIN_ROW, ORIGIN_COLUMN, PIECES);
+    public int getOriginColumn() {
+        return ORIGIN_COLUMN;
+    }
 
-        return result;
+    @Override
+    public int getDestinationRow() {
+        return DESTINATION_ROW;
+    }
+
+    @Override
+    public int getDestinationColumn() {
+        return DESTINATION_COLUMN;
     }
 
     @Override
@@ -53,16 +48,15 @@ public class MovingCoordinates implements ICoordinates {
         if (this == o) return true;
         if (!(o instanceof MovingCoordinates)) return false;
         MovingCoordinates that = (MovingCoordinates) o;
-        return ORIGIN_ROW == that.ORIGIN_ROW &&
-                ORIGIN_COLUMN == that.ORIGIN_COLUMN &&
-                DESTINATION_ROW == that.DESTINATION_ROW &&
-                DESTINATION_COLUMN == that.DESTINATION_COLUMN &&
-                PIECES == that.PIECES;
+        return getOriginRow() == that.getOriginRow() &&
+                getOriginColumn() == that.getOriginColumn() &&
+                getDestinationRow() == that.getDestinationRow() &&
+                getDestinationColumn() == that.getDestinationColumn();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ORIGIN_ROW, ORIGIN_COLUMN, DESTINATION_ROW, DESTINATION_COLUMN, PIECES);
+        return Objects.hash(getOriginRow(), getOriginColumn(), getDestinationRow(), getDestinationColumn());
     }
 
 }

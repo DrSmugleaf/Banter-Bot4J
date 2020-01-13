@@ -15,6 +15,6 @@ public interface IPreset {
     int getStones();
     int getCarryLimit();
     int getMaximumStackSize();
-    ImmutableList<ICoordinates> getAllActions();
+    ImmutableList<IAction> getAllActions();
 
 }

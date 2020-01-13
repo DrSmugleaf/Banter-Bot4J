@@ -28,7 +28,7 @@ public enum Preset implements IPreset {
     private final int CAPSTONES;
     private final int STONES;
     private final String IMAGE_NAME;
-    private final ImmutableList<ICoordinates> ALL_ACTIONS;
+    private final ImmutableList<IAction> ALL_ACTIONS;
 
     Preset(int size, int capstones, int stones, String imageName) {
         if (size <= 0) {
@@ -40,12 +40,12 @@ public enum Preset implements IPreset {
         CAPSTONES = capstones;
         IMAGE_NAME = imageName;
 
-        List<ICoordinates> allActions = new ArrayList<>();
+        List<IAction> allActions = new ArrayList<>();
         IBoard board = new Board(this);
         for (Row row : board.getRows()) {
             for (ISquare origin : row.getSquares()) {
                 for (IType type : Type.getTypes()) {
-                    Coordinates place = new Coordinates(origin, type);
+                    Place place = new Place(origin, type);
                     allActions.add(place);
                 }
 
@@ -56,7 +56,7 @@ public enum Preset implements IPreset {
                     }
 
                     for (int pieces = 1; pieces <= getCarryLimit(); pieces++) {
-                        MovingCoordinates move = new MovingCoordinates(origin, destination, pieces);
+                        Move move = new Move(origin, destination, pieces);
                         allActions.add(move);
                     }
                 }
@@ -118,7 +118,7 @@ public enum Preset implements IPreset {
     }
 
     @Override
-    public ImmutableList<ICoordinates> getAllActions() {
+    public ImmutableList<IAction> getAllActions() {
         return ALL_ACTIONS;
     }
 

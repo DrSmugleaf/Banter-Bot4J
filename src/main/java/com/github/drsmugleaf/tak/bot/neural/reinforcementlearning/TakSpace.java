@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tak.bot.neural.reinforcementlearning;
 
-import com.github.drsmugleaf.tak.board.ICoordinates;
+import com.github.drsmugleaf.tak.board.IAction;
 import com.github.drsmugleaf.tak.game.IGame;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
 
@@ -20,13 +20,13 @@ public class TakSpace extends DiscreteSpace {
 
     @Override
     public Integer randomAction() {
-        List<ICoordinates> actions = GAME.getNextPlayer().getAvailableActions();
+        List<IAction> actions = GAME.getNextPlayer().getAvailableActions();
         if (actions.isEmpty()) {
             return noOp();
         }
 
         int randomIndex = rnd.nextInt(actions.size());
-        ICoordinates randomAction = actions.get(randomIndex);
+        IAction randomAction = actions.get(randomIndex);
         System.out.println("Space: " + actions.size());
         return GAME.getBoard().getPreset().getAllActions().indexOf(randomAction);
     }

@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.tak.board;
 
 import com.github.drsmugleaf.tak.pieces.IColor;
+import com.github.drsmugleaf.tak.pieces.IType;
 import com.github.drsmugleaf.tak.player.IPlayer;
 
 import java.util.function.Function;
@@ -10,8 +11,7 @@ import java.util.function.Function;
  */
 public interface ICoordinates {
 
-    boolean canPlace(IPlayer player);
-    void place(IPlayer player);
-    int with(IBoard board, IColor nextColor, Function<IBoard, Integer> function);
+    int getRow();
+    int getColumn();
 
 }

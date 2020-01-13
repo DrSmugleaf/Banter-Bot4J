@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tak.bot.neural.deeplearning;
 
-import com.github.drsmugleaf.tak.board.ICoordinates;
+import com.github.drsmugleaf.tak.board.IAction;
 import com.github.drsmugleaf.tak.bot.Bot;
 import com.github.drsmugleaf.tak.game.IGame;
 import com.github.drsmugleaf.tak.pieces.IColor;
@@ -35,7 +35,7 @@ public class DLBot extends Bot {
     }
 
     @Override
-    public ICoordinates getNextAction() {
+    public IAction getNextAction() {
         return null;
     }
 

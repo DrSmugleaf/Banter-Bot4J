@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.bot.neural.reinforcementlearning;
 
 import com.github.drsmugleaf.env.Keys;
-import com.github.drsmugleaf.tak.board.ICoordinates;
+import com.github.drsmugleaf.tak.board.IAction;
 import com.github.drsmugleaf.tak.board.IPreset;
 import com.github.drsmugleaf.tak.board.Preset;
 import com.github.drsmugleaf.tak.bot.random.RandomFlatBot;
@@ -136,21 +136,21 @@ public class TakMDP implements MDP<INeuralBoard, Integer, DiscreteSpace> {
     }
 
     @Override
-    public StepReply<INeuralBoard> step(Integer action) {
+    public StepReply<INeuralBoard> step(Integer actionIndex) {
         IPlayer nextPlayer = GAME.getNextPlayer();
         if (!(nextPlayer instanceof NeuralBot)) {
             throw new IllegalStateException();
         }
 
         INeuralBoard board = GAME.getBoard();
-        List<ICoordinates> coordinates = board.getPreset().getAllActions();
+        List<IAction> actions = board.getPreset().getAllActions();
         System.out.println("MDP: " + nextPlayer.getAvailableActions().size());
-        ICoordinates coordinate = coordinates.get(action);
-        if (action.equals(ACTION_SPACE.noOp()) || action >= coordinates.size() || !coordinate.canPlace(nextPlayer)) {
+        IAction action = actions.get(actionIndex);
+        if (actionIndex.equals(ACTION_SPACE.noOp()) || actionIndex >= actions.size() || !action.canExecute(nextPlayer)) {
             return new StepReply<>(board, Integer.MIN_VALUE, isDone(), new JSONObject("{}"));
         }
 
-        nextPlayer.setNextAction(coordinate);
+        nextPlayer.setNextAction(action);
         GAME.nextTurn();
 
         if (!isDone()) {

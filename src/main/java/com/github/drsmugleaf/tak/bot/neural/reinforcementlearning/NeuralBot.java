@@ -1,9 +1,9 @@
 package com.github.drsmugleaf.tak.bot.neural.reinforcementlearning;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.tak.game.Game;
-import com.github.drsmugleaf.tak.board.ICoordinates;
+import com.github.drsmugleaf.tak.board.IAction;
 import com.github.drsmugleaf.tak.bot.Bot;
+import com.github.drsmugleaf.tak.game.Game;
 import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.player.IPlayer;
 import com.github.drsmugleaf.tak.player.IPlayerInformation;
@@ -33,11 +33,11 @@ public class NeuralBot extends Bot {
 
     @Nullable
     @Override
-    public ICoordinates getNextAction() {
+    public IAction getNextAction() {
         NeuralBoard board = (NeuralBoard) getGame().getBoard();
         INDArray array = Nd4j.create(board.toArray());
         Integer action = TakMDP.getPolicy().nextAction(array);
-        List<ICoordinates> actions = getAvailableActions();
+        List<IAction> actions = getAvailableActions();
         return actions.get(action);
     }
 

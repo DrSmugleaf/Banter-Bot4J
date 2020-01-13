@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.bot.random;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.tak.board.ICoordinates;
+import com.github.drsmugleaf.tak.board.IAction;
 import com.github.drsmugleaf.tak.bot.Bot;
 import com.github.drsmugleaf.tak.game.IGame;
 import com.github.drsmugleaf.tak.pieces.IColor;
@@ -20,8 +20,8 @@ public abstract class RandomBot extends Bot {
 
     @Nullable
     @Override
-    public ICoordinates getNextAction() {
-        List<ICoordinates> availableActions = getAvailableActions();
+    public IAction getNextAction() {
+        List<IAction> availableActions = getAvailableActions();
         if (availableActions.isEmpty()) {
             return null;
         }

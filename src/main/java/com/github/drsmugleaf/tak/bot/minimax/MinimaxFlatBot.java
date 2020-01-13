@@ -1,8 +1,8 @@
 package com.github.drsmugleaf.tak.bot.minimax;
 
+import com.github.drsmugleaf.tak.board.IAction;
 import com.github.drsmugleaf.tak.game.IGame;
 import com.github.drsmugleaf.tak.board.IBoard;
-import com.github.drsmugleaf.tak.board.ICoordinates;
 import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.github.drsmugleaf.tak.player.IPlayer;
@@ -33,7 +33,7 @@ public class MinimaxFlatBot extends MinimaxBot {
     }
 
     @Override
-    public List<ICoordinates> getAvailableActions(IBoard board) {
+    public List<IAction> getAvailableActions(IBoard board) {
         return super.getAvailableActions(board, Type.FLAT_STONE);
     }
 

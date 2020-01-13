@@ -1,9 +1,7 @@
 package com.github.drsmugleaf.tak.player;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.tak.board.IBoard;
-import com.github.drsmugleaf.tak.board.ICoordinates;
-import com.github.drsmugleaf.tak.board.ISquare;
+import com.github.drsmugleaf.tak.board.*;
 import com.github.drsmugleaf.tak.game.IGame;
 import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.pieces.IType;
@@ -16,23 +14,23 @@ import java.util.Set;
  */
 public interface IPlayer {
 
-    List<ICoordinates> getAvailableActions(IBoard board, IType type);
-    List<ICoordinates> getAvailableActions(IBoard board);
-    List<ICoordinates> getAvailableActions();
-    List<ICoordinates> getAvailableMoves(IBoard board);
-    List<ICoordinates> getAvailableMoves();
-    List<ICoordinates> getAvailablePlaces(IBoard board, IType... types);
-    List<ICoordinates> getAvailablePlaces(IBoard board, Set<IType> types);
-    List<ICoordinates> getAvailablePlaces(IBoard board);
-    List<ICoordinates> getAvailablePlaces(IType type);
-    List<ICoordinates> getAvailablePlaces();
+    List<IAction> getAvailableActions(IBoard board, IType type);
+    List<IAction> getAvailableActions(IBoard board);
+    List<IAction> getAvailableActions();
+    List<IMove> getAvailableMoves(IBoard board);
+    List<IMove> getAvailableMoves();
+    List<IPlace> getAvailablePlaces(IBoard board, IType... types);
+    List<IPlace> getAvailablePlaces(IBoard board, Set<IType> types);
+    List<IPlace> getAvailablePlaces(IBoard board);
+    List<IPlace> getAvailablePlaces(IType type);
+    List<IPlace> getAvailablePlaces();
     String getName();
     IGame getGame();
     Hand getHand();
     boolean isPassive();
     @Nullable
-    ICoordinates getNextAction();
-    void setNextAction(ICoordinates action);
+    IAction getNextAction();
+    void setNextAction(IAction action);
     IColor getColor();
     boolean canMove(ISquare origin, ISquare destination, int pieces);
     boolean canMove(int originRow, int originColumn, int destinationRow, int destinationColumn, int pieces);

@@ -24,11 +24,11 @@ public abstract class MinimaxBot extends Bot {
 
     @Nullable
     @Override
-    public ICoordinates getNextAction() {
+    public IAction getNextAction() {
         return getBestPlace().getKey();
     }
 
-    protected Pair<ICoordinates, Integer> getBestPlace() {
+    protected Pair<IAction, Integer> getBestPlace() {
         IBoard board = getGame().getBoard();
         IColor nextColor = getGame().getNextPlayer().getColor();
 
@@ -78,16 +78,16 @@ public abstract class MinimaxBot extends Bot {
         return score;
     }
 
-    protected final Pair<ICoordinates, Integer> getMax(List<ICoordinates> moves, IBoard board, IColor nextPlayer, int alpha, int beta, final int depth) {
-        ICoordinates bestMove = null;
+    protected final Pair<IAction, Integer> getMax(List<IAction> actions, IBoard board, IColor nextPlayer, int alpha, int beta, final int depth) {
+        IAction bestAction = null;
         int score = 0;
 
-        for (ICoordinates coordinates : moves) {
+        for (IAction action : actions) {
             int finalAlpha = alpha;
             int finalBeta = beta;
-            score = coordinates.with(board, nextPlayer, copy -> {
+            score = action.with(board, nextPlayer, copy -> {
                 if (depth > 1 && !isTerminal(copy)) {
-                    List<ICoordinates> availableActions = getGame().getPlayer(nextPlayer.getOpposite()).getAvailableActions(copy);
+                    List<IAction> availableActions = getGame().getPlayer(nextPlayer.getOpposite()).getAvailableActions(copy);
                     return getMax(availableActions, copy, nextPlayer.getOpposite(), finalAlpha, finalBeta, depth - 1).getValue();
                 } else {
                     return getScore(copy);
@@ -97,12 +97,12 @@ public abstract class MinimaxBot extends Bot {
             if (nextPlayer == getColor()) {
                 if (score > alpha) {
                     alpha = score;
-                    bestMove = coordinates;
+                    bestAction = action;
                 }
             } else if (nextPlayer.getOpposite() == getColor()) {
                 if (score < beta) {
                     beta = score;
-                    bestMove = coordinates;
+                    bestAction = action;
                 }
             } else {
                 throw new IllegalArgumentException("Unrecognized color: " + nextPlayer);
@@ -113,7 +113,7 @@ public abstract class MinimaxBot extends Bot {
             }
         }
 
-        return new Pair<>(bestMove, score);
+        return new Pair<>(bestAction, score);
     }
 
 }

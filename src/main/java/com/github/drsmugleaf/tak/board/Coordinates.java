@@ -1,10 +1,6 @@
 package com.github.drsmugleaf.tak.board;
 
-import com.github.drsmugleaf.tak.pieces.*;
-import com.github.drsmugleaf.tak.player.IPlayer;
-
 import java.util.Objects;
-import java.util.function.Function;
 
 /**
  * Created by DrSmugleaf on 26/12/2018
@@ -13,36 +9,24 @@ public class Coordinates implements ICoordinates {
 
     private int ROW;
     private int COLUMN;
-    private final IType PIECE;
 
-    public Coordinates(int row, int column, IType piece) {
+    public Coordinates(int row, int column) {
         ROW = row;
         COLUMN = column;
-        PIECE = piece;
     }
 
-    public Coordinates(ISquare square, IType piece) {
-        this(square.getRow(), square.getColumn(), piece);
-    }
-
-    @Override
-    public boolean canPlace(IPlayer player) {
-        return player.canPlace(PIECE, ROW, COLUMN);
+    public Coordinates(ISquare square) {
+        this(square.getRow(), square.getColumn());
     }
 
     @Override
-    public void place(IPlayer player) {
-        player.place(PIECE, ROW, COLUMN);
+    public int getRow() {
+        return ROW;
     }
 
     @Override
-    public int with(IBoard board, IColor nextColor, Function<IBoard, Integer> function) {
-        IPiece piece = new Piece(nextColor, PIECE);
-        board.placeSilent(piece, ROW, COLUMN);
-        Integer result = function.apply(board);
-        board.removeSilent(piece, ROW, COLUMN);
-
-        return result;
+    public int getColumn() {
+        return COLUMN;
     }
 
     @Override
@@ -50,14 +34,13 @@ public class Coordinates implements ICoordinates {
         if (this == o) return true;
         if (!(o instanceof Coordinates)) return false;
         Coordinates that = (Coordinates) o;
-        return ROW == that.ROW &&
-                COLUMN == that.COLUMN &&
-                PIECE.equals(that.PIECE);
+        return getRow() == that.getRow() &&
+                getColumn() == that.getColumn();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ROW, COLUMN, PIECE);
+        return Objects.hash(getRow(), getColumn());
     }
 
 }

@@ -20,10 +20,10 @@ public abstract class Player implements IPlayer {
     private final IGame GAME;
     private final Hand HAND;
     @Nullable
-    private ICoordinates NEXT_ACTION = null;
+    private IAction NEXT_ACTION = null;
     private final boolean PASSIVE;
     @Nullable
-    private List<ICoordinates> AVAILABLE_ACTIONS = null;
+    private List<IAction> AVAILABLE_ACTIONS = null;
 
     public Player(String name, IGame game, IColor color, boolean passive) {
         NAME = name;
@@ -33,37 +33,41 @@ public abstract class Player implements IPlayer {
     }
 
     @Override
-    public final List<ICoordinates> getAvailableActions(IBoard board, IType type) {
-        List<ICoordinates> moves = getAvailableMoves(board);
-        List<ICoordinates> places = getAvailablePlaces(board, type);
-        moves.addAll(places);
+    public final List<IAction> getAvailableActions(IBoard board, IType type) {
+        List<IAction> actions = new ArrayList<>();
+        List<IMove> moves = getAvailableMoves(board);
+        List<IPlace> places = getAvailablePlaces(board, type);
+        actions.addAll(moves);
+        actions.addAll(places);
 
-        return moves;
+        return actions;
     }
 
     @Override
-    public List<ICoordinates> getAvailableActions(IBoard board) {
-        List<ICoordinates> moves = getAvailableMoves(board);
-        List<ICoordinates> places = getAvailablePlaces(board);
-        moves.addAll(places);
+    public List<IAction> getAvailableActions(IBoard board) {
+        List<IAction> actions = new ArrayList<>();
+        List<IMove> moves = getAvailableMoves(board);
+        List<IPlace> places = getAvailablePlaces(board);
+        actions.addAll(moves);
+        actions.addAll(places);
 
-        return moves;
+        return actions;
     }
 
     @Override
-    public final List<ICoordinates> getAvailableActions() {
+    public final List<IAction> getAvailableActions() {
         if (AVAILABLE_ACTIONS != null) {
             return AVAILABLE_ACTIONS;
         }
 
-        List<ICoordinates> actions = getAvailableActions(getGame().getBoard());
+        List<IAction> actions = getAvailableActions(getGame().getBoard());
         AVAILABLE_ACTIONS = actions;
         return actions;
     }
 
     @Override
-    public final List<ICoordinates> getAvailableMoves(IBoard board) {
-        List<ICoordinates> moves = new ArrayList<>();
+    public final List<IMove> getAvailableMoves(IBoard board) {
+        List<IMove> moves = new ArrayList<>();
 
         for (Line row : board.getRows()) {
             for (ISquare origin : row.getSquares()) {
@@ -80,7 +84,7 @@ public abstract class Player implements IPlayer {
 
                     for (int amount = 1; amount <= board.getPreset().getCarryLimit(); amount++) {
                         if (canMove(origin, destination, amount)) {
-                            moves.add(new MovingCoordinates(origin, destination, amount));
+                            moves.add(new Move(origin, destination, amount));
                         }
                     }
                 }
@@ -91,13 +95,13 @@ public abstract class Player implements IPlayer {
     }
 
     @Override
-    public final List<ICoordinates> getAvailableMoves() {
+    public final List<IMove> getAvailableMoves() {
         return getAvailableMoves(getGame().getBoard());
     }
 
     @Override
-    public final List<ICoordinates> getAvailablePlaces(IBoard board, IType... types) {
-        List<ICoordinates> places = new ArrayList<>();
+    public final List<IPlace> getAvailablePlaces(IBoard board, IType... types) {
+        List<IPlace> places = new ArrayList<>();
 
         Line[] rows = board.getRows();
         for (int i = 0; i < rows.length; i++) {
@@ -105,7 +109,7 @@ public abstract class Player implements IPlayer {
             for (int j = 0; j < row.length; j++) {
                 for (IType type : types) {
                     if (canPlace(type, i, j)) {
-                        places.add(new Coordinates(i, j, type));
+                        places.add(new Place(i, j, type));
                     }
                 }
             }
@@ -115,22 +119,22 @@ public abstract class Player implements IPlayer {
     }
 
     @Override
-    public final List<ICoordinates> getAvailablePlaces(IBoard board, Set<IType> types) {
+    public final List<IPlace> getAvailablePlaces(IBoard board, Set<IType> types) {
         return getAvailablePlaces(board, types.toArray(new IType[0]));
     }
 
     @Override
-    public final List<ICoordinates> getAvailablePlaces(IBoard board) {
+    public final List<IPlace> getAvailablePlaces(IBoard board) {
         return getAvailablePlaces(board, Type.getTypes());
     }
 
     @Override
-    public final List<ICoordinates> getAvailablePlaces(IType type) {
+    public final List<IPlace> getAvailablePlaces(IType type) {
         return getAvailablePlaces(getGame().getBoard(), type);
     }
 
     @Override
-    public final List<ICoordinates> getAvailablePlaces() {
+    public final List<IPlace> getAvailablePlaces() {
         return getAvailablePlaces(getGame().getBoard(), Type.getTypes());
     }
 
@@ -155,7 +159,7 @@ public abstract class Player implements IPlayer {
     }
 
     @Override
-    public final void setNextAction(ICoordinates action) {
+    public final void setNextAction(IAction action) {
         NEXT_ACTION = action;
         synchronized (this) {
             notify();
@@ -241,7 +245,7 @@ public abstract class Player implements IPlayer {
         if (NEXT_ACTION == null) {
             surrender();
         } else {
-            NEXT_ACTION.place(this);
+            NEXT_ACTION.execute(this);
         }
 
         NEXT_ACTION = null;
