@@ -71,4 +71,15 @@ public class Features {
         return test;
     }
 
+    public File toNpy() {
+        File file = new File("features.npy");
+        try {
+            Nd4j.writeAsNumpy(Nd4j.create(getArray()), file);
+        } catch (IOException e) {
+            throw new IllegalStateException("Error writing file as .npy", e);
+        }
+
+        return file;
+    }
+
 }

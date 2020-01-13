@@ -1,5 +1,10 @@
 package com.github.drsmugleaf.tak.bot.neural.deeplearning;
 
+import org.nd4j.linalg.factory.Nd4j;
+
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Created by DrSmugleaf on 12/01/2020
  */
@@ -51,6 +56,17 @@ public class Labels {
         double[][] test = new double[getTestSize()][getL2()];
         System.arraycopy(ARRAY, getTrainSize(), test, 0, test.length);
         return test;
+    }
+
+    public File toNpy() {
+        File file = new File("labels.npy");
+        try {
+            Nd4j.writeAsNumpy(Nd4j.create(getArray()), file);
+        } catch (IOException e) {
+            throw new IllegalStateException("Error writing file as .npy", e);
+        }
+
+        return file;
     }
 
 }
