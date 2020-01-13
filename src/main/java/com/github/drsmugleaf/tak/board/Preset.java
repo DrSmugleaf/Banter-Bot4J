@@ -113,6 +113,11 @@ public enum Preset implements IPreset {
     }
 
     @Override
+    public int getMaximumStackSize() {
+        return (getCapstones() > 0 ? 1 : 0) + getStones() * 2;
+    }
+
+    @Override
     public ImmutableList<ICoordinates> getAllActions() {
         return ALL_ACTIONS;
     }

@@ -14,6 +14,7 @@ public interface IPreset {
     int getCapstones();
     int getStones();
     int getCarryLimit();
+    int getMaximumStackSize();
     ImmutableList<ICoordinates> getAllActions();
 
 }

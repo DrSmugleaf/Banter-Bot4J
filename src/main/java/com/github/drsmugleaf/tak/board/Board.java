@@ -399,7 +399,7 @@ public class Board implements IBoard {
     public double[][][] toDoubleArray() {
         IPreset preset = getPreset();
         int size = preset.getSize();
-        int maximumPieces = 1 + preset.getStones() * 2;
+        int maximumPieces = preset.getMaximumStackSize();
         double[][][] array = new double[size][size][maximumPieces];
 
         Row[] rows = getRows();

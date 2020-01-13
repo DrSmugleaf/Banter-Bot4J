@@ -61,7 +61,7 @@ public class TakMDP implements MDP<INeuralBoard, Integer, DiscreteSpace> {
 
     public TakMDP(IPreset preset) {
         GAME = new NeuralGame(new NeuralBoard(preset), "Neural Bot 1", "Neural Bot 2", NeuralBot::from, RandomFlatBot::from);
-        OBSERVATION_SPACE = new ArrayObservationSpace<>(new int[]{preset.getSize() * preset.getSize() * (1 + preset.getStones() * 2)});
+        OBSERVATION_SPACE = new ArrayObservationSpace<>(new int[]{preset.getSize() * preset.getSize() * (preset.getMaximumStackSize())});
         ACTION_SPACE = new TakSpace(GAME);
     }
 

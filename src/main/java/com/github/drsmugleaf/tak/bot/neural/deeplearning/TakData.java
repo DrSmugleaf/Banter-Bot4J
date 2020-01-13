@@ -109,7 +109,7 @@ public class TakData {
 
     public static int getInputs() {
         IPreset preset = getPreset();
-        return preset.getSize() * preset.getSize() * (1 + preset.getStones() * 2);
+        return preset.getSize() * preset.getSize() * preset.getMaximumStackSize();
     }
 
     public static int getOutputs() {
