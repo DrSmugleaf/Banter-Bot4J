@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.tak.board.coordinates;
 
+import com.github.drsmugleaf.tak.board.IBoard;
 import com.github.drsmugleaf.tak.board.layout.ISquare;
 
 import java.util.Objects;
@@ -29,6 +30,11 @@ public class Coordinates implements ICoordinates {
     @Override
     public int getColumn() {
         return COLUMN;
+    }
+
+    @Override
+    public ISquare toSquare(IBoard board) {
+        return board.getRows()[getRow()].getSquares()[getColumn()];
     }
 
     @Override

@@ -8,5 +8,6 @@ import com.github.drsmugleaf.tak.board.coordinates.IMovingCoordinates;
 public interface IMove extends IAction, IMovingCoordinates {
 
     int getAmount();
+    IMove reverse();
 
 }

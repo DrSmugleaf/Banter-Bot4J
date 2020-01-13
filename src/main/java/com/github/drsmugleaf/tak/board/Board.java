@@ -1,6 +1,8 @@
 package com.github.drsmugleaf.tak.board;
 
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.tak.board.action.IMove;
+import com.github.drsmugleaf.tak.board.action.IPlace;
 import com.github.drsmugleaf.tak.board.layout.*;
 import com.github.drsmugleaf.tak.board.layout.IPreset;
 import com.github.drsmugleaf.tak.board.layout.Preset;
@@ -110,75 +112,43 @@ public class Board implements IBoard {
     }
 
     @Override
-    public boolean canMove(ISquare origin, ISquare destination, int pieces) {
-        int originRow = origin.getRow();
-        int originColumn = origin.getColumn();
-        IAdjacentSquares adjacent = getAdjacent(origin);
+    public boolean canMove(IMove move) {
+        int originRow = move.getRow();
+        int amount = move.getAmount();
+        ISquare destination = move.toDestination(this);
+        IAdjacentSquares adjacent = getAdjacent(destination);
 
         return originRow < getRows().length &&
-               pieces <= PRESET.getCarryLimit() &&
+               amount <= PRESET.getCarryLimit() &&
                adjacent.contains(destination) &&
-               getRows()[originRow].canMove(originColumn, destination, pieces);
+               getRows()[originRow].canMove(move, destination);
     }
 
     @Override
-    public ISquare move(ISquare origin, ISquare destination, int pieces, boolean silent) {
-        int originRow = origin.getRow();
-        int originColumn = origin.getColumn();
-        return getRows()[originRow].move(originColumn, destination, pieces, silent);
+    public ISquare move(IMove move, boolean silent) {
+        ISquare destination = move.toDestination(this);
+        return getRows()[move.getRow()].move(move, destination, silent);
     }
 
     @Override
-    public ISquare move(ISquare origin, ISquare destination, int pieces) {
-        return move(origin, destination, pieces, false);
-    }
-
-    @Override
-    public ISquare moveSilent(ISquare origin, ISquare destination, int pieces) {
-        return move(origin, destination, pieces, true);
-    }
-
-    @Override
-    public final ISquare moveSilent(int originRow, int originColumn, int destinationRow, int destinationColumn, int pieces) {
+    public boolean canPlace(IPlace place) {
+        int row = place.getRow();
         Row[] rows = getRows();
-        ISquare origin = rows[originRow].getSquares()[originColumn];
-        ISquare destination = rows[destinationRow].getSquares()[destinationColumn];
-        return moveSilent(origin, destination, pieces);
+        return row < rows.length && rows[row].canPlace(place);
     }
 
     @Override
-    public boolean canPlace(int row, int column) {
-        return column < COLUMNS.length && COLUMNS[column].canPlace(row);
+    public ISquare place(IPiece piece, IPlace place, boolean silent) {
+        int row = place.getRow();
+        Row[] rows = getRows();
+        return rows[row].place(piece, place, silent);
     }
 
     @Override
-    public ISquare place(IPiece piece, int row, int column, boolean silent) {
-        return COLUMNS[column].place(piece, row, silent);
-    }
-
-    @Override
-    public ISquare place(IPiece piece, int row, int column) {
-        return COLUMNS[column].place(piece, row, false);
-    }
-
-    @Override
-    public ISquare placeSilent(IPiece piece, int row, int column) {
-        return COLUMNS[column].place(piece, row, true);
-    }
-
-    @Override
-    public ISquare remove(IPiece piece, int row, int column, boolean silent) {
-        return COLUMNS[column].remove(piece, row, silent);
-    }
-
-    @Override
-    public ISquare remove(IPiece piece, int row, int column) {
-        return COLUMNS[column].remove(piece, row, false);
-    }
-
-    @Override
-    public ISquare removeSilent(IPiece piece, int row, int column) {
-        return COLUMNS[column].remove(piece, row, true);
+    public ISquare remove(IPiece piece, IPlace place, boolean silent) {
+        int row = place.getRow();
+        Row[] rows = getRows();
+        return rows[row].remove(piece, place, silent);
     }
 
     @Override

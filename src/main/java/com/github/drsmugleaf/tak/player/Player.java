@@ -87,8 +87,9 @@ public abstract class Player implements IPlayer {
                     }
 
                     for (int amount = 1; amount <= board.getPreset().getCarryLimit(); amount++) {
-                        if (canMove(origin, destination, amount)) {
-                            moves.add(new Move(origin, destination, amount));
+                        IMove move = new Move(origin, destination, amount);
+                        if (move.canExecute(this)) {
+                            moves.add(move);
                         }
                     }
                 }
@@ -112,8 +113,9 @@ public abstract class Player implements IPlayer {
             ISquare[] row = rows[i].getSquares();
             for (int j = 0; j < row.length; j++) {
                 for (IType type : types) {
-                    if (canPlace(type, i, j)) {
-                        places.add(new Place(i, j, type));
+                    IPlace place = new Place(i, j, type);
+                    if (canPlace(place)) {
+                        places.add(place);
                     }
                 }
             }
@@ -176,39 +178,23 @@ public abstract class Player implements IPlayer {
     }
 
     @Override
-    public final boolean canMove(ISquare origin, ISquare destination, int pieces) {
-        return getColor() == origin.getColor() && GAME.canMove(this, origin, destination, pieces);
+    public final boolean canMove(IMove move) {
+        return getColor() == move.toSquare(getGame().getBoard()).getColor() && GAME.canMove(this, move);
     }
 
     @Override
-    public final boolean canMove(int originRow, int originColumn, int destinationRow, int destinationColumn, int pieces) {
-        Line[] rows = getGame().getBoard().getRows();
-        ISquare origin = rows[originRow].getSquares()[originColumn];
-        ISquare destination = rows[destinationRow].getSquares()[destinationColumn];
-        return canMove(origin, destination, pieces);
+    public final ISquare move(IMove move, boolean silent) {
+        return GAME.move(this, move, silent);
     }
 
     @Override
-    public final ISquare move(ISquare origin, ISquare destination, int pieces) {
-        return GAME.move(this, origin, destination, pieces);
+    public final boolean canPlace(IPlace place) {
+        return getHand().has(place.getType()) && GAME.canPlace(this, place);
     }
 
     @Override
-    public final ISquare move(int originRow, int originColumn, int destinationRow, int destinationColumn, int pieces) {
-        Line[] rows = getGame().getBoard().getRows();
-        ISquare origin = rows[originRow].getSquares()[originColumn];
-        ISquare destination = rows[destinationRow].getSquares()[destinationColumn];
-        return move(origin, destination, pieces);
-    }
-
-    @Override
-    public final boolean canPlace(IType type, int row, int column) {
-        return getHand().has(type) && GAME.canPlace(this, row, column);
-    }
-
-    @Override
-    public final ISquare place(IType type, int row, int column) {
-        return GAME.place(this, type, row, column);
+    public final ISquare place(IPlace place, boolean silent) {
+        return GAME.place(this, place, silent);
     }
 
     @Override
@@ -257,16 +243,16 @@ public abstract class Player implements IPlayer {
     }
 
     @Override
-    public void onEnemyPieceMove(IPlayer player, ISquare origin, ISquare destination, int pieces) {}
+    public void onEnemyPieceMove(IPlayer player, IMove move) {}
 
     @Override
-    public void onOwnPieceMove(ISquare origin, ISquare destination, int pieces) {}
+    public void onOwnPieceMove(IMove move) {}
 
     @Override
-    public void onEnemyPiecePlace(IPlayer player, IType type, ISquare square) {}
+    public void onEnemyPiecePlace(IPlayer player, IPlace place) {}
 
     @Override
-    public void onOwnPiecePlace(IType type, ISquare square) {}
+    public void onOwnPiecePlace(IPlace place) {}
 
     @Override
     public void onEnemyTurnEnd(IPlayer player) {}

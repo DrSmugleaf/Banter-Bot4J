@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.player;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.tak.board.*;
+import com.github.drsmugleaf.tak.board.IBoard;
 import com.github.drsmugleaf.tak.board.action.IAction;
 import com.github.drsmugleaf.tak.board.action.IMove;
 import com.github.drsmugleaf.tak.board.action.IPlace;
@@ -36,19 +36,17 @@ public interface IPlayer {
     IAction getNextAction();
     void setNextAction(IAction action);
     IColor getColor();
-    boolean canMove(ISquare origin, ISquare destination, int pieces);
-    boolean canMove(int originRow, int originColumn, int destinationRow, int destinationColumn, int pieces);
-    ISquare move(ISquare origin, ISquare destination, int pieces);
-    ISquare move(int originRow, int originColumn, int destinationRow, int destinationColumn, int pieces);
-    boolean canPlace(IType type, int row, int column);
-    ISquare place(IType type, int row, int column);
+    boolean canMove(IMove move);
+    ISquare move(IMove move, boolean silent);
+    boolean canPlace(IPlace place);
+    ISquare place(IPlace place, boolean silent);
     void surrender();
     void resetPlayer();
     void nextTurn();
-    void onEnemyPieceMove(IPlayer player, ISquare origin, ISquare destination, int pieces);
-    void onOwnPieceMove(ISquare origin, ISquare destination, int pieces);
-    void onEnemyPiecePlace(IPlayer player, IType type, ISquare square);
-    void onOwnPiecePlace(IType type, ISquare square);
+    void onEnemyPieceMove(IPlayer player, IMove move);
+    void onOwnPieceMove(IMove move);
+    void onEnemyPiecePlace(IPlayer player, IPlace place);
+    void onOwnPiecePlace(IPlace place);
     void onEnemyTurnEnd(IPlayer player);
     void onOwnTurnEnd();
     void onGameEnd(@Nullable IPlayer winner);

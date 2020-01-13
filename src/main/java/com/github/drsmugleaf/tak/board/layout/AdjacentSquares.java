@@ -24,7 +24,7 @@ public class AdjacentSquares implements IAdjacentSquares {
     private final ImmutableSet<ISquare> ADJACENT;
     private final ImmutableSet<ISquare> CONNECTIONS;
 
-    protected AdjacentSquares(
+    public AdjacentSquares(
             ISquare center,
             @Nullable ISquare up,
             @Nullable ISquare right,

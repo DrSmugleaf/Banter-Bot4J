@@ -1,8 +1,9 @@
 package com.github.drsmugleaf.tak.board;
 
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.tak.board.action.IMove;
+import com.github.drsmugleaf.tak.board.action.IPlace;
 import com.github.drsmugleaf.tak.board.layout.*;
-import com.github.drsmugleaf.tak.board.layout.IPreset;
 import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.pieces.IPiece;
 
@@ -18,18 +19,11 @@ public interface IBoard {
     Column[] getColumns();
     Row[] getRows();
     IPreset getPreset();
-    boolean canMove(ISquare origin, ISquare destination, int pieces);
-    ISquare move(ISquare origin, ISquare destination, int pieces, boolean silent);
-    ISquare move(ISquare origin, ISquare destination, int pieces);
-    ISquare moveSilent(ISquare origin, ISquare destination, int pieces);
-    ISquare moveSilent(int originRow, int originColumn, int destinationRow, int destinationColumn, int pieces);
-    boolean canPlace(int row, int column);
-    ISquare place(IPiece piece, int row, int column, boolean silent);
-    ISquare place(IPiece piece, int row, int column);
-    ISquare placeSilent(IPiece piece, int row, int column);
-    ISquare remove(IPiece piece, int row, int column, boolean silent);
-    ISquare remove(IPiece piece, int row, int column);
-    ISquare removeSilent(IPiece piece, int row, int column);
+    boolean canMove(IMove move);
+    ISquare move(IMove move, boolean silent);
+    boolean canPlace(IPlace place);
+    ISquare place(IPiece piece, IPlace place, boolean silent);
+    ISquare remove(IPiece piece, IPlace place, boolean silent);
     Row getFirstRow();
     Row getLastRow();
     Column getFirstColumn();

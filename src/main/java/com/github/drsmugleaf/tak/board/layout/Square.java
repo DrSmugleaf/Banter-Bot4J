@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.tak.board.layout;
 
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.tak.board.action.IMove;
 import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.pieces.IPiece;
 import com.github.drsmugleaf.tak.pieces.IType;
@@ -19,7 +20,7 @@ public class Square implements ISquare {
     private final int ROW;
     private final int COLUMN;
 
-    protected Square(int row, int column) {
+    public Square(int row, int column) {
         ROW = row;
         COLUMN = column;
     }
@@ -90,7 +91,8 @@ public class Square implements ISquare {
     }
 
     @Override
-    public boolean canMove(ISquare other, int amount) {
+    public boolean canMove(IMove move, ISquare destination) {
+        int amount = move.getAmount();
         if (amount <= 0 || amount > getPieces().size()) {
             return false;
         }
@@ -100,7 +102,7 @@ public class Square implements ISquare {
             return false;
         }
 
-        IPiece otherTopPiece = other.getTopPiece();
+        IPiece otherTopPiece = destination.getTopPiece();
         if (otherTopPiece == null) {
             return true;
         }
@@ -113,9 +115,10 @@ public class Square implements ISquare {
     }
 
     @Override
-    public ISquare move(ISquare destination, int amount, boolean silent) {
+    public ISquare move(IMove move, ISquare destination, boolean silent) {
         List<IPiece> pieces = getPieces();
         ListIterator<IPiece> iterator = pieces.listIterator(pieces.size());
+        int amount = move.getAmount();
         while (iterator.hasPrevious() && amount > 0) {
             IPiece piece = iterator.previous();
 

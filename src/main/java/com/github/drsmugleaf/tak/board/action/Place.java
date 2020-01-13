@@ -36,20 +36,20 @@ public class Place extends Coordinates implements IPlace {
 
     @Override
     public boolean canExecute(IPlayer player) {
-        return player.canPlace(getType(), getRow(), getColumn());
+        return player.canPlace(this);
     }
 
     @Override
     public void execute(IPlayer player) {
-        player.place(getType(), getRow(), getColumn());
+        player.place(this, false);
     }
 
     @Override
     public int with(IBoard board, IColor nextColor, Function<IBoard, Integer> function) {
         IPiece piece = new Piece(nextColor, getType());
-        board.placeSilent(piece, getRow(), getColumn());
+        board.place(piece, this, true);
         Integer result = function.apply(board);
-        board.removeSilent(piece, getRow(), getColumn());
+        board.remove(piece, this, true);
 
         return result;
     }

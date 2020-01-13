@@ -3,12 +3,13 @@ package com.github.drsmugleaf.tak.game;
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tak.board.Board;
 import com.github.drsmugleaf.tak.board.IBoard;
+import com.github.drsmugleaf.tak.board.action.IMove;
+import com.github.drsmugleaf.tak.board.action.IPlace;
 import com.github.drsmugleaf.tak.board.layout.IPreset;
 import com.github.drsmugleaf.tak.board.layout.ISquare;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.pieces.IPiece;
-import com.github.drsmugleaf.tak.pieces.IType;
 import com.github.drsmugleaf.tak.player.IPlayer;
 import com.github.drsmugleaf.tak.player.IPlayerInformation;
 import com.github.drsmugleaf.tak.player.PlayerInformation;
@@ -76,35 +77,39 @@ public class Game implements IGame {
     }
 
     @Override
-    public boolean canMove(IPlayer player, ISquare origin, ISquare destination, int pieces) {
-        return isActive() && nextPlayer == player && getBoard().canMove(origin, destination, pieces);
+    public boolean canMove(IPlayer player, IMove move) {
+        return isActive() && nextPlayer == player && getBoard().canMove(move);
     }
 
     @Override
-    public ISquare move(IPlayer player, ISquare origin, ISquare destination, int pieces) {
-        if (!canMove(player, origin, destination, pieces)) {
-            throw new IllegalGameCall("Illegal move call, origin " + origin + ", destination " + destination + " and pieces " + pieces);
+    public ISquare move(IPlayer player, IMove move, boolean silent) {
+        if (!canMove(player, move)) {
+            throw new IllegalGameCall(
+                    "Illegal move call, origin " + move.toSquare(getBoard()) +
+                    ", destination " + move.toDestination(getBoard()) +
+                    " and amount " + move.getAmount()
+            );
         }
 
-        ISquare square = getBoard().move(origin, destination, pieces);
-        onPieceMove(player, origin, destination, pieces);
+        ISquare square = getBoard().move(move, silent);
+        onPieceMove(player, move);
         return square;
     }
 
     @Override
-    public boolean canPlace(IPlayer player, int row, int column) {
-        return isActive() && nextPlayer == player && getBoard().canPlace(row, column);
+    public boolean canPlace(IPlayer player, IPlace place) {
+        return isActive() && nextPlayer == player && getBoard().canPlace(place);
     }
 
     @Override
-    public ISquare place(IPlayer player, IType type, int row, int column) {
-        if (!canPlace(player, row, column)) {
-            throw new IllegalGameCall("Illegal place call, piece type " + type + " at row " + row + " and column " + column);
+    public ISquare place(IPlayer player, IPlace place, boolean silent) {
+        if (!canPlace(player, place)) {
+            throw new IllegalGameCall("Illegal place call, piece type " + place.getType() + " at row " + place.getRow() + " and column " + place.getColumn());
         }
 
-        IPiece piece = player.getHand().takePiece(type);
-        ISquare square = getBoard().place(piece, row, column);
-        onPiecePlace(player, type, square);
+        IPiece piece = player.getHand().takePiece(place.getType());
+        ISquare square = getBoard().place(piece, place, silent);
+        onPiecePlace(player, place);
         return square;
     }
 
@@ -244,15 +249,15 @@ public class Game implements IGame {
     }
 
     @Override
-    public void onPieceMove(IPlayer player, ISquare origin, ISquare destination, int pieces) {
-        player.onOwnPieceMove(origin, destination, pieces);
-        getOtherPlayer(player).onEnemyPieceMove(player, origin, destination, pieces);
+    public void onPieceMove(IPlayer player, IMove move) {
+        player.onOwnPieceMove(move);
+        getOtherPlayer(player).onEnemyPieceMove(player, move);
     }
 
     @Override
-    public void onPiecePlace(IPlayer player, IType type, ISquare square) {
-        player.onOwnPiecePlace(type, square);
-        getOtherPlayer(player).onEnemyPiecePlace(player, type, square);
+    public void onPiecePlace(IPlayer player, IPlace place) {
+        player.onOwnPiecePlace(place);
+        getOtherPlayer(player).onEnemyPiecePlace(player, place);
     }
 
     @Override

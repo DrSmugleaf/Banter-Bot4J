@@ -22,8 +22,7 @@ public class Move extends MovingCoordinates implements IMove {
     }
 
     public Move(ISquare origin, ISquare destination, int amount) {
-        super(origin, destination);
-        AMOUNT = amount;
+        this(origin.getRow(), origin.getColumn(), destination.getRow(), destination.getColumn(), amount);
     }
 
     @Override
@@ -33,21 +32,26 @@ public class Move extends MovingCoordinates implements IMove {
 
     @Override
     public boolean canExecute(IPlayer player) {
-        return player.canMove(getOriginRow(), getOriginColumn(), getDestinationRow(), getDestinationColumn(), getAmount());
+        return player.canMove(this);
     }
 
     @Override
     public void execute(IPlayer player) {
-        player.move(getOriginRow(), getOriginColumn(), getDestinationRow(), getDestinationColumn(), getAmount());
+        player.move(this, false);
     }
 
     @Override
     public int with(IBoard board, IColor nextColor, Function<IBoard, Integer> function) {
-        board.moveSilent(getOriginRow(), getOriginColumn(), getDestinationRow(), getDestinationColumn(), getAmount());
+        board.move(this, true);
         Integer result = function.apply(board);
-        board.moveSilent(getDestinationRow(), getDestinationColumn(), getOriginRow(), getOriginColumn(), getAmount());
+        board.move(reverse(), true);
 
         return result;
+    }
+
+    @Override
+    public IMove reverse() {
+        return new Move(getDestinationRow(), getDestinationColumn(), getRow(), getColumn(), getAmount());
     }
 
     @Override

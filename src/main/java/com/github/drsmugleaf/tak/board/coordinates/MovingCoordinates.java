@@ -1,5 +1,6 @@
 package com.github.drsmugleaf.tak.board.coordinates;
 
+import com.github.drsmugleaf.tak.board.IBoard;
 import com.github.drsmugleaf.tak.board.layout.ISquare;
 
 import java.util.Objects;
@@ -26,12 +27,12 @@ public class MovingCoordinates implements IMovingCoordinates {
     }
 
     @Override
-    public int getOriginRow() {
+    public int getRow() {
         return ORIGIN_ROW;
     }
 
     @Override
-    public int getOriginColumn() {
+    public int getColumn() {
         return ORIGIN_COLUMN;
     }
 
@@ -46,19 +47,29 @@ public class MovingCoordinates implements IMovingCoordinates {
     }
 
     @Override
+    public ISquare toSquare(IBoard board) {
+        return board.getRows()[getRow()].getSquares()[getColumn()];
+    }
+
+    @Override
+    public ISquare toDestination(IBoard board) {
+        return board.getRows()[getDestinationRow()].getSquares()[getDestinationColumn()];
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof MovingCoordinates)) return false;
         MovingCoordinates that = (MovingCoordinates) o;
-        return getOriginRow() == that.getOriginRow() &&
-                getOriginColumn() == that.getOriginColumn() &&
+        return getRow() == that.getRow() &&
+                getColumn() == that.getColumn() &&
                 getDestinationRow() == that.getDestinationRow() &&
                 getDestinationColumn() == that.getDestinationColumn();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getOriginRow(), getOriginColumn(), getDestinationRow(), getDestinationColumn());
+        return Objects.hash(getRow(), getColumn(), getDestinationRow(), getDestinationColumn());
     }
 
 }
