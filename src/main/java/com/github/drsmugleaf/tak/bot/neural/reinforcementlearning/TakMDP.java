@@ -7,8 +7,6 @@ import com.github.drsmugleaf.tak.board.layout.Preset;
 import com.github.drsmugleaf.tak.bot.random.RandomFlatBot;
 import com.github.drsmugleaf.tak.player.IPlayer;
 import org.deeplearning4j.gym.StepReply;
-import org.deeplearning4j.rl4j.learning.Learning;
-import org.deeplearning4j.rl4j.learning.sync.Transition;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.discrete.QLearningDiscreteDense;
 import org.deeplearning4j.rl4j.mdp.MDP;
@@ -22,7 +20,6 @@ import org.json.JSONObject;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.learning.config.Adam;
-import org.nd4j.linalg.util.ArrayUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -104,16 +101,7 @@ public class TakMDP implements MDP<INeuralBoard, Integer, DiscreteSpace> {
         }
 
         mdp.GAME.reset();
-        System.out.println(pol2.getNeuralNet().isRecurrent());
         double[][] input = new double[][]{mdp.getGame().getBoard().toArray()};
-
-        pol2.getNeuralNet().reset();
-        Learning.InitMdp<INeuralBoard> initMdp = Learning.initMdp(mdp, null);
-        INeuralBoard obs = initMdp.getLastObs();
-        INDArray lInput = Learning.getInput(mdp, obs);
-        INDArray[] history = new INDArray[] {lInput};
-        INDArray hstack = Transition.concat(history);
-        hstack = hstack.reshape(Learning.makeShape(1, ArrayUtil.toInts(hstack.shape())));
         INDArray output = pol2.getNeuralNet().output(Nd4j.create(input));
 
         double rewards = 0;
