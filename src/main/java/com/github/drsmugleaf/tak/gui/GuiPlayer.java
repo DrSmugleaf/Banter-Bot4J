@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.tak.gui;
 
 import com.github.drsmugleaf.tak.board.ICoordinates;
+import com.github.drsmugleaf.tak.game.Game;
 import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.player.IPlayer;
 import com.github.drsmugleaf.tak.player.IPlayerInformation;
@@ -15,22 +16,22 @@ public class GuiPlayer extends Player {
 
     private final GuiGame GAME;
 
-    public GuiPlayer(String name, GuiGame game, IColor color) {
+    public GuiPlayer(String name, Game game, IColor color) {
         super(name, game, color, true);
 
-        GAME = game;
+        GAME = (GuiGame) game;
 
         SquareButton[][] pieces = GAME.getBoardPanel().getButtons();
-        for (SquareButton[] row : pieces) {
-            for (SquareButton square : row) {
+        for (SquareButton[] column : pieces) {
+            for (SquareButton square : column) {
                 JButton button = square.getButton();
                 button.addMouseListener(new GuiMouseListener(this, square));
             }
         }
     }
 
-    public static IPlayer from(IPlayerInformation information, GuiGame game) {
-        return new GuiPlayer(information.getName(), game, information.getColor());
+    public static IPlayer from(IPlayerInformation information) {
+        return new GuiPlayer(information.getName(), information.getGame(), information.getColor());
     }
 
     @Override

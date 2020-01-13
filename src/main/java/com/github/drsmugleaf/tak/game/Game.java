@@ -30,6 +30,11 @@ public class Game implements IGame {
     private IPlayer winner = null;
     private boolean active = true;
 
+    protected Game(IBoard board) {
+        BOARD = board;
+        PLAYERS = ImmutableMap.of();
+    }
+
     public Game(
             IBoard board,
             String playerName1,
@@ -62,7 +67,7 @@ public class Game implements IGame {
 
     @Override
     public IPlayer getPlayer(IColor color) {
-        return PLAYERS.get(color);
+        return getPlayers().get(color);
     }
 
     @Override
@@ -72,7 +77,7 @@ public class Game implements IGame {
 
     @Override
     public boolean canMove(IPlayer player, ISquare origin, ISquare destination, int pieces) {
-        return isActive() && nextPlayer == player && BOARD.canMove(origin, destination, pieces);
+        return isActive() && nextPlayer == player && getBoard().canMove(origin, destination, pieces);
     }
 
     @Override
@@ -81,14 +86,14 @@ public class Game implements IGame {
             throw new IllegalGameCall("Illegal move call, origin " + origin + ", destination " + destination + " and pieces " + pieces);
         }
 
-        ISquare square = BOARD.move(origin, destination, pieces);
+        ISquare square = getBoard().move(origin, destination, pieces);
         onPieceMove(player, origin, destination, pieces);
         return square;
     }
 
     @Override
     public boolean canPlace(IPlayer player, int column, int row) {
-        return isActive() && nextPlayer == player && BOARD.canPlace(column, row);
+        return isActive() && nextPlayer == player && getBoard().canPlace(column, row);
     }
 
     @Override
@@ -98,7 +103,7 @@ public class Game implements IGame {
         }
 
         IPiece piece = player.getHand().takePiece(type);
-        ISquare square = BOARD.place(piece, column, row);
+        ISquare square = getBoard().place(piece, column, row);
         onPiecePlace(player, type, square);
         return square;
     }
@@ -106,8 +111,8 @@ public class Game implements IGame {
     @Nullable
     @Override
     public IPlayer checkVictory() {
-        boolean blackWins = BOARD.hasRoad(Color.BLACK);
-        boolean whiteWins = BOARD.hasRoad(Color.WHITE);
+        boolean blackWins = getBoard().hasRoad(Color.BLACK);
+        boolean whiteWins = getBoard().hasRoad(Color.WHITE);
         if (blackWins && whiteWins) {
             return nextPlayer;
         }
@@ -121,7 +126,7 @@ public class Game implements IGame {
             return null;
         }
 
-        IPlayer winner = PLAYERS.get(winningColor);
+        IPlayer winner = getPlayers().get(winningColor);
         setWinner(winner);
         return getWinner();
     }
@@ -131,7 +136,7 @@ public class Game implements IGame {
     public IPlayer forceVictory() {
         Map<IColor, Integer> flatStonesByColor = new HashMap<>();
         for (IColor color : Color.getColors()) {
-            int stones = BOARD.countFlat(color);
+            int stones = getBoard().countFlat(color);
             flatStonesByColor.put(color, stones);
         }
 
@@ -165,7 +170,7 @@ public class Game implements IGame {
 
     @Override
     public IPlayer getOtherPlayer(IPlayer player) {
-        return PLAYERS.get(player.getColor().getOpposite());
+        return getPlayers().get(player.getColor().getOpposite());
     }
 
     @Override
@@ -217,7 +222,7 @@ public class Game implements IGame {
         setWinner(checkVictory());
         if (getWinner() != null) {
             end();
-        } else if (!nextPlayer.getHand().hasAny() || BOARD.isFull()) {
+        } else if (!nextPlayer.getHand().hasAny() || getBoard().isFull()) {
             setWinner(forceVictory());
             end();
         }
@@ -228,11 +233,11 @@ public class Game implements IGame {
 
     @Override
     public void reset() {
-        for (IPlayer player : PLAYERS.values()) {
+        for (IPlayer player : getPlayers().values()) {
             player.resetPlayer();
         }
 
-        BOARD.reset();
+        getBoard().reset();
         nextPlayer = getPlayer(Color.BLACK);
         winner = null;
         active = true;
@@ -258,7 +263,7 @@ public class Game implements IGame {
 
     @Override
     public void onGameEnd(@Nullable IPlayer winner) {
-        for (IPlayer player : PLAYERS.values()) {
+        for (IPlayer player : getPlayers().values()) {
             player.onGameEnd(winner);
         }
     }

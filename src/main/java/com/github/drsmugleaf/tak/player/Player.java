@@ -206,6 +206,7 @@ public abstract class Player implements IPlayer {
     @Override
     public final void surrender() {
         AVAILABLE_ACTIONS = null;
+        NEXT_ACTION = null;
         if (GAME.isActive()) {
             GAME.surrender(this);
         }
