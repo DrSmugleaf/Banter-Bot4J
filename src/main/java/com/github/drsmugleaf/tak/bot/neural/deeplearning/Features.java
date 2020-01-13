@@ -1,5 +1,11 @@
 package com.github.drsmugleaf.tak.bot.neural.deeplearning;
 
+import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.util.ArrayUtil;
+
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Created by DrSmugleaf on 12/01/2020
  */
@@ -74,7 +80,8 @@ public class Features {
     public File toNpy() {
         File file = new File("features.npy");
         try {
-            Nd4j.writeAsNumpy(Nd4j.create(getArray()), file);
+            double[] flat = ArrayUtil.flattenDoubleArray(getArray());
+            Nd4j.writeAsNumpy(Nd4j.create(flat), file);
         } catch (IOException e) {
             throw new IllegalStateException("Error writing file as .npy", e);
         }
