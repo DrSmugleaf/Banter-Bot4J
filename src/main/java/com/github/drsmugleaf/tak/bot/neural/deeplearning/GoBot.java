@@ -21,7 +21,6 @@ import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Objects;
 import java.util.logging.Logger;
 
@@ -32,7 +31,7 @@ public class GoBot {
 
     private static final String RESOURCE_PATH = Objects.requireNonNull(GoBot.class.getClassLoader().getResource("go")).getFile();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         INDArray features = Nd4j.createFromNpyFile(new File(RESOURCE_PATH + "/features_3000.npy"));
         INDArray labels = Nd4j.createFromNpyFile(new File(RESOURCE_PATH + "/labels_3000.npy"));
 
