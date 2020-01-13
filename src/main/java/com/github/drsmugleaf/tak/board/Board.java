@@ -16,31 +16,31 @@ import java.util.List;
 public class Board implements IBoard {
 
     private final IPreset PRESET;
-    private final Line[] COLUMNS;
-    private final Line[] ROWS;
+    private final Row[] ROWS;
+    private final Column[] COLUMNS;
 
     public Board(IPreset preset) {
         PRESET = preset;
         int size = PRESET.getSize();
 
-        Line[] rows = new Line[size];
-        Line[] columns = new Line[size];
+        Row[] rows = new Row[size];
+        Column[] columns = new Column[size];
 
         for (int i = 0; i < size; i++) {
-            columns[i] = new Line(size);
-            rows[i] = new Line(size);
+            rows[i] = new Row(size);
+            columns[i] = new Column(size);
         }
 
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
-                ISquare square = new Square(column, row);
+                ISquare square = new Square(row, column);
                 rows[row].getSquares()[column] = square;
                 columns[column].getSquares()[row] = square;
             }
         }
 
-        COLUMNS = columns;
         ROWS = rows;
+        COLUMNS = columns;
     }
 
     public Board(ISquare[][] squares) {
@@ -51,30 +51,30 @@ public class Board implements IBoard {
 
         PRESET = preset;
         int boardSize = PRESET.getSize();
-        for (ISquare[] column : squares) {
-            int columnLength = column.length;
-            if (columnLength != boardSize) {
-                throw new IllegalArgumentException("Array isn't a square. Expected size: " + boardSize + ". Found: " + columnLength);
+        for (ISquare[] row : squares) {
+            int rowLength = row.length;
+            if (rowLength != boardSize) {
+                throw new IllegalArgumentException("Array isn't a square. Expected size: " + boardSize + ". Found: " + rowLength);
             }
         }
 
-        Line[] columns = new Line[boardSize];
-        Line[] rows = new Line[boardSize];
+        Row[] rows = new Row[boardSize];
+        Column[] columns = new Column[boardSize];
 
         for (int i = 0; i < boardSize; i++) {
-            columns[i] = new Line(boardSize);
-            rows[i] = new Line(boardSize);
+            columns[i] = new Column(boardSize);
+            rows[i] = new Row(boardSize);
         }
 
-        for (int column = 0; column < boardSize; column++) {
-            for (int row = 0; row < boardSize; row++) {
-                columns[column].setSquare(row, squares[column][row]);
-                rows[row].setSquare(column, squares[column][row]);
+        for (int row = 0; row < boardSize; row++) {
+            for (int column = 0; column < boardSize; column++) {
+                rows[row].setSquare(column, squares[row][column]);
+                columns[column].setSquare(row, squares[row][column]);
             }
         }
 
-        COLUMNS = columns;
         ROWS = rows;
+        COLUMNS = columns;
     }
 
     private Board(IBoard board) {
@@ -92,12 +92,12 @@ public class Board implements IBoard {
     }
 
     @Override
-    public Line[] getColumns() {
+    public Column[] getColumns() {
         return COLUMNS;
     }
 
     @Override
-    public Line[] getRows() {
+    public Row[] getRows() {
         return ROWS;
     }
 
@@ -108,21 +108,21 @@ public class Board implements IBoard {
 
     @Override
     public boolean canMove(ISquare origin, ISquare destination, int pieces) {
-        int column = origin.getColumn();
-        int row = origin.getRow();
+        int originRow = origin.getRow();
+        int originColumn = origin.getColumn();
         IAdjacentSquares adjacent = getAdjacent(origin);
 
-        return column < COLUMNS.length &&
+        return originRow < getRows().length &&
                pieces <= PRESET.getCarryLimit() &&
                adjacent.contains(destination) &&
-               COLUMNS[column].canMove(row, destination, pieces);
+               getRows()[originRow].canMove(originColumn, destination, pieces);
     }
 
     @Override
     public ISquare move(ISquare origin, ISquare destination, int pieces, boolean silent) {
-        int column = origin.getColumn();
-        int row = origin.getRow();
-        return COLUMNS[column].move(row, destination, pieces, silent);
+        int originRow = origin.getRow();
+        int originColumn = origin.getColumn();
+        return getRows()[originRow].move(originColumn, destination, pieces, silent);
     }
 
     @Override
@@ -136,65 +136,65 @@ public class Board implements IBoard {
     }
 
     @Override
-    public final ISquare moveSilent(int originColumn, int originRow, int destinationColumn, int destinationRow, int pieces) {
-        Line[] rows = getRows();
+    public final ISquare moveSilent(int originRow, int originColumn, int destinationRow, int destinationColumn, int pieces) {
+        Row[] rows = getRows();
         ISquare origin = rows[originRow].getSquares()[originColumn];
         ISquare destination = rows[destinationRow].getSquares()[destinationColumn];
         return moveSilent(origin, destination, pieces);
     }
 
     @Override
-    public boolean canPlace(int column, int row) {
+    public boolean canPlace(int row, int column) {
         return column < COLUMNS.length && COLUMNS[column].canPlace(row);
     }
 
     @Override
-    public ISquare place(IPiece piece, int column, int row, boolean silent) {
+    public ISquare place(IPiece piece, int row, int column, boolean silent) {
         return COLUMNS[column].place(piece, row, silent);
     }
 
     @Override
-    public ISquare place(IPiece piece, int column, int row) {
+    public ISquare place(IPiece piece, int row, int column) {
         return COLUMNS[column].place(piece, row, false);
     }
 
     @Override
-    public ISquare placeSilent(IPiece piece, int column, int row) {
+    public ISquare placeSilent(IPiece piece, int row, int column) {
         return COLUMNS[column].place(piece, row, true);
     }
 
     @Override
-    public ISquare remove(IPiece piece, int column, int row, boolean silent) {
+    public ISquare remove(IPiece piece, int row, int column, boolean silent) {
         return COLUMNS[column].remove(piece, row, silent);
     }
 
     @Override
-    public ISquare remove(IPiece piece, int column, int row) {
+    public ISquare remove(IPiece piece, int row, int column) {
         return COLUMNS[column].remove(piece, row, false);
     }
 
     @Override
-    public ISquare removeSilent(IPiece piece, int column, int row) {
+    public ISquare removeSilent(IPiece piece, int row, int column) {
         return COLUMNS[column].remove(piece, row, true);
     }
 
     @Override
-    public Line getFirstRow() {
-        return ROWS[0];
+    public Row getFirstRow() {
+        return getRows()[0];
     }
 
     @Override
-    public Line getLastRow() {
-        return ROWS[ROWS.length - 1];
+    public Row getLastRow() {
+        return getRows()[getRows().length - 1];
     }
 
     @Override
-    public Line getFirstColumn() {
+    public Column getFirstColumn() {
         return COLUMNS[0];
     }
 
     @Override
-    public Line getLastColumn() {
+    public Column getLastColumn() {
         return COLUMNS[COLUMNS.length - 1];
     }
 
@@ -202,8 +202,8 @@ public class Board implements IBoard {
     public int countAdjacent(IColor color) {
         int amount = 0;
 
-        for (Line column : getColumns()) {
-            for (ISquare square : column.getSquares()) {
+        for (Row row : getRows()) {
+            for (ISquare square : row.getSquares()) {
                 if (square.getColor() != color) {
                     continue;
                 }
@@ -218,7 +218,7 @@ public class Board implements IBoard {
 
     @Override
     public IAdjacentSquares getAdjacent(ISquare square) {
-        Line[] rows = getRows();
+        Row[] rows = getRows();
         int rowIndex = square.getRow();
         int columnIndex = square.getColumn();
 
@@ -231,29 +231,29 @@ public class Board implements IBoard {
             throw new ArrayIndexOutOfBoundsException("Column " + columnIndex + " is out of bounds");
         }
 
-        ISquare centerSquare = row[columnIndex];
+        ISquare center = row[columnIndex];
 
-        ISquare upSquare = null;
+        ISquare up = null;
         if (rowIndex > 0) {
-            upSquare = ROWS[rowIndex - 1].getSquares()[columnIndex];
+            up = getRows()[rowIndex - 1].getSquares()[columnIndex];
         }
 
-        ISquare rightSquare = null;
+        ISquare right = null;
         if ((columnIndex + 1) < row.length) {
-            rightSquare = row[columnIndex + 1];
+            right = row[columnIndex + 1];
         }
 
-        ISquare downSquare = null;
-        if ((rowIndex + 1) < ROWS.length) {
-            downSquare = ROWS[rowIndex + 1].getSquares()[columnIndex];
+        ISquare down = null;
+        if ((rowIndex + 1) < getRows().length) {
+            down = getRows()[rowIndex + 1].getSquares()[columnIndex];
         }
 
-        ISquare leftSquare = null;
+        ISquare left = null;
         if (columnIndex > 0) {
-            leftSquare = row[columnIndex - 1];
+            left = row[columnIndex - 1];
         }
 
-        return new AdjacentSquares(centerSquare, upSquare, rightSquare, downSquare, leftSquare);
+        return new AdjacentSquares(center, up, right, down, left);
     }
 
     @Override
@@ -341,7 +341,7 @@ public class Board implements IBoard {
 
     @Override
     public boolean hasPiecesInEveryColumn(IColor color) {
-        for (Line column : COLUMNS) {
+        for (Column column : COLUMNS) {
             if (!column.hasSquare(color)) {
                 return false;
             }
@@ -352,7 +352,7 @@ public class Board implements IBoard {
 
     @Override
     public boolean hasPiecesInEveryRow(IColor color) {
-        for (Line row : ROWS) {
+        for (Row row : getRows()) {
             if (!row.hasSquare(color)) {
                 return false;
             }
@@ -378,7 +378,7 @@ public class Board implements IBoard {
     public int countFlat(IColor color) {
         int amount = 0;
 
-        for (Line column : getColumns()) {
+        for (Column column : getColumns()) {
             amount += column.countFlat(color);
         }
 
@@ -390,8 +390,8 @@ public class Board implements IBoard {
         int size = getPreset().getSize();
 
         for (int i = 0; i < size; i++) {
-            COLUMNS[i].reset();
-            ROWS[i].reset();
+            getRows()[i].reset();
+            getColumns()[i].reset();
         }
     }
 
@@ -402,7 +402,7 @@ public class Board implements IBoard {
         int maximumPieces = 1 + preset.getStones() * 2;
         double[][][] array = new double[size][size][maximumPieces];
 
-        Line[] rows = getRows();
+        Row[] rows = getRows();
         for (int r = 0; r < rows.length; r++) {
             ISquare[] columns = rows[r].getSquares();
             for (int c = 0; c < columns.length; c++) {
@@ -419,8 +419,8 @@ public class Board implements IBoard {
         int boardSize = PRESET.getSize();
         ISquare[][] squares = new ISquare[boardSize][boardSize];
 
-        for (int i = 0; i < ROWS.length; i++) {
-            ISquare[] row = ROWS[i].getSquares();
+        for (int i = 0; i < getRows().length; i++) {
+            ISquare[] row = getRows()[i].getSquares();
             for (int j = 0; j < row.length; j++) {
                 squares[i][j] = row[j].copy();
             }
@@ -434,9 +434,7 @@ public class Board implements IBoard {
         StringBuilder builder = new StringBuilder();
         ISquare[][] board = toSquareArray();
 
-        for (int rowIndex = 0; rowIndex < board.length; rowIndex++) {
-            ISquare[] row = board[rowIndex];
-
+        for (ISquare[] row : board) {
             for (int column = 0; column < row.length; column++) {
                 builder.append(row[column]);
 

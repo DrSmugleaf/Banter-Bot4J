@@ -102,7 +102,7 @@ public class Images {
         return getPiece(piece).getScaledInstance(width, height, Image.SCALE_SMOOTH);
     }
 
-    public static Image getSquare(int column, int row) {
+    public static Image getSquare(int row, int column) {
         String file;
         if ((column + row) % 2 == 0) {
             file = "white square.jpg";

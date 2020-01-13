@@ -8,7 +8,7 @@ import com.google.common.collect.ImmutableSet;
  */
 public interface IAdjacentSquares {
 
-    ISquare getOrigin();
+    ISquare getCenter();
     @Nullable
     ISquare getUp();
     @Nullable

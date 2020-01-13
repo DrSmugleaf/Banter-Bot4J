@@ -46,7 +46,7 @@ public class GuiMouseListener implements MouseListener {
         button.getModel().setArmed(true);
         button.getModel().setPressed(true);
 
-        Coordinates coordinates = new Coordinates(SQUARE.getColumn(), SQUARE.getRow(), type);
+        Coordinates coordinates = new Coordinates(SQUARE.getRow(), SQUARE.getColumn(), type);
         if (coordinates.canPlace(PLAYER)) {
             PLAYER.setNextAction(coordinates);
         }

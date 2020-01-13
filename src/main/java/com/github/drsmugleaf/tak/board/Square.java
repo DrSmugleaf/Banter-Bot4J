@@ -16,24 +16,24 @@ import java.util.ListIterator;
 public class Square implements ISquare {
 
     private final List<IPiece> PIECES = new ArrayList<>();
-    private final int COLUMN;
     private final int ROW;
+    private final int COLUMN;
 
-    protected Square(int column, int row) {
-        COLUMN = column;
+    protected Square(int row, int column) {
         ROW = row;
+        COLUMN = column;
     }
 
     private Square(ISquare square) {
-        this(square.getColumn(), square.getRow());
+        this(square.getRow(), square.getColumn());
 
         for (IPiece piece : square.getPieces()) {
             PIECES.add(piece.copy());
         }
     }
 
-    public static ISquare createCustom(int column, int row, IPiece... pieces) {
-        ISquare square = new Square(column, row);
+    public static ISquare createCustom(int row, int column, IPiece... pieces) {
+        ISquare square = new Square(row, column);
         Collections.addAll(square.getPieces(), pieces);
         return square;
     }
@@ -44,13 +44,13 @@ public class Square implements ISquare {
     }
 
     @Override
-    public int getColumn() {
-        return COLUMN;
+    public int getRow() {
+        return ROW;
     }
 
     @Override
-    public int getRow() {
-        return ROW;
+    public int getColumn() {
+        return COLUMN;
     }
 
     @Override

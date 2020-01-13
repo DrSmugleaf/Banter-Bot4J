@@ -12,7 +12,7 @@ import java.util.stream.Stream;
  */
 public class AdjacentSquares implements IAdjacentSquares {
 
-    private final ISquare ORIGIN;
+    private final ISquare CENTER;
     @Nullable
     private final ISquare UP;
     @Nullable
@@ -25,13 +25,13 @@ public class AdjacentSquares implements IAdjacentSquares {
     private final ImmutableSet<ISquare> CONNECTIONS;
 
     protected AdjacentSquares(
-            ISquare origin,
+            ISquare center,
             @Nullable ISquare up,
             @Nullable ISquare right,
             @Nullable ISquare down,
             @Nullable ISquare left
     ) {
-        ORIGIN = origin;
+        CENTER = center;
         UP = up;
         RIGHT = right;
         DOWN = down;
@@ -48,7 +48,7 @@ public class AdjacentSquares implements IAdjacentSquares {
         CONNECTIONS = Stream
                 .of(UP, RIGHT, DOWN, LEFT)
                 .filter(Objects::nonNull)
-                .filter(square -> square.connectsTo(ORIGIN))
+                .filter(square -> square.connectsTo(CENTER))
                 .collect(Collector.of(
                         ImmutableSet.Builder<ISquare>::new,
                         ImmutableSet.Builder<ISquare>::add,
@@ -58,8 +58,8 @@ public class AdjacentSquares implements IAdjacentSquares {
     }
 
     @Override
-    public ISquare getOrigin() {
-        return ORIGIN;
+    public ISquare getCenter() {
+        return CENTER;
     }
 
     @Override

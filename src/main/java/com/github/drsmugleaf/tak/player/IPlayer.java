@@ -35,11 +35,11 @@ public interface IPlayer {
     void setNextAction(ICoordinates action);
     IColor getColor();
     boolean canMove(ISquare origin, ISquare destination, int pieces);
-    boolean canMove(int originColumn, int originRow, int destinationColumn, int destinationRow, int pieces);
+    boolean canMove(int originRow, int originColumn, int destinationRow, int destinationColumn, int pieces);
     ISquare move(ISquare origin, ISquare destination, int pieces);
-    ISquare move(int originColumn, int originRow, int destinationColumn, int destinationRow, int pieces);
-    boolean canPlace(IType type, int column, int row);
-    ISquare place(IType type, int column, int row);
+    ISquare move(int originRow, int originColumn, int destinationRow, int destinationColumn, int pieces);
+    boolean canPlace(IType type, int row, int column);
+    ISquare place(IType type, int row, int column);
     void surrender();
     void resetPlayer();
     void nextTurn();

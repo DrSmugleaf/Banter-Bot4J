@@ -20,8 +20,8 @@ public class SquareButton extends Square {
     private final int SIZE;
     private final JButton BUTTON;
 
-    protected SquareButton(int column, int row, IPreset preset) {
-        super(column, row);
+    protected SquareButton(int row, int column, IPreset preset) {
+        super(row, column);
         SIZE = SINGLE_SQUARE_SIZE / preset.getSize();
 
         JButton button = new JButton();
@@ -37,7 +37,7 @@ public class SquareButton extends Square {
     }
 
     private Image getDefaultImage() {
-        Image image = Images.getSquare(getColumn(), getRow()).getScaledInstance(SIZE, SIZE, Image.SCALE_SMOOTH);
+        Image image = Images.getSquare(getRow(), getColumn()).getScaledInstance(SIZE, SIZE, Image.SCALE_SMOOTH);
         BufferedImage background = new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics = background.createGraphics();
         graphics.drawImage(image, 0, 0, null);

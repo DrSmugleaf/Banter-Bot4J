@@ -92,18 +92,18 @@ public class Game implements IGame {
     }
 
     @Override
-    public boolean canPlace(IPlayer player, int column, int row) {
-        return isActive() && nextPlayer == player && getBoard().canPlace(column, row);
+    public boolean canPlace(IPlayer player, int row, int column) {
+        return isActive() && nextPlayer == player && getBoard().canPlace(row, column);
     }
 
     @Override
-    public ISquare place(IPlayer player, IType type, int column, int row) {
-        if (!canPlace(player, column, row)) {
+    public ISquare place(IPlayer player, IType type, int row, int column) {
+        if (!canPlace(player, row, column)) {
             throw new IllegalGameCall("Illegal place call, piece type " + type + " at row " + row + " and column " + column);
         }
 
         IPiece piece = player.getHand().takePiece(type);
-        ISquare square = getBoard().place(piece, column, row);
+        ISquare square = getBoard().place(piece, row, column);
         onPiecePlace(player, type, square);
         return square;
     }

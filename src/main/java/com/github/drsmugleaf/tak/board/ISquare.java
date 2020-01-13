@@ -13,8 +13,8 @@ import java.util.List;
 public interface ISquare {
 
     ISquare copy();
-    int getColumn();
     int getRow();
+    int getColumn();
     List<IPiece> getPieces();
     @Nullable
     IColor getColor();

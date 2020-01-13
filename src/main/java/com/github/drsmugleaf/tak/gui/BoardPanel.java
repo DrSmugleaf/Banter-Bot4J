@@ -38,10 +38,10 @@ public class BoardPanel extends Board {
     public static BoardPanel from(IPreset preset) {
         int dimensions = preset.getSize();
         SquareButton[][] board = new SquareButton[dimensions][dimensions];
-        for (int i = 0; i < board.length; i++) {
-            SquareButton[] row = board[i];
-            for (int j = 0; j < row.length; j++) {
-                board[i][j] = new SquareButton(i, j, preset);
+        for (int rowIndex = 0; rowIndex < board.length; rowIndex++) {
+            SquareButton[] row = board[rowIndex];
+            for (int columnIndex = 0; columnIndex < row.length; columnIndex++) {
+                board[rowIndex][columnIndex] = new SquareButton(rowIndex, columnIndex, preset);
             }
         }
 

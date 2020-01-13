@@ -104,8 +104,8 @@ public abstract class Player implements IPlayer {
             ISquare[] row = rows[i].getSquares();
             for (int j = 0; j < row.length; j++) {
                 for (IType type : types) {
-                    if (canPlace(type, j, i)) {
-                        places.add(new Coordinates(j, i, type));
+                    if (canPlace(type, i, j)) {
+                        places.add(new Coordinates(i, j, type));
                     }
                 }
             }
@@ -173,7 +173,7 @@ public abstract class Player implements IPlayer {
     }
 
     @Override
-    public final boolean canMove(int originColumn, int originRow, int destinationColumn, int destinationRow, int pieces) {
+    public final boolean canMove(int originRow, int originColumn, int destinationRow, int destinationColumn, int pieces) {
         Line[] rows = getGame().getBoard().getRows();
         ISquare origin = rows[originRow].getSquares()[originColumn];
         ISquare destination = rows[destinationRow].getSquares()[destinationColumn];
@@ -186,7 +186,7 @@ public abstract class Player implements IPlayer {
     }
 
     @Override
-    public final ISquare move(int originColumn, int originRow, int destinationColumn, int destinationRow, int pieces) {
+    public final ISquare move(int originRow, int originColumn, int destinationRow, int destinationColumn, int pieces) {
         Line[] rows = getGame().getBoard().getRows();
         ISquare origin = rows[originRow].getSquares()[originColumn];
         ISquare destination = rows[destinationRow].getSquares()[destinationColumn];
@@ -194,13 +194,13 @@ public abstract class Player implements IPlayer {
     }
 
     @Override
-    public final boolean canPlace(IType type, int column, int row) {
-        return getHand().has(type) && GAME.canPlace(this, column, row);
+    public final boolean canPlace(IType type, int row, int column) {
+        return getHand().has(type) && GAME.canPlace(this, row, column);
     }
 
     @Override
-    public final ISquare place(IType type, int column, int row) {
-        return GAME.place(this, type, column, row);
+    public final ISquare place(IType type, int row, int column) {
+        return GAME.place(this, type, row, column);
     }
 
     @Override

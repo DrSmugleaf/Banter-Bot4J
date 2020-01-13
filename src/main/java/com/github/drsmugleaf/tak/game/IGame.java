@@ -18,8 +18,8 @@ public interface IGame {
     ImmutableMap<IColor, IPlayer> getPlayers();
     boolean canMove(IPlayer player, ISquare origin, ISquare destination, int pieces);
     ISquare move(IPlayer player, ISquare origin, ISquare destination, int pieces);
-    boolean canPlace(IPlayer player, int column, int row);
-    ISquare place(IPlayer player, IType type, int column, int row);
+    boolean canPlace(IPlayer player, int row, int column);
+    ISquare place(IPlayer player, IType type, int row, int column);
     IPlayer checkVictory();
     IPlayer forceVictory();
     IPlayer getNextPlayer();

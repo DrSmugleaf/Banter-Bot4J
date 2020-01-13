@@ -42,7 +42,7 @@ public enum Preset implements IPreset {
 
         List<ICoordinates> allActions = new ArrayList<>();
         IBoard board = new Board(this);
-        for (Line row : board.getRows()) {
+        for (Row row : board.getRows()) {
             for (ISquare origin : row.getSquares()) {
                 for (IType type : Type.getTypes()) {
                     Coordinates place = new Coordinates(origin, type);
