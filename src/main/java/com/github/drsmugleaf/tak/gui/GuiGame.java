@@ -1,8 +1,8 @@
 package com.github.drsmugleaf.tak.gui;
 
-import com.github.drsmugleaf.tak.board.IPreset;
+import com.github.drsmugleaf.tak.board.layout.IPreset;
 import com.github.drsmugleaf.tak.game.Game;
-import com.github.drsmugleaf.tak.board.Preset;
+import com.github.drsmugleaf.tak.board.layout.Preset;
 import com.github.drsmugleaf.tak.bot.minimax.MinimaxFlatMoveBot;
 import com.github.drsmugleaf.tak.images.Images;
 import com.github.drsmugleaf.tak.pieces.Color;

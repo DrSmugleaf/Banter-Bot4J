@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tak.bot.neural.reinforcementlearning;
 
-import com.github.drsmugleaf.tak.board.IAction;
+import com.github.drsmugleaf.tak.board.action.IAction;
 import com.github.drsmugleaf.tak.game.IGame;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
 

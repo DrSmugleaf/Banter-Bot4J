@@ -1,4 +1,6 @@
-package com.github.drsmugleaf.tak.board;
+package com.github.drsmugleaf.tak.board.coordinates;
+
+import com.github.drsmugleaf.tak.board.layout.ISquare;
 
 import java.util.Objects;
 

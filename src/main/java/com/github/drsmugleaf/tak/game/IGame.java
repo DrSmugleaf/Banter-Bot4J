@@ -2,7 +2,7 @@ package com.github.drsmugleaf.tak.game;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tak.board.IBoard;
-import com.github.drsmugleaf.tak.board.ISquare;
+import com.github.drsmugleaf.tak.board.layout.ISquare;
 import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.pieces.IType;
 import com.github.drsmugleaf.tak.player.IPlayer;

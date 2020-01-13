@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.bot.neural.reinforcementlearning;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.tak.board.IAction;
+import com.github.drsmugleaf.tak.board.action.IAction;
 import com.github.drsmugleaf.tak.bot.Bot;
 import com.github.drsmugleaf.tak.game.Game;
 import com.github.drsmugleaf.tak.pieces.IColor;

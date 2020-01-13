@@ -1,5 +1,6 @@
-package com.github.drsmugleaf.tak.board;
+package com.github.drsmugleaf.tak.board.action;
 
+import com.github.drsmugleaf.tak.board.coordinates.ICoordinates;
 import com.github.drsmugleaf.tak.pieces.IType;
 
 /**

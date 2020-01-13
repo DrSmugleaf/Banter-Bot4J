@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.tak.board;
+package com.github.drsmugleaf.tak.board.layout;
 
 import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.pieces.IPiece;

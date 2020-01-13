@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.gui;
 
 import com.github.drsmugleaf.tak.board.Board;
-import com.github.drsmugleaf.tak.board.IPreset;
+import com.github.drsmugleaf.tak.board.layout.IPreset;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

@@ -1,6 +1,10 @@
 package com.github.drsmugleaf.tak.player;
 
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.tak.board.action.*;
+import com.github.drsmugleaf.tak.board.layout.IAdjacentSquares;
+import com.github.drsmugleaf.tak.board.layout.ISquare;
+import com.github.drsmugleaf.tak.board.layout.Line;
 import com.github.drsmugleaf.tak.game.IGame;
 import com.github.drsmugleaf.tak.board.*;
 import com.github.drsmugleaf.tak.pieces.IColor;

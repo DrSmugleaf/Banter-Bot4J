@@ -1,8 +1,8 @@
 package com.github.drsmugleaf.tak.bot.neural.reinforcementlearning;
 
 import com.github.drsmugleaf.tak.board.Board;
-import com.github.drsmugleaf.tak.board.IPreset;
-import com.github.drsmugleaf.tak.board.ISquare;
+import com.github.drsmugleaf.tak.board.layout.IPreset;
+import com.github.drsmugleaf.tak.board.layout.ISquare;
 import org.deeplearning4j.rl4j.space.Encodable;
 
 import java.util.Arrays;

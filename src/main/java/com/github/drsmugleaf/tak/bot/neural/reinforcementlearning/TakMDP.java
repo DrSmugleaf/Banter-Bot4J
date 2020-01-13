@@ -1,9 +1,9 @@
 package com.github.drsmugleaf.tak.bot.neural.reinforcementlearning;
 
 import com.github.drsmugleaf.env.Keys;
-import com.github.drsmugleaf.tak.board.IAction;
-import com.github.drsmugleaf.tak.board.IPreset;
-import com.github.drsmugleaf.tak.board.Preset;
+import com.github.drsmugleaf.tak.board.action.IAction;
+import com.github.drsmugleaf.tak.board.layout.IPreset;
+import com.github.drsmugleaf.tak.board.layout.Preset;
 import com.github.drsmugleaf.tak.bot.random.RandomFlatBot;
 import com.github.drsmugleaf.tak.player.IPlayer;
 import org.deeplearning4j.gym.StepReply;

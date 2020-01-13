@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tak.player;
 
-import com.github.drsmugleaf.tak.board.IPreset;
+import com.github.drsmugleaf.tak.board.layout.IPreset;
 import com.github.drsmugleaf.tak.pieces.*;
 
 /**

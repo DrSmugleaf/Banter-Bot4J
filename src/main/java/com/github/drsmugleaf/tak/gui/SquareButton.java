@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.gui;
 
-import com.github.drsmugleaf.tak.board.IPreset;
-import com.github.drsmugleaf.tak.board.Square;
+import com.github.drsmugleaf.tak.board.layout.IPreset;
+import com.github.drsmugleaf.tak.board.layout.Square;
 import com.github.drsmugleaf.tak.images.Images;
 import com.github.drsmugleaf.tak.pieces.IPiece;
 

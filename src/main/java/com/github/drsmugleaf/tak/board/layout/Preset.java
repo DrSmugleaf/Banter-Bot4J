@@ -1,7 +1,12 @@
-package com.github.drsmugleaf.tak.board;
+package com.github.drsmugleaf.tak.board.layout;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.tak.board.Board;
+import com.github.drsmugleaf.tak.board.IBoard;
+import com.github.drsmugleaf.tak.board.action.IAction;
+import com.github.drsmugleaf.tak.board.action.Move;
+import com.github.drsmugleaf.tak.board.action.Place;
 import com.github.drsmugleaf.tak.pieces.IType;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.google.common.collect.ImmutableList;

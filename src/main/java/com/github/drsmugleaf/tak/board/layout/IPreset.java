@@ -1,5 +1,6 @@
-package com.github.drsmugleaf.tak.board;
+package com.github.drsmugleaf.tak.board.layout;
 
+import com.github.drsmugleaf.tak.board.action.IAction;
 import com.google.common.collect.ImmutableList;
 
 import java.io.InputStream;

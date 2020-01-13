@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.gui;
 
-import com.github.drsmugleaf.tak.board.IPlace;
-import com.github.drsmugleaf.tak.board.Place;
+import com.github.drsmugleaf.tak.board.action.IPlace;
+import com.github.drsmugleaf.tak.board.action.Place;
 import com.github.drsmugleaf.tak.pieces.IType;
 import com.github.drsmugleaf.tak.pieces.Type;
 

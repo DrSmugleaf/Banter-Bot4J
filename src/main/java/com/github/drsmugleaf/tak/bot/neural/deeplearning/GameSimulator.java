@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.bot.neural.deeplearning;
 
-import com.github.drsmugleaf.tak.board.IPreset;
-import com.github.drsmugleaf.tak.board.Preset;
+import com.github.drsmugleaf.tak.board.layout.IPreset;
+import com.github.drsmugleaf.tak.board.layout.Preset;
 import com.github.drsmugleaf.tak.bot.neural.reinforcementlearning.INeuralGame;
 import com.github.drsmugleaf.tak.bot.neural.reinforcementlearning.NeuralBoard;
 import com.github.drsmugleaf.tak.bot.neural.reinforcementlearning.NeuralGame;

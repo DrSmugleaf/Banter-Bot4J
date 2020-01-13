@@ -1,5 +1,8 @@
-package com.github.drsmugleaf.tak.board;
+package com.github.drsmugleaf.tak.board.action;
 
+import com.github.drsmugleaf.tak.board.IBoard;
+import com.github.drsmugleaf.tak.board.layout.ISquare;
+import com.github.drsmugleaf.tak.board.coordinates.Coordinates;
 import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.pieces.IPiece;
 import com.github.drsmugleaf.tak.pieces.IType;

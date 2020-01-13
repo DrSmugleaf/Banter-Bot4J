@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tak.pieces;
 
-import com.github.drsmugleaf.tak.board.ISquare;
+import com.github.drsmugleaf.tak.board.layout.ISquare;
 
 /**
  * Created by DrSmugleaf on 09/01/2020

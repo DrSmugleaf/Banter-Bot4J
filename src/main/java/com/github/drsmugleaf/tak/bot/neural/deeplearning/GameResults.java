@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.tak.bot.neural.deeplearning;
 
-import com.github.drsmugleaf.tak.board.IPreset;
+import com.github.drsmugleaf.tak.board.layout.IPreset;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;

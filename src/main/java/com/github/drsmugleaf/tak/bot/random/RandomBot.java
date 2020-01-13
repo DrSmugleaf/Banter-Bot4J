@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.tak.bot.random;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.tak.board.IAction;
+import com.github.drsmugleaf.tak.board.action.IAction;
 import com.github.drsmugleaf.tak.bot.Bot;
 import com.github.drsmugleaf.tak.game.IGame;
 import com.github.drsmugleaf.tak.pieces.IColor;
