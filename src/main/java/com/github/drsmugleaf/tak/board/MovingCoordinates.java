@@ -43,7 +43,7 @@ public class MovingCoordinates implements ICoordinates {
     public int with(IBoard board, IColor nextColor, Function<IBoard, Integer> function) {
         board.moveSilent(ORIGIN_ROW, ORIGIN_COLUMN, DESTINATION_ROW, DESTINATION_COLUMN, PIECES);
         Integer result = function.apply(board);
-        board.moveSilent(ORIGIN_ROW, ORIGIN_COLUMN, DESTINATION_ROW, DESTINATION_COLUMN, PIECES);
+        board.moveSilent(DESTINATION_ROW, DESTINATION_COLUMN, ORIGIN_ROW, ORIGIN_COLUMN, PIECES);
 
         return result;
     }
