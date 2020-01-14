@@ -218,15 +218,15 @@ public abstract class Player implements IPlayer {
 
     @Override
     public final void nextTurn() {
-        if (isPassive()) {
-            try {
-                synchronized (this) {
-                    wait();
-                }
-            } catch (InterruptedException e) {
-                throw new IllegalStateException("Player thread interrupted", e);
-            }
-        }
+//        if (isPassive()) {
+//            try {
+//                synchronized (this) {
+//                    wait();
+//                }
+//            } catch (InterruptedException e) {
+//                throw new IllegalStateException("Player thread interrupted", e);
+//            }
+//        }
 
         if (NEXT_ACTION == null) {
             NEXT_ACTION = getNextAction();

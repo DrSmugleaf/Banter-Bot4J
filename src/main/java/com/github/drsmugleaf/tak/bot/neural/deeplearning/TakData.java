@@ -26,7 +26,6 @@ import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.SplitTestAndTrain;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
-import org.nd4j.linalg.util.ArrayUtil;
 
 import java.util.logging.Logger;
 
@@ -54,14 +53,14 @@ public class TakData {
                     .activation(Activation.RELU).nOut(500).build())
             .layer(5, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
                     .nOut(getOutputs()).activation(Activation.SOFTMAX).build())
-            .setInputType(InputType.convolutional(getPreset().getSize() * getPreset().getSize(), 43, 11))
+            .setInputType(InputType.convolutionalFlat(getPreset().getSize(), getPreset().getSize(), getPreset().getMaximumStackSize()))
             .backpropType(BackpropType.Standard)
             .build();
 
     public static void main(String[] args) {
         GameSimulator simulator = new GameSimulator();
-        GameResults results = simulator.simulate(500);
-        INDArray features = Nd4j.create(ArrayUtil.flattenDoubleArray(results.getFeatures().getArray()));
+        GameResults results = simulator.simulateFlat(500);
+        INDArray features = Nd4j.create(results.getFeatures().getArray());
         INDArray labels = Nd4j.create(results.getLabels().getArray());
 
         DataSet allData = new DataSet(features, labels);

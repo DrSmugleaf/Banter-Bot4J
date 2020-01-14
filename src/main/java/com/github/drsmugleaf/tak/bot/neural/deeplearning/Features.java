@@ -89,4 +89,8 @@ public class Features {
         return file;
     }
 
+    public int[] getShape() {
+        return new int[]{getL1(), getL2(), getL3(), getL4(), getL5()};
+    }
+
 }

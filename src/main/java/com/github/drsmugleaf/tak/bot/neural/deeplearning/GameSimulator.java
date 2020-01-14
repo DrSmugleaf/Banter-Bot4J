@@ -7,6 +7,7 @@ import com.github.drsmugleaf.tak.bot.neural.reinforcementlearning.NeuralBoard;
 import com.github.drsmugleaf.tak.bot.neural.reinforcementlearning.NeuralGame;
 import com.github.drsmugleaf.tak.bot.random.RandomAllBot;
 import com.github.drsmugleaf.tak.pieces.Color;
+import org.nd4j.linalg.util.ArrayUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +98,62 @@ public class GameSimulator {
         double[][] labelsArray = labelsList.toArray(new double[][]{});
 
         Features features = new Features(featuresArray, games, getMaxTurns(), getPreset().getSize(), getPreset().getSize(), 43, getTrainPercentage());
+        Labels labels = new Labels(labelsArray, games, getMaxTurns(), getTrainPercentage());
+
+        return null;
+    }
+
+
+    public GameResults simulateFlat(int games) {
+        List<double[]> featuresList = new ArrayList<>();
+        List<double[]> labelsList = new ArrayList<>();
+        for (int i = 0; i < games; i++) {
+            INeuralGame game = new NeuralGame(
+                    new NeuralBoard(Preset.getDefault()),
+                    "Player 1",
+                    "Player 2",
+                    RandomAllBot::from,
+                    RandomAllBot::from
+            );
+
+            double[][][][] tempFeatures = new double[MAX_TURNS][][][];
+            double[] tempLabels = new double[MAX_TURNS];
+            for (int turn = 0; turn < MAX_TURNS; turn++) {
+                if (game.isActive()) {
+                    game.nextTurn();
+                    tempFeatures[turn] = game.getBoard().toDoubleArray();
+
+                    double label;
+                    if (game.getWinner() == game.getPlayer(Color.BLACK)) {
+                        label = 1;
+                    } else if (game.getWinner() == game.getPlayer(Color.WHITE)) {
+                        label = 0;
+                    } else {
+                        label = 0.5;
+                    }
+                    tempLabels[turn] = label;
+                } else {
+                    tempFeatures[turn] = new double[5][5][43];
+                    tempLabels[turn] = 0.5;
+                }
+            }
+
+            for (int j = 0; game.isActive(); j++) {
+                if (j >= MAX_TURNS) {
+                    Logger.getAnonymousLogger().info("Number of turns reached maximum of " + MAX_TURNS);
+                    break;
+                }
+
+            }
+
+            featuresList.add(ArrayUtil.flattenDoubleArray(tempFeatures));
+            labelsList.add(tempLabels);
+        }
+
+        double[][] featuresArray = featuresList.toArray(new double[][]{});
+        double[][] labelsArray = labelsList.toArray(new double[][]{});
+
+        FeaturesFlat features = new FeaturesFlat(featuresArray, games, getMaxTurns());
         Labels labels = new Labels(labelsArray, games, getMaxTurns(), getTrainPercentage());
 
         return new GameResults(features, labels, games, getMaxTurns(), getPreset());
