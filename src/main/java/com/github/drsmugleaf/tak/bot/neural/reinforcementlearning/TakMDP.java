@@ -37,7 +37,7 @@ public class TakMDP implements MDP<INeuralBoard, Integer, DiscreteSpace> {
             .builder()
             .l2(0.001)
             .updater(new Adam(0.0005))
-            .numHiddenNodes(800)
+            .numHiddenNodes(250)
             .numLayer(3)
             .build();
     private static QLearning.QLConfiguration QL = new QLearning.QLConfiguration(
