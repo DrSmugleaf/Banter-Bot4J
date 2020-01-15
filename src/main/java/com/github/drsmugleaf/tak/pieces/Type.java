@@ -27,13 +27,13 @@ public enum Type implements IType {
             }
         }
     },
-    FLAT_STONE("flat.png", false, false, true, 2, "F") {
+    FLAT_STONE("flatstone.png", false, false, true, 2, "F") {
         @Override
         public boolean isFlatStone() {
             return true;
         }
     },
-    STANDING_STONE("wall.png", true, false, false, 3, "S") {
+    STANDING_STONE("standingstone.png", true, false, false, 3, "S") {
         @Override
         public boolean isStandingStone() {
             return true;
