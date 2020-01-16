@@ -3,7 +3,7 @@ package com.github.drsmugleaf.tak.bot.neural.deeplearning;
 import com.github.drsmugleaf.tak.board.Board;
 import com.github.drsmugleaf.tak.board.layout.IPreset;
 import com.github.drsmugleaf.tak.board.layout.Preset;
-import com.github.drsmugleaf.tak.bot.random.RandomAllBot;
+import com.github.drsmugleaf.tak.bot.random.RandomBot;
 import com.github.drsmugleaf.tak.game.Game;
 import com.github.drsmugleaf.tak.pieces.Color;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
@@ -79,7 +79,7 @@ public class TakData {
         Logger.getAnonymousLogger().info(evaluation.stats());
 
         Game game;
-        game = new Game(new Board(Preset.getDefault()), "Neural Bot", "Random Bot", DLBot.from(model), RandomAllBot::from);
+        game = new Game(new Board(Preset.getDefault()), "Neural Bot", "Random Bot", DLBot.from(model), RandomBot::from);
         int win = 0;
         int loss = 0;
         int tie = 0;

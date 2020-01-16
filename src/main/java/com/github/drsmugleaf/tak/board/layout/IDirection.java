@@ -1,5 +1,7 @@
 package com.github.drsmugleaf.tak.board.layout;
 
+import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.tak.board.IBoard;
 import com.github.drsmugleaf.tak.board.coordinates.ICoordinates;
 
 /**
@@ -7,8 +9,12 @@ import com.github.drsmugleaf.tak.board.coordinates.ICoordinates;
  */
 public interface IDirection {
 
-    int getDestinationRowOffset();
-    int getDestinationColumnOffset();
+    int getRowOffset();
+    int getColumnOffset();
     boolean isValid(ICoordinates origin, ICoordinates destination);
+    @Nullable
+    ISquare get(IBoard board, ISquare origin);
+    @Nullable
+    ICoordinates get(int row, int column, int offset);
 
 }

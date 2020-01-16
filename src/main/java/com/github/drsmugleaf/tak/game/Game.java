@@ -5,6 +5,7 @@ import com.github.drsmugleaf.tak.board.Board;
 import com.github.drsmugleaf.tak.board.IBoard;
 import com.github.drsmugleaf.tak.board.action.IMove;
 import com.github.drsmugleaf.tak.board.action.IPlace;
+import com.github.drsmugleaf.tak.board.coordinates.IMovingCoordinates;
 import com.github.drsmugleaf.tak.board.layout.IPreset;
 import com.github.drsmugleaf.tak.board.layout.ISquare;
 import com.github.drsmugleaf.tak.pieces.Color;
@@ -78,27 +79,37 @@ public class Game implements IGame {
 
     @Override
     public boolean canMove(IPlayer player, IMove move) {
-        return isActive() && nextPlayer == player && getBoard().canMove(move);
+        return canMove(player, move, getBoard());
     }
 
     @Override
-    public ISquare move(IPlayer player, IMove move, boolean silent) {
+    public boolean canMove(IPlayer player, IMove move, IBoard board) {
+        return isActive() && nextPlayer == player && board.canMove(move);
+    }
+
+    @Override
+    public void move(IPlayer player, IMove move, boolean silent) {
         if (!canMove(player, move)) {
-            throw new IllegalGameCall(
-                    "Illegal move call, origin " + move.toSquare(getBoard()) +
-                    ", destination " + move.toDestination(getBoard()) +
-                    " and amount " + move.getAmount()
-            );
+            StringBuilder error = new StringBuilder("Illegal move call");
+            for (IMovingCoordinates coordinate : move.getCoordinates()) {
+                error.append("\n").append(coordinate);
+            }
+
+            throw new IllegalGameCall(error.toString());
         }
 
-        ISquare square = getBoard().move(move, silent);
+        getBoard().move(move, silent);
         onPieceMove(player, move);
-        return square;
     }
 
     @Override
     public boolean canPlace(IPlayer player, IPlace place) {
-        return isActive() && nextPlayer == player && getBoard().canPlace(place);
+        return canPlace(player, place, getBoard());
+    }
+
+    @Override
+    public boolean canPlace(IPlayer player, IPlace place, IBoard board) {
+        return isActive() && nextPlayer == player && board.canPlace(place);
     }
 
     @Override

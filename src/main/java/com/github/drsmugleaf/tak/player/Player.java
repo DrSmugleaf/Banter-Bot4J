@@ -1,19 +1,16 @@
 package com.github.drsmugleaf.tak.player;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.tak.board.action.*;
-import com.github.drsmugleaf.tak.board.layout.IAdjacentSquares;
+import com.github.drsmugleaf.tak.board.IBoard;
+import com.github.drsmugleaf.tak.board.action.IAction;
+import com.github.drsmugleaf.tak.board.action.IMove;
+import com.github.drsmugleaf.tak.board.action.IPlace;
 import com.github.drsmugleaf.tak.board.layout.ISquare;
-import com.github.drsmugleaf.tak.board.layout.Line;
 import com.github.drsmugleaf.tak.game.IGame;
-import com.github.drsmugleaf.tak.board.*;
 import com.github.drsmugleaf.tak.pieces.IColor;
-import com.github.drsmugleaf.tak.pieces.IType;
-import com.github.drsmugleaf.tak.pieces.Type;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by DrSmugleaf on 01/12/2018
@@ -37,28 +34,6 @@ public abstract class Player implements IPlayer {
     }
 
     @Override
-    public final List<IAction> getAvailableActions(IBoard board, IType type) {
-        List<IAction> actions = new ArrayList<>();
-        List<IMove> moves = getAvailableMoves(board);
-        List<IPlace> places = getAvailablePlaces(board, type);
-        actions.addAll(moves);
-        actions.addAll(places);
-
-        return actions;
-    }
-
-    @Override
-    public List<IAction> getAvailableActions(IBoard board) {
-        List<IAction> actions = new ArrayList<>();
-        List<IMove> moves = getAvailableMoves(board);
-        List<IPlace> places = getAvailablePlaces(board);
-        actions.addAll(moves);
-        actions.addAll(places);
-
-        return actions;
-    }
-
-    @Override
     public final List<IAction> getAvailableActions() {
         if (AVAILABLE_ACTIONS != null) {
             return AVAILABLE_ACTIONS;
@@ -70,78 +45,8 @@ public abstract class Player implements IPlayer {
     }
 
     @Override
-    public final List<IMove> getAvailableMoves(IBoard board) {
-        List<IMove> moves = new ArrayList<>();
-
-        for (Line row : board.getRows()) {
-            for (ISquare origin : row.getSquares()) {
-                if (origin.getTopPiece() == null) {
-                    continue;
-                }
-
-                IAdjacentSquares adjacent = board.getAdjacent(origin);
-
-                for (ISquare destination : adjacent.getAll()) {
-                    if (destination == null) {
-                        continue;
-                    }
-
-                    for (int amount = 1; amount <= board.getPreset().getCarryLimit(); amount++) {
-                        IMove move = new Move(origin, destination, amount);
-                        if (move.canExecute(this)) {
-                            moves.add(move);
-                        }
-                    }
-                }
-            }
-        }
-
-        return moves;
-    }
-
-    @Override
-    public final List<IMove> getAvailableMoves() {
-        return getAvailableMoves(getGame().getBoard());
-    }
-
-    @Override
-    public final List<IPlace> getAvailablePlaces(IBoard board, IType... types) {
-        List<IPlace> places = new ArrayList<>();
-
-        Line[] rows = board.getRows();
-        for (int i = 0; i < rows.length; i++) {
-            ISquare[] row = rows[i].getSquares();
-            for (int j = 0; j < row.length; j++) {
-                for (IType type : types) {
-                    IPlace place = new Place(i, j, type);
-                    if (canPlace(place)) {
-                        places.add(place);
-                    }
-                }
-            }
-        }
-
-        return places;
-    }
-
-    @Override
-    public final List<IPlace> getAvailablePlaces(IBoard board, Set<IType> types) {
-        return getAvailablePlaces(board, types.toArray(new IType[0]));
-    }
-
-    @Override
-    public final List<IPlace> getAvailablePlaces(IBoard board) {
-        return getAvailablePlaces(board, Type.getTypes());
-    }
-
-    @Override
-    public final List<IPlace> getAvailablePlaces(IType type) {
-        return getAvailablePlaces(getGame().getBoard(), type);
-    }
-
-    @Override
-    public final List<IPlace> getAvailablePlaces() {
-        return getAvailablePlaces(getGame().getBoard(), Type.getTypes());
+    public final List<IAction> getAvailableActions(IBoard board) {
+        return board.getPreset().getAllActions().stream().filter(action -> action.canExecute(this, board)).collect(Collectors.toList());
     }
 
     @Override
@@ -179,21 +84,39 @@ public abstract class Player implements IPlayer {
 
     @Override
     public final boolean canMove(IMove move) {
-        return getColor() == move.toSquare(getGame().getBoard()).getColor() && GAME.canMove(this, move);
+        return canMove(move, getGame().getBoard());
     }
 
     @Override
-    public final ISquare move(IMove move, boolean silent) {
-        return GAME.move(this, move, silent);
+    public boolean canMove(IMove move, IBoard board) {
+        return getColor() == move.getCoordinates().get(0).toSquare(board).getColor() && GAME.canMove(this, move, board);
+    }
+
+    @Override
+    public final void move(IMove move, boolean silent) {
+        if (!canMove(move)) {
+            throw new IllegalArgumentException();
+        }
+
+        GAME.move(this, move, silent);
     }
 
     @Override
     public final boolean canPlace(IPlace place) {
-        return getHand().has(place.getType()) && GAME.canPlace(this, place);
+        return canPlace(place, getGame().getBoard());
+    }
+
+    @Override
+    public boolean canPlace(IPlace place, IBoard board) {
+        return getHand().has(place.getType()) && GAME.canPlace(this, place, board);
     }
 
     @Override
     public final ISquare place(IPlace place, boolean silent) {
+        if (!canPlace(place)) {
+            throw new IllegalArgumentException();
+        }
+
         return GAME.place(this, place, silent);
     }
 
@@ -218,15 +141,15 @@ public abstract class Player implements IPlayer {
 
     @Override
     public final void nextTurn() {
-//        if (isPassive()) {
-//            try {
-//                synchronized (this) {
-//                    wait();
-//                }
-//            } catch (InterruptedException e) {
-//                throw new IllegalStateException("Player thread interrupted", e);
-//            }
-//        }
+        if (isPassive()) {
+            try {
+                synchronized (this) {
+                    wait();
+                }
+            } catch (InterruptedException e) {
+                throw new IllegalStateException("Player thread interrupted", e);
+            }
+        }
 
         if (NEXT_ACTION == null) {
             NEXT_ACTION = getNextAction();

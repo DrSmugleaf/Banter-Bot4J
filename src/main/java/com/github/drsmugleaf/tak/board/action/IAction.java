@@ -12,6 +12,7 @@ import java.util.function.Function;
 public interface IAction {
 
     boolean canExecute(IPlayer player);
+    boolean canExecute(IPlayer player, IBoard board);
     void execute(IPlayer player);
     int with(IBoard board, IColor nextColor, Function<IBoard, Integer> function);
 

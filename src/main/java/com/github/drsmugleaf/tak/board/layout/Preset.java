@@ -5,8 +5,11 @@ import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tak.board.Board;
 import com.github.drsmugleaf.tak.board.IBoard;
 import com.github.drsmugleaf.tak.board.action.IAction;
+import com.github.drsmugleaf.tak.board.action.IMove;
 import com.github.drsmugleaf.tak.board.action.Move;
 import com.github.drsmugleaf.tak.board.action.Place;
+import com.github.drsmugleaf.tak.board.coordinates.IMovingCoordinates;
+import com.github.drsmugleaf.tak.board.coordinates.MovingCoordinates;
 import com.github.drsmugleaf.tak.pieces.IType;
 import com.github.drsmugleaf.tak.pieces.Type;
 import com.google.common.collect.ImmutableList;
@@ -15,6 +18,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -54,21 +58,70 @@ public enum Preset implements IPreset {
                     allActions.add(place);
                 }
 
-                IAdjacentSquares adjacent = board.getAdjacent(origin);
-                for (ISquare destination : adjacent.getAll()) {
-                    if (destination == null) {
-                        continue;
-                    }
+                for (int pickedUp = 1; pickedUp <= getCarryLimit(); pickedUp++) {
+                    for (IDirection direction : Directions.values()) {
+                        ISquare thisSquare = origin;
+                        List<ISquare> possibleCoordinates = new ArrayList<>();
+                        possibleCoordinates.add(origin);
+                        while ((thisSquare = direction.get(board, thisSquare)) != null) {
+                            possibleCoordinates.add(thisSquare);
+                        }
 
-                    for (int pieces = 1; pieces <= getCarryLimit(); pieces++) {
-                        Move move = new Move(origin, destination, pieces);
-                        allActions.add(move);
+                        if (possibleCoordinates.size() < 2) {
+                            continue;
+                        }
+
+                        for (int n = 2; n <= possibleCoordinates.size(); n++) {
+                            List<int[]> possible = generate(pickedUp, pickedUp, n);
+                            for (int[] array : possible) {
+                                List<IMovingCoordinates> coordinates = new ArrayList<>();
+                                for (int j = 0; j < array.length; j++) {
+                                    int amount = array[j];
+                                    ISquare square = possibleCoordinates.get(j);
+                                    IMovingCoordinates coordinate = new MovingCoordinates(square.getRow(), square.getColumn(), amount);
+                                    coordinates.add(coordinate);
+                                }
+
+                                if (coordinates.size() == 1) {
+                                    System.out.println();
+                                }
+                                IMove move = new Move(coordinates, direction);
+                                allActions.add(move);
+                            }
+                        }
                     }
                 }
             }
         }
 
         ALL_ACTIONS = ImmutableList.copyOf(allActions);
+    }
+
+    private static List<int[]> generate(int target, int max, int n) {
+        return generate(new ArrayList<>(), new int[0], target, max, n);
+    }
+
+    private static List<int[]> generate(List<int[]> solutions, int[] current, int target, int max, int n) {
+        int sum = Arrays.stream(current).sum();
+        if (current.length == n) {
+            if (sum == target) {
+                solutions.add(current);
+            }
+
+            return solutions;
+        }
+
+        if (sum > target) {
+            return solutions;
+        }
+
+        for(int i = 1; i <= max; i++) {
+            int[] next = Arrays.copyOf(current, current.length + 1);
+            next[current.length] = i;
+            generate(solutions, next, target, max, n);
+        }
+
+        return solutions;
     }
 
     public static IPreset getDefault() {

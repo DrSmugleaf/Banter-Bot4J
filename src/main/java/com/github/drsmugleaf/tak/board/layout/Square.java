@@ -1,7 +1,6 @@
 package com.github.drsmugleaf.tak.board.layout;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.tak.board.action.IMove;
 import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.pieces.IPiece;
 import com.github.drsmugleaf.tak.pieces.IType;
@@ -91,8 +90,7 @@ public class Square implements ISquare {
     }
 
     @Override
-    public boolean canMove(IMove move, ISquare destination) {
-        int amount = move.getAmount();
+    public boolean canMove(int amount, ISquare destination) {
         if (amount <= 0 || amount > getPieces().size()) {
             return false;
         }
@@ -115,10 +113,9 @@ public class Square implements ISquare {
     }
 
     @Override
-    public ISquare move(IMove move, ISquare destination, boolean silent) {
+    public ISquare move(int amount, ISquare destination, boolean silent) {
         List<IPiece> pieces = getPieces();
         ListIterator<IPiece> iterator = pieces.listIterator(pieces.size());
-        int amount = move.getAmount();
         while (iterator.hasPrevious() && amount > 0) {
             IPiece piece = iterator.previous();
 

@@ -5,7 +5,7 @@ import com.github.drsmugleaf.tak.board.layout.Preset;
 import com.github.drsmugleaf.tak.bot.neural.reinforcementlearning.INeuralGame;
 import com.github.drsmugleaf.tak.bot.neural.reinforcementlearning.NeuralBoard;
 import com.github.drsmugleaf.tak.bot.neural.reinforcementlearning.NeuralGame;
-import com.github.drsmugleaf.tak.bot.random.RandomAllBot;
+import com.github.drsmugleaf.tak.bot.random.RandomBot;
 import com.github.drsmugleaf.tak.pieces.Color;
 import org.nd4j.linalg.util.ArrayUtil;
 
@@ -56,8 +56,8 @@ public class GameSimulator {
                     new NeuralBoard(Preset.getDefault()),
                     "Player 1",
                     "Player 2",
-                    RandomAllBot::from,
-                    RandomAllBot::from
+                    RandomBot::from,
+                    RandomBot::from
             );
 
             double[][][][] tempFeatures = new double[MAX_TURNS][][][];
@@ -112,8 +112,8 @@ public class GameSimulator {
                     new NeuralBoard(Preset.getDefault()),
                     "Player 1",
                     "Player 2",
-                    RandomAllBot::from,
-                    RandomAllBot::from
+                    RandomBot::from,
+                    RandomBot::from
             );
 
             double[][][][] tempFeatures = new double[MAX_TURNS][][][];

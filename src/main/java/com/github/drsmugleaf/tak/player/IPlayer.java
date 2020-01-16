@@ -8,26 +8,16 @@ import com.github.drsmugleaf.tak.board.action.IPlace;
 import com.github.drsmugleaf.tak.board.layout.ISquare;
 import com.github.drsmugleaf.tak.game.IGame;
 import com.github.drsmugleaf.tak.pieces.IColor;
-import com.github.drsmugleaf.tak.pieces.IType;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by DrSmugleaf on 09/01/2020
  */
 public interface IPlayer {
 
-    List<IAction> getAvailableActions(IBoard board, IType type);
-    List<IAction> getAvailableActions(IBoard board);
     List<IAction> getAvailableActions();
-    List<IMove> getAvailableMoves(IBoard board);
-    List<IMove> getAvailableMoves();
-    List<IPlace> getAvailablePlaces(IBoard board, IType... types);
-    List<IPlace> getAvailablePlaces(IBoard board, Set<IType> types);
-    List<IPlace> getAvailablePlaces(IBoard board);
-    List<IPlace> getAvailablePlaces(IType type);
-    List<IPlace> getAvailablePlaces();
+    List<IAction> getAvailableActions(IBoard board);
     String getName();
     IGame getGame();
     Hand getHand();
@@ -37,8 +27,10 @@ public interface IPlayer {
     void setNextAction(IAction action);
     IColor getColor();
     boolean canMove(IMove move);
-    ISquare move(IMove move, boolean silent);
+    boolean canMove(IMove move, IBoard board);
+    void move(IMove move, boolean silent);
     boolean canPlace(IPlace place);
+    boolean canPlace(IPlace place, IBoard board);
     ISquare place(IPlace place, boolean silent);
     void surrender();
     void resetPlayer();

@@ -4,7 +4,7 @@ import com.github.drsmugleaf.env.Keys;
 import com.github.drsmugleaf.tak.board.action.IAction;
 import com.github.drsmugleaf.tak.board.layout.IPreset;
 import com.github.drsmugleaf.tak.board.layout.Preset;
-import com.github.drsmugleaf.tak.bot.random.RandomFlatBot;
+import com.github.drsmugleaf.tak.bot.random.RandomBot;
 import com.github.drsmugleaf.tak.player.IPlayer;
 import org.deeplearning4j.gym.StepReply;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;
@@ -62,12 +62,13 @@ public class TakMDP implements MDP<INeuralBoard, Integer, DiscreteSpace> {
     private final TakSpace ACTION_SPACE;
 
     public TakMDP(IPreset preset) {
-        GAME = new NeuralGame(new NeuralBoard(preset), "Neural Bot 1", "Neural Bot 2", NeuralBot::from, RandomFlatBot::from);
+        GAME = new NeuralGame(new NeuralBoard(preset), "Neural Bot 1", "Neural Bot 2", NeuralBot::from, RandomBot::from);
         OBSERVATION_SPACE = new ArrayObservationSpace<>(new int[]{preset.getSize() * preset.getSize() * (preset.getMaximumStackSize())});
         ACTION_SPACE = new TakSpace(GAME);
     }
 
     public static void main(String[] args) {
+        System.out.println(Preset.getDefault().getAllActions().size());
         String directory = Keys.TAK_POLICY_DIRECTORY.VALUE;
         new File(directory).mkdirs();
         DataManager manager;

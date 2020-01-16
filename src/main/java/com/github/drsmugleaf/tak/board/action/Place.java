@@ -36,7 +36,12 @@ public class Place extends Coordinates implements IPlace {
 
     @Override
     public boolean canExecute(IPlayer player) {
-        return player.canPlace(this);
+        return canExecute(player, player.getGame().getBoard());
+    }
+
+    @Override
+    public boolean canExecute(IPlayer player, IBoard board) {
+        return player.canPlace(this, board);
     }
 
     @Override

@@ -9,20 +9,35 @@ import com.github.drsmugleaf.tak.board.*;
 import com.github.drsmugleaf.tak.bot.Bot;
 import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.pieces.IPiece;
+import com.github.drsmugleaf.tak.player.IPlayer;
+import com.github.drsmugleaf.tak.player.IPlayerInformation;
 import javafx.util.Pair;
 
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Created by DrSmugleaf on 16/03/2019
  */
-public abstract class MinimaxBot extends Bot {
+public class MinimaxBot extends Bot {
 
     protected final int DEPTH;
 
     protected MinimaxBot(String name, IGame game, IColor color, int depth) {
         super(name, game, color, false);
         DEPTH = depth;
+    }
+
+    public static IPlayer from(IPlayerInformation information, int depth) {
+        return new MinimaxBot(information.getName(), information.getGame(), information.getColor(), depth);
+    }
+
+    public static Function<IPlayerInformation, IPlayer> from(int depth) {
+        return information -> from(information, depth);
+    }
+
+    public static IPlayer from(IPlayerInformation information) {
+        return from(information, 3);
     }
 
     @Nullable

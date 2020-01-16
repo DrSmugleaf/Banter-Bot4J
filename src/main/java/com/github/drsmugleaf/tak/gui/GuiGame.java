@@ -1,9 +1,9 @@
 package com.github.drsmugleaf.tak.gui;
 
 import com.github.drsmugleaf.tak.board.layout.IPreset;
+import com.github.drsmugleaf.tak.bot.minimax.MinimaxBot;
 import com.github.drsmugleaf.tak.game.Game;
 import com.github.drsmugleaf.tak.board.layout.Preset;
-import com.github.drsmugleaf.tak.bot.minimax.MinimaxFlatMoveBot;
 import com.github.drsmugleaf.tak.images.Images;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.IColor;
@@ -41,7 +41,7 @@ public class GuiGame extends Game {
     }
 
     public static void main(String[] args) {
-        GuiGame game = new GuiGame(Preset.getDefault(), "1", "2", GuiPlayer::from, MinimaxFlatMoveBot::from);
+        GuiGame game = new GuiGame(Preset.getDefault(), "1", "2", GuiPlayer::from, MinimaxBot::from);
         game.start();
     }
 

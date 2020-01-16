@@ -20,7 +20,8 @@ public interface IBoard {
     Row[] getRows();
     IPreset getPreset();
     boolean canMove(IMove move);
-    ISquare move(IMove move, boolean silent);
+    void move(IMove move, boolean silent);
+    void reverseMove(IMove move);
     boolean canPlace(IPlace place);
     ISquare place(IPiece piece, IPlace place, boolean silent);
     ISquare remove(IPiece piece, IPlace place, boolean silent);

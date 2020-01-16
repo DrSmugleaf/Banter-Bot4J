@@ -1,7 +1,6 @@
 package com.github.drsmugleaf.tak.board.layout;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.tak.board.action.IMove;
 import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.pieces.IPiece;
 import com.github.drsmugleaf.tak.pieces.IType;
@@ -23,8 +22,8 @@ public interface ISquare {
     IType getType();
     @Nullable
     IPiece getTopPiece();
-    boolean canMove(IMove move, ISquare destination);
-    ISquare move(IMove move, ISquare destination, boolean silent);
+    boolean canMove(int amount, ISquare destination);
+    ISquare move(int amount, ISquare destination, boolean silent);
     boolean canPlace();
     ISquare place(IPiece piece, boolean silent);
     ISquare remove(IPiece piece, boolean silent);

@@ -10,8 +10,7 @@ import com.github.drsmugleaf.tak.pieces.IPiece;
 public interface ILine {
 
     ISquare[] getSquares();
-    boolean canMove(int origin, IMove move, ISquare destination);
-    ISquare move(int origin, IMove move, ISquare destination, boolean silent);
+    ISquare move(int origin, int amount, ISquare destination, boolean silent);
     boolean canPlace(int index);
     ISquare place(IPiece piece, int location, boolean silent);
     ISquare remove(IPiece piece, int location, boolean silent);

@@ -20,7 +20,7 @@ public enum Type implements IType {
         }
 
         @Override
-            public void move(ISquare to, int pieces) {
+        public void move(ISquare to, int pieces) {
             IPiece topPiece = to.getTopPiece();
             if (pieces == 1 && topPiece != null && topPiece.getType() == STANDING_STONE) {
                 topPiece.flatten();

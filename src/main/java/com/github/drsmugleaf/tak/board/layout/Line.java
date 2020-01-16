@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.tak.board.layout;
 
-import com.github.drsmugleaf.tak.board.action.IMove;
 import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.pieces.IPiece;
 import com.github.drsmugleaf.tak.pieces.Type;
@@ -22,13 +21,8 @@ public class Line implements ILine {
     }
 
     @Override
-    public boolean canMove(int origin, IMove move, ISquare destination) {
-        return origin < getSquares().length && getSquares()[origin].canMove(move, destination);
-    }
-
-    @Override
-    public ISquare move(int origin, IMove move, ISquare destination, boolean silent) {
-        return getSquares()[origin].move(move, destination, silent);
+    public ISquare move(int origin, int amount, ISquare destination, boolean silent) {
+        return getSquares()[origin].move(amount, destination, silent);
     }
 
     @Override

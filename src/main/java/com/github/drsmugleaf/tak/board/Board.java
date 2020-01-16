@@ -3,6 +3,7 @@ package com.github.drsmugleaf.tak.board;
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tak.board.action.IMove;
 import com.github.drsmugleaf.tak.board.action.IPlace;
+import com.github.drsmugleaf.tak.board.coordinates.IMovingCoordinates;
 import com.github.drsmugleaf.tak.board.layout.*;
 import com.github.drsmugleaf.tak.board.layout.IPreset;
 import com.github.drsmugleaf.tak.board.layout.Preset;
@@ -113,21 +114,56 @@ public class Board implements IBoard {
 
     @Override
     public boolean canMove(IMove move) {
-        int originRow = move.getRow();
-        int amount = move.getAmount();
-        ISquare destination = move.toDestination(this);
-        IAdjacentSquares adjacent = getAdjacent(destination);
+        ISquare originSquare = null;
+        for (IMovingCoordinates coordinate : move.getCoordinates()) {
+            ISquare coordinateSquare = coordinate.toSquare(this);
+            if (originSquare == null) {
+                originSquare = coordinateSquare;
+                continue;
+            }
 
-        return originRow < getRows().length &&
-               amount <= PRESET.getCarryLimit() &&
-               adjacent.contains(destination) &&
-               getRows()[originRow].canMove(move, destination);
+            if (!originSquare.canMove(coordinate.getAmount(), coordinateSquare)) {
+                return false;
+            }
+
+            originSquare = coordinateSquare;
+        }
+
+        return move.getTotalAmount() <= PRESET.getCarryLimit();
     }
 
     @Override
-    public ISquare move(IMove move, boolean silent) {
-        ISquare destination = move.toDestination(this);
-        return getRows()[move.getRow()].move(move, destination, silent);
+    public void move(IMove move, boolean silent) {
+        IMovingCoordinates originCoordinate = null;
+        ISquare origin = null;
+        for (IMovingCoordinates coordinate : move.getCoordinates()) {
+            if (originCoordinate == null) {
+                originCoordinate = coordinate;
+                origin = originCoordinate.toSquare(this);
+                continue;
+            }
+
+            int amount = coordinate.getAmount();
+            ISquare destination = coordinate.toSquare(this);
+            origin.move(amount, destination, silent);
+        }
+    }
+
+    @Override
+    public void reverseMove(IMove move) {
+        IMovingCoordinates originCoordinate = null;
+        ISquare origin = null;
+        for (IMovingCoordinates coordinate : move.getCoordinates()) {
+            if (originCoordinate == null) {
+                originCoordinate = coordinate;
+                origin = originCoordinate.toSquare(this);
+                continue;
+            }
+
+            int amount = coordinate.getAmount();
+            ISquare destination = coordinate.toSquare(this);
+            destination.move(amount, origin, true);
+        }
     }
 
     @Override

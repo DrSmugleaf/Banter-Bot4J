@@ -5,6 +5,8 @@ import com.github.drsmugleaf.tak.board.action.IAction;
 import com.github.drsmugleaf.tak.bot.Bot;
 import com.github.drsmugleaf.tak.game.IGame;
 import com.github.drsmugleaf.tak.pieces.IColor;
+import com.github.drsmugleaf.tak.player.IPlayer;
+import com.github.drsmugleaf.tak.player.IPlayerInformation;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -12,10 +14,14 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Created by DrSmugleaf on 16/03/2019
  */
-public abstract class RandomBot extends Bot {
+public class RandomBot extends Bot {
 
     protected RandomBot(String name, IGame game, IColor color) {
         super(name, game, color, false);
+    }
+
+    public static IPlayer from(IPlayerInformation information) {
+        return new RandomBot(information.getName(), information.getGame(), information.getColor());
     }
 
     @Nullable
