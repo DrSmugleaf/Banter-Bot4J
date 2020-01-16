@@ -3,6 +3,7 @@ package com.github.drsmugleaf.tak.board;
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tak.board.action.IMove;
 import com.github.drsmugleaf.tak.board.action.IPlace;
+import com.github.drsmugleaf.tak.board.history.IBoardHistory;
 import com.github.drsmugleaf.tak.board.layout.*;
 import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.pieces.IPiece;
@@ -19,9 +20,9 @@ public interface IBoard {
     Column[] getColumns();
     Row[] getRows();
     IPreset getPreset();
+    IBoardHistory getHistory();
     boolean canMove(IMove move);
     void move(IMove move, boolean silent);
-    void reverseMove(IMove move);
     boolean canPlace(IPlace place);
     ISquare place(IPiece piece, IPlace place, boolean silent);
     ISquare remove(IPiece piece, IPlace place, boolean silent);

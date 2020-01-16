@@ -67,7 +67,6 @@ public class Move implements IMove {
     public <T> T with(IBoard board, IColor nextColor, Function<IBoard, T> function) {
         board.move(this, true);
         T result = function.apply(board);
-        board.reverseMove(this);
 
         return result;
     }

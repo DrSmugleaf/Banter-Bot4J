@@ -4,6 +4,8 @@ import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tak.board.action.IMove;
 import com.github.drsmugleaf.tak.board.action.IPlace;
 import com.github.drsmugleaf.tak.board.coordinates.IMovingCoordinates;
+import com.github.drsmugleaf.tak.board.history.BoardHistory;
+import com.github.drsmugleaf.tak.board.history.IBoardHistory;
 import com.github.drsmugleaf.tak.board.layout.*;
 import com.github.drsmugleaf.tak.board.layout.IPreset;
 import com.github.drsmugleaf.tak.board.layout.Preset;
@@ -24,6 +26,7 @@ public class Board implements IBoard {
     private final IPreset PRESET;
     private final Row[] ROWS;
     private final Column[] COLUMNS;
+    private final IBoardHistory HISTORY;
 
     public Board(IPreset preset) {
         PRESET = preset;
@@ -47,6 +50,7 @@ public class Board implements IBoard {
 
         ROWS = rows;
         COLUMNS = columns;
+        HISTORY = new BoardHistory(this);
     }
 
     public Board(ISquare[][] squares) {
@@ -81,11 +85,13 @@ public class Board implements IBoard {
 
         ROWS = rows;
         COLUMNS = columns;
+        HISTORY = new BoardHistory(this);
     }
 
     private Board(IBoard board) {
         this(board.toSquareArray());
     }
+
 
     @Override
     public IBoard copy() {
@@ -110,6 +116,11 @@ public class Board implements IBoard {
     @Override
     public IPreset getPreset() {
         return PRESET;
+    }
+
+    @Override
+    public IBoardHistory getHistory() {
+        return HISTORY;
     }
 
     @Override
@@ -147,22 +158,9 @@ public class Board implements IBoard {
             ISquare destination = coordinate.toSquare(this);
             origin.move(amount, destination, silent);
         }
-    }
 
-    @Override
-    public void reverseMove(IMove move) {
-        IMovingCoordinates originCoordinate = null;
-        ISquare origin = null;
-        for (IMovingCoordinates coordinate : move.getCoordinates()) {
-            if (originCoordinate == null) {
-                originCoordinate = coordinate;
-                origin = originCoordinate.toSquare(this);
-                continue;
-            }
-
-            int amount = coordinate.getAmount();
-            ISquare destination = coordinate.toSquare(this);
-            destination.move(amount, origin, true);
+        if (!silent) {
+            getHistory().addState(this);
         }
     }
 
@@ -177,7 +175,12 @@ public class Board implements IBoard {
     public ISquare place(IPiece piece, IPlace place, boolean silent) {
         int row = place.getRow();
         Row[] rows = getRows();
-        return rows[row].place(piece, place, silent);
+        ISquare square = rows[row].place(piece, place, silent);
+        if (!silent) {
+            getHistory().addState(this);
+        }
+
+        return square;
     }
 
     @Override
