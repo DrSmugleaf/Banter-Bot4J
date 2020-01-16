@@ -22,7 +22,7 @@ public interface ISquare {
     IType getType();
     @Nullable
     IPiece getTopPiece();
-    boolean canMove(int amount, ISquare destination);
+    boolean canMove(IType bottomType);
     ISquare move(int amount, ISquare destination, boolean silent);
     boolean canPlace();
     ISquare place(IPiece piece, boolean silent);

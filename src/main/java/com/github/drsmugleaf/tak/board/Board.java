@@ -12,6 +12,7 @@ import com.github.drsmugleaf.tak.game.IllegalGameCall;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.pieces.IPiece;
+import com.github.drsmugleaf.tak.pieces.IType;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.*;
@@ -123,19 +124,24 @@ public class Board implements IBoard {
 
     @Override
     public boolean canMove(IMove move) {
-        ISquare originSquare = null;
-        for (IMovingCoordinates coordinate : move.getCoordinates()) {
-            ISquare coordinateSquare = coordinate.toSquare(this);
-            if (originSquare == null) {
-                originSquare = coordinateSquare;
-                continue;
-            }
+        ISquare first = move.getFirst().toSquare(this);
+        if (first.getPieces().size() < move.getTotalAmount()) {
+            return false;
+        }
 
-            if (!originSquare.canMove(coordinate.getAmount(), coordinateSquare)) {
+        ISquare origin = first;
+        List<IPiece> stack = first.getPieces();
+        List<IPiece> held = stack.subList(stack.size() - move.getTotalAmount(), stack.size());
+        int i = held.size() - 1;
+        for (IMovingCoordinates coordinate : move.getCoordinates()) {
+            ISquare destination = coordinate.toSquare(this);
+            IType bottomType = held.get(i).getType();
+            if (!origin.canMove(bottomType)) {
                 return false;
             }
 
-            originSquare = coordinateSquare;
+            origin = destination;
+            i -= coordinate.getAmount();
         }
 
         return move.getTotalAmount() <= PRESET.getCarryLimit();

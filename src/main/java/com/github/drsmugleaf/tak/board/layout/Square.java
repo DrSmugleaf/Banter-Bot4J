@@ -90,26 +90,13 @@ public class Square implements ISquare {
     }
 
     @Override
-    public boolean canMove(int amount, ISquare destination) {
-        if (amount <= 0 || amount > getPieces().size()) {
-            return false;
-        }
-
+    public boolean canMove(IType bottomType) {
         IPiece thisTopPiece = getTopPiece();
         if (thisTopPiece == null) {
-            return false;
-        }
-
-        IPiece otherTopPiece = destination.getTopPiece();
-        if (otherTopPiece == null) {
             return true;
         }
 
-        if (amount == 1) {
-            return thisTopPiece.getType().canMoveTo(otherTopPiece);
-        } else {
-            return !otherTopPiece.getType().blocks();
-        }
+        return bottomType.canMoveTo(thisTopPiece);
     }
 
     @Override

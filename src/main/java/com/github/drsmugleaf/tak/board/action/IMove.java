@@ -10,6 +10,7 @@ import com.google.common.collect.ImmutableList;
 public interface IMove extends IAction {
 
     void validate();
+    IMovingCoordinates getFirst();
     ImmutableList<IMovingCoordinates> getCoordinates();
     IDirection getDirection();
     int getTotalAmount();

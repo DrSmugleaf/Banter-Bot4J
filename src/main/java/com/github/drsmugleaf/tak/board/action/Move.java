@@ -82,6 +82,11 @@ public class Move implements IMove {
     }
 
     @Override
+    public IMovingCoordinates getFirst() {
+        return getCoordinates().get(0);
+    }
+
+    @Override
     public ImmutableList<IMovingCoordinates> getCoordinates() {
         return COORDINATES;
     }
