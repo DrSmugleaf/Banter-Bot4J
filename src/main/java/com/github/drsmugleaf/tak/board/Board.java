@@ -124,23 +124,21 @@ public class Board implements IBoard {
 
     @Override
     public boolean canMove(IMove move) {
-        ISquare first = move.getFirst().toSquare(this);
-        if (first.getPieces().size() < move.getTotalAmount()) {
+        ISquare origin = move.getOrigin().toSquare(this);
+        if (origin.getPieces().size() < move.getTotalAmount()) {
             return false;
         }
 
-        ISquare origin = first;
-        List<IPiece> stack = first.getPieces();
+        List<IPiece> stack = origin.getPieces();
         List<IPiece> held = stack.subList(stack.size() - move.getTotalAmount(), stack.size());
         int i = held.size() - 1;
         for (IMovingCoordinates coordinate : move.getCoordinates()) {
             ISquare destination = coordinate.toSquare(this);
             IType bottomType = held.get(i).getType();
-            if (!origin.canMove(bottomType)) {
+            if (!destination.canMove(bottomType)) {
                 return false;
             }
 
-            origin = destination;
             i -= coordinate.getAmount();
         }
 
@@ -149,17 +147,12 @@ public class Board implements IBoard {
 
     @Override
     public void move(IMove move, boolean silent) {
-        IMovingCoordinates originCoordinate = null;
-        ISquare origin = null;
-        for (IMovingCoordinates coordinate : move.getCoordinates()) {
-            if (originCoordinate == null) {
-                originCoordinate = coordinate;
-                origin = originCoordinate.toSquare(this);
-                continue;
-            }
-
-            int amount = coordinate.getAmount();
-            ISquare destination = coordinate.toSquare(this);
+        IMovingCoordinates originCoordinates = move.getOrigin();
+        ISquare origin = originCoordinates.toSquare(this);
+        for (int i = move.getCoordinates().size() - 1; i >= 1; i--) {
+            IMovingCoordinates destinationCoordinates = move.getCoordinates().get(i);
+            ISquare destination = destinationCoordinates.toSquare(this);
+            int amount = destinationCoordinates.getAmount();
             origin.move(amount, destination, silent);
         }
 

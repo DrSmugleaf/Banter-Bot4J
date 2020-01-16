@@ -61,25 +61,18 @@ public enum Preset implements IPreset {
                 for (int pickedUp = 1; pickedUp <= getCarryLimit(); pickedUp++) {
                     for (IDirection direction : Directions.values()) {
                         ISquare thisSquare = origin;
-                        List<ISquare> possibleCoordinates = new ArrayList<>();
-                        possibleCoordinates.add(origin);
+                        List<ISquare> possibleSquares = new ArrayList<>();
+                        possibleSquares.add(origin);
                         while ((thisSquare = direction.get(board, thisSquare)) != null) {
-                            possibleCoordinates.add(thisSquare);
+                            possibleSquares.add(thisSquare);
                         }
 
-                        if (possibleCoordinates.size() < 2) {
-                            continue;
-                        }
-
-                        for (int n = 2; n <= possibleCoordinates.size(); n++) {
+                        for (int n = 2; n <= possibleSquares.size(); n++) {
                             List<int[]> possible = generate(pickedUp, pickedUp, n);
                             for (int[] array : possible) {
-                                List<IMovingCoordinates> coordinates = new ArrayList<>();
-                                for (int j = 0; j < array.length; j++) {
-                                    int amount = array[j];
-                                    ISquare square = possibleCoordinates.get(j);
-                                    IMovingCoordinates coordinate = new MovingCoordinates(square.getRow(), square.getColumn(), amount);
-                                    coordinates.add(coordinate);
+                                List<IMovingCoordinates> coordinates = toMovingCoordinates(possibleSquares, array);
+                                if (coordinates.isEmpty()) {
+                                    continue;
                                 }
 
                                 if (coordinates.size() == 1) {
@@ -95,6 +88,22 @@ public enum Preset implements IPreset {
         }
 
         ALL_ACTIONS = ImmutableList.copyOf(allActions);
+    }
+
+    private static List<IMovingCoordinates> toMovingCoordinates(List<ISquare> possibleSquares, int[] array) {
+        List<IMovingCoordinates> coordinates = new ArrayList<>();
+        for (int j = 0; j < array.length; j++) {
+            int amount = array[j];
+            if (amount == 0 && j != 0) {
+                return new ArrayList<>();
+            }
+
+            ISquare square = possibleSquares.get(j);
+            IMovingCoordinates coordinate = new MovingCoordinates(square.getRow(), square.getColumn(), amount);
+            coordinates.add(coordinate);
+        }
+
+        return coordinates;
     }
 
     private static List<int[]> generate(int target, int max, int n) {
@@ -115,7 +124,7 @@ public enum Preset implements IPreset {
             return solutions;
         }
 
-        for(int i = 1; i <= max; i++) {
+        for(int i = 0; i <= max; i++) {
             int[] next = Arrays.copyOf(current, current.length + 1);
             next[current.length] = i;
             generate(solutions, next, target, max, n);

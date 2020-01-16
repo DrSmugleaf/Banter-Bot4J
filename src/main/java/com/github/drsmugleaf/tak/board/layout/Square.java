@@ -101,6 +101,10 @@ public class Square implements ISquare {
 
     @Override
     public ISquare move(int amount, ISquare destination, boolean silent) {
+        if (this == destination) {
+            throw new IllegalArgumentException("A square can't move pieces to itself");
+        }
+
         List<IPiece> pieces = getPieces();
         ListIterator<IPiece> iterator = pieces.listIterator(pieces.size());
         while (iterator.hasPrevious() && amount > 0) {
