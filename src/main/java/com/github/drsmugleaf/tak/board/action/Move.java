@@ -36,6 +36,10 @@ public class Move implements IMove {
 
         IMovingCoordinates last = null;
         for (IMovingCoordinates coordinates : getCoordinates()) {
+            if (coordinates.getAmount() < 1) {
+                throw new IllegalStateException("Moved pieces must be bigger than or equal to 1");
+            }
+
             if (last == null) {
                 last = coordinates;
                 continue;
