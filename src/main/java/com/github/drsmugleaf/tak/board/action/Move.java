@@ -64,9 +64,9 @@ public class Move implements IMove {
     }
 
     @Override
-    public int with(IBoard board, IColor nextColor, Function<IBoard, Integer> function) {
+    public <T> T with(IBoard board, IColor nextColor, Function<IBoard, T> function) {
         board.move(this, true);
-        Integer result = function.apply(board);
+        T result = function.apply(board);
         board.reverseMove(this);
 
         return result;

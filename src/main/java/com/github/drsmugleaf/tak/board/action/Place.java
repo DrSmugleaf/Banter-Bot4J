@@ -50,10 +50,10 @@ public class Place extends Coordinates implements IPlace {
     }
 
     @Override
-    public int with(IBoard board, IColor nextColor, Function<IBoard, Integer> function) {
+    public <T> T with(IBoard board, IColor nextColor, Function<IBoard, T> function) {
         IPiece piece = new Piece(nextColor, getType());
         board.place(piece, this, true);
-        Integer result = function.apply(board);
+        T result = function.apply(board);
         board.remove(piece, this, true);
 
         return result;
