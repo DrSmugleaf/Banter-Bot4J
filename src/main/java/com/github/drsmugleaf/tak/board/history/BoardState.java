@@ -7,7 +7,9 @@ import com.github.drsmugleaf.tak.board.layout.ISquare;
 import com.github.drsmugleaf.tak.board.layout.Row;
 import com.github.drsmugleaf.tak.pieces.IPiece;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by DrSmugleaf on 16/01/2020
@@ -36,14 +38,15 @@ public class BoardState implements IBoardState {
             for (int rowIndex = 0; rowIndex < previous.length; rowIndex++) {
                 IPiece[][] rows = previous[rowIndex];
                 for (int columnIndex = 0; columnIndex < rows.length; columnIndex++) {
-                    IPiece[] previousPieces = rows[columnIndex];
+                    IPiece[] previousStack = rows[columnIndex];
                     ISquare currentSquare = current.getRows()[rowIndex].getSquares()[columnIndex];
-                    List<IPiece> currentPieces = currentSquare.getPieces();
-                    if (previousPieces.length == currentPieces.size()) {
+                    List<IPiece> currentStack = currentSquare.getPieces();
+                    long previousPieces = Arrays.stream(previousStack).filter(Objects::nonNull).count();
+                    if (previousPieces == currentStack.size()) {
                         continue;
                     }
 
-                    PIECES[rowIndex][columnIndex] = previousPieces;
+                    PIECES[rowIndex][columnIndex] = currentStack.toArray(new IPiece[]{});
                 }
             }
         }

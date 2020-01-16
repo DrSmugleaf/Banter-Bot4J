@@ -158,7 +158,7 @@ public abstract class Player implements IPlayer {
         if (NEXT_ACTION == null) {
             surrender();
         } else {
-            NEXT_ACTION.execute(this);
+            NEXT_ACTION.execute(this, false);
         }
 
         NEXT_ACTION = null;

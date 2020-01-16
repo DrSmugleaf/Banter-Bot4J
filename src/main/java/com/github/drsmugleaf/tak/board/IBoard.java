@@ -26,6 +26,7 @@ public interface IBoard {
     boolean canPlace(IPlace place);
     ISquare place(IPiece piece, IPlace place, boolean silent);
     ISquare remove(IPiece piece, IPlace place, boolean silent);
+    void restore();
     Row getFirstRow();
     Row getLastRow();
     Column getFirstColumn();

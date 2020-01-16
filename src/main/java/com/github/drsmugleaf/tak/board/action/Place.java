@@ -45,8 +45,8 @@ public class Place extends Coordinates implements IPlace {
     }
 
     @Override
-    public void execute(IPlayer player) {
-        player.place(this, false);
+    public void execute(IPlayer player, boolean silent) {
+        player.place(this, silent);
     }
 
     @Override

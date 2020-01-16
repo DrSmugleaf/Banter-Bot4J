@@ -59,14 +59,15 @@ public class Move implements IMove {
     }
 
     @Override
-    public void execute(IPlayer player) {
-        player.move(this, false);
+    public void execute(IPlayer player, boolean silent) {
+        player.move(this, silent);
     }
 
     @Override
     public <T> T with(IBoard board, IColor nextColor, Function<IBoard, T> function) {
         board.move(this, true);
         T result = function.apply(board);
+        board.restore();
 
         return result;
     }

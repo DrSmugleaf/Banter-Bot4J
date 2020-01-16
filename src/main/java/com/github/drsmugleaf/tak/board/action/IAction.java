@@ -13,7 +13,7 @@ public interface IAction {
 
     boolean canExecute(IPlayer player);
     boolean canExecute(IPlayer player, IBoard board);
-    void execute(IPlayer player);
+    void execute(IPlayer player, boolean silent);
     <T> T with(IBoard board, IColor nextColor, Function<IBoard, T> function);
 
 }

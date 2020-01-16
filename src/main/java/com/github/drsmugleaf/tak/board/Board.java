@@ -6,17 +6,15 @@ import com.github.drsmugleaf.tak.board.action.IPlace;
 import com.github.drsmugleaf.tak.board.coordinates.IMovingCoordinates;
 import com.github.drsmugleaf.tak.board.history.BoardHistory;
 import com.github.drsmugleaf.tak.board.history.IBoardHistory;
+import com.github.drsmugleaf.tak.board.history.IBoardState;
 import com.github.drsmugleaf.tak.board.layout.*;
-import com.github.drsmugleaf.tak.board.layout.IPreset;
-import com.github.drsmugleaf.tak.board.layout.Preset;
 import com.github.drsmugleaf.tak.game.IllegalGameCall;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.pieces.IPiece;
 import com.google.common.collect.ImmutableSet;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by DrSmugleaf on 01/12/2018
@@ -188,6 +186,31 @@ public class Board implements IBoard {
         int row = place.getRow();
         Row[] rows = getRows();
         return rows[row].remove(piece, place, silent);
+    }
+
+    @Override
+    public void restore() {
+        IBoardState state = getHistory().getState();
+        IPiece[][][] previous = state.getPieces();
+        for (int rowIndex = 0; rowIndex < previous.length; rowIndex++) {
+            IPiece[][] row = previous[rowIndex];
+            for (int columnIndex = 0; columnIndex < row.length; columnIndex++) {
+                IPiece[] previousStack = row[columnIndex];
+                List<IPiece> currentStack = getRows()[rowIndex].getSquares()[columnIndex].getPieces();
+                long previousPieces = Arrays.stream(previousStack).filter(Objects::nonNull).count();
+                if (previousPieces == 0) {
+                    continue;
+                }
+
+
+                if (previousPieces == currentStack.size()) {
+                    continue;
+                }
+
+                currentStack.clear();
+                Arrays.stream(previousStack).filter(Objects::nonNull).forEachOrdered(currentStack::add);
+            }
+        }
     }
 
     @Override
