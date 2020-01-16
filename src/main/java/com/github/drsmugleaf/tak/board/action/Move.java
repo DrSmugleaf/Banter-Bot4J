@@ -29,6 +29,11 @@ public class Move implements IMove {
 
     @Override
     public void validate() {
+        int size = getCoordinates().size();
+        if (size < 2) {
+            throw new IllegalStateException("A move must have at least two coordinates, found: " + size);
+        }
+
         IMovingCoordinates last = null;
         for (IMovingCoordinates coordinates : getCoordinates()) {
             if (last == null) {
