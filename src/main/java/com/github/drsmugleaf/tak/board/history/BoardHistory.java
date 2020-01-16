@@ -16,8 +16,9 @@ public class BoardHistory implements IBoardHistory {
     private final List<IBoardState> STATES;
 
     public BoardHistory(IBoard board) {
+        id = 0;
         STATES = new ArrayList<>();
-        IBoardState state = new BoardState(0, null, board);
+        IBoardState state = new BoardState(id, board);
         STATES.add(state);
         id = STATES.size() - 1;
     }
@@ -29,9 +30,8 @@ public class BoardHistory implements IBoardHistory {
 
     @Override
     public void addState(IBoard board) {
-        IBoardState previous = getState();
         id++;
-        IBoardState state = new BoardState(id, previous, board);
+        IBoardState state = new BoardState(id, board);
         STATES.add(id, state);
     }
 

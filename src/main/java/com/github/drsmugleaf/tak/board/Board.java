@@ -198,11 +198,6 @@ public class Board implements IBoard {
                 IPiece[] previousStack = row[columnIndex];
                 List<IPiece> currentStack = getRows()[rowIndex].getSquares()[columnIndex].getPieces();
                 long previousPieces = Arrays.stream(previousStack).filter(Objects::nonNull).count();
-                if (previousPieces == 0) {
-                    continue;
-                }
-
-
                 if (previousPieces == currentStack.size()) {
                     continue;
                 }
