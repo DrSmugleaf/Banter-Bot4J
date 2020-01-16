@@ -59,7 +59,7 @@ public class Move implements IMove {
 
     @Override
     public boolean canExecute(IPlayer player) {
-        return player.canMove(this);
+        return canExecute(player, player.getGame().getBoard());
     }
 
     @Override
