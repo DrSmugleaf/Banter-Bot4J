@@ -422,6 +422,8 @@ public class Board implements IBoard {
             getRows()[i].reset();
             getColumns()[i].reset();
         }
+
+        HISTORY.reset(this);
     }
 
     @Override

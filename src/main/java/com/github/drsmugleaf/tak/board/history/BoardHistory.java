@@ -67,4 +67,13 @@ public class BoardHistory implements IBoardHistory {
         return STATES.get(id);
     }
 
+    @Override
+    public void reset(IBoard board) {
+        id = 0;
+        STATES.clear();
+        IBoardState state = new BoardState(id, board);
+        STATES.add(state);
+        id = STATES.size() - 1;
+    }
+
 }

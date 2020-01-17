@@ -18,5 +18,6 @@ public interface IBoardHistory {
     IBoardState getPrevious(IBoardState state);
     @Nullable
     IBoardState getNext(IBoardState state);
+    void reset(IBoard board);
 
 }
