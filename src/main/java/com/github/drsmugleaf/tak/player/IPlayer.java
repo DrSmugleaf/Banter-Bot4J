@@ -5,7 +5,6 @@ import com.github.drsmugleaf.tak.board.IBoard;
 import com.github.drsmugleaf.tak.board.action.IAction;
 import com.github.drsmugleaf.tak.board.action.IMove;
 import com.github.drsmugleaf.tak.board.action.IPlace;
-import com.github.drsmugleaf.tak.board.layout.ISquare;
 import com.github.drsmugleaf.tak.game.IGame;
 import com.github.drsmugleaf.tak.pieces.IColor;
 
@@ -28,10 +27,10 @@ public interface IPlayer {
     IColor getColor();
     boolean canMove(IMove move);
     boolean canMove(IMove move, IBoard board);
-    void move(IMove move, boolean silent);
+    int move(IMove move, boolean silent);
     boolean canPlace(IPlace place);
     boolean canPlace(IPlace place, IBoard board);
-    ISquare place(IPlace place, boolean silent);
+    int place(IPlace place, boolean silent);
     void surrender();
     void resetPlayer();
     void nextTurn();

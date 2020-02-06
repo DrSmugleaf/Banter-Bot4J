@@ -146,7 +146,7 @@ public class Board implements IBoard {
     }
 
     @Override
-    public void move(IMove move, boolean silent) {
+    public int move(IMove move, boolean silent) {
         IMovingCoordinates originCoordinates = move.getOrigin();
         ISquare origin = originCoordinates.toSquare(this);
         for (int i = move.getCoordinates().size() - 1; i >= 1; i--) {
@@ -156,9 +156,7 @@ public class Board implements IBoard {
             origin.move(amount, destination, silent);
         }
 
-        if (!silent) {
-            getHistory().addState(this);
-        }
+        return getHistory().addState(this);
     }
 
     @Override
@@ -169,27 +167,16 @@ public class Board implements IBoard {
     }
 
     @Override
-    public ISquare place(IPiece piece, IPlace place, boolean silent) {
+    public int place(IPiece piece, IPlace place, boolean silent) {
         int row = place.getRow();
         Row[] rows = getRows();
-        ISquare square = rows[row].place(piece, place, silent);
-        if (!silent) {
-            getHistory().addState(this);
-        }
-
-        return square;
+        rows[row].place(piece, place, silent);
+        return getHistory().addState(this);
     }
 
     @Override
-    public ISquare remove(IPiece piece, IPlace place, boolean silent) {
-        int row = place.getRow();
-        Row[] rows = getRows();
-        return rows[row].remove(piece, place, silent);
-    }
-
-    @Override
-    public void restore() {
-        IBoardState state = getHistory().getState();
+    public void restore(int id) {
+        IBoardState state = getHistory().toState(id);
         IPiece[][][] previous = state.getPieces();
         for (int rowIndex = 0; rowIndex < previous.length; rowIndex++) {
             IPiece[][] row = previous[rowIndex];
@@ -423,7 +410,7 @@ public class Board implements IBoard {
             getColumns()[i].reset();
         }
 
-        HISTORY.reset(this);
+        getHistory().reset(this);
     }
 
     @Override

@@ -5,7 +5,6 @@ import com.github.drsmugleaf.tak.board.IBoard;
 import com.github.drsmugleaf.tak.board.action.IAction;
 import com.github.drsmugleaf.tak.board.action.IMove;
 import com.github.drsmugleaf.tak.board.action.IPlace;
-import com.github.drsmugleaf.tak.board.layout.ISquare;
 import com.github.drsmugleaf.tak.game.IGame;
 import com.github.drsmugleaf.tak.pieces.IColor;
 
@@ -93,12 +92,14 @@ public abstract class Player implements IPlayer {
     }
 
     @Override
-    public final void move(IMove move, boolean silent) {
+    public final int move(IMove move, boolean silent) {
         if (!canMove(move)) {
             throw new IllegalArgumentException();
         }
 
-        GAME.move(this, move, silent);
+        int previousState = GAME.move(this, move, silent);
+        AVAILABLE_ACTIONS = null;
+        return previousState;
     }
 
     @Override
@@ -112,12 +113,14 @@ public abstract class Player implements IPlayer {
     }
 
     @Override
-    public final ISquare place(IPlace place, boolean silent) {
+    public final int place(IPlace place, boolean silent) {
         if (!canPlace(place)) {
             throw new IllegalArgumentException();
         }
 
-        return GAME.place(this, place, silent);
+        int previousState = GAME.place(this, place, silent);
+        AVAILABLE_ACTIONS = null;
+        return previousState;
     }
 
     @Override

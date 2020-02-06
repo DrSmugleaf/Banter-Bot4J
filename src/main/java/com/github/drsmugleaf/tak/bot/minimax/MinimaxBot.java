@@ -1,12 +1,12 @@
 package com.github.drsmugleaf.tak.bot.minimax;
 
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.tak.board.IBoard;
 import com.github.drsmugleaf.tak.board.action.IAction;
 import com.github.drsmugleaf.tak.board.layout.ISquare;
 import com.github.drsmugleaf.tak.board.layout.Row;
-import com.github.drsmugleaf.tak.game.IGame;
-import com.github.drsmugleaf.tak.board.*;
 import com.github.drsmugleaf.tak.bot.Bot;
+import com.github.drsmugleaf.tak.game.IGame;
 import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.pieces.IPiece;
 import com.github.drsmugleaf.tak.player.IPlayer;
@@ -43,18 +43,14 @@ public class MinimaxBot extends Bot {
     @Nullable
     @Override
     public IAction getNextAction() {
-        return getBestPlace().getKey();
+        Pair<IAction, Integer> bestAction = getBestAction();
+        System.out.println(bestAction.getValue());
+        return bestAction.getKey();
     }
 
-    protected Pair<IAction, Integer> getBestPlace() {
-        IBoard board = getGame().getBoard();
+    protected Pair<IAction, Integer> getBestAction() {
         IColor nextColor = getGame().getNextPlayer().getColor();
-
-        return getMax(getAvailableActions(), board, nextColor, Integer.MIN_VALUE, Integer.MAX_VALUE, DEPTH);
-    }
-
-    private boolean isTerminal(IBoard board) {
-        return board.getRoad() != null;
+        return getMax(nextColor, Integer.MIN_VALUE, Integer.MAX_VALUE, DEPTH);
     }
 
     protected int getScore(IBoard board, IColor color) {
@@ -96,43 +92,46 @@ public class MinimaxBot extends Bot {
         return score;
     }
 
-    protected final Pair<IAction, Integer> getMax(List<IAction> actions, IBoard board, IColor nextColor, int alpha, int beta, final int depth) {
+    protected final Pair<IAction, Integer> getMax(IColor nextColor, int alpha, int beta, final int depth) {
+        IPlayer nextPlayer = getGame().getPlayer(nextColor);
+        IBoard board = nextPlayer.getGame().getBoard();
+        List<IAction> actions = nextPlayer.getAvailableActions(board);
         IAction bestAction = null;
-        int score = 0;
+        int score;
 
-        for (IAction action : actions) {
-            int finalAlpha = alpha;
-            int finalBeta = beta;
-            score = action.with(board, nextColor, copy -> {
-                if (depth > 1 && !isTerminal(copy)) {
-                    List<IAction> availableActions = getGame().getOtherPlayer(this).getAvailableActions(copy);
-                    return getMax(availableActions, copy, nextColor.getOpposite(), finalAlpha, finalBeta, depth - 1).getValue();
+        if (depth == 0 || actions.isEmpty()) {
+            score = getScore(board, getColor());
+            return new Pair<>(bestAction, score);
+        } else {
+            for (IAction action : actions) {
+                int previousState = action.execute(nextPlayer, true);
+                if (getColor() == nextColor) {
+                    Pair<IAction, Integer> max = getMax(getColor().getOpposite(), alpha, beta, depth - 1);
+                    score = max.getValue();
+
+                    if (score > alpha) {
+                        alpha = score;
+                        bestAction = action;
+                    }
                 } else {
-                    int tempScore = getScore(copy, nextColor);
-                    return nextColor == getColor() ? tempScore : -tempScore;
-                }
-            }) - depth;
+                    Pair<IAction, Integer> max = getMax(getColor(), alpha, beta, depth - 1);
+                    score = max.getValue();
 
-            if (nextColor == getColor()) {
-                if (score > alpha) {
-                    alpha = score;
-                    bestAction = action;
+                    if (score < beta) {
+                        beta = score;
+                        bestAction = action;
+                    }
                 }
-            } else if (nextColor.getOpposite() == getColor()) {
-                if (score < beta) {
-                    beta = score;
-                    bestAction = action;
+
+                getGame().restore(previousState);
+
+                if (alpha >= beta) {
+                    break;
                 }
-            } else {
-                throw new IllegalArgumentException("Unrecognized color: " + nextColor);
             }
 
-            if (alpha >= beta) {
-                break;
-            }
+            return new Pair<>(bestAction, (nextColor == getColor()) ? alpha : beta);
         }
-
-        return new Pair<>(bestAction, score);
     }
 
 }

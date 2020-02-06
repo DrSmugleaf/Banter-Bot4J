@@ -7,7 +7,6 @@ import com.github.drsmugleaf.tak.board.action.IMove;
 import com.github.drsmugleaf.tak.board.action.IPlace;
 import com.github.drsmugleaf.tak.board.coordinates.IMovingCoordinates;
 import com.github.drsmugleaf.tak.board.layout.IPreset;
-import com.github.drsmugleaf.tak.board.layout.ISquare;
 import com.github.drsmugleaf.tak.pieces.Color;
 import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.pieces.IPiece;
@@ -88,7 +87,7 @@ public class Game implements IGame {
     }
 
     @Override
-    public void move(IPlayer player, IMove move, boolean silent) {
+    public int move(IPlayer player, IMove move, boolean silent) {
         if (!canMove(player, move)) {
             StringBuilder error = new StringBuilder("Illegal move call");
             for (IMovingCoordinates coordinate : move.getCoordinates()) {
@@ -98,8 +97,15 @@ public class Game implements IGame {
             throw new IllegalGameCall(error.toString());
         }
 
-        getBoard().move(move, silent);
-        onPieceMove(player, move);
+        int previousState = getBoard().move(move, silent);
+
+        if (!silent) {
+            onPieceMove(player, move);
+        }
+
+        nextPlayer = getOtherPlayer(player);
+
+        return previousState;
     }
 
     @Override
@@ -113,15 +119,27 @@ public class Game implements IGame {
     }
 
     @Override
-    public ISquare place(IPlayer player, IPlace place, boolean silent) {
+    public int place(IPlayer player, IPlace place, boolean silent) {
         if (!canPlace(player, place)) {
             throw new IllegalGameCall("Illegal place call, piece type " + place.getType() + " at row " + place.getRow() + " and column " + place.getColumn());
         }
 
-        IPiece piece = player.getHand().takePiece(place.getType());
-        ISquare square = getBoard().place(piece, place, silent);
-        onPiecePlace(player, place);
-        return square;
+        IPiece piece = player.getHand().takePiece(place.getType(), silent);
+        int previousState = getBoard().place(piece, place, silent);
+
+        if (!silent) {
+            onPiecePlace(player, place);
+        }
+
+        nextPlayer = getOtherPlayer(player);
+
+        return previousState;
+    }
+
+    @Override
+    public void restore(int state) {
+        nextPlayer = (state & 1) == 0 ? getPlayer(Color.BLACK) : getPlayer(Color.WHITE);
+        getBoard().restore(state);
     }
 
     @Nullable
@@ -243,7 +261,6 @@ public class Game implements IGame {
             end();
         }
 
-        nextPlayer = getOtherPlayer(nextPlayer);
         onTurnEnd(getOtherPlayer(nextPlayer));
     }
 

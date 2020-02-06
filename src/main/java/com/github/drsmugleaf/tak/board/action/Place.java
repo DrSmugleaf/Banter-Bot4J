@@ -1,16 +1,12 @@
 package com.github.drsmugleaf.tak.board.action;
 
 import com.github.drsmugleaf.tak.board.IBoard;
-import com.github.drsmugleaf.tak.board.layout.ISquare;
 import com.github.drsmugleaf.tak.board.coordinates.Coordinates;
-import com.github.drsmugleaf.tak.pieces.IColor;
-import com.github.drsmugleaf.tak.pieces.IPiece;
+import com.github.drsmugleaf.tak.board.layout.ISquare;
 import com.github.drsmugleaf.tak.pieces.IType;
-import com.github.drsmugleaf.tak.pieces.Piece;
 import com.github.drsmugleaf.tak.player.IPlayer;
 
 import java.util.Objects;
-import java.util.function.Function;
 
 /**
  * Created by DrSmugleaf on 13/01/2020
@@ -45,18 +41,8 @@ public class Place extends Coordinates implements IPlace {
     }
 
     @Override
-    public void execute(IPlayer player, boolean silent) {
-        player.place(this, silent);
-    }
-
-    @Override
-    public <T> T with(IBoard board, IColor nextColor, Function<IBoard, T> function) {
-        IPiece piece = new Piece(nextColor, getType());
-        board.place(piece, this, true);
-        T result = function.apply(board);
-        board.remove(piece, this, true);
-
-        return result;
+    public int execute(IPlayer player, boolean silent) {
+        return player.place(this, silent);
     }
 
     @Override

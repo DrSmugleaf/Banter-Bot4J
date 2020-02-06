@@ -22,11 +22,10 @@ public interface IBoard {
     IPreset getPreset();
     IBoardHistory getHistory();
     boolean canMove(IMove move);
-    void move(IMove move, boolean silent);
+    int move(IMove move, boolean silent);
     boolean canPlace(IPlace place);
-    ISquare place(IPiece piece, IPlace place, boolean silent);
-    ISquare remove(IPiece piece, IPlace place, boolean silent);
-    void restore();
+    int place(IPiece piece, IPlace place, boolean silent);
+    void restore(int state);
     Row getFirstRow();
     Row getLastRow();
     Column getFirstColumn();

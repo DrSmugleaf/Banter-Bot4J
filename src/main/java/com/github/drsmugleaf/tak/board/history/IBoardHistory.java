@@ -11,11 +11,14 @@ import java.util.List;
 public interface IBoardHistory {
 
     int getID();
-    void addState(IBoard state);
+    int addState(IBoard state);
     List<IBoardState> getStates();
+    IBoardState getState(int id);
     IBoardState getState();
-    @Nullable
-    IBoardState getPrevious(IBoardState state);
+    IBoardState getPrevious();
+    IBoardState toState(int id);
+    IBoardState toPrevious();
+    IBoardState toPrevious(IBoardState state);
     @Nullable
     IBoardState getNext(IBoardState state);
     void reset(IBoard board);

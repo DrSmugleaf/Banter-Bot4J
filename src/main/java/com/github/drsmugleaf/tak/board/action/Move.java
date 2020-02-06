@@ -3,12 +3,10 @@ package com.github.drsmugleaf.tak.board.action;
 import com.github.drsmugleaf.tak.board.IBoard;
 import com.github.drsmugleaf.tak.board.coordinates.IMovingCoordinates;
 import com.github.drsmugleaf.tak.board.layout.IDirection;
-import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.player.IPlayer;
 import com.google.common.collect.ImmutableList;
 
 import java.util.Collection;
-import java.util.function.Function;
 
 /**
  * Created by DrSmugleaf on 13/01/2020
@@ -68,17 +66,8 @@ public class Move implements IMove {
     }
 
     @Override
-    public void execute(IPlayer player, boolean silent) {
-        player.move(this, silent);
-    }
-
-    @Override
-    public <T> T with(IBoard board, IColor nextColor, Function<IBoard, T> function) {
-        board.move(this, true);
-        T result = function.apply(board);
-        board.restore();
-
-        return result;
+    public int execute(IPlayer player, boolean silent) {
+        return player.move(this, silent);
     }
 
     @Override

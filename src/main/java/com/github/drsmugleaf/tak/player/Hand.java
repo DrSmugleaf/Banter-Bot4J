@@ -60,17 +60,19 @@ public class Hand {
         return false;
     }
 
-    public IPiece takePiece(IType type) {
+    public IPiece takePiece(IType type, boolean silent) {
         if (!has(type)) {
             throw new IllegalArgumentException("No pieces left in this hand of type " + type);
         }
 
-        if (type.isCapstone()) {
-            CAPSTONES--;
-        } else if (type.isFlatStone() || type.isStandingStone()) {
-            STONES--;
-        } else {
-            throw new IllegalArgumentException("Unrecognized piece type: " + type);
+        if (!silent) {
+            if (type.isCapstone()) {
+                CAPSTONES--;
+            } else if (type.isFlatStone() || type.isStandingStone()) {
+                STONES--;
+            } else {
+                throw new IllegalArgumentException("Unrecognized piece type: " + type);
+            }
         }
 
         return new Piece(COLOR, type);

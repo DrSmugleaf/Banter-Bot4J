@@ -29,10 +29,11 @@ public class BoardHistory implements IBoardHistory {
     }
 
     @Override
-    public void addState(IBoard board) {
+    public int addState(IBoard board) {
         id++;
         IBoardState state = new BoardState(id, board);
         STATES.add(id, state);
+        return id - 1;
     }
 
     @Override
@@ -41,19 +42,44 @@ public class BoardHistory implements IBoardHistory {
     }
 
     @Override
-    public IBoardState getState() {
-        return STATES.get(getID());
+    public IBoardState getState(int id) {
+        return STATES.get(id);
     }
 
-    @Nullable
     @Override
-    public IBoardState getPrevious(IBoardState state) {
-        int id = state.getID();
-        if (id < 0) {
-            return null;
+    public IBoardState getState() {
+        return getState(getID());
+    }
+
+    @Override
+    public IBoardState getPrevious() {
+        if (STATES.size() == 1) {
+            return STATES.get(0);
         }
 
-        return STATES.get(id);
+        return STATES.get(id - 2);
+    }
+
+    @Override
+    public IBoardState toState(int id) {
+        if (id < 0) {
+            id = 0;
+        }
+
+        IBoardState state = STATES.get(id);
+        STATES.removeIf(oldState -> oldState.getID() > state.getID());
+        this.id = state.getID();
+        return state;
+    }
+
+    @Override
+    public IBoardState toPrevious() {
+        return toPrevious(getState());
+    }
+
+    @Override
+    public IBoardState toPrevious(IBoardState state) {
+        return toState(state.getID() - 1);
     }
 
     @Nullable

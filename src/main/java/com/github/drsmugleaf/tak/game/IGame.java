@@ -4,7 +4,6 @@ import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.tak.board.IBoard;
 import com.github.drsmugleaf.tak.board.action.IMove;
 import com.github.drsmugleaf.tak.board.action.IPlace;
-import com.github.drsmugleaf.tak.board.layout.ISquare;
 import com.github.drsmugleaf.tak.pieces.IColor;
 import com.github.drsmugleaf.tak.player.IPlayer;
 import com.google.common.collect.ImmutableMap;
@@ -19,10 +18,11 @@ public interface IGame {
     ImmutableMap<IColor, IPlayer> getPlayers();
     boolean canMove(IPlayer player, IMove move);
     boolean canMove(IPlayer player, IMove move, IBoard board);
-    void move(IPlayer player, IMove move, boolean silent);
+    int move(IPlayer player, IMove move, boolean silent);
     boolean canPlace(IPlayer player, IPlace place);
     boolean canPlace(IPlayer player, IPlace place, IBoard board);
-    ISquare place(IPlayer player, IPlace place, boolean silent);
+    int place(IPlayer player, IPlace place, boolean silent);
+    void restore(int state);
     @Nullable
     IPlayer checkVictory();
     @Nullable
