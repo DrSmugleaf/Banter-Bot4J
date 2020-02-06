@@ -71,8 +71,11 @@ public abstract class Player implements IPlayer {
     @Override
     public final void setNextAction(IAction action) {
         NEXT_ACTION = action;
-        synchronized (this) {
-            notify();
+
+        if (isPassive()) {
+            synchronized (this) {
+                notify();
+            }
         }
     }
 
