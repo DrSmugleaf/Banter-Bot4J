@@ -23,7 +23,7 @@ public class NeuralBot extends Bot {
     public static int tie = 0;
 
     protected NeuralBot(String name, Game game, IColor color) {
-        super(name, game, color, true);
+        super(name, game, color, false);
     }
 
     @Contract("_ -> new")
