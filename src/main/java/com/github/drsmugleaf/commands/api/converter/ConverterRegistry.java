@@ -30,7 +30,7 @@ public class ConverterRegistry {
 
         return "";
     };
-    private final Map<TripleIdentifier, Converter> CONVERTERS = new HashMap<>();
+    private final Map<Identifier<?, ?, ?>, Converter<?, ?, ?>> CONVERTERS = new HashMap<>();
 
     public ConverterRegistry() {
         registerCommandTo(String.class, (s, e) -> s);
@@ -81,7 +81,7 @@ public class ConverterRegistry {
         });
     }
 
-    public ConverterRegistry register(Converter converter) {
+    public ConverterRegistry register(Converter<?, ?, ?> converter) {
         CONVERTERS.put(converter.getIdentifier(), converter);
         return this;
     }
@@ -93,7 +93,7 @@ public class ConverterRegistry {
             BiFunction<T, U, R> converterFunction,
             @Nullable BiFunction<CommandField, ? super R, String> validatorFunction
     ) {
-        TripleIdentifier<T, U, R> identifier = new TripleIdentifier<>(from1, from2, to);
+        Identifier<T, U, R> identifier = new Identifier<>(from1, from2, to);
         Validator<R> validator = new Validator<>(to, validatorFunction);
         Converter<T, U, R> converter = new Converter<>(identifier, converterFunction, validator);
         register(converter);
@@ -146,10 +146,18 @@ public class ConverterRegistry {
         return this;
     }
 
-    public ConverterRegistry registerConverters(List<Entry> commands) {
-        for (Entry entry : commands) {
-            Command command = entry.newInstance();
-            command.registerConverters(this);
+    public <T> ConverterRegistry registerTransformer(
+            Transformer<T> transformer
+    ) {
+        registerCommandTo(transformer.getType(), transformer.getTransformer(), null);
+        return this;
+    }
+
+    public ConverterRegistry registerConverters(List<Entry<? extends Command>> commands) {
+        for (Entry<? extends Command> entry : commands) {
+            for (Transformer<?> transformer : entry.getTransformers().get()) {
+                registerTransformer(transformer);
+            }
         }
 
         return this;
@@ -161,7 +169,7 @@ public class ConverterRegistry {
         return (Converter<T, U, R>) CONVERTERS
                 .entrySet()
                 .stream()
-                .filter(entry -> entry.getKey().equals(new TripleIdentifier(from1, from2, to)))
+                .filter(entry -> entry.getKey().equals(new Identifier<>(from1, from2, to)))
                 .map(Map.Entry::getValue)
                 .findFirst()
                 .orElse(null);

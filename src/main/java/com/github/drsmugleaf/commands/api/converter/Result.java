@@ -9,9 +9,10 @@ public class Result<E> {
 
     @Nullable
     private final E ELEMENT;
+    @Nullable
     private final String ERROR_RESPONSE;
 
-    public Result(@Nullable E element, String errorResponse) {
+    public Result(@Nullable E element, @Nullable String errorResponse) {
         ELEMENT = element;
         ERROR_RESPONSE = errorResponse;
     }
@@ -22,9 +23,10 @@ public class Result<E> {
     }
 
     public boolean isValid() {
-        return ERROR_RESPONSE.isEmpty();
+        return ERROR_RESPONSE == null;
     }
 
+    @Nullable
     public String getErrorResponse() {
         return ERROR_RESPONSE;
     }

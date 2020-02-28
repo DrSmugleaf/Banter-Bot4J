@@ -14,7 +14,7 @@ import java.util.List;
  */
 @CommandInfo(
         aliases = {"undostop"},
-        tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE},
+        tags = {Tags.DELETE_COMMAND_MESSAGE},
         description = "Restore the stopped tracks back to the queue"
 )
 public class Restore extends MusicCommand {

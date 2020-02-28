@@ -23,13 +23,9 @@ public class Validator<E> {
         return IDENTIFIER;
     }
 
-    public String validate(CommandField argument, E value) {
-        if (VALIDATOR == null) {
-            return "";
-        }
-
-        String error = VALIDATOR.apply(argument, value);
-        return error == null ? "" : error;
+    @Nullable
+    public String getError(CommandField argument, E value) {
+        return VALIDATOR == null ? null : VALIDATOR.apply(argument, value);
     }
 
 }

@@ -3,7 +3,7 @@ package com.github.drsmugleaf.commands.roll;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
+import com.github.drsmugleaf.commands.api.converter.TransformerSet;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -61,7 +61,9 @@ public class Roll extends Command {
     }
 
     @Override
-    public void registerConverters(ConverterRegistry converter) {
-        converter.registerCommandTo(RollString.class, (s, e) -> new RollString(s));
+    public TransformerSet getTransformers() {
+        return TransformerSet.of(
+                RollString.class, (s, e) -> new RollString(s)
+        );
     }
 }

@@ -4,7 +4,7 @@ import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
+import com.github.drsmugleaf.commands.api.converter.TransformerSet;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 
 import javax.imageio.ImageIO;
@@ -59,8 +59,10 @@ public class MergeImages extends Command {
     }
 
     @Override
-    public void registerConverters(ConverterRegistry converter) {
-        converter.registerCommandTo(Orientation.class, (s, e) -> Orientation.valueOf(s.toUpperCase()));
+    public TransformerSet getTransformers() {
+        return TransformerSet.of(
+                Orientation.class, (s, e) -> Orientation.valueOf(s.toUpperCase())
+        );
     }
 
 }

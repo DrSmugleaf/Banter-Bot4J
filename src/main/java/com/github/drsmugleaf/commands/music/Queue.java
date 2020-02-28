@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
  * Created by DrSmugleaf on 09/06/2018
  */
 @CommandInfo(
-        tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE},
+        tags = {Tags.DELETE_COMMAND_MESSAGE},
         description = "The current queue of tracks"
 )
 public class Queue extends MusicCommand {

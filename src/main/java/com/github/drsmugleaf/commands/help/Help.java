@@ -5,7 +5,7 @@ import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
+import com.github.drsmugleaf.commands.api.converter.TransformerSet;
 import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
 import com.github.drsmugleaf.commands.api.registry.Entry;
 import com.google.common.collect.ImmutableList;
@@ -20,14 +20,14 @@ public class Help extends Command {
 
     @Argument(position = 1, examples = "play", maxWords = Integer.MAX_VALUE, optional = true)
     @Nullable
-    private Entry command;
+    private Entry<? extends Command> command;
 
     @Override
     public void run() {
         if (command == null) {
-            ImmutableList<Entry> commands = BanterBot4J.getHandler().getRegistry().getEntries();
+            ImmutableList<Entry<? extends Command>> commands = BanterBot4J.getHandler().getRegistry().getEntries();
             StringBuilder response = new StringBuilder("\n");
-            for (Entry command : commands) {
+            for (Entry<? extends Command> command : commands) {
                 String name = command.getName();
                 String description = command.getCommandInfo().description();
 
@@ -46,11 +46,13 @@ public class Help extends Command {
     }
 
     @Override
-    public void registerConverters(ConverterRegistry converter) {
-        converter.registerCommandTo(Entry.class, (s, e) -> {
-            CommandSearchResult search = BanterBot4J.getHandler().getRegistry().findCommand(s);
-            return search == null ? null : search.getEntry();
-        });
+    public TransformerSet getTransformers() {
+        return TransformerSet.of(
+                Entry.class, (s, e) -> {
+                    CommandSearchResult<?> search = BanterBot4J.getHandler().getRegistry().findCommand(s);
+                    return search == null ? null : search.getEntry();
+                }
+        );
     }
 
 }

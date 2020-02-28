@@ -1,11 +1,11 @@
 package com.github.drsmugleaf.commands.api.registry;
 
 import com.github.drsmugleaf.commands.api.Argument;
-import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.ICommand;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by DrSmugleaf on 13/04/2019
@@ -40,8 +40,8 @@ public class CommandField {
         return argument.maximum();
     }
 
-    public static List<CommandField> from(Class<? extends Command> command) {
-        List<CommandField> fields = new ArrayList<>();
+    public static Set<CommandField> from(Class<? extends ICommand> command) {
+        Set<CommandField> fields = new HashSet<>();
 
         for (Field field : command.getDeclaredFields()) {
             if (field.isAnnotationPresent(Argument.class)) {

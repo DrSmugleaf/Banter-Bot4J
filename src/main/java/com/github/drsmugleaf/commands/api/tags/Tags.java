@@ -21,17 +21,6 @@ public enum Tags implements Tag {
             event.getMessage().delete().subscribe();
         }
     },
-    GUILD_ONLY {
-        @Override
-        public boolean isValid(MessageCreateEvent event) {
-            return event.getGuild().blockOptional().isPresent();
-        }
-
-        @Override
-        public String message() {
-            return "That command must be used in a server channel.";
-        }
-    },
     OWNER_ONLY {
         @Override
         public boolean isValid(MessageCreateEvent event) {
@@ -46,7 +35,7 @@ public enum Tags implements Tag {
     SAME_VOICE_CHANNEL {
         @Override
         public boolean isValid(MessageCreateEvent event) {
-            if (!GUILD_ONLY.isValid(event)) {
+            if (event.getGuildId().isEmpty()) {
                 return false;
             }
 
@@ -73,7 +62,7 @@ public enum Tags implements Tag {
     VOICE_ONLY {
         @Override
         public boolean isValid(MessageCreateEvent event) {
-            if (!GUILD_ONLY.isValid(event)) {
+            if (event.getGuildId().isEmpty()) {
                 return false;
             }
 

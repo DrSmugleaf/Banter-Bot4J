@@ -3,10 +3,10 @@ package com.github.drsmugleaf.commands;
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.Argument;
-import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
-import com.github.drsmugleaf.commands.api.tags.Tags;
+import com.github.drsmugleaf.commands.api.GuildCommand;
+import com.github.drsmugleaf.commands.api.converter.Transformer;
+import com.github.drsmugleaf.commands.api.converter.TransformerSet;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Role;
@@ -16,7 +16,7 @@ import discord4j.core.object.util.PermissionSet;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,10 +24,9 @@ import java.util.stream.Collectors;
  * Created by DrSmugleaf on 23/01/2018.
  */
 @CommandInfo(
-        tags = {Tags.GUILD_ONLY},
         description = "Change your name color"
 )
-public class ColorCommand extends Command {
+public class ColorCommand extends GuildCommand {
 
     @Nullable
     private static Color resolve(String string) {
@@ -77,14 +76,14 @@ public class ColorCommand extends Command {
                         Role colorRole = roles.get(0);
                         colorRole
                                 .getPosition()
-                                .filterWhen(colorPosition -> SELF_MEMBER
+                                .filterWhen(colorPosition -> MEMBER
                                         .getRoles()
                                         .filter(botRole -> botRole.getPermissions().contains(Permission.MANAGE_ROLES))
                                         .single()
                                         .hasElement()
                                 )
                                 .doOnDiscard(Integer.class, (position) -> reply("I don't have permission to manage roles.").subscribe())
-                                .filterWhen(colorPosition -> SELF_MEMBER
+                                .filterWhen(colorPosition -> MEMBER
                                         .getRoles()
                                         .filter(botRole -> botRole.getPermissions().contains(Permission.MANAGE_ROLES))
                                         .flatMap(Role::getPosition)
@@ -117,7 +116,7 @@ public class ColorCommand extends Command {
                             EVENT
                                     .getMessage()
                                     .getAuthorAsMember()
-                                    .filterWhen(author -> SELF_MEMBER
+                                    .filterWhen(author -> MEMBER
                                             .getRoles()
                                             .filter(botRole -> botRole.getPermissions().contains(Permission.MANAGE_ROLES))
                                             .single()
@@ -149,8 +148,10 @@ public class ColorCommand extends Command {
     }
 
     @Override
-    public void registerConverters(ConverterRegistry converter) {
-        converter.registerCommandTo(Color.class, (s, e) -> resolve(s));
+    public TransformerSet getTransformers() {
+        return TransformerSet.of(
+                new Transformer<>(Color.class, (s, e) -> resolve(s))
+        );
     }
 
 }

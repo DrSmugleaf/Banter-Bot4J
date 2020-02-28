@@ -22,7 +22,6 @@ import java.util.Map;
  */
 @CommandInfo(
         tags = {
-                Tags.GUILD_ONLY,
                 Tags.VOICE_ONLY,
                 Tags.SAME_VOICE_CHANNEL,
                 Tags.DELETE_COMMAND_MESSAGE

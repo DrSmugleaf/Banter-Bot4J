@@ -1,80 +1,37 @@
 package com.github.drsmugleaf.commands.api.registry;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
-import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
-import com.google.common.collect.ImmutableList;
-import discord4j.core.object.entity.Member;
+import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.commands.api.*;
+import com.github.drsmugleaf.commands.api.converter.Result;
+import com.github.drsmugleaf.commands.api.converter.TransformerSet;
+import com.github.drsmugleaf.commands.api.tags.Tag;
+import com.github.drsmugleaf.commands.api.tags.Tags;
+import com.google.common.collect.ImmutableSet;
 import discord4j.core.object.entity.User;
-import reactor.core.publisher.Mono;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by DrSmugleaf on 13/04/2019
+ * Created by DrSmugleaf on 28/02/2020
  */
-public class Entry {
+public abstract class Entry<T extends ICommand> {
 
-    private final Class<? extends Command> COMMAND;
+    private final Class<T> COMMAND;
     private final CommandInfo COMMAND_INFO;
-    private final ImmutableList<CommandField> COMMAND_FIELDS;
+    private final ImmutableSet<CommandField> COMMAND_FIELDS;
+    private final TransformerSet TRANSFORMERS;
 
-    protected Entry(Class<? extends Command> command) {
+    public Entry(Class<T> command) {
         COMMAND = command;
         COMMAND_INFO = command.getDeclaredAnnotation(CommandInfo.class);
-        COMMAND_FIELDS = ImmutableList.copyOf(CommandField.from(command));
+        COMMAND_FIELDS = ImmutableSet.copyOf(CommandField.from(command));
+        TRANSFORMERS = emptyInstance().getTransformers();
     }
 
-    public static void setEvent(Command command, CommandReceivedEvent event) {
-        try {
-            Command.class.getDeclaredField("EVENT").set(command, event);
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            throw new IllegalStateException("Error setting event field for command " + command, e);
-        }
-    }
-
-    public static void setArgs(Command command, Arguments args) {
-        try {
-            Command.class.getDeclaredField("ARGUMENTS").set(command, args);
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            throw new IllegalStateException("Error setting args field for command " + command, e);
-        }
-    }
-
-    public static void setSelfUser(Command command, CommandReceivedEvent event) {
-        User selfUser = event
-                .getClient()
-                .getSelf()
-                .blockOptional()
-                .orElseThrow(() -> new IllegalStateException("Unable to get self user"));
-
-        try {
-            Command.class.getDeclaredField("SELF_USER").set(command, selfUser);
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            throw new IllegalStateException("Error setting self user field for command " + command, e);
-        }
-    }
-
-    public static void setSelfMember(Command command, CommandReceivedEvent event) {
-        Member selfMember = event
-                .getClient()
-                .getSelf()
-                .zipWith(Mono.justOrEmpty(event.getGuildId()))
-                .flatMap(tuple -> tuple.getT1().asMember(tuple.getT2()))
-                .blockOptional()
-                .orElse(null);
-
-        try {
-            Command.class.getDeclaredField("SELF_MEMBER").set(command, selfMember);
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            throw new IllegalStateException("Error setting self member field for command " + command, e);
-        }
-    }
-
-    public Class<? extends Command> getCommand() {
+    public Class<T> getCommand() {
         return COMMAND;
     }
 
@@ -116,16 +73,65 @@ public class Entry {
         return aliases;
     }
 
-    public ImmutableList<CommandField> getCommandFields() {
+    public ImmutableSet<CommandField> getCommandFields() {
         return COMMAND_FIELDS;
     }
 
-    public Command newInstance() {
+    public TransformerSet getTransformers() {
+        return TRANSFORMERS;
+    }
+
+    private T emptyInstance() {
         try {
-            return COMMAND.getDeclaredConstructor().newInstance();
+            return getCommand().getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new IllegalStateException("Error creating instance of command " + getName(), e);
         }
+    }
+
+    @Nullable
+    public T newInstance(CommandReceivedEvent event, Arguments arguments) {
+        T command = emptyInstance();
+
+        for (CommandField commandField : getCommandFields()) {
+            Field field = commandField.getField();
+            field.setAccessible(true);
+
+            Object def;
+            try {
+                def = field.get(command);
+            } catch (IllegalAccessException e) {
+                throw new IllegalStateException("Error getting command argument " + field, e);
+            }
+
+            Result<?> result = arguments.getArg(commandField, def);
+            if (!result.isValid()) {
+                event.reply(result.getErrorResponse()).subscribe();
+                return null;
+            }
+
+            try {
+                field.set(command, result.getElement());
+            } catch (IllegalAccessException e) {
+                throw new IllegalStateException("Error setting command argument " + field, e);
+            }
+        }
+
+        User user = event
+                .getClient()
+                .getSelf()
+                .blockOptional()
+                .orElseThrow(() -> new IllegalStateException("Unable to get self user"));
+
+        try {
+            Command.class.getDeclaredField("EVENT").set(command, event);
+            Command.class.getDeclaredField("ARGUMENTS").set(command, arguments);
+            Command.class.getDeclaredField("USER").set(command, user);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            throw new IllegalStateException("Error setting fields for command " + command, e);
+        }
+
+        return command;
     }
 
     public String getFormats() {
@@ -183,12 +189,12 @@ public class Entry {
     private String getOptionalExamples() {
         List<String> examples = new ArrayList<>();
 
-        for (CommandField field1 : getCommandFields()) {
-            if (!field1.getArgument().optional()) {
+        for (CommandField field : getCommandFields()) {
+            if (!field.getArgument().optional()) {
                 continue;
             }
 
-            String example = getAllExampleCombinations(BanterBot4J.BOT_PREFIX + getName(), field1.getArgument().examples());
+            String example = getAllExampleCombinations(BanterBot4J.BOT_PREFIX + getName(), field.getArgument().examples());
             examples.add(example);
         }
 
@@ -202,6 +208,13 @@ public class Entry {
 
     public String getFormatsExamples() {
         return getFormats() + "\n" + getExamples();
+    }
+
+    public void executeTags(CommandReceivedEvent event) {
+        Tags[] tags = getCommandInfo().tags();
+        for (Tag tag : tags) {
+            tag.execute(event);
+        }
     }
 
 }

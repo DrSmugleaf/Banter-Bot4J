@@ -9,17 +9,17 @@ import java.util.function.BiFunction;
  */
 public class Converter<T, U, R> {
 
-    private final TripleIdentifier<T, U, R> IDENTIFIER;
+    private final Identifier<T, U, R> IDENTIFIER;
     private final BiFunction<T, U, R> CONVERTER;
     private final Validator<R> VALIDATOR;
 
-    public Converter(TripleIdentifier<T, U, R> identifier, BiFunction<T, U, R> converter, Validator<R> validator) {
+    public Converter(Identifier<T, U, R> identifier, BiFunction<T, U, R> converter, Validator<R> validator) {
         IDENTIFIER = identifier;
         CONVERTER = converter;
         VALIDATOR = validator;
     }
 
-    public TripleIdentifier<T, U, R> getIdentifier() {
+    public Identifier<T, U, R> getIdentifier() {
         return IDENTIFIER;
     }
 
@@ -31,7 +31,7 @@ public class Converter<T, U, R> {
             throw new ConversionException("Error converting value " + in1 + " and " + in2 + " for field " + field);
         }
 
-        String error = VALIDATOR.validate(field, out);
+        String error = VALIDATOR.getError(field, out);
 
         return new Result<>(out, error);
     }

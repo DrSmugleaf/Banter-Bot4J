@@ -62,7 +62,7 @@ public class Handler {
                     return !member.isBlacklisted;
                 })
                 .flatMap(tuple -> {
-                    CommandSearchResult search = COMMAND_REGISTRY.findCommand(tuple.getT1());
+                    CommandSearchResult<?> search = COMMAND_REGISTRY.findCommand(tuple.getT1());
                     if (search == null) {
                         return Mono.empty();
                     }
@@ -99,7 +99,7 @@ public class Handler {
                         }
                     }
 
-                    Command.run(result, commandEvent);
+                    result.run(commandEvent);
                 })
                 .then();
     }

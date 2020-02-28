@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.commands.music;
 
-import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.GuildCommand;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.MessageChannel;
@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 /**
  * Created by DrSmugleaf on 28/08/2018
  */
-public abstract class MusicCommand extends Command {
+public abstract class MusicCommand extends GuildCommand {
 
     private static final Map<Guild, Message> LAST_MESSAGES = new HashMap<>();
 

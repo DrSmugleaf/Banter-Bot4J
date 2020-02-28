@@ -4,7 +4,7 @@ import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
+import com.github.drsmugleaf.commands.api.converter.TransformerSet;
 import com.github.drsmugleaf.database.model.EveTimerModel;
 import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
@@ -90,21 +90,23 @@ public class EveTimer extends Command {
     }
 
     @Override
-    public void registerConverters(ConverterRegistry converter) {
-        converter.registerCommandTo(ZonedDateTime.class, (s, e) -> {
-            Long days = parseDatePortion(s, Pattern.compile("(\\d+)d"));
-            Long hours = parseDatePortion(s, Pattern.compile("(\\d+)h"));
-            Long minutes = parseDatePortion(s, Pattern.compile("(\\d+)m"));
-            Long seconds = parseDatePortion(s, Pattern.compile("(\\d+)s"));
+    public TransformerSet getTransformers() {
+        return TransformerSet.of(
+                ZonedDateTime.class, (s, e) -> {
+                    Long days = parseDatePortion(s, Pattern.compile("(\\d+)d"));
+                    Long hours = parseDatePortion(s, Pattern.compile("(\\d+)h"));
+                    Long minutes = parseDatePortion(s, Pattern.compile("(\\d+)m"));
+                    Long seconds = parseDatePortion(s, Pattern.compile("(\\d+)s"));
 
-            ZonedDateTime time = ZonedDateTime.now(EveTimerModel.EVE_TIMEZONE);
-            if (days != null) time = time.plusDays(days);
-            if (hours != null) time = time.plusHours(hours);
-            if (minutes != null) time = time.plusMinutes(minutes);
-            if (seconds != null) time = time.plusSeconds(seconds);
+                    ZonedDateTime time = ZonedDateTime.now(EveTimerModel.EVE_TIMEZONE);
+                    if (days != null) time = time.plusDays(days);
+                    if (hours != null) time = time.plusHours(hours);
+                    if (minutes != null) time = time.plusMinutes(minutes);
+                    if (seconds != null) time = time.plusSeconds(seconds);
 
-            return time;
-        });
+                    return time;
+                }
+        );
     }
 
 }

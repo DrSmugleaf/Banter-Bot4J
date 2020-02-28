@@ -1,10 +1,9 @@
 package com.github.drsmugleaf.commands.translate;
 
 import com.github.drsmugleaf.commands.api.Argument;
-import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
-import com.github.drsmugleaf.commands.api.tags.Tags;
+import com.github.drsmugleaf.commands.api.GuildCommand;
+import com.github.drsmugleaf.commands.api.converter.TransformerSet;
 import com.github.drsmugleaf.database.model.BridgedChannel;
 import com.github.drsmugleaf.translator.Languages;
 import discord4j.core.object.entity.Guild;
@@ -16,10 +15,9 @@ import discord4j.core.object.util.Permission;
  */
 @CommandInfo(
         permissions = {Permission.MANAGE_CHANNELS},
-        tags = {Tags.GUILD_ONLY},
         description = "Bridge two Discord channels to send and translate messages between them"
 )
-public class Bridge extends Command {
+public class Bridge extends GuildCommand {
 
     @Argument(position = 1, examples = "general")
     private TextChannel firstChannel;
@@ -56,16 +54,16 @@ public class Bridge extends Command {
     }
 
     @Override
-    public void registerConverters(ConverterRegistry converter) {
-        converter.registerCommandTo(TextChannel.class, (s, e) -> e
-                .getGuild()
-                .flatMapMany(Guild::getChannels)
-                .filter(channel -> channel.getName().equalsIgnoreCase(s) && channel instanceof TextChannel)
-                .cast(TextChannel.class)
-                .blockFirst()
+    public TransformerSet getTransformers() {
+        return TransformerSet.of(
+                TextChannel.class, (s, e) -> e
+                        .getGuild()
+                        .flatMapMany(Guild::getChannels)
+                        .filter(channel -> channel.getName().equalsIgnoreCase(s) && channel instanceof TextChannel)
+                        .cast(TextChannel.class)
+                        .blockFirst(),
+                Languages.class, (s, e) -> Languages.getLanguage(s)
         );
-
-        converter.registerCommandTo(Languages.class, (s, e) -> Languages.getLanguage(s));
     }
 
 }

@@ -4,8 +4,7 @@ import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
-import com.github.drsmugleaf.deadbydaylight.dennisreep.ICharacter;
+import com.github.drsmugleaf.commands.api.converter.TransformerSet;
 import com.github.drsmugleaf.deadbydaylight.dennisreep.*;
 
 import java.io.InputStream;
@@ -123,8 +122,10 @@ public class DBDRoulette extends Command {
     }
 
     @Override
-    public void registerConverters(ConverterRegistry converter) {
-        converter.registerCommandTo(RouletteTypes.class, (s, e) -> RouletteTypes.from(s));
+    public TransformerSet getTransformers() {
+        return TransformerSet.of(
+                RouletteTypes.class, (s, e) -> RouletteTypes.from(s)
+        );
     }
 
 }

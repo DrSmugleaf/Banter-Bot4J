@@ -19,25 +19,31 @@ import java.util.Set;
 public class CommandRegistry {
 
     private final ConverterRegistry CONVERTERS;
-    private final ImmutableList<Entry> ENTRIES;
+    private final ImmutableList<Entry<? extends Command>> ENTRIES;
 
     public CommandRegistry(List<Class<Command>> commands) {
         CONVERTERS = new ConverterRegistry();
 
-        List<Entry> entries = new ArrayList<>();
-        for (Class<Command> command : commands) {
+        List<Entry<? extends Command>> entries = new ArrayList<>();
+        for (Class<? extends Command> command : commands) {
             if (Modifier.isAbstract(command.getModifiers())) {
                 continue;
             }
 
-            Entry entry = new Entry(command);
+            Entry<? extends Command> entry;
+            try {
+                entry = command.getDeclaredConstructor().newInstance().getEntry();
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Error creating instance of command " + command, e);
+            }
+
             entries.add(entry);
         }
 
         ENTRIES = ImmutableList.copyOf(entries);
         CONVERTERS.registerConverters(entries);
 
-        List<CommandSearchResult> duplicates = findDuplicates();
+        List<CommandSearchResult<?>> duplicates = findDuplicates();
         if (!duplicates.isEmpty()) {
             String duplicatesString = formatDuplicates(duplicates);
             throw new DuplicateCommandNameException(duplicatesString);
@@ -48,18 +54,18 @@ public class CommandRegistry {
         return CONVERTERS;
     }
 
-    public ImmutableList<Entry> getEntries() {
+    public ImmutableList<Entry<? extends Command>> getEntries() {
         return ENTRIES;
     }
 
-    private List<CommandSearchResult> findDuplicates() {
+    private List<CommandSearchResult<?>> findDuplicates() {
         Set<String> uniqueAliases = new HashSet<>();
-        List<CommandSearchResult> duplicateAliases = new ArrayList<>();
+        List<CommandSearchResult<?>> duplicateAliases = new ArrayList<>();
 
-        for (Entry entry : ENTRIES) {
+        for (Entry<? extends Command> entry : ENTRIES) {
             for (String alias : entry.getAllAliases()) {
                 if (!uniqueAliases.add(alias)) {
-                    CommandSearchResult search = new CommandSearchResult(entry, alias);
+                    CommandSearchResult<?> search = new CommandSearchResult<>(entry, alias);
                     duplicateAliases.add(search);
                 }
             }
@@ -68,13 +74,13 @@ public class CommandRegistry {
         return duplicateAliases;
     }
 
-    private String formatDuplicates(List<CommandSearchResult> duplicates) {
+    private String formatDuplicates(List<CommandSearchResult<?>> duplicates) {
         if (duplicates.isEmpty()) {
             return "No duplicate command names found";
         }
 
         StringBuilder builder = new StringBuilder("Duplicate command names found:");
-        for (CommandSearchResult duplicate : duplicates) {
+        for (CommandSearchResult<?> duplicate : duplicates) {
             builder
                     .append("\n")
                     .append(duplicate.getEntry())
@@ -86,20 +92,20 @@ public class CommandRegistry {
     }
 
     @Nullable
-    public CommandSearchResult findCommand(String message) {
+    public CommandSearchResult<?> findCommand(String message) {
         if (message.startsWith(BanterBot4J.BOT_PREFIX)) {
             message = message.substring(BanterBot4J.BOT_PREFIX.length()).toLowerCase();
         }
 
-        List<CommandSearchResult> matches = new ArrayList<>();
+        List<CommandSearchResult<?>> matches = new ArrayList<>();
         List<String> argsList = Arguments.parseArgs(message);
         while (argsList.size() > 0) {
             String args = String.join(" ", argsList);
 
-            for (Entry entry : ENTRIES) {
+            for (Entry<? extends Command> entry : ENTRIES) {
                 for (String alias : entry.getAllAliases()) {
                     if (alias.equalsIgnoreCase(args)) {
-                        CommandSearchResult search = new CommandSearchResult(entry, alias);
+                        CommandSearchResult<?> search = new CommandSearchResult<>(entry, alias);
                         matches.add(search);
                     }
                 }
