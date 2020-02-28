@@ -32,7 +32,7 @@ public class CommandRegistry {
 
             Entry<? extends Command> entry;
             try {
-                entry = command.getDeclaredConstructor().newInstance().getEntry();
+                entry = command.getDeclaredConstructor().newInstance().toEntry();
             } catch (Exception e) {
                 throw new IllegalArgumentException("Error creating instance of command " + command, e);
             }

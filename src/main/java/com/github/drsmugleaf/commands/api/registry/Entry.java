@@ -2,13 +2,15 @@ package com.github.drsmugleaf.commands.api.registry;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.commands.api.*;
+import com.github.drsmugleaf.commands.api.Arguments;
+import com.github.drsmugleaf.commands.api.CommandInfo;
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
+import com.github.drsmugleaf.commands.api.ICommand;
 import com.github.drsmugleaf.commands.api.converter.Result;
 import com.github.drsmugleaf.commands.api.converter.TransformerSet;
 import com.github.drsmugleaf.commands.api.tags.Tag;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 import com.google.common.collect.ImmutableSet;
-import discord4j.core.object.entity.User;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -115,20 +117,6 @@ public abstract class Entry<T extends ICommand> {
             } catch (IllegalAccessException e) {
                 throw new IllegalStateException("Error setting command argument " + field, e);
             }
-        }
-
-        User user = event
-                .getClient()
-                .getSelf()
-                .blockOptional()
-                .orElseThrow(() -> new IllegalStateException("Unable to get self user"));
-
-        try {
-            Command.class.getDeclaredField("EVENT").set(command, event);
-            Command.class.getDeclaredField("ARGUMENTS").set(command, arguments);
-            Command.class.getDeclaredField("USER").set(command, user);
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            throw new IllegalStateException("Error setting fields for command " + command, e);
         }
 
         return command;

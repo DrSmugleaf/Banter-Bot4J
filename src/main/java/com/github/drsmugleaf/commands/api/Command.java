@@ -4,7 +4,6 @@ import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.converter.TransformerSet;
 import com.github.drsmugleaf.commands.api.registry.CommandEntry;
-import com.github.drsmugleaf.commands.api.registry.Entry;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.User;
 import discord4j.core.spec.MessageCreateSpec;
@@ -50,9 +49,9 @@ public abstract class Command implements ICommand {
         return TransformerSet.of();
     }
 
-    @SuppressWarnings("unchecked")
-    public Entry<? extends Command> getEntry() {
-        return new CommandEntry<>((Class<Command>) getClass());
+    @Override
+    public CommandEntry<? extends Command> toEntry() {
+        return new CommandEntry<>(getClass());
     }
 
     public Mono<Message> reply(Consumer<MessageCreateSpec> spec) {

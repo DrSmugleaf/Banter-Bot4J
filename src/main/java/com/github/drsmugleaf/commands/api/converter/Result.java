@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.commands.api.converter;
 
 import com.github.drsmugleaf.Nullable;
+import org.jetbrains.annotations.Contract;
 
 /**
  * Created by DrSmugleaf on 21/04/2019
@@ -17,6 +18,7 @@ public class Result<E> {
         ERROR_RESPONSE = errorResponse;
     }
 
+    @Contract(pure = true)
     @Nullable
     public E getElement() {
         return ELEMENT;
@@ -26,6 +28,7 @@ public class Result<E> {
         return ERROR_RESPONSE == null;
     }
 
+    @Contract(pure = true)
     @Nullable
     public String getErrorResponse() {
         return ERROR_RESPONSE;

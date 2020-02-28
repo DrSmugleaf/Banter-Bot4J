@@ -1,6 +1,5 @@
 package com.github.drsmugleaf.commands.api;
 
-import com.github.drsmugleaf.commands.api.registry.Entry;
 import com.github.drsmugleaf.commands.api.registry.GuildCommandEntry;
 import discord4j.core.object.entity.Member;
 
@@ -14,9 +13,8 @@ public abstract class GuildCommand extends Command {
     protected GuildCommand() {}
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Entry<? extends GuildCommand> getEntry() {
-        return new GuildCommandEntry((Class<GuildCommand>) getClass());
+    public GuildCommandEntry<? extends GuildCommand> toEntry() {
+        return new GuildCommandEntry<>(getClass());
     }
 
 }
