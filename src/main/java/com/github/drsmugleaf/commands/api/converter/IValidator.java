@@ -11,6 +11,6 @@ public interface IValidator<T> extends Function<ValidatorContext<? extends T>, S
     
     @Nullable
     @Override
-    String apply(ValidatorContext<? extends T> validatorContext);
+    String apply(ValidatorContext<? extends T> context);
 
 }
