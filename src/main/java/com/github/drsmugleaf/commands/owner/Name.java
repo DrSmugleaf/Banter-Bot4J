@@ -21,7 +21,7 @@ public class Name extends Command {
     public void run() {
         EVENT
                 .getClient()
-                .edit(self -> self.setUsername(String.join(" ", ARGUMENTS)))
+                .edit(self -> self.setUsername(ARGUMENTS.toString()))
                 .flatMap(newName -> reply("Changed the bot's name to " + name))
                 .subscribe();
     }

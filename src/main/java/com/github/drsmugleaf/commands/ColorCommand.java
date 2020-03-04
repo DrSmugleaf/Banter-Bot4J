@@ -129,7 +129,7 @@ public class ColorCommand extends GuildCommand {
                                             .setPermissions(PermissionSet.none())
                                     ).map(Role::getId))
                                     .flatMap(tuple2 -> tuple2.getT1().addRole(tuple2.getT2()))
-                                    .then(reply("Changed your name color to " + String.join(" ", ARGUMENTS)))
+                                    .then(reply("Changed your name color to " + ARGUMENTS.toString()))
                                     .subscribe();
                         } else {
                             Role role = roles.get(0);
@@ -140,7 +140,7 @@ public class ColorCommand extends GuildCommand {
                                     .zipWith(role.edit(spec -> spec.setColor(color)).map(Role::getId))
                                     .flatMap(tuple2 -> tuple2.getT1().addRole(tuple2.getT2()))
                                     .doOnError(e -> reply("I can't modify your name color. Check my highest role with permission to manage roles.").subscribe())
-                                    .then(reply("Changed your name color to " + String.join(" ", ARGUMENTS) + ". Your old name color's hex code was " + oldHex))
+                                    .then(reply("Changed your name color to " + ARGUMENTS.toString() + ". Your old name color's hex code was " + oldHex))
                                     .subscribe();
                         }
                     }
