@@ -8,7 +8,7 @@ import discord4j.core.object.entity.Member;
  */
 public abstract class GuildCommand extends Command {
 
-    public Member MEMBER;
+    public Member SELF_MEMBER;
 
     protected GuildCommand() {}
 

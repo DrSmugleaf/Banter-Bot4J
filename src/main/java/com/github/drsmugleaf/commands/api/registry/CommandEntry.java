@@ -24,7 +24,7 @@ public class CommandEntry<T extends Command> extends Entry<T> {
 
         command.EVENT = event;
         command.ARGUMENTS = arguments;
-        command.USER = event
+        command.SELF_USER = event
                 .getClient()
                 .getSelf()
                 .blockOptional()

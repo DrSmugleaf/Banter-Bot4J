@@ -27,7 +27,7 @@ public abstract class Command implements ICommand {
 
     public CommandReceivedEvent EVENT;
     public Arguments ARGUMENTS;
-    public User USER;
+    public User SELF_USER;
 
     protected Command() {}
 

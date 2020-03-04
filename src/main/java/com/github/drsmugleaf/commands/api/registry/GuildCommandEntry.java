@@ -27,7 +27,7 @@ public class GuildCommandEntry<T extends GuildCommand> extends CommandEntry<T> {
             return result;
         }
 
-        command.MEMBER = event
+        command.SELF_MEMBER = event
                 .getClient()
                 .getSelf()
                 .zipWith(Mono.justOrEmpty(event.getGuildId()))

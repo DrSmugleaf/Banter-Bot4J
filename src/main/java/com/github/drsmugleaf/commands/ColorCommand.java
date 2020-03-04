@@ -76,14 +76,14 @@ public class ColorCommand extends GuildCommand {
                         Role colorRole = roles.get(0);
                         colorRole
                                 .getPosition()
-                                .filterWhen(colorPosition -> MEMBER
+                                .filterWhen(colorPosition -> SELF_MEMBER
                                         .getRoles()
                                         .filter(botRole -> botRole.getPermissions().contains(Permission.MANAGE_ROLES))
                                         .single()
                                         .hasElement()
                                 )
                                 .doOnDiscard(Integer.class, (position) -> reply("I don't have permission to manage roles.").subscribe())
-                                .filterWhen(colorPosition -> MEMBER
+                                .filterWhen(colorPosition -> SELF_MEMBER
                                         .getRoles()
                                         .filter(botRole -> botRole.getPermissions().contains(Permission.MANAGE_ROLES))
                                         .flatMap(Role::getPosition)
@@ -116,7 +116,7 @@ public class ColorCommand extends GuildCommand {
                             EVENT
                                     .getMessage()
                                     .getAuthorAsMember()
-                                    .filterWhen(author -> MEMBER
+                                    .filterWhen(author -> SELF_MEMBER
                                             .getRoles()
                                             .filter(botRole -> botRole.getPermissions().contains(Permission.MANAGE_ROLES))
                                             .single()
