@@ -32,7 +32,7 @@ public abstract class Command implements ICommand {
     protected Command() {}
 
     @Contract("null -> false")
-    public static boolean isOwner(@Nullable User user) {
+    public static final boolean isOwner(@Nullable User user) {
         if (user == null) {
             return false;
         }
