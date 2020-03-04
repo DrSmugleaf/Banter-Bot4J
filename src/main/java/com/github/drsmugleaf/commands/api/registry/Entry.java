@@ -1,7 +1,6 @@
 package com.github.drsmugleaf.commands.api.registry;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
@@ -91,8 +90,7 @@ public abstract class Entry<T extends ICommand> {
         }
     }
 
-    @Nullable
-    public T newInstance(CommandReceivedEvent event, Arguments arguments) {
+    public Result<T> newInstance(CommandReceivedEvent event, Arguments arguments) {
         T command = emptyInstance();
 
         for (CommandField commandField : getCommandFields()) {
@@ -107,9 +105,8 @@ public abstract class Entry<T extends ICommand> {
             }
 
             Result<?> result = arguments.getArg(commandField, def);
-            if (!result.isValid()) {
-                event.reply(result.getErrorResponse()).subscribe();
-                return null;
+            if (result.getErrorResponse() != null) {
+                return new Result<>(null, result.getErrorResponse());
             }
 
             try {
@@ -119,7 +116,7 @@ public abstract class Entry<T extends ICommand> {
             }
         }
 
-        return command;
+        return new Result<>(command, null);
     }
 
     public String getFormats() {

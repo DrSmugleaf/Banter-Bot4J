@@ -3,10 +3,8 @@ package com.github.drsmugleaf.commands.api.registry;
 import com.github.drsmugleaf.commands.api.Arguments;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.GuildCommand;
-import discord4j.core.object.entity.Member;
+import com.github.drsmugleaf.commands.api.converter.Result;
 import reactor.core.publisher.Mono;
-
-import java.util.Optional;
 
 /**
  * Created by DrSmugleaf on 27/02/2020
@@ -18,24 +16,25 @@ public class GuildCommandEntry<T extends GuildCommand> extends CommandEntry<T> {
     }
 
     @Override
-    public T newInstance(CommandReceivedEvent event, Arguments arguments) {
-        T command = super.newInstance(event, arguments);
-        if (command == null) {
-            return null;
+    public Result<T> newInstance(CommandReceivedEvent event, Arguments arguments) {
+        if (event.getGuildId().isEmpty()) {
+            return new Result<>(null, "That command must be used in a server channel.");
         }
 
-        Optional<Member> member = event
+        Result<T> result = super.newInstance(event, arguments);
+        T command = result.getElement();
+        if (command == null) {
+            return result;
+        }
+
+        command.MEMBER = event
                 .getClient()
                 .getSelf()
                 .zipWith(Mono.justOrEmpty(event.getGuildId()))
                 .flatMap(tuple -> tuple.getT1().asMember(tuple.getT2()))
-                .blockOptional();
+                .blockOptional()
+                .orElseThrow(() -> new IllegalStateException("Unable to get self selfMember"));
 
-        if (member.isEmpty()) {
-            return null;
-        }
-
-        command.MEMBER = member.get();
-        return command;
+        return result;
     }
 }
