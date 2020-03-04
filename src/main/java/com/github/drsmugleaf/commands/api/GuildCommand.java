@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.commands.api;
 
-import com.github.drsmugleaf.commands.api.registry.GuildCommandEntry;
+import com.github.drsmugleaf.commands.api.registry.entry.GuildCommandEntry;
 import discord4j.core.object.entity.Member;
 
 /**

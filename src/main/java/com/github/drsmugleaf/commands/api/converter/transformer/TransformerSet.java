@@ -1,5 +1,6 @@
-package com.github.drsmugleaf.commands.api.converter;
+package com.github.drsmugleaf.commands.api.converter.transformer;
 
+import com.github.drsmugleaf.commands.api.converter.validator.IValidator;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.Set;

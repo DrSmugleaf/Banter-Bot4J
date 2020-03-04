@@ -1,12 +1,13 @@
-package com.github.drsmugleaf.commands.api.registry;
+package com.github.drsmugleaf.commands.api.registry.entry;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.Arguments;
+import com.github.drsmugleaf.commands.api.arguments.Arguments;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.ICommand;
-import com.github.drsmugleaf.commands.api.converter.Result;
-import com.github.drsmugleaf.commands.api.converter.TransformerSet;
+import com.github.drsmugleaf.commands.api.converter.result.Result;
+import com.github.drsmugleaf.commands.api.converter.transformer.TransformerSet;
+import com.github.drsmugleaf.commands.api.registry.CommandField;
 import com.github.drsmugleaf.commands.api.tags.Tag;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 import com.google.common.collect.ImmutableSet;

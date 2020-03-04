@@ -1,9 +1,9 @@
-package com.github.drsmugleaf.commands.api.registry;
+package com.github.drsmugleaf.commands.api.registry.entry;
 
-import com.github.drsmugleaf.commands.api.Arguments;
+import com.github.drsmugleaf.commands.api.arguments.Arguments;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.GuildCommand;
-import com.github.drsmugleaf.commands.api.converter.Result;
+import com.github.drsmugleaf.commands.api.converter.result.Result;
 import reactor.core.publisher.Mono;
 
 /**

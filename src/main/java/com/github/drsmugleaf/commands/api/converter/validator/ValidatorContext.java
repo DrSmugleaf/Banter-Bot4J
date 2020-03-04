@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.commands.api.converter;
+package com.github.drsmugleaf.commands.api.converter.validator;
 
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.registry.CommandField;

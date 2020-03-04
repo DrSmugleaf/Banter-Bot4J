@@ -2,8 +2,9 @@ package com.github.drsmugleaf.commands.api;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.commands.api.converter.TransformerSet;
-import com.github.drsmugleaf.commands.api.registry.CommandEntry;
+import com.github.drsmugleaf.commands.api.arguments.Arguments;
+import com.github.drsmugleaf.commands.api.converter.transformer.TransformerSet;
+import com.github.drsmugleaf.commands.api.registry.entry.CommandEntry;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.User;
 import discord4j.core.spec.MessageCreateSpec;

@@ -1,13 +1,14 @@
-package com.github.drsmugleaf.commands.api;
+package com.github.drsmugleaf.commands.api.arguments;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.converter.ConversionException;
 import com.github.drsmugleaf.commands.api.converter.Converter;
-import com.github.drsmugleaf.commands.api.converter.Result;
+import com.github.drsmugleaf.commands.api.converter.result.Result;
 import com.github.drsmugleaf.commands.api.registry.CommandField;
 import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
-import com.github.drsmugleaf.commands.api.registry.Entry;
+import com.github.drsmugleaf.commands.api.registry.entry.Entry;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 
 import java.lang.reflect.Field;

@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.commands.api.registry;
 
-import com.github.drsmugleaf.commands.api.Argument;
+import com.github.drsmugleaf.commands.api.arguments.Argument;
 import com.github.drsmugleaf.commands.api.ICommand;
 
 import java.lang.reflect.Field;

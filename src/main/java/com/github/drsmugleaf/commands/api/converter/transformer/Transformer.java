@@ -1,6 +1,7 @@
-package com.github.drsmugleaf.commands.api.converter;
+package com.github.drsmugleaf.commands.api.converter.transformer;
 
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.commands.api.converter.validator.IValidator;
 
 /**
  * Created by DrSmugleaf on 28/02/2020

@@ -4,10 +4,10 @@ import com.github.drsmugleaf.article13.entities.Country;
 import com.github.drsmugleaf.article13.entities.Party;
 import com.github.drsmugleaf.article13.vote.Decision;
 import com.github.drsmugleaf.article13.vote.Vote;
-import com.github.drsmugleaf.commands.api.Argument;
+import com.github.drsmugleaf.commands.api.arguments.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.converter.TransformerSet;
+import com.github.drsmugleaf.commands.api.converter.transformer.TransformerSet;
 
 import java.util.List;
 import java.util.Map;

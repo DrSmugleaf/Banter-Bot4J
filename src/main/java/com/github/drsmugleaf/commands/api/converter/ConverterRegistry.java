@@ -1,10 +1,15 @@
 package com.github.drsmugleaf.commands.api.converter;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.commands.api.Argument;
+import com.github.drsmugleaf.commands.api.arguments.Argument;
 import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.converter.identifier.Identifier;
+import com.github.drsmugleaf.commands.api.converter.transformer.ITransformer;
+import com.github.drsmugleaf.commands.api.converter.transformer.Transformer;
+import com.github.drsmugleaf.commands.api.converter.validator.IValidator;
+import com.github.drsmugleaf.commands.api.converter.validator.Validator;
 import com.github.drsmugleaf.commands.api.registry.CommandField;
-import com.github.drsmugleaf.commands.api.registry.Entry;
+import com.github.drsmugleaf.commands.api.registry.entry.Entry;
 
 import java.util.HashMap;
 import java.util.List;

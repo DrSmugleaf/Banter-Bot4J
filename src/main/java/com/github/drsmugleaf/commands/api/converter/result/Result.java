@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.commands.api.converter;
+package com.github.drsmugleaf.commands.api.converter.result;
 
 import com.github.drsmugleaf.Nullable;
 import org.jetbrains.annotations.Contract;

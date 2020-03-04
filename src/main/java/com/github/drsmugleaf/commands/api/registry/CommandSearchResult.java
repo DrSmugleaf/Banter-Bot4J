@@ -1,9 +1,10 @@
 package com.github.drsmugleaf.commands.api.registry;
 
-import com.github.drsmugleaf.commands.api.Arguments;
+import com.github.drsmugleaf.commands.api.arguments.Arguments;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.ICommand;
-import com.github.drsmugleaf.commands.api.converter.Result;
+import com.github.drsmugleaf.commands.api.converter.result.Result;
+import com.github.drsmugleaf.commands.api.registry.entry.Entry;
 
 /**
  * Created by DrSmugleaf on 01/09/2018

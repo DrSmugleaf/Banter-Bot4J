@@ -2,11 +2,11 @@ package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.commands.api.Argument;
+import com.github.drsmugleaf.commands.api.arguments.Argument;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.GuildCommand;
-import com.github.drsmugleaf.commands.api.converter.Transformer;
-import com.github.drsmugleaf.commands.api.converter.TransformerSet;
+import com.github.drsmugleaf.commands.api.converter.transformer.Transformer;
+import com.github.drsmugleaf.commands.api.converter.transformer.TransformerSet;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Role;

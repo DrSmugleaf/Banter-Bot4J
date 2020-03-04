@@ -1,9 +1,9 @@
 package com.github.drsmugleaf.commands.roll;
 
-import com.github.drsmugleaf.commands.api.Argument;
+import com.github.drsmugleaf.commands.api.arguments.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.converter.TransformerSet;
+import com.github.drsmugleaf.commands.api.converter.transformer.TransformerSet;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

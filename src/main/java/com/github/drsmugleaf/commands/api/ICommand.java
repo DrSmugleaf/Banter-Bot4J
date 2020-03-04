@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.commands.api;
 
-import com.github.drsmugleaf.commands.api.converter.TransformerSet;
-import com.github.drsmugleaf.commands.api.registry.Entry;
+import com.github.drsmugleaf.commands.api.converter.transformer.TransformerSet;
+import com.github.drsmugleaf.commands.api.registry.entry.Entry;
 
 /**
  * Created by DrSmugleaf on 12/06/2018

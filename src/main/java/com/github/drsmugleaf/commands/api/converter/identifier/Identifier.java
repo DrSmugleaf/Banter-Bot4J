@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.commands.api.converter;
+package com.github.drsmugleaf.commands.api.converter.identifier;
 
 import java.util.Objects;
 

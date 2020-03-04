@@ -1,10 +1,10 @@
 package com.github.drsmugleaf.commands.eve;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.commands.api.Argument;
+import com.github.drsmugleaf.commands.api.arguments.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.converter.TransformerSet;
+import com.github.drsmugleaf.commands.api.converter.transformer.TransformerSet;
 import com.github.drsmugleaf.database.model.EveTimerModel;
 import discord4j.core.object.entity.MessageChannel;
 import discord4j.core.object.entity.User;
