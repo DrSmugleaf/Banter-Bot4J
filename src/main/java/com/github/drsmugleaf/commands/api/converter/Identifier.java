@@ -5,24 +5,18 @@ import java.util.Objects;
 /**
  * Created by DrSmugleaf on 19/04/2019
  */
-public class Identifier<T, U, R> {
+public class Identifier<T, R> {
 
-    private final Class<T> FROM1;
-    private final Class<U> FROM2;
+    private final Class<T> FROM;
     private final Class<R> TO;
 
-    public Identifier(Class<T> from1, Class<U> from2, Class<R> to) {
-        FROM1 = from1;
-        FROM2 = from2;
+    public Identifier(Class<T> from1, Class<R> to) {
+        FROM = from1;
         TO = to;
     }
 
-    public Class<T> getFrom1() {
-        return FROM1;
-    }
-
-    public Class<U> getFrom2() {
-        return FROM2;
+    public Class<T> getFrom() {
+        return FROM;
     }
 
     public Class<R> getTo() {
@@ -33,15 +27,14 @@ public class Identifier<T, U, R> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Identifier<?, ?, ?> that = (Identifier<?, ?, ?>) o;
-        return FROM1.equals(that.FROM1) &&
-                FROM2.equals(that.FROM2) &&
+        Identifier<?, ?> that = (Identifier<?, ?>) o;
+        return FROM.equals(that.FROM) &&
                 TO.equals(that.TO);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(FROM1, FROM2, TO);
+        return Objects.hash(FROM, TO);
     }
 
 }

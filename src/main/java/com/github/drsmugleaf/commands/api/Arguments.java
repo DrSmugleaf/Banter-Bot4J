@@ -180,7 +180,7 @@ public class Arguments extends ArrayList<String> {
         }
 
         Class<?> fieldType = field.getType();
-        Converter<String, CommandReceivedEvent, ?> converter = BanterBot4J
+        Converter<String, ?> converter = BanterBot4J
                 .getHandler()
                 .getRegistry()
                 .getConverters()
@@ -195,6 +195,7 @@ public class Arguments extends ArrayList<String> {
         try {
             result = converter.convert(commandField, stringArg, EVENT);
         } catch (ConversionException e) {
+            BanterBot4J.warn("Error converting arguments", e);
             return new Result<>(null, "Invalid " + field.getName() + ".\n" + ENTRY.getFormatsExamples());
         }
 

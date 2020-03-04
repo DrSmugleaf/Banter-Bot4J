@@ -35,6 +35,7 @@ public class TransformerSet {
                 new Transformer<>(type1, transformer1)
         );
     }
+
     public static <E1, E2> TransformerSet of(
             Class<E1> type1, ITransformer<E1> transformer1,
             Class<E2> type2, ITransformer<E2> transformer2
@@ -44,6 +45,7 @@ public class TransformerSet {
                 new Transformer<>(type2, transformer2)
         );
     }
+
     public static <E1, E2, E3> TransformerSet of(
             Class<E1> type1, ITransformer<E1> transformer1,
             Class<E2> type2, ITransformer<E2> transformer2,
@@ -55,6 +57,7 @@ public class TransformerSet {
                 new Transformer<>(type3, transformer3)
         );
     }
+
     public static <E1, E2, E3, E4> TransformerSet of(
             Class<E1> type1, ITransformer<E1> transformer1,
             Class<E2> type2, ITransformer<E2> transformer2,
@@ -68,6 +71,7 @@ public class TransformerSet {
                 new Transformer<>(type4, transformer4)
         );
     }
+
     public static <E1, E2, E3, E4, E5> TransformerSet of(
             Class<E1> type1, ITransformer<E1> transformer1,
             Class<E2> type2, ITransformer<E2> transformer2,
@@ -83,6 +87,7 @@ public class TransformerSet {
                 new Transformer<>(type5, transformer5)
         );
     }
+
     public static <E1, E2, E3, E4, E5, E6> TransformerSet of(
             Class<E1> type1, ITransformer<E1> transformer1,
             Class<E2> type2, ITransformer<E2> transformer2,
@@ -100,6 +105,7 @@ public class TransformerSet {
                 new Transformer<>(type6, transformer6)
         );
     }
+
     public static <E1, E2, E3, E4, E5, E6, E7> TransformerSet of(
             Class<E1> type1, ITransformer<E1> transformer1,
             Class<E2> type2, ITransformer<E2> transformer2,
@@ -119,6 +125,7 @@ public class TransformerSet {
                 new Transformer<>(type7, transformer7)
         );
     }
+
     public static <E1, E2, E3, E4, E5, E6, E7, E8> TransformerSet of(
             Class<E1> type1, ITransformer<E1> transformer1,
             Class<E2> type2, ITransformer<E2> transformer2,
@@ -188,6 +195,14 @@ public class TransformerSet {
                 new Transformer<>(type8, transformer8),
                 new Transformer<>(type9, transformer9),
                 new Transformer<>(type10, transformer10)
+        );
+    }
+
+    public static <E1> TransformerSet of(
+            Class<E1> type1, ITransformer<E1> transformer1, IValidator<E1> validator1
+    ) {
+        return of(
+                new Transformer<>(type1, transformer1, validator1)
         );
     }
 

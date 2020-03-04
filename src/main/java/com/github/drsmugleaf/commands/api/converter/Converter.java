@@ -1,37 +1,37 @@
 package com.github.drsmugleaf.commands.api.converter;
 
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.registry.CommandField;
-
-import java.util.function.BiFunction;
 
 /**
  * Created by DrSmugleaf on 19/04/2019
  */
-public class Converter<T, U, R> {
+public class Converter<T, R> {
 
-    private final Identifier<T, U, R> IDENTIFIER;
-    private final BiFunction<T, U, R> CONVERTER;
+    private final Identifier<T, R> IDENTIFIER;
+    private final Transformer<R> TRANSFORMER;
     private final Validator<R> VALIDATOR;
 
-    public Converter(Identifier<T, U, R> identifier, BiFunction<T, U, R> converter, Validator<R> validator) {
+    public Converter(Identifier<T, R> identifier, Transformer<R> transformer, Validator<R> validator) {
         IDENTIFIER = identifier;
-        CONVERTER = converter;
+        TRANSFORMER = transformer;
         VALIDATOR = validator;
     }
 
-    public Identifier<T, U, R> getIdentifier() {
+    public Identifier<T, R> getIdentifier() {
         return IDENTIFIER;
     }
 
-    public Result<R> convert(CommandField field, T in1, U in2) throws ConversionException {
+    public Result<R> convert(CommandField field, String value, CommandReceivedEvent event) throws ConversionException {
         R out;
         try {
-            out = CONVERTER.apply(in1, in2);
+            out = TRANSFORMER.getTransformer().apply(value, event);
         } catch (Exception e) {
-            throw new ConversionException("Error converting value " + in1 + " and " + in2 + " for field " + field);
+            throw new ConversionException("Error converting value " + value + " for field " + field, e);
         }
 
-        String error = VALIDATOR.getError(field, out);
+        ValidatorContext<R> context = new ValidatorContext<>(field, out, event);
+        String error = VALIDATOR.getError(context);
 
         return new Result<>(out, error);
     }

@@ -1,8 +1,6 @@
 package com.github.drsmugleaf.commands.api.converter;
 
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
-
-import java.util.function.BiFunction;
+import com.github.drsmugleaf.Nullable;
 
 /**
  * Created by DrSmugleaf on 28/02/2020
@@ -10,19 +8,31 @@ import java.util.function.BiFunction;
 public class Transformer<T> {
 
     private final Class<T> TYPE;
-    private final BiFunction<String, CommandReceivedEvent, T> TRANSFORMER;
+    private final ITransformer<T> TRANSFORMER;
+    @Nullable
+    private final IValidator<? super T> VALIDATOR;
 
-    public Transformer(Class<T> type, BiFunction<String, CommandReceivedEvent, T> transformer) {
+    public Transformer(Class<T> type, ITransformer<T> transformer, @Nullable IValidator<? super T> validator) {
         TYPE = type;
         TRANSFORMER = transformer;
+        VALIDATOR = validator;
+    }
+
+    public Transformer(Class<T> type, ITransformer<T> transformer) {
+        this(type, transformer, null);
     }
 
     public Class<T> getType() {
         return TYPE;
     }
 
-    public BiFunction<String, CommandReceivedEvent, T> getTransformer() {
+    public ITransformer<T> getTransformer() {
         return TRANSFORMER;
+    }
+
+    @Nullable
+    public IValidator<? super T> getValidator() {
+        return VALIDATOR;
     }
 
 }
