@@ -27,7 +27,7 @@ public class ConverterRegistry {
             return "Too many " + commandField.getField().getName() + " requested. Maximum: " + maximum;
         }
 
-        return "";
+        return null;
     };
     private final Map<Identifier<?, ?>, Converter<?, ?>> CONVERTERS = new HashMap<>();
 
