@@ -32,7 +32,7 @@ public class DiscordChannel extends Model<DiscordChannel> {
             DiscordChannel channel = new DiscordChannel(id);
             channel.createIfNotExists();
 
-            Database.LOGGER.info("Created private discord channel with id " + id);
+            Database.LOGGER.debug("Created private discord channel with id " + id);
         };
 
         Thread thread = new Thread(runnable);
