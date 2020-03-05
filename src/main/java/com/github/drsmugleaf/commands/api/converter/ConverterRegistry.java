@@ -141,11 +141,11 @@ public class ConverterRegistry {
 
     @Nullable
     @SuppressWarnings("unchecked")
-    public <T, U, R> Converter<T, R> find(Class<T> from1, Class<U> from2, Class<R> to) {
+    public <T, R> Converter<T, R> find(Class<T> from, Class<R> to) {
         return (Converter<T, R>) CONVERTERS
                 .entrySet()
                 .stream()
-                .filter(entry -> entry.getKey().equals(new Identifier<>(from1, to)))
+                .filter(entry -> entry.getKey().equals(new Identifier<>(from, to)))
                 .map(Map.Entry::getValue)
                 .findFirst()
                 .orElse(null);

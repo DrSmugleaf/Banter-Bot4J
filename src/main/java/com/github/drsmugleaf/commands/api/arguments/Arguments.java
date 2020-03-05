@@ -185,7 +185,7 @@ public class Arguments extends ArrayList<String> {
                 .getHandler()
                 .getRegistry()
                 .getConverters()
-                .find(String.class, CommandReceivedEvent.class, fieldType);
+                .find(String.class, fieldType);
         if (converter == null) {
             throw new IllegalStateException("No converter found for type" + fieldType);
         }

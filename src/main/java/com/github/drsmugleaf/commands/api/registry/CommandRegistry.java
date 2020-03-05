@@ -4,6 +4,7 @@ import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.commands.api.arguments.Arguments;
 import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.converter.Converter;
 import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
 import com.github.drsmugleaf.commands.api.registry.entry.Entry;
 import com.google.common.collect.ImmutableList;
@@ -43,6 +44,16 @@ public class CommandRegistry {
 
         ENTRIES = ImmutableList.copyOf(entries);
         CONVERTERS.registerConverters(entries);
+
+        for (Entry<? extends Command> command : ENTRIES) {
+            for (CommandField field : command.getCommandFields()) {
+                Class<?> fieldType = field.getField().getType();
+                Converter<String, ?> converter = CONVERTERS.find(String.class, fieldType);
+                if (converter == null) {
+                    throw new IllegalStateException("No converter found for type " + fieldType + " in command " + command.getCommand().getName());
+                }
+            }
+        }
 
         List<CommandSearchResult<?>> duplicates = findDuplicates();
         if (!duplicates.isEmpty()) {
