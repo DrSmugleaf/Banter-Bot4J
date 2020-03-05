@@ -61,7 +61,8 @@ public class EveTimerModel extends Model<EveTimerModel> {
             @Nullable String structure,
             @Nullable String system,
             @Nullable Long date,
-            @Nullable Long submitter) {
+            @Nullable Long submitter
+    ) {
         this.channel = new DiscordChannel(channel);
         this.structure = structure;
         this.system = system;

@@ -25,7 +25,7 @@ public class Blacklist extends GuildCommand {
     @Override
     public void run() {
         for (Member mention : mentions) {
-            DiscordMember member = new DiscordMember(mention.getId().asLong(), mention.getGuildId().asLong(), null).get().get(0);
+            DiscordMember member = new DiscordMember(mention, null).get().get(0);
 
             member.isBlacklisted = !member.isBlacklisted;
             member.save();
