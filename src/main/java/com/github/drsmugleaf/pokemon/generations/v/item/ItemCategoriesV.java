@@ -8,6 +8,9 @@ import org.jetbrains.annotations.Contract;
  */
 public enum ItemCategoriesV implements IItemCategory {
 
+    NONE("None"),
+    BERRY("Berry"),
+    ARCEUS_PLATE("Arceus Plate"),
     GENESECT_DRIVE("Genesect Drive");
 
     private final String NAME;

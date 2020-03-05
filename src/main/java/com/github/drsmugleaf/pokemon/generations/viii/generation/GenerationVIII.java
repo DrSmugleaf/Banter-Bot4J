@@ -3,9 +3,11 @@ package com.github.drsmugleaf.pokemon.generations.viii.generation;
 import com.github.drsmugleaf.pokemon.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon.base.pokemon.species.SpeciesRegistry;
 import com.github.drsmugleaf.pokemon.base.pokemon.stat.type.StatTypeRegistry;
+import com.github.drsmugleaf.pokemon.generations.ii.item.ItemCategoryRegistry;
 import com.github.drsmugleaf.pokemon.generations.iii.pokemon.species.SpeciesRegistryIII;
 import com.github.drsmugleaf.pokemon.generations.vii.generation.GenerationVII;
 import com.github.drsmugleaf.pokemon.generations.viii.game.GamesVIII;
+import com.github.drsmugleaf.pokemon.generations.viii.item.ItemCategoriesVIII;
 import com.github.drsmugleaf.pokemon.generations.viii.pokemon.species.SpeciesVIII;
 import org.jetbrains.annotations.Contract;
 
@@ -19,6 +21,7 @@ public class GenerationVIII extends BaseGenerationVIII {
     private final GameRegistry GAMES = new GameRegistry(GamesVIII.values());
     private final SpeciesRegistry<SpeciesVIII> POKEDEX = new SpeciesRegistryIII<>(this, SpeciesVIII::new);
     private final StatTypeRegistry STATS = GenerationVII.get().getStats();
+    private final ItemCategoryRegistry ITEM_CATEGORIES = new ItemCategoryRegistry(ItemCategoriesVIII.values());
 
     private GenerationVIII() {
         super();
@@ -67,6 +70,11 @@ public class GenerationVIII extends BaseGenerationVIII {
     @Override
     public String getName() {
         return "Generation VIII";
+    }
+
+    @Override
+    public ItemCategoryRegistry getItemCategories() {
+        return ITEM_CATEGORIES;
     }
 
 }

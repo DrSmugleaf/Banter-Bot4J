@@ -8,7 +8,8 @@ import org.jetbrains.annotations.Contract;
  */
 public enum ItemCategoriesIII implements IItemCategory {
 
-    ;
+    NONE("None"),
+    BERRY("Berry");
 
     private final String NAME;
 

@@ -1,6 +1,7 @@
 package com.github.drsmugleaf.pokemon.generations.ii.generation;
 
 import com.github.drsmugleaf.pokemon.base.generation.IGeneration;
+import com.github.drsmugleaf.pokemon.generations.ii.item.ItemCategoryRegistry;
 import com.github.drsmugleaf.pokemon.generations.ii.item.ItemRegistry;
 
 /**
@@ -9,5 +10,6 @@ import com.github.drsmugleaf.pokemon.generations.ii.item.ItemRegistry;
 public interface IGenerationII extends IGeneration {
 
     ItemRegistry getItems();
+    ItemCategoryRegistry getItemCategories();
 
 }

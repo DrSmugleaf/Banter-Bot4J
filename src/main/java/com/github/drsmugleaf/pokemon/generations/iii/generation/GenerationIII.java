@@ -3,7 +3,9 @@ package com.github.drsmugleaf.pokemon.generations.iii.generation;
 import com.github.drsmugleaf.pokemon.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon.base.pokemon.species.SpeciesRegistry;
 import com.github.drsmugleaf.pokemon.base.pokemon.stat.type.StatTypeRegistry;
+import com.github.drsmugleaf.pokemon.generations.ii.item.ItemCategoryRegistry;
 import com.github.drsmugleaf.pokemon.generations.iii.game.GamesIII;
+import com.github.drsmugleaf.pokemon.generations.iii.item.ItemCategoriesIII;
 import com.github.drsmugleaf.pokemon.generations.iii.pokemon.species.SpeciesRegistryIII;
 import com.github.drsmugleaf.pokemon.generations.iii.pokemon.species.SpeciesIII;
 import com.github.drsmugleaf.pokemon.generations.iii.pokemon.stat.StatsIII;
@@ -19,6 +21,7 @@ public class GenerationIII extends BaseGenerationIII {
     private final GameRegistry GAMES = new GameRegistry(GamesIII.values());
     private final SpeciesRegistry<SpeciesIII> POKEDEX = new SpeciesRegistryIII<>(this, SpeciesIII::new);
     private final StatTypeRegistry STATS = new StatTypeRegistry(StatsIII.values());
+    private final ItemCategoryRegistry ITEM_CATEGORIES = new ItemCategoryRegistry(ItemCategoriesIII.values());
 
     protected GenerationIII() {
         super();
@@ -62,6 +65,11 @@ public class GenerationIII extends BaseGenerationIII {
     @Override
     public String getName() {
         return "Generation III";
+    }
+
+    @Override
+    public ItemCategoryRegistry getItemCategories() {
+        return ITEM_CATEGORIES;
     }
 
 }

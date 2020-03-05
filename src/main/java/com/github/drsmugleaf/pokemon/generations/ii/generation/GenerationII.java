@@ -5,6 +5,8 @@ import com.github.drsmugleaf.pokemon.base.pokemon.species.SpeciesRegistry;
 import com.github.drsmugleaf.pokemon.base.pokemon.stat.type.StatTypeRegistry;
 import com.github.drsmugleaf.pokemon.generations.i.pokemon.species.SpeciesRegistryI;
 import com.github.drsmugleaf.pokemon.generations.ii.game.GamesII;
+import com.github.drsmugleaf.pokemon.generations.ii.item.ItemCategoriesII;
+import com.github.drsmugleaf.pokemon.generations.ii.item.ItemCategoryRegistry;
 import com.github.drsmugleaf.pokemon.generations.ii.pokemon.species.SpeciesII;
 import com.github.drsmugleaf.pokemon.generations.ii.pokemon.stat.StatsII;
 import org.jetbrains.annotations.Contract;
@@ -19,6 +21,7 @@ public class GenerationII extends BaseGenerationII {
     private final GameRegistry GAMES = new GameRegistry(GamesII.values());
     private final SpeciesRegistry<SpeciesII> POKEDEX = new SpeciesRegistryI<>(this, SpeciesII::new);
     private final StatTypeRegistry STATS = new StatTypeRegistry(StatsII.values());
+    private final ItemCategoryRegistry ITEM_CATEGORIES = new ItemCategoryRegistry(ItemCategoriesII.values());
 
     private GenerationII() {
         super();
@@ -62,6 +65,11 @@ public class GenerationII extends BaseGenerationII {
     @Override
     public String getName() {
         return "Generation II";
+    }
+
+    @Override
+    public ItemCategoryRegistry getItemCategories() {
+        return ITEM_CATEGORIES;
     }
 
 }

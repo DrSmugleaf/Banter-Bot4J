@@ -3,10 +3,12 @@ package com.github.drsmugleaf.pokemon.generations.v.generation;
 import com.github.drsmugleaf.pokemon.base.game.GameRegistry;
 import com.github.drsmugleaf.pokemon.base.pokemon.species.SpeciesRegistry;
 import com.github.drsmugleaf.pokemon.base.pokemon.stat.type.StatTypeRegistry;
+import com.github.drsmugleaf.pokemon.generations.ii.item.ItemCategoryRegistry;
 import com.github.drsmugleaf.pokemon.generations.iii.generation.BaseGenerationIII;
 import com.github.drsmugleaf.pokemon.generations.iii.pokemon.species.SpeciesRegistryIII;
 import com.github.drsmugleaf.pokemon.generations.iv.generation.GenerationIV;
 import com.github.drsmugleaf.pokemon.generations.v.game.GamesV;
+import com.github.drsmugleaf.pokemon.generations.v.item.ItemCategoriesV;
 import com.github.drsmugleaf.pokemon.generations.v.pokemon.species.SpeciesV;
 import org.jetbrains.annotations.Contract;
 
@@ -20,6 +22,7 @@ public class GenerationV extends BaseGenerationIII {
     private final GameRegistry GAMES = new GameRegistry(GamesV.values());
     private final SpeciesRegistry<SpeciesV> POKEDEX = new SpeciesRegistryIII<>(this, SpeciesV::new);
     private final StatTypeRegistry STATS = GenerationIV.get().getStats();
+    private final ItemCategoryRegistry ITEM_CATEGORIES = new ItemCategoryRegistry(ItemCategoriesV.values());
 
     private GenerationV() {
         super();
@@ -63,6 +66,11 @@ public class GenerationV extends BaseGenerationIII {
     @Override
     public String getName() {
         return "Generation V";
+    }
+
+    @Override
+    public ItemCategoryRegistry getItemCategories() {
+        return ITEM_CATEGORIES;
     }
 
 }

@@ -14,7 +14,7 @@ public class Item implements IItem {
     }
 
     public Item(String name) {
-        this(ItemCategories.NONE, name);
+        this(ItemCategoriesII.NONE, name);
     }
 
     @Override

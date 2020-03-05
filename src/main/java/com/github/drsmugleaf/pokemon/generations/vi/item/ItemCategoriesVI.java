@@ -8,6 +8,10 @@ import org.jetbrains.annotations.Contract;
  */
 public enum ItemCategoriesVI implements IItemCategory {
 
+    NONE("None"),
+    BERRY("Berry"),
+    ARCEUS_PLATE("Arceus Plate"),
+    GENESECT_DRIVE("Genesect Drive"),
     MEGA_STONE("Mega Stone"),
     PRIMAL_ORB("Primal Orb");
 
