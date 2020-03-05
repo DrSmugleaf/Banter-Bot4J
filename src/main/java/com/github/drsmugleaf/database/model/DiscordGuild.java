@@ -46,7 +46,7 @@ public class DiscordGuild extends Model<DiscordGuild> {
             DiscordGuild guild = new DiscordGuild(guildId);
             guild.createIfNotExists();
 
-            Database.LOGGER.info("Created guild with id " + guildId);
+            Database.LOGGER.debug("Created guild with id " + guildId);
 
             event
                     .getGuild()
@@ -57,13 +57,13 @@ public class DiscordGuild extends Model<DiscordGuild> {
                     .doOnNext(user -> {
                         user.createIfNotExists();
 
-                        Database.LOGGER.info("Created user with id " + guildId);
+                        Database.LOGGER.debug("Created user with id " + guildId);
                     })
                     .map(user -> new DiscordMember(user.id, guildId, false))
                     .subscribe(member -> {
                         member.createIfNotExists();
 
-                        Database.LOGGER.info("Created member with id " + member.user.id + " in guild " + guildId);
+                        Database.LOGGER.debug("Created member with id " + member.user.id + " in guild " + guildId);
                     });
         };
 

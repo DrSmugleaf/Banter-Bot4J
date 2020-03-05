@@ -6,6 +6,7 @@ import com.github.drsmugleaf.database.api.annotations.Column;
 import com.github.drsmugleaf.database.api.annotations.Relation;
 import com.github.drsmugleaf.database.api.annotations.RelationTypes;
 import com.github.drsmugleaf.database.api.annotations.Table;
+import discord4j.core.object.entity.Member;
 
 /**
  * Created by DrSmugleaf on 17/05/2017.
@@ -33,6 +34,10 @@ public class DiscordMember extends Model<DiscordMember> {
         user = new DiscordUser(userID);
         guild = new DiscordGuild(guildID);
         this.isBlacklisted = isBlacklisted;
+    }
+
+    public DiscordMember(Member member, @Nullable Boolean isBlacklisted) {
+        this(member.getId().asLong(), member.getGuildId().asLong(), isBlacklisted);
     }
 
     private DiscordMember() {}

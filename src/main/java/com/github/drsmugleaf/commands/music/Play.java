@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.commands.music;
 
-import com.github.drsmugleaf.commands.api.Argument;
+import com.github.drsmugleaf.commands.api.arguments.Argument;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.tags.Tags;
 import com.github.drsmugleaf.music.AudioResultHandler;
@@ -16,7 +16,10 @@ import reactor.util.function.Tuples;
  */
 @CommandInfo(
         aliases = {"e"},
-        tags = {Tags.GUILD_ONLY, Tags.VOICE_ONLY, Tags.DELETE_COMMAND_MESSAGE},
+        tags = {
+                Tags.VOICE_ONLY,
+                Tags.DELETE_COMMAND_MESSAGE
+        },
         description = "Add a track to the queue"
 )
 public class Play extends MusicCommand {

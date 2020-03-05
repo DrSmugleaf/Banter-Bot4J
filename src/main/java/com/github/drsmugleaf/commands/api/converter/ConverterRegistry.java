@@ -1,36 +1,40 @@
 package com.github.drsmugleaf.commands.api.converter;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.commands.api.Argument;
+import com.github.drsmugleaf.commands.api.arguments.Argument;
 import com.github.drsmugleaf.commands.api.Command;
-import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
+import com.github.drsmugleaf.commands.api.converter.identifier.Identifier;
+import com.github.drsmugleaf.commands.api.converter.transformer.ITransformer;
+import com.github.drsmugleaf.commands.api.converter.transformer.Transformer;
+import com.github.drsmugleaf.commands.api.converter.validator.IValidator;
+import com.github.drsmugleaf.commands.api.converter.validator.Validator;
 import com.github.drsmugleaf.commands.api.registry.CommandField;
-import com.github.drsmugleaf.commands.api.registry.Entry;
+import com.github.drsmugleaf.commands.api.registry.entry.Entry;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
 
 /**
  * Created by DrSmugleaf on 19/04/2019
  */
 public class ConverterRegistry {
 
-    private static final BiFunction<CommandField, Number, String> NUMBER_VALIDATOR = (field, n) -> {
-        Argument argument = field.getArgument();
-        long value = n.longValue();
+    private static final IValidator<Number> NUMBER_VALIDATOR = (context) -> {
+        CommandField commandField = context.getField();
+        Argument argument = commandField.getArgument();
+        long value = context.getValue().longValue();
         long minimum = argument.minimum();
-        long maximum = field.getMaximum();
+        long maximum = commandField.getMaximum();
         if (value < minimum) {
-            return "Not enough " + field.getField().getName() + " requested. Minimum: " + minimum;
+            return "Not enough " + commandField.getField().getName() + " requested. Minimum: " + minimum;
         } else if (value > maximum) {
-            return "Too many " + field.getField().getName() + " requested. Maximum: " + maximum;
+            return "Too many " + commandField.getField().getName() + " requested. Maximum: " + maximum;
         }
 
-        return "";
+        return null;
     };
-    private final Map<TripleIdentifier, Converter> CONVERTERS = new HashMap<>();
+    private final Map<Identifier<?, ?>, Converter<?, ?>> CONVERTERS = new HashMap<>();
 
     public ConverterRegistry() {
         registerCommandTo(String.class, (s, e) -> s);
@@ -81,75 +85,55 @@ public class ConverterRegistry {
         });
     }
 
-    public ConverterRegistry register(Converter converter) {
+    public ConverterRegistry register(Converter<?, ?> converter) {
         CONVERTERS.put(converter.getIdentifier(), converter);
         return this;
     }
 
-    public <T, U, R> ConverterRegistry register(
-            Class<T> from1,
-            Class<U> from2,
+    public <T, R> ConverterRegistry register(
+            Class<T> from,
             Class<R> to,
-            BiFunction<T, U, R> converterFunction,
-            @Nullable BiFunction<CommandField, ? super R, String> validatorFunction
+            Transformer<R> transformer,
+            @Nullable IValidator<? super R> validatorFunction
     ) {
-        TripleIdentifier<T, U, R> identifier = new TripleIdentifier<>(from1, from2, to);
+        Identifier<T, R> identifier = new Identifier<>(from, to);
         Validator<R> validator = new Validator<>(to, validatorFunction);
-        Converter<T, U, R> converter = new Converter<>(identifier, converterFunction, validator);
+        Converter<T, R> converter = new Converter<>(identifier, transformer, validator);
         register(converter);
         return this;
     }
 
-    public <T, U, R> ConverterRegistry register(
-            Class<T> from1,
-            Class<U> from2,
-            Class<R> to,
-            BiFunction<T, U, R> converterFunction
+    public <R> ConverterRegistry registerTransformer(
+            Transformer<R> transformer
     ) {
-        register(from1, from2, to, converterFunction, null);
-        return this;
-    }
-
-    public <U, R> ConverterRegistry registerStringTo(
-            Class<U> from,
-            Class<R> to,
-            BiFunction<String, U, R> converterFunction,
-            @Nullable BiFunction<CommandField, ? super R, String> validatorFunction
-    ) {
-        register(String.class, from, to, converterFunction, validatorFunction);
-        return this;
-    }
-
-    public <U, R> ConverterRegistry registerStringTo(
-            Class<U> from,
-            Class<R> to,
-            BiFunction<String, U, R> converterFunction
-    ) {
-        registerStringTo(from, to, converterFunction, null);
+        register(String.class, transformer.getType(), transformer, transformer.getValidator());
         return this;
     }
 
     public <R> ConverterRegistry registerCommandTo(
             Class<R> to,
-            BiFunction<String, CommandReceivedEvent, R> converterFunction,
-            @Nullable BiFunction<CommandField, ? super R, String> validatorFunction
+            ITransformer<R> transformerFunction,
+            @Nullable IValidator<? super R> validatorFunction
     ) {
-        registerStringTo(CommandReceivedEvent.class, to, converterFunction, validatorFunction);
+        Transformer<R> transformer = new Transformer<>(to, transformerFunction, validatorFunction);
+        registerTransformer(transformer);
         return this;
     }
 
     public <R> ConverterRegistry registerCommandTo(
             Class<R> to,
-            BiFunction<String, CommandReceivedEvent, R> converterFunction
+            ITransformer<R> transformerFunction
     ) {
-        registerCommandTo(to, converterFunction, null);
+        Transformer<R> transformer = new Transformer<>(to, transformerFunction);
+        registerTransformer(transformer);
         return this;
     }
 
-    public ConverterRegistry registerConverters(List<Entry> commands) {
-        for (Entry entry : commands) {
-            Command command = entry.newInstance();
-            command.registerConverters(this);
+    public ConverterRegistry registerConverters(List<Entry<? extends Command>> commands) {
+        for (Entry<? extends Command> entry : commands) {
+            for (Transformer<?> transformer : entry.getTransformers().get()) {
+                registerTransformer(transformer);
+            }
         }
 
         return this;
@@ -157,11 +141,11 @@ public class ConverterRegistry {
 
     @Nullable
     @SuppressWarnings("unchecked")
-    public <T, U, R> Converter<T, U, R> find(Class<T> from1, Class<U> from2, Class<R> to) {
-        return (Converter<T, U, R>) CONVERTERS
+    public <T, R> Converter<T, R> find(Class<T> from, Class<R> to) {
+        return (Converter<T, R>) CONVERTERS
                 .entrySet()
                 .stream()
-                .filter(entry -> entry.getKey().equals(new TripleIdentifier(from1, from2, to)))
+                .filter(entry -> entry.getKey().equals(new Identifier<>(from, to)))
                 .map(Map.Entry::getValue)
                 .findFirst()
                 .orElse(null);

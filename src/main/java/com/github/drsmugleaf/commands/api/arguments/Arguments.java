@@ -1,12 +1,14 @@
-package com.github.drsmugleaf.commands.api;
+package com.github.drsmugleaf.commands.api.arguments;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.converter.ConversionException;
 import com.github.drsmugleaf.commands.api.converter.Converter;
-import com.github.drsmugleaf.commands.api.converter.Result;
+import com.github.drsmugleaf.commands.api.converter.result.Result;
 import com.github.drsmugleaf.commands.api.registry.CommandField;
 import com.github.drsmugleaf.commands.api.registry.CommandSearchResult;
+import com.github.drsmugleaf.commands.api.registry.entry.Entry;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 
 import java.lang.reflect.Field;
@@ -23,12 +25,12 @@ public class Arguments extends ArrayList<String> {
 
     private static final Pattern SPLIT_ON_SPACES_EXCEPT_WITHIN_QUOTES = Pattern.compile("\"([^\"]*)\"|'([^']*)'|[^\\s]+");
 
-    private final CommandSearchResult SEARCH;
+    private final Entry<?> ENTRY;
     private final CommandReceivedEvent EVENT;
 
-    Arguments(CommandSearchResult search, CommandReceivedEvent event) {
+    public Arguments(CommandSearchResult<?> search, CommandReceivedEvent event) {
         super(getArgs(search, event));
-        SEARCH = search;
+        ENTRY = search.getEntry();
         EVENT = event;
     }
 
@@ -43,12 +45,12 @@ public class Arguments extends ArrayList<String> {
         return matcher.group();
     }
 
-    private static String extractArgs(CommandSearchResult command, MessageCreateEvent event) {
-        String matchedCommandName = command.getMatchedName();
+    private static String extractArgs(CommandSearchResult<?> search, MessageCreateEvent event) {
         return event
                 .getMessage()
                 .getContent()
                 .flatMap(content -> {
+                    String matchedCommandName = search.getMatchedName();
                     int index = content.toLowerCase().indexOf(matchedCommandName.toLowerCase());
                     content = content.substring(index + matchedCommandName.length()).trim();
                     return Optional.of(content);
@@ -67,7 +69,7 @@ public class Arguments extends ArrayList<String> {
         return args;
     }
 
-    public static List<String> getArgs(CommandSearchResult search, MessageCreateEvent event) {
+    public static List<String> getArgs(CommandSearchResult<?> search, MessageCreateEvent event) {
         String argumentsString = extractArgs(search, event);
         return parseArgs(argumentsString);
     }
@@ -168,22 +170,22 @@ public class Arguments extends ArrayList<String> {
 
         if (!has(position)) {
             if (def != null) {
-                return new Result<>(def, "");
+                return new Result<>(def, null);
             }
 
             if (!argument.optional()) {
-                return new Result<>(null, "Invalid arguments.\n" + SEARCH.getEntry().getFormatsExamples());
+                return new Result<>(null, "Invalid arguments.\n" + ENTRY.getFormatsExamples());
             }
 
-            return new Result<>(null, "");
+            return new Result<>(null, null);
         }
 
         Class<?> fieldType = field.getType();
-        Converter<String, CommandReceivedEvent, ?> converter = BanterBot4J
+        Converter<String, ?> converter = BanterBot4J
                 .getHandler()
                 .getRegistry()
                 .getConverters()
-                .find(String.class, CommandReceivedEvent.class, fieldType);
+                .find(String.class, fieldType);
         if (converter == null) {
             throw new IllegalStateException("No converter found for type" + fieldType);
         }
@@ -194,7 +196,8 @@ public class Arguments extends ArrayList<String> {
         try {
             result = converter.convert(commandField, stringArg, EVENT);
         } catch (ConversionException e) {
-            return new Result<>(null, "Invalid " + field.getName() + ".\n" + SEARCH.getEntry().getFormatsExamples());
+            BanterBot4J.warn("Error converting arguments", e);
+            return new Result<>(null, "Invalid " + field.getName() + ".\n" + ENTRY.getFormatsExamples());
         }
 
         if (!result.isValid()) {
@@ -204,9 +207,9 @@ public class Arguments extends ArrayList<String> {
         arg = result.getElement();
 
         if (arg == null) {
-            return new Result<>(null, "Invalid arguments.\n" + SEARCH.getEntry().getFormatsExamples());
+            return new Result<>(null, "Invalid arguments.\n" + ENTRY.getFormatsExamples());
         } else {
-            return new Result<>((E) arg, "");
+            return new Result<>((E) arg, null);
         }
     }
 

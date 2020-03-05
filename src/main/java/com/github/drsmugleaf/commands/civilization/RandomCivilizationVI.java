@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.commands.civilization;
 
 import com.github.drsmugleaf.civilization.vi.Leaders;
-import com.github.drsmugleaf.commands.api.Argument;
+import com.github.drsmugleaf.commands.api.arguments.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 

@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.commands.character;
 
 import com.github.drsmugleaf.charactersheets.character.CharacterBuilder;
-import com.github.drsmugleaf.commands.api.Argument;
+import com.github.drsmugleaf.commands.api.arguments.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import discord4j.core.object.entity.User;

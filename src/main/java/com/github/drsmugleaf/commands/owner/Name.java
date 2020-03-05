@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.commands.owner;
 
-import com.github.drsmugleaf.commands.api.Argument;
+import com.github.drsmugleaf.commands.api.arguments.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.tags.Tags;
@@ -21,7 +21,7 @@ public class Name extends Command {
     public void run() {
         EVENT
                 .getClient()
-                .edit(self -> self.setUsername(String.join(" ", ARGUMENTS)))
+                .edit(self -> self.setUsername(ARGUMENTS.toString()))
                 .flatMap(newName -> reply("Changed the bot's name to " + name))
                 .subscribe();
     }

@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.commands.api;
+package com.github.drsmugleaf.commands.api.arguments;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

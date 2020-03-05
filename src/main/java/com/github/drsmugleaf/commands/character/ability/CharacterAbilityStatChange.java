@@ -4,7 +4,7 @@ import com.github.drsmugleaf.charactersheets.ability.Ability;
 import com.github.drsmugleaf.charactersheets.ability.effect.StatChange;
 import com.github.drsmugleaf.charactersheets.character.CharacterBuilder;
 import com.github.drsmugleaf.charactersheets.state.State;
-import com.github.drsmugleaf.commands.api.Argument;
+import com.github.drsmugleaf.commands.api.arguments.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.character.CharacterCreate;

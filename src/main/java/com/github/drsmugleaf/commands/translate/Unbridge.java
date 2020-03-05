@@ -1,9 +1,8 @@
 package com.github.drsmugleaf.commands.translate;
 
-import com.github.drsmugleaf.commands.api.Argument;
-import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.arguments.Argument;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.tags.Tags;
+import com.github.drsmugleaf.commands.api.GuildCommand;
 import com.github.drsmugleaf.database.model.BridgedChannel;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.GuildChannel;
@@ -17,10 +16,9 @@ import reactor.util.function.Tuples;
  */
 @CommandInfo(
         permissions = {Permission.MANAGE_CHANNELS},
-        tags = {Tags.GUILD_ONLY},
         description = "Unbridge two Discord channels to stop sending and translating messages between them"
 )
-public class Unbridge extends Command {
+public class Unbridge extends GuildCommand {
 
     @Argument(position = 1, examples = "general")
     private String channelName;

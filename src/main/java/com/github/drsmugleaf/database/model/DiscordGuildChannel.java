@@ -48,7 +48,7 @@ public class DiscordGuildChannel extends Model<DiscordGuildChannel> {
                 .subscribe(model -> {
                     model.createIfNotExists();
 
-                    Database.LOGGER.info(
+                    Database.LOGGER.debug(
                             String.format("Created guild channel with id %s in guild %s", model.channel.id, model.guild.id)
                     );
                 });

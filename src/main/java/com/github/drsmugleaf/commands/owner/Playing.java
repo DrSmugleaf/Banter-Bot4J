@@ -1,7 +1,7 @@
 package com.github.drsmugleaf.commands.owner;
 
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.commands.api.Argument;
+import com.github.drsmugleaf.commands.api.arguments.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.tags.Tags;

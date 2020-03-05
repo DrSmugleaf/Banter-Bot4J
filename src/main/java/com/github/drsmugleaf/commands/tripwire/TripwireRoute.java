@@ -1,6 +1,6 @@
 package com.github.drsmugleaf.commands.tripwire;
 
-import com.github.drsmugleaf.commands.api.Argument;
+import com.github.drsmugleaf.commands.api.arguments.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.tags.Tags;

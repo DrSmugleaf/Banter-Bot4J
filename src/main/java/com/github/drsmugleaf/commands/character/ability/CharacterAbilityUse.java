@@ -6,7 +6,7 @@ import com.github.drsmugleaf.charactersheets.character.Character;
 import com.github.drsmugleaf.charactersheets.character.CharacterBuilder;
 import com.github.drsmugleaf.charactersheets.character.sheet.Sheet;
 import com.github.drsmugleaf.charactersheets.stat.StatGroup;
-import com.github.drsmugleaf.commands.api.Argument;
+import com.github.drsmugleaf.commands.api.arguments.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.character.CharacterCreate;

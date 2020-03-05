@@ -17,7 +17,7 @@ import java.util.AbstractMap;
  */
 @CommandInfo(
         permissions = {Permission.MUTE_MEMBERS},
-        tags = {Tags.GUILD_ONLY, Tags.DELETE_COMMAND_MESSAGE},
+        tags = {Tags.DELETE_COMMAND_MESSAGE},
         description = "Stop the current track"
 )
 public class Stop extends MusicCommand {

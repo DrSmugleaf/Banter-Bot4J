@@ -4,10 +4,10 @@ import com.github.drsmugleaf.article13.entities.Country;
 import com.github.drsmugleaf.article13.entities.Party;
 import com.github.drsmugleaf.article13.vote.Decision;
 import com.github.drsmugleaf.article13.vote.Vote;
-import com.github.drsmugleaf.commands.api.Argument;
+import com.github.drsmugleaf.commands.api.arguments.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
+import com.github.drsmugleaf.commands.api.converter.transformer.TransformerSet;
 
 import java.util.List;
 import java.util.Map;
@@ -56,11 +56,12 @@ public class Article13 extends Command {
     }
 
     @Override
-    public void registerConverters(ConverterRegistry converter) {
-        converter
-                .registerCommandTo(Country.class, (s, e) -> Country.getCountry(s))
-                .registerCommandTo(Decision.class, (s, e) -> Decision.from(s))
-                .registerCommandTo(Vote.class, (s, e) -> Vote.getVote(s));
+    public TransformerSet getTransformers() {
+        return TransformerSet.of(
+                Country.class, (s, e) -> Country.getCountry(s),
+                Decision.class, (s, e) -> Decision.from(s),
+                Vote.class, (s, e) -> Vote.getVote(s)
+        );
     }
 
 }

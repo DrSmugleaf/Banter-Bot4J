@@ -2,11 +2,11 @@ package com.github.drsmugleaf.commands;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
-import com.github.drsmugleaf.commands.api.Argument;
-import com.github.drsmugleaf.commands.api.Command;
+import com.github.drsmugleaf.commands.api.arguments.Argument;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.commands.api.converter.ConverterRegistry;
-import com.github.drsmugleaf.commands.api.tags.Tags;
+import com.github.drsmugleaf.commands.api.GuildCommand;
+import com.github.drsmugleaf.commands.api.converter.transformer.Transformer;
+import com.github.drsmugleaf.commands.api.converter.transformer.TransformerSet;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Role;
@@ -16,7 +16,7 @@ import discord4j.core.object.util.PermissionSet;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,10 +24,9 @@ import java.util.stream.Collectors;
  * Created by DrSmugleaf on 23/01/2018.
  */
 @CommandInfo(
-        tags = {Tags.GUILD_ONLY},
         description = "Change your name color"
 )
-public class ColorCommand extends Command {
+public class ColorCommand extends GuildCommand {
 
     @Nullable
     private static Color resolve(String string) {
@@ -130,7 +129,7 @@ public class ColorCommand extends Command {
                                             .setPermissions(PermissionSet.none())
                                     ).map(Role::getId))
                                     .flatMap(tuple2 -> tuple2.getT1().addRole(tuple2.getT2()))
-                                    .then(reply("Changed your name color to " + String.join(" ", ARGUMENTS)))
+                                    .then(reply("Changed your name color to " + ARGUMENTS.toString()))
                                     .subscribe();
                         } else {
                             Role role = roles.get(0);
@@ -141,7 +140,7 @@ public class ColorCommand extends Command {
                                     .zipWith(role.edit(spec -> spec.setColor(color)).map(Role::getId))
                                     .flatMap(tuple2 -> tuple2.getT1().addRole(tuple2.getT2()))
                                     .doOnError(e -> reply("I can't modify your name color. Check my highest role with permission to manage roles.").subscribe())
-                                    .then(reply("Changed your name color to " + String.join(" ", ARGUMENTS) + ". Your old name color's hex code was " + oldHex))
+                                    .then(reply("Changed your name color to " + ARGUMENTS.toString() + ". Your old name color's hex code was " + oldHex))
                                     .subscribe();
                         }
                     }
@@ -149,8 +148,10 @@ public class ColorCommand extends Command {
     }
 
     @Override
-    public void registerConverters(ConverterRegistry converter) {
-        converter.registerCommandTo(Color.class, (s, e) -> resolve(s));
+    public TransformerSet getTransformers() {
+        return TransformerSet.of(
+                new Transformer<>(Color.class, (s, e) -> resolve(s))
+        );
     }
 
 }
