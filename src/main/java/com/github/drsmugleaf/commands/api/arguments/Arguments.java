@@ -196,7 +196,7 @@ public class Arguments extends ArrayList<String> {
         try {
             result = converter.convert(commandField, stringArg, EVENT);
         } catch (ConversionException e) {
-            BanterBot4J.warn("Error converting arguments", e);
+            BanterBot4J.LOGGER.debug("Error converting arguments", e);
             return new Result<>(null, "Invalid " + field.getName() + ".\n" + ENTRY.getFormatsExamples());
         }
 
