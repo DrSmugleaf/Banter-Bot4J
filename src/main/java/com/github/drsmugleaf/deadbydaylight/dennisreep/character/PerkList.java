@@ -1,6 +1,7 @@
-package com.github.drsmugleaf.deadbydaylight.dennisreep;
+package com.github.drsmugleaf.deadbydaylight.dennisreep.character;
 
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.character.killer.Killer;
 
 import java.util.ArrayList;
 import java.util.Collections;

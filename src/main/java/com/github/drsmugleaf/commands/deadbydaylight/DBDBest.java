@@ -6,6 +6,12 @@ import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.converter.transformer.TransformerSet;
 import com.github.drsmugleaf.deadbydaylight.dennisreep.*;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.character.PerkList;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.character.killer.Killer;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.character.killer.KillerPerk;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.character.killer.KillersAPI;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.character.survivor.SurvivorPerk;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.character.survivor.SurvivorsAPI;
 import discord4j.core.spec.EmbedCreateSpec;
 
 import java.io.InputStream;
@@ -119,7 +125,7 @@ public class DBDBest extends Command {
     @Override
     public TransformerSet getTransformers() {
         return TransformerSet.of(
-                Killer.class, (s, e) -> KillersAPI.getKiller(s)
+                Killer.class, (s, e) -> KillersAPI.getKillers().get(s)
         );
     }
 

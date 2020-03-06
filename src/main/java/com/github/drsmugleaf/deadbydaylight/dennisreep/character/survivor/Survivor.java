@@ -1,7 +1,9 @@
-package com.github.drsmugleaf.deadbydaylight.dennisreep;
+package com.github.drsmugleaf.deadbydaylight.dennisreep.character.survivor;
 
 import com.github.drsmugleaf.BanterBot4J;
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.API;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.character.ICharacter;
 
 import java.io.File;
 import java.io.FileInputStream;

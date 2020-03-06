@@ -1,6 +1,9 @@
-package com.github.drsmugleaf.deadbydaylight.dennisreep;
+package com.github.drsmugleaf.deadbydaylight.dennisreep.character.survivor;
 
+import com.github.drsmugleaf.NonNull;
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.API;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.character.Perk;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
@@ -11,22 +14,23 @@ import com.google.gson.annotations.SerializedName;
 public class SurvivorPerk extends Perk {
 
     @SerializedName("Survivor")
-    public final String SURVIVOR_NAME;
-
-    SurvivorPerk(String name, Tiers tier, double rating, long ratings, String survivorName) {
-        super(name, tier, rating, ratings);
-        SURVIVOR_NAME = survivorName;
-    }
+    private String SURVIVOR_NAME;
 
     public static SurvivorPerk from(JsonElement json) {
         JsonObject object = json.getAsJsonObject();
         return API.GSON.fromJson(object, SurvivorPerk.class);
     }
 
+    @NonNull
+    @Override
+    public String getCharacterName() {
+        return SURVIVOR_NAME;
+    }
+
     @Nullable
     @Override
-    public ICharacter getCharacter() {
-        return null;
+    public Survivor getCharacter() {
+        return SurvivorsAPI.getSurvivors().get(SURVIVOR_NAME);
     }
 
 }

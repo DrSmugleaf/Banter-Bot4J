@@ -6,6 +6,16 @@ import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.converter.transformer.TransformerSet;
 import com.github.drsmugleaf.deadbydaylight.dennisreep.*;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.character.ICharacter;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.character.Perk;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.character.PerkList;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.character.Tiers;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.character.killer.Killer;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.character.killer.KillerPerk;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.character.killer.KillersAPI;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.character.survivor.Survivor;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.character.survivor.SurvivorPerk;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.character.survivor.SurvivorsAPI;
 
 import java.io.InputStream;
 

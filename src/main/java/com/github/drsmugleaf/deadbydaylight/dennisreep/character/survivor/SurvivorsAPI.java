@@ -1,5 +1,7 @@
-package com.github.drsmugleaf.deadbydaylight.dennisreep;
+package com.github.drsmugleaf.deadbydaylight.dennisreep.character.survivor;
 
+import com.github.drsmugleaf.deadbydaylight.dennisreep.API;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.character.PerkList;
 import com.google.common.base.Suppliers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -33,7 +35,7 @@ public class SurvivorsAPI extends API {
     private static Map<String, Survivor> getSurvivorData() {
         Map<String, Survivor> survivors = new HashMap<>();
         for (SurvivorPerk perk : getPerks()) {
-            String survivorName = perk.SURVIVOR_NAME;
+            String survivorName = perk.getCharacterName();
             if (survivorName.equalsIgnoreCase("all")) {
                 continue;
             }

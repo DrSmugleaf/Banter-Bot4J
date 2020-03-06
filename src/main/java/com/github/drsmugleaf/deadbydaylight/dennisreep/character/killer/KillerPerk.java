@@ -1,6 +1,9 @@
-package com.github.drsmugleaf.deadbydaylight.dennisreep;
+package com.github.drsmugleaf.deadbydaylight.dennisreep.character.killer;
 
+import com.github.drsmugleaf.NonNull;
 import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.API;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.character.Perk;
 import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,28 +13,22 @@ import com.google.gson.annotations.SerializedName;
 public class KillerPerk extends Perk {
 
     @SerializedName(value = "Killer", alternate = {"PerkKiller"})
-    public final String KILLER_NAME;
-
-    private final Killer KILLER;
-
-    KillerPerk(String imageUrl, String name, Tiers tier, double rating, long ratings, String killerName) {
-        super(name, tier, rating, ratings);
-        KILLER_NAME = killerName;
-        KILLER = KillersAPI.getKiller(killerName);
-    }
+    private String KILLER_NAME;
 
     public static KillerPerk from(JsonElement json) {
         return API.GSON.fromJson(json.getAsJsonObject(), KillerPerk.class);
     }
 
-    public String getKillerName() {
+    @NonNull
+    @Override
+    public String getCharacterName() {
         return KILLER_NAME;
     }
 
     @Nullable
     @Override
-    public ICharacter getCharacter() {
-        return KILLER;
+    public Killer getCharacter() {
+        return KillersAPI.getKillers().get(KILLER_NAME);
     }
 
 }

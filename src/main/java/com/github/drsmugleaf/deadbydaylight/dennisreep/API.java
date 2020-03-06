@@ -26,7 +26,7 @@ public abstract class API {
     public static final String SURVIVOR_ROULETTE_URL = "https://dennisreep.nl/dbd/roulette/survivor/";
     public static final String IMAGES_PATH = Objects.requireNonNull(API.class.getClassLoader().getResource("deadbydaylight")).getFile();
     public static final String PATH = "https://dennisreep.nl/dbd/api/v2/";
-    protected static final Gson GSON = new GsonBuilder().create();
+    public static final Gson GSON = new GsonBuilder().create();
 
     public static InputStream getDBDLogo() {
         String fileName = "/logo.png";

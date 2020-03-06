@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.deadbydaylight.dennisreep;
+package com.github.drsmugleaf.deadbydaylight.dennisreep.character;
 
 import com.github.drsmugleaf.Nullable;
 import com.google.gson.annotations.SerializedName;
@@ -9,23 +9,16 @@ import com.google.gson.annotations.SerializedName;
 public abstract class Perk implements Comparable<Perk> {
 
     @SerializedName("PerkName")
-    public final String NAME;
+    public String NAME;
 
     @SerializedName("Tier")
-    public final Tiers TIER;
+    public Tiers TIER;
 
     @SerializedName("Rating")
-    public final double RATING;
+    public double RATING;
 
     @SerializedName("Ratings")
-    public final long RATINGS;
-
-    Perk(String name, Tiers tier, double rating, long ratings) {
-        NAME = name;
-        TIER = tier;
-        RATING = rating;
-        RATINGS = ratings;
-    }
+    public long RATINGS;
 
     @Override
     public int compareTo(Perk other) {
@@ -47,6 +40,9 @@ public abstract class Perk implements Comparable<Perk> {
     public long getRatings() {
         return RATINGS;
     }
+
+    @Nullable
+    public abstract String getCharacterName();
 
     @Nullable
     public abstract ICharacter getCharacter();

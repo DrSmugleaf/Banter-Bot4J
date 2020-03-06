@@ -1,4 +1,4 @@
-package com.github.drsmugleaf.deadbydaylight.dennisreep;
+package com.github.drsmugleaf.deadbydaylight.dennisreep.character;
 
 import java.awt.*;
 

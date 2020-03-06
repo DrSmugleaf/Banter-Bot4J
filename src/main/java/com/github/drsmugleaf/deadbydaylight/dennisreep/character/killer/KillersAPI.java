@@ -1,6 +1,7 @@
-package com.github.drsmugleaf.deadbydaylight.dennisreep;
+package com.github.drsmugleaf.deadbydaylight.dennisreep.character.killer;
 
-import com.github.drsmugleaf.Nullable;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.API;
+import com.github.drsmugleaf.deadbydaylight.dennisreep.character.PerkList;
 import com.google.common.base.Suppliers;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -81,17 +82,6 @@ public class KillersAPI extends API {
         } catch (ExecutionException e) {
             throw new IllegalStateException("Error getting perks for killer " + killer.getName());
         }
-    }
-
-    @Nullable
-    public static Killer getKiller(@Nullable String name) {
-        for (Map.Entry<String, Killer> entry : getKillers().entrySet()) {
-            if (entry.getKey().equalsIgnoreCase(name)) {
-                return entry.getValue();
-            }
-        }
-
-        return null;
     }
 
     public static Killer randomKiller() {
