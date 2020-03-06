@@ -14,7 +14,10 @@ import com.google.common.collect.ImmutableList;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by DrSmugleaf on 28/02/2020
@@ -120,6 +123,10 @@ public abstract class Entry<T extends ICommand> {
         return new Result<>(command, null);
     }
 
+    public boolean hasOptionalArguments() {
+        return getCommandFields().stream().anyMatch(field -> field.getArgument().optional());
+    }
+
     public String getFormats() {
         StringBuilder formats = new StringBuilder();
         formats
@@ -143,53 +150,50 @@ public abstract class Entry<T extends ICommand> {
         return formats.toString();
     }
 
-    private String getAllExampleCombinations(String from, String[] argumentExamples) {
-        List<String> examples = new ArrayList<>();
-
-        for (String example : argumentExamples) {
-            if (example.contains(" ")) {
-                examples.add(from + " \"" + example + "\"");
-            } else {
-                examples.add(from + " " + example);
-            }
-        }
-
-        return String.join("\n", examples);
-    }
-
-    private String getMandatoryExamples() {
-        List<String> examples = new ArrayList<>();
-
-        for (CommandField field : getCommandFields()) {
-            if (field.getArgument().optional()) {
-                continue;
-            }
-
-            String example = getAllExampleCombinations(BanterBot4J.BOT_PREFIX + getName(), field.getArgument().examples());
-            examples.add(example);
-        }
-
-        return String.join("\n", examples);
-    }
-
-    private String getOptionalExamples() {
-        List<String> examples = new ArrayList<>();
-
-        for (CommandField field : getCommandFields()) {
-            if (!field.getArgument().optional()) {
-                continue;
-            }
-
-            String example = getAllExampleCombinations(BanterBot4J.BOT_PREFIX + getName(), field.getArgument().examples());
-            examples.add(example);
-        }
-
-        String text = String.join("\n", examples);
-        return text.isEmpty() ? text : text + "\n";
-    }
-
     public String getExamples() {
-        return "**Examples:**\n" + getOptionalExamples() + getMandatoryExamples();
+        List<StringBuilder> mandatory = new ArrayList<>();
+        List<StringBuilder> optional = new ArrayList<>();
+
+        for (CommandField field : getCommandFields()) {
+            List<StringBuilder> examples = Arrays
+                    .stream(field.getArgument().examples())
+                    .map(example -> example.contains(" ") ? "\"" + example + "\"" : example)
+                    .map(StringBuilder::new)
+                    .collect(Collectors.toList());
+
+            boolean isOptional = field.getArgument().optional();
+            if (mandatory.isEmpty() || optional.isEmpty()) {
+                Stream<StringBuilder> stream = examples
+                        .stream()
+                        .map(example -> example.insert(0, " ").insert(0, getName()).insert(0, BanterBot4J.BOT_PREFIX));
+
+                stream.forEachOrdered(optional::add);
+                if (!isOptional) {
+                    for (StringBuilder example : optional) {
+                        mandatory.add(new StringBuilder(example));
+                    }
+                }
+            } else {
+                for (StringBuilder example : examples) {
+                    if (isOptional) {
+                        for (StringBuilder optionalExample : optional) {
+                            optionalExample.append(" ").append(example);
+                        }
+                    } else {
+                        for (StringBuilder mandatoryExample : mandatory) {
+                            mandatoryExample.append(" ").append(example);
+                        }
+                    }
+                }
+            }
+        }
+
+        StringBuilder examples = new StringBuilder("**Examples:**\n").append(String.join("\n", mandatory));
+        if (hasOptionalArguments()) {
+            examples.append("\n").append(String.join("\n", optional));
+        }
+
+        return examples.toString();
     }
 
     public String getFormatsExamples() {
