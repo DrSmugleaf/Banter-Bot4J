@@ -1,16 +1,16 @@
 package com.github.drsmugleaf.commands.api.registry.entry;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.arguments.Arguments;
 import com.github.drsmugleaf.commands.api.CommandInfo;
 import com.github.drsmugleaf.commands.api.CommandReceivedEvent;
 import com.github.drsmugleaf.commands.api.ICommand;
+import com.github.drsmugleaf.commands.api.arguments.Arguments;
 import com.github.drsmugleaf.commands.api.converter.result.Result;
 import com.github.drsmugleaf.commands.api.converter.transformer.TransformerSet;
 import com.github.drsmugleaf.commands.api.registry.CommandField;
 import com.github.drsmugleaf.commands.api.tags.Tag;
 import com.github.drsmugleaf.commands.api.tags.Tags;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -23,13 +23,13 @@ public abstract class Entry<T extends ICommand> {
 
     private final Class<T> COMMAND;
     private final CommandInfo COMMAND_INFO;
-    private final ImmutableSet<CommandField> COMMAND_FIELDS;
+    private final ImmutableList<CommandField> COMMAND_FIELDS;
     private final TransformerSet TRANSFORMERS;
 
     public Entry(Class<T> command) {
         COMMAND = command;
         COMMAND_INFO = command.getDeclaredAnnotation(CommandInfo.class);
-        COMMAND_FIELDS = ImmutableSet.copyOf(CommandField.from(command));
+        COMMAND_FIELDS = ImmutableList.copyOf(CommandField.from(command));
         TRANSFORMERS = emptyInstance().getTransformers();
     }
 
@@ -75,7 +75,7 @@ public abstract class Entry<T extends ICommand> {
         return aliases;
     }
 
-    public ImmutableSet<CommandField> getCommandFields() {
+    public ImmutableList<CommandField> getCommandFields() {
         return COMMAND_FIELDS;
     }
 
