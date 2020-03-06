@@ -1,10 +1,10 @@
 package com.github.drsmugleaf.commands.tripwire;
 
 import com.github.drsmugleaf.BanterBot4J;
-import com.github.drsmugleaf.commands.api.arguments.Argument;
 import com.github.drsmugleaf.commands.api.Command;
 import com.github.drsmugleaf.commands.api.CommandInfo;
-import com.github.drsmugleaf.eve.Systems;
+import com.github.drsmugleaf.commands.api.arguments.Argument;
+import com.github.drsmugleaf.eve.EVE;
 import com.github.drsmugleaf.tripwire.route.Route;
 import com.github.drsmugleaf.tripwire.route.StarSystem;
 import discord4j.core.object.entity.User;
@@ -16,7 +16,7 @@ import java.util.Set;
  * Created by DrSmugleaf on 10/06/2018
  */
 @CommandInfo(
-        description = "Join two Tripwire systems together with a jump bridge for the pathfinding algorithm"
+        description = "Join two or more Tripwire systems together with a jump bridge for the pathfinding algorithm"
 )
 public class TripwireBridge extends Command {
 
@@ -40,7 +40,7 @@ public class TripwireBridge extends Command {
         String[] systemNames = systems.split(" ");
         Route route = TripwireRoute.ROUTES.get(author);
         for (String systemName1 : systemNames) {
-            if (!Systems.NAMES.containsValue(systemName1)) {
+            if (!EVE.getSystems().containsValue(systemName1)) {
                 invalidSystems.add(systemName1);
                 continue;
             }
@@ -59,7 +59,7 @@ public class TripwireBridge extends Command {
             }
 
             for (String systemName2 : systemNames) {
-                if (!Systems.NAMES.containsValue(systemName2)) {
+                if (!EVE.getSystems().containsValue(systemName2)) {
                     invalidSystems.add(systemName2);
                     continue;
                 }

@@ -77,6 +77,7 @@ public class Sheet extends File {
                 CSVReaderHeaderAware reader = new CSVReaderHeaderAwareBuilder(fileReader).build()
         ) {
             Map<String, String> line;
+
             while ((line = reader.readMap()) != null) {
                 lines.add(line);
             }

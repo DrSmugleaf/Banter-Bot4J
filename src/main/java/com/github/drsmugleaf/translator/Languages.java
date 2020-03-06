@@ -90,13 +90,11 @@ public enum Languages {
     }
 
     @Contract(pure = true)
-
     public String getName() {
         return NAME;
     }
 
     @Contract(pure = true)
-
     public String getCode() {
         return CODE;
     }

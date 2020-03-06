@@ -2,7 +2,7 @@ package com.github.drsmugleaf.tripwire.route;
 
 import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.dijkstra.Node;
-import com.github.drsmugleaf.eve.Systems;
+import com.github.drsmugleaf.eve.EVE;
 import com.github.drsmugleaf.tripwire.models.Signature;
 import net.troja.eve.esi.ApiException;
 import net.troja.eve.esi.api.UniverseApi;
@@ -41,9 +41,9 @@ public class StarSystem extends Node<StarSystem> {
             throw new ESIException("Error getting names for a list of systems " + IDs + " response body: " + e.getResponseBody(), e);
         }
 
-        Systems.CONNECTIONS.asMap().forEach((from, to) -> {
+        EVE.getStargates().asMap().forEach((from, to) -> {
             if (!starSystems.containsKey(from)) {
-                StarSystem systemFrom = new StarSystem(from, Systems.NAMES.get(from));
+                StarSystem systemFrom = new StarSystem(from, EVE.getSystems().get(from));
 
                 for (Integer idTo : to) {
                     StarSystem systemTo;
@@ -51,7 +51,7 @@ public class StarSystem extends Node<StarSystem> {
                         systemTo = starSystems.get(idTo);
                         systemFrom.addDestination(systemTo, 1);
                     } else {
-                        systemTo = new StarSystem(idTo, Systems.NAMES.get(idTo));
+                        systemTo = new StarSystem(idTo, EVE.getSystems().get(idTo));
                         starSystems.put(idTo, systemTo);
                     }
                     systemFrom.addDestination(systemTo, 1);
@@ -64,7 +64,7 @@ public class StarSystem extends Node<StarSystem> {
                     if (starSystems.containsKey(idTo)) {
                         systemTo = starSystems.get(idTo);
                     } else {
-                        systemTo = new StarSystem(idTo, Systems.NAMES.get(idTo));
+                        systemTo = new StarSystem(idTo, EVE.getSystems().get(idTo));
                         starSystems.put(idTo, systemTo);
                     }
                     starSystems.get(from).addDestination(systemTo, 1);
