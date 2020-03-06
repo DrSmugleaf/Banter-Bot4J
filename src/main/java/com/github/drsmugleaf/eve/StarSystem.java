@@ -1,15 +1,9 @@
-package com.github.drsmugleaf.tripwire.route;
+package com.github.drsmugleaf.eve;
 
-import com.github.drsmugleaf.Nullable;
 import com.github.drsmugleaf.dijkstra.Node;
-import com.github.drsmugleaf.eve.EVE;
-import com.github.drsmugleaf.tripwire.models.Signature;
-import net.troja.eve.esi.ApiException;
-import net.troja.eve.esi.api.UniverseApi;
-import net.troja.eve.esi.model.UniverseNamesResponse;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by DrSmugleaf on 19/05/2018.
@@ -23,23 +17,8 @@ public class StarSystem extends Node<StarSystem> {
         ID = id;
     }
 
-    public static boolean isValid(@Nullable Integer id) {
-        return id != null && id > 30000001;
-    }
-
-    static Map<Integer, StarSystem> fromIDs(Collection<Integer> IDs) {
+    public static Map<Integer, StarSystem> getAll() {
         Map<Integer, StarSystem> starSystems = new HashMap<>();
-        IDs.removeIf(id -> !StarSystem.isValid(id));
-
-        try {
-            List<UniverseNamesResponse> response = new UniverseApi().postUniverseNames(new ArrayList<>(IDs), null);
-            for (UniverseNamesResponse systemInfo : response) {
-                StarSystem system = new StarSystem(systemInfo.getId(), systemInfo.getName());
-                starSystems.put(system.ID, system);
-            }
-        } catch (ApiException e) {
-            throw new ESIException("Error getting names for a list of systems " + IDs + " response body: " + e.getResponseBody(), e);
-        }
 
         EVE.getStargates().asMap().forEach((from, to) -> {
             if (!starSystems.containsKey(from)) {
@@ -75,9 +54,8 @@ public class StarSystem extends Node<StarSystem> {
         return starSystems;
     }
 
-    static Map<Integer, StarSystem> fromSignatures(Collection<Signature> signatures) {
-        Set<Integer> ids = signatures.stream().map(signature -> signature.SYSTEM_ID).collect(Collectors.toSet());
-        return fromIDs(ids);
+    public int getID() {
+        return ID;
     }
 
 }

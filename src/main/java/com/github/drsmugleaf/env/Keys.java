@@ -19,9 +19,7 @@ public enum Keys {
     DATABASE_URL,
     DISCORD_TOKEN,
     DISCORD_WARNING_CHANNEL(""),
-    GOOGLE_KEY,
-    TRIPWIRE_TEST_USERNAME(""),
-    TRIPWIRE_TEST_PASSWORD("");
+    GOOGLE_KEY;
 
     public final String VALUE;
 
