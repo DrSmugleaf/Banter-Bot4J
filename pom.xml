@@ -75,20 +75,27 @@
             <id>jcenter</id>
             <url>http://jcenter.bintray.com</url>
         </repository>
+
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+
+        <repository>
+            <id>central</id>
+            <name>bintray</name>
+            <url>https://jcenter.bintray.com</url>
+        </repository>
     </repositories>
 
     <dependencies>
-
         <dependency>
             <groupId>com.discord4j</groupId>
             <artifactId>discord4j-core</artifactId>
             <version>3.0.12</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.sedmelluq/lavaplayer -->
         <dependency>
             <groupId>com.sedmelluq</groupId>
             <artifactId>lavaplayer</artifactId>
@@ -183,7 +190,6 @@
             <version>${junit-version}</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <properties>
