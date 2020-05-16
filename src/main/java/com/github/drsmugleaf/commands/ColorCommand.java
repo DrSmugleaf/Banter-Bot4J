@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
  * Created by DrSmugleaf on 23/01/2018.
  */
 @CommandInfo(
+        name = "color",
         description = "Change your name color"
 )
 public class ColorCommand extends GuildCommand {
